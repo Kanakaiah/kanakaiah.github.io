@@ -158,6 +158,7 @@ const state = {
     activeMode: "read",
     autoPlayActive: false,
     autoPlayTimer: null,
+    wakeLockInstance: null,
     // Eraser mode variables
     eraserIndices: [], // Indices of words currently hidden
     // Scramble mode variables
@@ -463,7 +464,33 @@ function advancePracticeQueue() {
     }
 }
 
-// --- INITIALIZATION ---
+// --- WAKE LOCK API ---
+async function requestWakeLock() {
+    if ('wakeLock' in navigator) {
+        try {
+            state.wakeLockInstance = await navigator.wakeLock.request('screen');
+            console.log('Wake Lock is active');
+            
+            // Listen for release
+            state.wakeLockInstance.addEventListener('release', () => {
+                console.log('Wake Lock was released');
+            });
+        } catch (err) {
+            console.warn(`Wake Lock error: ${err.name}, ${err.message}`);
+        }
+    }
+}
+
+function releaseWakeLock() {
+    if (state.wakeLockInstance !== null) {
+        state.wakeLockInstance.release()
+            .then(() => {
+                state.wakeLockInstance = null;
+            });
+    }
+}
+
+// --- PRACTICE MODE LOGIC ---
 async function runDataMigrationAsync() {
     let hasChanges = false;
     
@@ -933,6 +960,7 @@ function triggerSeed100(buttonElement) {
 
 function clearAutoPlay() {
     state.autoPlayActive = false;
+    releaseWakeLock();
     if (state.autoPlayTimer) {
         clearTimeout(state.autoPlayTimer);
         state.autoPlayTimer = null;
@@ -2048,6 +2076,13 @@ function resetDatabase() {
 
 // --- EVENT ROUTERS & LISTENERS ---
 function setupEventListeners() {
+    // Re-request wake lock if visibility changes while auto-play is active
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && state.autoPlayActive) {
+            requestWakeLock();
+        }
+    });
+
     // Navigation bar routing
     document.querySelectorAll("[data-screen-link]").forEach(nav => {
         nav.onclick = () => {
@@ -2241,8 +2276,10 @@ function setupEventListeners() {
             state.autoPlayActive = !state.autoPlayActive;
             updateAutoPlayUI();
             if (state.autoPlayActive) {
+                requestWakeLock();
                 runAutoPlayStep();
             } else {
+                releaseWakeLock();
                 if (state.autoPlayTimer) {
                     clearTimeout(state.autoPlayTimer);
                     state.autoPlayTimer = null;
