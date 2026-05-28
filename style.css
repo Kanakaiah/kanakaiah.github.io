@@ -2202,8 +2202,8 @@ body.immersed-active {
 }
 
 #screen-practice.immersed .display-text .sentence-wrap {
-    display: block;
-    margin-bottom: 0.8em;
+    display: block !important;
+    margin-bottom: 0.8em !important;
 }
 
 #screen-practice.immersed .display-text .sentence-wrap.masked-sentence {

@@ -2037,6 +2037,12 @@ function saveSettingsInputs() {
     state.settings.notificationsEnabled = document.getElementById("settings-notifications-enabled").checked;
     state.settings.recallMasking = document.getElementById("settings-recall-masking").checked;
     saveToLocalStorage();
+    
+    // Instantly apply visual setting changes if in practice view
+    if (state.currentScreen === "practice" && (state.activeMode === "read" || state.activeMode === "immersed")) {
+        const verse = state.verses.find(v => v.id === state.activeVerseId);
+        if (verse) renderReadMode(verse);
+    }
 }
 
 // --- BACKUP / EXPORT / RESET LOGIC ---
