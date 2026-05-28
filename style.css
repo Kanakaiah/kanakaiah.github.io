@@ -2162,8 +2162,14 @@ body.immersed-active {
 [data-theme="parchment"] body.immersed-active {
     background: #fdfdfc !important; /* Pure white/cream */
 }
+[data-theme="pure-white"] body.immersed-active {
+    background: #ffffff !important; /* Pure white */
+}
 [data-theme="parchment"] body.immersed-active #immersed-back-btn {
     color: #2c2417 !important;
+}
+[data-theme="pure-white"] body.immersed-active #immersed-back-btn {
+    color: #000000 !important;
 }
 
 #screen-practice.immersed .display-board {
@@ -2197,6 +2203,9 @@ body.immersed-active {
 
 [data-theme="parchment"] #screen-practice.immersed .display-text {
     color: #222 !important;
+}
+[data-theme="pure-white"] #screen-practice.immersed .display-text {
+    color: #000000 !important;
 }
 
 #screen-practice.immersed .display-text span {
