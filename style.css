@@ -28,6 +28,7 @@
     --border-radius-lg: 24px;
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
+    --accent-text: #ffffff;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -116,6 +117,7 @@
     --bg-secondary: #0a0a0a;
     --bg-radial: none;
     --accent: #ffffff;
+    --accent-text: #000000;
     --accent-glow: rgba(255, 255, 255, 0.1);
     --accent-glow-strong: rgba(255, 255, 255, 0.2);
     --accent-light: #e5e5e5;
@@ -140,6 +142,7 @@
     --bg-secondary: #f5f5f5;
     --bg-radial: none;
     --accent: #000000;
+    --accent-text: #ffffff;
     --accent-glow: rgba(0, 0, 0, 0.05);
     --accent-glow-strong: rgba(0, 0, 0, 0.15);
     --accent-light: #404040;
@@ -409,7 +412,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-primary {
     background: var(--accent);
-    color: #ffffff;
+    color: var(--accent-text);
     box-shadow: 0 4px 14px 0 var(--accent-glow-strong);
 }
 
@@ -612,7 +615,7 @@ textarea.text-input {
 
 .filter-chip.active {
     background: var(--accent);
-    color: #ffffff;
+    color: var(--accent-text);
     border-color: var(--accent);
     box-shadow: 0 4px 12px var(--accent-glow);
 }
@@ -921,7 +924,7 @@ textarea.text-input {
 }
 
 .mode-tab.active {
-    color: #ffffff;
+    color: var(--accent-text);
     background: var(--accent);
     box-shadow: 0 4px 16px var(--accent-glow-strong);
     transform: scale(1.02);
