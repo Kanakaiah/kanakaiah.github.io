@@ -1439,7 +1439,7 @@ function selectPracticeMode(modeId) {
     });
 
     // Hide all practice mode control blocks
-    document.getElementById("practice-read-controls").style.display = "none";
+    document.getElementById("practice-read-controls").style.display = "block";
     document.getElementById("practice-eraser-controls").style.display = "none";
     document.getElementById("practice-scramble-controls").style.display = "none";
     document.getElementById("practice-typing-controls").style.display = "none";
@@ -1458,7 +1458,6 @@ function selectPracticeMode(modeId) {
     // Trigger modes
     switch (modeId) {
         case "read":
-            document.getElementById("practice-read-controls").style.display = "block";
             updateAutoPlayUI();
             renderReadMode(verse);
             break;
