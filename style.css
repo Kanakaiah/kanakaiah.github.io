@@ -2045,16 +2045,35 @@ input:checked + .slider-toggle:before {
 }
 
 /* --- IMMERSED READ MODE --- */
-#screen-practice.immersed .practice-header,
 #screen-practice.immersed .modes-scroll,
 #screen-practice.immersed #practice-default-footer,
-#screen-practice.immersed #practice-read-controls {
+#screen-practice.immersed #practice-read-controls,
+#screen-practice.immersed .practice-header #practice-back-btn,
+#screen-practice.immersed .practice-header .practice-title-container {
     display: none !important;
 }
 
 #screen-practice.immersed .practice-header {
-    margin-bottom: 40px;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
 }
+
+#screen-practice.immersed #practice-nav-controls {
+    position: fixed !important;
+    bottom: 30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+    background: transparent !important;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+#screen-practice.immersed #practice-nav-controls:hover {
+    opacity: 1;
+}
+
 
 body.immersed-active #app-header,
 body.immersed-active .bottom-nav {
