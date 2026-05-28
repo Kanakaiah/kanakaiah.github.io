@@ -295,9 +295,7 @@ function openVerseDetail(verseId) {
     document.getElementById('detail-ref').innerText = verse.ref;
     document.getElementById('detail-translation').innerText = `${verse.translation || 'Custom'} Translation`;
     const detailTextEl = document.getElementById('detail-text');
-    if (state.settings.bionicReading) {
-        detailTextEl.innerHTML = applyBionicReading(escapeHtml(verse.text));
-    } else {
+    if (detailTextEl) {
         detailTextEl.innerText = verse.text;
     }
     
@@ -1191,7 +1189,7 @@ function renderLibrary() {
                 <span class="verse-ref">${verse.ref}</span>
                 <span class="verse-status-badge ${statusClass}">${statusText}</span>
             </div>
-            <p class="verse-text-preview">${state.settings.bionicReading ? applyBionicReading(escapeHtml(verse.text)) : escapeHtml(verse.text)}</p>
+            <p class="verse-text-preview">${escapeHtml(verse.text)}</p>
             <div class="verse-card-footer">
                 <span>Translation: ${verse.translation || "Custom"}</span>
                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -1508,8 +1506,8 @@ function renderReadMode(verse) {
     
     let formattedText = escapeHtml(verse.text);
     
-    // Apply bionic reading fixation points if enabled
-    if (state.settings.bionicReading) {
+    // Apply bionic reading fixation points if enabled and in immersed mode
+    if (state.settings.bionicReading && state.activeMode === "immersed") {
         formattedText = applyBionicReading(formattedText);
     }
     
