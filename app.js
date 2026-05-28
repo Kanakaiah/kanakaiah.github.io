@@ -1395,8 +1395,16 @@ function selectPracticeMode(modeId) {
     const screenPractice = document.getElementById("screen-practice");
     if (modeId === "immersed") {
         screenPractice.classList.add("immersed");
+        document.body.classList.add("immersed-active");
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(err => console.log(err));
+        }
     } else {
         screenPractice.classList.remove("immersed");
+        document.body.classList.remove("immersed-active");
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(err => console.log(err));
+        }
     }
 
     if (modeId !== "read") {
@@ -2076,6 +2084,14 @@ function resetDatabase() {
 
 // --- EVENT ROUTERS & LISTENERS ---
 function setupEventListeners() {
+    // Immersed Mode Back Button
+    const immersedBackBtn = document.getElementById("immersed-back-btn");
+    if (immersedBackBtn) {
+        immersedBackBtn.onclick = () => {
+            selectPracticeMode("read");
+        };
+    }
+
     // Re-request wake lock if visibility changes while auto-play is active
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible' && state.autoPlayActive) {

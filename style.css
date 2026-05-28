@@ -2055,3 +2055,16 @@ input:checked + .slider-toggle:before {
 #screen-practice.immersed .practice-header {
     margin-bottom: 40px;
 }
+
+body.immersed-active #app-header,
+body.immersed-active .bottom-nav {
+    display: none !important;
+}
+
+body.immersed-active #app-container {
+    padding-bottom: 0 !important;
+}
+
+body.immersed-active #immersed-back-btn {
+    display: flex !important;
+}

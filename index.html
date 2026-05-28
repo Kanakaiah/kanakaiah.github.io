@@ -43,7 +43,7 @@
     <div id="app-container">
         
         <!-- --- TOP HEADER BAR --- -->
-        <header style="display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 0; z-index: 10;">
+        <header id="app-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 0; z-index: 10;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <div style="background: var(--accent-glow); border: 1px solid var(--accent-glow-strong); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent);">
                     <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
@@ -228,6 +228,10 @@
 
         <!-- --- PRACTICE STUDIO SCREEN --- -->
         <section id="screen-practice" class="screen">
+            <!-- Immersed Mode Back Button -->
+            <button class="back-btn" id="immersed-back-btn" title="Exit Immersed Mode" style="display: none; position: absolute; top: 16px; left: 16px; z-index: 9999; background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 50%; width: 40px; height: 40px; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                <i data-lucide="arrow-left"></i>
+            </button>
             <div class="practice-header">
                 <button class="back-btn" id="practice-back-btn" title="Back to Dashboard">
                     <i data-lucide="chevron-left"></i>
