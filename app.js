@@ -1497,9 +1497,9 @@ function renderReadMode(verse) {
     const boardText = document.getElementById("practice-board-text");
     
     let formattedText = escapeHtml(verse.text);
-    // Wrap sentences in spans to allow block display in immersed mode
+    // Wrap sentences/phrases in spans to allow block display in immersed mode
     const maskClass = state.settings.recallMasking ? " masked-sentence" : "";
-    formattedText = formattedText.replace(/([.?!]["']?)(\s+)/g, `$1</span><span class='sentence-wrap${maskClass}'>$2`);
+    formattedText = formattedText.replace(/([.?!;:,]["']?)(\s+)/g, `$1</span><span class='sentence-wrap${maskClass}'>$2`);
     
     boardText.innerHTML = `<span style="font-size: 22px; line-height: 1.7; font-weight: 500;"><span class='sentence-wrap${maskClass}'>${formattedText}</span></span>`;
 
