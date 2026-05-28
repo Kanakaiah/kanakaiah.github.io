@@ -2294,7 +2294,7 @@ function setupEventListeners() {
     };
 
     // Immersive Mode Toggle & Swipe Gestures
-    const practiceBoard = document.getElementById("practice-board");
+    const screenPractice = document.getElementById("screen-practice");
     const workspacePanel = document.getElementById("practice-workspace-panel");
     let touchstartX = 0;
     let touchendX = 0;
@@ -2315,16 +2315,18 @@ function setupEventListeners() {
         }, {passive: true});
     }
 
-    if (practiceBoard) {
-        practiceBoard.addEventListener('click', (e) => {
-            // Edge tap navigation (left 30% / right 30%)
+    if (screenPractice) {
+        screenPractice.addEventListener('click', (e) => {
+            // Edge tap navigation (left 25% / right 25%)
             const width = window.innerWidth;
             const x = e.clientX;
             
             // Don't trigger if clicking an interactive element
             const targetTag = e.target.tagName.toLowerCase();
-            const isInteractive = ['button', 'a', 'i', 'svg', 'path'].includes(targetTag) || 
+            const isInteractive = ['button', 'a', 'i', 'svg', 'path', 'input'].includes(targetTag) || 
                                   e.target.closest('button') || 
+                                  e.target.closest('a') ||
+                                  e.target.closest('.bottom-nav') ||
                                   e.target.classList.contains('scramble-word') ||
                                   e.target.classList.contains('word-input');
 
@@ -2346,6 +2348,7 @@ function setupEventListeners() {
             }
 
             // Middle area click: toggle immersed mode UI if active
+            // Only toggle if we clicked somewhere inside the text area or background
             if (state.activeMode === "immersed" && !isInteractive) {
                 document.getElementById("screen-practice").classList.toggle("immersed");
             }
