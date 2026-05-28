@@ -1494,7 +1494,12 @@ function selectPracticeMode(modeId) {
 // 1. READ MODE
 function renderReadMode(verse) {
     const boardText = document.getElementById("practice-board-text");
-    boardText.innerHTML = `<span style="font-size: 22px; line-height: 1.7; font-weight: 500;">${escapeHtml(verse.text)}</span>`;
+    
+    let formattedText = escapeHtml(verse.text);
+    // Wrap sentences in spans to allow block display in immersed mode
+    formattedText = formattedText.replace(/([.?!]["']?)(\s+)/g, "$1</span><span class='sentence-wrap'>$2");
+    
+    boardText.innerHTML = `<span style="font-size: 22px; line-height: 1.7; font-weight: 500;"><span class='sentence-wrap'>${formattedText}</span></span>`;
 
     // Clear any existing active timer to prevent overlaps
     if (state.autoPlayTimer) {

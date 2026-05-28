@@ -2201,6 +2201,11 @@ body.immersed-active {
     letter-spacing: 0.02em !important;
 }
 
+#screen-practice.immersed .display-text .sentence-wrap {
+    display: block;
+    margin-bottom: 0.8em;
+}
+
 [data-theme="parchment"] #screen-practice.immersed .display-text {
     color: #222 !important;
 }
