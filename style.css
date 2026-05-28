@@ -2206,6 +2206,23 @@ body.immersed-active {
     margin-bottom: 0.8em;
 }
 
+#screen-practice.immersed .display-text .sentence-wrap.masked-sentence {
+    filter: blur(6px);
+    opacity: 0.5;
+    cursor: pointer;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+    user-select: none;
+}
+
+#screen-practice.immersed .display-text .sentence-wrap.masked-sentence:hover {
+    opacity: 0.8;
+}
+
+#screen-practice.immersed .display-text .sentence-wrap.masked-sentence.unmasked {
+    filter: blur(0px);
+    opacity: 1;
+}
+
 [data-theme="parchment"] #screen-practice.immersed .display-text {
     color: #222 !important;
 }

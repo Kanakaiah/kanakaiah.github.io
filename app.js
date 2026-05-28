@@ -150,7 +150,8 @@ const state = {
     hasSeeded100: false,
     settings: {
         ttsEnabled: false,
-        notificationsEnabled: false
+        notificationsEnabled: false,
+        recallMasking: false
     },
     // Navigation / UI temporary states
     currentScreen: "dashboard",
@@ -1497,9 +1498,10 @@ function renderReadMode(verse) {
     
     let formattedText = escapeHtml(verse.text);
     // Wrap sentences in spans to allow block display in immersed mode
-    formattedText = formattedText.replace(/([.?!]["']?)(\s+)/g, "$1</span><span class='sentence-wrap'>$2");
+    const maskClass = state.settings.recallMasking ? " masked-sentence" : "";
+    formattedText = formattedText.replace(/([.?!]["']?)(\s+)/g, `$1</span><span class='sentence-wrap${maskClass}'>$2`);
     
-    boardText.innerHTML = `<span style="font-size: 22px; line-height: 1.7; font-weight: 500;"><span class='sentence-wrap'>${formattedText}</span></span>`;
+    boardText.innerHTML = `<span style="font-size: 22px; line-height: 1.7; font-weight: 500;"><span class='sentence-wrap${maskClass}'>${formattedText}</span></span>`;
 
     // Clear any existing active timer to prevent overlaps
     if (state.autoPlayTimer) {
@@ -2027,11 +2029,13 @@ function handleRecallRating(score) {
 function loadSettingsInputs() {
     document.getElementById("settings-tts-enabled").checked = state.settings.ttsEnabled;
     document.getElementById("settings-notifications-enabled").checked = state.settings.notificationsEnabled;
+    document.getElementById("settings-recall-masking").checked = state.settings.recallMasking || false;
 }
 
 function saveSettingsInputs() {
     state.settings.ttsEnabled = document.getElementById("settings-tts-enabled").checked;
     state.settings.notificationsEnabled = document.getElementById("settings-notifications-enabled").checked;
+    state.settings.recallMasking = document.getElementById("settings-recall-masking").checked;
     saveToLocalStorage();
 }
 
@@ -2087,7 +2091,7 @@ function resetDatabase() {
             state.lastActiveDate = null;
             state.theme = 'nebula';
             state.hasSeeded100 = false;
-            state.settings = { ttsEnabled: false, notificationsEnabled: false };
+            state.settings = { ttsEnabled: false, notificationsEnabled: false, recallMasking: false };
             
             saveToLocalStorage();
             applyTheme('nebula');
@@ -2217,6 +2221,7 @@ function setupEventListeners() {
     // Settings adjustments
     document.getElementById("settings-tts-enabled").onchange = saveSettingsInputs;
     document.getElementById("settings-notifications-enabled").onchange = saveSettingsInputs;
+    document.getElementById("settings-recall-masking").onchange = saveSettingsInputs;
 
     // Theme Picker Clicks
     document.querySelectorAll("[data-theme-id]").forEach(btn => {
@@ -2291,6 +2296,13 @@ function setupEventListeners() {
                                   e.target.closest('button') || 
                                   e.target.classList.contains('scramble-word') ||
                                   e.target.classList.contains('word-input');
+
+            // Handle unmasking logic
+            const maskedTarget = e.target.closest('.masked-sentence:not(.unmasked)');
+            if (maskedTarget && state.activeMode === "immersed") {
+                maskedTarget.classList.add('unmasked');
+                return;
+            }
 
             if (!isInteractive) {
                 if (x < width * 0.25) {
