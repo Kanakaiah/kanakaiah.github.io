@@ -2265,8 +2265,30 @@ function setupEventListeners() {
     }
 
     if (practiceBoard) {
-        practiceBoard.addEventListener('click', () => {
-            if (state.activeMode === "immersed") {
+        practiceBoard.addEventListener('click', (e) => {
+            // Edge tap navigation (left 30% / right 30%)
+            const width = window.innerWidth;
+            const x = e.clientX;
+            
+            // Don't trigger if clicking an interactive element
+            const targetTag = e.target.tagName.toLowerCase();
+            const isInteractive = ['button', 'a', 'i', 'svg', 'path'].includes(targetTag) || 
+                                  e.target.closest('button') || 
+                                  e.target.classList.contains('scramble-word') ||
+                                  e.target.classList.contains('word-input');
+
+            if (!isInteractive) {
+                if (x < width * 0.25) {
+                    navigateVerse("prev");
+                    return;
+                } else if (x > width * 0.75) {
+                    navigateVerse("next");
+                    return;
+                }
+            }
+
+            // Middle area click: toggle immersed mode UI if active
+            if (state.activeMode === "immersed" && !isInteractive) {
                 document.getElementById("screen-practice").classList.toggle("immersed");
             }
         });
