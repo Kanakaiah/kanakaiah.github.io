@@ -862,7 +862,11 @@ function checkSpacedRepetitionPrompt() {
         const suggested = dueVerses[0];
 
         document.getElementById("suggestion-ref").innerText = suggested.ref;
-        document.getElementById("suggestion-meta").innerText = `Overdue since ${new Date(suggested.sm2.nextDueDate).toLocaleDateString()}`;
+        if (suggested.sm2.repetition === 0) {
+            document.getElementById("suggestion-meta").innerText = "Ready to learn!";
+        } else {
+            document.getElementById("suggestion-meta").innerText = `Overdue since ${new Date(suggested.sm2.nextDueDate).toLocaleDateString()}`;
+        }
         suggestionCard.style.display = "flex";
 
         // Bind quick action
@@ -1164,11 +1168,11 @@ function renderLibrary() {
         const masteryPct = Math.min(100, Math.round((verse.sm2.repetition / 6) * 100));
 
         let statusClass = "status-learning";
-        let statusText = "Learning";
+        let statusText = verse.sm2.repetition === 0 ? "New" : "Learning";
         if (verse.status === "memorized") {
             statusClass = "status-memorized";
             statusText = "Memorized";
-        } else if (isDue) {
+        } else if (isDue && verse.sm2.repetition > 0) {
             statusClass = "status-review";
             statusText = "Review Due";
         }
@@ -1338,7 +1342,13 @@ function setupPracticeWorkspace() {
     // Load active verse titles
     document.getElementById("practice-ref-title").innerText = verse.ref;
     const isDue = new Date(verse.sm2.nextDueDate) <= new Date();
-    document.getElementById("practice-status-subtitle").innerText = `${verse.translation || 'Custom'} translation • ${isDue ? 'Review Due Now' : 'Mastery ' + Math.min(100, Math.round((verse.sm2.repetition / 6) * 100)) + '%'}`;
+    let subtitleStatus = `Mastery ${Math.min(100, Math.round((verse.sm2.repetition / 6) * 100))}%`;
+    if (verse.sm2.repetition === 0) {
+        subtitleStatus = "New";
+    } else if (isDue) {
+        subtitleStatus = "Review Due";
+    }
+    document.getElementById("practice-status-subtitle").innerText = `${verse.translation || 'Custom'} translation • ${subtitleStatus}`;
 
     // Update index indicator (e.g. 10 / 103)
     const currentIndex = state.verses.findIndex(v => v.id === state.activeVerseId);
