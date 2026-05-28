@@ -1446,7 +1446,6 @@ function selectPracticeMode(modeId) {
     document.getElementById("practice-speech-controls").style.display = "none";
 
     // Standard show/hide options in footer
-    document.getElementById("practice-default-footer").style.display = "flex";
     document.getElementById("practice-eval-footer").style.display = "none";
 
 
@@ -1488,15 +1487,20 @@ function selectPracticeMode(modeId) {
             break;
     }
 
-    // Dynamic button label per mode
+    // Dynamic footer logic per mode
+    const defaultFooter = document.getElementById("practice-default-footer");
     const doneBtn = document.getElementById("practice-done-btn");
-    if (doneBtn) {
-        if (modeId === "read") {
-            doneBtn.innerHTML = '<i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i> Next Verse';
-        } else {
+    
+    if (modeId === "read") {
+        // Read mode has card arrows/taps, so hide the bottom button entirely
+        if (defaultFooter) defaultFooter.style.display = "none";
+    } else {
+        // Practice modes need the submission button
+        if (defaultFooter) defaultFooter.style.display = "flex";
+        if (doneBtn) {
             doneBtn.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i> Score My Recall';
+            lucide.createIcons();
         }
-        lucide.createIcons();
     }
 }
 
