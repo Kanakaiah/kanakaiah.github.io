@@ -2168,7 +2168,7 @@ body.immersed-active {
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    padding: 40px 16px !important;
+    padding: 80px 16px 40px 16px !important;
     text-align: left !important;
     align-items: flex-start !important;
 }
