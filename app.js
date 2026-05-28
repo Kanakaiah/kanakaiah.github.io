@@ -618,6 +618,8 @@ function loadFromLocalStorage() {
         const storedVerses = localStorage.getItem("remora_verses");
         if (storedVerses) {
             state.verses = JSON.parse(storedVerses);
+            // Sanitize verse text: decode any HTML entities stored from API responses
+            state.verses.forEach(v => { if (v.text) v.text = decodeHtml(v.text); });
         } else {
             // Seed defaults
             state.verses = [...SEED_VERSES];
@@ -2494,11 +2496,15 @@ function setupEventListeners() {
 }
 
 // Helper to escape HTML tags in strings
-// Decode any pre-existing HTML entities (e.g. &quot; from API responses) before re-escaping
+// Decode any pre-existing HTML entities (e.g. &quot; &amp;quot; from API responses)
+// Recurses until fully decoded to handle double-encoded strings already in localStorage
 function decodeHtml(str) {
+    if (!str) return str;
     const el = document.createElement('textarea');
     el.innerHTML = str;
-    return el.value;
+    const decoded = el.value;
+    // Keep decoding until stable (handles &amp;quot; → &quot; → ")
+    return decoded !== str ? decodeHtml(decoded) : decoded;
 }
 
 function escapeHtml(str) {
