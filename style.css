@@ -2230,7 +2230,7 @@ body.immersed-active {
     color: #000000 !important;
 }
 
-#screen-practice.immersed .display-text span {
+#screen-practice.immersed .display-text span:not(.sentence-wrap) {
     display: inline;
 }
 

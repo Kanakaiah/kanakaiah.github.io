@@ -1501,7 +1501,7 @@ function renderReadMode(verse) {
     const maskClass = state.settings.recallMasking ? " masked-sentence" : "";
     formattedText = formattedText.replace(/([.?!;:,]["']?)(\s+)/g, `$1</span><span class='sentence-wrap${maskClass}'>$2`);
     
-    boardText.innerHTML = `<span style="font-size: 22px; line-height: 1.7; font-weight: 500;"><span class='sentence-wrap${maskClass}'>${formattedText}</span></span>`;
+    boardText.innerHTML = `<div style="font-size: 22px; line-height: 1.7; font-weight: 500;"><span class='sentence-wrap${maskClass}'>${formattedText}</span></div>`;
 
     // Clear any existing active timer to prevent overlaps
     if (state.autoPlayTimer) {
