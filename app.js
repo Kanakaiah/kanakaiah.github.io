@@ -294,7 +294,12 @@ function openVerseDetail(verseId) {
     // Populate view mode
     document.getElementById('detail-ref').innerText = verse.ref;
     document.getElementById('detail-translation').innerText = `${verse.translation || 'Custom'} Translation`;
-    document.getElementById('detail-text').innerText = verse.text;
+    const detailTextEl = document.getElementById('detail-text');
+    if (state.settings.bionicReading) {
+        detailTextEl.innerHTML = applyBionicReading(escapeHtml(verse.text));
+    } else {
+        detailTextEl.innerText = verse.text;
+    }
     
     const masteryPct = Math.min(100, Math.round((verse.sm2.repetition / 6) * 100));
     document.getElementById('detail-mastery').innerText = getMasteryLabel(masteryPct);
@@ -1184,7 +1189,7 @@ function renderLibrary() {
                 <span class="verse-ref">${verse.ref}</span>
                 <span class="verse-status-badge ${statusClass}">${statusText}</span>
             </div>
-            <p class="verse-text-preview">${escapeHtml(verse.text)}</p>
+            <p class="verse-text-preview">${state.settings.bionicReading ? applyBionicReading(escapeHtml(verse.text)) : escapeHtml(verse.text)}</p>
             <div class="verse-card-footer">
                 <span>Translation: ${verse.translation || "Custom"}</span>
                 <div style="display: flex; align-items: center; gap: 8px;">
