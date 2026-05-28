@@ -1,0 +1,552 @@
+[
+    {
+        "ref": "Genesis 1:1",
+        "text": "In the beginning God created the heavens and the earth.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Genesis 1:27",
+        "text": "And God created man in His own image, in the image of God He created him; male and female He created them.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Genesis 2:24",
+        "text": "For this reason a man shall leave his father and his mother, and be joined to his wife; and they shall become one flesh.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Genesis 50:20",
+        "text": "As for you, you meant evil against me, but God meant it for good in order to bring about this present result, to preserve many people alive.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Exodus 14:14",
+        "text": "Yahweh will fight for you while you keep silent.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Exodus 20:3",
+        "text": "You shall have no other gods before Me.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Joshua 1:9",
+        "text": "Have I not commanded you? Be strong and courageous! Do not be terrified or dismayed, for Yahweh your God is with you wherever you go.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Joshua 24:15",
+        "text": "If it is disagreeable in your sight to serve Yahweh, choose for yourselves today whom you will serve: whether the gods which your fathers served which were beyond the River, or the gods of the Amorites in whose land you are living; but as for me and my house, we will serve Yahweh.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Ruth 1:16",
+        "text": "But Ruth said, \"Do not urge me to leave you or turn back from following you; for where you go, I will go, and where you lodge, I will lodge. Your people shall be my people, and your God, my God.\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 Samuel 16:7",
+        "text": "But Yahweh said to Samuel, \"Do not look at his appearance or at the height of his stature, because I have rejected him; for God sees not as man sees, for man looks at the outward appearance, but Yahweh looks at the heart.\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "2 Chronicles 7:14",
+        "text": "and My people who are called by My name humble themselves and pray and seek My face and turn from their evil ways, then I will hear from heaven, will forgive their sin and will heal their land.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Nehemiah 8:10",
+        "text": "Then he said to them, \"Go, eat of the fat, drink of the sweet, and send portions to him who has nothing prepared; for this day is holy to our Lord. Do not be grieved, for the joy of Yahweh is your strength.\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 1:1-2",
+        "text": "How blessed is the man who does not walk in the counsel of the wicked, Nor stand in the path of sinners, Nor sit in the seat of scoffers! But his delight is in the law of Yahweh, And in His law he meditates day and night.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 19:14",
+        "text": "Let the words of my mouth and the meditation of my heart Be acceptable in Your sight, O Yahweh, my rock and my redeemer.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 23:1",
+        "text": "Yahweh is my shepherd, I shall not want.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 23:4",
+        "text": "Even though I walk through the valley of the shadow of death, I fear no evil, for You are with me; Your rod and Your staff, they comfort me.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 23:6",
+        "text": "Surely goodness and lovingkindness will pursue me all the days of my life, And I will dwell in the house of Yahweh forever.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 27:1",
+        "text": "Yahweh is my light and my salvation; Whom shall I fear? Yahweh is the strong defense of my life; Whom shall I dread?",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 34:8",
+        "text": "O taste and see that Yahweh is good; How blessed is the man who takes refuge in Him!",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 37:4",
+        "text": "Delight yourself in Yahweh; And He will give you the desires of your heart.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 46:1",
+        "text": "God is our refuge and strength, A very present help in trouble.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 46:10",
+        "text": "Cease striving and know that I am God; I will be exalted among the nations, I will be exalted in the earth.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 51:10",
+        "text": "Create in me a clean heart, O God, And renew a steadfast spirit within me.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 118:24",
+        "text": "This is the day which Yahweh has made; Let us rejoice and be glad in it.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 119:11",
+        "text": "Your word I have treasured in my heart, That I may not sin against You.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 119:105",
+        "text": "Your word is a lamp to my feet And a light to my path.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 121:1-2",
+        "text": "I will lift up my eyes to the mountains; From where shall my help come? My help comes from Yahweh, Who made heaven and earth.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Psalm 139:14",
+        "text": "I will give thanks to You, for I am fearfully and wonderfully made; Wonderful are Your works, And my soul knows it very well.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Proverbs 3:5-6",
+        "text": "Trust in Yahweh with all your heart And do not lean on your own understanding. In all your ways acknowledge Him, And He will make your paths straight.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Proverbs 4:23",
+        "text": "Keep your heart with all vigilance, For from it flow the springs of life.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Proverbs 16:3",
+        "text": "Commit your works to Yahweh And your plans will be established.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Proverbs 18:24",
+        "text": "A man of many friends comes to ruin, But there is a friend who sticks closer than a brother.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Ecclesiastes 3:1",
+        "text": "There is an appointed time for everything. And there is a time for every event under heaven—",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 9:6",
+        "text": "For a child will be born to us, a son will be given to us; And the government will rest on His shoulders; And His name will be called Wonderful Counselor, Mighty God, Eternal Father, Prince of Peace.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 26:3",
+        "text": "The steadfast of mind You will keep in perfect peace, Because he trusts in You.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 40:31",
+        "text": "Yet those who hope in Yahweh Will gain new strength; They will mount up with wings like eagles, They will run and not get tired, They will walk and not become weary.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 41:10",
+        "text": "Do not fear, for I am with you; Do not anxiously look about you, for I am your God. I will strengthen you, surely I will help you, Surely I will uphold you with My righteous right hand.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 43:2",
+        "text": "When you pass through the waters, I will be with you; And through the rivers, they will not overflow you. When you walk through the fire, you will not be scorched, Nor will the flame burn you.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 53:5",
+        "text": "But He was pierced for our transgressions, He was crushed for our iniquities; The chastening for our peace fell upon Him, And by His wounds we are healed.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 53:6",
+        "text": "All of us like sheep have gone astray, Each of us has turned to his own way; But Yahweh has caused the iniquity of us all To fall on Him.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Isaiah 55:8-9",
+        "text": "For My thoughts are not your thoughts, Nor are your ways My ways, declares Yahweh. For as the heavens are higher than the earth, So are My ways higher than your ways And My thoughts than your thoughts.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Jeremiah 29:11",
+        "text": "For I know the plans that I have for you, declares Yahweh, plans for peace and not for calamity, to give you a future and a hope.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Jeremiah 33:3",
+        "text": "Call to Me and I will answer you, and I will tell you great and mighty things, which you do not know.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Lamentations 3:22-23",
+        "text": "The lovingkindnesses of Yahweh indeed never cease, For His compassions never fail. They are new every morning; Great is Your faithfulness.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Micah 6:8",
+        "text": "He has told you, O man, what is good; And what does Yahweh require of you But to do justice, to love lovingkindness, And to walk humbly with your God?",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Matthew 5:16",
+        "text": "Let your light show before men in such a way that they may see your good works, and glorify your Father who is in heaven.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Matthew 6:33",
+        "text": "But seek first His kingdom and His righteousness, and all these things will be added to you.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Matthew 7:7",
+        "text": "Ask, and it will be given to you; seek, and you will find; knock, and it will be opened to you.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Matthew 11:28",
+        "text": "Come to Me, all who are weary and heavy-laden, and I will give you rest.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Matthew 19:26",
+        "text": "And looking at them, Jesus said to them, \"With people this is impossible, but with God all things are possible.\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Matthew 22:37-39",
+        "text": "And He said to him, \"'You shall love the Lord your God with all your heart, and with all your soul, and with all your mind.' This is the great and foremost commandment. The second is like it: 'You shall love your neighbor as yourself.'\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Matthew 28:19-20",
+        "text": "Go therefore and make disciples of all the nations, baptizing them in the name of the Father and the Son and the Holy Spirit, teaching them to keep all that I commanded you; and behold, I am with you always, even to the end of the age.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Mark 10:45",
+        "text": "For even the Son of Man did not come to be served, but to serve, and to give His life a ransom for many.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Mark 12:30",
+        "text": "and you shall love the Lord your God with all your heart, and with all your soul, and with all your mind, and with all your strength.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Luke 1:37",
+        "text": "For nothing will be impossible with God.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Luke 2:14",
+        "text": "Glory to God in the highest, And on earth peace among men with whom He is pleased.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Luke 9:23",
+        "text": "And He was saying to them all, \"If anyone wishes to come after Me, he must deny himself, and take up his cross daily and follow Me.\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 1:1",
+        "text": "In the beginning was the Word, and the Word was with God, and the Word was God.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 1:12",
+        "text": "But as many as received Him, to them He gave the right to become children of God, even to those who believe in His name,",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 3:16",
+        "text": "For God so loved the world, that He gave His only begotten Son, that whoever believes in Him shall not perish, but have eternal life.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 10:10",
+        "text": "The thief comes only to steal and kill and destroy; I came that they may have life, and have it abundantly.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 11:25",
+        "text": "Jesus said to her, \"I am the resurrection and the life; he who believes in Me will live even if he dies,\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 13:34-35",
+        "text": "A new commandment I give to you, that you love one another, even as I have loved you, that you also love one another. By this all men will know that you are My disciples, if you have love for one another.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 14:6",
+        "text": "Jesus said to him, \"I am the way, and the truth, and the life; no one comes to the Father but through Me.\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 14:27",
+        "text": "Peace I leave with you; My peace I give to you; not as the world gives do I give to you. Do not let your heart be troubled, nor let it be fearful.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "John 15:5",
+        "text": "I am the vine, you are the branches; he who abides in Me and I in him, he bears much fruit, for apart from Me you can do nothing.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Acts 1:8",
+        "text": "but you will receive power when the Holy Spirit has come upon you; and you shall be My witnesses both in Jerusalem, and in all Judea and Samaria, and even to the remotest part of the earth.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Acts 4:12",
+        "text": "And there is salvation in no one else; for there is no other name under heaven that has been given among men by which we must be saved.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Acts 16:31",
+        "text": "They said, \"Believe in the Lord Jesus, and you will be saved, you and your household.\"",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 3:23",
+        "text": "for all have sinned and fall short of the glory of God,",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 5:8",
+        "text": "But God demonstrates His own love toward us, in that while we were yet sinners, Christ died for us.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 6:23",
+        "text": "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 8:1",
+        "text": "Therefore there is now no condemnation for those who are in Christ Jesus.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 8:28",
+        "text": "And we know that God causes all things to work together for good to those who love God, to those who are called according to His purpose.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 8:31",
+        "text": "What then shall we say to these things? If God is for us, who is against us?",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 8:38-39",
+        "text": "For I am convinced that neither death, nor life, nor angels, nor rulers, nor things present, nor things to come, nor powers, nor height, nor depth, nor any other created thing, will be able to separate us from the love of God, which is in Christ Jesus our Lord.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 10:9",
+        "text": "that if you confess with your mouth Jesus as Lord, and believe in your heart that God raised Him from the dead, you will be saved;",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 12:1-2",
+        "text": "Therefore I urge you, brothers, by the mercies of God, to present your bodies as a living and holy sacrifice, acceptable to God, which is your spiritual service of worship. And do not be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what the will of God is, that which is good and acceptable and perfect.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Romans 12:21",
+        "text": "Do not be overcome by evil, but overcome evil with good.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 Corinthians 10:13",
+        "text": "No temptation has overtaken you but such as is common to man; and God is faithful, who will not allow you to be tempted beyond what you are able, but with the temptation will provide the way of escape also, so that you will be able to endure it.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 Corinthians 13:4-7",
+        "text": "Love is patient, love is kind and is not jealous; love does not brag and is not arrogant, does not act unbecomingly; it does not seek its own, is not provoked, does not take into account a wrong suffered, does not rejoice in unrighteousness, but rejoices with the truth; bears all things, believes all things, hopes all things, endures all things.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 Corinthians 15:3-4",
+        "text": "For I delivered to you as of first importance what I also received, that Christ died for our sins according to the Scriptures, and that He was buried, and that He was raised on the third day according to the Scriptures,",
+        "translation": "LSB"
+    },
+    {
+        "ref": "2 Corinthians 5:17",
+        "text": "Therefore if anyone is in Christ, he is a new creation; the old things passed away; behold, new things have come.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "2 Corinthians 12:9",
+        "text": "And He has said to me, \"My grace is sufficient for you, for power is perfected in weakness.\" Most gladly therefore, I will rather boast in my weaknesses, so that the power of Christ may dwell in me.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Galatians 2:20",
+        "text": "I have been crucified with Christ; and it is no longer I who live, but Christ lives in me; and the life which I now live in the flesh I live by faith in the Son of God, who loved me and gave Himself up for me.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Galatians 5:22-23",
+        "text": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control; against such things there is no law.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Ephesians 2:8-9",
+        "text": "For by grace you have been saved through faith; and that not of yourselves, it is the gift of God; not as a result of works, so that no one may boast.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Ephesians 4:32",
+        "text": "Be kind to one another, tender-hearted, forgiving each other, just as God in Christ also has forgiven you.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Ephesians 6:10-11",
+        "text": "Finally, be strong in the Lord and in the strength of His might. Put on the full armor of God, so that you will be able to stand firm against the schemes of the devil.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Philippians 4:6-7",
+        "text": "Be anxious for nothing, but in everything by prayer and petition with thanksgiving let your requests be made known to God. And the peace of God, which surpasses all comprehension, will guard your hearts and your minds in Christ Jesus.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Philippians 4:13",
+        "text": "I can do all things through Him who strengthens me.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Philippians 4:19",
+        "text": "And my God will supply all your needs according to His riches in glory in Christ Jesus.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Colossians 3:17",
+        "text": "Whatever you do in word or deed, do all in the name of the Lord Jesus, giving thanks through Him to God the Father.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Colossians 3:23",
+        "text": "Whatever you do, do your work heartily, as for the Lord rather than for men,",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 Thessalonians 5:16-18",
+        "text": "Rejoice always; pray without ceasing; in everything give thanks; for this is the will of God for you in Christ Jesus.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "2 Timothy 1:7",
+        "text": "For God has not given us a spirit of cowardice, but of power and love and self-discipline.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "2 Timothy 3:16-17",
+        "text": "All Scripture is God-breathed and profitable for teaching, for reproof, for correction, for training in righteousness, so that the man of God may be equipped, having been thoroughly equipped for every good work.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Hebrews 4:12",
+        "text": "For the word of God is living and active and sharper than any two-edged sword, and piercing as far as the division of soul and spirit, of both joints and marrow, and able to judge the thoughts and intentions of the heart.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Hebrews 11:1",
+        "text": "Now faith is the assurance of things hoped for, the conviction of things not seen.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Hebrews 11:6",
+        "text": "And without faith it is impossible to please Him, for he who comes to God must believe that He is and that He is a rewarder of those who seek Him.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Hebrews 12:1-2",
+        "text": "Therefore, since we have so great a cloud of witnesses surrounding us, laying aside every weight and the sin which so easily entangles us, let us run with endurance the race that is set before us, fixing our eyes on Jesus, the author and perfecter of faith, who for the joy set before Him endured the cross, despising the shame, and has sat down at the right hand of the throne of God.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "James 1:2-4",
+        "text": "Consider it all joy, my brothers, when you encounter various trials, knowing that the testing of your faith renders endurance. And let endurance have its perfect result, so that you may be perfect and complete, lacking in nothing.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "James 1:5",
+        "text": "But if any of you lacks wisdom, let him ask of God, who gives to all generously and without reproach, and it will be given to him.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "James 1:22",
+        "text": "But prove yourselves doers of the word, and not merely hearers who delude themselves.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "James 4:7",
+        "text": "Submit therefore to God. But resist the devil and he will flee from you.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 Peter 5:7",
+        "text": "casting all your anxiety on Him, because He cares for you.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 John 1:9",
+        "text": "If we confess our sins, He is faithful and righteous to forgive us our sins and to cleanse us from all unrighteousness.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "1 John 4:19",
+        "text": "We love, because He first loved us.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Revelation 3:20",
+        "text": "Behold, I stand at the door and knock; if anyone hears My voice and opens the door, I will come in to him and will dine with him, and he with Me.",
+        "translation": "LSB"
+    },
+    {
+        "ref": "Revelation 21:4",
+        "text": "and He will wipe away every tear from their eyes; and there will no longer be any death; there will no longer be any mourning, or crying, or pain; the first things have passed away.",
+        "translation": "LSB"
+    }
+]
