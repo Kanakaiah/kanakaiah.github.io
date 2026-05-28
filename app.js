@@ -2424,3 +2424,25 @@ function escapeHtml(str) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+// --- SCROLL TO HIDE MENU ---
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll', () => {
+    const bottomNav = document.querySelector('.bottom-nav');
+    if (!bottomNav) return;
+    
+    // Check if we are immersed (we completely hide the nav in immersed mode already)
+    if (document.body.classList.contains("immersed-active")) return;
+
+    if (window.scrollY <= 50) {
+        // At the top of the page, always show
+        bottomNav.classList.remove('nav-hidden');
+    } else if (window.scrollY > lastScrollY) {
+        // Scrolling down
+        bottomNav.classList.add('nav-hidden');
+    } else {
+        // Scrolling up
+        bottomNav.classList.remove('nav-hidden');
+    }
+    lastScrollY = window.scrollY;
+});

@@ -2195,3 +2195,8 @@ body.immersed-active {
 #screen-practice.immersed .display-text span {
     display: inline;
 }
+
+/* Hidden Nav Bar when scrolling down */
+.bottom-nav.nav-hidden {
+    transform: translateX(-50%) translateY(150px) !important;
+}
