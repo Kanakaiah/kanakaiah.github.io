@@ -2246,18 +2246,13 @@ b.bionic-fix {
 }
 
 /* In-card verse navigation arrows */
-/* In-card verse navigation arrows — absolute left/right edges */
+/* In-card verse navigation arrows and index */
 .card-nav-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    pointer-events: none;
-    padding: 0;
+    padding: 16px 0 0;
+    margin-top: 12px;
 }
 
 .card-nav-btn {
@@ -2265,21 +2260,21 @@ b.bionic-fix {
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 12px 10px;
+    padding: 8px 12px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     font-size: 13px;
     font-weight: 600;
-    transition: color 0.2s;
-    pointer-events: all;
+    transition: color 0.2s, background 0.2s;
 }
 
 .card-nav-btn:hover {
     color: var(--text-primary);
+    background: var(--glass-bg);
 }
 
 .card-nav-btn i {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 }

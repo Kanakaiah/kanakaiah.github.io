@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="icon.png">
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
     <!-- Toast Notification Container -->
@@ -240,7 +240,6 @@
                     <h2 id="practice-ref-title">Choose a Verse</h2>
                     <p id="practice-status-subtitle">Select or add a verse to start memorizing</p>
                 </div>
-                <span id="practice-index-indicator" style="font-size: 13px; font-weight: 600; color: var(--text-secondary); min-width: 60px; text-align: right; font-family: var(--font-heading);">0 / 0</span>
             </div>
 
             <!-- Select verse warning if activeVerse is null -->
@@ -287,16 +286,17 @@
                 </div>
 
                 <!-- Main Display Box -->
-                <div class="glass-panel display-board" style="position: relative;">
+                <div class="glass-panel display-board">
                     <div class="practice-ref-label" id="practice-board-ref"></div>
                     <div class="display-text" id="practice-board-text">
                         <!-- Dynamic text content based on active mode -->
                     </div>
-                    <!-- In-card navigation arrows -->
+                    <!-- In-card navigation arrows and index -->
                     <div id="practice-nav-controls" class="card-nav-controls">
                         <button class="card-nav-btn" id="practice-prev-btn" title="Previous Verse">
                             <i data-lucide="arrow-left"></i>
                         </button>
+                        <span id="practice-index-indicator" style="font-size: 13px; font-weight: 600; color: var(--text-muted); font-family: var(--font-heading);">0 / 0</span>
                         <button class="card-nav-btn" id="practice-next-btn" title="Next Verse">
                             <i data-lucide="arrow-right"></i>
                         </button>
@@ -643,6 +643,6 @@
     </script>
     
     <!-- Application Logic Script -->
-    <script src="app.js?v=9"></script>
+    <script src="app.js?v=10"></script>
 </body>
 </html>
