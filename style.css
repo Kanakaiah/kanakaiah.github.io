@@ -2152,6 +2152,7 @@ body.immersed-active #app-container {
 
 body.immersed-active #immersed-back-btn {
     display: flex !important;
+    color: #e5e5e5 !important;
 }
 
 /* Safari Reader Style for Immersed Mode */
@@ -2160,6 +2161,9 @@ body.immersed-active {
 }
 [data-theme="parchment"] body.immersed-active {
     background: #fdfdfc !important; /* Pure white/cream */
+}
+[data-theme="parchment"] body.immersed-active #immersed-back-btn {
+    color: #2c2417 !important;
 }
 
 #screen-practice.immersed .display-board {
