@@ -2238,3 +2238,9 @@ body.immersed-active {
 .bottom-nav.nav-hidden {
     transform: translateX(-50%) translateY(150px) !important;
 }
+
+/* Bionic Reading: bold fixation points */
+b.bionic-fix {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}

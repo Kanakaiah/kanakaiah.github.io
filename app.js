@@ -151,7 +151,8 @@ const state = {
     settings: {
         ttsEnabled: false,
         notificationsEnabled: false,
-        recallMasking: false
+        recallMasking: false,
+        bionicReading: false
     },
     // Navigation / UI temporary states
     currentScreen: "dashboard",
@@ -1492,11 +1493,25 @@ function selectPracticeMode(modeId) {
     }
 }
 
+// Helper: apply bionic reading fixation points to a plain text string
+function applyBionicReading(text) {
+    return text.replace(/(\b[\w']+\b)/g, (word) => {
+        const boldLen = Math.ceil(word.length / 2);
+        return `<b class="bionic-fix">${word.slice(0, boldLen)}</b>${word.slice(boldLen)}`;
+    });
+}
+
 // 1. READ MODE
 function renderReadMode(verse) {
     const boardText = document.getElementById("practice-board-text");
     
     let formattedText = escapeHtml(verse.text);
+    
+    // Apply bionic reading fixation points if enabled
+    if (state.settings.bionicReading) {
+        formattedText = applyBionicReading(formattedText);
+    }
+    
     // Wrap sentences/phrases in spans to allow block display in immersed mode
     const maskClass = state.settings.recallMasking ? " masked-sentence" : "";
     formattedText = formattedText.replace(/([.?!;:,]["']?)(\s+)/g, `$1</span><span class='sentence-wrap${maskClass}'>$2`);
@@ -2030,12 +2045,14 @@ function loadSettingsInputs() {
     document.getElementById("settings-tts-enabled").checked = state.settings.ttsEnabled;
     document.getElementById("settings-notifications-enabled").checked = state.settings.notificationsEnabled;
     document.getElementById("settings-recall-masking").checked = state.settings.recallMasking || false;
+    document.getElementById("settings-bionic-reading").checked = state.settings.bionicReading || false;
 }
 
 function saveSettingsInputs() {
     state.settings.ttsEnabled = document.getElementById("settings-tts-enabled").checked;
     state.settings.notificationsEnabled = document.getElementById("settings-notifications-enabled").checked;
     state.settings.recallMasking = document.getElementById("settings-recall-masking").checked;
+    state.settings.bionicReading = document.getElementById("settings-bionic-reading").checked;
     saveToLocalStorage();
     
     // Instantly apply visual setting changes if in practice view
@@ -2097,7 +2114,7 @@ function resetDatabase() {
             state.lastActiveDate = null;
             state.theme = 'nebula';
             state.hasSeeded100 = false;
-            state.settings = { ttsEnabled: false, notificationsEnabled: false, recallMasking: false };
+            state.settings = { ttsEnabled: false, notificationsEnabled: false, recallMasking: false, bionicReading: false };
             
             saveToLocalStorage();
             applyTheme('nebula');
@@ -2228,6 +2245,7 @@ function setupEventListeners() {
     document.getElementById("settings-tts-enabled").onchange = saveSettingsInputs;
     document.getElementById("settings-notifications-enabled").onchange = saveSettingsInputs;
     document.getElementById("settings-recall-masking").onchange = saveSettingsInputs;
+    document.getElementById("settings-bionic-reading").onchange = saveSettingsInputs;
 
     // Theme Picker Clicks
     document.querySelectorAll("[data-theme-id]").forEach(btn => {
