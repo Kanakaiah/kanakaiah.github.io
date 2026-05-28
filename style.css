@@ -605,13 +605,10 @@ textarea.text-input {
 }
 
 .verse-text-preview {
-    font-size: 13.5px;
+    font-size: 16px;
     color: var(--text-secondary);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.5;
+    line-height: 1.6;
+    margin-bottom: 12px;
 }
 
 .verse-card-footer {
