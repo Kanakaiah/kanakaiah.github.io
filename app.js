@@ -1348,16 +1348,7 @@ function setupPracticeWorkspace() {
         return;
     }
 
-    // Load active verse titles
-    document.getElementById("practice-ref-title").innerText = verse.ref;
-    const isDue = new Date(verse.sm2.nextDueDate) <= new Date();
-    let subtitleStatus = `Mastery ${Math.min(100, Math.round((verse.sm2.repetition / 6) * 100))}%`;
-    if (verse.sm2.repetition === 0) {
-        subtitleStatus = "New";
-    } else if (isDue) {
-        subtitleStatus = "Review Due";
-    }
-    document.getElementById("practice-status-subtitle").innerText = `${verse.translation || 'Custom'} translation • ${subtitleStatus}`;
+    // Load active verse titles (Removed as per design update)
 
     // Update index indicator (e.g. 10 / 103)
     const currentIndex = state.verses.findIndex(v => v.id === state.activeVerseId);

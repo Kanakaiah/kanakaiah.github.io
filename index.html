@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="icon.png">
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=14">
+    <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
     <!-- Toast Notification Container -->
@@ -232,14 +232,10 @@
             <button class="back-btn" id="immersed-back-btn" title="Exit Immersed Mode" style="display: none; position: absolute; top: 16px; left: 16px; z-index: 9999; background: transparent; border: none; width: 40px; height: 40px; justify-content: center; align-items: center; box-shadow: none; padding: 0; color: var(--text-primary);">
                 <i data-lucide="arrow-left"></i>
             </button>
-            <div class="practice-header">
+            <div class="practice-header" style="margin-bottom: 8px;">
                 <button class="back-btn" id="practice-back-btn" title="Back to Dashboard">
                     <i data-lucide="chevron-left"></i>
                 </button>
-                <div class="practice-title-container">
-                    <h2 id="practice-ref-title">Choose a Verse</h2>
-                    <p id="practice-status-subtitle">Select or add a verse to start memorizing</p>
-                </div>
             </div>
 
             <!-- Select verse warning if activeVerse is null -->
@@ -643,6 +639,6 @@
     </script>
     
     <!-- Application Logic Script -->
-    <script src="app.js?v=14"></script>
+    <script src="app.js?v=15"></script>
 </body>
 </html>
