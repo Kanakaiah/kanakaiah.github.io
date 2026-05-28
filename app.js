@@ -2349,12 +2349,6 @@ function setupEventListeners() {
                     return;
                 }
             }
-
-            // Middle area click: toggle immersed mode UI if active
-            // Only toggle if we clicked somewhere inside the text area or background
-            if (state.activeMode === "immersed" && !isInteractive) {
-                document.getElementById("screen-practice").classList.toggle("immersed");
-            }
         });
     }
 
