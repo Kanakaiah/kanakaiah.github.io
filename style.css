@@ -2244,3 +2244,38 @@ b.bionic-fix {
     font-weight: 800;
     letter-spacing: -0.01em;
 }
+
+/* In-card verse navigation arrows */
+.card-nav-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4px 0;
+    margin-top: 8px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.card-nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.card-nav-btn:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+}
+
+.card-nav-btn i {
+    width: 16px;
+    height: 16px;
+}

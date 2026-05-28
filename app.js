@@ -1446,7 +1446,7 @@ function selectPracticeMode(modeId) {
     // Standard show/hide options in footer
     document.getElementById("practice-default-footer").style.display = "flex";
     document.getElementById("practice-eval-footer").style.display = "none";
-    document.getElementById("practice-show-hint-btn").style.display = "flex";
+
 
     const verse = state.verses.find(v => v.id === state.activeVerseId);
     if (!verse) return;
@@ -1477,7 +1477,7 @@ function selectPracticeMode(modeId) {
             break;
         case "typing":
             document.getElementById("practice-typing-controls").style.display = "flex";
-            document.getElementById("practice-show-hint-btn").style.display = "none";
+
             renderTypingMode(verse);
             break;
         case "speech":
