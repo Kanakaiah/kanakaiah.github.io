@@ -2045,8 +2045,8 @@ input:checked + .slider-toggle:before {
 }
 
 /* --- IMMERSED READ MODE --- */
-#screen-practice.immersed .practice-title-container,
-#screen-practice.immersed #practice-modes-container,
+#screen-practice.immersed .practice-header,
+#screen-practice.immersed .modes-scroll,
 #screen-practice.immersed #practice-default-footer,
 #screen-practice.immersed #practice-read-controls {
     display: none !important;
