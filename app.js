@@ -2494,8 +2494,15 @@ function setupEventListeners() {
 }
 
 // Helper to escape HTML tags in strings
+// Decode any pre-existing HTML entities (e.g. &quot; from API responses) before re-escaping
+function decodeHtml(str) {
+    const el = document.createElement('textarea');
+    el.innerHTML = str;
+    return el.value;
+}
+
 function escapeHtml(str) {
-    return str
+    return decodeHtml(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
