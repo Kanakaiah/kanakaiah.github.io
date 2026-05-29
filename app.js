@@ -2500,9 +2500,7 @@ function escapeHtml(str) {
     return decodeHtml(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/>/g, "&gt;");
 }
 
 // --- SCROLL TO HIDE MENU ---
