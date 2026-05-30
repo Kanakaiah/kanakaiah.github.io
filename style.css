@@ -346,6 +346,11 @@ h1, h2, h3, h4, h5, h6 {
     transform: scale(1);
 }
 
+.nav-item:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
 .nav-item.active svg {
     stroke: var(--accent);
     transform: translateY(-3px) scale(1.1);
@@ -427,6 +432,11 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     color: var(--text-primary);
+}
+
+.btn:active {
+    transform: scale(0.96) !important;
+    box-shadow: none !important;
 }
 
 .btn-secondary:hover {
@@ -707,18 +717,29 @@ textarea.text-input {
 
 .empty-state {
     text-align: center;
-    padding: 40px 20px;
+    padding: 60px 32px;
+    margin: 20px 0;
     color: var(--text-secondary);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
+    background: var(--glass-bg);
+    border: 1px dashed var(--glass-border);
+    border-radius: var(--border-radius-md);
+}
+
+.empty-state p {
+    font-size: calc(16px * var(--font-scale));
+    line-height: 1.5;
 }
 
 .empty-state svg {
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
     color: var(--text-muted);
+    opacity: 0.5;
+    margin-bottom: 8px;
 }
 
 /* --- ADD VERSE SCREEN SPECIFICS --- */
@@ -1088,13 +1109,31 @@ textarea.text-input {
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius-md);
     padding: 16px;
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-size: calc(16px * var(--font-scale));
     outline: none;
     resize: none;
     line-height: 1.6;
     transition: var(--transition);
+}
+
+.text-input,
+.select-input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--glass-border);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: calc(16px * var(--font-scale));
+    transition: var(--transition);
+}
+
+.text-input:focus,
+.select-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .typing-input:focus {
