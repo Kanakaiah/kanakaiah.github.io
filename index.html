@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="icon.png">
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
     <!-- Toast Notification Container -->
@@ -385,6 +385,35 @@
             </div>
         </section>
 
+        <!-- --- STUDY GUIDES SCREEN --- -->
+        <section id="screen-guides" class="screen">
+            <!-- List View -->
+            <div id="guides-list-view">
+                <div class="screen-header">
+                    <h1 class="screen-title">Study Guides</h1>
+                </div>
+                <div id="guides-list-container">
+                    <!-- Dynamic guide cards rendered here -->
+                </div>
+            </div>
+            <!-- Detail View -->
+            <div id="guides-detail-view" class="guide-detail-container">
+                <div class="guide-detail-header">
+                    <button class="guide-detail-back" id="guide-detail-back-btn" title="Back to Guides">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
+                    <div class="guide-detail-title-group">
+                        <div class="guide-detail-title" id="guide-detail-title"></div>
+                        <div class="guide-detail-subtitle" id="guide-detail-subtitle"></div>
+                    </div>
+                    <div class="guide-detail-icon" id="guide-detail-icon"></div>
+                </div>
+                <div id="guide-detail-content">
+                    <!-- Dynamic guide detail rendered here -->
+                </div>
+            </div>
+        </section>
+
         <!-- --- SETTINGS SCREEN --- -->
         <section id="screen-settings" class="screen">
             <div class="screen-header">
@@ -523,6 +552,10 @@
                 <i data-lucide="book-open"></i>
                 Practice
             </button>
+            <button class="nav-item" data-screen-link="guides">
+                <i data-lucide="graduation-cap"></i>
+                Guides
+            </button>
             <button class="nav-item" data-screen-link="settings">
                 <i data-lucide="settings"></i>
                 Settings
@@ -638,7 +671,10 @@
       }
     </script>
     
+    <!-- Study Guides Data -->
+    <script src="guides_data.js?v=1"></script>
+    
     <!-- Application Logic Script -->
-    <script src="app.js?v=17"></script>
+    <script src="app.js?v=18"></script>
 </body>
 </html>

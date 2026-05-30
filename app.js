@@ -686,6 +686,8 @@ function navigateTo(screenId) {
         checkSeederBanner();
     } else if (screenId === "practice") {
         setupPracticeWorkspace();
+    } else if (screenId === "guides") {
+        renderGuidesScreen();
     } else if (screenId === "settings") {
         loadSettingsInputs();
     }
@@ -2124,6 +2126,263 @@ function resetDatabase() {
 }
 
 // --- EVENT ROUTERS & LISTENERS ---
+// --- STUDY GUIDES RENDERING ---
+let currentGuideId = null;
+
+function renderGuidesScreen() {
+    const container = document.getElementById('guides-list-container');
+    const listView = document.getElementById('guides-list-view');
+    const detailView = document.getElementById('guides-detail-view');
+    if (!container || !listView || !detailView) return;
+
+    // Show list, hide detail
+    listView.style.display = 'block';
+    detailView.classList.remove('active');
+    currentGuideId = null;
+
+    // Check if data exists
+    if (typeof NT_STUDY_GUIDES === 'undefined' || !NT_STUDY_GUIDES.length) {
+        container.innerHTML = '<div class="empty-state"><i data-lucide="book-open"></i><p>Study guides data not found.</p></div>';
+        lucide.createIcons();
+        return;
+    }
+
+    // Group guides by category
+    const categories = {};
+    NT_STUDY_GUIDES.forEach(guide => {
+        const cat = guide.category || 'Other';
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push(guide);
+    });
+
+    let html = '';
+    for (const [category, guides] of Object.entries(categories)) {
+        html += `<div class="guides-category-label">${escapeHtml(category)}</div>`;
+        html += '<div class="guides-list">';
+        guides.forEach(guide => {
+            const tierBadge = guide.tier ? `<span class="guide-tier-badge tier-${guide.tier}">Tier ${guide.tier}</span>` : '';
+            html += `
+                <div class="glass-panel guide-card" data-guide-id="${guide.id}">
+                    <div class="guide-card-icon">${guide.icon}</div>
+                    <div class="guide-card-info">
+                        <div class="guide-card-title">${escapeHtml(guide.title)}</div>
+                        <div class="guide-card-subtitle">${escapeHtml(guide.subtitle)}</div>
+                    </div>
+                    ${tierBadge}
+                    <div class="guide-card-arrow"><i data-lucide="chevron-right"></i></div>
+                </div>
+            `;
+        });
+        html += '</div>';
+    }
+
+    container.innerHTML = html;
+    lucide.createIcons();
+
+    // Bind click events
+    container.querySelectorAll('[data-guide-id]').forEach(card => {
+        card.onclick = () => {
+            const guideId = card.getAttribute('data-guide-id');
+            renderGuideDetail(guideId);
+        };
+    });
+}
+
+function renderGuideDetail(guideId) {
+    const guide = NT_STUDY_GUIDES.find(g => g.id === guideId);
+    if (!guide) return;
+
+    currentGuideId = guideId;
+
+    const listView = document.getElementById('guides-list-view');
+    const detailView = document.getElementById('guides-detail-view');
+    const contentEl = document.getElementById('guide-detail-content');
+
+    // Update header
+    document.getElementById('guide-detail-title').innerText = guide.title;
+    document.getElementById('guide-detail-subtitle').innerText = guide.subtitle;
+    document.getElementById('guide-detail-icon').innerText = guide.icon;
+
+    // Build content based on guide type
+    let html = '';
+
+    if (guide.type === 'reference') {
+        html = renderReferenceGuide(guide);
+    } else if (guide.type === 'book-guide') {
+        html = renderBookGuide(guide);
+    }
+
+    contentEl.innerHTML = html;
+
+    // Switch views
+    listView.style.display = 'none';
+    detailView.classList.add('active');
+
+    window.scrollTo(0, 0);
+    lucide.createIcons();
+}
+
+function renderReferenceGuide(guide) {
+    let html = '';
+    if (!guide.sections) return html;
+
+    guide.sections.forEach(section => {
+        html += '<div class="guide-section">';
+        if (section.heading) {
+            html += `<div class="guide-section-heading">${escapeHtml(section.heading)}</div>`;
+        }
+        if (section.description) {
+            html += `<div class="guide-section-desc">${escapeHtml(section.description)}</div>`;
+        }
+
+        // Table
+        if (section.table) {
+            html += renderGuideTable(section.table);
+        }
+
+        // Evangelist-style entries
+        if (section.entries) {
+            section.entries.forEach(entry => {
+                html += `
+                    <div class="evangelist-entry">
+                        <div class="evangelist-entry-header">
+                            <span class="evangelist-rank">${entry.rank}</span>
+                            <span class="evangelist-person">${escapeHtml(entry.person)}</span>
+                            <span class="evangelist-ref">${escapeHtml(entry.reference)}</span>
+                        </div>
+                        <div class="evangelist-quote">${escapeHtml(entry.quote)}</div>
+                        <div class="evangelist-note">${escapeHtml(entry.note)}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // Note
+        if (section.note) {
+            html += `<div class="guide-section-note">${escapeHtml(section.note)}</div>`;
+        }
+
+        // Key verse inline
+        if (section.keyVerse) {
+            html += `<div class="guide-key-verse-inline"><strong>${escapeHtml(section.keyVerse.ref)}</strong> — ${escapeHtml(section.keyVerse.text)}</div>`;
+        }
+
+        html += '</div>';
+    });
+
+    return html;
+}
+
+function renderBookGuide(guide) {
+    let html = '';
+
+    // Structure overview
+    html += '<div class="guide-section">';
+    html += '<div class="guide-section-heading">✦ Structure Overview</div>';
+
+    if (guide.structureFormula) {
+        html += `<div class="structure-formula">Pattern: ${escapeHtml(guide.structureFormula)}</div>`;
+    }
+
+    if (guide.blocks && guide.blocks.length) {
+        html += '<div class="structure-blocks">';
+        guide.blocks.forEach(block => {
+            html += `
+                <div class="structure-block">
+                    <span class="structure-block-chapters">Ch. ${escapeHtml(block.chapters)}</span>
+                    <span class="structure-block-label">${escapeHtml(block.label)}</span>
+                    <span class="structure-block-desc">${escapeHtml(block.description)}</span>
+                </div>
+            `;
+        });
+        html += '</div>';
+    }
+    html += '</div>';
+
+    // Chapter anchors table
+    if (guide.anchors && guide.anchors.length) {
+        html += '<div class="guide-section">';
+        html += '<div class="guide-section-heading">📌 One-Word Chapter Anchors</div>';
+        html += renderGuideTable({
+            headers: ['Ch', 'Word', 'Scene'],
+            rows: guide.anchors.map(a => [a.ch.toString(), a.word, a.scene]),
+            isAnchorTable: true
+        });
+        html += '</div>';
+    }
+
+    // Memory sentence
+    if (guide.memorySentence) {
+        html += `
+            <div class="guide-section">
+                <div class="guide-section-heading">🧠 Memory Sentence</div>
+                <div class="memory-sentence-card">
+                    <div class="memory-sentence-label">Read 3–4 times to lock the flow</div>
+                    <div class="memory-sentence-text">${highlightAnchorWords(escapeHtml(guide.memorySentence))}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Key verses
+    if (guide.keyVerses && guide.keyVerses.length) {
+        html += '<div class="guide-section">';
+        html += '<div class="guide-section-heading">📖 Key Verses</div>';
+        html += '<div class="key-verses-list">';
+        guide.keyVerses.forEach(kv => {
+            html += `
+                <div class="key-verse-card">
+                    <div class="key-verse-ref">${escapeHtml(kv.ref)}</div>
+                    <div>
+                        <div class="key-verse-text">${escapeHtml(kv.text || '')}</div>
+                        ${kv.theme ? `<div class="key-verse-theme">${escapeHtml(kv.theme)}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        html += '</div>';
+    }
+
+    return html;
+}
+
+function renderGuideTable(tableData) {
+    let html = '<div class="guide-table-wrapper"><table class="guide-table"><thead><tr>';
+    tableData.headers.forEach(h => {
+        html += `<th>${escapeHtml(h)}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+    tableData.rows.forEach(row => {
+        html += '<tr>';
+        row.forEach((cell, i) => {
+            let cls = '';
+            if (tableData.isAnchorTable) {
+                if (i === 0) cls = ' class="ch-num"';
+                if (i === 1) cls = ' class="anchor-word"';
+            }
+            html += `<td${cls}>${escapeHtml(cell)}</td>`;
+        });
+        html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+}
+
+function highlightAnchorWords(text) {
+    // Bold ALL-CAPS words in the memory sentence
+    return text.replace(/\b([A-Z]{2,}(?:'S)?)\b/g, '<strong style="color: var(--accent-light); font-style: normal;">$1</strong>');
+}
+
+function showGuidesList() {
+    const listView = document.getElementById('guides-list-view');
+    const detailView = document.getElementById('guides-detail-view');
+    if (listView) listView.style.display = 'block';
+    if (detailView) detailView.classList.remove('active');
+    currentGuideId = null;
+    window.scrollTo(0, 0);
+}
+
 function setupEventListeners() {
     // Immersed Mode Back Button
     const immersedBackBtn = document.getElementById("immersed-back-btn");
@@ -2152,6 +2411,12 @@ function setupEventListeners() {
     const addShortcut = document.getElementById("btn-add-shortcut");
     if (addShortcut) {
         addShortcut.onclick = () => navigateTo("add");
+    }
+
+    // Guide Detail Back Button
+    const guideBackBtn = document.getElementById("guide-detail-back-btn");
+    if (guideBackBtn) {
+        guideBackBtn.onclick = showGuidesList;
     }
 
     // Add Verse Tabs
