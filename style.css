@@ -219,7 +219,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* --- BASE LAYOUT --- */
 #app-container {
-    max-width: 600px;
+    max-width: 900px;
     margin: 0 auto;
     min-height: 100vh;
     position: relative;
@@ -275,7 +275,7 @@ h1, h2, h3, h4, h5, h6 {
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 48px);
-    max-width: 420px;
+    max-width: 520px;
     height: 72px;
     background: rgba(20, 20, 28, 0.65);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -2738,4 +2738,357 @@ b.bionic-fix {
 .guide-key-verse-inline strong {
     color: var(--accent-light);
     font-style: normal;
+}
+
+/* === RESPONSIVE BREAKPOINTS === */
+
+/* --- Phone Landscape --- */
+@media (max-width: 767px) and (orientation: landscape) {
+    #app-container {
+        padding-bottom: 80px;
+    }
+
+    .screen {
+        padding: 16px 24px;
+    }
+
+    .bottom-nav {
+        height: 56px;
+        bottom: 12px;
+        border-radius: 28px;
+    }
+
+    .nav-item {
+        font-size: 9px;
+        gap: 2px;
+    }
+
+    .nav-item svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .nav-item::before {
+        inset: 6px;
+    }
+
+    .nav-item.active svg {
+        transform: translateY(-1px) scale(1.05);
+    }
+
+    .screen-header {
+        margin-bottom: 16px;
+    }
+
+    .screen-title {
+        font-size: 24px;
+    }
+
+    .stats-grid {
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 12px 8px;
+    }
+
+    .stat-val {
+        font-size: 20px;
+    }
+
+    /* Verse cards more compact in landscape */
+    .verse-text-preview {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .guide-detail-header {
+        margin-bottom: 14px;
+    }
+}
+
+/* --- Tablet Portrait (iPad upright, 768px–1023px) --- */
+@media (min-width: 768px) and (orientation: portrait) {
+    #app-container {
+        max-width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .screen {
+        padding: 32px 40px;
+    }
+
+    .screen-title {
+        font-size: 34px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .stat-card {
+        padding: 24px 16px;
+    }
+
+    .stat-val {
+        font-size: 30px;
+    }
+
+    .stat-lbl {
+        font-size: 12px;
+    }
+
+    .topic-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .verse-text-preview {
+        font-size: 20px;
+    }
+
+    .glass-panel {
+        padding: 24px;
+    }
+
+    .bottom-nav {
+        max-width: 560px;
+        height: 76px;
+    }
+
+    .nav-item {
+        font-size: 11px;
+    }
+
+    .nav-item svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    /* Guides: two-column */
+    .guides-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .structure-blocks {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .key-verses-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .guide-detail-title {
+        font-size: 26px;
+    }
+
+    .guide-section-heading {
+        font-size: 18px;
+    }
+
+    .text-input,
+    .select-input {
+        font-size: 16px;
+        padding: 16px 18px;
+    }
+
+    .btn {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+
+    .tabs-header {
+        max-width: 420px;
+    }
+
+    .verse-list {
+        gap: 14px;
+    }
+}
+
+/* --- Tablet Landscape (iPad sideways, 1024px+) --- */
+@media (min-width: 768px) and (orientation: landscape) {
+    #app-container {
+        max-width: 1100px;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .screen {
+        padding: 28px 48px;
+    }
+
+    .screen-title {
+        font-size: 36px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .stat-card {
+        padding: 24px 16px;
+    }
+
+    .stat-val {
+        font-size: 32px;
+    }
+
+    .stat-lbl {
+        font-size: 12px;
+    }
+
+    .topic-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+    }
+
+    .verse-text-preview {
+        font-size: 20px;
+    }
+
+    .glass-panel {
+        padding: 24px;
+    }
+
+    /* Verse cards side-by-side in landscape */
+    .verse-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .bottom-nav {
+        max-width: 600px;
+        height: 72px;
+        bottom: 16px;
+    }
+
+    .nav-item {
+        font-size: 11px;
+    }
+
+    .nav-item svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    /* Guides: three-column in landscape */
+    .guides-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .structure-blocks {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .key-verses-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .guide-detail-title {
+        font-size: 28px;
+    }
+
+    .guide-section-heading {
+        font-size: 20px;
+    }
+
+    .guide-table td {
+        font-size: 18px;
+        padding: 12px 16px;
+    }
+
+    .guide-table th {
+        font-size: 13px;
+        padding: 12px 16px;
+    }
+
+    .text-input,
+    .select-input {
+        font-size: 16px;
+        padding: 16px 18px;
+    }
+
+    .btn {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+
+    .tabs-header {
+        max-width: 440px;
+    }
+
+    /* Search results two-column */
+    .search-results {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
+/* --- Large Desktop (1200px+) --- */
+@media (min-width: 1200px) {
+    #app-container {
+        max-width: 1200px;
+    }
+
+    .screen {
+        padding: 40px 60px;
+    }
+
+    .screen-title {
+        font-size: 40px;
+    }
+
+    .stat-val {
+        font-size: 36px;
+    }
+
+    .verse-text-preview {
+        font-size: 22px;
+    }
+
+    .bottom-nav {
+        max-width: 640px;
+        height: 80px;
+    }
+
+    .nav-item {
+        font-size: 12px;
+        gap: 5px;
+    }
+
+    .nav-item svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .guide-detail-title {
+        font-size: 32px;
+    }
+
+    .guides-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .structure-blocks {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
