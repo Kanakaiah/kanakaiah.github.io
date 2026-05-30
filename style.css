@@ -2655,7 +2655,7 @@ b.bionic-fix {
 .key-verse-ref {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 13px;
+    font-size: 18px;
     color: var(--accent-light);
     min-width: 80px;
     white-space: nowrap;
@@ -2668,7 +2668,7 @@ b.bionic-fix {
 }
 
 .key-verse-theme {
-    font-size: 11px;
+    font-size: 15px;
     color: var(--text-muted);
     margin-top: 3px;
 }
