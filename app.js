@@ -555,8 +555,10 @@ async function runDataMigrationAsync() {
 document.addEventListener("DOMContentLoaded", () => {
     loadFromLocalStorage();
     runDataMigrationAsync();
-    setupEventListeners();
+    // Apply loaded theme and font-scale immediately
     applyTheme(state.theme);
+    if (!state.settings.fontScale) state.settings.fontScale = 1;
+    document.documentElement.style.setProperty('--font-scale', state.settings.fontScale);
     initSpeechRecognition();
     navigateTo(state.currentScreen);
     updateStatsPills();
@@ -2047,6 +2049,9 @@ function loadSettingsInputs() {
     document.getElementById("settings-notifications-enabled").checked = state.settings.notificationsEnabled;
     document.getElementById("settings-recall-masking").checked = state.settings.recallMasking || false;
     document.getElementById("settings-bionic-reading").checked = state.settings.bionicReading || false;
+    document.getElementById("settings-font-size").value = state.settings.fontScale || "1";
+    
+    document.documentElement.style.setProperty('--font-scale', state.settings.fontScale || 1);
 }
 
 function saveSettingsInputs() {
@@ -2054,6 +2059,9 @@ function saveSettingsInputs() {
     state.settings.notificationsEnabled = document.getElementById("settings-notifications-enabled").checked;
     state.settings.recallMasking = document.getElementById("settings-recall-masking").checked;
     state.settings.bionicReading = document.getElementById("settings-bionic-reading").checked;
+    state.settings.fontScale = parseFloat(document.getElementById("settings-font-size").value) || 1;
+    
+    document.documentElement.style.setProperty('--font-scale', state.settings.fontScale);
     saveToLocalStorage();
     
     // Instantly apply visual setting changes if in practice view
@@ -2115,7 +2123,7 @@ function resetDatabase() {
             state.lastActiveDate = null;
             state.theme = 'nebula';
             state.hasSeeded100 = false;
-            state.settings = { ttsEnabled: false, notificationsEnabled: false, recallMasking: false, bionicReading: false };
+            state.settings = { ttsEnabled: false, notificationsEnabled: false, recallMasking: false, bionicReading: false, fontScale: 1 };
             
             saveToLocalStorage();
             applyTheme('nebula');
@@ -2510,6 +2518,7 @@ function setupEventListeners() {
     document.getElementById("settings-notifications-enabled").onchange = saveSettingsInputs;
     document.getElementById("settings-recall-masking").onchange = saveSettingsInputs;
     document.getElementById("settings-bionic-reading").onchange = saveSettingsInputs;
+    document.getElementById("settings-font-size").onchange = saveSettingsInputs;
 
     // Theme Picker Clicks
     document.querySelectorAll("[data-theme-id]").forEach(btn => {

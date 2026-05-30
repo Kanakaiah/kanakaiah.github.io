@@ -2,6 +2,7 @@
 
 /* --- DESIGN SYSTEM & THEMES --- */
 :root {
+    --font-scale: 1;
     /* Default: Nebula Purple Theme */
     --bg-primary: #0b0c14;
     --bg-secondary: #131524;
@@ -299,7 +300,7 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
     text-decoration: none;
     color: var(--text-secondary);
-    font-size: 10px;
+    font-size: calc(10px * var(--font-scale));
     font-weight: 600;
     letter-spacing: 0.02em;
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -362,7 +363,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .screen-title {
-    font-size: 28px;
+    font-size: calc(28px * var(--font-scale));
     font-weight: 800;
     background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
     -webkit-background-clip: text;
@@ -380,7 +381,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: var(--border-radius-lg);
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
 }
 
 .stats-pill.streak {
@@ -405,7 +406,7 @@ h1, h2, h3, h4, h5, h6 {
     border: none;
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     cursor: pointer;
     transition: var(--transition);
 }
@@ -456,7 +457,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .input-label {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -470,7 +471,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 14px 16px;
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     outline: none;
     transition: var(--transition);
 }
@@ -487,7 +488,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 14px 16px;
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     outline: none;
     cursor: pointer;
     transition: var(--transition);
@@ -527,14 +528,14 @@ textarea.text-input {
 
 .stat-val {
     font-family: var(--font-heading);
-    font-size: 24px;
+    font-size: calc(24px * var(--font-scale));
     font-weight: 800;
     color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .stat-lbl {
-    font-size: 11px;
+    font-size: calc(11px * var(--font-scale));
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -542,7 +543,7 @@ textarea.text-input {
 }
 
 .section-label {
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     font-weight: 700;
     color: var(--text-primary);
     margin: 20px 0 12px;
@@ -552,7 +553,7 @@ textarea.text-input {
 }
 
 .section-link {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--accent-light);
     text-decoration: none;
     font-weight: 600;
@@ -571,13 +572,13 @@ textarea.text-input {
 }
 
 .prompt-details h3 {
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     margin-bottom: 4px;
     font-weight: 700;
 }
 
 .prompt-details p {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--text-secondary);
 }
 
@@ -601,7 +602,7 @@ textarea.text-input {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     color: var(--text-secondary);
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
@@ -641,13 +642,13 @@ textarea.text-input {
 
 .verse-ref {
     font-weight: 700;
-    font-size: 15px;
+    font-size: calc(15px * var(--font-scale));
 }
 
 .verse-status-badge {
     padding: 4px 10px;
     border-radius: var(--border-radius-sm);
-    font-size: 10px;
+    font-size: calc(10px * var(--font-scale));
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -672,7 +673,7 @@ textarea.text-input {
 }
 
 .verse-text-preview {
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 12px;
@@ -682,7 +683,7 @@ textarea.text-input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
+    font-size: calc(11px * var(--font-scale));
     color: var(--text-muted);
     border-top: 1px solid rgba(255, 255, 255, 0.03);
     padding-top: 8px;
@@ -803,12 +804,12 @@ textarea.text-input {
 
 .topic-name {
     font-weight: 700;
-    font-size: 15px;
+    font-size: calc(15px * var(--font-scale));
     margin-bottom: 4px;
 }
 
 .topic-desc {
-    font-size: 11px;
+    font-size: calc(11px * var(--font-scale));
     color: var(--text-secondary);
 }
 
@@ -853,12 +854,12 @@ textarea.text-input {
 }
 
 .practice-title-container h2 {
-    font-size: 20px;
+    font-size: calc(20px * var(--font-scale));
     font-weight: 800;
 }
 
 .practice-title-container p {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     color: var(--text-secondary);
 }
 
@@ -900,7 +901,7 @@ textarea.text-input {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     font-weight: 600;
 }
 
@@ -910,7 +911,7 @@ textarea.text-input {
 }
 
 .mode-tab .mode-subtitle {
-    font-size: 10px;
+    font-size: calc(10px * var(--font-scale));
     color: inherit;
     opacity: 0.85;
     margin-top: 4px;
@@ -948,7 +949,7 @@ textarea.text-input {
 }
 
 .practice-ref-label {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -959,7 +960,7 @@ textarea.text-input {
 }
 
 .display-text {
-    font-size: 20px;
+    font-size: calc(20px * var(--font-scale));
     font-weight: 500;
     line-height: 1.6;
     letter-spacing: -0.01em;
@@ -1053,7 +1054,7 @@ textarea.text-input {
     border: 1px solid var(--glass-border);
     color: var(--text-primary);
     border-radius: var(--border-radius-sm);
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     font-weight: 500;
     cursor: pointer;
     user-select: none;
@@ -1089,7 +1090,7 @@ textarea.text-input {
     padding: 16px;
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     outline: none;
     resize: none;
     line-height: 1.6;
@@ -1107,7 +1108,7 @@ textarea.text-input {
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid var(--glass-border);
     min-height: 60px;
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     line-height: 1.6;
     text-align: left;
 }
@@ -1145,7 +1146,7 @@ textarea.text-input {
 }
 
 .speech-status {
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     color: var(--text-secondary);
     font-weight: 500;
 }
@@ -1210,7 +1211,7 @@ textarea.text-input {
 .speech-interim-text {
     width: 100%;
     text-align: center;
-    font-size: 15px;
+    font-size: calc(15px * var(--font-scale));
     font-style: italic;
     color: var(--accent-light);
     min-height: 24px;
@@ -1266,13 +1267,13 @@ textarea.text-input {
 }
 
 .eval-header h4 {
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--success);
     margin-bottom: 4px;
 }
 
 .eval-header p {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--text-secondary);
 }
 
@@ -1302,12 +1303,12 @@ textarea.text-input {
 }
 
 .eval-score {
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     font-weight: 700;
 }
 
 .eval-lbl {
-    font-size: 10px;
+    font-size: calc(10px * var(--font-scale));
     color: var(--text-secondary);
     text-transform: uppercase;
     font-weight: 600;
@@ -1345,7 +1346,7 @@ textarea.text-input {
 }
 
 .settings-group-title {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     font-weight: 700;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -1370,7 +1371,7 @@ textarea.text-input {
     border-radius: var(--border-radius-md);
     cursor: pointer;
     font-family: var(--font-body);
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     font-weight: 600;
     color: var(--text-primary);
     transition: var(--transition);
@@ -1416,12 +1417,12 @@ textarea.text-input {
 }
 
 .settings-label-title {
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     font-weight: 600;
 }
 
 .settings-label-desc {
-    font-size: 11px;
+    font-size: calc(11px * var(--font-scale));
     color: var(--text-secondary);
 }
 
@@ -1486,12 +1487,12 @@ input:checked + .slider-toggle:before {
 
 .danger-zone h3 {
     color: var(--danger);
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     margin-bottom: 6px;
 }
 
 .danger-zone p {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     color: var(--text-secondary);
     margin-bottom: 12px;
 }
@@ -1542,13 +1543,13 @@ input:checked + .slider-toggle:before {
 }
 
 .success-box h3 {
-    font-size: 24px;
+    font-size: calc(24px * var(--font-scale));
     font-weight: 800;
     color: var(--success);
 }
 
 .success-box p {
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     color: var(--text-secondary);
     margin-bottom: 8px;
 }
@@ -1566,7 +1567,7 @@ input:checked + .slider-toggle:before {
     border: none;
     border-radius: var(--border-radius-sm);
     color: var(--text-secondary);
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     font-weight: 500;
     cursor: pointer;
     text-align: left;
@@ -1609,7 +1610,7 @@ input:checked + .slider-toggle:before {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     font-weight: 500;
     color: var(--text-primary);
     animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -1728,14 +1729,14 @@ input:checked + .slider-toggle:before {
 }
 
 .onboarding-card h2 {
-    font-size: 24px;
+    font-size: calc(24px * var(--font-scale));
     font-weight: 800;
     margin-bottom: 12px;
     font-family: var(--font-heading);
 }
 
 .onboarding-card p {
-    font-size: 15px;
+    font-size: calc(15px * var(--font-scale));
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 32px;
@@ -1827,13 +1828,13 @@ input:checked + .slider-toggle:before {
 
 .bottom-sheet-ref {
     font-family: var(--font-heading);
-    font-size: 22px;
+    font-size: calc(22px * var(--font-scale));
     font-weight: 800;
     margin-bottom: 4px;
 }
 
 .bottom-sheet-translation {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1842,7 +1843,7 @@ input:checked + .slider-toggle:before {
 }
 
 .bottom-sheet-verse-text {
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     line-height: 1.8;
     color: var(--text-secondary);
     margin-bottom: 24px;
@@ -1869,14 +1870,14 @@ input:checked + .slider-toggle:before {
 
 .bottom-sheet-stat-val {
     font-family: var(--font-heading);
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     font-weight: 800;
     display: block;
     margin-bottom: 2px;
 }
 
 .bottom-sheet-stat-lbl {
-    font-size: 10px;
+    font-size: calc(10px * var(--font-scale));
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1937,12 +1938,12 @@ input:checked + .slider-toggle:before {
 }
 
 .confirm-box h3 {
-    font-size: 20px;
+    font-size: calc(20px * var(--font-scale));
     margin-bottom: 8px;
 }
 
 .confirm-box p {
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     color: var(--text-secondary);
     line-height: 1.5;
     margin-bottom: 24px;
@@ -1992,7 +1993,7 @@ input:checked + .slider-toggle:before {
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius-sm);
     padding: 12px 16px;
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--text-secondary);
     line-height: 1.4;
     white-space: nowrap;
@@ -2026,19 +2027,19 @@ input:checked + .slider-toggle:before {
 }
 
 .milestone-emoji {
-    font-size: 56px;
+    font-size: calc(56px * var(--font-scale));
     margin-bottom: 16px;
     animation: milestoneBounce 0.6s ease 0.3s;
 }
 
 .milestone-card h3 {
-    font-size: 22px;
+    font-size: calc(22px * var(--font-scale));
     font-weight: 800;
     margin-bottom: 8px;
 }
 
 .milestone-card p {
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     color: var(--text-secondary);
     line-height: 1.5;
     margin-bottom: 24px;
@@ -2062,7 +2063,7 @@ input:checked + .slider-toggle:before {
 
 /* --- MASTERY LABELS --- */
 .mastery-label {
-    font-size: 10px;
+    font-size: calc(10px * var(--font-scale));
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -2097,7 +2098,7 @@ input:checked + .slider-toggle:before {
 
 /* Updated evaluation panel for 3 buttons */
 .eval-btn .eval-preview {
-    font-size: 11px;
+    font-size: calc(11px * var(--font-scale));
     color: var(--text-muted);
     margin-top: 2px;
     font-weight: 400;
@@ -2107,7 +2108,7 @@ input:checked + .slider-toggle:before {
     margin-top: 8px;
     width: 100%;
     padding: 10px;
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
 }
 
 /* --- IMMERSED READ MODE --- */
@@ -2264,7 +2265,7 @@ b.bionic-fix {
     border-radius: 8px;
     display: flex;
     align-items: center;
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     font-weight: 600;
     transition: color 0.2s, background 0.2s;
 }
@@ -2283,7 +2284,7 @@ b.bionic-fix {
 
 /* Guides Category Label */
 .guides-category-label {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
@@ -2333,7 +2334,7 @@ b.bionic-fix {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: calc(22px * var(--font-scale));
 }
 
 .guide-card-info {
@@ -2344,13 +2345,13 @@ b.bionic-fix {
 .guide-card-title {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 15px;
+    font-size: calc(15px * var(--font-scale));
     color: var(--text-primary);
     margin-bottom: 2px;
 }
 
 .guide-card-subtitle {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     color: var(--text-secondary);
 }
 
@@ -2366,7 +2367,7 @@ b.bionic-fix {
 
 /* Tier Badges */
 .guide-tier-badge {
-    font-size: 9px;
+    font-size: calc(9px * var(--font-scale));
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -2440,7 +2441,7 @@ b.bionic-fix {
 
 .guide-detail-title {
     font-family: var(--font-heading);
-    font-size: 22px;
+    font-size: calc(22px * var(--font-scale));
     font-weight: 800;
     background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
     -webkit-background-clip: text;
@@ -2448,13 +2449,13 @@ b.bionic-fix {
 }
 
 .guide-detail-subtitle {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--text-secondary);
     margin-top: 2px;
 }
 
 .guide-detail-icon {
-    font-size: 32px;
+    font-size: calc(32px * var(--font-scale));
 }
 
 /* Guide Sections */
@@ -2464,7 +2465,7 @@ b.bionic-fix {
 
 .guide-section-heading {
     font-family: var(--font-heading);
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     font-weight: 700;
     color: var(--accent-light);
     margin-bottom: 8px;
@@ -2474,14 +2475,14 @@ b.bionic-fix {
 }
 
 .guide-section-desc {
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 12px;
 }
 
 .guide-section-note {
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--text-muted);
     font-style: italic;
     margin-top: 8px;
@@ -2502,14 +2503,14 @@ b.bionic-fix {
 .guide-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
 }
 
 .guide-table th {
     background: var(--accent-glow);
     color: var(--accent-light);
     font-weight: 700;
-    font-size: 11px;
+    font-size: calc(11px * var(--font-scale));
     text-transform: uppercase;
     letter-spacing: 0.05em;
     padding: 10px 12px;
@@ -2524,7 +2525,7 @@ b.bionic-fix {
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     vertical-align: top;
     line-height: 1.6;
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
 }
 
 .guide-table tr:last-child td {
@@ -2576,7 +2577,7 @@ b.bionic-fix {
 .structure-block-chapters {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--accent-light);
     min-width: 60px;
     white-space: nowrap;
@@ -2585,13 +2586,13 @@ b.bionic-fix {
 .structure-block-label {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 13px;
+    font-size: calc(13px * var(--font-scale));
     color: var(--text-primary);
     min-width: 100px;
 }
 
 .structure-block-desc {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     color: var(--text-muted);
     flex: 1;
 }
@@ -2599,7 +2600,7 @@ b.bionic-fix {
 .structure-formula {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 14px;
+    font-size: calc(14px * var(--font-scale));
     color: var(--accent);
     text-align: center;
     padding: 8px 14px;
@@ -2620,7 +2621,7 @@ b.bionic-fix {
 }
 
 .memory-sentence-label {
-    font-size: 11px;
+    font-size: calc(11px * var(--font-scale));
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -2629,7 +2630,7 @@ b.bionic-fix {
 }
 
 .memory-sentence-text {
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--text-primary);
     line-height: 1.8;
     font-style: italic;
@@ -2655,20 +2656,20 @@ b.bionic-fix {
 .key-verse-ref {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--accent-light);
     min-width: 80px;
     white-space: nowrap;
 }
 
 .key-verse-text {
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--text-secondary);
     line-height: 1.6;
 }
 
 .key-verse-theme {
-    font-size: 15px;
+    font-size: calc(15px * var(--font-scale));
     color: var(--text-muted);
     margin-top: 3px;
 }
@@ -2690,24 +2691,24 @@ b.bionic-fix {
 }
 
 .evangelist-rank {
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
 }
 
 .evangelist-person {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 15px;
+    font-size: calc(15px * var(--font-scale));
     color: var(--text-primary);
 }
 
 .evangelist-ref {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     color: var(--accent-light);
     margin-left: auto;
 }
 
 .evangelist-quote {
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--text-secondary);
     font-style: italic;
     line-height: 1.6;
@@ -2717,7 +2718,7 @@ b.bionic-fix {
 }
 
 .evangelist-note {
-    font-size: 12px;
+    font-size: calc(12px * var(--font-scale));
     color: var(--text-muted);
     line-height: 1.5;
 }
@@ -2729,7 +2730,7 @@ b.bionic-fix {
     border-left: 3px solid var(--accent);
     border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
     margin-top: 10px;
-    font-size: 18px;
+    font-size: calc(18px * var(--font-scale));
     color: var(--text-secondary);
     font-style: italic;
     line-height: 1.6;
@@ -2759,7 +2760,7 @@ b.bionic-fix {
     }
 
     .nav-item {
-        font-size: 9px;
+        font-size: calc(9px * var(--font-scale));
         gap: 2px;
     }
 
@@ -2781,7 +2782,7 @@ b.bionic-fix {
     }
 
     .screen-title {
-        font-size: 24px;
+        font-size: calc(24px * var(--font-scale));
     }
 
     .stats-grid {
@@ -2793,12 +2794,12 @@ b.bionic-fix {
     }
 
     .stat-val {
-        font-size: 20px;
+        font-size: calc(20px * var(--font-scale));
     }
 
     /* Verse cards more compact in landscape */
     .verse-text-preview {
-        font-size: 16px;
+        font-size: calc(16px * var(--font-scale));
         margin-bottom: 8px;
     }
 
@@ -2820,7 +2821,7 @@ b.bionic-fix {
     }
 
     .screen-title {
-        font-size: 34px;
+        font-size: calc(34px * var(--font-scale));
     }
 
     .stats-grid {
@@ -2833,11 +2834,11 @@ b.bionic-fix {
     }
 
     .stat-val {
-        font-size: 30px;
+        font-size: calc(30px * var(--font-scale));
     }
 
     .stat-lbl {
-        font-size: 12px;
+        font-size: calc(12px * var(--font-scale));
     }
 
     .topic-grid {
@@ -2846,7 +2847,7 @@ b.bionic-fix {
     }
 
     .verse-text-preview {
-        font-size: 20px;
+        font-size: calc(20px * var(--font-scale));
     }
 
     .glass-panel {
@@ -2859,7 +2860,7 @@ b.bionic-fix {
     }
 
     .nav-item {
-        font-size: 11px;
+        font-size: calc(11px * var(--font-scale));
     }
 
     .nav-item svg {
@@ -2887,22 +2888,22 @@ b.bionic-fix {
     }
 
     .guide-detail-title {
-        font-size: 26px;
+        font-size: calc(26px * var(--font-scale));
     }
 
     .guide-section-heading {
-        font-size: 18px;
+        font-size: calc(18px * var(--font-scale));
     }
 
     .text-input,
     .select-input {
-        font-size: 16px;
+        font-size: calc(16px * var(--font-scale));
         padding: 16px 18px;
     }
 
     .btn {
         padding: 14px 24px;
-        font-size: 15px;
+        font-size: calc(15px * var(--font-scale));
     }
 
     .tabs-header {
@@ -2927,7 +2928,7 @@ b.bionic-fix {
     }
 
     .screen-title {
-        font-size: 36px;
+        font-size: calc(36px * var(--font-scale));
     }
 
     .stats-grid {
@@ -2940,11 +2941,11 @@ b.bionic-fix {
     }
 
     .stat-val {
-        font-size: 32px;
+        font-size: calc(32px * var(--font-scale));
     }
 
     .stat-lbl {
-        font-size: 12px;
+        font-size: calc(12px * var(--font-scale));
     }
 
     .topic-grid {
@@ -2953,7 +2954,7 @@ b.bionic-fix {
     }
 
     .verse-text-preview {
-        font-size: 20px;
+        font-size: calc(20px * var(--font-scale));
     }
 
     .glass-panel {
@@ -2974,7 +2975,7 @@ b.bionic-fix {
     }
 
     .nav-item {
-        font-size: 11px;
+        font-size: calc(11px * var(--font-scale));
     }
 
     .nav-item svg {
@@ -3002,32 +3003,32 @@ b.bionic-fix {
     }
 
     .guide-detail-title {
-        font-size: 28px;
+        font-size: calc(28px * var(--font-scale));
     }
 
     .guide-section-heading {
-        font-size: 20px;
+        font-size: calc(20px * var(--font-scale));
     }
 
     .guide-table td {
-        font-size: 18px;
+        font-size: calc(18px * var(--font-scale));
         padding: 12px 16px;
     }
 
     .guide-table th {
-        font-size: 13px;
+        font-size: calc(13px * var(--font-scale));
         padding: 12px 16px;
     }
 
     .text-input,
     .select-input {
-        font-size: 16px;
+        font-size: calc(16px * var(--font-scale));
         padding: 16px 18px;
     }
 
     .btn {
         padding: 14px 24px;
-        font-size: 15px;
+        font-size: calc(15px * var(--font-scale));
     }
 
     .tabs-header {
@@ -3053,15 +3054,15 @@ b.bionic-fix {
     }
 
     .screen-title {
-        font-size: 40px;
+        font-size: calc(40px * var(--font-scale));
     }
 
     .stat-val {
-        font-size: 36px;
+        font-size: calc(36px * var(--font-scale));
     }
 
     .verse-text-preview {
-        font-size: 22px;
+        font-size: calc(22px * var(--font-scale));
     }
 
     .bottom-nav {
@@ -3070,7 +3071,7 @@ b.bionic-fix {
     }
 
     .nav-item {
-        font-size: 12px;
+        font-size: calc(12px * var(--font-scale));
         gap: 5px;
     }
 
@@ -3080,7 +3081,7 @@ b.bionic-fix {
     }
 
     .guide-detail-title {
-        font-size: 32px;
+        font-size: calc(32px * var(--font-scale));
     }
 
     .guides-list {
