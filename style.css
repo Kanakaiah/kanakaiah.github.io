@@ -188,6 +188,7 @@
 
 body {
     font-family: var(--font-body);
+    font-size: calc(16px * var(--font-scale));
     background-color: var(--bg-primary);
     background-image: var(--bg-radial);
     color: var(--text-primary);

@@ -1243,7 +1243,7 @@ async function handleSearch() {
                     <span class="verse-ref" style="color: var(--accent-light);">${data.reference}</span>
                     <span class="verse-status-badge" style="background: var(--accent-glow); color: var(--accent-light);">${data.translation_name}</span>
                 </div>
-                <p style="font-size: 14px; line-height: 1.6;">${escapeHtml(data.text.trim())}</p>
+                <p style="font-size: calc(14px * var(--font-scale)); line-height: 1.6;">${escapeHtml(data.text.trim())}</p>
                 <button class="btn btn-primary btn-sm" id="btn-add-search-result" style="align-self: flex-end; padding: 8px 16px;">
                     Add to Library
                 </button>
@@ -1262,8 +1262,8 @@ async function handleSearch() {
             <div class="glass-panel" style="border-color: var(--danger-glow); text-align: center; color: var(--text-secondary); padding: 20px;">
                 <i data-lucide="alert-circle" style="color: var(--danger); width: 32px; height: 32px; margin-bottom: 8px;"></i>
                 <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 4px;">Search Failed</p>
-                <p style="font-size: 13px; margin-bottom: 12px;">${err.message}</p>
-                <p style="font-size: 12px; opacity: 0.85; line-height: 1.4; color: var(--text-muted);">
+                <p style="font-size: calc(13px * var(--font-scale)); margin-bottom: 12px;">${err.message}</p>
+                <p style="font-size: calc(12px * var(--font-scale)); opacity: 0.85; line-height: 1.4; color: var(--text-muted);">
                     💡 <strong>Tip:</strong> Modern copyrighted translations (like <strong>LSB</strong> or <strong>NASB 1998</strong>) are not available on free public APIs. Please use the <strong>Manual Entry</strong> tab above to add them!
                 </p>
             </div>
@@ -1519,7 +1519,7 @@ function renderReadMode(verse) {
     const maskClass = state.settings.recallMasking ? " masked-sentence" : "";
     formattedText = formattedText.replace(/([.?!;:,]["']?)(\s+)/g, `$1</span><span class='sentence-wrap${maskClass}'>$2`);
     
-    boardText.innerHTML = `<div style="font-size: 22px; line-height: 1.7; font-weight: 500;"><span class='sentence-wrap${maskClass}'>${formattedText}</span></div>`;
+    boardText.innerHTML = `<div style="font-size: calc(22px * var(--font-scale)); line-height: 1.7; font-weight: 500;"><span class='sentence-wrap${maskClass}'>${formattedText}</span></div>`;
 
     // Clear any existing active timer to prevent overlaps
     if (state.autoPlayTimer) {
@@ -1639,7 +1639,7 @@ function renderFirstLettersMode(verse) {
         }).join("");
     }).join("");
 
-    boardText.innerHTML = `<span style="font-size: 22px; line-height: 1.7; font-weight: 600; letter-spacing: 0.1em;">${escapeHtml(converted)}</span>`;
+    boardText.innerHTML = `<span style="font-size: calc(22px * var(--font-scale)); line-height: 1.7; font-weight: 600; letter-spacing: 0.1em;">${escapeHtml(converted)}</span>`;
 }
 
 // 4. SCRAMBLE MODE (with chunking for long verses)
@@ -1665,12 +1665,12 @@ function renderScrambleMode(verse) {
             state.scrambleChunks.push(cleanWordList.slice(i, i + CHUNK_SIZE));
         }
         state.scrambleCurrentChunk = 0;
-        boardText.innerHTML = `<span style="color: var(--text-muted); font-size: 15px; font-style: italic;">Part ${state.scrambleCurrentChunk + 1} of ${state.scrambleChunks.length} — Tap words in the correct order.</span>`;
+        boardText.innerHTML = `<span style="color: var(--text-muted); font-size: calc(15px * var(--font-scale)); font-style: italic;">Part ${state.scrambleCurrentChunk + 1} of ${state.scrambleChunks.length} — Tap words in the correct order.</span>`;
         renderScrambleChunk(state.scrambleChunks[0]);
     } else {
         state.scrambleChunks = null;
         state.scrambleCurrentChunk = 0;
-        boardText.innerHTML = `<span style="color: var(--text-muted); font-size: 15px; font-style: italic;">Reconstruct the verse by tapping the words in the correct order.</span>`;
+        boardText.innerHTML = `<span style="color: var(--text-muted); font-size: calc(15px * var(--font-scale)); font-style: italic;">Reconstruct the verse by tapping the words in the correct order.</span>`;
         state.scrambleTargetWords = [...cleanWordList];
         renderScrambleChunk(cleanWordList);
     }
@@ -1696,7 +1696,7 @@ function renderScrambleChunk(wordList) {
     
     wordList.forEach(() => {
         const slot = document.createElement("div");
-        slot.style.cssText = "min-width: 50px; height: 35px; border-bottom: 2px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: var(--accent-light); padding: 0 4px;";
+        slot.style.cssText = "min-width: 50px; height: 35px; border-bottom: 2px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: calc(14px * var(--font-scale)); font-weight: 500; color: var(--accent-light); padding: 0 4px;";
         slotsContainer.appendChild(slot);
     });
     
@@ -1724,11 +1724,11 @@ function renderScrambleChunk(wordList) {
                     if (state.scrambleChunks && state.scrambleCurrentChunk < state.scrambleChunks.length - 1) {
                         state.scrambleCurrentChunk++;
                         setTimeout(() => {
-                            boardText.innerHTML = `<span style="color: var(--success); font-size: 15px;">✓ Part ${state.scrambleCurrentChunk} done! </span><span style="color: var(--text-muted); font-size: 15px; font-style: italic;">Part ${state.scrambleCurrentChunk + 1} of ${state.scrambleChunks.length}</span>`;
+                            boardText.innerHTML = `<span style="color: var(--success); font-size: calc(15px * var(--font-scale));">✓ Part ${state.scrambleCurrentChunk} done! </span><span style="color: var(--text-muted); font-size: calc(15px * var(--font-scale)); font-style: italic;">Part ${state.scrambleCurrentChunk + 1} of ${state.scrambleChunks.length}</span>`;
                             renderScrambleChunk(state.scrambleChunks[state.scrambleCurrentChunk]);
                         }, 600);
                     } else {
-                        boardText.innerHTML = `<span style="color: var(--success); font-weight: 600; font-size: 16px;">Success! You completed the scrambled sequence.</span>`;
+                        boardText.innerHTML = `<span style="color: var(--success); font-weight: 600; font-size: calc(16px * var(--font-scale));">Success! You completed the scrambled sequence.</span>`;
                     }
                 }
             } else {
@@ -1759,7 +1759,7 @@ function renderTypingMode(verse) {
     const textInput = document.getElementById("typing-textarea");
     const feedbackBox = document.getElementById("typing-live-feedback");
 
-    boardText.innerHTML = `<span style="color: var(--text-muted); font-size: 15px; font-style: italic;">Type the verse below. The app will validate accuracy character by character.</span>`;
+    boardText.innerHTML = `<span style="color: var(--text-muted); font-size: calc(15px * var(--font-scale)); font-style: italic;">Type the verse below. The app will validate accuracy character by character.</span>`;
     
     textInput.value = "";
     feedbackBox.innerHTML = `<span class="typing-char pending">${escapeHtml(verse.text)}</span>`;
@@ -1798,7 +1798,7 @@ function renderTypingMode(verse) {
 
         // Auto trigger complete when typing is correct
         if (isDone && typed.length === target.length) {
-            boardText.innerHTML = `<span style="color: var(--success); font-weight: 600; font-size: 16px;">Perfect match! Press Done to log your recall score.</span>`;
+            boardText.innerHTML = `<span style="color: var(--success); font-weight: 600; font-size: calc(16px * var(--font-scale));">Perfect match! Press Done to log your recall score.</span>`;
         }
     };
 }
