@@ -130,7 +130,7 @@ export const Dashboard: React.FC = () => {
       )}
 
       {/* Seeder Banner for Empty Library */}
-      {state.verses.length === 0 && (
+      {state.verses.length <= 2 && !state.hasSeeded100 && (
         <div className="bg-gradient-to-br from-purple-500/15 to-purple-500/5 border border-purple-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-bold font-heading text-primary">Get Started Quickly!</h3>
@@ -158,6 +158,7 @@ export const Dashboard: React.FC = () => {
                   attempts: 0
                 }));
                 dispatch({ type: 'HYDRATE_VERSES', payload: newVerses });
+                dispatch({ type: 'UPDATE_SETTINGS', payload: {} }); // Just to trigger a save, though HYDRATE_VERSES does it
                 showToast('100 verses loaded successfully!', 'success');
               } catch (err) {
                 showToast('Failed to load verses.', 'error');
