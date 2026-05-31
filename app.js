@@ -681,6 +681,16 @@ function navigateTo(screenId) {
         }
     });
 
+    // Toggle app header for practice screen
+    const appHeader = document.getElementById("app-header");
+    if (appHeader) {
+        if (screenId === "practice") {
+            appHeader.style.display = "none";
+        } else {
+            appHeader.style.display = "flex";
+        }
+    }
+
     // Special cleanups or refreshes per screen
     if (screenId === "dashboard") {
         renderLibrary();
