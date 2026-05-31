@@ -84,11 +84,11 @@ export const Guides: React.FC = () => {
                 ))}
               </div>
 
-              {activeGuide.keyThemes && (
+              {(activeGuide as any).keyThemes && (
                 <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-3">
                   <h3 className="font-bold text-accent-light text-sm uppercase tracking-wider">Key Themes</h3>
                   <div className="flex flex-wrap gap-2">
-                    {activeGuide.keyThemes.map((theme: string, i: number) => (
+                    {(activeGuide as any).keyThemes.map((theme: string, i: number) => (
                       <span key={i} className="px-3 py-1.5 rounded-lg bg-glass-bg border border-glass-border text-sm font-medium text-secondary">
                         {theme}
                       </span>

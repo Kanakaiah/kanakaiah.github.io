@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Download, Upload, Trash2, Palette, Type, Bell, Brain, EyeOff, Volume2 } from 'lucide-react';
+import { Download, Upload, Trash2, Palette, Type, Brain, EyeOff, Volume2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { Card } from '../components/ui/Card';

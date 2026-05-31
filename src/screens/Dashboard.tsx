@@ -6,7 +6,7 @@ import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { parseReference } from '../utils/bible';
-import { Verse } from '../types/models';
+// No Verse import needed if unused
 
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
 

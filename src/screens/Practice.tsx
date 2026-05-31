@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronLeft, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
-import { Verse } from '../types/models';
+import type { Verse } from '../types/models';
 
 // Subcomponents
 import { ReadMode } from '../components/practice/ReadMode';
@@ -202,5 +202,3 @@ export const Practice: React.FC = () => {
   );
 };
 
-// Also needed: BookOpen icon import at the top
-import { BookOpen } from 'lucide-react';
