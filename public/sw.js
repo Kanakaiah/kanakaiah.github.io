@@ -1,9 +1,9 @@
-const CACHE_NAME = 'bible-mem-cache-v1';
+const CACHE_NAME = 'bible-mem-cache-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './style.css',
-  './app.js',
+  
+  
   './verses_100.json',
   './icon.png',
   './manifest.json',
