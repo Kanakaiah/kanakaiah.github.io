@@ -681,10 +681,10 @@ function navigateTo(screenId) {
         }
     });
 
-    // Toggle app header for practice screen
+    // Toggle app header (only show on dashboard)
     const appHeader = document.getElementById("app-header");
     if (appHeader) {
-        if (screenId === "practice") {
+        if (screenId !== "dashboard") {
             appHeader.style.display = "none";
         } else {
             appHeader.style.display = "flex";
