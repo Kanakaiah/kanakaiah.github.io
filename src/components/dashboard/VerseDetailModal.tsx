@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { X, Pencil, Trash2, Check, BookOpen } from 'lucide-react';
 import type { Verse } from '../../types/models';
 import { Card } from '../ui/Card';
-import { Input } from '../components/ui/Input';
-import { Button } from '../components/ui/Button';
+import { Input } from '../ui/Input';
+import { Button } from '../ui/Button';
 
 interface VerseDetailModalProps {
   verse: Verse;
@@ -96,20 +96,20 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
             <Input 
               label="Reference"
               value={editRef}
-              onChange={e => setEditRef(e.target.value)}
+              onChange={(e: any) => setEditRef(e.target.value)}
             />
             <div className="flex flex-col gap-1.5 w-full">
               <label className="text-sm font-medium text-secondary ml-1">Verse Text</label>
               <textarea 
                 className="w-full min-h-[120px] p-4 rounded-xl bg-background border border-glass-border focus:outline-none focus:ring-2 focus:ring-accent transition-all text-primary placeholder:text-muted resize-none"
                 value={editText}
-                onChange={(e) => setEditText(e.target.value)}
+                onChange={(e: any) => setEditText(e.target.value)}
               />
             </div>
             <Input 
               label="Translation"
               value={editTranslation}
-              onChange={e => setEditTranslation(e.target.value)}
+              onChange={(e: any) => setEditTranslation(e.target.value)}
             />
             <div className="flex gap-3 pt-2">
               <Button variant="secondary" onClick={() => setIsEditing(false)} className="flex-1">

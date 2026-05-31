@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BookOpen, ChevronLeft, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check, Play, Square, HelpCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
