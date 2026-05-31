@@ -555,6 +555,7 @@ async function runDataMigrationAsync() {
 document.addEventListener("DOMContentLoaded", () => {
     loadFromLocalStorage();
     runDataMigrationAsync();
+    setupEventListeners();
     // Apply loaded theme and font-scale immediately
     applyTheme(state.theme);
     if (!state.settings.fontScale) state.settings.fontScale = 1;
