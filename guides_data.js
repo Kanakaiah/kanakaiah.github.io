@@ -46,7 +46,7 @@ const NT_STUDY_GUIDES = [
             person: "The Samaritan Woman",
             reference: "John 4:28–30, 39",
             quote: "So the woman left her water jar and went away into town and said to the people, 'Come, see a man who told me all that I ever did. Can this be the Christ?' Many Samaritans from that town believed in him because of the woman's testimony.",
-            note: "She is often called the first cross-cultural evangelist — proclaiming Christ to an entire town."
+            note: "She is often called the first cross-cultural evangelist — proclaiming Christ to an entire town. Note the irony: a Samaritan woman becomes a herald before most of the twelve disciples do."
           }
         ]
       },
@@ -120,7 +120,7 @@ const NT_STUDY_GUIDES = [
             ["I AM — to the woman at the well", "John 4:26"]
           ]
         },
-        note: "These are among the strongest divine identity claims in the NT."
+        note: "These are among the strongest divine identity claims in the NT. The crowd's reaction in John 8:59 (taking up stones) and the soldiers falling in 18:6 confirm the audience understood exactly what was being claimed."
       },
       {
         heading: "Summary: Signs ↔ I AMs",
@@ -226,7 +226,7 @@ const NT_STUDY_GUIDES = [
     ],
     memorySentence: "God's WRATH falls on the self-righteous JUDGE because ALL fall short — even ABRAHAM was saved like ADAM was lost, by one act. So be DEAD to sin, end the inner WAR, walk in the SPIRIT, rest in the POTTER'S hand, open your MOUTH, don't cut the OLIVE branch, offer your BODY, respect the SWORD, eat at the TABLE in peace, tear down the WALL, and go GREET your brothers.",
     keyVerses: [
-      { ref: "Romans 1:16-17", theme: "'I am not ashamed of the gospel' (The thesis)" },
+      { ref: "Romans 1:16-17", theme: "'I am not ashamed of the gospel — the righteous shall live by faith' (The thesis)" },
       { ref: "Romans 8:1", theme: "'There is therefore now no condemnation' (The climax of doctrine)" },
       { ref: "Romans 12:1", theme: "'Present your bodies as a living sacrifice' (The turn to life)" }
     ]
