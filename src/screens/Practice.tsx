@@ -23,7 +23,6 @@ export const Practice: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [activeVerseIndex, setActiveVerseIndex] = useState(0);
   const [activeMode, setActiveMode] = useState<PracticeMode>('read');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   
@@ -46,9 +45,27 @@ export const Practice: React.FC = () => {
 
   // Filter for allDue if query param is present
   const isAllDue = searchParams.get('mode') === 'alldue';
-  const verses = isAllDue 
-    ? state.verses.filter(v => v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date())
-    : state.verses;
+  const targetId = searchParams.get('id');
+
+  const verses = React.useMemo(() => {
+    return isAllDue 
+      ? state.verses.filter(v => v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date())
+      : state.verses;
+  }, [state.verses, isAllDue]);
+
+  const initialIndex = React.useMemo(() => {
+    if (targetId) {
+      const idx = verses.findIndex(v => v.id === targetId);
+      return idx >= 0 ? idx : 0;
+    }
+    return 0;
+  }, [verses, targetId]);
+
+  const [activeVerseIndex, setActiveVerseIndex] = useState(initialIndex);
+
+  React.useEffect(() => {
+    setActiveVerseIndex(initialIndex);
+  }, [initialIndex]);
 
   const currentVerse = verses[activeVerseIndex];
 

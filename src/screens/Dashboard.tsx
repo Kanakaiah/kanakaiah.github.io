@@ -25,19 +25,19 @@ export const Dashboard: React.FC = () => {
   const stats = useMemo(() => {
     let memorized = 0;
     let learning = 0;
-    let totalAttempts = 0;
-    let totalMastery = 0;
+    let highScores = 0;
 
     state.verses.forEach(v => {
       const masteryPct = Math.min(100, Math.round((v.sm2.repetition / 6) * 100));
       if (masteryPct >= 100) memorized++;
       else learning++;
       
-      totalAttempts += (v.attempts || 0);
-      totalMastery += masteryPct;
+      if (v.sm2 && v.sm2.repetition > 1) {
+        highScores++;
+      }
     });
 
-    const accuracy = state.verses.length > 0 ? Math.round(totalMastery / state.verses.length) : 0;
+    const accuracy = state.verses.length > 0 ? Math.round((highScores / state.verses.length) * 100) : 0;
     const dueForReview = state.verses.filter(v => v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date());
 
     return { memorized, learning, accuracy, dueForReview };
@@ -119,7 +119,7 @@ export const Dashboard: React.FC = () => {
             <p className="text-sm text-secondary">Due for review now</p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
-            <Button onClick={() => navigate('/practice')} className="flex-1 sm:flex-none">
+            <Button onClick={() => navigate('/practice?id=' + stats.dueForReview[0].id)} className="flex-1 sm:flex-none">
               Practice <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             <Button variant="secondary" onClick={() => navigate('/practice?mode=alldue')} className="flex-1 sm:flex-none">
@@ -232,7 +232,7 @@ export const Dashboard: React.FC = () => {
               <VerseCard 
                 key={verse.id} 
                 verse={verse} 
-                onPractice={() => navigate('/practice')} 
+                onPractice={() => navigate('/practice?id=' + verse.id)} 
                 onClick={() => setSelectedVerse(verse)} 
               />
             ))
@@ -256,7 +256,7 @@ export const Dashboard: React.FC = () => {
           onClose={() => setSelectedVerse(null)}
           onPractice={() => {
             setSelectedVerse(null);
-            navigate('/practice');
+            navigate('/practice?id=' + selectedVerse.id);
           }}
           onSave={(updatedVerse) => {
             dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
