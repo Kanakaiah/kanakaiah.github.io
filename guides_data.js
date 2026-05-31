@@ -848,5 +848,239 @@ const NT_STUDY_GUIDES = [
       { ref: "2 Timothy 3:16-17", theme: "'All Scripture is breathed out by God and profitable'" },
       { ref: "2 Timothy 4:7", theme: "'I have fought the good fight, I have finished the race'" }
     ]
+  },
+  {
+    id: "1-john",
+    title: "1 John",
+    subtitle: "5 Chapters",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 5,
+    structureFormula: "2 → 1 → 1 → 1",
+    blocks: [
+      { chapters: "1-2", label: "LIGHT", description: "God is light — walk in the light, not darkness" },
+      { chapters: "3", label: "LOVE", description: "Love one another — we are children of God" },
+      { chapters: "4", label: "SPIRIT", description: "Test the spirits — God is love" },
+      { chapters: "5", label: "FAITH", description: "Victory that overcomes the world — assurance" }
+    ],
+    anchors: [
+      { ch: 1, word: "DARKNESS", scene: "'If we say we have fellowship with Him but walk in darkness we lie'" },
+      { ch: 2, word: "WORLD", scene: "'Do not love the world — the world is passing away'" },
+      { ch: 3, word: "MURDER", scene: "'Whoever hates his brother is a murderer' — Cain as warning" },
+      { ch: 4, word: "FIRST", scene: "'We love because He first loved us'" },
+      { ch: 5, word: "WATER", scene: "'This is He who came by water and blood — Jesus Christ'" }
+    ],
+    memorySentence: "Walk out of DARKNESS, stop loving the WORLD, don't be like Cain the MURDERER, love because He loved FIRST, and trust the testimony of the WATER and the blood.",
+    keyVerses: [
+      { ref: "1 John 1:9", theme: "'If we confess our sins He is faithful and just to forgive' (Assurance of confession)" },
+      { ref: "1 John 4:8", theme: "'Anyone who does not love does not know God — for God is love' (The heart of the letter)" },
+      { ref: "1 John 5:13", theme: "'I write so that you may know that you have eternal life' (The purpose statement)" }
+    ]
+  },
+  {
+    id: "titus",
+    title: "Titus",
+    subtitle: "3 Chapters",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 3,
+    structureFormula: "1 → 1 → 1",
+    blocks: [
+      { chapters: "1", label: "LEADERS", description: "Appoint elders — rebuke false teachers in Crete" },
+      { chapters: "2", label: "HOUSEHOLDS", description: "Teach sound doctrine to every age and role" },
+      { chapters: "3", label: "SOCIETY", description: "Submit to rulers — saved by grace not works" }
+    ],
+    anchors: [
+      { ch: 1, word: "CRETE", scene: "'Cretans are always liars, evil beasts, lazy gluttons' — appoint elders anyway" },
+      { ch: 2, word: "ADORNING", scene: "'Adorn the doctrine of God our Savior in everything'" },
+      { ch: 3, word: "BATH", scene: "'He saved us through the washing of regeneration and renewing of the Holy Spirit'" }
+    ],
+    memorySentence: "Plant leaders in CRETE, live in a way that is ADORNING to the gospel, for you were saved through the BATH of regeneration — not your own works.",
+    keyVerses: [
+      { ref: "Titus 1:5", theme: "'Put what remains in order and appoint elders in every town'" },
+      { ref: "Titus 2:11-12", theme: "'The grace of God has appeared — training us to renounce ungodliness'" },
+      { ref: "Titus 3:5", theme: "'He saved us — not because of works but according to His own mercy'" }
+    ]
+  },
+  {
+    id: "philemon",
+    title: "Philemon",
+    subtitle: "1 Chapter",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 1,
+    structureFormula: "7 → 9 → 9",
+    blocks: [
+      { chapters: "1-7", label: "THANKSGIVING", description: "Paul praises Philemon's love and faith" },
+      { chapters: "8-16", label: "THE REQUEST", description: "Paul appeals for Onesimus — now a brother" },
+      { chapters: "17-25", label: "THE CHARGE", description: "Charge it to my account — receive him as me" }
+    ],
+    anchors: [
+      { ch: 1, word: "CHARGE", scene: "'If he has wronged you or owes you anything — charge that to my account' (v.18)" }
+    ],
+    memorySentence: "The Gospel Hidden in Philemon is a parable of substitutionary atonement.",
+    keyVerses: [
+      { ref: "Philemon 1:10, 16", theme: "'I appeal to you for my child Onesimus… no longer as a slave but better than a slave — as a dear brother.'" }
+    ]
+  },
+  {
+    id: "2-peter",
+    title: "2 Peter",
+    subtitle: "3 Chapters",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 3,
+    structureFormula: "1 → 1 → 1",
+    blocks: [
+      { chapters: "1", label: "GROW", description: "Add to your faith — make your calling sure" },
+      { chapters: "2", label: "BEWARE", description: "False teachers — judgment is certain" },
+      { chapters: "3", label: "WAIT", description: "The Day of the Lord — patient endurance" }
+    ],
+    anchors: [
+      { ch: 1, word: "LADDER", scene: "Add to faith: virtue → knowledge → self-control → steadfastness → godliness → love" },
+      { ch: 2, word: "DOG", scene: "'The dog returns to its vomit — the sow to the mud' — false teachers" },
+      { ch: 3, word: "THIEF", scene: "'The Day of the Lord will come like a thief — the heavens will pass away with a roar'" }
+    ],
+    memorySentence: "Climb the LADDER of faith, beware the false teacher who returns like a DOG to vomit, and stay ready — the Lord comes like a THIEF in the night.",
+    keyVerses: [
+      { ref: "2 Peter 1:3", theme: "'His divine power has granted us everything pertaining to life and godliness'" },
+      { ref: "2 Peter 1:21", theme: "'Men spoke from God as they were carried along by the Holy Spirit' (Inspiration of Scripture)" },
+      { ref: "2 Peter 3:9", theme: "'Not wishing that any should perish but that all should reach repentance'" }
+    ]
+  },
+  {
+    id: "jude",
+    title: "Jude",
+    subtitle: "1 Chapter",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 1,
+    structureFormula: "4 → 12 → 7 → 2",
+    blocks: [
+      { chapters: "1-4", label: "THE ALARM", description: "Contend for the faith — certain men have crept in" },
+      { chapters: "5-16", label: "THE EVIDENCE", description: "Three OT examples of judgment — Enoch prophesied it" },
+      { chapters: "17-23", label: "THE RESPONSE", description: "Build up, pray, keep, have mercy" },
+      { chapters: "24-25", label: "THE DOXOLOGY", description: "To Him who is able to keep you from stumbling" }
+    ],
+    anchors: [
+      { ch: 1, word: "CREPT", scene: "'Certain people have crept in unnoticed — who long ago were designated for condemnation' (v.4)" }
+    ],
+    memorySentence: "Jude is an alarm bell rung in the night to contend for the faith.",
+    keyVerses: [
+      { ref: "Jude 1:24-25", theme: "'Now to Him who is able to keep you from stumbling...'" }
+    ]
+  },
+  {
+    id: "2-john",
+    title: "2 John",
+    subtitle: "1 Chapter",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 1,
+    structureFormula: "3 → 3 → 5 → 2",
+    blocks: [
+      { chapters: "1-3", label: "GREETING", description: "To the elect lady — truth and love" },
+      { chapters: "4-6", label: "WALK IN LOVE", description: "Love one another — this is the command" },
+      { chapters: "7-11", label: "BEWARE", description: "Many deceivers have gone out — do not receive them" },
+      { chapters: "12-13", label: "CLOSING", description: "Hope to come face to face — paper and ink fall short" }
+    ],
+    anchors: [
+      { ch: 1, word: "DOOR", scene: "'Do not receive him into your house or give him any greeting' (v.10) — the false teacher at the door" }
+    ],
+    memorySentence: "Walk in love toward the brethren, but do not open the door to false teachers.",
+    keyVerses: [
+      { ref: "2 John 1:8", theme: "'Watch yourselves so that you may not lose what we have worked for but may win a full reward.'" }
+    ]
+  },
+  {
+    id: "3-john",
+    title: "3 John",
+    subtitle: "1 Chapter",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 1,
+    structureFormula: "8 → 3 → 1 → 3",
+    blocks: [
+      { chapters: "1-8", label: "GAIUS PRAISED", description: "Walking in truth — showing hospitality to missionaries" },
+      { chapters: "9-11", label: "DIOTREPHES WARNED", description: "Loves to be first — refuses the apostles" },
+      { chapters: "12", label: "DEMETRIUS COMMENDED", description: "Well spoken of by everyone and by the truth" },
+      { chapters: "13-15", label: "CLOSING", description: "Pen and ink — peace to you — greet the friends" }
+    ],
+    anchors: [
+      { ch: 1, word: "FIRST", scene: "'Diotrephes who likes to put himself first does not acknowledge our authority' (v.9)" }
+    ],
+    memorySentence: "Be faithful like Gaius, avoid the pride of Diotrephes, and keep a good reputation like Demetrius.",
+    keyVerses: [
+      { ref: "3 John 1:4", theme: "'I have no greater joy than to hear that my children are walking in the truth.'" }
+    ]
+  },
+  {
+    id: "1-thessalonians",
+    title: "1 Thessalonians",
+    subtitle: "5 Chapters",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 5,
+    structureFormula: "3 → 2",
+    blocks: [
+      { chapters: "1-3", label: "PERSONAL", description: "Paul's relationship with the Thessalonians" },
+      { chapters: "4-5", label: "PRACTICAL", description: "How to live while waiting for the Lord" }
+    ],
+    anchors: [
+      { ch: 1, word: "THUNDER", scene: "'Our gospel came to you not in word only but in power — you became an example to all Macedonia'" },
+      { ch: 2, word: "MOTHER", scene: "'We were gentle among you like a nursing mother caring for her children'" },
+      { ch: 3, word: "CROWN", scene: "'You are our glory and joy — our crown' — Timothy's good report" },
+      { ch: 4, word: "TRUMPET", scene: "'The Lord will descend with a trumpet call — the dead in Christ rise first'" },
+      { ch: 5, word: "THIEF", scene: "'The Day of the Lord comes like a thief in the night — but you are children of light'" }
+    ],
+    memorySentence: "The gospel came like THUNDER to Thessalonica, Paul loved them like a MOTHER, called them his CROWN, promised the dead will rise at the TRUMPET, and warned the Day comes like a THIEF — but children of light are never in the dark.",
+    keyVerses: [
+      { ref: "1 Thessalonians 1:9-10", theme: "'You turned from idols to serve the living God and to wait for His Son from heaven' (The model conversion)" },
+      { ref: "1 Thessalonians 4:16-17", theme: "'The Lord himself will descend… the dead in Christ will rise first' (The great hope)" },
+      { ref: "1 Thessalonians 5:16-18", theme: "'Rejoice always, pray without ceasing, give thanks in all circumstances' (The three commands)" }
+    ]
+  },
+  {
+    id: "2-thessalonians",
+    title: "2 Thessalonians",
+    subtitle: "3 Chapters",
+    icon: "📖",
+    type: "book-guide",
+    tier: 3,
+    category: "Tier 3 — Additional",
+    chapters: 3,
+    structureFormula: "1 → 1 → 1",
+    blocks: [
+      { chapters: "1", label: "ENCOURAGEMENT", description: "Persevere — God will repay your persecutors" },
+      { chapters: "2", label: "CORRECTION", description: "The Day has NOT yet come — the man of lawlessness first" },
+      { chapters: "3", label: "INSTRUCTION", description: "Work while you wait — don't be idle" }
+    ],
+    anchors: [
+      { ch: 1, word: "FIRE", scene: "'The Lord Jesus revealed from heaven in flaming fire — taking vengeance on those who do not know God'" },
+      { ch: 2, word: "RESTRAINER", scene: "'The one who restrains will be taken out of the way — then the lawless one will be revealed'" },
+      { ch: 3, word: "BREAD", scene: "'If anyone is not willing to work let him not eat' — Paul worked for his own bread" }
+    ],
+    memorySentence: "Christ returns in FIRE to repay persecutors, the RESTRAINER still holds back the man of lawlessness, so pick up your tools and earn your BREAD while you wait.",
+    keyVerses: [
+      { ref: "2 Thessalonians 1:7", theme: "'Relief for you who are afflicted — when the Lord Jesus is revealed from heaven in flaming fire'" },
+      { ref: "2 Thessalonians 2:3", theme: "'That day will not come unless the rebellion comes first and the man of lawlessness is revealed'" },
+      { ref: "2 Thessalonians 3:10", theme: "'If anyone is not willing to work let him not eat'" }
+    ]
   }
 ];
