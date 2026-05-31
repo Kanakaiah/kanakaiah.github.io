@@ -6,8 +6,9 @@ import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { parseReference } from '../utils/bible';
-// No Verse import needed if unused
-
+import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
+import { useToast } from '../context/ToastContext';
+import type { Verse } from '../types/models';
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
 
 export const Dashboard: React.FC = () => {
@@ -17,6 +18,8 @@ export const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
+  const { showToast } = useToast();
 
   // Stats calculation
   const stats = useMemo(() => {
@@ -119,7 +122,35 @@ export const Dashboard: React.FC = () => {
             <Button onClick={() => navigate('/practice')} className="flex-1 sm:flex-none">
               Practice <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
+            <Button variant="secondary" onClick={() => navigate('/practice?mode=alldue')} className="flex-1 sm:flex-none">
+              Practice All Due ({stats.dueForReview.length})
+            </Button>
           </div>
+        </div>
+      )}
+
+      {/* Seeder Banner for Empty Library */}
+      {state.verses.length === 0 && (
+        <div className="bg-gradient-to-br from-purple-500/15 to-purple-500/5 border border-purple-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-bold font-heading text-primary">Get Started Quickly!</h3>
+            <p className="text-sm text-secondary">Load 100+ highly popular Bible verses into your library to start practicing immediately.</p>
+          </div>
+          <Button 
+            onClick={async () => {
+              try {
+                const res = await fetch('/verses_100.json');
+                const data = await res.json();
+                dispatch({ type: 'HYDRATE_VERSES', payload: data });
+                showToast('100 verses loaded successfully!', 'success');
+              } catch (err) {
+                showToast('Failed to load verses.', 'error');
+              }
+            }} 
+            className="whitespace-nowrap w-full sm:w-auto shadow-lg shadow-purple-500/20"
+          >
+            Load 100 Verses ✨
+          </Button>
         </div>
       )}
 
@@ -202,7 +233,7 @@ export const Dashboard: React.FC = () => {
                 key={verse.id} 
                 verse={verse} 
                 onPractice={() => navigate('/practice')} 
-                onClick={() => { /* Open Detail Modal */ }} 
+                onClick={() => setSelectedVerse(verse)} 
               />
             ))
           ) : (
@@ -216,6 +247,28 @@ export const Dashboard: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Verse Detail Modal */}
+      {selectedVerse && (
+        <VerseDetailModal
+          verse={selectedVerse}
+          isOpen={true}
+          onClose={() => setSelectedVerse(null)}
+          onPractice={() => {
+            setSelectedVerse(null);
+            navigate('/practice');
+          }}
+          onSave={(updatedVerse) => {
+            dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
+            showToast('Verse updated', 'success');
+          }}
+          onDelete={() => {
+            dispatch({ type: 'DELETE_VERSE', payload: selectedVerse.id });
+            setSelectedVerse(null);
+            showToast('Verse deleted', 'info');
+          }}
+        />
+      )}
     </div>
   );
 };

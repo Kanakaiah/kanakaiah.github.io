@@ -14,7 +14,8 @@ const initialState: AppState = {
     ttsEnabled: false,
     notificationsEnabled: false,
     recallMasking: false,
-    bionicReading: false
+    bionicReading: false,
+    fontSize: 1
   }
 };
 
@@ -24,6 +25,7 @@ export type AppAction =
   | { type: 'ADD_VERSE'; payload: Verse }
   | { type: 'UPDATE_VERSE'; payload: Verse }
   | { type: 'DELETE_VERSE'; payload: string }
+  | { type: 'HYDRATE_VERSES'; payload: Verse[] }
   | { type: 'SET_THEME'; payload: string }
   | { type: 'SET_SORT_ORDER'; payload: AppState['sortOrder'] }
   | { type: 'UPDATE_SETTINGS'; payload: Partial<UserSettings> }
@@ -45,6 +47,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         verses: state.verses.filter(v => v.id !== action.payload)
+      };
+    case 'HYDRATE_VERSES':
+      return {
+        ...state,
+        verses: [...state.verses, ...action.payload]
       };
     case 'SET_THEME':
       return { ...state, theme: action.payload };

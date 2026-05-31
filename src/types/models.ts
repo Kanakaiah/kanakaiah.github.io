@@ -22,6 +22,7 @@ export interface UserSettings {
   notificationsEnabled: boolean;
   recallMasking: boolean;
   bionicReading: boolean;
+  fontSize: number;
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';

@@ -159,6 +159,23 @@ export const Settings: React.FC = () => {
                 />
               </label>
 
+              <div className="p-4 flex items-center justify-between rounded-b-xl">
+                <div>
+                  <h3 className="font-bold text-primary">Global Text Size</h3>
+                  <p className="text-xs text-secondary">Scale the font size for the entire app</p>
+                </div>
+                <select
+                  value={state.settings.fontSize}
+                  onChange={(e) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(e.target.value) } })}
+                  className="bg-background border border-glass-border rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
+                >
+                  <option value={0.85}>Small</option>
+                  <option value={1}>Normal</option>
+                  <option value={1.15}>Large</option>
+                  <option value={1.3}>Extra Large</option>
+                </select>
+              </div>
+
             </div>
           </Card>
         </section>
@@ -199,6 +216,28 @@ export const Settings: React.FC = () => {
                     </Button>
                   </label>
                 </div>
+              </div>
+
+              <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-bold text-primary">Load 100 Popular Verses</h3>
+                  <p className="text-xs text-secondary">Seed your library with 100 well-known verses</p>
+                </div>
+                <Button 
+                  onClick={async () => {
+                    try {
+                      const res = await fetch('/verses_100.json');
+                      const data = await res.json();
+                      dispatch({ type: 'HYDRATE_VERSES', payload: data });
+                      showToast('100 verses loaded successfully!', 'success');
+                    } catch (err) {
+                      showToast('Failed to load verses.', 'error');
+                    }
+                  }} 
+                  className="whitespace-nowrap"
+                >
+                  Load 100 Verses
+                </Button>
               </div>
 
               <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

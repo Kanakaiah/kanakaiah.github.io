@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BookOpen, ChevronLeft, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check } from 'lucide-react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { BookOpen, ChevronLeft, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check, Play, Square, HelpCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
@@ -21,10 +21,14 @@ export const Practice: React.FC = () => {
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [activeVerseIndex, setActiveVerseIndex] = useState(0);
   const [activeMode, setActiveMode] = useState<PracticeMode>('read');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
+  
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   // If there are no verses, show empty state
   if (state.verses.length === 0) {
@@ -40,10 +44,43 @@ export const Practice: React.FC = () => {
     );
   }
 
-  // To simulate "activeVerse", for now we just practice the entire library or pass a specific verse ID via state/URL.
-  // We will just map over state.verses for this simple implementation.
-  const verses = state.verses;
+  // Filter for allDue if query param is present
+  const isAllDue = searchParams.get('mode') === 'alldue';
+  const verses = isAllDue 
+    ? state.verses.filter(v => v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date())
+    : state.verses;
+
   const currentVerse = verses[activeVerseIndex];
+
+  if (!currentVerse) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
+        <h2 className="text-xl font-bold text-primary mb-2">You're All Caught Up!</h2>
+        <p className="text-secondary mb-6">No verses are currently due for review.</p>
+        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+      </div>
+    );
+  }
+
+  const handleToggleTTS = () => {
+    if (isPlaying) {
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
+    } else {
+      const textToSpeak = `${currentVerse.ref}. ${currentVerse.text}`;
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.onend = () => setIsPlaying(false);
+      window.speechSynthesis.speak(utterance);
+      setIsPlaying(true);
+    }
+  };
+
+  // Stop TTS when leaving or changing verses
+  React.useEffect(() => {
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, [currentVerse.id]);
 
   const handleNext = () => {
     if (activeVerseIndex < verses.length - 1) setActiveVerseIndex(i => i + 1);
@@ -146,6 +183,23 @@ export const Practice: React.FC = () => {
           </div>
 
           <div className="flex-1">
+            {activeMode === 'read' && (
+              <div className="flex items-center justify-between bg-glass-bg p-3 rounded-xl border border-glass-border mb-4">
+                <Button variant="secondary" onClick={handleToggleTTS} className="text-sm">
+                  {isPlaying ? <Square className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                  {isPlaying ? 'Stop' : 'Auto Play'}
+                </Button>
+                <Button variant="secondary" onClick={() => setShowHint(!showHint)} className="text-sm">
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  {showHint ? 'Hide Hint' : 'Show Hint'}
+                </Button>
+              </div>
+            )}
+            {showHint && activeMode === 'read' && (
+              <div className="text-sm text-accent mb-4 p-3 bg-accent/10 rounded-lg">
+                Hint: Focus on the structure of the verse and try to visualize the context.
+              </div>
+            )}
             {renderWorkspace()}
           </div>
 

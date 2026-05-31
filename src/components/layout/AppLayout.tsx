@@ -19,7 +19,10 @@ export const AppLayout: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen w-full overflow-hidden bg-background">
+    <div 
+      className="flex flex-col lg:flex-row h-screen w-full overflow-hidden bg-background"
+      style={{ fontSize: `${state.settings.fontSize || 1}rem` }}
+    >
       
       {/* LEFT SIDEBAR (Desktop) / BOTTOM NAV (Mobile) */}
       <nav className="

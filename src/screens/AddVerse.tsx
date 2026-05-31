@@ -151,6 +151,31 @@ export const AddVerse: React.FC = () => {
               </Button>
             </div>
           )}
+
+          {/* Curated Collections */}
+          <div className="mt-4 flex flex-col gap-3">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted ml-2">Curated Collections</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                { topic: "Peace & Calming", desc: "Verses for anxiety & stress", q: "Philippians 4:6-7" },
+                { topic: "Faith & Trust", desc: "Strengthen your belief", q: "Proverbs 3:5-6" },
+                { topic: "Strength & Courage", desc: "Power to overcome obstacles", q: "Joshua 1:9" },
+                { topic: "Love & Grace", desc: "God's love and kindness", q: "Romans 8:38-39" }
+              ].map(collection => (
+                <button
+                  key={collection.topic}
+                  onClick={() => {
+                    setSearchQuery(collection.q);
+                    handleSearch();
+                  }}
+                  className="bg-glass-bg border border-glass-border rounded-xl p-4 text-left hover:bg-glass-bg-hover transition-colors flex flex-col gap-1"
+                >
+                  <span className="font-bold text-primary">{collection.topic}</span>
+                  <span className="text-xs text-secondary">{collection.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </Card>
       )}
 
