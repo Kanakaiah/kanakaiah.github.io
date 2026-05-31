@@ -228,7 +228,23 @@ export const Settings: React.FC = () => {
                     try {
                       const res = await fetch('/verses_100.json');
                       const data = await res.json();
-                      dispatch({ type: 'HYDRATE_VERSES', payload: data });
+                      const newVerses = data.map((v: any) => ({
+                        id: crypto.randomUUID(),
+                        ref: v.ref,
+                        text: v.text,
+                        translation: v.translation || 'LSB',
+                        addedDate: new Date().toISOString(),
+                        status: 'learning',
+                        sm2: {
+                          interval: 0,
+                          repetition: 0,
+                          efactor: 2.5,
+                          nextDueDate: new Date().toISOString()
+                        },
+                        streak: 0,
+                        attempts: 0
+                      }));
+                      dispatch({ type: 'HYDRATE_VERSES', payload: newVerses });
                       showToast('100 verses loaded successfully!', 'success');
                     } catch (err) {
                       showToast('Failed to load verses.', 'error');
