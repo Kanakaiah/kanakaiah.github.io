@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 export const ReadMode = ({ text }: { text: string }) => {
   return (
