@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ArrowUpDown, BookOpen, Sparkles, ArrowRight } from 'lucide-react';
+import { Search, ArrowUpDown, BookOpen, ArrowRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';

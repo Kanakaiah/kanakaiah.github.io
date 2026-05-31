@@ -6,7 +6,7 @@ import { useToast } from '../context/ToastContext';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { Verse } from '../types/models';
+import type { Verse } from '../types/models';
 
 export const AddVerse: React.FC = () => {
   const { state, dispatch } = useApp();

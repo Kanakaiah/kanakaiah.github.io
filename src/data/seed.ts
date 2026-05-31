@@ -1,4 +1,4 @@
-import { Verse } from '../types/models';
+import type { Verse } from '../types/models';
 
 export const SEED_VERSES: Verse[] = [
     {

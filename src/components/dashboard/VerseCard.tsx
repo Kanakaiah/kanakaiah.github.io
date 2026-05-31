@@ -1,7 +1,7 @@
 import React from 'react';
 import { Play } from 'lucide-react';
 import { Card } from '../ui/Card';
-import { Verse } from '../../types/models';
+import type { Verse } from '../../types/models';
 
 interface VerseCardProps {
   verse: Verse;

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { AppState, Verse, UserSettings } from '../types/models';
+import type { ReactNode } from 'react';
+import type { UserSettings, Verse, AppState } from '../types/models';
 import { SEED_VERSES } from '../data/seed';
 
 // --- INITIAL STATE ---
