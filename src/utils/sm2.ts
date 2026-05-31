@@ -1,4 +1,4 @@
-import { SM2Data } from '../types/models';
+import type { SM2Data } from '../types/models';
 
 export function evaluateSM2(sm2: SM2Data, score: number): { newSM2: SM2Data, newStatus: 'learning' | 'review' } {
   let { interval, repetition, efactor } = sm2;
