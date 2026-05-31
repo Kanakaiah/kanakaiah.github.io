@@ -1,0 +1,206 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BookOpen, ChevronLeft, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check } from 'lucide-react';
+import { useApp } from '../context/AppContext';
+import { useToast } from '../context/ToastContext';
+import { evaluateSM2 } from '../utils/sm2';
+import { Verse } from '../types/models';
+
+// Subcomponents
+import { ReadMode } from '../components/practice/ReadMode';
+import { EraserMode } from '../components/practice/EraserMode';
+import { FirstLetterMode } from '../components/practice/FirstLetterMode';
+import { ScrambleMode } from '../components/practice/ScrambleMode';
+import { TypingMode } from '../components/practice/TypingMode';
+import { SpeechMode } from '../components/practice/SpeechMode';
+import { Button } from '../components/ui/Button';
+
+type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'immersed';
+
+export const Practice: React.FC = () => {
+  const { state, dispatch } = useApp();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+
+  const [activeVerseIndex, setActiveVerseIndex] = useState(0);
+  const [activeMode, setActiveMode] = useState<PracticeMode>('read');
+  const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
+
+  // If there are no verses, show empty state
+  if (state.verses.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
+        <div className="w-16 h-16 bg-glass-bg rounded-full flex items-center justify-center mb-4">
+          <BookOpen className="w-8 h-8 text-muted" />
+        </div>
+        <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
+        <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
+        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+      </div>
+    );
+  }
+
+  // To simulate "activeVerse", for now we just practice the entire library or pass a specific verse ID via state/URL.
+  // We will just map over state.verses for this simple implementation.
+  const verses = state.verses;
+  const currentVerse = verses[activeVerseIndex];
+
+  const handleNext = () => {
+    if (activeVerseIndex < verses.length - 1) setActiveVerseIndex(i => i + 1);
+  };
+
+  const handlePrev = () => {
+    if (activeVerseIndex > 0) setActiveVerseIndex(i => i - 1);
+  };
+
+  const handleScore = (score: number) => {
+    const { newSM2, newStatus } = evaluateSM2(currentVerse.sm2, score);
+    
+    const updatedVerse: Verse = {
+      ...currentVerse,
+      sm2: newSM2,
+      status: newStatus,
+      attempts: (currentVerse.attempts || 0) + 1
+    };
+    
+    dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
+    setIsEvaluationOpen(false);
+    showToast(`Score logged. Next review in ${newSM2.interval} days.`, 'success');
+  };
+
+  // Render the current mode's workspace
+  const renderWorkspace = () => {
+    switch (activeMode) {
+      case 'read':
+      case 'immersed':
+        return <ReadMode text={currentVerse.text} />;
+      case 'eraser':
+        return <EraserMode text={currentVerse.text} />;
+      case 'first-letter':
+        return <FirstLetterMode text={currentVerse.text} />;
+      case 'scramble':
+        return <ScrambleMode text={currentVerse.text} />;
+      case 'typing':
+        return <TypingMode text={currentVerse.text} />;
+      case 'speech':
+        return <SpeechMode text={currentVerse.text} />;
+      default:
+        return null;
+    }
+  };
+
+  const isImmersed = activeMode === 'immersed';
+
+  return (
+    <div className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100] bg-background' : ''}`}>
+      
+      {/* Header */}
+      <div className={`flex items-center justify-between p-4 ${isImmersed ? 'absolute top-0 left-0 w-full z-10' : ''}`}>
+        <button 
+          onClick={() => {
+            if (isImmersed) setActiveMode('read');
+            else navigate(-1);
+          }}
+          className="w-10 h-10 rounded-full flex items-center justify-center bg-glass-bg border border-glass-border text-primary hover:bg-glass-bg-hover transition-colors"
+        >
+          {isImmersed ? <ArrowLeft className="w-5 h-5" /> : <ChevronLeft className="w-6 h-6" />}
+        </button>
+      </div>
+
+      <div className={`flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 ${isImmersed ? 'justify-center items-center h-full -mt-16' : ''}`}>
+        
+        {/* Mode Selector (Hidden in Immersed) */}
+        {!isImmersed && (
+          <div className="flex overflow-x-auto pb-4 mb-2 scrollbar-hide gap-3 w-full">
+            {[
+              { id: 'read', icon: Eye, label: 'Read', sub: 'Read the full text' },
+              { id: 'eraser', icon: Eraser, label: 'Eraser', sub: 'Hide words gradually' },
+              { id: 'first-letter', icon: Keyboard, label: 'Letters', sub: 'First letters only' },
+              { id: 'scramble', icon: Grid, label: 'Scramble', sub: 'Reorder words' },
+              { id: 'typing', icon: FileText, label: 'Typing', sub: 'Type from memory' },
+              { id: 'speech', icon: Mic, label: 'Recite', sub: 'Speak it aloud' },
+              { id: 'immersed', icon: Maximize, label: 'Immersed', sub: 'Focus reading' },
+            ].map(mode => (
+              <button
+                key={mode.id}
+                onClick={() => setActiveMode(mode.id as PracticeMode)}
+                className={`flex-shrink-0 flex flex-col items-center p-3 rounded-xl min-w-[100px] border transition-all duration-300
+                  ${activeMode === mode.id 
+                    ? 'bg-accent/10 border-accent/30 shadow-[0_4px_20px_rgba(var(--accent-rgb),0.15)] scale-105' 
+                    : 'bg-glass-bg border-glass-border hover:bg-glass-bg-hover'}`}
+              >
+                <mode.icon className={`w-6 h-6 mb-2 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
+                <span className={`text-sm font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
+                <span className="text-[10px] text-muted mt-1 text-center leading-tight">{mode.sub}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Display Board */}
+        <div className={`bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-sm mb-24 lg:mb-8'}`}>
+          <div className="text-center mb-8">
+            <span className={`font-heading font-bold ${isImmersed ? 'text-2xl text-secondary' : 'text-accent-light px-4 py-1.5 rounded-full bg-accent/10'}`}>
+              {currentVerse.ref}
+            </span>
+          </div>
+
+          <div className="flex-1">
+            {renderWorkspace()}
+          </div>
+
+          {/* Navigation Arrows */}
+          <div className="mt-8 pt-6 border-t border-glass-border flex items-center justify-between">
+            <button 
+              onClick={handlePrev} disabled={activeVerseIndex === 0}
+              className="p-2 rounded-full hover:bg-glass-bg-hover disabled:opacity-30 transition-colors text-secondary hover:text-primary"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+            
+            <span className="font-heading font-bold text-muted text-sm">
+              {activeVerseIndex + 1} / {verses.length}
+            </span>
+            
+            <button 
+              onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
+              className="p-2 rounded-full hover:bg-glass-bg-hover disabled:opacity-30 transition-colors text-secondary hover:text-primary"
+            >
+              <ArrowRight className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Footer / Scoring (Hidden in Read/Immersed) */}
+      {!isImmersed && activeMode !== 'read' && (
+        <div className="fixed bottom-20 lg:bottom-4 left-0 w-full px-4 flex justify-center z-40">
+          <div className="max-w-md w-full bg-glass-bg backdrop-blur-xl border border-glass-border rounded-2xl shadow-2xl p-4 flex flex-col gap-4">
+            
+            {!isEvaluationOpen ? (
+              <Button onClick={() => setIsEvaluationOpen(true)} className="w-full h-12 shadow-accent/20">
+                <Check className="w-5 h-5 mr-2" /> Score My Recall
+              </Button>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <p className="text-center font-medium text-secondary text-sm">How well did you remember it?</p>
+                <div className="grid grid-cols-4 gap-2">
+                  <button onClick={() => handleScore(1)} className="py-3 rounded-xl bg-red-500/10 text-red-500 font-bold hover:bg-red-500/20 transition-colors text-sm border border-red-500/20">Blank (1)</button>
+                  <button onClick={() => handleScore(2)} className="py-3 rounded-xl bg-orange-500/10 text-orange-500 font-bold hover:bg-orange-500/20 transition-colors text-sm border border-orange-500/20">Hard (2)</button>
+                  <button onClick={() => handleScore(4)} className="py-3 rounded-xl bg-blue-500/10 text-blue-500 font-bold hover:bg-blue-500/20 transition-colors text-sm border border-blue-500/20">Good (4)</button>
+                  <button onClick={() => handleScore(5)} className="py-3 rounded-xl bg-green-500/10 text-green-500 font-bold hover:bg-green-500/20 transition-colors text-sm border border-green-500/20">Easy (5)</button>
+                </div>
+                <button onClick={() => setIsEvaluationOpen(false)} className="text-muted text-xs hover:text-primary mt-1">Cancel</button>
+              </div>
+            )}
+            
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Also needed: BookOpen icon import at the top
+import { BookOpen } from 'lucide-react';

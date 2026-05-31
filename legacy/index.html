@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Remora - Bible Verse Memorization</title>
+    <meta name="description" content="A premium, interactive Bible verse memorization application designed to lock scripture in memory using active recall, spaced repetition, and speech recognition.">
+    <!-- PWA and Mobile Settings -->
+    <meta name="theme-color" content="#1e293b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=18">
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Onboarding Overlay -->
+    <div id="onboarding-overlay" class="hidden">
+        <div class="glass-panel onboarding-card">
+            <div class="onboarding-icon">
+                <i data-lucide="sparkles"></i>
+            </div>
+            <h2 id="onboarding-title">Welcome to Remora</h2>
+            <p id="onboarding-text">Memorize Bible verses using proven active-recall techniques and spaced repetition. Your progress is saved automatically.</p>
+            <div class="onboarding-dots">
+                <div class="onboarding-dot active" data-step="0"></div>
+                <div class="onboarding-dot" data-step="1"></div>
+                <div class="onboarding-dot" data-step="2"></div>
+            </div>
+            <div class="onboarding-actions">
+                <button class="btn btn-secondary" id="onboarding-skip">Skip</button>
+                <button class="btn btn-primary" id="onboarding-next">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container">
+        
+        <!-- --- TOP HEADER BAR --- -->
+        <header id="app-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 0; z-index: 10;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="background: var(--accent-glow); border: 1px solid var(--accent-glow-strong); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent);">
+                    <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
+                </div>
+                <span style="font-family: var(--font-heading); font-weight: 800; font-size: 20px; letter-spacing: -0.5px;">Remora</span>
+            </div>
+            <div style="display: flex; gap: 8px; position: relative;">
+                <div class="stats-pill streak" id="header-streak-pill" title="Daily Practice Streak">
+                    <i data-lucide="flame"></i>
+                    <span id="header-streak-val">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- --- DASHBOARD SCREEN --- -->
+        <main id="screen-dashboard" class="screen active">
+            <div class="screen-header">
+                <h1 class="screen-title">Welcome</h1>
+            </div>
+
+            <!-- Stats Overview Grid -->
+            <div class="stats-grid">
+                <div class="glass-panel stat-card">
+                    <span class="stat-val" id="stat-memorized-count">0</span>
+                    <span class="stat-lbl">Memorized</span>
+                </div>
+                <div class="glass-panel stat-card">
+                    <span class="stat-val" id="stat-learning-count">0</span>
+                    <span class="stat-lbl">Learning</span>
+                </div>
+                <div class="glass-panel stat-card">
+                    <span class="stat-val" id="stat-accuracy-rate">0%</span>
+                    <span class="stat-lbl">Accuracy</span>
+                </div>
+            </div>
+
+            <!-- Seeder Banner -->
+            <div class="glass-panel prompt-card" id="seeder-banner" style="display: none; background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%); border-color: var(--accent-glow-strong); margin-bottom: 20px;">
+                <div class="prompt-details">
+                    <h3>Get Started Quickly!</h3>
+                    <p>Load 100+ highly popular Bible verses into your library to start practicing immediately.</p>
+                </div>
+                <button class="btn btn-primary" id="btn-dashboard-seed-100">
+                    Load 100 Verses <i data-lucide="sparkles" style="width: 14px; height: 14px; margin-left: 6px;"></i>
+                </button>
+            </div>
+
+            <!-- Spaced Repetition Practice Alert (SM-2 suggestion) -->
+            <div class="glass-panel prompt-card" id="practice-suggestion-card" style="display: none;">
+                <div class="prompt-details">
+                    <h3 id="suggestion-ref">Philippians 4:13</h3>
+                    <p id="suggestion-meta">Due for review now</p>
+                </div>
+                <button class="btn btn-primary" id="btn-start-suggestion">
+                    Practice <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                </button>
+                <button class="btn btn-secondary practice-all-due-btn" id="btn-practice-all-due" style="display: none;">
+                    Practice All Due (<span id="practice-all-due-count">0</span>)
+                </button>
+            </div>
+
+            <!-- Library Filters & Scrollable List -->
+            <div class="section-label">
+                <span>My Library</span>
+                <span class="section-link" id="btn-add-shortcut">+ Add Verse</span>
+            </div>
+
+            <div class="library-search-wrapper">
+                <span class="search-icon"><i data-lucide="search"></i></span>
+                <input type="text" class="text-input" id="library-search-input" placeholder="Search verses by reference...">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; position: relative;">
+                <div class="filters-scroll" style="margin-bottom: 0; padding-bottom: 0; flex-grow: 1;">
+                    <button class="filter-chip active" data-filter="all">All Verses</button>
+                    <button class="filter-chip" data-filter="review">Review Due</button>
+                    <button class="filter-chip" data-filter="learning">Learning</button>
+                    <button class="filter-chip" data-filter="memorized">Memorized</button>
+                </div>
+                <div style="position: relative;">
+                    <button class="filter-chip" id="btn-sort-toggle" style="display: flex; align-items: center; gap: 6px; padding: 8px 12px;" title="Sort order">
+                        <i data-lucide="arrow-up-down" style="width: 14px; height: 14px;"></i>
+                        <span id="sort-label">Smart</span>
+                    </button>
+                    <div id="sort-dropdown" class="glass-panel" style="display: none; position: absolute; right: 0; top: 40px; z-index: 100; min-width: 150px; padding: 6px; flex-direction: column; gap: 4px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); border-color: var(--accent-glow-strong);">
+                        <button class="sort-option active" data-sort="smart">Default</button>
+                        <button class="sort-option" data-sort="bible-asc">Bible (Gen → Rev)</button>
+                        <button class="sort-option" data-sort="bible-desc">Bible (Rev → Gen)</button>
+                        <button class="sort-option" data-sort="random">Shuffle</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-list" id="dashboard-verse-list">
+                <!-- Dynamic cards will be rendered here -->
+                <div class="empty-state">
+                    <i data-lucide="book-open"></i>
+                    <p>No verses in your library yet.</p>
+                    <button class="btn btn-primary btn-sm" id="empty-state-add-btn">Add Your First Verse</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- --- ADD VERSE SCREEN --- -->
+        <section id="screen-add" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">Add Verse</h1>
+            </div>
+
+            <!-- Search vs Manual Tab switcher -->
+            <div class="tabs-header">
+                <button class="tab-btn active" id="tab-search">Look Up Verse</button>
+                <button class="tab-btn" id="tab-manual">Type It Yourself</button>
+            </div>
+
+            <!-- Tab 1: API Search -->
+            <div id="add-search-content" class="tab-content" style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="api-search-container">
+                    <input type="text" class="text-input" id="search-input" placeholder="e.g. John 3:16 or Psalm 23">
+                    <button class="btn btn-primary btn-icon" id="search-btn" title="Search Bible API">
+                        <i data-lucide="search"></i>
+                    </button>
+                </div>
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: -8px;">Searches public domain translations. For ESV/NIV/NASB, use "Type It Yourself" tab.</p>
+
+                <div class="input-group">
+                    <label class="input-label">Translation</label>
+                    <select class="select-input" id="search-translation">
+                        <option value="web" selected>World English Bible (WEB)</option>
+                        <option value="kjv">King James Version (KJV)</option>
+                        <option value="bbe">Bible in Basic English (BBE)</option>
+                        <option value="oeb">Open English Bible (OEB)</option>
+                    </select>
+                </div>
+
+                <!-- API results container -->
+                <div class="search-results" id="search-results-list"></div>
+
+                <!-- Curated Topics -->
+                <div class="topic-group">
+                    <span class="input-label">Curated Collections</span>
+                    <div class="topic-grid">
+                        <button class="topic-btn" data-topic="peace">
+                            <div class="topic-name">Peace & Calming</div>
+                            <div class="topic-desc">Verses for anxiety & stress</div>
+                        </button>
+                        <button class="topic-btn" data-topic="faith">
+                            <div class="topic-name">Faith & Trust</div>
+                            <div class="topic-desc">Strengthen your belief</div>
+                        </button>
+                        <button class="topic-btn" data-topic="strength">
+                            <div class="topic-name">Strength & Courage</div>
+                            <div class="topic-desc">Power to overcome obstacles</div>
+                        </button>
+                        <button class="topic-btn" data-topic="love">
+                            <div class="topic-name">Love & Grace</div>
+                            <div class="topic-desc">God's love and kindness</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Manual Form -->
+            <div id="add-manual-content" class="tab-content" style="display: none; flex-direction: column; gap: 16px;">
+                <div class="input-group">
+                    <label class="input-label" for="manual-ref">Reference</label>
+                    <input type="text" class="text-input" id="manual-ref" placeholder="e.g. Romans 8:28">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="manual-text">Verse Text</label>
+                    <textarea class="text-input" id="manual-text" placeholder="Type the scripture text here..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="manual-translation">Translation (Optional)</label>
+                    <input type="text" class="text-input" id="manual-translation" placeholder="e.g. ESV, NIV, NASB">
+                </div>
+                <button class="btn btn-primary" id="btn-save-manual">
+                    <i data-lucide="check" style="width: 16px; height: 16px;"></i> Save to Library
+                </button>
+            </div>
+        </section>
+
+        <!-- --- PRACTICE STUDIO SCREEN --- -->
+        <section id="screen-practice" class="screen">
+            <!-- Immersed Mode Back Button -->
+            <button class="back-btn" id="immersed-back-btn" title="Exit Immersed Mode" style="display: none; position: absolute; top: 16px; left: 16px; z-index: 9999; background: transparent; border: none; width: 40px; height: 40px; justify-content: center; align-items: center; box-shadow: none; padding: 0; color: var(--text-primary);">
+                <i data-lucide="arrow-left"></i>
+            </button>
+            <div class="practice-header" style="margin-bottom: 8px;">
+                <button class="back-btn" id="practice-back-btn" title="Back to Dashboard">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </div>
+
+            <!-- Select verse warning if activeVerse is null -->
+            <div id="practice-no-verse-panel" class="empty-state glass-panel" style="margin-top: 40px;">
+                <i data-lucide="book-open"></i>
+                <h3>No Verse Selected</h3>
+                <p>Pick a verse from the dashboard list or add a new one to practice.</p>
+                <button class="btn btn-primary" id="practice-select-btn">Go to Dashboard</button>
+            </div>
+
+            <!-- Workspace contents (active when a verse is loaded) -->
+            <div id="practice-workspace-panel" style="display: none; flex-direction: column; flex-grow: 1;">
+                
+                <!-- Practice Modes Scrollable Bar -->
+                <div class="modes-scroll">
+                    <button class="mode-tab active" data-mode="read">
+                        <span class="mode-label"><i data-lucide="eye"></i> Read</span>
+                        <span class="mode-subtitle">Read the full text</span>
+                    </button>
+                    <button class="mode-tab" data-mode="eraser">
+                        <span class="mode-label"><i data-lucide="eraser"></i> Eraser</span>
+                        <span class="mode-subtitle">Hide words gradually</span>
+                    </button>
+                    <button class="mode-tab" data-mode="first-letter">
+                        <span class="mode-label"><i data-lucide="keyboard"></i> First Letters</span>
+                        <span class="mode-subtitle">Only first letters shown</span>
+                    </button>
+                    <button class="mode-tab" data-mode="scramble">
+                        <span class="mode-label"><i data-lucide="grid"></i> Scramble</span>
+                        <span class="mode-subtitle">Reorder the words</span>
+                    </button>
+                    <button class="mode-tab" data-mode="typing">
+                        <span class="mode-label"><i data-lucide="file-text"></i> Typing</span>
+                        <span class="mode-subtitle">Type from memory</span>
+                    </button>
+                    <button class="mode-tab" data-mode="speech">
+                        <span class="mode-label"><i data-lucide="mic"></i> Recite</span>
+                        <span class="mode-subtitle">Speak it aloud</span>
+                    </button>
+                    <button class="mode-tab" data-mode="immersed">
+                        <span class="mode-label"><i data-lucide="maximize"></i> Immersed</span>
+                        <span class="mode-subtitle">Focus reading</span>
+                    </button>
+                </div>
+
+                <!-- Main Display Box -->
+                <div class="glass-panel display-board">
+                    <div class="practice-ref-label" id="practice-board-ref"></div>
+                    <div class="display-text" id="practice-board-text">
+                        <!-- Dynamic text content based on active mode -->
+                    </div>
+                    <!-- In-card navigation arrows and index -->
+                    <div id="practice-nav-controls" class="card-nav-controls">
+                        <button class="card-nav-btn" id="practice-prev-btn" title="Previous Verse">
+                            <i data-lucide="arrow-left"></i>
+                        </button>
+                        <span id="practice-index-indicator" style="font-size: 13px; font-weight: 600; color: var(--text-muted); font-family: var(--font-heading);">0 / 0</span>
+                        <button class="card-nav-btn" id="practice-next-btn" title="Next Verse">
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Specific Workspaces (Appended dynamic fields) -->
+                <div id="practice-read-controls" style="display: none; margin-bottom: 12px; width: 100%;">
+                    <div class="read-controls" style="display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); padding: 10px 16px; border-radius: var(--border-radius-md); border: 1px solid var(--glass-border); gap: 12px;">
+                        <button class="btn btn-secondary btn-sm" id="btn-toggle-auto-play" style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                            <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+                            <span>Auto Play</span>
+                        </button>
+                        <span id="auto-play-status" style="font-size: 12px; font-weight: 500; color: var(--text-muted);">Off</span>
+                        <div style="width: 1px; background: var(--glass-border); height: 24px;"></div>
+                        <button class="btn btn-secondary btn-sm" id="practice-show-hint-btn" style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                            <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
+                            <span>Show Hint</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="practice-eraser-controls" style="display: none; margin-bottom: 20px;">
+                    <div class="eraser-controls">
+                        <div class="slider-container">
+                            <span class="input-label" style="min-width: 60px;">Hide Level</span>
+                            <input type="range" class="range-slider" id="eraser-slider" min="0" max="100" step="10" value="0">
+                            <span class="input-label" id="eraser-slider-lbl" style="min-width: 35px; text-align: right;">0%</span>
+                        </div>
+                        <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 4px;">
+                            Drag to hide random words, or tap individual words to erase/reveal them.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="practice-scramble-controls" style="display: none; margin-bottom: 20px; width: 100%;">
+                    <div class="scramble-slots" id="scramble-slots-container"></div>
+                    <div class="scramble-pool" id="scramble-pool-container"></div>
+                </div>
+
+                <div id="practice-typing-controls" style="display: none; margin-bottom: 20px; width: 100%;">
+                    <div class="typing-workspace">
+                        <textarea class="typing-input" id="typing-textarea" placeholder="Type the verse from memory..."></textarea>
+                        <div class="typing-feedback-display" id="typing-live-feedback"></div>
+                    </div>
+                </div>
+
+                <div id="practice-speech-controls" style="display: none; margin-bottom: 20px; width: 100%;">
+                    <div class="speech-workspace">
+                        <div class="speech-status" id="speech-status-indicator">Ready to record</div>
+                        <button class="speech-mic-btn" id="speech-mic-btn" title="Tap to toggle speech validation">
+                            <i data-lucide="mic"></i>
+                        </button>
+                        <div class="speech-interim-text" id="speech-interim-box"></div>
+                    </div>
+                </div>
+
+                <!-- Footer Operations -->
+                <div id="practice-default-footer" class="practice-footer-controls">
+                    <button class="btn btn-primary" style="flex-grow: 1;" id="practice-done-btn">
+                        <i data-lucide="check" style="width: 16px; height: 16px;"></i> Done Reciting
+                    </button>
+                </div>
+
+                <!-- SM-2 Evaluation Prompt Panel (reveals when clicking Done) -->
+                <div id="practice-eval-footer" class="glass-panel evaluation-panel" style="display: none;">
+                    <div class="eval-header">
+                        <h4>How well did you recall it?</h4>
+                        <p>Your rating determines when this verse comes back for review.</p>
+                    </div>
+                    <div class="eval-buttons">
+                        <button class="eval-btn" data-score="1">
+                            <span class="eval-score score-again">❌</span>
+                            <span class="eval-lbl">Forgot</span>
+                            <span class="eval-preview" id="eval-preview-1">Review tomorrow</span>
+                        </button>
+                        <button class="eval-btn" data-score="3">
+                            <span class="eval-score score-hard">😐</span>
+                            <span class="eval-lbl">Struggled</span>
+                            <span class="eval-preview" id="eval-preview-3">Review in ~1 day</span>
+                        </button>
+                        <button class="eval-btn" data-score="5">
+                            <span class="eval-score score-easy">✅</span>
+                            <span class="eval-lbl">Nailed It</span>
+                            <span class="eval-preview" id="eval-preview-5">Review in ~3 days</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- --- STUDY GUIDES SCREEN --- -->
+        <section id="screen-guides" class="screen">
+            <!-- List View -->
+            <div id="guides-list-view">
+                <div class="screen-header">
+                    <h1 class="screen-title">Study Guides</h1>
+                </div>
+                <div id="guides-list-container">
+                    <!-- Dynamic guide cards rendered here -->
+                </div>
+            </div>
+            <!-- Detail View -->
+            <div id="guides-detail-view" class="guide-detail-container">
+                <div class="guide-detail-header">
+                    <button class="guide-detail-back" id="guide-detail-back-btn" title="Back to Guides">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
+                    <div class="guide-detail-title-group">
+                        <div class="guide-detail-title" id="guide-detail-title"></div>
+                        <div class="guide-detail-subtitle" id="guide-detail-subtitle"></div>
+                    </div>
+                    <div class="guide-detail-icon" id="guide-detail-icon"></div>
+                </div>
+                <div id="guide-detail-content">
+                    <!-- Dynamic guide detail rendered here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- --- SETTINGS SCREEN --- -->
+        <section id="screen-settings" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">Settings</h1>
+            </div>
+
+            <div class="settings-list">
+                <!-- Themes Group -->
+                <div class="settings-group">
+                    <span class="settings-group-title">Interface Theme</span>
+                    <div class="theme-options-grid">
+                        <button class="theme-btn active" data-theme-id="nebula">
+                            <span class="theme-dot nebula"></span> Nebula Purple
+                        </button>
+                        <button class="theme-btn" data-theme-id="emerald">
+                            <span class="theme-dot emerald"></span> Emerald Sage
+                        </button>
+                        <button class="theme-btn" data-theme-id="obsidian">
+                            <span class="theme-dot obsidian"></span> Obsidian Red
+                        </button>
+                        <button class="theme-btn" data-theme-id="ocean">
+                            <span class="theme-dot ocean"></span> Midnight Ocean
+                        </button>
+                        <button class="theme-btn" data-theme-id="parchment">
+                            <span class="theme-dot parchment"></span> Parchment Light
+                        </button>
+                        <button class="theme-btn" data-theme-id="pure-black">
+                            <span class="theme-dot pure-black"></span> Pure Black
+                        </button>
+                        <button class="theme-btn" data-theme-id="pure-white">
+                            <span class="theme-dot pure-white"></span> Pure White
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Study Adjustments -->
+                <div class="settings-group">
+                    <span class="settings-group-title">Study Preferences</span>
+                    
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Global Text Size</span>
+                            <span class="settings-label-desc">Scale the font size for the entire app</span>
+                        </div>
+                        <select class="select-input" id="settings-font-size" style="width: auto; padding: 6px 12px; font-size: 14px;">
+                            <option value="0.85">Small</option>
+                            <option value="1" selected>Normal</option>
+                            <option value="1.15">Large</option>
+                            <option value="1.3">Extra Large</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Auto-speak text</span>
+                            <span class="settings-label-desc">Read verses aloud using text-to-speech</span>
+                        </div>
+                        <label class="switch-control">
+                            <input type="checkbox" id="settings-tts-enabled">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Daily review reminders</span>
+                            <span class="settings-label-desc">Show notification requests for study reminders</span>
+                        </div>
+                        <label class="switch-control">
+                            <input type="checkbox" id="settings-notifications-enabled">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Active Recall Masking</span>
+                            <span class="settings-label-desc">Blur sentences in Immersed mode. Tap to reveal.</span>
+                        </div>
+                        <label class="switch-control">
+                            <input type="checkbox" id="settings-recall-masking">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Bionic Reading</span>
+                            <span class="settings-label-desc">Bold fixation points guide your eyes through each word.</span>
+                        </div>
+                        <label class="switch-control">
+                            <input type="checkbox" id="settings-bionic-reading">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Backup & Reset -->
+                <div class="settings-group">
+                    <span class="settings-group-title">Data Management</span>
+                    
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Backup Verses</span>
+                            <span class="settings-label-desc">Export library data to a JSON file</span>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="btn-export-data">Export</button>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Restore Library</span>
+                            <span class="settings-label-desc">Import data from exported JSON file</span>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="btn-import-data-trigger">Import</button>
+                        <input type="file" id="btn-import-data-file" style="display: none;" accept=".json">
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-row-label">
+                            <span class="settings-label-title">Load 100 Popular Verses</span>
+                            <span class="settings-label-desc">Seed your library with 100 well-known verses</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btn-seed-100-verses">Load 100 Verses</button>
+                    </div>
+
+                    <div class="glass-panel danger-zone" style="margin-top: 10px;">
+                        <h3>Danger Zone</h3>
+                        <p>This action will delete all verses, progress logs, and streak counters from this browser. This cannot be undone.</p>
+                        <button class="btn btn-secondary" style="border-color: var(--danger); color: var(--danger); width: 100%;" id="btn-reset-database">
+                            Reset App Database
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --- BOTTOM NAVIGATION BAR --- -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-screen-link="dashboard">
+                <i data-lucide="home"></i>
+                Dashboard
+            </button>
+            <button class="nav-item" data-screen-link="add">
+                <i data-lucide="plus-circle"></i>
+                Add Verse
+            </button>
+            <button class="nav-item" data-screen-link="practice">
+                <i data-lucide="book-open"></i>
+                Practice
+            </button>
+            <button class="nav-item" data-screen-link="guides">
+                <i data-lucide="graduation-cap"></i>
+                Guides
+            </button>
+            <button class="nav-item" data-screen-link="settings">
+                <i data-lucide="settings"></i>
+                Settings
+            </button>
+        </nav>
+
+        <!-- --- SUCCESS / CELEBRATION MODAL --- -->
+        <div class="success-overlay" id="success-modal">
+            <div class="glass-panel success-box">
+                <div class="success-badge">
+                    <i data-lucide="check"></i>
+                </div>
+                <h3 id="success-modal-title">Well Done!</h3>
+                <p id="success-modal-text">You successfully recalled this verse!</p>
+                <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;" id="success-modal-next-review">
+                    Next review scheduled in 1 day.
+                </div>
+                <button class="btn btn-primary" id="success-modal-close" style="width: 100%;">
+                    Continue Study
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Verse Detail Bottom Sheet -->
+    <div class="bottom-sheet-overlay" id="verse-detail-overlay"></div>
+    <div class="bottom-sheet" id="verse-detail-sheet">
+        <div class="bottom-sheet-handle"></div>
+        <div class="bottom-sheet-content">
+            <div id="verse-detail-view-mode">
+                <div class="bottom-sheet-ref" id="detail-ref">John 3:16</div>
+                <div class="bottom-sheet-translation" id="detail-translation">LSB Translation</div>
+                <div class="bottom-sheet-verse-text" id="detail-text">Verse text here...</div>
+                <div class="bottom-sheet-stats">
+                    <div class="bottom-sheet-stat">
+                        <span class="bottom-sheet-stat-val" id="detail-mastery">0%</span>
+                        <span class="bottom-sheet-stat-lbl">Mastery</span>
+                    </div>
+                    <div class="bottom-sheet-stat">
+                        <span class="bottom-sheet-stat-val" id="detail-attempts">0</span>
+                        <span class="bottom-sheet-stat-lbl">Attempts</span>
+                    </div>
+                    <div class="bottom-sheet-stat">
+                        <span class="bottom-sheet-stat-val" id="detail-next-review">—</span>
+                        <span class="bottom-sheet-stat-lbl">Next Review</span>
+                    </div>
+                </div>
+                <div class="bottom-sheet-actions">
+                    <button class="btn btn-secondary" id="detail-edit-btn"><i data-lucide="pencil" style="width: 16px; height: 16px;"></i> Edit</button>
+                    <button class="btn btn-primary" id="detail-practice-btn" style="flex: 2;"><i data-lucide="book-open" style="width: 16px; height: 16px;"></i> Practice</button>
+                    <button class="btn btn-danger" id="detail-delete-btn"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button>
+                </div>
+            </div>
+            <div id="verse-detail-edit-mode" style="display: none;">
+                <h3 style="margin-bottom: 16px; font-size: 18px;">Edit Verse</h3>
+                <div class="bottom-sheet-edit-group">
+                    <label class="input-label" for="detail-edit-ref">Reference</label>
+                    <input type="text" class="text-input" id="detail-edit-ref" placeholder="e.g. Romans 8:28">
+                </div>
+                <div class="bottom-sheet-edit-group">
+                    <label class="input-label" for="detail-edit-text">Verse Text</label>
+                    <textarea class="text-input" id="detail-edit-text" style="height: 120px;" placeholder="Verse text..."></textarea>
+                </div>
+                <div class="bottom-sheet-edit-group">
+                    <label class="input-label" for="detail-edit-translation">Translation</label>
+                    <input type="text" class="text-input" id="detail-edit-translation" placeholder="e.g. LSB, ESV">
+                </div>
+                <div class="bottom-sheet-actions">
+                    <button class="btn btn-secondary" id="detail-edit-cancel">Cancel</button>
+                    <button class="btn btn-primary" id="detail-edit-save" style="flex: 2;"><i data-lucide="check" style="width: 16px; height: 16px;"></i> Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="confirm-modal">
+        <div class="glass-panel confirm-box">
+            <h3 id="confirm-title">Are you sure?</h3>
+            <p id="confirm-message">This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-danger" id="confirm-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Milestone Celebration Modal -->
+    <div class="milestone-overlay" id="milestone-modal" style="display: none;">
+        <div class="glass-panel milestone-card">
+            <div class="milestone-emoji" id="milestone-emoji">🎉</div>
+            <h3 id="milestone-title">Milestone Reached!</h3>
+            <p id="milestone-text">You've memorized 5 verses!</p>
+            <button class="btn btn-primary" id="milestone-close" style="width: 100%;">Keep Going!</button>
+        </div>
+    </div>
+
+    <!-- Lucide Icons Library -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then((registration) => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, (err) => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
+    
+    <!-- Study Guides Data -->
+    <script src="guides_data.js?v=1"></script>
+    
+    <!-- Application Logic Script -->
+    <script src="app.js?v=18"></script>
+</body>
+</html>
