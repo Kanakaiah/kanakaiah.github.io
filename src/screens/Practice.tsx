@@ -246,7 +246,7 @@ export const Practice: React.FC = () => {
 
       {/* Footer / Scoring (Hidden in Read/Immersed) */}
       {!isImmersed && activeMode !== 'read' && (
-        <div className="fixed bottom-20 lg:bottom-4 left-0 w-full px-4 flex justify-center z-40">
+        <div className="fixed bottom-20 lg:bottom-4 left-0 lg:left-64 w-full lg:w-[calc(100%-16rem)] px-4 flex justify-center z-40">
           <div className="max-w-md w-full bg-glass-bg backdrop-blur-xl border border-glass-border rounded-2xl shadow-2xl p-4 flex flex-col gap-4">
             
             {!isEvaluationOpen ? (
