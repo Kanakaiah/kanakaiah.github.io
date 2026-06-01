@@ -35,8 +35,8 @@ export const AppLayout: React.FC = () => {
       ">
         {/* Desktop Logo */}
         <div className="hidden lg:flex items-center gap-3 mb-8 w-full px-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white font-heading font-bold shadow-md shadow-accent/20">
-            R
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white shadow-md shadow-accent/20">
+            <BookOpen className="w-4 h-4" />
           </div>
           <span className="text-xl font-heading font-bold text-primary tracking-wide">Remora</span>
         </div>
@@ -68,8 +68,8 @@ export const AppLayout: React.FC = () => {
         {!isPracticeScreen && (
           <header className="flex-shrink-0 px-5 lg:px-8 pt-5 pb-3 flex justify-between items-center z-10">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white font-heading font-bold lg:hidden shadow-sm shadow-accent/20">
-                R
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white lg:hidden shadow-sm shadow-accent/20">
+                <BookOpen className="w-4 h-4" />
               </div>
               <h1 className="text-xl lg:hidden font-heading font-bold tracking-wide text-primary">Remora</h1>
             </div>
