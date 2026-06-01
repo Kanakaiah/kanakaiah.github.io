@@ -110,7 +110,7 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
         className={`flex flex-wrap gap-2 justify-center transition-transform ${shake ? 'animate-shake' : ''}`}
         style={{ animation: shake ? 'shake 0.3s cubic-bezier(.36,.07,.19,.97) both' : 'none' }}
       >
-        {targetWords.map((word, idx) => {
+        {targetWords.map((_, idx) => {
           const isFilled = idx < assembledCount;
           return (
             <div 
