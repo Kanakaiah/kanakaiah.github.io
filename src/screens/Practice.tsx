@@ -67,6 +67,11 @@ export const Practice: React.FC = () => {
     setActiveVerseIndex(initialIndex);
   }, [initialIndex]);
 
+  // Reset hint when changing verses or modes
+  React.useEffect(() => {
+    setShowHint(false);
+  }, [activeVerseIndex, activeMode]);
+
   const currentVerse = verses[activeVerseIndex];
 
   if (!currentVerse) {
@@ -310,7 +315,27 @@ export const Practice: React.FC = () => {
                   <span className="hidden sm:inline">{isAutoPlaying ? 'Stop' : 'Auto Play'}</span>
                 </button>
               )}
+
+              {!isImmersed && activeMode !== 'read' && (
+                <button 
+                  onClick={() => setShowHint(!showHint)} 
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-colors text-sm font-bold
+                    ${showHint ? 'bg-accent text-white' : 'bg-accent/10 text-accent hover:bg-accent hover:text-white'}`}
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  <span className="hidden sm:inline">{showHint ? 'Hide Hint' : 'Show Hint'}</span>
+                </button>
+              )}
             </div>
+            
+            {showHint && !isImmersed && activeMode !== 'read' && (
+              <div className="mb-6 p-4 rounded-xl bg-accent/10 border border-accent/20 text-secondary text-base leading-relaxed italic relative">
+                <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                  HINT
+                </div>
+                {currentVerse.text}
+              </div>
+            )}
             
             <div className="flex-1">
               {renderWorkspace()}
