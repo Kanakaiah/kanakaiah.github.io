@@ -27,7 +27,7 @@ export const Practice: React.FC = () => {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const [showHint, setShowHint] = useState(false);
+  const [hintLevel, setHintLevel] = useState(0);
 
   // If there are no verses, show empty state
   if (state.verses.length === 0) {
@@ -69,7 +69,7 @@ export const Practice: React.FC = () => {
 
   // Reset hint when changing verses or modes
   React.useEffect(() => {
-    setShowHint(false);
+    setHintLevel(0);
   }, [activeVerseIndex, activeMode]);
 
   const currentVerse = verses[activeVerseIndex];
@@ -148,6 +148,42 @@ export const Practice: React.FC = () => {
     dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
     setIsEvaluationOpen(false);
     showToast(`Score logged. Next review in ${newSM2.interval} days.`, 'success');
+  };
+
+  const handleHintClick = () => {
+    if (hintLevel >= 4) {
+      setHintLevel(0);
+    } else {
+      setHintLevel(h => h + 1);
+    }
+  };
+
+  const renderProgressiveHint = () => {
+    if (hintLevel === 0) return null;
+    
+    const totalWords = currentVerse.text.split(/\s+/).filter(w => w.trim().length > 0);
+    const wordsToReveal = Math.ceil(totalWords.length * (hintLevel * 0.25));
+    
+    let revealedCount = 0;
+    const tokens = currentVerse.text.split(/(\s+)/);
+    
+    return (
+      <div className="mb-6 p-4 rounded-xl bg-accent/10 border border-accent/20 text-secondary text-base leading-relaxed relative">
+        <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+          HINT {hintLevel < 4 ? `${hintLevel}/4` : '(Full)'}
+        </div>
+        {tokens.map((token, i) => {
+          if (!token.trim()) return <span key={i}>{token}</span>; // whitespace
+          
+          revealedCount++;
+          if (revealedCount <= wordsToReveal) {
+            return <span key={i} className="text-primary font-medium">{token}</span>;
+          } else {
+            return <span key={i} className="opacity-40 blur-[4px] select-none transition-all">{token}</span>;
+          }
+        })}
+      </div>
+    );
   };
 
   // Render the current mode's workspace
@@ -318,24 +354,19 @@ export const Practice: React.FC = () => {
 
               {!isImmersed && activeMode !== 'read' && (
                 <button 
-                  onClick={() => setShowHint(!showHint)} 
+                  onClick={handleHintClick} 
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-colors text-sm font-bold
-                    ${showHint ? 'bg-accent text-white' : 'bg-accent/10 text-accent hover:bg-accent hover:text-white'}`}
+                    ${hintLevel > 0 ? 'bg-accent text-white' : 'bg-accent/10 text-accent hover:bg-accent hover:text-white'}`}
                 >
                   <HelpCircle className="w-4 h-4" />
-                  <span className="hidden sm:inline">{showHint ? 'Hide Hint' : 'Show Hint'}</span>
+                  <span className="hidden sm:inline">
+                    {hintLevel === 0 ? 'Show Hint' : hintLevel < 4 ? 'More Hint' : 'Hide Hint'}
+                  </span>
                 </button>
               )}
             </div>
             
-            {showHint && !isImmersed && activeMode !== 'read' && (
-              <div className="mb-6 p-4 rounded-xl bg-accent/10 border border-accent/20 text-secondary text-base leading-relaxed italic relative">
-                <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                  HINT
-                </div>
-                {currentVerse.text}
-              </div>
-            )}
+            {!isImmersed && activeMode !== 'read' && renderProgressiveHint()}
             
             <div className="flex-1">
               {renderWorkspace()}
