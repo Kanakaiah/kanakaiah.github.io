@@ -86,10 +86,10 @@ export const Settings: React.FC = () => {
                   onChange={(e) => dispatch({ type: 'SET_THEME', payload: e.target.value })}
                   className="bg-background border border-glass-border rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
                 >
-                  <option value="nebula">Nebula (Dark Purple)</option>
-                  <option value="obsidian">Obsidian (Pure Dark)</option>
-                  <option value="midnight">Midnight (Dark Blue)</option>
-                  <option value="parchment">Parchment (Light Warm)</option>
+                  <option value="nebula" className="bg-background text-primary">Nebula (Dark Purple)</option>
+                  <option value="obsidian" className="bg-background text-primary">Obsidian (Pure Dark)</option>
+                  <option value="midnight" className="bg-background text-primary">Midnight (Dark Blue)</option>
+                  <option value="parchment" className="bg-background text-primary">Parchment (Light Warm)</option>
                 </select>
               </div>
 
@@ -169,10 +169,10 @@ export const Settings: React.FC = () => {
                   onChange={(e) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(e.target.value) } })}
                   className="bg-background border border-glass-border rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
                 >
-                  <option value={0.85}>Small</option>
-                  <option value={1}>Normal</option>
-                  <option value={1.15}>Large</option>
-                  <option value={1.3}>Extra Large</option>
+                  <option value={0.85} className="bg-background text-primary">Small</option>
+                  <option value={1} className="bg-background text-primary">Normal</option>
+                  <option value={1.15} className="bg-background text-primary">Large</option>
+                  <option value={1.3} className="bg-background text-primary">Extra Large</option>
                 </select>
               </div>
 

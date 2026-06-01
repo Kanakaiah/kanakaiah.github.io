@@ -117,9 +117,9 @@ export const AddVerse: React.FC = () => {
               onChange={(e) => setSearchTranslation(e.target.value)}
               className="h-12 px-4 rounded-xl bg-background border border-glass-border text-primary focus:outline-none focus:ring-2 focus:ring-accent w-full sm:w-auto"
             >
-              <option value="web">WEB (World English Bible)</option>
-              <option value="kjv">KJV (King James Version)</option>
-              <option value="bbe">BBE (Bible in Basic English)</option>
+              <option value="web" className="bg-background text-primary">WEB (World English Bible)</option>
+              <option value="kjv" className="bg-background text-primary">KJV (King James Version)</option>
+              <option value="bbe" className="bg-background text-primary">BBE (Bible in Basic English)</option>
             </select>
           </div>
           
