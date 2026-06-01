@@ -93,16 +93,13 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) 
     if (!state.settings.bionicReading || !isImmersed) return str;
     
     const words = str.split(/(\b[\w']+\b)/);
-    let wordCount = 0; // Track actual words to cycle colors properly
     return words.map((w, i) => {
       if (/^[\w']+$/.test(w)) {
         const boldLen = Math.ceil(w.length / 2);
-        const colorVar = `var(--bionic-${(wordCount % 5) + 1})`;
-        wordCount++;
         return (
           <React.Fragment key={i}>
-            <b className="font-bold opacity-100" style={{ color: colorVar }}>{w.slice(0, boldLen)}</b>
-            <span className="opacity-70">{w.slice(boldLen)}</span>
+            <b className="font-bold opacity-100">{w.slice(0, boldLen)}</b>
+            <span className="opacity-80">{w.slice(boldLen)}</span>
           </React.Fragment>
         );
       }
@@ -112,7 +109,7 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) 
 
   return (
     <div 
-      className={`text-xl font-medium ${!isImmersed ? 'whitespace-pre-wrap leading-relaxed' : 'transition-none'}`}
+      className={`text-xl font-normal ${!isImmersed ? 'whitespace-pre-wrap leading-relaxed' : 'transition-none'}`}
       style={isImmersed ? { fontSize: `${1.25 * zoomLevel}rem`, lineHeight: `${1.75 * zoomLevel}rem` } : {}}
     >
       {parts.map((part, index) => {
