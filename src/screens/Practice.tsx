@@ -127,17 +127,17 @@ export const Practice: React.FC = () => {
     switch (activeMode) {
       case 'read':
       case 'immersed':
-        return <ReadMode text={currentVerse.text} isImmersed={isImmersed} />;
+        return <ReadMode key={currentVerse.id} text={currentVerse.text} isImmersed={isImmersed} />;
       case 'eraser':
-        return <EraserMode text={currentVerse.text} />;
+        return <EraserMode key={currentVerse.id} text={currentVerse.text} />;
       case 'first-letter':
-        return <FirstLetterMode text={currentVerse.text} />;
+        return <FirstLetterMode key={currentVerse.id} text={currentVerse.text} />;
       case 'scramble':
-        return <ScrambleMode text={currentVerse.text} />;
+        return <ScrambleMode key={currentVerse.id} text={currentVerse.text} />;
       case 'typing':
-        return <TypingMode text={currentVerse.text} />;
+        return <TypingMode key={currentVerse.id} text={currentVerse.text} />;
       case 'speech':
-        return <SpeechMode text={currentVerse.text} />;
+        return <SpeechMode key={currentVerse.id} text={currentVerse.text} />;
       default:
         return null;
     }
