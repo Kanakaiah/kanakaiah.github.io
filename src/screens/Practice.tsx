@@ -26,7 +26,7 @@ export const Practice: React.FC = () => {
   const [activeMode, setActiveMode] = useState<PracticeMode>('read');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
   // If there are no verses, show empty state
@@ -80,24 +80,39 @@ export const Practice: React.FC = () => {
   }
 
   const handleToggleTTS = () => {
-    if (isPlaying) {
+    if (isAutoPlaying) {
       window.speechSynthesis.cancel();
-      setIsPlaying(false);
+      setIsAutoPlaying(false);
     } else {
-      const textToSpeak = `${currentVerse.ref}. ${currentVerse.text}`;
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
-      utterance.onend = () => setIsPlaying(false);
-      window.speechSynthesis.speak(utterance);
-      setIsPlaying(true);
+      setIsAutoPlaying(true);
     }
   };
 
-  // Stop TTS when leaving or changing verses
+  // Handle Auto Play Logic
   React.useEffect(() => {
+    if (isAutoPlaying && currentVerse) {
+      window.speechSynthesis.cancel();
+      const textToSpeak = `${currentVerse.ref}. ${currentVerse.text}`;
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      
+      utterance.onend = () => {
+        if (activeVerseIndex < verses.length - 1) {
+          // Short pause before advancing to the next verse
+          setTimeout(() => {
+            setActiveVerseIndex(i => i + 1);
+          }, 800);
+        } else {
+          setIsAutoPlaying(false);
+        }
+      };
+      
+      window.speechSynthesis.speak(utterance);
+    }
+
     return () => {
       window.speechSynthesis.cancel();
     };
-  }, [currentVerse.id]);
+  }, [activeVerseIndex, isAutoPlaying, currentVerse, verses.length]);
 
   const handleNext = () => {
     if (activeVerseIndex < verses.length - 1) setActiveVerseIndex(i => i + 1);
@@ -282,8 +297,8 @@ export const Practice: React.FC = () => {
             {activeMode === 'read' && (
               <div className="flex items-center justify-between bg-glass-bg p-3 rounded-xl border border-glass-border mb-4">
                 <Button variant="secondary" onClick={handleToggleTTS} className="text-sm">
-                  {isPlaying ? <Square className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                  {isPlaying ? 'Stop' : 'Auto Play'}
+                  {isAutoPlaying ? <Square className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                  {isAutoPlaying ? 'Stop' : 'Auto Play'}
                 </Button>
                 <Button variant="secondary" onClick={() => setShowHint(!showHint)} className="text-sm">
                   <HelpCircle className="w-4 h-4 mr-2" />
