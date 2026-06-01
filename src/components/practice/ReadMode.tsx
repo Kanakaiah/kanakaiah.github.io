@@ -98,8 +98,8 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) 
         const boldLen = Math.ceil(w.length / 2);
         return (
           <React.Fragment key={i}>
-            <b className="font-bold opacity-100">{w.slice(0, boldLen)}</b>
-            <span className="opacity-80">{w.slice(boldLen)}</span>
+            <b className="font-bold text-accent opacity-100">{w.slice(0, boldLen)}</b>
+            <span className="opacity-70">{w.slice(boldLen)}</span>
           </React.Fragment>
         );
       }
