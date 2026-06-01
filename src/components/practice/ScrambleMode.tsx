@@ -1,98 +1,167 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Button } from '../ui/Button';
+import React, { useState, useEffect } from 'react';
 
 interface ScrambleModeProps {
   text: string;
 }
 
 export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
-  const [pool, setPool] = useState<{ id: string, word: string }[]>([]);
-  const [assembled, setAssembled] = useState<{ id: string, word: string }[]>([]);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [chunks, setChunks] = useState<string[][]>([]);
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
+  
+  const [pool, setPool] = useState<{ id: string, word: string, selected: boolean }[]>([]);
+  const [assembledCount, setAssembledCount] = useState(0);
+  const [errorId, setErrorId] = useState<string | null>(null);
+  const [shake, setShake] = useState(false);
 
-  const words = useMemo(() => {
-    return text.split(/(\s+)/).filter(w => w.trim().length > 0);
+  useEffect(() => {
+    // 1. Clean words (mirroring legacy regex to strip punctuation)
+    const cleanWordList = text
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+      .split(/\s+/)
+      .filter(w => w.trim().length > 0);
+
+    // 2. Chunking for long verses
+    let newChunks: string[][] = [];
+    if (cleanWordList.length > 15) {
+      const CHUNK_SIZE = 10;
+      for (let i = 0; i < cleanWordList.length; i += CHUNK_SIZE) {
+        newChunks.push(cleanWordList.slice(i, i + CHUNK_SIZE));
+      }
+    } else {
+      newChunks = [cleanWordList];
+    }
+    
+    setChunks(newChunks);
+    setCurrentChunkIndex(0);
   }, [text]);
 
   useEffect(() => {
-    const wordObjs = words.map((w, i) => ({ id: `${i}-${w}`, word: w }));
-    setPool([...wordObjs].sort(() => Math.random() - 0.5));
-    setAssembled([]);
-    setIsCorrect(null);
-  }, [words]);
+    if (chunks.length === 0) return;
+    
+    const targetWords = chunks[currentChunkIndex];
+    const poolData = targetWords.map((word, idx) => ({
+      id: `scramble-${currentChunkIndex}-${idx}`,
+      word,
+      selected: false
+    }));
+    
+    // Shuffle the pool
+    setPool(poolData.sort(() => Math.random() - 0.5));
+    setAssembledCount(0);
+  }, [chunks, currentChunkIndex]);
 
-  const moveToAssembled = (item: { id: string, word: string }) => {
-    setPool(pool.filter(p => p.id !== item.id));
-    setAssembled([...assembled, item]);
-    setIsCorrect(null);
-  };
+  const targetWords = chunks[currentChunkIndex] || [];
+  const isChunkComplete = assembledCount === targetWords.length && targetWords.length > 0;
+  const isAllComplete = isChunkComplete && currentChunkIndex === chunks.length - 1;
 
-  const moveToPool = (item: { id: string, word: string }) => {
-    setAssembled(assembled.filter(a => a.id !== item.id));
-    setPool([...pool, item]);
-    setIsCorrect(null);
-  };
+  const handleChipClick = (item: { id: string, word: string, selected: boolean }) => {
+    if (item.selected || isChunkComplete) return;
 
-  const checkOrder = () => {
-    if (assembled.length !== words.length) {
-      setIsCorrect(false);
-      return;
+    const nextWordToMatch = targetWords[assembledCount];
+    
+    // Case-insensitive match check
+    if (item.word.toLowerCase() === nextWordToMatch.toLowerCase()) {
+      // Match!
+      setPool(prev => prev.map(p => p.id === item.id ? { ...p, selected: true } : p));
+      setAssembledCount(prev => prev + 1);
+      setErrorId(null);
+      
+      // If chunk is complete, advance after delay
+      if (assembledCount + 1 === targetWords.length) {
+        if (currentChunkIndex < chunks.length - 1) {
+          setTimeout(() => {
+            setCurrentChunkIndex(prev => prev + 1);
+          }, 800);
+        }
+      }
+    } else {
+      // Mismatch!
+      setErrorId(item.id);
+      setShake(true);
+      setTimeout(() => setShake(false), 300);
+      setTimeout(() => setErrorId(null), 600);
     }
-    const currentStr = assembled.map(a => a.word).join(" ");
-    const targetStr = words.join(" ");
-    setIsCorrect(currentStr === targetStr);
   };
 
-  const reset = () => {
-    const wordObjs = words.map((w, i) => ({ id: `${i}-${w}`, word: w }));
-    setPool([...wordObjs].sort(() => Math.random() - 0.5));
-    setAssembled([]);
-    setIsCorrect(null);
-  };
+  if (chunks.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* Assembled Area */}
-      <div className="min-h-[120px] p-4 rounded-xl border-2 border-dashed border-glass-border bg-background flex flex-wrap gap-2 items-start content-start">
-        {assembled.map(item => (
-          <button
-            key={item.id}
-            onClick={() => moveToPool(item)}
-            className="px-3 py-1.5 bg-accent text-white rounded-lg text-sm shadow hover:scale-105 transition-transform"
-          >
-            {item.word}
-          </button>
-        ))}
-        {assembled.length === 0 && (
-          <span className="text-muted text-sm w-full text-center mt-8">Tap words from the pool below to assemble them here.</span>
+    <div className="flex flex-col gap-6 w-full items-center">
+      
+      {/* Status Text */}
+      <div className="text-center min-h-[24px]">
+        {isAllComplete ? (
+          <span className="text-green-500 font-bold">Success! You completed the sequence.</span>
+        ) : isChunkComplete ? (
+          <span className="text-green-500 font-medium">Part {currentChunkIndex + 1} done! Loading next...</span>
+        ) : chunks.length > 1 ? (
+          <span className="text-muted text-sm italic">
+            Part {currentChunkIndex + 1} of {chunks.length} — Tap words in correct order
+          </span>
+        ) : (
+          <span className="text-muted text-sm italic">
+            Reconstruct the verse by tapping words in order
+          </span>
         )}
       </div>
 
-      {/* Pool Area */}
-      <div className="p-4 rounded-xl bg-glass-bg flex flex-wrap gap-2 justify-center">
-        {pool.map(item => (
-          <button
-            key={item.id}
-            onClick={() => moveToAssembled(item)}
-            className="px-3 py-1.5 bg-background border border-glass-border text-primary rounded-lg text-sm shadow-sm hover:scale-105 transition-transform hover:border-accent hover:text-accent"
-          >
-            {item.word}
-          </button>
-        ))}
-        {pool.length === 0 && (
-          <span className="text-muted text-sm w-full text-center py-2">All words placed.</span>
-        )}
+      {/* Slots Container */}
+      <div 
+        className={`flex flex-wrap gap-2 justify-center transition-transform ${shake ? 'animate-shake' : ''}`}
+        style={{ animation: shake ? 'shake 0.3s cubic-bezier(.36,.07,.19,.97) both' : 'none' }}
+      >
+        {targetWords.map((word, idx) => {
+          const isFilled = idx < assembledCount;
+          return (
+            <div 
+              key={idx}
+              className={`min-w-[50px] h-10 px-3 flex items-center justify-center font-medium text-sm transition-all duration-300
+                ${isFilled 
+                  ? 'text-primary border-b-2 border-transparent scale-105' 
+                  : 'text-accent-light border-b-2 border-glass-border'
+                }`}
+            >
+              {isFilled ? targetWords[idx] : ''}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Controls */}
-      <div className="flex justify-between items-center">
-        <Button variant="ghost" onClick={reset}>Reset</Button>
-        <div className="flex items-center gap-4">
-          {isCorrect === true && <span className="text-green-500 font-bold">Perfect!</span>}
-          {isCorrect === false && <span className="text-red-500 font-bold">Not quite right.</span>}
-          <Button onClick={checkOrder} disabled={assembled.length === 0}>Check Order</Button>
-        </div>
+      {/* Pool Container */}
+      <div className="flex flex-wrap gap-3 justify-center mt-6">
+        {pool.map(item => {
+          if (item.selected) return null;
+          
+          const isError = errorId === item.id;
+          
+          return (
+            <button
+              key={item.id}
+              onClick={() => handleChipClick(item)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium shadow-sm transition-all duration-200
+                ${isError 
+                  ? 'bg-red-500/10 text-red-500 border-red-500 border shadow-[0_0_8px_rgba(239,68,68,0.4)]' 
+                  : 'bg-glass-bg border border-glass-border text-primary hover:scale-105 hover:border-accent hover:text-accent'
+                }`}
+            >
+              {item.word}
+            </button>
+          );
+        })}
       </div>
+
+      {/* Injecting Shake Animation Keyframes */}
+      <style>{`
+        @keyframes shake {
+          10%, 90% { transform: translate3d(-2px, 0, 0); }
+          20%, 80% { transform: translate3d(4px, 0, 0); }
+          30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+          40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+        .animate-shake {
+          animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+        }
+      `}</style>
     </div>
   );
 };
