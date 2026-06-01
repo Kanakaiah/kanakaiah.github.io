@@ -178,7 +178,10 @@ export const Practice: React.FC = () => {
   }, [isImmersed, activeVerseIndex, verses.length]);
 
   return (
-    <div className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100] bg-background' : ''}`}>
+    <div 
+      className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : ''}`}
+      style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
+    >
       
       {/* Header */}
       <div className={`flex items-center justify-between p-4 ${isImmersed ? 'absolute top-0 left-0 w-full z-10' : ''}`}>
@@ -193,7 +196,7 @@ export const Practice: React.FC = () => {
         </button>
       </div>
 
-      <div className={`flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 ${isImmersed ? 'justify-center items-center h-full -mt-16' : ''}`}>
+      <div className={`flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 ${isImmersed ? 'justify-center items-center h-full' : ''}`}>
         
         {/* Mode Selector (Hidden in Immersed) */}
         {!isImmersed && (
@@ -253,25 +256,27 @@ export const Practice: React.FC = () => {
           </div>
 
           {/* Navigation Arrows */}
-          <div className="mt-8 pt-6 border-t border-glass-border flex items-center justify-between">
-            <button 
-              onClick={handlePrev} disabled={activeVerseIndex === 0}
-              className="p-2 rounded-full hover:bg-glass-bg-hover disabled:opacity-30 transition-colors text-secondary hover:text-primary"
-            >
-              <ArrowLeft className="w-6 h-6" />
-            </button>
-            
-            <span className="font-heading font-bold text-muted text-sm">
-              {activeVerseIndex + 1} / {verses.length}
-            </span>
-            
-            <button 
-              onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
-              className="p-2 rounded-full hover:bg-glass-bg-hover disabled:opacity-30 transition-colors text-secondary hover:text-primary"
-            >
-              <ArrowRight className="w-6 h-6" />
-            </button>
-          </div>
+          {!isImmersed && (
+            <div className="mt-8 pt-6 border-t border-glass-border flex items-center justify-between">
+              <button 
+                onClick={handlePrev} disabled={activeVerseIndex === 0}
+                className="p-2 rounded-full hover:bg-glass-bg-hover disabled:opacity-30 transition-colors text-secondary hover:text-primary"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              
+              <span className="font-heading font-bold text-muted text-sm">
+                {activeVerseIndex + 1} / {verses.length}
+              </span>
+              
+              <button 
+                onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
+                className="p-2 rounded-full hover:bg-glass-bg-hover disabled:opacity-30 transition-colors text-secondary hover:text-primary"
+              >
+                <ArrowRight className="w-6 h-6" />
+              </button>
+            </div>
+          )}
         </div>
 
       </div>
