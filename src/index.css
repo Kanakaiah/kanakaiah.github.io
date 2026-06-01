@@ -20,6 +20,52 @@
     --glass-bg-hover: rgba(51, 65, 85, 0.8);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-border-hover: rgba(255, 255, 255, 0.15);
+  }
+
+  [data-theme="obsidian"] {
+    --bg-color: #050505;
+    --accent: #f43f5e;
+    --accent-hover: #e11d48;
+    --accent-glow: rgba(244, 63, 94, 0.15);
+    --accent-glow-strong: rgba(244, 63, 94, 0.4);
+    --accent-light: #fb7185;
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-bg-hover: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-hover: rgba(255, 255, 255, 0.12);
+  }
+
+  [data-theme="midnight"] {
+    --bg-color: #040d1a;
+    --accent: #0ea5e9;
+    --accent-hover: #0284c7;
+    --accent-glow: rgba(14, 165, 233, 0.15);
+    --accent-glow-strong: rgba(14, 165, 233, 0.4);
+    --accent-light: #38bdf8;
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-bg-hover: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-hover: rgba(255, 255, 255, 0.12);
+  }
+
+  [data-theme="parchment"] {
+    color-scheme: light;
+    --bg-color: #f5f0e8;
+    --text-primary: #2c2417;
+    --text-secondary: #6b5d4f;
+    --text-muted: #9a8d7f;
+    --accent: #7c5c3c;
+    --accent-hover: #60452d;
+    --accent-glow: rgba(124, 92, 60, 0.12);
+    --accent-glow-strong: rgba(124, 92, 60, 0.3);
+    --accent-light: #9a7856;
+    --glass-bg: rgba(0, 0, 0, 0.03);
+    --glass-bg-hover: rgba(0, 0, 0, 0.06);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-hover: rgba(0, 0, 0, 0.15);
+  }
+
+  :root {
 
     --font-primary: 'Inter', system-ui, sans-serif;
     --font-heading: 'Outfit', system-ui, sans-serif;
