@@ -287,22 +287,26 @@ export const Practice: React.FC = () => {
 
         {/* Display Board */}
         <div className={`bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-sm mb-48 lg:mb-32'}`}>
-          <div className="text-center mb-8">
-            <span className={`font-heading font-bold ${isImmersed ? 'text-2xl text-secondary' : 'text-accent-light px-4 py-1.5 rounded-full bg-accent/10'}`}>
-              {currentVerse.ref}
-            </span>
-          </div>
-
-          <div className="flex-1">
-            {activeMode === 'read' && (
-              <div className="flex items-center justify-between bg-glass-bg p-3 rounded-xl border border-glass-border mb-4">
-                <Button variant="secondary" onClick={handleToggleTTS} className="text-sm">
-                  {isAutoPlaying ? <Square className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                  {isAutoPlaying ? 'Stop' : 'Auto Play'}
-                </Button>
-              </div>
-            )}
-            {renderWorkspace()}
+          <div className="flex-1 flex flex-col">
+            <div className={`flex items-center mb-6 ${isImmersed ? 'justify-center' : 'justify-between'}`}>
+              <span className={`font-heading font-bold ${isImmersed ? 'text-2xl text-secondary' : 'text-accent-light text-xl'}`}>
+                {currentVerse.ref}
+              </span>
+              
+              {!isImmersed && activeMode === 'read' && (
+                <button 
+                  onClick={handleToggleTTS} 
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent hover:bg-accent hover:text-white transition-colors text-sm font-bold"
+                >
+                  {isAutoPlaying ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                  <span className="hidden sm:inline">{isAutoPlaying ? 'Stop' : 'Auto Play'}</span>
+                </button>
+              )}
+            </div>
+            
+            <div className="flex-1">
+              {renderWorkspace()}
+            </div>
           </div>
 
           {/* Navigation Arrows */}
