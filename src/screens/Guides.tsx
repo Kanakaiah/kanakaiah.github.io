@@ -40,62 +40,157 @@ export const Guides: React.FC = () => {
         <div className="bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 shadow-sm flex flex-col gap-8">
           
           {activeGuide.type === 'reference' && activeGuide.sections && (
-             <div className="flex flex-col gap-8">
+             <div className="flex flex-col gap-10">
                {activeGuide.sections.map((sec: any, i: number) => (
-                 <div key={i} className="flex flex-col gap-3">
-                   <h2 className="text-xl font-bold text-accent-light border-b border-glass-border pb-2 inline-block">
-                     {sec.title}
-                   </h2>
-                   <div className="flex flex-col gap-2 pl-4 border-l-2 border-accent/30">
-                     {sec.items.map((item: any, j: number) => (
-                       <div key={j} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 py-1">
-                         <span className="font-bold text-primary min-w-[140px]">{item.ref}</span>
-                         <span className="text-secondary text-sm">{item.desc}</span>
-                       </div>
-                     ))}
-                   </div>
+                 <div key={i} className="flex flex-col gap-4">
+                   {sec.heading && (
+                     <h2 className="text-xl font-bold text-accent-light border-b border-glass-border pb-2 inline-block">
+                       {sec.heading}
+                     </h2>
+                   )}
+                   {sec.description && (
+                     <p className="text-secondary leading-relaxed">{sec.description}</p>
+                   )}
+                   
+                   {sec.table && (
+                     <div className="overflow-x-auto mt-2">
+                       <table className="w-full text-left text-sm border-collapse">
+                         <thead>
+                           <tr>
+                             {sec.table.headers.map((h: string, hi: number) => (
+                               <th key={hi} className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover">{h}</th>
+                             ))}
+                           </tr>
+                         </thead>
+                         <tbody>
+                           {sec.table.rows.map((row: string[], ri: number) => (
+                             <tr key={ri} className="border-b border-glass-border/50 hover:bg-glass-bg transition-colors">
+                               {row.map((cell: string, ci: number) => (
+                                 <td key={ci} className="p-3 text-secondary">{cell}</td>
+                               ))}
+                             </tr>
+                           ))}
+                         </tbody>
+                       </table>
+                     </div>
+                   )}
+
+                   {sec.entries && (
+                     <div className="flex flex-col gap-4 mt-2">
+                       {sec.entries.map((entry: any, ei: number) => (
+                         <div key={ei} className="bg-glass-bg border border-glass-border rounded-xl p-5 flex flex-col gap-3 shadow-sm">
+                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-glass-border/50 pb-3">
+                             <span className="font-bold text-accent px-3 py-1 bg-accent/10 rounded-full text-xs uppercase tracking-wider">{entry.rank}</span>
+                             <span className="font-heading font-bold text-lg text-primary">{entry.person}</span>
+                             <span className="text-sm font-bold text-muted sm:ml-auto">{entry.reference}</span>
+                           </div>
+                           <p className="text-primary italic leading-relaxed border-l-2 border-accent/40 pl-4 my-1">"{entry.quote}"</p>
+                           {entry.note && <p className="text-secondary text-sm">{entry.note}</p>}
+                         </div>
+                       ))}
+                     </div>
+                   )}
+
+                   {sec.note && (
+                     <div className="bg-accent/5 border border-accent/20 rounded-xl p-4 mt-2">
+                       <p className="text-sm text-secondary leading-relaxed"><strong className="text-accent-light">Note:</strong> {sec.note}</p>
+                     </div>
+                   )}
+
+                   {sec.keyVerse && (
+                     <div className="bg-glass-bg border-l-4 border-l-accent rounded-r-xl p-5 mt-4">
+                       <p className="font-bold text-primary mb-1">{sec.keyVerse.ref}</p>
+                       <p className="text-secondary italic">"{sec.keyVerse.text}"</p>
+                     </div>
+                   )}
                  </div>
                ))}
              </div>
           )}
 
           {activeGuide.type === 'book-guide' && activeGuide.blocks && (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-8">
               
-              <div className="bg-background rounded-xl p-4 border border-glass-border flex flex-col items-center gap-3">
-                <span className="text-xs uppercase tracking-widest text-muted font-bold">Structure Formula</span>
-                <div className="text-2xl font-heading font-bold text-accent-light tracking-[0.2em]">
+              <div className="bg-glass-bg rounded-2xl p-6 border border-glass-border flex flex-col items-center gap-4 text-center">
+                <span className="text-xs uppercase tracking-[0.2em] text-muted font-bold">Structure Overview</span>
+                <div className="text-3xl font-heading font-bold text-accent-light tracking-widest">
                   {activeGuide.structureFormula}
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-5">
                 {activeGuide.blocks.map((block: any, i: number) => (
                   <div key={i} className="flex gap-4 items-start group">
-                    <div className="w-16 h-16 rounded-2xl bg-accent/10 flex flex-col items-center justify-center border border-accent/20 flex-shrink-0 group-hover:bg-accent/20 transition-colors">
-                      <span className="text-[10px] text-accent font-bold uppercase tracking-wider mb-0.5">Ch</span>
+                    <div className="w-16 h-16 rounded-2xl bg-glass-bg flex flex-col items-center justify-center border border-glass-border flex-shrink-0 shadow-sm">
+                      <span className="text-[10px] text-muted font-bold uppercase tracking-wider mb-0.5">Ch</span>
                       <span className="font-heading font-bold text-primary text-lg leading-none">{block.chapters}</span>
                     </div>
-                    <div className="pt-1.5 flex flex-col gap-1">
-                      <h3 className="font-bold text-primary tracking-wide">{block.label}</h3>
-                      <p className="text-secondary text-sm leading-relaxed">{block.description}</p>
+                    <div className="pt-2 flex flex-col gap-1">
+                      <h3 className="font-bold text-primary tracking-wide text-lg">{block.label}</h3>
+                      <p className="text-secondary leading-relaxed">{block.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {(activeGuide as any).keyThemes && (
-                <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-3">
-                  <h3 className="font-bold text-accent-light text-sm uppercase tracking-wider">Key Themes</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {(activeGuide as any).keyThemes.map((theme: string, i: number) => (
-                      <span key={i} className="px-3 py-1.5 rounded-lg bg-glass-bg border border-glass-border text-sm font-medium text-secondary">
-                        {theme}
-                      </span>
+              {activeGuide.anchors && (
+                <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-4">
+                  <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm border-collapse">
+                      <thead>
+                        <tr>
+                          <th className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover w-16">Ch</th>
+                          <th className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover w-32">Word</th>
+                          <th className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover">Scene</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeGuide.anchors.map((anchor: any, i: number) => (
+                          <tr key={i} className="border-b border-glass-border/50 hover:bg-glass-bg transition-colors">
+                            <td className="p-3 text-muted font-bold">{anchor.ch}</td>
+                            <td className="p-3 font-bold text-accent-light">{anchor.word}</td>
+                            <td className="p-3 text-secondary">{anchor.scene}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {activeGuide.memorySentence && (
+                <div className="mt-2 pt-6 border-t border-glass-border flex flex-col gap-4">
+                  <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em] flex items-center justify-between">
+                    <span>Memory Sentence</span>
+                    <span className="text-[10px] text-muted tracking-normal bg-glass-bg px-2 py-1 rounded hidden sm:block">Read 3-4 times to lock flow</span>
+                  </h3>
+                  <div className="bg-glass-bg border border-glass-border rounded-xl p-6 shadow-sm">
+                    <p 
+                      className="text-lg leading-relaxed text-secondary"
+                      dangerouslySetInnerHTML={{
+                        __html: activeGuide.memorySentence.replace(/\b([A-Z]{2,}(?:'S)?)\b/g, '<strong class="text-accent-light font-bold">$1</strong>')
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeGuide.keyVerses && (
+                <div className="mt-2 pt-6 border-t border-glass-border flex flex-col gap-4">
+                  <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">Key Verses</h3>
+                  <div className="flex flex-col gap-3">
+                    {activeGuide.keyVerses.map((kv: any, i: number) => (
+                      <div key={i} className="bg-glass-bg border border-glass-border rounded-xl p-5 shadow-sm">
+                        <p className="font-bold text-primary mb-2 text-sm">{kv.ref}</p>
+                        {kv.text && <p className="text-secondary italic mb-2">"{kv.text}"</p>}
+                        {kv.theme && <p className="text-xs font-bold text-accent uppercase tracking-wider">{kv.theme}</p>}
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
+
             </div>
           )}
 
