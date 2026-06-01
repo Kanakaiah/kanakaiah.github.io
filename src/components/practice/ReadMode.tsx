@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 
 interface ReadModeProps {
@@ -9,6 +9,59 @@ interface ReadModeProps {
 export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) => {
   const { state } = useApp();
   const [unmaskedIndices, setUnmaskedIndices] = useState<number[]>([]);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const initialPinchDist = useRef<number | null>(null);
+  const initialZoomRef = useRef<number>(1);
+
+  // Handle Pinch-to-Zoom logic in Immersed mode
+  useEffect(() => {
+    if (!isImmersed) {
+      setZoomLevel(1);
+      return;
+    }
+
+    const getDistance = (touches: TouchList) => {
+      if (touches.length < 2) return 0;
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        initialPinchDist.current = getDistance(e.touches);
+        initialZoomRef.current = zoomLevel;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2 && initialPinchDist.current !== null) {
+        e.preventDefault(); // Prevent native browser page zoom
+        const currentDist = getDistance(e.touches);
+        const ratio = currentDist / initialPinchDist.current;
+        let newZoom = initialZoomRef.current * ratio;
+        newZoom = Math.max(0.5, Math.min(newZoom, 4.0)); // Clamp between 0.5x and 4x
+        setZoomLevel(newZoom);
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) {
+        initialPinchDist.current = null;
+      }
+    };
+
+    // Attach to document to catch touches everywhere, with non-passive to allow preventDefault
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isImmersed, zoomLevel]);
 
   // Reset unmasked indices when text changes
   useEffect(() => {
@@ -55,7 +108,10 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) 
   };
 
   return (
-    <div className={`text-xl leading-relaxed font-medium ${!isImmersed ? 'whitespace-pre-wrap' : ''}`}>
+    <div 
+      className={`text-xl font-medium ${!isImmersed ? 'whitespace-pre-wrap leading-relaxed' : 'transition-none'}`}
+      style={isImmersed ? { fontSize: `${1.25 * zoomLevel}rem`, lineHeight: `${1.75 * zoomLevel}rem` } : {}}
+    >
       {parts.map((part, index) => {
         const isMaskEnabled = isImmersed && state.settings.recallMasking;
         const isMasked = isMaskEnabled && !unmaskedIndices.includes(index);
