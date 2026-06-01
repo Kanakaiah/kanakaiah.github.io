@@ -90,6 +90,7 @@ export const Settings: React.FC = () => {
                   <option value="obsidian" className="bg-background text-primary">Obsidian (Pure Dark)</option>
                   <option value="midnight" className="bg-background text-primary">Midnight (Dark Blue)</option>
                   <option value="parchment" className="bg-background text-primary">Parchment (Light Warm)</option>
+                  <option value="pure-white" className="bg-background text-primary">Pure White</option>
                 </select>
               </div>
 

@@ -65,6 +65,23 @@
     --glass-border-hover: rgba(0, 0, 0, 0.15);
   }
 
+  [data-theme="pure-white"] {
+    color-scheme: light;
+    --bg-color: #f8f9fa;
+    --text-primary: #000000;
+    --text-secondary: #525252;
+    --text-muted: #a3a3a3;
+    --accent: #000000;
+    --accent-hover: #404040;
+    --accent-glow: rgba(0, 0, 0, 0.05);
+    --accent-glow-strong: rgba(0, 0, 0, 0.15);
+    --accent-light: #404040;
+    --glass-bg: #ffffff;
+    --glass-bg-hover: rgba(0, 0, 0, 0.06);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-hover: rgba(0, 0, 0, 0.15);
+  }
+
   :root {
 
     --font-primary: 'Inter', system-ui, sans-serif;
