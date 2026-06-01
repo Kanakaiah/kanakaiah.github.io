@@ -145,37 +145,81 @@ export const Practice: React.FC = () => {
 
   const isImmersed = activeMode === 'immersed';
 
-  // Immersed Mode Fullscreen & Navigation Logic
+  // Global Navigation: Keyboard, Swipe, and Immersed Taps
   React.useEffect(() => {
-    if (isImmersed) {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(() => {});
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const handlePrevVerse = () => {
+      setActiveVerseIndex(i => (i > 0 ? i - 1 : i));
+    };
+
+    const handleNextVerse = () => {
+      setActiveVerseIndex(i => (i < verses.length - 1 ? i + 1 : i));
+    };
+
+    // Keyboard navigation
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === 'ArrowLeft') handlePrevVerse();
+      if (e.key === 'ArrowRight') handleNextVerse();
+    };
+
+    // Swipe navigation
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      const touchEndY = e.changedTouches[0].screenY;
+      
+      const swipeX = touchEndX - touchStartX;
+      const swipeY = touchEndY - touchStartY;
+      
+      // Ensure it's a deliberate horizontal swipe (not just scrolling)
+      if (Math.abs(swipeX) > 50 && Math.abs(swipeX) > Math.abs(swipeY) * 1.5) {
+        if (swipeX > 0) handlePrevVerse();
+        else handleNextVerse();
       }
+    };
+
+    // Immersed click navigation
+    const handleImmersedClick = (e: MouseEvent) => {
+      if (!isImmersed) return;
+      const target = e.target as HTMLElement;
+      const isInteractive = target.closest('button') || target.closest('a') || target.closest('.masked-sentence');
       
-      const handleImmersedClick = (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        const isInteractive = target.closest('button') || target.closest('a') || target.closest('.masked-sentence');
-        
-        if (!isInteractive) {
-          const x = e.clientX;
-          const width = window.innerWidth;
-          if (x < width * 0.25) {
-            if (activeVerseIndex > 0) setActiveVerseIndex(i => i - 1);
-          } else if (x > width * 0.75) {
-            if (activeVerseIndex < verses.length - 1) setActiveVerseIndex(i => i + 1);
-          }
-        }
-      };
-      
-      window.addEventListener('click', handleImmersedClick);
-      return () => {
-        window.removeEventListener('click', handleImmersedClick);
-        if (document.fullscreenElement) {
-          document.exitFullscreen().catch(() => {});
-        }
-      };
+      if (!isInteractive) {
+        const x = e.clientX;
+        const width = window.innerWidth;
+        if (x < width * 0.25) handlePrevVerse();
+        else if (x > width * 0.75) handleNextVerse();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('click', handleImmersedClick);
+
+    // Fullscreen logic
+    if (isImmersed && document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
     }
-  }, [isImmersed, activeVerseIndex, verses.length]);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('click', handleImmersedClick);
+      
+      if (isImmersed && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    };
+  }, [isImmersed, verses.length]);
 
   return (
     <div 
