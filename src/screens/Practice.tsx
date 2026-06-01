@@ -301,7 +301,7 @@ export const Practice: React.FC = () => {
 
           {/* Navigation Arrows */}
           {!isImmersed && (
-            <div className="mt-8 pt-6 border-t border-glass-border flex items-center justify-between">
+            <div className="mt-12 flex items-center justify-between">
               <button 
                 onClick={handlePrev} disabled={activeVerseIndex === 0}
                 className="p-2 rounded-full hover:bg-glass-bg-hover disabled:opacity-30 transition-colors text-secondary hover:text-primary"
