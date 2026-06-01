@@ -300,15 +300,6 @@ export const Practice: React.FC = () => {
                   {isAutoPlaying ? <Square className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
                   {isAutoPlaying ? 'Stop' : 'Auto Play'}
                 </Button>
-                <Button variant="secondary" onClick={() => setShowHint(!showHint)} className="text-sm">
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  {showHint ? 'Hide Hint' : 'Show Hint'}
-                </Button>
-              </div>
-            )}
-            {showHint && activeMode === 'read' && (
-              <div className="text-sm text-accent mb-4 p-3 bg-accent/10 rounded-lg">
-                Hint: Focus on the structure of the verse and try to visualize the context.
               </div>
             )}
             {renderWorkspace()}
