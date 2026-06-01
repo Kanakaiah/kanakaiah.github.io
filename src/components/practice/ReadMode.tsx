@@ -55,24 +55,30 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) 
   };
 
   return (
-    <div className='text-xl leading-relaxed whitespace-pre-wrap font-medium'>
+    <div className={`text-xl leading-relaxed font-medium ${!isImmersed ? 'whitespace-pre-wrap' : ''}`}>
       {parts.map((part, index) => {
-        const shouldMask = isImmersed && state.settings.recallMasking;
-        const isMasked = shouldMask && !unmaskedIndices.includes(index);
+        const isMaskEnabled = isImmersed && state.settings.recallMasking;
+        const isMasked = isMaskEnabled && !unmaskedIndices.includes(index);
         
-        if (shouldMask) {
+        // Immersed mode ALWAYS splits into block sentences for focused reading
+        if (isImmersed) {
+          const displayPart = part.trim();
+          if (!displayPart) return null;
+          
           return (
             <span 
               key={index}
-              onClick={(e) => toggleMask(index, e)}
-              className={`block mb-4 cursor-pointer transition-all duration-300 select-none masked-sentence
+              onClick={isMaskEnabled ? (e) => toggleMask(index, e) : undefined}
+              className={`block mb-5 transition-all duration-300 
+                ${isMaskEnabled ? 'cursor-pointer select-none masked-sentence' : ''} 
                 ${isMasked ? 'blur-[6px] opacity-50 hover:opacity-80' : 'blur-none opacity-100'}`}
             >
-              {renderBionicText(part)}
+              {renderBionicText(displayPart)}
             </span>
           );
         }
 
+        // Standard mode renders inline
         return <span key={index}>{renderBionicText(part)}</span>;
       })}
     </div>
