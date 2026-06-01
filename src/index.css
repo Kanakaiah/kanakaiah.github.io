@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    color-scheme: dark;
     --bg-color: #0f172a;
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
@@ -36,5 +37,9 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
-  font-family: var(--font-primary);
+}
+
+select option {
+  background-color: var(--bg-color) !important;
+  color: var(--text-primary) !important;
 }
