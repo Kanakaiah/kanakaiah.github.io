@@ -31,7 +31,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
             <h3 className="font-heading font-bold text-base text-primary truncate">{verse.ref}</h3>
             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-white/10 text-secondary">{verse.translation}</span>
           </div>
-          <p className="text-base text-secondary line-clamp-2 leading-relaxed">
+          <p className="text-base text-secondary leading-relaxed">
             {verse.text}
           </p>
         </div>
