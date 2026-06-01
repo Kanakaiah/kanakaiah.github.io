@@ -90,6 +90,14 @@ export const Practice: React.FC = () => {
 
   // Handle Auto Play Logic
   React.useEffect(() => {
+    if (activeMode !== 'read') {
+      if (isAutoPlaying) {
+        setIsAutoPlaying(false);
+        window.speechSynthesis.cancel();
+      }
+      return;
+    }
+
     if (isAutoPlaying && currentVerse) {
       window.speechSynthesis.cancel();
       const textToSpeak = `${currentVerse.ref}. ${currentVerse.text}`;
@@ -112,7 +120,7 @@ export const Practice: React.FC = () => {
     return () => {
       window.speechSynthesis.cancel();
     };
-  }, [activeVerseIndex, isAutoPlaying, currentVerse, verses.length]);
+  }, [activeVerseIndex, isAutoPlaying, currentVerse, verses.length, activeMode]);
 
   const handleNext = () => {
     if (activeVerseIndex < verses.length - 1) setActiveVerseIndex(i => i + 1);
