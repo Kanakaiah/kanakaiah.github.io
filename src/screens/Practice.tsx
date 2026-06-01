@@ -271,7 +271,7 @@ export const Practice: React.FC = () => {
         )}
 
         {/* Display Board */}
-        <div className={`bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-sm mb-24 lg:mb-8'}`}>
+        <div className={`bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-sm mb-48 lg:mb-32'}`}>
           <div className="text-center mb-8">
             <span className={`font-heading font-bold ${isImmersed ? 'text-2xl text-secondary' : 'text-accent-light px-4 py-1.5 rounded-full bg-accent/10'}`}>
               {currentVerse.ref}
