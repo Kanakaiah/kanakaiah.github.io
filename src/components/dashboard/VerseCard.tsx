@@ -45,7 +45,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
         </button>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-glass-border flex items-center justify-between text-xs text-muted">
+      <div className="mt-4 flex items-center justify-between text-xs text-muted">
         <div className="flex items-center gap-1.5">
           <div className="w-16 h-1.5 bg-background rounded-full overflow-hidden">
             <div 
