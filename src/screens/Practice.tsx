@@ -127,7 +127,7 @@ export const Practice: React.FC = () => {
     switch (activeMode) {
       case 'read':
       case 'immersed':
-        return <ReadMode text={currentVerse.text} />;
+        return <ReadMode text={currentVerse.text} isImmersed={isImmersed} />;
       case 'eraser':
         return <EraserMode text={currentVerse.text} />;
       case 'first-letter':
@@ -144,6 +144,38 @@ export const Practice: React.FC = () => {
   };
 
   const isImmersed = activeMode === 'immersed';
+
+  // Immersed Mode Fullscreen & Navigation Logic
+  React.useEffect(() => {
+    if (isImmersed) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      
+      const handleImmersedClick = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const isInteractive = target.closest('button') || target.closest('a') || target.closest('.masked-sentence');
+        
+        if (!isInteractive) {
+          const x = e.clientX;
+          const width = window.innerWidth;
+          if (x < width * 0.25) {
+            if (activeVerseIndex > 0) setActiveVerseIndex(i => i - 1);
+          } else if (x > width * 0.75) {
+            if (activeVerseIndex < verses.length - 1) setActiveVerseIndex(i => i + 1);
+          }
+        }
+      };
+      
+      window.addEventListener('click', handleImmersedClick);
+      return () => {
+        window.removeEventListener('click', handleImmersedClick);
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+      };
+    }
+  }, [isImmersed, activeVerseIndex, verses.length]);
 
   return (
     <div className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100] bg-background' : ''}`}>
