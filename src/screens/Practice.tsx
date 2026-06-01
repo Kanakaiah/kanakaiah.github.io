@@ -259,7 +259,7 @@ export const Practice: React.FC = () => {
                 onClick={() => setActiveMode(mode.id as PracticeMode)}
                 className={`flex-shrink-0 md:flex-shrink flex flex-col items-center p-3 rounded-xl min-w-[100px] md:min-w-0 border transition-all duration-300
                   ${activeMode === mode.id 
-                    ? 'bg-accent/10 border-accent/30 shadow-[0_4px_20px_rgba(var(--accent-rgb),0.15)] scale-105' 
+                    ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)] scale-105' 
                     : 'bg-glass-bg border-glass-border hover:bg-glass-bg-hover'}`}
               >
                 <mode.icon className={`w-6 h-6 mb-2 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
