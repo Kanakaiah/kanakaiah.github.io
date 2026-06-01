@@ -165,7 +165,7 @@ export const Practice: React.FC = () => {
         
         {/* Mode Selector (Hidden in Immersed) */}
         {!isImmersed && (
-          <div className="flex overflow-x-auto pb-4 mb-2 scrollbar-hide gap-3 w-full">
+          <div className="flex overflow-x-auto pb-6 pt-2 px-2 -mx-2 mb-2 scrollbar-hide gap-3 w-full">
             {[
               { id: 'read', icon: Eye, label: 'Read', sub: 'Read the full text' },
               { id: 'eraser', icon: Eraser, label: 'Eraser', sub: 'Hide words gradually' },
@@ -178,7 +178,7 @@ export const Practice: React.FC = () => {
               <button
                 key={mode.id}
                 onClick={() => setActiveMode(mode.id as PracticeMode)}
-                className={`flex-shrink-0 flex flex-col items-center p-3 rounded-xl min-w-[100px] border transition-all duration-300
+                className={`flex-1 shrink-0 flex flex-col items-center p-3 rounded-xl min-w-[100px] border transition-all duration-300
                   ${activeMode === mode.id 
                     ? 'bg-accent/10 border-accent/30 shadow-[0_4px_20px_rgba(var(--accent-rgb),0.15)] scale-105' 
                     : 'bg-glass-bg border-glass-border hover:bg-glass-bg-hover'}`}
