@@ -93,12 +93,15 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) 
     if (!state.settings.bionicReading || !isImmersed) return str;
     
     const words = str.split(/(\b[\w']+\b)/);
+    let wordCount = 0; // Track actual words to cycle colors properly
     return words.map((w, i) => {
       if (/^[\w']+$/.test(w)) {
         const boldLen = Math.ceil(w.length / 2);
+        const colorVar = `var(--bionic-${(wordCount % 5) + 1})`;
+        wordCount++;
         return (
           <React.Fragment key={i}>
-            <b className="font-bold text-accent opacity-100">{w.slice(0, boldLen)}</b>
+            <b className="font-bold opacity-100" style={{ color: colorVar }}>{w.slice(0, boldLen)}</b>
             <span className="opacity-70">{w.slice(boldLen)}</span>
           </React.Fragment>
         );

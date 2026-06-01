@@ -20,6 +20,12 @@
     --glass-bg-hover: rgba(51, 65, 85, 0.8);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-border-hover: rgba(255, 255, 255, 0.15);
+
+    --bionic-1: #ef4444;
+    --bionic-2: #3b82f6;
+    --bionic-3: #10b981;
+    --bionic-4: #f59e0b;
+    --bionic-5: #8b5cf6;
   }
 
   [data-theme="obsidian"] {
@@ -63,6 +69,12 @@
     --glass-bg-hover: rgba(0, 0, 0, 0.06);
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-border-hover: rgba(0, 0, 0, 0.15);
+
+    --bionic-1: #b91c1c;
+    --bionic-2: #1d4ed8;
+    --bionic-3: #047857;
+    --bionic-4: #b45309;
+    --bionic-5: #6d28d9;
   }
 
   [data-theme="pure-white"] {
@@ -80,6 +92,12 @@
     --glass-bg-hover: rgba(0, 0, 0, 0.06);
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-border-hover: rgba(0, 0, 0, 0.15);
+
+    --bionic-1: #b91c1c;
+    --bionic-2: #1d4ed8;
+    --bionic-3: #047857;
+    --bionic-4: #b45309;
+    --bionic-5: #6d28d9;
   }
 
   :root {
