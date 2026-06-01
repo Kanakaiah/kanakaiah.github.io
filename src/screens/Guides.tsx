@@ -148,9 +148,9 @@ export const Guides: React.FC = () => {
                       <tbody>
                         {activeGuide.anchors.map((anchor: any, i: number) => (
                           <tr key={i} className="border-b border-glass-border/50 hover:bg-glass-bg transition-colors">
-                            <td className="p-3 text-muted font-bold">{anchor.ch}</td>
-                            <td className="p-3 font-bold text-accent-light">{anchor.word}</td>
-                            <td className="p-3 text-secondary">{anchor.scene}</td>
+                            <td className="p-3 text-muted font-bold whitespace-nowrap">{anchor.ch}</td>
+                            <td className="p-3 font-bold text-accent-light whitespace-nowrap">{anchor.word}</td>
+                            <td className="p-3 text-secondary leading-relaxed min-w-[250px]">{anchor.scene}</td>
                           </tr>
                         ))}
                       </tbody>
