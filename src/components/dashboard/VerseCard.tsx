@@ -28,10 +28,10 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <div className={`w-2.5 h-2.5 rounded-full ${indicatorColor}`} />
-            <h3 className="font-heading font-bold text-lg text-primary truncate">{verse.ref}</h3>
+            <h3 className="font-heading font-bold text-base text-primary truncate">{verse.ref}</h3>
             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-white/10 text-secondary">{verse.translation}</span>
           </div>
-          <p className="text-sm text-secondary line-clamp-2 leading-relaxed">
+          <p className="text-base text-secondary line-clamp-2 leading-relaxed">
             {verse.text}
           </p>
         </div>
