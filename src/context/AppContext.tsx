@@ -34,8 +34,20 @@ export type AppAction =
 // --- REDUCER ---
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
-    case 'HYDRATE':
-      return { ...state, ...action.payload };
+    case 'HYDRATE': {
+      // Deduplicate verses on load to clean up any corrupted state from older versions
+      const verses = action.payload.verses || [];
+      const uniqueVerses: typeof verses = [];
+      const seen = new Set<string>();
+      for (const v of verses) {
+        const key = `${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueVerses.push(v);
+        }
+      }
+      return { ...state, ...action.payload, verses: uniqueVerses };
+    }
     case 'ADD_VERSE':
       return { ...state, verses: [...state.verses, action.payload] };
     case 'UPDATE_VERSE':
