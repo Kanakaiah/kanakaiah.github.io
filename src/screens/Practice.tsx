@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BookOpen, ChevronLeft, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check, Play, Square, HelpCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -28,6 +28,10 @@ export const Practice: React.FC = () => {
   
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [hintLevel, setHintLevel] = useState(0);
+
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const initialPinchDist = useRef<number | null>(null);
+  const initialZoomRef = useRef<number>(1);
 
   // If there are no verses, show empty state
   if (state.verses.length === 0) {
@@ -186,12 +190,14 @@ export const Practice: React.FC = () => {
     );
   };
 
+  const isImmersed = activeMode === 'immersed';
+
   // Render the current mode's workspace
   const renderWorkspace = () => {
     switch (activeMode) {
       case 'read':
       case 'immersed':
-        return <ReadMode key={currentVerse.id} text={currentVerse.text} isImmersed={isImmersed} />;
+        return <ReadMode key={currentVerse.id} text={currentVerse.text} isImmersed={isImmersed} zoomLevel={zoomLevel} />;
       case 'eraser':
         return <EraserMode key={currentVerse.id} text={currentVerse.text} />;
       case 'first-letter':
@@ -206,8 +212,6 @@ export const Practice: React.FC = () => {
         return null;
     }
   };
-
-  const isImmersed = activeMode === 'immersed';
 
   // Global Navigation: Keyboard, Swipe, and Immersed Taps
   React.useEffect(() => {
@@ -285,6 +289,59 @@ export const Practice: React.FC = () => {
     };
   }, [isImmersed, verses.length]);
 
+  // Reset zoom when leaving immersed mode
+  useEffect(() => {
+    if (!isImmersed) {
+      setZoomLevel(1);
+    }
+  }, [isImmersed]);
+
+  // Pinch-to-zoom logic for Immersed mode
+  useEffect(() => {
+    if (!isImmersed) return;
+
+    const getDistance = (touches: TouchList) => {
+      if (touches.length < 2) return 0;
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        initialPinchDist.current = getDistance(e.touches);
+        initialZoomRef.current = zoomLevel;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2 && initialPinchDist.current !== null) {
+        e.preventDefault(); // Prevent native browser page zoom
+        const currentDist = getDistance(e.touches);
+        const ratio = currentDist / initialPinchDist.current;
+        let newZoom = initialZoomRef.current * ratio;
+        newZoom = Math.max(0.5, Math.min(newZoom, 4.0));
+        setZoomLevel(newZoom);
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) {
+        initialPinchDist.current = null;
+      }
+    };
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isImmersed, zoomLevel]);
+
   return (
     <div 
       className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : ''}`}
@@ -338,7 +395,10 @@ export const Practice: React.FC = () => {
         <div className={`bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-sm mb-48 lg:mb-32'}`}>
           <div className="flex-1 flex flex-col">
             <div className={`flex items-center mb-6 ${isImmersed ? 'justify-center' : 'justify-between'}`}>
-              <span className={`font-heading font-bold ${isImmersed ? 'text-2xl text-secondary' : 'text-accent-light text-xl'}`}>
+              <span 
+                className={`font-heading font-bold transition-all duration-75 ${isImmersed ? 'text-secondary' : 'text-accent-light text-xl'}`}
+                style={isImmersed ? { fontSize: `${1.5 * zoomLevel}rem`, lineHeight: `${2 * zoomLevel}rem` } : {}}
+              >
                 {currentVerse.ref}
               </span>
               
