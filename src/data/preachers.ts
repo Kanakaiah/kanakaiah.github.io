@@ -16,7 +16,7 @@ export const PREACHERS_GUIDE = {
           reference: 'Bishop of Antioch; apostolic father; martyr',
           quote: 'Disciple of the Apostle John. Wrote seven epistles on church unity, the Eucharist, and the bishop\'s role while being transported to Rome for execution. "Let me be ground by the teeth of wild beasts" — his martyrdom theology remains stirring.',
           resources: [
-            { type: 'web', title: 'Ante-Nicene Fathers vol. 1 — CCEL', url: 'https://ccel.org/ccel/schaff/anf01/anf01.v.html' }
+            { type: 'web', title: 'Ante-Nicene Fathers vol. 1 — CCEL', url: 'https://www.ccel.org/ccel/schaff/anf01.html' }
           ]
         },
         {
