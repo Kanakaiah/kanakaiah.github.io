@@ -419,6 +419,7 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'The Gospel\'s Power and Message', url: 'https://www.amazon.com/Gospels-Power-Message-Recovering-Gospel/dp/1601781954' },
             { type: 'book', title: 'Gospel Assurance and Warnings', url: 'https://www.amazon.com/Gospel-Assurance-Warnings-Recovering/dp/1601782942' },
+            { type: 'audio', title: 'HeartCry — sermons & missionary resources', url: 'https://heartcrymissionary.com/resources/' },
             { type: 'youtube', title: 'HeartCry Missionary Society (YouTube)', url: 'https://www.youtube.com/@Heartcrymissionary' }
           ]
         }
