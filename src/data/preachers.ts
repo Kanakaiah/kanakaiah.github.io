@@ -417,8 +417,8 @@ export const PREACHERS_GUIDE = {
           reference: 'HeartCry Missionary Society; evangelist',
           quote: 'Known for piercing calls to genuine repentance and an uncompromising focus on the holiness of God. His 2002 youth conference sermon became one of the most-viewed evangelistic messages online. Serves as a missionary statesman supporting indigenous church planting globally.',
           resources: [
-            { type: 'book', title: 'The Gospel\'s Power and Message', url: 'https://www.amazon.com/Gospels-Power-Message-Paul-Washer/dp/1601781199' },
-            { type: 'book', title: 'Gospel Assurance and Warnings', url: 'https://www.amazon.com/Gospel-Assurance-Warnings-Paul-Washer/dp/1601783434' },
+            { type: 'book', title: 'The Gospel\'s Power and Message', url: 'https://www.amazon.com/Gospels-Power-Message-Recovering-Gospel/dp/1601781954' },
+            { type: 'book', title: 'Gospel Assurance and Warnings', url: 'https://www.amazon.com/Gospel-Assurance-Warnings-Recovering/dp/1601782942' },
             { type: 'youtube', title: 'HeartCry Missionary Society (YouTube)', url: 'https://www.youtube.com/@Heartcrymissionary' }
           ]
         }
