@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, ArrowLeft } from 'lucide-react';
+import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones } from 'lucide-react';
 import { NT_STUDY_GUIDES } from '../data/guides';
 
 export const Guides: React.FC = () => {
@@ -86,6 +86,28 @@ export const Guides: React.FC = () => {
                            </div>
                            <p className="text-primary italic leading-relaxed border-l-2 border-accent/40 pl-4 my-1">"{entry.quote}"</p>
                            {entry.note && <p className="text-secondary text-sm">{entry.note}</p>}
+                           {entry.resources && entry.resources.length > 0 && (
+                             <div className="flex flex-wrap gap-2 mt-1 pt-2 border-t border-glass-border/30">
+                               {entry.resources.map((res: any, ri: number) => {
+                                 const Icon = res.type === 'book' ? BookOpen : res.type === 'audio' ? Headphones : Globe;
+                                 const colorClass = res.type === 'book' ? 'text-amber-500 bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20' 
+                                   : res.type === 'audio' ? 'text-purple-400 bg-purple-400/10 border-purple-400/20 hover:bg-purple-400/20' 
+                                   : 'text-sky-400 bg-sky-400/10 border-sky-400/20 hover:bg-sky-400/20';
+                                 return (
+                                   <a
+                                     key={ri}
+                                     href={res.url}
+                                     target="_blank"
+                                     rel="noopener noreferrer"
+                                     className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${colorClass}`}
+                                   >
+                                     <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                                     <span className="truncate max-w-[200px]">{res.title}</span>
+                                   </a>
+                                 );
+                               })}
+                             </div>
+                           )}
                          </div>
                        ))}
                      </div>

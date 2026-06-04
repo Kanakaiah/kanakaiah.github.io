@@ -1,7 +1,10 @@
+import { PREACHERS_GUIDE } from './preachers';
+
 export const NT_STUDY_GUIDES = [
   // =============================
   // REFERENCE GUIDES
   // =============================
+  PREACHERS_GUIDE,
   {
     id: "evangelists",
     title: "The First Evangelists",
