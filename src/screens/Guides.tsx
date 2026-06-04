@@ -5,7 +5,7 @@ import { NT_STUDY_GUIDES } from '../data/guides';
 export const Guides: React.FC = () => {
   const [activeGuideId, setActiveGuideId] = useState<string | null>(null);
 
-  const activeGuide = useMemo(() => {
+  const activeGuide: any = useMemo(() => {
     return NT_STUDY_GUIDES.find((g: any) => g.id === activeGuideId);
   }, [activeGuideId]);
 
