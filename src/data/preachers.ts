@@ -203,8 +203,8 @@ export const PREACHERS_GUIDE = {
           quote: 'Preached to open-air crowds of up to 30,000 without amplification in Britain and America. Lloyd-Jones called him "the greatest preacher England ever produced." Benjamin Franklin, no friend of religion, calculated Whitefield\'s voice could be heard by 25,000 people simultaneously.',
           resources: [
             { type: 'book', title: 'Selected Sermons of George Whitefield', url: 'https://www.amazon.com/Selected-Sermons-George-Whitefield/dp/0851514618' },
-            { type: 'book', title: 'George Whitefield: God\'s Anointed Servant — Arnold Dallimore', url: 'https://www.amazon.com/George-Whitefield-Life-Times-Evangelist/dp/0891074880' },
-            { type: 'web', title: 'Monergism — Whitefield sermon archive', url: 'https://www.monergism.com/search?keywords=whitefield' }
+            { type: 'book', title: 'George Whitefield: God\'s Anointed Servant', url: 'https://www.amazon.com/George-Whitefield-Life-Times-Evangelist/dp/0891074880' },
+            { type: 'web', title: 'Monergism — Whitefield archive', url: 'https://www.monergism.com/search?keywords=whitefield' }
           ]
         },
         {
@@ -226,7 +226,7 @@ export const PREACHERS_GUIDE = {
           quote: 'A shoe salesman who became one of the most effective urban evangelists of the 19th century, conducting massive crusades across America and Britain. Founded what became Moody Bible Institute and Northfield Schools; pioneered gospel music in evangelism alongside Ira Sankey.',
           resources: [
             { type: 'book', title: 'Secret Power — on the Holy Spirit', url: 'https://www.amazon.com/Secret-Power-D-L-Moody/dp/0802454593' },
-            { type: 'book', title: 'D.L. Moody: A Life — Kevin Belmonte', url: 'https://www.amazon.com/D-L-Moody-Life-Innovator-Awakener/dp/0802412041' }
+            { type: 'book', title: 'D.L. Moody: A Life', url: 'https://www.amazon.com/D-L-Moody-Life-Innovator-Awakener/dp/0802412041' }
           ]
         }
       ]
@@ -254,7 +254,9 @@ export const PREACHERS_GUIDE = {
             { type: 'book', title: 'Preaching and Preachers', url: 'https://www.amazon.com/Preaching-Preachers-Martyn-Lloyd-Jones/dp/0310278708' },
             { type: 'book', title: 'Spiritual Depression', url: 'https://www.amazon.com/Spiritual-Depression-Its-Causes-Cure/dp/0802813879' },
             { type: 'book', title: 'Romans series & Ephesians series (multi-vol.)', url: 'https://www.amazon.com/Romans-Exposition-Chapter-Assurance-5-1-11/dp/0851510582' },
-            { type: 'audio', title: 'MLJTrust.org — 1,600+ free sermons', url: 'https://www.mljtrust.org' }
+            { type: 'audio', title: 'MLJTrust.org — 1,600+ free sermons', url: 'https://www.mljtrust.org' },
+            { type: 'youtube', title: 'Martyn Lloyd-Jones Trust (YouTube)', url: 'https://www.youtube.com/@MartynLloydJonesTrust' },
+            { type: 'podcast', title: 'MLJ Trust Sermons Podcast', url: 'https://podcasts.apple.com/us/podcast/martyn-lloyd-jones-sermon-podcast/id1078736166' }
           ]
         },
         {
@@ -265,7 +267,8 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'Just As I Am — autobiography', url: 'https://www.amazon.com/Just-As-I-Am-Autobiography/dp/0061259187' },
             { type: 'book', title: 'The Holy Spirit', url: 'https://www.amazon.com/Holy-Spirit-Activating-Gods-Power/dp/0849911249' },
-            { type: 'audio', title: 'BillyGraham.org — crusade footage & sermons', url: 'https://billygraham.org' }
+            { type: 'audio', title: 'BillyGraham.org — crusade footage & sermons', url: 'https://billygraham.org' },
+            { type: 'youtube', title: 'Billy Graham Evangelistic Association', url: 'https://www.youtube.com/@billygraham' }
           ]
         },
         {
@@ -298,7 +301,7 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'Knowing God', url: 'https://www.amazon.com/Knowing-God-J-I-Packer/dp/083081650X' },
             { type: 'book', title: 'Evangelism and the Sovereignty of God', url: 'https://www.amazon.com/Evangelism-Sovereignty-God-J-Packer/dp/0830837965' },
-            { type: 'book', title: 'A Quest for Godliness — on Puritan spirituality', url: 'https://www.amazon.com/Quest-Godliness-Puritan-Vision-Christian/dp/0891075828' }
+            { type: 'book', title: 'A Quest for Godliness', url: 'https://www.amazon.com/Quest-Godliness-Puritan-Vision-Christian/dp/0891075828' }
           ]
         },
         {
@@ -310,7 +313,8 @@ export const PREACHERS_GUIDE = {
             { type: 'book', title: 'The Holiness of God', url: 'https://www.amazon.com/Holiness-God-R-C-Sproul/dp/0842339655' },
             { type: 'book', title: 'Chosen by God', url: 'https://www.amazon.com/Chosen-God-R-C-Sproul/dp/0842313354' },
             { type: 'book', title: 'Everyone\'s a Theologian', url: 'https://www.amazon.com/Everyones-Theologian-Introduction-Systematic-Theology/dp/1567693652' },
-            { type: 'audio', title: 'Ligonier.org — full teaching library', url: 'https://www.ligonier.org' }
+            { type: 'youtube', title: 'Ligonier Ministries (YouTube)', url: 'https://www.youtube.com/@LigonierMinistries' },
+            { type: 'podcast', title: 'Renewing Your Mind Podcast', url: 'https://podcasts.apple.com/us/podcast/renewing-your-mind-with-r-c-sproul/id1076274404' }
           ]
         }
       ]
@@ -328,7 +332,8 @@ export const PREACHERS_GUIDE = {
             { type: 'book', title: 'A Call to Spiritual Reformation', url: 'https://www.amazon.com/Call-Spiritual-Reformation-Priorities-Prayer/dp/0801025699' },
             { type: 'book', title: 'The Gospel of John — Pillar NT Commentary', url: 'https://www.amazon.com/Gospel-according-John-Pillar-Testament/dp/0851117499' },
             { type: 'book', title: 'Exegetical Fallacies', url: 'https://www.amazon.com/Exegetical-Fallacies-D-A-Carson/dp/0801020867' },
-            { type: 'audio', title: 'Gospel Coalition — sermon & article library', url: 'https://www.thegospelcoalition.org/speakers/d-a-carson/' }
+            { type: 'youtube', title: 'Gospel Coalition (YouTube)', url: 'https://www.youtube.com/@TheGospelCoalition' },
+            { type: 'podcast', title: 'D.A. Carson Audio Podcast', url: 'https://podcasts.apple.com/us/podcast/d-a-carson-audio/id1220973685' }
           ]
         },
         {
@@ -340,7 +345,8 @@ export const PREACHERS_GUIDE = {
             { type: 'book', title: 'Desiring God', url: 'https://www.amazon.com/Desiring-God-Meditations-Christian-Hedonist/dp/1601423101' },
             { type: 'book', title: 'Let the Nations Be Glad', url: 'https://www.amazon.com/Let-Nations-Glad-Supremacy-Missions/dp/0801036410' },
             { type: 'book', title: 'The Pleasures of God', url: 'https://www.amazon.com/Pleasures-God-Meditations-Delight-Being/dp/1601423101' },
-            { type: 'audio', title: 'DesiringGod.org — 1,500+ free sermons', url: 'https://www.desiringgod.org' }
+            { type: 'youtube', title: 'Desiring God (YouTube)', url: 'https://www.youtube.com/@desiringgod' },
+            { type: 'podcast', title: 'Ask Pastor John Podcast', url: 'https://podcasts.apple.com/us/podcast/ask-pastor-john/id618132843' }
           ]
         },
         {
@@ -352,7 +358,8 @@ export const PREACHERS_GUIDE = {
             { type: 'book', title: 'The MacArthur Study Bible', url: 'https://www.amazon.com/NASB-MacArthur-Study-Bible-Hardcover/dp/0529122553' },
             { type: 'book', title: 'The Gospel According to Jesus', url: 'https://www.amazon.com/Gospel-According-Jesus-Anniversary/dp/0310291461' },
             { type: 'book', title: 'MacArthur NT Commentary series (34 vols.)', url: 'https://www.amazon.com/MacArthur-New-Testament-Commentary-Set/dp/0802413560' },
-            { type: 'audio', title: 'GTY.org — full 50+ year sermon archive', url: 'https://www.gty.org' }
+            { type: 'youtube', title: 'Grace to You (YouTube)', url: 'https://www.youtube.com/@gracetoyou' },
+            { type: 'podcast', title: 'Grace to You Radio Podcast', url: 'https://podcasts.apple.com/us/podcast/grace-to-you-radio-podcast/id72314561' }
           ]
         },
         {
@@ -363,8 +370,9 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'The Reason for God', url: 'https://www.amazon.com/Reason-God-Belief-Age-Skepticism/dp/1594483493' },
             { type: 'book', title: 'The Prodigal God', url: 'https://www.amazon.com/Prodigal-God-Recovering-Heart-Christian/dp/1594484023' },
-            { type: 'book', title: 'Prayer: Experiencing Awe and Intimacy with God', url: 'https://www.amazon.com/Prayer-Experiencing-Intimacy-Timothy-Keller/dp/0143108581' },
-            { type: 'audio', title: 'Gospel Coalition — Keller sermon archive', url: 'https://www.thegospelcoalition.org/speakers/timothy-keller/' }
+            { type: 'book', title: 'Prayer: Experiencing Awe and Intimacy', url: 'https://www.amazon.com/Prayer-Experiencing-Intimacy-Timothy-Keller/dp/0143108581' },
+            { type: 'youtube', title: 'Gospel in Life (YouTube)', url: 'https://www.youtube.com/@gospelinlife' },
+            { type: 'podcast', title: 'Timothy Keller Sermons Podcast', url: 'https://podcasts.apple.com/us/podcast/timothy-keller-sermons-podcast-by-gospel-in-life/id352660924' }
           ]
         },
         {
@@ -375,7 +383,8 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'Pray Big', url: 'https://www.amazon.com/Pray-Big-Alistair-Begg/dp/1784983071' },
             { type: 'book', title: 'Brave by Faith', url: 'https://www.amazon.com/Brave-Faith-Living-with-Confidence/dp/1784985333' },
-            { type: 'audio', title: 'TruthForLife.com — full sermon archive (free)', url: 'https://www.truthforlife.org' }
+            { type: 'youtube', title: 'Truth For Life (YouTube)', url: 'https://www.youtube.com/@truthforlife1' },
+            { type: 'podcast', title: 'Truth For Life Podcast', url: 'https://podcasts.apple.com/us/podcast/truth-for-life-daily-program/id120593452' }
           ]
         },
         {
@@ -386,7 +395,8 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'The Conviction to Lead', url: 'https://www.amazon.com/Conviction-Lead-Principles-Effective-Leadership/dp/0764211250' },
             { type: 'book', title: 'We Cannot Be Silent', url: 'https://www.amazon.com/Cannot-Silent-Standing-Marriage-Biblical/dp/0718032578' },
-            { type: 'audio', title: 'AlbertMohler.com — The Briefing podcast', url: 'https://albertmohler.com' }
+            { type: 'youtube', title: 'Albert Mohler (YouTube)', url: 'https://www.youtube.com/@albertmohler' },
+            { type: 'podcast', title: 'The Briefing Podcast', url: 'https://podcasts.apple.com/us/podcast/the-briefing-albert-mohler/id391404167' }
           ]
         },
         {
@@ -397,7 +407,8 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'Nine Marks of a Healthy Church', url: 'https://www.amazon.com/Nine-Marks-Healthy-Church-3rd/dp/1433539985' },
             { type: 'book', title: 'The Church: The Gospel Made Visible', url: 'https://www.amazon.com/Church-Gospel-Made-Visible/dp/1433677768' },
-            { type: 'audio', title: '9Marks.org — sermons, articles & podcast', url: 'https://www.9marks.org' }
+            { type: 'youtube', title: '9Marks (YouTube)', url: 'https://www.youtube.com/@9Marks' },
+            { type: 'podcast', title: 'Pastors\' Talk Podcast', url: 'https://podcasts.apple.com/us/podcast/pastors-talk/id1207137257' }
           ]
         },
         {
@@ -408,7 +419,7 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'The Gospel\'s Power and Message', url: 'https://www.amazon.com/Gospels-Power-Message-Paul-Washer/dp/1601781199' },
             { type: 'book', title: 'Gospel Assurance and Warnings', url: 'https://www.amazon.com/Gospel-Assurance-Warnings-Paul-Washer/dp/1601783434' },
-            { type: 'audio', title: 'HeartCry — sermons & missionary resources', url: 'https://heartcrymissionary.com' }
+            { type: 'youtube', title: 'HeartCry Missionary Society (YouTube)', url: 'https://www.youtube.com/@Heartcrymissionary' }
           ]
         }
       ]

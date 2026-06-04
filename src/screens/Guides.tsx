@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones } from 'lucide-react';
+import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones, Youtube, Radio } from 'lucide-react';
 import { NT_STUDY_GUIDES } from '../data/guides';
 
 export const Guides: React.FC = () => {
@@ -89,9 +89,15 @@ export const Guides: React.FC = () => {
                            {entry.resources && entry.resources.length > 0 && (
                              <div className="flex flex-wrap gap-2 mt-1 pt-2 border-t border-glass-border/30">
                                {entry.resources.map((res: any, ri: number) => {
-                                 const Icon = res.type === 'book' ? BookOpen : res.type === 'audio' ? Headphones : Globe;
+                                 const Icon = res.type === 'book' ? BookOpen : 
+                                              res.type === 'audio' ? Headphones : 
+                                              res.type === 'youtube' ? Youtube :
+                                              res.type === 'podcast' ? Radio :
+                                              Globe;
                                  const colorClass = res.type === 'book' ? 'text-amber-500 bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20' 
                                    : res.type === 'audio' ? 'text-purple-400 bg-purple-400/10 border-purple-400/20 hover:bg-purple-400/20' 
+                                   : res.type === 'youtube' ? 'text-red-500 bg-red-500/10 border-red-500/20 hover:bg-red-500/20'
+                                   : res.type === 'podcast' ? 'text-rose-400 bg-rose-400/10 border-rose-400/20 hover:bg-rose-400/20'
                                    : 'text-sky-400 bg-sky-400/10 border-sky-400/20 hover:bg-sky-400/20';
                                  return (
                                    <a
