@@ -28,10 +28,8 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
         </div>
       )}
 
-      {/* Dark overlay — heavier on left for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/10" />
-      {/* Strong bottom fade for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+      {/* Subtle bottom fade for text legibility — keeping top 60% of image crystal clear */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
       {/* Top-right — theme word badge */}
       <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-full">
@@ -80,7 +78,7 @@ const ChapterView: React.FC<{
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         {/* Back button */}
         <button
