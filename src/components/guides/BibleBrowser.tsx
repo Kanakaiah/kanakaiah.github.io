@@ -12,7 +12,7 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
   return (
     <button
       onClick={onClick}
-      className="group relative w-full overflow-hidden rounded-2xl h-40 text-left focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-200 hover:scale-[1.02] hover:shadow-2xl shadow-md"
+      className="group relative w-full overflow-hidden rounded-2xl h-56 text-left focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-200 hover:scale-[1.02] hover:shadow-2xl shadow-md"
     >
       {/* Full-bleed background image */}
       {!imgErr ? (
