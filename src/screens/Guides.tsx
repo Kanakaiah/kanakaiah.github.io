@@ -1,17 +1,24 @@
 import React, { useState, useMemo } from 'react';
 import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones, Youtube, Radio } from 'lucide-react';
 import { NT_STUDY_GUIDES } from '../data/guides';
+import { BibleBrowser } from '../components/guides/BibleBrowser';
+
+// Special sentinel ID for the Bible Browser entry point
+const BIBLE_BROWSER_ID = '__bible-browser__';
 
 export const Guides: React.FC = () => {
   const [activeGuideId, setActiveGuideId] = useState<string | null>(null);
 
   const activeGuide: any = useMemo(() => {
+    if (!activeGuideId || activeGuideId === BIBLE_BROWSER_ID) return null;
     return NT_STUDY_GUIDES.find((g: any) => g.id === activeGuideId);
   }, [activeGuideId]);
 
   const categories = useMemo(() => {
     const map: Record<string, any[]> = {};
     NT_STUDY_GUIDES.forEach((g: any) => {
+      // Skip book-guide entries from the category listing — they live in BibleBrowser
+      if (g.type === 'book-guide') return;
       const cat = g.category || 'Other';
       if (!map[cat]) map[cat] = [];
       map[cat].push(g);
@@ -19,12 +26,32 @@ export const Guides: React.FC = () => {
     return map;
   }, []);
 
+  // ── BibleBrowser view ──────────────────────────────────────────────────────
+  if (activeGuideId === BIBLE_BROWSER_ID) {
+    return (
+      <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]">
+        <BibleBrowser
+          onOpenGuide={(guideId) => setActiveGuideId(guideId)}
+          onBack={() => setActiveGuideId(null)}
+        />
+      </div>
+    );
+  }
+
+  // ── Individual guide detail view ───────────────────────────────────────────
   if (activeGuide) {
     return (
       <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]">
         <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setActiveGuideId(null)}
+          <button
+            onClick={() => {
+              // If it was a book-guide opened from BibleBrowser, go back to browser
+              if (activeGuide.type === 'book-guide') {
+                setActiveGuideId(BIBLE_BROWSER_ID);
+              } else {
+                setActiveGuideId(null);
+              }
+            }}
             className="w-10 h-10 rounded-full flex items-center justify-center bg-glass-bg border border-glass-border hover:bg-glass-bg-hover transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -38,7 +65,8 @@ export const Guides: React.FC = () => {
         </div>
 
         <div className="bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 shadow-sm flex flex-col gap-8">
-          
+
+          {/* ── Reference guide ── */}
           {activeGuide.type === 'reference' && activeGuide.sections && (
              <div className="flex flex-col gap-10">
                {activeGuide.sections.map((sec: any, i: number) => (
@@ -51,7 +79,7 @@ export const Guides: React.FC = () => {
                    {sec.description && (
                      <p className="text-secondary leading-relaxed">{sec.description}</p>
                    )}
-                   
+
                    {sec.table && (
                      <div className="overflow-x-auto mt-2">
                        <table className="w-full text-left text-sm border-collapse">
@@ -89,15 +117,19 @@ export const Guides: React.FC = () => {
                            {entry.resources && entry.resources.length > 0 && (
                              <div className="flex flex-wrap gap-2 mt-1 pt-2 border-t border-glass-border/30">
                                {entry.resources.map((res: any, ri: number) => {
-                                 const Icon = res.type === 'book' ? BookOpen : 
-                                              res.type === 'audio' ? Headphones : 
+                                 const Icon = res.type === 'book' ? BookOpen :
+                                              res.type === 'audio' ? Headphones :
                                               res.type === 'youtube' ? Youtube :
                                               res.type === 'podcast' ? Radio :
                                               Globe;
-                                 const colorClass = res.type === 'book' ? 'text-amber-500 bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20' 
-                                   : res.type === 'audio' ? 'text-purple-400 bg-purple-400/10 border-purple-400/20 hover:bg-purple-400/20' 
-                                   : res.type === 'youtube' ? 'text-red-500 bg-red-500/10 border-red-500/20 hover:bg-red-500/20'
-                                   : res.type === 'podcast' ? 'text-rose-400 bg-rose-400/10 border-rose-400/20 hover:bg-rose-400/20'
+                                 const colorClass = res.type === 'book'
+                                   ? 'text-amber-500 bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20'
+                                   : res.type === 'audio'
+                                   ? 'text-purple-400 bg-purple-400/10 border-purple-400/20 hover:bg-purple-400/20'
+                                   : res.type === 'youtube'
+                                   ? 'text-red-500 bg-red-500/10 border-red-500/20 hover:bg-red-500/20'
+                                   : res.type === 'podcast'
+                                   ? 'text-rose-400 bg-rose-400/10 border-rose-400/20 hover:bg-rose-400/20'
                                    : 'text-sky-400 bg-sky-400/10 border-sky-400/20 hover:bg-sky-400/20';
                                  return (
                                    <a
@@ -136,9 +168,10 @@ export const Guides: React.FC = () => {
              </div>
           )}
 
+          {/* ── Book guide ── */}
           {activeGuide.type === 'book-guide' && activeGuide.blocks && (
             <div className="flex flex-col gap-8">
-              
+
               <div className="bg-glass-bg rounded-2xl p-6 border border-glass-border flex flex-col items-center gap-4 text-center">
                 <span className="text-xs uppercase tracking-[0.2em] text-muted font-bold">Structure Overview</span>
                 <div className="text-3xl font-heading font-bold text-accent-light tracking-widest">
@@ -194,7 +227,7 @@ export const Guides: React.FC = () => {
                     <span className="text-[10px] text-muted tracking-normal bg-glass-bg px-2 py-1 rounded hidden sm:block">Read 3-4 times to lock flow</span>
                   </h3>
                   <div className="bg-glass-bg border border-glass-border rounded-xl p-6 shadow-sm">
-                    <p 
+                    <p
                       className="text-lg leading-relaxed text-secondary"
                       dangerouslySetInnerHTML={{
                         __html: activeGuide.memorySentence.replace(/\b([A-Z]{2,}(?:'S)?)\b/g, '<strong class="text-accent-light font-bold">$1</strong>')
@@ -227,6 +260,7 @@ export const Guides: React.FC = () => {
     );
   }
 
+  // ── Main listing view ──────────────────────────────────────────────────────
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4">
       <div className="hidden lg:block mb-2">
@@ -234,6 +268,31 @@ export const Guides: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-8 pb-12">
+
+        {/* ── Bible Browser entry point ── */}
+        <div className="flex flex-col gap-3">
+          <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">Bible Books</h2>
+          <button
+            onClick={() => setActiveGuideId(BIBLE_BROWSER_ID)}
+            className="relative overflow-hidden flex items-center gap-5 p-5 rounded-2xl border border-accent/30 bg-accent/5 hover:bg-accent/10 hover:border-accent/60 transition-all text-left group shadow-sm"
+          >
+            {/* Subtle gradient shimmer */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+            <div className="relative text-4xl select-none">📖</div>
+            <div className="relative flex-1 flex flex-col min-w-0 gap-0.5">
+              <span className="font-bold text-primary text-lg">Bible Browser</span>
+              <span className="text-sm text-secondary">Explore all 27 NT books with visual chapter maps & guides</span>
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {['OT / NT', '27 NT Books', 'Chapter Anchors', 'Image Cards'].map(tag => (
+                  <span key={tag} className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">{tag}</span>
+                ))}
+              </div>
+            </div>
+            <ChevronRight className="relative w-5 h-5 text-muted group-hover:text-accent group-hover:translate-x-1 transition-all" />
+          </button>
+        </div>
+
+        {/* ── Reference guides & others ── */}
         {Object.entries(categories).map(([category, guides]) => (
           <div key={category} className="flex flex-col gap-3">
             <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">
