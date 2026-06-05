@@ -204,14 +204,15 @@ const ChapterView: React.FC<{
 interface BibleBrowserProps {
   onOpenGuide: (guideId: string) => void;
   onBack: () => void;
+  initialTestament?: 'OT' | 'NT';
 }
 
 type View = 'testament-select' | 'book-grid' | 'chapter-view';
 
-export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack }) => {
-  const [testament, setTestament] = useState<'OT' | 'NT' | null>(null);
+export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack, initialTestament }) => {
+  const [testament, setTestament] = useState<'OT' | 'NT' | null>(initialTestament ?? null);
   const [selectedBook, setSelectedBook] = useState<NTBook | null>(null);
-  const [view, setView] = useState<View>('testament-select');
+  const [view, setView] = useState<View>(initialTestament ? 'book-grid' : 'testament-select');
 
   const handleSelectTestament = (t: 'OT' | 'NT') => {
     setTestament(t);

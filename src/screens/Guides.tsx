@@ -3,14 +3,15 @@ import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones, PlayCircle, Radio
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { BibleBrowser } from '../components/guides/BibleBrowser';
 
-// Special sentinel ID for the Bible Browser entry point
-const BIBLE_BROWSER_ID = '__bible-browser__';
+// Special sentinel IDs
+const BIBLE_BROWSER_NT = '__bible-browser-nt__';
+const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
 export const Guides: React.FC = () => {
   const [activeGuideId, setActiveGuideId] = useState<string | null>(null);
 
   const activeGuide: any = useMemo(() => {
-    if (!activeGuideId || activeGuideId === BIBLE_BROWSER_ID) return null;
+    if (!activeGuideId || activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) return null;
     return NT_STUDY_GUIDES.find((g: any) => g.id === activeGuideId);
   }, [activeGuideId]);
 
@@ -27,10 +28,11 @@ export const Guides: React.FC = () => {
   }, []);
 
   // ── BibleBrowser view ──────────────────────────────────────────────────────
-  if (activeGuideId === BIBLE_BROWSER_ID) {
+  if (activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) {
     return (
       <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]">
         <BibleBrowser
+          initialTestament={activeGuideId === BIBLE_BROWSER_NT ? 'NT' : 'OT'}
           onOpenGuide={(guideId) => setActiveGuideId(guideId)}
           onBack={() => setActiveGuideId(null)}
         />
@@ -47,7 +49,7 @@ export const Guides: React.FC = () => {
             onClick={() => {
               // If it was a book-guide opened from BibleBrowser, go back to browser
               if (activeGuide.type === 'book-guide') {
-                setActiveGuideId(BIBLE_BROWSER_ID);
+                setActiveGuideId(BIBLE_BROWSER_NT);
               } else {
                 setActiveGuideId(null);
               }
@@ -269,27 +271,36 @@ export const Guides: React.FC = () => {
 
       <div className="flex flex-col gap-8 pb-12">
 
-        {/* ── Bible Browser entry point ── */}
+        {/* ── Bible Books — OT / NT inline ── */}
         <div className="flex flex-col gap-3">
           <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">Bible Books</h2>
-          <button
-            onClick={() => setActiveGuideId(BIBLE_BROWSER_ID)}
-            className="relative overflow-hidden flex items-center gap-5 p-5 rounded-2xl border border-accent/30 bg-accent/5 hover:bg-accent/10 hover:border-accent/60 transition-all text-left group shadow-sm"
-          >
-            {/* Subtle gradient shimmer */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-            <div className="relative text-4xl select-none">📖</div>
-            <div className="relative flex-1 flex flex-col min-w-0 gap-0.5">
-              <span className="font-bold text-primary text-lg">Bible Browser</span>
-              <span className="text-sm text-secondary">Explore all 27 NT books with visual chapter maps & guides</span>
-              <div className="flex gap-2 mt-2 flex-wrap">
-                {['OT / NT', '27 NT Books', 'Chapter Anchors', 'Image Cards'].map(tag => (
-                  <span key={tag} className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">{tag}</span>
-                ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* OT Card */}
+            <button
+              onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
+              className="group relative overflow-hidden rounded-2xl p-6 border border-glass-border bg-glass-bg hover:bg-glass-bg-hover transition-all duration-200 hover:scale-[1.02] text-left shadow-sm"
+            >
+              <div className="text-4xl mb-3">📜</div>
+              <h3 className="text-lg font-bold font-heading text-primary">Old Testament</h3>
+              <p className="text-secondary text-xs mt-1">39 books · Genesis to Malachi</p>
+              <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold uppercase tracking-wider">
+                Coming Soon
               </div>
-            </div>
-            <ChevronRight className="relative w-5 h-5 text-muted group-hover:text-accent group-hover:translate-x-1 transition-all" />
-          </button>
+            </button>
+
+            {/* NT Card */}
+            <button
+              onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
+              className="group relative overflow-hidden rounded-2xl p-6 border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-200 hover:scale-[1.02] text-left shadow-sm"
+            >
+              <div className="text-4xl mb-3">✝️</div>
+              <h3 className="text-lg font-bold font-heading text-primary">New Testament</h3>
+              <p className="text-secondary text-xs mt-1">27 books · Matthew to Revelation</p>
+              <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-[10px] font-bold uppercase tracking-wider">
+                Explore Now →
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* ── Reference guides & others ── */}
