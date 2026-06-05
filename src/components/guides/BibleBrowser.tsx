@@ -12,50 +12,48 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
   return (
     <button
       onClick={onClick}
-      className="group relative overflow-hidden rounded-2xl aspect-[3/4] w-full text-left focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-200 hover:scale-[1.04] hover:shadow-2xl shadow-md"
+      className="group relative flex items-stretch w-full rounded-2xl overflow-hidden border border-glass-border bg-glass-bg hover:border-accent/40 hover:shadow-xl shadow-sm transition-all duration-200 hover:scale-[1.01] text-left focus:outline-none focus:ring-2 focus:ring-accent h-28"
     >
-      {/* Background image */}
-      {!imgErr ? (
-        <img
-          src={book.image}
-          alt={book.name}
-          onError={() => setImgErr(true)}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-      ) : (
-        // Gradient placeholder for books without images yet
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 flex items-center justify-center">
-          <span className="text-4xl font-black opacity-20 select-none tracking-widest">{book.themeWord.charAt(0)}</span>
+      {/* Left — square image panel */}
+      <div className="relative w-28 flex-shrink-0 overflow-hidden">
+        {!imgErr ? (
+          <img
+            src={book.image}
+            alt={book.name}
+            onError={() => setImgErr(true)}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 flex items-center justify-center">
+            <span className="text-3xl font-black opacity-20 select-none">{book.themeWord.charAt(0)}</span>
+          </div>
+        )}
+        {/* Dark overlay on image */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
+        {/* Theme word — vertical on left edge */}
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center">
+          <span className="text-[8px] font-black tracking-widest text-amber-300 uppercase bg-black/50 px-1.5 py-0.5 rounded-full">{book.themeWord}</span>
         </div>
-      )}
-
-      {/* Gradient overlay — stronger at bottom */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10" />
-
-      {/* Image word badge — top right */}
-      <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm border border-white/15 px-1.5 py-0.5 rounded-full">
-        <span className="text-[9px] font-black tracking-widest text-amber-300 uppercase">{book.themeWord}</span>
       </div>
 
-      {/* Guide available badge — top left */}
-      {book.hasGuide && (
-        <div className="absolute top-2 left-2 bg-accent/80 backdrop-blur-sm px-1.5 py-0.5 rounded-full">
-          <span className="text-[9px] font-bold text-white uppercase tracking-wide">Guide ✓</span>
-        </div>
-      )}
-
-      {/* Bottom content */}
-      <div className="absolute bottom-0 left-0 right-0 p-2.5 flex flex-col gap-0.5">
+      {/* Right — text content */}
+      <div className="flex flex-col justify-center px-4 py-3 flex-1 min-w-0 gap-1">
         {/* Key word */}
-        <span className="text-[9px] font-black tracking-[0.15em] text-sky-300 uppercase">{book.keyWord}</span>
+        <span className="text-[10px] font-black tracking-[0.18em] text-sky-400 uppercase">{book.keyWord}</span>
         {/* Book name */}
-        <p className="text-white font-heading font-bold text-sm leading-tight">{book.name}</p>
-        {/* Subtitle — hidden on small, shown on hover or md+ */}
-        <p className="text-white/60 text-[10px] leading-snug line-clamp-2 italic hidden sm:block group-hover:text-white/80 transition-colors">
-          {book.subtitle}
-        </p>
-        {/* Chapters count */}
-        <p className="text-white/40 text-[9px] mt-0.5">{book.chapters} ch.</p>
+        <p className="font-heading font-bold text-lg text-primary leading-tight">{book.name}</p>
+        {/* Subtitle */}
+        <p className="text-secondary text-sm italic leading-snug line-clamp-2">{book.subtitle}</p>
+      </div>
+
+      {/* Right edge — chapters + guide badge */}
+      <div className="flex flex-col items-end justify-between p-3 flex-shrink-0">
+        {book.hasGuide ? (
+          <span className="text-[9px] font-bold text-white bg-accent/80 px-2 py-0.5 rounded-full uppercase tracking-wide">Guide ✓</span>
+        ) : (
+          <span className="text-[9px] font-bold text-muted border border-glass-border px-2 py-0.5 rounded-full uppercase tracking-wide">Soon</span>
+        )}
+        <span className="text-xs text-muted font-medium">{book.chapters} ch.</span>
       </div>
     </button>
   );
@@ -308,7 +306,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack 
                   <p className="text-xs font-bold text-muted uppercase tracking-widest">{section}</p>
                   <span className="text-[10px] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                <div className="flex flex-col gap-2">
                   {books.map(book => (
                     <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} />
                   ))}
