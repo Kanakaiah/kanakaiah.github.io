@@ -8,6 +8,41 @@ import { BibleBrowser } from '../components/guides/BibleBrowser';
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
+const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }) => {
+  const [imgErr, setImgErr] = useState(false);
+  const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
+
+  return (
+    <div className="relative bg-glass-bg border border-glass-border rounded-2xl flex flex-col gap-3 hover:bg-glass-bg-hover hover:-translate-y-1 transition-all shadow-sm group overflow-hidden min-h-[160px]">
+      
+      {!imgErr && (
+        <img 
+          src={imgPath} 
+          alt={anchor.word} 
+          onError={() => setImgErr(true)}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      )}
+      <div className={`absolute inset-0 ${!imgErr ? 'bg-gradient-to-t from-black/90 via-black/50 to-black/20' : ''}`} />
+
+      {/* Content over image */}
+      <div className="relative z-10 p-6 flex flex-col h-full">
+        <div className="flex items-center justify-between">
+          <span className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-base shadow-inner ${!imgErr ? 'bg-black/50 backdrop-blur-md border border-white/20 text-white' : 'bg-accent/20 text-accent'}`}>
+            {anchor.ch}
+          </span>
+          <span className={`font-heading font-black tracking-widest uppercase text-sm px-4 py-2 rounded-full border transition-colors shadow-sm ${!imgErr ? 'text-white bg-black/60 backdrop-blur-md border-white/20 group-hover:border-accent/50' : 'text-primary bg-black/40 border-glass-border group-hover:border-accent/50'}`}>
+            {anchor.word}
+          </span>
+        </div>
+        <p className={`text-base leading-relaxed mt-auto pt-4 font-medium ${!imgErr ? 'text-white/90 drop-shadow-md' : 'text-secondary'}`}>
+          {anchor.scene}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export const Guides: React.FC = () => {
   const [activeGuideId, setActiveGuideId] = useState<string | null>(null);
 
@@ -225,19 +260,7 @@ export const Guides: React.FC = () => {
                   <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {activeGuide.anchors.map((anchor: any, i: number) => (
-                      <div key={i} className="bg-glass-bg border border-glass-border rounded-2xl p-6 flex flex-col gap-3 hover:bg-glass-bg-hover hover:-translate-y-1 transition-all shadow-sm group">
-                        <div className="flex items-center justify-between">
-                          <span className="w-10 h-10 rounded-full bg-accent/20 text-accent flex items-center justify-center font-bold text-base shadow-inner">
-                            {anchor.ch}
-                          </span>
-                          <span className="font-heading font-black text-primary tracking-widest uppercase text-sm bg-black/40 px-4 py-2 rounded-full border border-glass-border group-hover:border-accent/50 transition-colors shadow-sm">
-                            {anchor.word}
-                          </span>
-                        </div>
-                        <p className="text-secondary text-base leading-relaxed mt-1 font-medium">
-                          {anchor.scene}
-                        </p>
-                      </div>
+                      <ChapterAnchorCard key={i} anchor={anchor} guideId={activeGuide.id} />
                     ))}
                   </div>
                 </div>
