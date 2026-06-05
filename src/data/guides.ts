@@ -549,7 +549,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "1-corinthians",
+    id: "1corinthians",
     title: "1 Corinthians",
     subtitle: "16 Chapters",
     icon: "📖",
@@ -679,7 +679,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "1-peter",
+    id: "1peter",
     title: "1 Peter",
     subtitle: "5 Chapters",
     icon: "📖",
@@ -754,7 +754,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "2-corinthians",
+    id: "2corinthians",
     title: "2 Corinthians",
     subtitle: "13 Chapters",
     icon: "📖",
@@ -791,7 +791,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "1-timothy",
+    id: "1timothy",
     title: "1 Timothy",
     subtitle: "6 Chapters",
     icon: "📖",
@@ -824,7 +824,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "2-timothy",
+    id: "2timothy",
     title: "2 Timothy",
     subtitle: "4 Chapters",
     icon: "📖",
@@ -853,7 +853,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "1-john",
+    id: "1john",
     title: "1 John",
     subtitle: "5 Chapters",
     icon: "📖",
@@ -933,7 +933,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "2-peter",
+    id: "2peter",
     title: "2 Peter",
     subtitle: "3 Chapters",
     icon: "📖",
@@ -984,7 +984,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "2-john",
+    id: "2john",
     title: "2 John",
     subtitle: "1 Chapter",
     icon: "📖",
@@ -1008,7 +1008,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "3-john",
+    id: "3john",
     title: "3 John",
     subtitle: "1 Chapter",
     icon: "📖",
@@ -1032,7 +1032,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "1-thessalonians",
+    id: "1thessalonians",
     title: "1 Thessalonians",
     subtitle: "5 Chapters",
     icon: "📖",
@@ -1060,7 +1060,7 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
-    id: "2-thessalonians",
+    id: "2thessalonians",
     title: "2 Thessalonians",
     subtitle: "3 Chapters",
     icon: "📖",
