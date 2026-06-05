@@ -64,7 +64,7 @@ export const Guides: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-glass-bg border border-glass-border rounded-3xl p-6 lg:p-10 shadow-sm flex flex-col gap-8">
+        <div className="flex flex-col gap-8">
 
           {/* ── Reference guide ── */}
           {activeGuide.type === 'reference' && activeGuide.sections && (
