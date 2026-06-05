@@ -225,16 +225,16 @@ export const Guides: React.FC = () => {
                   <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {activeGuide.anchors.map((anchor: any, i: number) => (
-                      <div key={i} className="bg-glass-bg border border-glass-border rounded-2xl p-5 flex flex-col gap-2 hover:bg-glass-bg-hover hover:-translate-y-1 transition-all shadow-sm group">
+                      <div key={i} className="bg-glass-bg border border-glass-border rounded-2xl p-6 flex flex-col gap-3 hover:bg-glass-bg-hover hover:-translate-y-1 transition-all shadow-sm group">
                         <div className="flex items-center justify-between">
-                          <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center font-bold text-sm shadow-inner">
+                          <span className="w-10 h-10 rounded-full bg-accent/20 text-accent flex items-center justify-center font-bold text-base shadow-inner">
                             {anchor.ch}
                           </span>
-                          <span className="font-heading font-black text-primary tracking-widest uppercase text-[11px] bg-black/40 px-3 py-1.5 rounded-full border border-glass-border group-hover:border-accent/50 transition-colors shadow-sm">
+                          <span className="font-heading font-black text-primary tracking-widest uppercase text-sm bg-black/40 px-4 py-2 rounded-full border border-glass-border group-hover:border-accent/50 transition-colors shadow-sm">
                             {anchor.word}
                           </span>
                         </div>
-                        <p className="text-secondary text-sm leading-relaxed mt-2 font-medium">
+                        <p className="text-secondary text-base leading-relaxed mt-1 font-medium">
                           {anchor.scene}
                         </p>
                       </div>
