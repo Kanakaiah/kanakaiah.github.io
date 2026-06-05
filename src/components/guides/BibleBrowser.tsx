@@ -207,17 +207,12 @@ interface BibleBrowserProps {
   initialTestament?: 'OT' | 'NT';
 }
 
-type View = 'testament-select' | 'book-grid' | 'chapter-view';
+type View = 'book-grid' | 'chapter-view';
 
 export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack, initialTestament }) => {
-  const [testament, setTestament] = useState<'OT' | 'NT' | null>(initialTestament ?? null);
+  const [testament, setTestament] = useState<'OT' | 'NT' | null>(initialTestament ?? 'NT');
   const [selectedBook, setSelectedBook] = useState<NTBook | null>(null);
-  const [view, setView] = useState<View>(initialTestament ? 'book-grid' : 'testament-select');
-
-  const handleSelectTestament = (t: 'OT' | 'NT') => {
-    setTestament(t);
-    setView('book-grid');
-  };
+  const [view, setView] = useState<View>('book-grid');
 
   const handleSelectBook = (book: NTBook) => {
     if (book.hasGuide) {
@@ -234,58 +229,11 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
   };
 
   const handleBackFromGrid = () => {
-    setTestament(null);
-    setView('testament-select');
+    onBack();
   };
 
   return (
     <div className="flex flex-col gap-5 w-full animate-[fadeIn_0.25s_ease-out]">
-
-      {/* ── Testament Select ────────────────────────────────────────────────── */}
-      {view === 'testament-select' && (
-        <>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onBack}
-              className="w-9 h-9 rounded-full flex items-center justify-center bg-glass-bg border border-glass-border hover:bg-glass-bg-hover transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <div>
-              <h2 className="text-xl font-bold font-heading text-primary">Bible Browser</h2>
-              <p className="text-secondary text-sm">Choose a testament to explore</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-            {/* OT Card */}
-            <button
-              onClick={() => handleSelectTestament('OT')}
-              className="group relative overflow-hidden rounded-3xl p-8 border border-glass-border bg-glass-bg hover:bg-glass-bg-hover transition-all duration-200 hover:scale-[1.02] text-left shadow-md"
-            >
-              <div className="text-5xl mb-4">📜</div>
-              <h3 className="text-2xl font-bold font-heading text-primary">Old Testament</h3>
-              <p className="text-secondary text-sm mt-1">39 books · Genesis to Malachi</p>
-              <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider">
-                Coming Soon
-              </div>
-            </button>
-
-            {/* NT Card */}
-            <button
-              onClick={() => handleSelectTestament('NT')}
-              className="group relative overflow-hidden rounded-3xl p-8 border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-200 hover:scale-[1.02] text-left shadow-md"
-            >
-              <div className="text-5xl mb-4">✝️</div>
-              <h3 className="text-2xl font-bold font-heading text-primary">New Testament</h3>
-              <p className="text-secondary text-sm mt-1">27 books · Matthew to Revelation</p>
-              <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-xs font-bold uppercase tracking-wider">
-                Explore Now →
-              </div>
-            </button>
-          </div>
-        </>
-      )}
 
       {/* ── NT Book Grid ─────────────────────────────────────────────────────── */}
       {view === 'book-grid' && testament === 'NT' && (
