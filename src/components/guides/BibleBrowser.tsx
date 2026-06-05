@@ -210,7 +210,7 @@ interface BibleBrowserProps {
 type View = 'book-grid' | 'chapter-view';
 
 export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack, initialTestament }) => {
-  const [testament, setTestament] = useState<'OT' | 'NT' | null>(initialTestament ?? 'NT');
+  const [testament] = useState<'OT' | 'NT' | null>(initialTestament ?? 'NT');
   const [selectedBook, setSelectedBook] = useState<NTBook | null>(null);
   const [view, setView] = useState<View>('book-grid');
 
