@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, BookOpen, Lock } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { NT_BOOKS, NT_SECTIONS } from '../../data/ntBooks';
 import type { NTBook } from '../../data/ntBooks';
-import { NT_STUDY_GUIDES } from '../../data/guides';
 
 // ─── Book Card ────────────────────────────────────────────────────────────────
 
