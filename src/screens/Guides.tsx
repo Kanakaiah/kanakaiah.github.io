@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones, PlayCircle, Radio } from 'lucide-react';
 import { NT_STUDY_GUIDES } from '../data/guides';
+import { NT_BOOKS } from '../data/ntBooks';
 import { BibleBrowser } from '../components/guides/BibleBrowser';
 
 // Special sentinel IDs
@@ -12,7 +13,30 @@ export const Guides: React.FC = () => {
 
   const activeGuide: any = useMemo(() => {
     if (!activeGuideId || activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) return null;
-    return NT_STUDY_GUIDES.find((g: any) => g.id === activeGuideId);
+    
+    // Check if we have a hand-written guide
+    const existingGuide = NT_STUDY_GUIDES.find((g: any) => g.id === activeGuideId);
+    if (existingGuide) return existingGuide;
+
+    // Otherwise check if it's an NT book and generate a placeholder
+    const book = NT_BOOKS.find(b => b.id === activeGuideId);
+    if (book) {
+      return {
+        id: book.id,
+        type: 'book-guide',
+        title: book.name,
+        subtitle: book.subtitle,
+        icon: '📖', // generic icon
+        sections: [
+          {
+            heading: "Guide Coming Soon",
+            description: `We are currently crafting the study guide for ${book.name}. Check back soon!`
+          }
+        ]
+      };
+    }
+    
+    return null;
   }, [activeGuideId]);
 
   const categories = useMemo(() => {

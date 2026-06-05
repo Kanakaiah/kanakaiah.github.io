@@ -58,145 +58,6 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
   );
 };
 
-// ─── Chapter View ─────────────────────────────────────────────────────────────
-
-const ChapterView: React.FC<{
-  book: NTBook;
-  onBack: () => void;
-  onSelectGuide: (guideId: string) => void;
-}> = ({ book, onBack, onSelectGuide }) => {
-  const [imgErr, setImgErr] = useState(false);
-  const guide: any = NT_STUDY_GUIDES.find((g: any) => g.id === book.id && g.type === 'book-guide');
-
-  return (
-    <div className="flex flex-col gap-5 animate-[fadeIn_0.25s_ease-out]">
-
-      {/* Hero banner */}
-      <div className="relative overflow-hidden rounded-3xl h-44">
-        {!imgErr ? (
-          <img src={book.image} alt={book.name} onError={() => setImgErr(true)} className="absolute inset-0 w-full h-full object-cover" />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-        {/* Back button */}
-        <button
-          onClick={onBack}
-          className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center bg-black/50 backdrop-blur-sm border border-white/20 hover:bg-black/70 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 text-white" />
-        </button>
-
-        {/* Book identity */}
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <p className="text-[10px] font-black tracking-[0.2em] text-sky-300 uppercase mb-0.5">{book.keyWord}</p>
-              <h2 className="text-2xl font-bold font-heading text-white leading-none">{book.name}</h2>
-              <p className="text-white/70 text-sm italic mt-1">{book.subtitle}</p>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <p className="text-[9px] font-black tracking-widest text-amber-300 uppercase">{book.themeWord}</p>
-              <p className="text-white/50 text-xs">{book.chapters} chapters</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Structure blocks */}
-      {guide?.blocks && (
-        <div className="bg-glass-bg border border-glass-border rounded-2xl p-4 flex flex-col gap-2">
-          <p className="text-xs font-bold text-muted uppercase tracking-widest">Book Structure</p>
-          {guide.structureFormula && (
-            <p className="text-xs text-muted font-mono">{guide.structureFormula}</p>
-          )}
-          <div className="flex flex-wrap gap-2 mt-1">
-            {guide.blocks.map((block: any, i: number) => (
-              <div key={i} className="flex flex-col bg-accent/10 border border-accent/20 rounded-xl px-3 py-2">
-                <span className="text-[10px] font-bold text-accent uppercase tracking-wider">{block.label}</span>
-                <span className="text-xs text-muted mt-0.5">Ch. {block.chapters}</span>
-                {block.description && <span className="text-[10px] text-secondary mt-0.5">{block.description}</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Chapter grid */}
-      <div>
-        <p className="text-xs font-bold text-muted uppercase tracking-widest mb-3">
-          {guide ? 'Chapters — click any to open guide' : 'Chapters'}
-        </p>
-        <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 gap-2">
-          {Array.from({ length: book.chapters }, (_, i) => i + 1).map(ch => {
-            const anchor = guide?.anchors?.find((a: any) => a.ch === ch);
-            return (
-              <button
-                key={ch}
-                onClick={() => guide && onSelectGuide(book.id)}
-                title={anchor ? `${anchor.word} — ${anchor.scene}` : `Chapter ${ch}`}
-                disabled={!guide}
-                className={`relative flex flex-col items-center justify-center rounded-xl py-2 px-1 border transition-all duration-150
-                  ${anchor
-                    ? 'bg-accent/10 border-accent/30 hover:bg-accent/20 hover:border-accent/60 cursor-pointer hover:scale-105'
-                    : guide
-                    ? 'bg-glass-bg border-glass-border hover:bg-glass-bg-hover cursor-pointer'
-                    : 'bg-glass-bg border-glass-border opacity-60 cursor-default'
-                  }`}
-              >
-                <span className="text-sm font-bold text-primary">{ch}</span>
-                {anchor && (
-                  <span className="text-[8px] font-bold text-accent uppercase tracking-wide mt-0.5 truncate w-full text-center">{anchor.word}</span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Open full guide CTA */}
-      {guide ? (
-        <button
-          onClick={() => onSelectGuide(book.id)}
-          className="flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-all hover:shadow-lg hover:scale-[1.01]"
-        >
-          <BookOpen className="w-4 h-4" />
-          Open Full Chapter Guide
-        </button>
-      ) : (
-        <div className="flex items-center gap-3 py-3 px-4 rounded-2xl bg-glass-bg border border-glass-border text-secondary text-sm">
-          <Lock className="w-4 h-4 flex-shrink-0 text-muted" />
-          <span>Detailed chapter guide for <strong className="text-primary">{book.name}</strong> is coming soon.</span>
-        </div>
-      )}
-
-      {/* Key verses */}
-      {guide?.keyVerses && (
-        <div className="bg-glass-bg border border-glass-border rounded-2xl p-4 flex flex-col gap-3">
-          <p className="text-xs font-bold text-muted uppercase tracking-widest">Key Verses</p>
-          {guide.keyVerses.map((kv: any, i: number) => (
-            <div key={i} className="flex gap-3 items-start border-l-2 border-accent/40 pl-3">
-              <div>
-                <span className="font-bold text-accent text-sm block">{kv.ref}</span>
-                <span className="text-secondary text-sm italic">{kv.theme}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Memory sentence */}
-      {guide?.memorySentence && (
-        <div className="bg-glass-bg border border-glass-border rounded-2xl p-4">
-          <p className="text-xs font-bold text-muted uppercase tracking-widest mb-2">Memory Sentence</p>
-          <p className="text-primary text-sm leading-relaxed italic">{guide.memorySentence}</p>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // ─── Main BibleBrowser ────────────────────────────────────────────────────────
 
 interface BibleBrowserProps {
@@ -205,25 +66,14 @@ interface BibleBrowserProps {
   initialTestament?: 'OT' | 'NT';
 }
 
-type View = 'book-grid' | 'chapter-view';
+type View = 'book-grid';
 
 export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack, initialTestament }) => {
   const [testament] = useState<'OT' | 'NT' | null>(initialTestament ?? 'NT');
-  const [selectedBook, setSelectedBook] = useState<NTBook | null>(null);
-  const [view, setView] = useState<View>('book-grid');
+  const [view] = useState<View>('book-grid');
 
   const handleSelectBook = (book: NTBook) => {
-    if (book.hasGuide) {
-      onOpenGuide(book.id);
-    } else {
-      setSelectedBook(book);
-      setView('chapter-view');
-    }
-  };
-
-  const handleBackFromChapters = () => {
-    setSelectedBook(null);
-    setView('book-grid');
+    onOpenGuide(book.id);
   };
 
   const handleBackFromGrid = () => {
@@ -286,14 +136,6 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
         </>
       )}
 
-      {/* ── Chapter View ─────────────────────────────────────────────────────── */}
-      {view === 'chapter-view' && selectedBook && (
-        <ChapterView
-          book={selectedBook}
-          onBack={handleBackFromChapters}
-          onSelectGuide={onOpenGuide}
-        />
-      )}
     </div>
   );
 };
