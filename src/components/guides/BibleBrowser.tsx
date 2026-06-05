@@ -29,9 +29,9 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
       )}
 
       {/* Dark overlay — heavier on left for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/20" />
-      {/* Extra bottom fade */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/10" />
+      {/* Strong bottom fade for text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
       {/* Top-right — theme word badge */}
       <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-full">
@@ -50,8 +50,8 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
         <span className="text-white/50 text-xs font-medium">{book.chapters} chapters</span>
       </div>
 
-      {/* Left — all text overlaid on image */}
-      <div className="absolute inset-0 flex flex-col justify-center pl-5 pr-32 gap-1">
+      {/* Bottom — all text overlaid on image */}
+      <div className="absolute inset-0 flex flex-col justify-end pl-5 pr-32 pb-5 gap-1">
         <span className="text-[11px] font-black tracking-[0.2em] text-sky-300 uppercase">{book.keyWord}</span>
         <h3 className="text-white font-heading font-bold text-2xl leading-tight">{book.name}</h3>
         <p className="text-white/70 text-sm italic leading-snug">{book.subtitle}</p>
