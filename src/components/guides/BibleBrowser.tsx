@@ -219,8 +219,12 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack 
   };
 
   const handleSelectBook = (book: NTBook) => {
-    setSelectedBook(book);
-    setView('chapter-view');
+    if (book.hasGuide) {
+      onOpenGuide(book.id);
+    } else {
+      setSelectedBook(book);
+      setView('chapter-view');
+    }
   };
 
   const handleBackFromChapters = () => {
