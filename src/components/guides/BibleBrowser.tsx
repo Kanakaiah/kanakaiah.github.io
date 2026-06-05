@@ -45,9 +45,9 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
         </div>
       )}
 
-      {/* Bottom-right — chapter count */}
-      <div className="absolute bottom-3 right-4">
-        <span className="text-white/50 text-xs font-medium">{book.chapters} chapters</span>
+      {/* Bottom-right — chapter count styled like theme word badge */}
+      <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-full">
+        <span className="text-[10px] font-black tracking-widest text-amber-300 uppercase">{book.chapters} Ch</span>
       </div>
 
       {/* Bottom — all text overlaid on image */}
