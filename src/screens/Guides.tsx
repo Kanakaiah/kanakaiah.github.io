@@ -274,31 +274,37 @@ export const Guides: React.FC = () => {
         {/* ── Bible Books — OT / NT inline ── */}
         <div className="flex flex-col gap-3">
           <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">Bible Books</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* OT Card */}
             <button
               onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
-              className="group relative overflow-hidden rounded-2xl p-6 border border-glass-border bg-glass-bg hover:bg-glass-bg-hover transition-all duration-200 hover:scale-[1.02] text-left shadow-sm"
+              className="flex items-center gap-4 p-4 rounded-2xl bg-glass-bg border border-glass-border hover:bg-glass-bg-hover hover:border-accent/40 transition-all text-left group shadow-sm"
             >
-              <div className="text-4xl mb-3">📜</div>
-              <h3 className="text-lg font-bold font-heading text-primary">Old Testament</h3>
-              <p className="text-secondary text-xs mt-1">39 books · Genesis to Malachi</p>
-              <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold uppercase tracking-wider">
-                Coming Soon
+              <div className="text-2xl">📜</div>
+              <div className="flex-1 flex flex-col min-w-0">
+                <span className="font-bold text-primary truncate">Old Testament</span>
+                <span className="text-xs text-secondary">39 books · Genesis to Malachi</span>
               </div>
+              <span className="hidden sm:inline-block px-2 py-1 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 uppercase tracking-wider">
+                Soon
+              </span>
+              <ChevronRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
             </button>
 
             {/* NT Card */}
             <button
               onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
-              className="group relative overflow-hidden rounded-2xl p-6 border border-accent/30 bg-accent/5 hover:bg-accent/10 transition-all duration-200 hover:scale-[1.02] text-left shadow-sm"
+              className="flex items-center gap-4 p-4 rounded-2xl bg-accent/5 border border-accent/30 hover:bg-accent/10 hover:border-accent/60 transition-all text-left group shadow-sm"
             >
-              <div className="text-4xl mb-3">✝️</div>
-              <h3 className="text-lg font-bold font-heading text-primary">New Testament</h3>
-              <p className="text-secondary text-xs mt-1">27 books · Matthew to Revelation</p>
-              <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-[10px] font-bold uppercase tracking-wider">
-                Explore Now →
+              <div className="text-2xl">✝️</div>
+              <div className="flex-1 flex flex-col min-w-0">
+                <span className="font-bold text-primary truncate">New Testament</span>
+                <span className="text-xs text-secondary">27 books · Matthew to Revelation</span>
               </div>
+              <span className="hidden sm:inline-block px-2 py-1 rounded text-[10px] font-bold bg-accent/10 text-accent uppercase tracking-wider">
+                Explore
+              </span>
+              <ChevronRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
             </button>
           </div>
         </div>
