@@ -221,27 +221,24 @@ export const Guides: React.FC = () => {
               </div>
 
               {activeGuide.anchors && (
-                <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-4">
+                <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-5">
                   <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm border-collapse">
-                      <thead>
-                        <tr>
-                          <th className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover w-16">Ch</th>
-                          <th className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover w-32">Word</th>
-                          <th className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover">Scene</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {activeGuide.anchors.map((anchor: any, i: number) => (
-                          <tr key={i} className="border-b border-glass-border/50 hover:bg-glass-bg transition-colors">
-                            <td className="p-3 text-muted font-bold whitespace-nowrap">{anchor.ch}</td>
-                            <td className="p-3 font-bold text-accent-light whitespace-nowrap">{anchor.word}</td>
-                            <td className="p-3 text-secondary leading-relaxed min-w-[250px]">{anchor.scene}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {activeGuide.anchors.map((anchor: any, i: number) => (
+                      <div key={i} className="bg-glass-bg border border-glass-border rounded-2xl p-5 flex flex-col gap-2 hover:bg-glass-bg-hover hover:-translate-y-1 transition-all shadow-sm group">
+                        <div className="flex items-center justify-between">
+                          <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center font-bold text-sm shadow-inner">
+                            {anchor.ch}
+                          </span>
+                          <span className="font-heading font-black text-primary tracking-widest uppercase text-[11px] bg-black/40 px-3 py-1.5 rounded-full border border-glass-border group-hover:border-accent/50 transition-colors shadow-sm">
+                            {anchor.word}
+                          </span>
+                        </div>
+                        <p className="text-secondary text-sm leading-relaxed mt-2 font-medium">
+                          {anchor.scene}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
