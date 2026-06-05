@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones, Youtube, Radio } from 'lucide-react';
+import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones, PlayCircle, Radio } from 'lucide-react';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { BibleBrowser } from '../components/guides/BibleBrowser';
 
@@ -119,7 +119,7 @@ export const Guides: React.FC = () => {
                                {entry.resources.map((res: any, ri: number) => {
                                  const Icon = res.type === 'book' ? BookOpen :
                                               res.type === 'audio' ? Headphones :
-                                              res.type === 'youtube' ? Youtube :
+                                              res.type === 'youtube' ? PlayCircle :
                                               res.type === 'podcast' ? Radio :
                                               Globe;
                                  const colorClass = res.type === 'book'
