@@ -344,7 +344,7 @@ export const PREACHERS_GUIDE = {
           resources: [
             { type: 'book', title: 'Desiring God', url: 'https://www.amazon.com/Desiring-God-Meditations-Christian-Hedonist/dp/1601423101' },
             { type: 'book', title: 'Let the Nations Be Glad', url: 'https://www.amazon.com/Let-Nations-Glad-Supremacy-Missions/dp/0801036410' },
-            { type: 'book', title: 'The Pleasures of God', url: 'https://www.amazon.com/Pleasures-God-Meditations-Delight-Being/dp/1601423101' },
+            { type: 'book', title: 'The Pleasures of God', url: 'https://www.desiringgod.org/books/the-pleasures-of-god' },
             { type: 'youtube', title: 'Desiring God (YouTube)', url: 'https://www.youtube.com/@desiringgod' },
             { type: 'podcast', title: 'Ask Pastor John Podcast', url: 'https://podcasts.apple.com/us/podcast/ask-pastor-john/id618132843' }
           ]
