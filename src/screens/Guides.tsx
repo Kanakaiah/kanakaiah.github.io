@@ -13,7 +13,7 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
   const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
 
   return (
-    <div className="relative bg-glass-bg border border-glass-border rounded-2xl flex flex-col gap-3 hover:bg-glass-bg-hover hover:-translate-y-1 transition-all shadow-sm group overflow-hidden min-h-[160px]">
+    <div className={`relative bg-glass-bg rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[160px] group ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-glass-border hover:bg-glass-bg-hover shadow-sm'}`}>
       
       {!imgErr && (
         <img 
