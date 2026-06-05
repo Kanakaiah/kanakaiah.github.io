@@ -30,6 +30,9 @@ export const AppLayout: React.FC = () => {
     { to: "/settings", icon: Settings, label: "Settings" },
   ];
 
+  const currentRoute = navLinks.find(link => location.pathname === link.to || (link.to !== '/' && location.pathname.startsWith(link.to))) || navLinks[0];
+  const PageIcon = currentRoute.icon;
+
   return (
     <div className="flex flex-col lg:flex-row h-screen w-full overflow-hidden bg-background">
       
@@ -53,21 +56,26 @@ export const AppLayout: React.FC = () => {
         </div>
 
         {/* Nav Links */}
-        <div className="flex lg:flex-col w-full justify-between lg:justify-start lg:gap-2">
+        <div className="flex lg:flex-col w-full justify-between lg:justify-start lg:gap-3">
           {navLinks.map(link => (
             <NavLink
               key={link.to}
               to={link.to}
               className={({ isActive }) => `
-                flex flex-col lg:flex-row items-center lg:px-4 py-2 lg:py-3 rounded-xl lg:rounded-lg
-                transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]
+                relative flex flex-col lg:flex-row items-center lg:px-4 py-2 lg:py-3 rounded-xl lg:rounded-xl
+                transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
                 ${isActive 
-                  ? 'text-accent lg:bg-accent/10 lg:text-accent-light scale-110 lg:scale-100' 
+                  ? 'text-white bg-accent lg:bg-accent/15 lg:text-accent-light shadow-lg lg:shadow-none shadow-accent/30 scale-105 lg:scale-100' 
                   : 'text-muted hover:text-secondary lg:hover:bg-glass-bg-hover'}
+                w-14 sm:w-16 lg:w-full
               `}
             >
-              <link.icon className="w-6 h-6 lg:w-5 lg:h-5 lg:mr-3" />
-              <span className="text-[10px] lg:text-sm font-medium mt-1 lg:mt-0">{link.label}</span>
+              <link.icon className={`w-5 h-5 lg:w-5 lg:h-5 lg:mr-3 ${location.pathname === link.to ? 'text-white lg:text-accent-light' : ''}`} />
+              <span className={`text-[9px] lg:text-sm font-bold mt-1 lg:mt-0 ${location.pathname === link.to ? 'text-white lg:text-accent-light' : ''}`}>
+                {link.label}
+              </span>
+              {/* Desktop active indicator pill */}
+              <div className={`hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-accent rounded-r-full transition-opacity duration-300 ${location.pathname === link.to ? 'opacity-100' : 'opacity-0'}`} />
             </NavLink>
           ))}
         </div>
@@ -82,11 +90,11 @@ export const AppLayout: React.FC = () => {
             transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none lg:static
             ${isNavHidden ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'}
           `}>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white lg:hidden shadow-sm shadow-accent/20">
-                <BookOpen className="w-4 h-4" />
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-accent shadow-sm lg:hidden">
+                <PageIcon className="w-4 h-4" />
               </div>
-              <h1 className="text-xl lg:hidden font-heading font-bold tracking-wide text-primary">Remora</h1>
+              <h1 className="text-xl lg:hidden font-heading font-bold tracking-wide text-primary">{currentRoute.label}</h1>
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-glass-bg border border-glass-border">
               <span className="text-orange-400 text-sm">🔥</span>
