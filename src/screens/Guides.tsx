@@ -305,15 +305,21 @@ export const Guides: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-5">
+              <div className="relative flex flex-col">
+                {/* Continuous Timeline Line */}
+                <div className="absolute left-8 top-8 bottom-8 w-[2px] bg-glass-border -ml-[1px] z-0" />
+                
                 {activeGuide.blocks.map((block: any, i: number) => (
-                  <div key={i} className="flex gap-4 items-start group">
-                    <div className="w-16 h-16 rounded-2xl bg-glass-bg flex flex-col items-center justify-center border border-glass-border flex-shrink-0 shadow-sm">
-                      <span className="text-[10px] text-muted font-bold uppercase tracking-wider mb-0.5">Ch</span>
-                      <span className="font-heading font-bold text-primary text-lg leading-none">{block.chapters}</span>
+                  <div key={i} className="relative flex gap-6 items-start group pb-10 last:pb-0">
+                    {/* Node Box */}
+                    <div className="w-16 h-16 rounded-2xl bg-background flex flex-col items-center justify-center border-2 border-glass-border group-hover:border-accent/80 group-hover:bg-accent/10 flex-shrink-0 z-10 transition-all duration-300 shadow-sm group-hover:shadow-lg group-hover:-translate-y-0.5">
+                      <span className="text-[10px] text-muted group-hover:text-accent font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300">Ch</span>
+                      <span className="font-heading font-bold text-primary text-xl leading-none transition-colors duration-300">{block.chapters}</span>
                     </div>
-                    <div className="pt-2 flex flex-col gap-1">
-                      <h3 className="font-bold text-primary tracking-wide text-lg">{block.label}</h3>
+                    
+                    {/* Content */}
+                    <div className="pt-1.5 flex flex-col gap-1.5 flex-1">
+                      <h3 className="font-bold text-primary tracking-wide text-lg group-hover:text-accent-light transition-colors duration-300 uppercase">{block.label}</h3>
                       <p className="text-secondary leading-relaxed">{block.description}</p>
                     </div>
                   </div>
