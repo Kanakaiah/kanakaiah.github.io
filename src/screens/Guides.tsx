@@ -307,7 +307,7 @@ export const Guides: React.FC = () => {
 
               <div className="relative flex flex-col">
                 {/* Continuous Timeline Line */}
-                <div className="absolute left-8 top-8 bottom-8 w-[2px] bg-glass-border -ml-[1px] z-0" />
+                <div className="absolute left-8 top-8 bottom-12 w-[2px] bg-gradient-to-b from-accent/60 via-accent/20 to-transparent -ml-[1px] z-0" />
                 
                 {activeGuide.blocks.map((block: any, i: number) => (
                   <div key={i} className="relative flex gap-6 items-start group pb-10 last:pb-0">
