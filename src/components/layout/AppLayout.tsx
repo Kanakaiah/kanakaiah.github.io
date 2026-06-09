@@ -9,8 +9,11 @@ export const AppLayout: React.FC = () => {
   const [isNavHidden, setIsNavHidden] = useState(false);
   const lastScrollY = useRef(0);
 
-  // Hide header only on the Practice screen
-  const isPracticeScreen = location.pathname === '/practice';
+  // Hide header on all screens except the Home (Library) screen
+  const isHomeScreen = location.pathname === '/';
+  
+  // Hide bottom/side navigation when in the reading view
+  const isReadingPage = new URLSearchParams(location.search).has('readerUrl');
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const currentScrollY = e.currentTarget.scrollTop;
@@ -46,6 +49,7 @@ export const AppLayout: React.FC = () => {
         px-6 py-3 lg:p-6 shadow-lg lg:shadow-none
         transition-transform duration-300 ease-in-out
         ${isNavHidden ? 'translate-y-[150px] lg:translate-y-0' : 'translate-y-0'}
+        ${isReadingPage ? 'hidden' : ''}
       `}>
         {/* Desktop Logo */}
         <div className="hidden lg:flex items-center gap-3 mb-8 w-full px-2">
@@ -83,8 +87,8 @@ export const AppLayout: React.FC = () => {
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        {/* GLOBAL HEADER (Hidden on Practice Screen) */}
-        {!isPracticeScreen && (
+        {/* GLOBAL HEADER (Only on Home Screen) */}
+        {isHomeScreen && (
           <header className={`
             absolute top-0 left-0 w-full px-5 lg:px-8 pt-5 pb-3 flex justify-between items-center z-40
             transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none lg:static
@@ -105,7 +109,7 @@ export const AppLayout: React.FC = () => {
 
         {/* SCROLLABLE PAGE CONTENT */}
         <div 
-          className={`flex-1 overflow-y-auto w-full ${isPracticeScreen ? '' : 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8'}`}
+          className={`flex-1 overflow-y-auto w-full ${isHomeScreen ? 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8' : (location.pathname === '/practice' || isReadingPage) ? '' : 'px-5 lg:px-8 pt-6 pb-24 lg:pb-8'}`}
           onScroll={handleScroll}
         >
           <Outlet />

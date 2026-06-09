@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, ArrowLeft, BookOpen, Globe, Headphones, PlayCircle, Radio } from 'lucide-react';
+import { ChevronRight, ChevronLeft, BookOpen, Globe, Headphones, PlayCircle, Radio } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { NT_BOOKS } from '../data/ntBooks';
 import { BibleBrowser } from '../components/guides/BibleBrowser';
@@ -8,12 +9,38 @@ import { BibleBrowser } from '../components/guides/BibleBrowser';
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
+const YOUVERSION_NT_ABBR: Record<string, string> = {
+  "matthew": "MAT", "mark": "MRK", "luke": "LUK", "john": "JHN", "acts": "ACT",
+  "romans": "ROM", "1corinthians": "1CO", "2corinthians": "2CO", "galatians": "GAL",
+  "ephesians": "EPH", "philippians": "PHP", "colossians": "COL", "1thessalonians": "1TH",
+  "2thessalonians": "2TH", "1timothy": "1TI", "2timothy": "2TI", "titus": "TIT",
+  "philemon": "PHM", "hebrews": "HEB", "james": "JAS", "1peter": "1PE", "2peter": "2PE",
+  "1john": "1JN", "2john": "2JN", "3john": "3JN", "jude": "JUD", "revelation": "REV"
+};
+
 const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }) => {
   const [imgErr, setImgErr] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
 
+  const bookAbbr = YOUVERSION_NT_ABBR[guideId] || 'JHN';
+  const bibleUrl = `https://www.bible.com/bible/3345/${bookAbbr}.${anchor.ch}.LSB`;
+
+  const handleRead = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.set('readerUrl', bibleUrl);
+      return next;
+    });
+  };
+
   return (
-    <div className={`relative bg-glass-bg rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[160px] group ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-glass-border hover:bg-glass-bg-hover shadow-sm'}`}>
+    <a 
+      href={bibleUrl}
+      onClick={handleRead}
+      className={`relative bg-glass-bg rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[240px] group cursor-pointer ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-glass-border hover:bg-glass-bg-hover shadow-sm'}`}
+    >
       
       {!imgErr && (
         <img 
@@ -23,7 +50,7 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
       )}
-      <div className={`absolute inset-0 ${!imgErr ? 'bg-gradient-to-t from-black/90 via-black/50 to-black/20' : ''}`} />
+      <div className={`absolute inset-0 ${!imgErr ? 'bg-gradient-to-t from-black/70 via-black/30 to-transparent' : ''}`} />
 
       {/* Content over image */}
       <div className="relative z-10 p-6 flex flex-col h-full">
@@ -39,12 +66,22 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
           {anchor.scene}
         </p>
       </div>
-    </div>
+    </a>
   );
 };
 
 export const Guides: React.FC = () => {
-  const [activeGuideId, setActiveGuideId] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeGuideId = searchParams.get('guide');
+  const readerUrl = searchParams.get('readerUrl');
+
+  const setActiveGuideId = (id: string | null) => {
+    if (id) {
+      setSearchParams({ guide: id });
+    } else {
+      setSearchParams({});
+    }
+  };
 
   const activeGuide: any = useMemo(() => {
     if (!activeGuideId || activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) return null;
@@ -86,6 +123,33 @@ export const Guides: React.FC = () => {
     return map;
   }, []);
 
+  // ── In-App Reader view ─────────────────────────────────────────────────────
+  if (readerUrl) {
+    return (
+      <div className="flex flex-col h-full w-full animate-[fadeIn_0.3s_ease-out] bg-background">
+        <div className="flex items-center justify-center p-3 border-b border-glass-border relative">
+          <button 
+            onClick={() => {
+              setSearchParams(prev => {
+                const next = new URLSearchParams(prev);
+                next.delete('readerUrl');
+                return next;
+              });
+            }}
+            className="absolute left-3 flex items-center gap-1 text-accent hover:text-accent-hover transition-colors font-medium text-[15px]"
+          >
+            <ChevronLeft className="w-5 h-5" />
+            <span>{activeGuide?.title || 'Book'}</span>
+          </button>
+          <span className="font-heading font-bold text-primary text-[17px]">Reader</span>
+        </div>
+        <div className="flex-1 w-full bg-white">
+          <iframe src={readerUrl} className="w-full h-full border-0 bg-white block" title="Bible Reader" />
+        </div>
+      </div>
+    );
+  }
+
   // ── BibleBrowser view ──────────────────────────────────────────────────────
   if (activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) {
     return (
@@ -103,7 +167,7 @@ export const Guides: React.FC = () => {
   if (activeGuide) {
     return (
       <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-4 mb-2">
           <button
             onClick={() => {
               // If it was a book-guide opened from BibleBrowser, go back to browser
@@ -113,15 +177,16 @@ export const Guides: React.FC = () => {
                 setActiveGuideId(null);
               }
             }}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-glass-bg border border-glass-border hover:bg-glass-bg-hover transition-colors"
+            className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[15px] self-start"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5" />
+            <span>{activeGuide.type === 'book-guide' ? 'Bible Books' : 'Guides'}</span>
           </button>
           <div>
-            <h1 className="text-2xl font-bold font-heading text-primary flex items-center gap-2">
+            <h1 className="text-3xl font-bold font-heading text-primary flex items-center gap-2">
               <span className="text-3xl">{activeGuide.icon}</span> {activeGuide.title}
             </h1>
-            <p className="text-secondary text-sm font-medium">{activeGuide.subtitle}</p>
+            <p className="text-secondary text-sm font-medium mt-1">{activeGuide.subtitle}</p>
           </div>
         </div>
 
@@ -258,7 +323,7 @@ export const Guides: React.FC = () => {
               {activeGuide.anchors && (
                 <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-5">
                   <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {activeGuide.anchors.map((anchor: any, i: number) => (
                       <ChapterAnchorCard key={i} anchor={anchor} guideId={activeGuide.id} />
                     ))}

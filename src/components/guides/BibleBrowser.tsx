@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ChevronLeft, BookOpen } from 'lucide-react';
 import { NT_BOOKS, NT_SECTIONS } from '../../data/ntBooks';
 import type { NTBook } from '../../data/ntBooks';
 
@@ -85,16 +85,17 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
       {/* ── NT Book Grid ─────────────────────────────────────────────────────── */}
       {view === 'book-grid' && testament === 'NT' && (
         <>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-4 mb-2">
             <button
               onClick={handleBackFromGrid}
-              className="w-9 h-9 rounded-full flex items-center justify-center bg-glass-bg border border-glass-border hover:bg-glass-bg-hover transition-colors"
+              className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[15px] self-start"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5" />
+              <span>Guides</span>
             </button>
             <div>
-              <h2 className="text-xl font-bold font-heading text-primary">New Testament</h2>
-              <p className="text-secondary text-sm">27 books — tap any to explore</p>
+              <h2 className="text-3xl font-bold font-heading text-primary">New Testament</h2>
+              <p className="text-secondary text-sm mt-1">27 books — tap any to explore</p>
             </div>
           </div>
 
@@ -121,11 +122,12 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
       {/* ── OT Coming Soon ───────────────────────────────────────────────────── */}
       {view === 'book-grid' && testament === 'OT' && (
         <>
-          <div className="flex items-center gap-3">
-            <button onClick={handleBackFromGrid} className="w-9 h-9 rounded-full flex items-center justify-center bg-glass-bg border border-glass-border hover:bg-glass-bg-hover transition-colors">
-              <ArrowLeft className="w-4 h-4" />
+          <div className="flex flex-col gap-4 mb-2">
+            <button onClick={handleBackFromGrid} className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[15px] self-start">
+              <ChevronLeft className="w-5 h-5" />
+              <span>Guides</span>
             </button>
-            <h2 className="text-xl font-bold font-heading text-primary">Old Testament</h2>
+            <h2 className="text-3xl font-bold font-heading text-primary">Old Testament</h2>
           </div>
           <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
             <div className="text-6xl">📜</div>

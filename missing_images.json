@@ -1,0 +1,1706 @@
+[
+  {
+    "guideId": "galatians",
+    "ch": 5,
+    "word": "FRUIT",
+    "scene": "Fruit of the Spirit vs. works of the flesh",
+    "imagePath": "public\\chapters\\galatians\\ch5.png",
+    "dirPath": "public\\chapters\\galatians"
+  },
+  {
+    "guideId": "galatians",
+    "ch": 6,
+    "word": "CROSS",
+    "scene": "'May I never boast except in the cross'",
+    "imagePath": "public\\chapters\\galatians\\ch6.png",
+    "dirPath": "public\\chapters\\galatians"
+  },
+  {
+    "guideId": "ephesians",
+    "ch": 1,
+    "word": "HEAVENLY",
+    "scene": "Every spiritual blessing in the heavenly places",
+    "imagePath": "public\\chapters\\ephesians\\ch1.png",
+    "dirPath": "public\\chapters\\ephesians"
+  },
+  {
+    "guideId": "ephesians",
+    "ch": 2,
+    "word": "WALL",
+    "scene": "The dividing wall of hostility — demolished",
+    "imagePath": "public\\chapters\\ephesians\\ch2.png",
+    "dirPath": "public\\chapters\\ephesians"
+  },
+  {
+    "guideId": "ephesians",
+    "ch": 3,
+    "word": "MYSTERY",
+    "scene": "The mystery hidden for ages — Gentiles as co-heirs",
+    "imagePath": "public\\chapters\\ephesians\\ch3.png",
+    "dirPath": "public\\chapters\\ephesians"
+  },
+  {
+    "guideId": "ephesians",
+    "ch": 4,
+    "word": "WALK",
+    "scene": "'Walk worthy' — unity, gifts, putting off the old self",
+    "imagePath": "public\\chapters\\ephesians\\ch4.png",
+    "dirPath": "public\\chapters\\ephesians"
+  },
+  {
+    "guideId": "ephesians",
+    "ch": 5,
+    "word": "LIGHT",
+    "scene": "Walk as children of light — marriage as gospel picture",
+    "imagePath": "public\\chapters\\ephesians\\ch5.png",
+    "dirPath": "public\\chapters\\ephesians"
+  },
+  {
+    "guideId": "ephesians",
+    "ch": 6,
+    "word": "ARMOR",
+    "scene": "Full armor of God — stand firm",
+    "imagePath": "public\\chapters\\ephesians\\ch6.png",
+    "dirPath": "public\\chapters\\ephesians"
+  },
+  {
+    "guideId": "acts",
+    "ch": 1,
+    "word": "CLOUD",
+    "scene": "Jesus ascends into a cloud",
+    "imagePath": "public\\chapters\\acts\\ch1.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 2,
+    "word": "FIRE",
+    "scene": "Tongues of fire — 3,000 saved at Pentecost",
+    "imagePath": "public\\chapters\\acts\\ch2.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 3,
+    "word": "GATE",
+    "scene": "Lame man healed at the Beautiful Gate",
+    "imagePath": "public\\chapters\\acts\\ch3.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 4,
+    "word": "PRISON",
+    "scene": "Peter and John arrested and imprisoned",
+    "imagePath": "public\\chapters\\acts\\ch4.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 5,
+    "word": "FEET",
+    "scene": "Ananias and Sapphira fall dead at the apostles' feet",
+    "imagePath": "public\\chapters\\acts\\ch5.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 6,
+    "word": "TABLE",
+    "scene": "Seven deacons chosen to serve tables",
+    "imagePath": "public\\chapters\\acts\\ch6.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 7,
+    "word": "STONES",
+    "scene": "Stephen stoned — first martyr",
+    "imagePath": "public\\chapters\\acts\\ch7.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 8,
+    "word": "ROAD",
+    "scene": "Philip on the desert road — Ethiopian eunuch baptized",
+    "imagePath": "public\\chapters\\acts\\ch8.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 9,
+    "word": "LIGHT",
+    "scene": "Saul blinded by light on the Damascus road",
+    "imagePath": "public\\chapters\\acts\\ch9.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 10,
+    "word": "SHEET",
+    "scene": "Peter's vision — sheet of unclean animals",
+    "imagePath": "public\\chapters\\acts\\ch10.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 11,
+    "word": "ANTIOCH",
+    "scene": "First called 'Christians' at Antioch",
+    "imagePath": "public\\chapters\\acts\\ch11.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 12,
+    "word": "CHAINS",
+    "scene": "Peter in chains — angel frees him",
+    "imagePath": "public\\chapters\\acts\\ch12.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 13,
+    "word": "SAIL",
+    "scene": "First missionary journey begins — Paul and Barnabas sail",
+    "imagePath": "public\\chapters\\acts\\ch13.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 14,
+    "word": "GODS",
+    "scene": "Crowd tries to worship Paul and Barnabas as gods",
+    "imagePath": "public\\chapters\\acts\\ch14.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 15,
+    "word": "COUNCIL",
+    "scene": "Jerusalem Council — circumcision debate settled",
+    "imagePath": "public\\chapters\\acts\\ch15.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 16,
+    "word": "EARTHQUAKE",
+    "scene": "Philippian jailer — midnight earthquake",
+    "imagePath": "public\\chapters\\acts\\ch16.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 17,
+    "word": "ALTAR",
+    "scene": "Athens — 'To the Unknown God' altar",
+    "imagePath": "public\\chapters\\acts\\ch17.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 18,
+    "word": "TENT",
+    "scene": "Corinth — Paul the tentmaker with Aquila and Priscilla",
+    "imagePath": "public\\chapters\\acts\\ch18.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 19,
+    "word": "RIOT",
+    "scene": "Ephesus riot — 'Great is Artemis!'",
+    "imagePath": "public\\chapters\\acts\\ch19.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 20,
+    "word": "WINDOW",
+    "scene": "Eutychus falls from a window — Paul raises him",
+    "imagePath": "public\\chapters\\acts\\ch20.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 21,
+    "word": "BOUND",
+    "scene": "Agabus binds Paul's hands — prophecy of arrest",
+    "imagePath": "public\\chapters\\acts\\ch21.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 22,
+    "word": "CROWD",
+    "scene": "Paul's defense to the Jerusalem crowd",
+    "imagePath": "public\\chapters\\acts\\ch22.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 23,
+    "word": "PLOT",
+    "scene": "40 men plot to kill Paul — nephew uncovers it",
+    "imagePath": "public\\chapters\\acts\\ch23.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 24,
+    "word": "FELIX",
+    "scene": "Paul before Governor Felix",
+    "imagePath": "public\\chapters\\acts\\ch24.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 25,
+    "word": "CAESAR",
+    "scene": "'I appeal to Caesar!' — Paul before Festus",
+    "imagePath": "public\\chapters\\acts\\ch25.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 26,
+    "word": "KING",
+    "scene": "Paul before King Agrippa",
+    "imagePath": "public\\chapters\\acts\\ch26.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 27,
+    "word": "SHIPWRECK",
+    "scene": "Storm and shipwreck on the way to Rome",
+    "imagePath": "public\\chapters\\acts\\ch27.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "acts",
+    "ch": 28,
+    "word": "HOUSE",
+    "scene": "Paul under house arrest in Rome — preaching freely",
+    "imagePath": "public\\chapters\\acts\\ch28.png",
+    "dirPath": "public\\chapters\\acts"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 1,
+    "word": "SON",
+    "scene": "'In these last days He has spoken to us by His Son'",
+    "imagePath": "public\\chapters\\hebrews\\ch1.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 2,
+    "word": "TASTE",
+    "scene": "Jesus tasted death for everyone",
+    "imagePath": "public\\chapters\\hebrews\\ch2.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 3,
+    "word": "HOUSE",
+    "scene": "Moses faithful as a servant in God's house — Jesus as Son over the house",
+    "imagePath": "public\\chapters\\hebrews\\ch3.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 4,
+    "word": "REST",
+    "scene": "A Sabbath rest remains for the people of God",
+    "imagePath": "public\\chapters\\hebrews\\ch4.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 5,
+    "word": "MILK",
+    "scene": "You need milk not solid food",
+    "imagePath": "public\\chapters\\hebrews\\ch5.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 6,
+    "word": "ANCHOR",
+    "scene": "Hope as an anchor for the soul — firm and secure",
+    "imagePath": "public\\chapters\\hebrews\\ch6.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 7,
+    "word": "MELCHIZEDEK",
+    "scene": "Priest forever — greater than Abraham and Levi",
+    "imagePath": "public\\chapters\\hebrews\\ch7.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 8,
+    "word": "COPY",
+    "scene": "Earthly tabernacle is a shadow and copy of the heavenly",
+    "imagePath": "public\\chapters\\hebrews\\ch8.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 9,
+    "word": "BLOOD",
+    "scene": "Without the shedding of blood there is no forgiveness",
+    "imagePath": "public\\chapters\\hebrews\\ch9.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 10,
+    "word": "ONCE",
+    "scene": "Christ offered once for all — sit down, work is finished",
+    "imagePath": "public\\chapters\\hebrews\\ch10.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 11,
+    "word": "FAITH",
+    "scene": "Faith Hall of Fame — Abel to the prophets",
+    "imagePath": "public\\chapters\\hebrews\\ch11.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 12,
+    "word": "RACE",
+    "scene": "Run with endurance — fix your eyes on Jesus",
+    "imagePath": "public\\chapters\\hebrews\\ch12.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "hebrews",
+    "ch": 13,
+    "word": "GATE",
+    "scene": "Jesus suffered outside the gate — go to him there",
+    "imagePath": "public\\chapters\\hebrews\\ch13.png",
+    "dirPath": "public\\chapters\\hebrews"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 1,
+    "word": "ROBE",
+    "scene": "Christ in a long robe — eyes like fire",
+    "imagePath": "public\\chapters\\revelation\\ch1.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 2,
+    "word": "LETTERS",
+    "scene": "Four letters — Ephesus, Smyrna, Pergamum, Thyatira",
+    "imagePath": "public\\chapters\\revelation\\ch2.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 3,
+    "word": "DOOR",
+    "scene": "Three letters — 'Behold I stand at the door and knock'",
+    "imagePath": "public\\chapters\\revelation\\ch3.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 4,
+    "word": "THRONE",
+    "scene": "Throne room — four living creatures, 24 elders",
+    "imagePath": "public\\chapters\\revelation\\ch4.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 5,
+    "word": "LAMB",
+    "scene": "The slain Lamb takes the scroll — worthy to open it",
+    "imagePath": "public\\chapters\\revelation\\ch5.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 6,
+    "word": "HORSE",
+    "scene": "Four horsemen — white, red, black, pale",
+    "imagePath": "public\\chapters\\revelation\\ch6.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 7,
+    "word": "SEALED",
+    "scene": "144,000 sealed — great multitude no one can number",
+    "imagePath": "public\\chapters\\revelation\\ch7.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 8,
+    "word": "INCENSE",
+    "scene": "Golden censer of incense — silence in heaven",
+    "imagePath": "public\\chapters\\revelation\\ch8.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 9,
+    "word": "LOCUSTS",
+    "scene": "Demonic locusts from the abyss",
+    "imagePath": "public\\chapters\\revelation\\ch9.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 10,
+    "word": "SCROLL",
+    "scene": "Little scroll — sweet in the mouth, bitter in the stomach",
+    "imagePath": "public\\chapters\\revelation\\ch10.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 11,
+    "word": "WITNESSES",
+    "scene": "Two witnesses — killed, raised, ascend",
+    "imagePath": "public\\chapters\\revelation\\ch11.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 12,
+    "word": "DRAGON",
+    "scene": "Red dragon pursues the woman and her child",
+    "imagePath": "public\\chapters\\revelation\\ch12.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 13,
+    "word": "BEAST",
+    "scene": "Beast from the sea — 666, mark of the beast",
+    "imagePath": "public\\chapters\\revelation\\ch13.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 14,
+    "word": "HARVEST",
+    "scene": "The Lamb on Mount Zion — the great harvest",
+    "imagePath": "public\\chapters\\revelation\\ch14.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 15,
+    "word": "SONG",
+    "scene": "Song of Moses and the Lamb",
+    "imagePath": "public\\chapters\\revelation\\ch15.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 16,
+    "word": "ARMAGEDDON",
+    "scene": "Seven bowls poured — kings gathered at Armageddon",
+    "imagePath": "public\\chapters\\revelation\\ch16.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 17,
+    "word": "HARLOT",
+    "scene": "Harlot Babylon riding the scarlet beast",
+    "imagePath": "public\\chapters\\revelation\\ch17.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 18,
+    "word": "SMOKE",
+    "scene": "Babylon falls — merchants weep, smoke rises",
+    "imagePath": "public\\chapters\\revelation\\ch18.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 19,
+    "word": "SWORD",
+    "scene": "Rider on a white horse — sword from His mouth",
+    "imagePath": "public\\chapters\\revelation\\ch19.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 20,
+    "word": "CHAINS",
+    "scene": "Satan bound in chains — great white throne judgment",
+    "imagePath": "public\\chapters\\revelation\\ch20.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 21,
+    "word": "CITY",
+    "scene": "New Jerusalem descends — no more tears, no more death",
+    "imagePath": "public\\chapters\\revelation\\ch21.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "revelation",
+    "ch": 22,
+    "word": "RIVER",
+    "scene": "River of life — tree of life — 'Come, Lord Jesus'",
+    "imagePath": "public\\chapters\\revelation\\ch22.png",
+    "dirPath": "public\\chapters\\revelation"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 3,
+    "word": "DOVE",
+    "scene": "Baptism — Spirit descends like a dove",
+    "imagePath": "public\\chapters\\matthew\\ch3.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 4,
+    "word": "DESERT",
+    "scene": "Temptation in the desert — 'It is written' three times",
+    "imagePath": "public\\chapters\\matthew\\ch4.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 5,
+    "word": "BEATITUDES",
+    "scene": "Blessed are the poor in spirit — salt and light",
+    "imagePath": "public\\chapters\\matthew\\ch5.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 6,
+    "word": "PRAYER",
+    "scene": "The Lord's Prayer — treasures in heaven",
+    "imagePath": "public\\chapters\\matthew\\ch6.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 7,
+    "word": "ROCK",
+    "scene": "Build on the rock — two gates, two trees, two builders",
+    "imagePath": "public\\chapters\\matthew\\ch7.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 8,
+    "word": "CENTURION",
+    "scene": "'I have not found such faith in Israel'",
+    "imagePath": "public\\chapters\\matthew\\ch8.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 9,
+    "word": "HARVEST",
+    "scene": "'The harvest is plentiful but workers are few'",
+    "imagePath": "public\\chapters\\matthew\\ch9.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 10,
+    "word": "SWORD",
+    "scene": "'I came not to bring peace but a sword' — mission discourse",
+    "imagePath": "public\\chapters\\matthew\\ch10.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 11,
+    "word": "YOKE",
+    "scene": "'Come to me… my yoke is easy, my burden is light'",
+    "imagePath": "public\\chapters\\matthew\\ch11.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 12,
+    "word": "SIGN",
+    "scene": "No sign given except the sign of Jonah",
+    "imagePath": "public\\chapters\\matthew\\ch12.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 13,
+    "word": "SOWER",
+    "scene": "Sower, wheat and tares, mustard seed — seven parables",
+    "imagePath": "public\\chapters\\matthew\\ch13.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 14,
+    "word": "WAVES",
+    "scene": "Peter walks on water — then sinks",
+    "imagePath": "public\\chapters\\matthew\\ch14.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 15,
+    "word": "CRUMBS",
+    "scene": "Canaanite woman — 'even dogs eat the crumbs'",
+    "imagePath": "public\\chapters\\matthew\\ch15.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 16,
+    "word": "KEYS",
+    "scene": "'You are Peter… I will give you the keys of the kingdom'",
+    "imagePath": "public\\chapters\\matthew\\ch16.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 17,
+    "word": "CLOUD",
+    "scene": "Transfiguration — voice from the cloud: 'Listen to Him'",
+    "imagePath": "public\\chapters\\matthew\\ch17.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 18,
+    "word": "CHILD",
+    "scene": "'Unless you become like a child' — community discourse",
+    "imagePath": "public\\chapters\\matthew\\ch18.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 19,
+    "word": "CAMEL",
+    "scene": "Camel through the eye of a needle — rich young ruler",
+    "imagePath": "public\\chapters\\matthew\\ch19.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 20,
+    "word": "LAST",
+    "scene": "'The last shall be first' — workers in the vineyard",
+    "imagePath": "public\\chapters\\matthew\\ch20.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 21,
+    "word": "DONKEY",
+    "scene": "Triumphal entry — temple cleansed, fig tree cursed",
+    "imagePath": "public\\chapters\\matthew\\ch21.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 22,
+    "word": "WEDDING",
+    "scene": "Wedding banquet parable — 'Many called, few chosen'",
+    "imagePath": "public\\chapters\\matthew\\ch22.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 23,
+    "word": "WOES",
+    "scene": "Seven woes to the Pharisees — 'Blind guides!'",
+    "imagePath": "public\\chapters\\matthew\\ch23.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 24,
+    "word": "EAGLES",
+    "scene": "Olivet Discourse — signs of the end",
+    "imagePath": "public\\chapters\\matthew\\ch24.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 25,
+    "word": "OIL",
+    "scene": "Ten virgins — five with oil, five without",
+    "imagePath": "public\\chapters\\matthew\\ch25.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 26,
+    "word": "JAR",
+    "scene": "Woman breaks alabaster jar — Last Supper, Gethsemane",
+    "imagePath": "public\\chapters\\matthew\\ch26.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 27,
+    "word": "CURTAIN",
+    "scene": "Curtain torn — darkness, earthquake, 'Son of God!'",
+    "imagePath": "public\\chapters\\matthew\\ch27.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "matthew",
+    "ch": 28,
+    "word": "MOUNTAIN",
+    "scene": "Great Commission on the mountain — 'Go therefore'",
+    "imagePath": "public\\chapters\\matthew\\ch28.png",
+    "dirPath": "public\\chapters\\matthew"
+  },
+  {
+    "guideId": "luke",
+    "ch": 1,
+    "word": "SONG",
+    "scene": "Mary's Magnificat + Zechariah's Benedictus",
+    "imagePath": "public\\chapters\\luke\\ch1.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 2,
+    "word": "MANGER",
+    "scene": "Birth in a manger — shepherds and angels",
+    "imagePath": "public\\chapters\\luke\\ch2.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 3,
+    "word": "GENEALOGY",
+    "scene": "Baptism + Luke's genealogy traced back to Adam",
+    "imagePath": "public\\chapters\\luke\\ch3.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 4,
+    "word": "SCROLL",
+    "scene": "Jesus reads Isaiah in Nazareth — 'Today this is fulfilled'",
+    "imagePath": "public\\chapters\\luke\\ch4.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 5,
+    "word": "NET",
+    "scene": "Peter's miraculous catch — 'I am a sinful man'",
+    "imagePath": "public\\chapters\\luke\\ch5.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 6,
+    "word": "PLAIN",
+    "scene": "Sermon on the Plain — Beatitudes and woes",
+    "imagePath": "public\\chapters\\luke\\ch6.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 7,
+    "word": "TEARS",
+    "scene": "Sinful woman washes feet with tears and hair",
+    "imagePath": "public\\chapters\\luke\\ch7.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 8,
+    "word": "LAMP",
+    "scene": "Lamp on a stand — don't hide the light",
+    "imagePath": "public\\chapters\\luke\\ch8.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 9,
+    "word": "FACE",
+    "scene": "Transfiguration — Jesus' face changed; 'set his face toward Jerusalem'",
+    "imagePath": "public\\chapters\\luke\\ch9.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 10,
+    "word": "FEET",
+    "scene": "Mary sits at Jesus' feet — Martha bustles around",
+    "imagePath": "public\\chapters\\luke\\ch10.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 11,
+    "word": "KNOCK",
+    "scene": "'Ask, seek, knock' — friend at midnight",
+    "imagePath": "public\\chapters\\luke\\ch11.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 12,
+    "word": "BARNS",
+    "scene": "Rich fool builds bigger barns",
+    "imagePath": "public\\chapters\\luke\\ch12.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 13,
+    "word": "FIG",
+    "scene": "Parable of the barren fig tree — one more year",
+    "imagePath": "public\\chapters\\luke\\ch13.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 14,
+    "word": "TABLE",
+    "scene": "Great Banquet — 'Come, for everything is ready'",
+    "imagePath": "public\\chapters\\luke\\ch14.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 15,
+    "word": "COIN",
+    "scene": "Lost sheep, lost coin, lost son — three parables of lostness",
+    "imagePath": "public\\chapters\\luke\\ch15.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 16,
+    "word": "RICH",
+    "scene": "Rich man and Lazarus — great chasm fixed",
+    "imagePath": "public\\chapters\\luke\\ch16.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 17,
+    "word": "TEN",
+    "scene": "Ten lepers healed — only one returns",
+    "imagePath": "public\\chapters\\luke\\ch17.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 18,
+    "word": "WIDOW",
+    "scene": "Persistent widow — Pharisee and tax collector",
+    "imagePath": "public\\chapters\\luke\\ch18.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 19,
+    "word": "TREE",
+    "scene": "Zacchaeus climbs a sycamore tree",
+    "imagePath": "public\\chapters\\luke\\ch19.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 20,
+    "word": "STONE",
+    "scene": "Cornerstone rejected",
+    "imagePath": "public\\chapters\\luke\\ch20.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 21,
+    "word": "WIDOW",
+    "scene": "Widow's mite — signs of the end",
+    "imagePath": "public\\chapters\\luke\\ch21.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 22,
+    "word": "CUP",
+    "scene": "Last Supper — 'This cup is the new covenant in my blood'",
+    "imagePath": "public\\chapters\\luke\\ch22.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 23,
+    "word": "PARADISE",
+    "scene": "'Today you will be with me in Paradise' — thief on the cross",
+    "imagePath": "public\\chapters\\luke\\ch23.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "luke",
+    "ch": 24,
+    "word": "ROAD",
+    "scene": "Emmaus road — 'Did not our hearts burn within us?'",
+    "imagePath": "public\\chapters\\luke\\ch24.png",
+    "dirPath": "public\\chapters\\luke"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 1,
+    "word": "CROSS",
+    "scene": "'The message of the cross is foolishness to those perishing'",
+    "imagePath": "public\\chapters\\1corinthians\\ch1.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 2,
+    "word": "SPIRIT",
+    "scene": "'The Spirit searches all things — even the depths of God'",
+    "imagePath": "public\\chapters\\1corinthians\\ch2.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 3,
+    "word": "FIRE",
+    "scene": "Each builder's work tested by fire — gold or straw",
+    "imagePath": "public\\chapters\\1corinthians\\ch3.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 4,
+    "word": "FOOLS",
+    "scene": "'We are fools for Christ' — apostles as spectacle",
+    "imagePath": "public\\chapters\\1corinthians\\ch4.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 5,
+    "word": "YEAST",
+    "scene": "A little yeast leavens the whole lump",
+    "imagePath": "public\\chapters\\1corinthians\\ch5.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 6,
+    "word": "TEMPLE",
+    "scene": "'Your body is a temple of the Holy Spirit'",
+    "imagePath": "public\\chapters\\1corinthians\\ch6.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 7,
+    "word": "MARRIED",
+    "scene": "Marriage, divorce, and singleness",
+    "imagePath": "public\\chapters\\1corinthians\\ch7.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 8,
+    "word": "IDOL",
+    "scene": "Food sacrificed to idols — knowledge puffs up",
+    "imagePath": "public\\chapters\\1corinthians\\ch8.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 9,
+    "word": "RACE",
+    "scene": "'Run in such a way as to win the prize'",
+    "imagePath": "public\\chapters\\1corinthians\\ch9.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 10,
+    "word": "ROCK",
+    "scene": "The rock that followed them was Christ",
+    "imagePath": "public\\chapters\\1corinthians\\ch10.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 11,
+    "word": "TABLE",
+    "scene": "Lord's Supper abused — 'examine yourselves'",
+    "imagePath": "public\\chapters\\1corinthians\\ch11.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 12,
+    "word": "BODY",
+    "scene": "One body, many members",
+    "imagePath": "public\\chapters\\1corinthians\\ch12.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 13,
+    "word": "LOVE",
+    "scene": "'If I have not love I am nothing' — love never fails",
+    "imagePath": "public\\chapters\\1corinthians\\ch13.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 14,
+    "word": "TONGUE",
+    "scene": "Tongues and prophecy — 'all things decently and in order'",
+    "imagePath": "public\\chapters\\1corinthians\\ch14.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 15,
+    "word": "SEED",
+    "scene": "Resurrection body like a seed — 'O death, where is your sting?'",
+    "imagePath": "public\\chapters\\1corinthians\\ch15.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "1corinthians",
+    "ch": 16,
+    "word": "DOOR",
+    "scene": "'A great door of effective work has opened'",
+    "imagePath": "public\\chapters\\1corinthians\\ch16.png",
+    "dirPath": "public\\chapters\\1corinthians"
+  },
+  {
+    "guideId": "colossians",
+    "ch": 1,
+    "word": "IMAGE",
+    "scene": "'He is the image of the invisible God — firstborn over all creation'",
+    "imagePath": "public\\chapters\\colossians\\ch1.png",
+    "dirPath": "public\\chapters\\colossians"
+  },
+  {
+    "guideId": "colossians",
+    "ch": 2,
+    "word": "SHADOW",
+    "scene": "Old rituals are shadows — the substance belongs to Christ",
+    "imagePath": "public\\chapters\\colossians\\ch2.png",
+    "dirPath": "public\\chapters\\colossians"
+  },
+  {
+    "guideId": "colossians",
+    "ch": 3,
+    "word": "ABOVE",
+    "scene": "'Set your minds on things above' — put off the old self",
+    "imagePath": "public\\chapters\\colossians\\ch3.png",
+    "dirPath": "public\\chapters\\colossians"
+  },
+  {
+    "guideId": "colossians",
+    "ch": 4,
+    "word": "SALT",
+    "scene": "'Let your speech always be gracious, seasoned with salt'",
+    "imagePath": "public\\chapters\\colossians\\ch4.png",
+    "dirPath": "public\\chapters\\colossians"
+  },
+  {
+    "guideId": "james",
+    "ch": 1,
+    "word": "MIRROR",
+    "scene": "Hear the word and do it — don't be like a man who forgets his face in a mirror",
+    "imagePath": "public\\chapters\\james\\ch1.png",
+    "dirPath": "public\\chapters\\james"
+  },
+  {
+    "guideId": "james",
+    "ch": 2,
+    "word": "RING",
+    "scene": "Man with gold rings welcomed — poor man told to sit on the floor",
+    "imagePath": "public\\chapters\\james\\ch2.png",
+    "dirPath": "public\\chapters\\james"
+  },
+  {
+    "guideId": "james",
+    "ch": 3,
+    "word": "FIRE",
+    "scene": "The tongue — a small fire that sets a great forest ablaze",
+    "imagePath": "public\\chapters\\james\\ch3.png",
+    "dirPath": "public\\chapters\\james"
+  },
+  {
+    "guideId": "james",
+    "ch": 4,
+    "word": "FOG",
+    "scene": "'You are a mist that appears for a little while then vanishes'",
+    "imagePath": "public\\chapters\\james\\ch4.png",
+    "dirPath": "public\\chapters\\james"
+  },
+  {
+    "guideId": "james",
+    "ch": 5,
+    "word": "RAIN",
+    "scene": "Be patient like the farmer waiting for the early and late rains",
+    "imagePath": "public\\chapters\\james\\ch5.png",
+    "dirPath": "public\\chapters\\james"
+  },
+  {
+    "guideId": "1peter",
+    "ch": 1,
+    "word": "GOLD",
+    "scene": "Faith more precious than gold refined by fire",
+    "imagePath": "public\\chapters\\1peter\\ch1.png",
+    "dirPath": "public\\chapters\\1peter"
+  },
+  {
+    "guideId": "1peter",
+    "ch": 2,
+    "word": "STONE",
+    "scene": "Jesus the living cornerstone — you are a chosen people, a royal priesthood",
+    "imagePath": "public\\chapters\\1peter\\ch2.png",
+    "dirPath": "public\\chapters\\1peter"
+  },
+  {
+    "guideId": "1peter",
+    "ch": 3,
+    "word": "ARK",
+    "scene": "Eight people saved through water — baptism now saves you",
+    "imagePath": "public\\chapters\\1peter\\ch3.png",
+    "dirPath": "public\\chapters\\1peter"
+  },
+  {
+    "guideId": "1peter",
+    "ch": 4,
+    "word": "FIERY",
+    "scene": "'Do not be surprised at the fiery trial'",
+    "imagePath": "public\\chapters\\1peter\\ch4.png",
+    "dirPath": "public\\chapters\\1peter"
+  },
+  {
+    "guideId": "1peter",
+    "ch": 5,
+    "word": "LION",
+    "scene": "'Your adversary the devil prowls like a roaring lion'",
+    "imagePath": "public\\chapters\\1peter\\ch5.png",
+    "dirPath": "public\\chapters\\1peter"
+  },
+  {
+    "guideId": "mark",
+    "ch": 1,
+    "word": "IMMEDIATELY",
+    "scene": "Baptism → temptation → calling → healing — all in one chapter",
+    "imagePath": "public\\chapters\\mark\\ch1.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 2,
+    "word": "ROOF",
+    "scene": "Four friends tear through a roof to lower the paralyzed man",
+    "imagePath": "public\\chapters\\mark\\ch2.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 3,
+    "word": "FAMILY",
+    "scene": "Jesus' family thinks He is out of His mind",
+    "imagePath": "public\\chapters\\mark\\ch3.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 4,
+    "word": "STORM",
+    "scene": "Jesus asleep in the boat — 'Peace, be still!'",
+    "imagePath": "public\\chapters\\mark\\ch4.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 5,
+    "word": "PIGS",
+    "scene": "Legion cast into pigs — man clothed and in his right mind",
+    "imagePath": "public\\chapters\\mark\\ch5.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 6,
+    "word": "PLATE",
+    "scene": "John the Baptist's head brought on a plate",
+    "imagePath": "public\\chapters\\mark\\ch6.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 7,
+    "word": "FINGERS",
+    "scene": "Jesus puts fingers in the deaf man's ears — 'Ephphatha'",
+    "imagePath": "public\\chapters\\mark\\ch7.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 8,
+    "word": "EYES",
+    "scene": "Blind man healed in two stages — then Peter sees who Jesus is",
+    "imagePath": "public\\chapters\\mark\\ch8.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 9,
+    "word": "CLOUD",
+    "scene": "Transfiguration — cloud overshadows",
+    "imagePath": "public\\chapters\\mark\\ch9.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 10,
+    "word": "CLOAK",
+    "scene": "Blind Bartimaeus throws off his cloak and runs to Jesus",
+    "imagePath": "public\\chapters\\mark\\ch10.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 11,
+    "word": "LEAVES",
+    "scene": "Fig tree cursed — all leaves, no fruit; temple cleansed",
+    "imagePath": "public\\chapters\\mark\\ch11.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 12,
+    "word": "COIN",
+    "scene": "Coin of Caesar — 'Render to Caesar… render to God'",
+    "imagePath": "public\\chapters\\mark\\ch12.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 13,
+    "word": "WATCHMAN",
+    "scene": "Olivet Discourse — 'Watch! You do not know when'",
+    "imagePath": "public\\chapters\\mark\\ch13.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 14,
+    "word": "JAR",
+    "scene": "Woman breaks alabaster jar — Last Supper, Gethsemane, Peter denies",
+    "imagePath": "public\\chapters\\mark\\ch14.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 15,
+    "word": "CURTAIN",
+    "scene": "Crucifixion — curtain torn; centurion: 'Truly this was the Son of God'",
+    "imagePath": "public\\chapters\\mark\\ch15.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "mark",
+    "ch": 16,
+    "word": "STONE",
+    "scene": "Stone rolled away — 'He is risen, He is not here'",
+    "imagePath": "public\\chapters\\mark\\ch16.png",
+    "dirPath": "public\\chapters\\mark"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 1,
+    "word": "COMFORT",
+    "scene": "'The God of all comfort — comforts us in all our affliction'",
+    "imagePath": "public\\chapters\\2corinthians\\ch1.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 2,
+    "word": "FRAGRANCE",
+    "scene": "'We are the aroma of Christ — fragrance of life or death'",
+    "imagePath": "public\\chapters\\2corinthians\\ch2.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 3,
+    "word": "VEIL",
+    "scene": "Moses' veil — we with unveiled face behold His glory",
+    "imagePath": "public\\chapters\\2corinthians\\ch3.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 4,
+    "word": "JAR",
+    "scene": "Treasure in jars of clay — struck down but not destroyed",
+    "imagePath": "public\\chapters\\2corinthians\\ch4.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 5,
+    "word": "TENT",
+    "scene": "Earthly tent destroyed — we have a building from God",
+    "imagePath": "public\\chapters\\2corinthians\\ch5.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 6,
+    "word": "TEMPLE",
+    "scene": "'We are the temple of the living God'",
+    "imagePath": "public\\chapters\\2corinthians\\ch6.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 7,
+    "word": "TEARS",
+    "scene": "Titus brings good news — Paul's tears of joy over Corinth",
+    "imagePath": "public\\chapters\\2corinthians\\ch7.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 8,
+    "word": "GRACE",
+    "scene": "'The grace of our Lord Jesus — though He was rich, became poor'",
+    "imagePath": "public\\chapters\\2corinthians\\ch8.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 9,
+    "word": "SEED",
+    "scene": "'Whoever sows sparingly reaps sparingly — God loves a cheerful giver'",
+    "imagePath": "public\\chapters\\2corinthians\\ch9.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 10,
+    "word": "WEAPONS",
+    "scene": "'Our weapons are not of the flesh — we demolish arguments'",
+    "imagePath": "public\\chapters\\2corinthians\\ch10.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 11,
+    "word": "FOOL",
+    "scene": "Paul becomes a 'fool' to list his sufferings",
+    "imagePath": "public\\chapters\\2corinthians\\ch11.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 12,
+    "word": "THORN",
+    "scene": "'A thorn in the flesh — my grace is sufficient for you'",
+    "imagePath": "public\\chapters\\2corinthians\\ch12.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "2corinthians",
+    "ch": 13,
+    "word": "EXAMINE",
+    "scene": "'Examine yourselves to see whether you are in the faith'",
+    "imagePath": "public\\chapters\\2corinthians\\ch13.png",
+    "dirPath": "public\\chapters\\2corinthians"
+  },
+  {
+    "guideId": "1timothy",
+    "ch": 1,
+    "word": "BLASPHEMER",
+    "scene": "'I was a blasphemer, persecutor, violent man — but I received mercy'",
+    "imagePath": "public\\chapters\\1timothy\\ch1.png",
+    "dirPath": "public\\chapters\\1timothy"
+  },
+  {
+    "guideId": "1timothy",
+    "ch": 2,
+    "word": "HANDS",
+    "scene": "'I desire men to pray lifting holy hands'",
+    "imagePath": "public\\chapters\\1timothy\\ch2.png",
+    "dirPath": "public\\chapters\\1timothy"
+  },
+  {
+    "guideId": "1timothy",
+    "ch": 3,
+    "word": "HOUSEHOLD",
+    "scene": "'If a man cannot manage his own household how can he care for God's church?'",
+    "imagePath": "public\\chapters\\1timothy\\ch3.png",
+    "dirPath": "public\\chapters\\1timothy"
+  },
+  {
+    "guideId": "1timothy",
+    "ch": 4,
+    "word": "GYMNASIUM",
+    "scene": "'Train yourself for godliness'",
+    "imagePath": "public\\chapters\\1timothy\\ch4.png",
+    "dirPath": "public\\chapters\\1timothy"
+  },
+  {
+    "guideId": "1timothy",
+    "ch": 5,
+    "word": "LIST",
+    "scene": "The widow's list — qualifications for enrollment",
+    "imagePath": "public\\chapters\\1timothy\\ch5.png",
+    "dirPath": "public\\chapters\\1timothy"
+  },
+  {
+    "guideId": "1timothy",
+    "ch": 6,
+    "word": "ROOTS",
+    "scene": "'Love of money is a root of all kinds of evil'",
+    "imagePath": "public\\chapters\\1timothy\\ch6.png",
+    "dirPath": "public\\chapters\\1timothy"
+  },
+  {
+    "guideId": "2timothy",
+    "ch": 1,
+    "word": "FLAME",
+    "scene": "'Fan into flame the gift of God' — guard the good deposit",
+    "imagePath": "public\\chapters\\2timothy\\ch1.png",
+    "dirPath": "public\\chapters\\2timothy"
+  },
+  {
+    "guideId": "2timothy",
+    "ch": 2,
+    "word": "SOLDIER",
+    "scene": "Soldier, athlete, farmer — suffer hardship with Christ",
+    "imagePath": "public\\chapters\\2timothy\\ch2.png",
+    "dirPath": "public\\chapters\\2timothy"
+  },
+  {
+    "guideId": "2timothy",
+    "ch": 3,
+    "word": "SCROLL",
+    "scene": "'All Scripture is breathed out by God' — sacred writings",
+    "imagePath": "public\\chapters\\2timothy\\ch3.png",
+    "dirPath": "public\\chapters\\2timothy"
+  },
+  {
+    "guideId": "2timothy",
+    "ch": 4,
+    "word": "CROWN",
+    "scene": "'I have fought the good fight… the crown of righteousness awaits me'",
+    "imagePath": "public\\chapters\\2timothy\\ch4.png",
+    "dirPath": "public\\chapters\\2timothy"
+  },
+  {
+    "guideId": "1john",
+    "ch": 1,
+    "word": "DARKNESS",
+    "scene": "'If we say we have fellowship with Him but walk in darkness we lie'",
+    "imagePath": "public\\chapters\\1john\\ch1.png",
+    "dirPath": "public\\chapters\\1john"
+  },
+  {
+    "guideId": "1john",
+    "ch": 2,
+    "word": "WORLD",
+    "scene": "'Do not love the world — the world is passing away'",
+    "imagePath": "public\\chapters\\1john\\ch2.png",
+    "dirPath": "public\\chapters\\1john"
+  },
+  {
+    "guideId": "1john",
+    "ch": 3,
+    "word": "MURDER",
+    "scene": "'Whoever hates his brother is a murderer' — Cain as warning",
+    "imagePath": "public\\chapters\\1john\\ch3.png",
+    "dirPath": "public\\chapters\\1john"
+  },
+  {
+    "guideId": "1john",
+    "ch": 4,
+    "word": "FIRST",
+    "scene": "'We love because He first loved us'",
+    "imagePath": "public\\chapters\\1john\\ch4.png",
+    "dirPath": "public\\chapters\\1john"
+  },
+  {
+    "guideId": "1john",
+    "ch": 5,
+    "word": "WATER",
+    "scene": "'This is He who came by water and blood — Jesus Christ'",
+    "imagePath": "public\\chapters\\1john\\ch5.png",
+    "dirPath": "public\\chapters\\1john"
+  },
+  {
+    "guideId": "titus",
+    "ch": 1,
+    "word": "CRETE",
+    "scene": "'Cretans are always liars, evil beasts, lazy gluttons' — appoint elders anyway",
+    "imagePath": "public\\chapters\\titus\\ch1.png",
+    "dirPath": "public\\chapters\\titus"
+  },
+  {
+    "guideId": "titus",
+    "ch": 2,
+    "word": "ADORNING",
+    "scene": "'Adorn the doctrine of God our Savior in everything'",
+    "imagePath": "public\\chapters\\titus\\ch2.png",
+    "dirPath": "public\\chapters\\titus"
+  },
+  {
+    "guideId": "titus",
+    "ch": 3,
+    "word": "BATH",
+    "scene": "'He saved us through the washing of regeneration and renewing of the Holy Spirit'",
+    "imagePath": "public\\chapters\\titus\\ch3.png",
+    "dirPath": "public\\chapters\\titus"
+  },
+  {
+    "guideId": "philemon",
+    "ch": 1,
+    "word": "CHARGE",
+    "scene": "'If he has wronged you or owes you anything — charge that to my account' (v.18)",
+    "imagePath": "public\\chapters\\philemon\\ch1.png",
+    "dirPath": "public\\chapters\\philemon"
+  },
+  {
+    "guideId": "2peter",
+    "ch": 1,
+    "word": "LADDER",
+    "scene": "Add to faith: virtue → knowledge → self-control → steadfastness → godliness → love",
+    "imagePath": "public\\chapters\\2peter\\ch1.png",
+    "dirPath": "public\\chapters\\2peter"
+  },
+  {
+    "guideId": "2peter",
+    "ch": 2,
+    "word": "DOG",
+    "scene": "'The dog returns to its vomit — the sow to the mud' — false teachers",
+    "imagePath": "public\\chapters\\2peter\\ch2.png",
+    "dirPath": "public\\chapters\\2peter"
+  },
+  {
+    "guideId": "2peter",
+    "ch": 3,
+    "word": "THIEF",
+    "scene": "'The Day of the Lord will come like a thief — the heavens will pass away with a roar'",
+    "imagePath": "public\\chapters\\2peter\\ch3.png",
+    "dirPath": "public\\chapters\\2peter"
+  },
+  {
+    "guideId": "jude",
+    "ch": 1,
+    "word": "CREPT",
+    "scene": "'Certain people have crept in unnoticed — who long ago were designated for condemnation' (v.4)",
+    "imagePath": "public\\chapters\\jude\\ch1.png",
+    "dirPath": "public\\chapters\\jude"
+  },
+  {
+    "guideId": "2john",
+    "ch": 1,
+    "word": "DOOR",
+    "scene": "'Do not receive him into your house or give him any greeting' (v.10) — the false teacher at the door",
+    "imagePath": "public\\chapters\\2john\\ch1.png",
+    "dirPath": "public\\chapters\\2john"
+  },
+  {
+    "guideId": "3john",
+    "ch": 1,
+    "word": "FIRST",
+    "scene": "'Diotrephes who likes to put himself first does not acknowledge our authority' (v.9)",
+    "imagePath": "public\\chapters\\3john\\ch1.png",
+    "dirPath": "public\\chapters\\3john"
+  },
+  {
+    "guideId": "1thessalonians",
+    "ch": 1,
+    "word": "THUNDER",
+    "scene": "'Our gospel came to you not in word only but in power — you became an example to all Macedonia'",
+    "imagePath": "public\\chapters\\1thessalonians\\ch1.png",
+    "dirPath": "public\\chapters\\1thessalonians"
+  },
+  {
+    "guideId": "1thessalonians",
+    "ch": 2,
+    "word": "MOTHER",
+    "scene": "'We were gentle among you like a nursing mother caring for her children'",
+    "imagePath": "public\\chapters\\1thessalonians\\ch2.png",
+    "dirPath": "public\\chapters\\1thessalonians"
+  },
+  {
+    "guideId": "1thessalonians",
+    "ch": 3,
+    "word": "CROWN",
+    "scene": "'You are our glory and joy — our crown' — Timothy's good report",
+    "imagePath": "public\\chapters\\1thessalonians\\ch3.png",
+    "dirPath": "public\\chapters\\1thessalonians"
+  },
+  {
+    "guideId": "1thessalonians",
+    "ch": 4,
+    "word": "TRUMPET",
+    "scene": "'The Lord will descend with a trumpet call — the dead in Christ rise first'",
+    "imagePath": "public\\chapters\\1thessalonians\\ch4.png",
+    "dirPath": "public\\chapters\\1thessalonians"
+  },
+  {
+    "guideId": "1thessalonians",
+    "ch": 5,
+    "word": "THIEF",
+    "scene": "'The Day of the Lord comes like a thief in the night — but you are children of light'",
+    "imagePath": "public\\chapters\\1thessalonians\\ch5.png",
+    "dirPath": "public\\chapters\\1thessalonians"
+  },
+  {
+    "guideId": "2thessalonians",
+    "ch": 1,
+    "word": "FIRE",
+    "scene": "'The Lord Jesus revealed from heaven in flaming fire — taking vengeance on those who do not know God'",
+    "imagePath": "public\\chapters\\2thessalonians\\ch1.png",
+    "dirPath": "public\\chapters\\2thessalonians"
+  },
+  {
+    "guideId": "2thessalonians",
+    "ch": 2,
+    "word": "RESTRAINER",
+    "scene": "'The one who restrains will be taken out of the way — then the lawless one will be revealed'",
+    "imagePath": "public\\chapters\\2thessalonians\\ch2.png",
+    "dirPath": "public\\chapters\\2thessalonians"
+  },
+  {
+    "guideId": "2thessalonians",
+    "ch": 3,
+    "word": "BREAD",
+    "scene": "'If anyone is not willing to work let him not eat' — Paul worked for his own bread",
+    "imagePath": "public\\chapters\\2thessalonians\\ch3.png",
+    "dirPath": "public\\chapters\\2thessalonians"
+  }
+]
