@@ -341,7 +341,7 @@ export const Guides: React.FC = () => {
                     <p
                       className="text-lg leading-relaxed text-secondary"
                       dangerouslySetInnerHTML={{
-                        __html: activeGuide.memorySentence.replace(/\b([A-Z]{2,}(?:'S)?)\b/g, '<strong class="text-accent-light font-bold">$1</strong>')
+                        __html: activeGuide.memorySentence.replace(/\b([A-Z]{2,}(?:'S)?)\b/g, '<strong class="text-orange-400 font-bold">$1</strong>')
                       }}
                     />
                   </div>
