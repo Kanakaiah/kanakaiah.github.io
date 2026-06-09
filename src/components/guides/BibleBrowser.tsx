@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, BookOpen } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { NT_BOOKS, NT_SECTIONS } from '../../data/ntBooks';
 import type { NTBook } from '../../data/ntBooks';
 

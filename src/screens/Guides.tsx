@@ -20,7 +20,7 @@ const YOUVERSION_NT_ABBR: Record<string, string> = {
 
 const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }) => {
   const [imgErr, setImgErr] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
 
   const bookAbbr = YOUVERSION_NT_ABBR[guideId] || 'JHN';
