@@ -76,6 +76,53 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     fetchChapter();
   }, [bookId, chapter]);
 
+  const buildChapterHtml = () => {
+    let html = '';
+    
+    // Add centered chapter title to match YouVersion
+    html += `
+      <div class="w-full text-center mt-2 mb-8">
+        <h1 class="text-[15px] font-bold tracking-[0.1em] uppercase text-primary">
+          ${bookTitle} ${chapter}
+        </h1>
+        <div class="h-px bg-glass-border w-full mt-8"></div>
+      </div>
+    `;
+
+    verses.forEach((v) => {
+      let text = v.text;
+      
+      // Extract section headings
+      let heading = '';
+      text = text.replace(/<S>(.*?)<\/S>/g, (_, match) => {
+        heading = `<div class="mt-10 mb-4 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug">${match}</div>`;
+        return '';
+      });
+
+      // Extract paragraph breaks
+      let hasP = false;
+      text = text.replace(/<p>/g, () => {
+        hasP = true;
+        return '';
+      });
+
+      // Append in correct order
+      if (heading) {
+        html += heading;
+      }
+      
+      if (hasP) {
+        // Visual paragraph break
+        html += `<div class="w-full h-5"></div>`; 
+      }
+
+      // Add verse number and text
+      html += `<span class="inline"><sup class="text-[12px] text-accent/80 font-bold ml-1.5 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
+    });
+
+    return html;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in duration-300">
       <div className="sticky top-0 z-10 p-4 pb-0 bg-background/80 backdrop-blur-md border-b border-glass-border">
@@ -115,44 +162,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           </div>
         ) : (
           <div className="max-w-2xl mx-auto pb-24 pt-4">
-            <div className="text-[19px] leading-[1.8] text-primary/90 font-sans tracking-[-0.01em]">
-              {verses.map((v) => {
-                const parts = v.text.split(/(<S>.*?<\/S>)/g);
-                let renderedVerseNum = false;
-
-                return (
-                  <span key={v.verse}>
-                    {parts.map((part, i) => {
-                      if (part.startsWith('<S>') && part.endsWith('</S>')) {
-                        const heading = part.replace(/<\/?S>/g, '');
-                        return (
-                          <span key={i} className="block w-full mt-10 mb-4">
-                            <span className="text-[22px] font-bold tracking-tight text-primary font-heading italic">
-                              {heading}
-                            </span>
-                          </span>
-                        );
-                      }
-                      
-                      if (part.trim() === '') return null;
-                      
-                      const showNum = !renderedVerseNum;
-                      if (showNum) renderedVerseNum = true;
-
-                      return (
-                        <span key={i} className="inline">
-                          {showNum && (
-                            <sup className="text-[12px] text-accent/80 font-bold ml-1.5 mr-1.5 relative -top-[0.4em] select-none">{v.verse}</sup>
-                          )}
-                          <span dangerouslySetInnerHTML={{ __html: part }} />
-                          {' '}
-                        </span>
-                      );
-                    })}
-                  </span>
-                );
-              })}
-            </div>
+            <div 
+              className="text-[19px] leading-[1.8] text-primary/90 font-sans tracking-[-0.01em]"
+              dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
+            />
           </div>
         )}
       </div>
