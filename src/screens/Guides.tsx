@@ -10,6 +10,17 @@ import { ChapterReader } from '../components/guides/ChapterReader';
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
+const DISTRIBUTION_COLORS = [
+  { bg: 'bg-[#dfab55]', text: 'text-[#dfab55]', border: 'border-l-[#dfab55]' },
+  { bg: 'bg-[#4e7cc2]', text: 'text-[#4e7cc2]', border: 'border-l-[#4e7cc2]' },
+  { bg: 'bg-[#49a274]', text: 'text-[#49a274]', border: 'border-l-[#49a274]' },
+  { bg: 'bg-[#cc6c4d]', text: 'text-[#cc6c4d]', border: 'border-l-[#cc6c4d]' },
+  { bg: 'bg-[#7873df]', text: 'text-[#7873df]', border: 'border-l-[#7873df]' },
+  { bg: 'bg-[#98968f]', text: 'text-[#98968f]', border: 'border-l-[#98968f]' },
+  { bg: 'bg-[#d95d8e]', text: 'text-[#d95d8e]', border: 'border-l-[#d95d8e]' },
+];
+
+
 const YOUVERSION_NT_ABBR: Record<string, string> = {
   "matthew": "MAT", "mark": "MRK", "luke": "LUK", "john": "JHN", "acts": "ACT",
   "romans": "ROM", "1corinthians": "1CO", "2corinthians": "2CO", "galatians": "GAL",
@@ -290,58 +301,130 @@ export const Guides: React.FC = () => {
 
           {/* ── Book guide ── */}
           {activeGuide.type === 'book-guide' && activeGuide.blocks && (
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-6">
 
-              <div 
-                className="rounded-2xl p-5 flex flex-col items-center gap-3 text-center"
-                style={{ 
-                  backgroundColor: 'var(--glass-bg)', 
-                  borderLeft: '3px solid var(--accent-light)',
-                }}
-              >
-                <span className="text-[10px] uppercase tracking-[0.2em] font-bold" style={{ color: 'var(--accent-light)' }}>Structure Overview</span>
-                <div className="text-3xl font-heading font-bold text-primary tracking-widest">
-                  {activeGuide.structureFormula}
+              {/* Header section replacing the old one */}
+              <div className="flex flex-col items-center mb-2 mt-2">
+                <h1 className="text-4xl sm:text-5xl font-bold font-heading text-primary mb-3 text-center">
+                  {activeGuide.title}
+                </h1>
+                <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted text-center">
+                  NARRATIVE ARCHITECTURE · {activeGuide.chapters || 28} CHAPTERS
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
-                {activeGuide.blocks.map((block: any, i: number) => (
-                  <div 
-                    key={i} 
-                    className="flex gap-4 items-center rounded-2xl p-4 transition-all duration-300 cursor-default"
-                    style={{ 
-                      backgroundColor: 'var(--glass-bg)', 
-                      borderLeft: '3px solid var(--accent-light)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--accent-glow)';
-                      e.currentTarget.style.borderLeftColor = 'var(--accent)';
-                      e.currentTarget.style.transform = 'translateX(4px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--glass-bg)';
-                      e.currentTarget.style.borderLeftColor = 'var(--accent-light)';
-                      e.currentTarget.style.transform = '';
-                    }}
-                  >
-                    {/* Chapter badge */}
-                    <div 
-                      className="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: 'var(--accent-glow-strong)' }}
-                    >
-                      <span className="text-[9px] font-bold uppercase tracking-wider mb-0.5" style={{ color: 'var(--accent-light)' }}>Ch</span>
-                      <span className="font-heading font-bold text-primary text-lg leading-none">{block.chapters}</span>
-                    </div>
-                    
-                    {/* Content */}
-                    <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                      <h3 className="font-bold text-primary tracking-wide text-base uppercase">{block.label}</h3>
-                      <p className="text-secondary text-sm leading-relaxed">{block.description}</p>
-                    </div>
-                  </div>
-                ))}
+              {/* CHAPTER DISTRIBUTION */}
+              <div className="flex flex-col mb-4 px-2">
+                <h3 className="text-center text-[10px] uppercase tracking-[0.2em] font-bold text-secondary mb-4">
+                  Chapter Distribution
+                </h3>
+                
+                {/* Bar chart */}
+                <div className="flex w-full h-14 rounded-md overflow-hidden shadow-sm">
+                  {activeGuide.blocks.map((block: any, i: number) => {
+                     const [start, end] = block.chapters.split('–').map(Number);
+                     const totalChapters = activeGuide.chapters || 28;
+                     const count = (end || start) - start + 1;
+                     const widthPercent = (count / totalChapters) * 100;
+                     const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
+                     return (
+                       <div 
+                         key={i} 
+                         className={`${color.bg} flex flex-col items-center justify-center border-r border-background/20 last:border-0`}
+                         style={{ width: `${widthPercent}%` }}
+                       >
+                         <span className="font-bold text-white/90 text-sm">{block.chapters.replace('–', '-')}</span>
+                         <span className="text-white/70 text-[10px]">{count}ch</span>
+                       </div>
+                     );
+                  })}
+                </div>
+                
+                {/* Ticks below the bar chart */}
+                <div className="flex w-full mt-2 relative h-4">
+                  {(() => {
+                     let chaptersBefore = 0;
+                     const totalChapters = activeGuide.chapters || 28;
+                     return activeGuide.blocks.map((block: any, i: number) => {
+                       const leftPercent = (chaptersBefore / totalChapters) * 100;
+                       const [start, end] = block.chapters.split('–').map(Number);
+                       const count = (end || start) - start + 1;
+                       chaptersBefore += count;
+                       return (
+                         <div 
+                           key={i} 
+                           className="absolute text-[11px] text-muted font-medium"
+                           style={{ left: `${leftPercent}%` }}
+                         >
+                           {start}
+                         </div>
+                       );
+                     });
+                  })()}
+                </div>
               </div>
+
+              {/* SECTION LIST */}
+              <div className="flex flex-col gap-3">
+                {activeGuide.blocks.map((block: any, i: number) => {
+                  const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
+                  
+                  const isDiscourse = block.description.toLowerCase().includes('sermon');
+                  const toTitleCase = (str: string) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                  const labelTitleCase = toTitleCase(block.label)
+                    .replace('1', 'I').replace('2', 'II').replace('3', 'III')
+                    .replace('4', 'IV').replace('5', 'V');
+                  
+                  const [start, end] = block.chapters.split('–').map(Number);
+                  const count = (end || start) - start + 1;
+                  const totalChapters = activeGuide.chapters || 28;
+                  const percent = ((count / totalChapters) * 100).toFixed(1) + '%';
+                  
+                  let cleanDesc = block.description;
+                  if (isDiscourse) {
+                    cleanDesc = cleanDesc.replace(/Sermon \d+:\s*/i, '');
+                    if (!cleanDesc.toLowerCase().includes('discourse') && cleanDesc.toLowerCase() !== 'sermon on the mount') {
+                         cleanDesc += ' discourse';
+                    }
+                  }
+                  
+                  return (
+                    <div 
+                      key={i}
+                      className="flex rounded-xl overflow-hidden bg-glass-bg border border-glass-border/40 hover:bg-glass-bg-hover transition-colors min-h-[80px]"
+                    >
+                      <div className={`w-[72px] flex-shrink-0 flex flex-col items-center justify-center border-l-4 ${color.border} border-r border-r-glass-border/30`}>
+                         <span className="text-[10px] uppercase font-bold text-muted tracking-widest mb-0.5">CH</span>
+                         <span className={`text-xl font-bold ${color.text} font-heading leading-none`}>{block.chapters.replace('–', '-')}</span>
+                      </div>
+                      
+                      <div className="flex-1 p-4 flex justify-between items-center gap-4">
+                        <div className="flex flex-col gap-1 min-w-0">
+                           <span className="text-[9px] uppercase tracking-widest text-muted font-bold">SECTION {String(i+1).padStart(2, '0')}</span>
+                           <h3 className={`text-lg font-heading font-bold ${color.text} truncate`}>{labelTitleCase}</h3>
+                           <p className="text-[13px] text-secondary italic truncate">{cleanDesc}</p>
+                        </div>
+                        
+                        <div className="flex flex-col items-end gap-2 flex-shrink-0 self-stretch justify-between py-0.5">
+                          {isDiscourse ? (
+                             <span className="text-[9px] font-bold uppercase tracking-widest text-sky-300 bg-sky-900/40 border border-sky-700/50 px-2 py-0.5 rounded-full">
+                               DISCOURSE
+                             </span>
+                          ) : <div />}
+                          <span className="text-[11px] text-muted font-medium mt-auto">{percent}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* FOOTER FORMULA */}
+              {activeGuide.structureFormula && (
+                <div className="mt-8 mb-4 text-center text-[10px] uppercase tracking-[0.2em] font-bold text-muted">
+                  FIVE MOSAIC DISCOURSES · {activeGuide.structureFormula.replace(/→/g, '->')}
+                </div>
+              )}
 
               {activeGuide.anchors && (
                 <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-5">
