@@ -88,7 +88,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       let heading = '';
       text = text.replace(/<S[^>]*>(.*?)<\/S>|<b[^>]*>(.*?)<\/b>/gi, (_, sMatch, bMatch) => {
         const hText = sMatch || bMatch;
-        heading += `<div class="mt-12 mb-3 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
+        heading += `<div class="mt-10 first-of-type:mt-0 mb-3 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
         return '';
       });
 
@@ -154,7 +154,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         ) : (
           <div className="max-w-2xl mx-auto pb-24 pt-4">
             <div 
-              className="text-[20px] leading-[1.7] text-primary/95 font-sans tracking-[-0.01em]"
+              className="text-[20px] leading-[1.7] text-primary/95 font-sans tracking-[-0.01em] [&>div:first-child]:mt-0"
               dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
             />
           </div>
