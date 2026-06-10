@@ -187,12 +187,14 @@ export const Guides: React.FC = () => {
             <ChevronLeft className="w-5 h-5" />
             <span>{activeGuide.type === 'book-guide' ? 'Bible Books' : 'Guides'}</span>
           </button>
-          <div>
-            <h1 className="text-3xl font-bold font-heading text-primary flex items-center gap-2">
-              <span className="text-3xl">{activeGuide.icon}</span> {activeGuide.title}
-            </h1>
-            <p className="text-secondary text-sm font-medium mt-1">{activeGuide.subtitle}</p>
-          </div>
+          {activeGuide.type !== 'book-guide' && (
+            <div>
+              <h1 className="text-3xl font-bold font-heading text-primary flex items-center gap-2">
+                <span className="text-3xl">{activeGuide.icon}</span> {activeGuide.title}
+              </h1>
+              <p className="text-secondary text-sm font-medium mt-1">{activeGuide.subtitle}</p>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-8">
