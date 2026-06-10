@@ -188,9 +188,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "The WORD turned WINE, visited by NIGHT at a WELL, healed a man on a MAT, became our BREAD at the FEAST, stooped to the GROUND, put MUD on blind eyes, called His SHEEP out of a TOMB on a DONKEY, grabbed a TOWEL, showed us the HOUSE, became the VINE, sent the WIND, prayed as PRAYER, was arrested by TORCH, hung on the CROSS, left only LINEN, and cooked FIRE for breakfast.",
     keyVerses: [
-      { ref: "John 1:1", theme: "'In the beginning was the Word' (The opening)" },
-      { ref: "John 3:16", theme: "'For God so loved the world' (The gospel in one verse)" },
-      { ref: "John 20:31", theme: "'These are written so that you may believe' (Purpose statement)" }
+      { ref: "John 1:1", text: "In the beginning was the Word, and the Word was with God, and the Word was God.", theme: "Opening" },
+      { ref: "John 3:16", text: "For God so loved the world, that He gave His only begotten Son, that whoever believes in Him shall not perish, but have eternal life.", theme: "Gospel" },
+      { ref: "John 20:31", text: "But these have been written so that you may believe that Jesus is the Christ, the Son of God; and that believing you may have life in His name.", theme: "Purpose" }
     ]
   },
   {
@@ -229,9 +229,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "God's WRATH falls on the self-righteous JUDGE because ALL fall short — even ABRAHAM was saved like ADAM was lost, by one act. So be DEAD to sin, end the inner WAR, walk in the SPIRIT, rest in the POTTER'S hand, open your MOUTH, don't cut the OLIVE branch, offer your BODY, respect the SWORD, eat at the TABLE in peace, tear down the WALL, and go GREET your brothers.",
     keyVerses: [
-      { ref: "Romans 1:16-17", theme: "'I am not ashamed of the gospel — the righteous shall live by faith' (The thesis)" },
-      { ref: "Romans 8:1", theme: "'There is therefore now no condemnation' (The climax of doctrine)" },
-      { ref: "Romans 12:1", theme: "'Present your bodies as a living sacrifice' (The turn to life)" }
+      { ref: "Romans 1:16-17", text: "For I am not ashamed of the gospel, for it is the power of God for salvation to everyone who believes, to the Jew first and also to the Greek. For in it the righteousness of God is revealed from faith to faith; as it is written, 'But the righteous shall live by faith.'", theme: "Thesis" },
+      { ref: "Romans 8:1", text: "Therefore there is now no condemnation for those who are in Christ Jesus.", theme: "Climax" },
+      { ref: "Romans 12:1", text: "Therefore I urge you, brothers, by the mercies of God, to present your bodies a living and holy sacrifice, acceptable to God, which is your spiritual service of worship.", theme: "Turn" }
     ]
   },
   {
@@ -259,9 +259,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Paul pronounces a CURSE, stands toe to toe FACE to face, calls ABRAHAM as his witness, contrasts HAGAR and Sarah, lists the FRUIT of the Spirit, and boasts only in the CROSS.",
     keyVerses: [
-      { ref: "Galatians 1:8", theme: "'Even if we or an angel — let him be accursed' (Gospel non-negotiable)" },
-      { ref: "Galatians 2:20", theme: "'I have been crucified with Christ' (Union with Christ)" },
-      { ref: "Galatians 5:1", theme: "'For freedom Christ has set us free' (The thesis of chapters 5-6)" }
+      { ref: "Galatians 1:8", text: "But even if we, or an angel from heaven, should preach to you a gospel contrary to what we have preached to you, he is to be accursed!", theme: "Non-Negotiable" },
+      { ref: "Galatians 2:20", text: "I have been crucified with Christ; and it is no longer I who live, but Christ lives in me; and the life which I now live in the flesh I live by faith in the Son of God, who loved me and gave Himself up for me.", theme: "Union" },
+      { ref: "Galatians 5:1", text: "It was for freedom that Christ set us free; therefore keep standing firm and do not be subject again to a yoke of slavery.", theme: "Thesis" }
     ]
   },
   {
@@ -288,9 +288,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Blessed with every HEAVENLY gift, the WALL between us torn down, the MYSTERY revealed — therefore WALK as children of LIGHT and put on the full ARMOR.",
     keyVerses: [
-      { ref: "Ephesians 1:3", theme: "'Every spiritual blessing in the heavenly places' (The foundation)" },
-      { ref: "Ephesians 2:8-9", theme: "'By grace through faith — not of works' (The heart)" },
-      { ref: "Ephesians 4:1", theme: "'Walk worthy of the calling' (The great hinge)" }
+      { ref: "Ephesians 1:3", text: "Blessed be the God and Father of our Lord Jesus Christ, who has blessed us with every spiritual blessing in the heavenly places in Christ.", theme: "Foundation" },
+      { ref: "Ephesians 2:8-9", text: "For by grace you have been saved through faith; and this is not of yourselves, it is the gift of God; not as a result of works, so that no one may boast.", theme: "Heart" },
+      { ref: "Ephesians 4:1", text: "Therefore I, the prisoner of the Lord, urge you to walk worthy of the calling with which you have been called.", theme: "Hinge" }
     ]
   },
   {
@@ -341,9 +341,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Jesus ascends through a CLOUD, FIRE falls at Pentecost, a lame man walks through a GATE, Peter lands in PRISON, two drop dead at the apostles' FEET, seven men are chosen to serve TABLES, Stephen dies under STONES, Philip runs down a ROAD, Saul is blinded by LIGHT, Peter sees a SHEET, believers are named in ANTIOCH, Peter breaks his CHAINS, Paul and Barnabas SAIL, nearly worshiped as GODS, the Jerusalem COUNCIL settles everything, an EARTHQUAKE frees a jailer, Paul preaches beside an ALTAR, makes TENTS in Corinth, survives a RIOT, raises a man from a WINDOW, gets BOUND by prophecy, defends to a CROWD, survives a PLOT, stands before FELIX, appeals to CAESAR, addresses a KING, survives a SHIPWRECK, and preaches from a HOUSE in Rome.",
     keyVerses: [
-      { ref: "Acts 1:8", theme: "'You will be my witnesses' (The outline key)" },
-      { ref: "Acts 2:42", theme: "'They devoted themselves to the apostles' teaching' (The church pattern)" },
-      { ref: "Acts 28:31", theme: "'He proclaimed the kingdom of God' (The unhindered gospel)" }
+      { ref: "Acts 1:8", text: "But you will receive power when the Holy Spirit has come upon you; and you shall be My witnesses both in Jerusalem, and in all Judea and Samaria, and even to the end of the earth.", theme: "Outline" },
+      { ref: "Acts 2:42", text: "They were continually devoting themselves to the apostles' teaching and to fellowship, to the breaking of bread and to prayer.", theme: "Pattern" },
+      { ref: "Acts 28:31", text: "Preaching the kingdom of God and teaching concerning the Lord Jesus Christ with all openness, unhindered.", theme: "Unhindered" }
     ]
   },
   {
@@ -381,9 +381,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "The SON TASTED death, is greater than Moses in His HOUSE, offers eternal REST, warns those still on MILK, is our ANCHOR as the eternal MELCHIZEDEK, not a COPY but the reality — His BLOOD offered ONCE for all, through FAITH we RACE to meet Him outside the GATE.",
     keyVerses: [
-      { ref: "Hebrews 1:1-2", theme: "'In these last days He has spoken by His Son' (The thesis)" },
-      { ref: "Hebrews 4:12", theme: "'The word of God is living and active' (The sword)" },
-      { ref: "Hebrews 12:2", theme: "'Fix your eyes on Jesus' (The climax)" }
+      { ref: "Hebrews 1:1-2", text: "God, after He spoke long ago to the fathers in the prophets in many portions and in many ways, in these last days has spoken to us in His Son, whom He appointed heir of all things, through whom also He made the worlds.", theme: "Thesis" },
+      { ref: "Hebrews 4:12", text: "For the word of God is living and active and sharper than any two-edged sword, and piercing as far as the division of soul and spirit, of both joints and marrow, and able to judge the thoughts and intentions of the heart.", theme: "Sword" },
+      { ref: "Hebrews 12:2", text: "Fixing our eyes on Jesus, the author and perfecter of faith, who for the joy set before Him endured the cross, despising the shame, and has sat down at the right hand of the throne of God.", theme: "Climax" }
     ]
   },
   {
@@ -433,9 +433,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Christ in His ROBE sends LETTERS and knocks at the DOOR, the THRONE room erupts as the LAMB takes the scroll, four HORSES ride, the SEALED multitude sings, INCENSE rises as LOCUSTS swarm, a little SCROLL is eaten, two WITNESSES rise, a DRAGON chases the woman, the BEAST marks his own, the great HARVEST comes, the SONG of Moses rings as ARMAGEDDON gathers, the HARLOT falls in SMOKE, the rider with a SWORD conquers, Satan is put in CHAINS, the holy CITY descends, and the RIVER of life flows forever.",
     keyVerses: [
-      { ref: "Revelation 1:19", theme: "'Write what you have seen' (The outline key)" },
-      { ref: "Revelation 5:9", theme: "'Worthy is the Lamb who was slain' (The theological center)" },
-      { ref: "Revelation 21:5", theme: "'Behold, I am making all things new' (The final answer)" }
+      { ref: "Revelation 1:19", text: "Therefore write the things which you have seen, and the things which are, and the things which will take place after these things.", theme: "Outline" },
+      { ref: "Revelation 5:9", text: "And they sang a new song, saying, 'Worthy are You to take the scroll and to break its seals; for You were slain, and purchased for God with Your blood people from every tribe and tongue and people and nation.'", theme: "Center" },
+      { ref: "Revelation 21:5", text: "And He who sits on the throne said, 'Behold, I am making all things new.' And He said, 'Write, for these words are faithful and true.'", theme: "Answer" }
     ]
   },
 
@@ -493,9 +493,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "A GENEALOGY leads to a STAR, a DOVE descends in the DESERT, the BEATITUDES open the PRAYER on the ROCK, a CENTURION believes, the HARVEST needs workers, a SWORD divides, wear His YOKE, ask for no SIGN, hear the SOWER — Peter walks on WAVES, a woman begs for CRUMBS, receives the KEYS, hears the voice in the CLOUD, becomes like a CHILD, the CAMEL cannot fit, the LAST go first, Jesus enters on a DONKEY, tells the WEDDING parable, pronounces seven WOES, points to EAGLES circling, warns about OIL, a JAR is broken, the CURTAIN tears, and a MOUNTAIN becomes the launch of the Great Commission.",
     keyVerses: [
-      { ref: "Matthew 1:23", theme: "'Immanuel — God with us' (The thesis)" },
-      { ref: "Matthew 16:18", theme: "'On this rock I will build my church' (The pivot)" },
-      { ref: "Matthew 28:19-20", theme: "'Go therefore and make disciples' (The commission)" }
+      { ref: "Matthew 1:23", text: "\"Behold, the virgin shall be with child and shall bear a Son, and they shall call His name Immanuel,\" which translated means, \"God with us.\"", theme: "The Thesis" },
+      { ref: "Matthew 16:18", text: "And I also say to you that you are Peter, and upon this rock I will build My church; and the gates of Hades will not overpower it.", theme: "The Pivot" },
+      { ref: "Matthew 28:19-20", text: "Go therefore and make disciples of all the nations, baptizing them in the name of the Father and the Son and the Holy Spirit, teaching them to observe all that I commanded you; and behold, I am with you always, even to the end of the age.", theme: "The Commission" }
     ]
   },
   {
@@ -543,9 +543,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Mary's SONG over a MANGER, a GENEALOGY back to Adam, Jesus reads a SCROLL, Peter drops his NET, the Sermon on the PLAIN, a woman's TEARS fall, a LAMP burns, Jesus sets His FACE, Mary sits at His FEET, a friend comes to KNOCK, the rich fool fills his BARNS, a FIG tree gets one more year, a TABLE is prepared, a COIN is found, a RICH man ignores Lazarus, TEN lepers walk away, a WIDOW keeps knocking, Zacchaeus climbs a TREE, the STONE is rejected, a WIDOW gives her mite, Jesus lifts the CUP, promises PARADISE, and walks the ROAD to Emmaus.",
     keyVerses: [
-      { ref: "Luke 1:46-47", theme: "'My soul magnifies the Lord' (The keynote)" },
-      { ref: "Luke 15:20", theme: "'While he was still a long way off, his father ran' (The heart)" },
-      { ref: "Luke 19:10", theme: "'The Son of Man came to seek and save the lost' (The mission)" }
+      { ref: "Luke 1:46-47", text: "And Mary said: 'My soul magnifies the Lord, and my spirit has rejoiced in God my Savior.'", theme: "The Keynote" },
+      { ref: "Luke 15:20", text: "So he got up and came to his father. But while he was still a long way off, his father saw him and felt compassion for him, and ran and embraced him and kissed him.", theme: "The Heart" },
+      { ref: "Luke 19:10", text: "For the Son of Man has come to seek and to save that which was lost.", theme: "The Mission" }
     ]
   },
   {
@@ -586,9 +586,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "The CROSS is wisdom, the SPIRIT searches deep, FIRE tests each builder, FOOLS for Christ, a little YEAST corrupts, your body is a TEMPLE, the MARRIED and single each have callings, IDOL meat divides, RACE to win, drink from the ROCK, don't abuse the TABLE, the BODY has many members, without LOVE nothing counts, TONGUES must serve others, we rise like a SEED, and a great DOOR stands open.",
     keyVerses: [
-      { ref: "1 Corinthians 1:18", theme: "'The message of the cross is foolishness… but to us it is the power of God'" },
-      { ref: "1 Corinthians 13:13", theme: "'The greatest of these is love'" },
-      { ref: "1 Corinthians 15:20", theme: "'Christ has been raised — the firstfruits'" }
+      { ref: "1 Corinthians 1:18", text: "For the word of the cross is foolishness to those who are perishing, but to us who are being saved it is the power of God.", theme: "The Power" },
+      { ref: "1 Corinthians 13:13", text: "But now faith, hope, love, abide these three; but the greatest of these is love.", theme: "The Greatest" },
+      { ref: "1 Corinthians 15:20", text: "But now Christ has been raised from the dead, the first fruits of those who have fallen asleep.", theme: "The Firstfruits" }
     ]
   },
   {
@@ -615,9 +615,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "From CHAINS Paul rejoices, at every KNEE Christ is Lord, all earthly gain is RUBBISH, and in all things Paul is CONTENT.",
     keyVerses: [
-      { ref: "Philippians 1:21", theme: "'To live is Christ, to die is gain'" },
-      { ref: "Philippians 2:5-8", theme: "'Have this mind — Christ humbled himself'" },
-      { ref: "Philippians 4:7", theme: "'The peace of God which surpasses understanding'" }
+      { ref: "Philippians 1:21", text: "For to me, to live is Christ and to die is gain.", theme: "The Life" },
+      { ref: "Philippians 2:5-8", text: "Have this way of thinking in yourselves which was also in Christ Jesus, who, although He existed in the form of God, did not regard equality with God a thing to be grasped, but emptied Himself, taking the form of a slave, being made in the likeness of men. Being found in appearance as a man, He humbled Himself by becoming obedient to the point of death, even death on a cross.", theme: "The Mind" },
+      { ref: "Philippians 4:7", text: "And the peace of God, which surpasses all comprehension, will guard your hearts and your minds in Christ Jesus.", theme: "The Peace" }
     ]
   },
   {
@@ -642,9 +642,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Christ is the IMAGE of God, the old law was a SHADOW, now set your heart on things ABOVE, and season your words with SALT.",
     keyVerses: [
-      { ref: "Colossians 1:15-17", theme: "'He is before all things and in him all things hold together'" },
-      { ref: "Colossians 2:9", theme: "'In Him the whole fullness of deity dwells bodily'" },
-      { ref: "Colossians 3:1-2", theme: "'Seek the things that are above'" }
+      { ref: "Colossians 1:15-17", text: "He is the image of the invisible God, the firstborn of all creation. For by Him all things were created, both in the heavens and on earth, visible and invisible, whether thrones or dominions or rulers or authorities\u2014all things have been created through Him and for Him. He is before all things, and in Him all things hold together.", theme: "The Supremacy" },
+      { ref: "Colossians 2:9", text: "For in Him all the fullness of Deity dwells in bodily form.", theme: "The Fullness" },
+      { ref: "Colossians 3:1-2", text: "Therefore if you have been raised up with Christ, keep seeking the things above, where Christ is, seated at the right hand of God. Set your mind on the things above, not on the things that are on earth.", theme: "The Focus" }
     ]
   },
   {
@@ -673,9 +673,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Look in the MIRROR and act on it, don't honor the gold RING over the poor, guard the FIRE of the tongue, your life is a FOG so submit to God, wait for the RAIN with patience.",
     keyVerses: [
-      { ref: "James 1:22", theme: "'Be doers of the word and not hearers only'" },
-      { ref: "James 2:17", theme: "'Faith by itself, if it does not have works, is dead'" },
-      { ref: "James 5:16", theme: "'The prayer of a righteous person has great power'" }
+      { ref: "James 1:22", text: "But prove yourselves doers of the word, and not merely hearers who delude themselves.", theme: "The Challenge" },
+      { ref: "James 2:17", text: "Even so faith, if it has no works, is dead, being by itself.", theme: "The Test" },
+      { ref: "James 5:16", text: "Therefore, confess your sins to one another, and pray for one another so that you may be healed. The effective prayer of a righteous man can accomplish much.", theme: "The Power" }
     ]
   },
   {
@@ -704,9 +704,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Faith is more precious than GOLD, Christ is the living STONE, Noah's ARK points to salvation, don't fear the FIERY trial, and stand firm against the roaring LION.",
     keyVerses: [
-      { ref: "1 Peter 1:3", theme: "'A living hope through the resurrection'" },
-      { ref: "1 Peter 2:9", theme: "'A chosen people, a royal priesthood, a holy nation'" },
-      { ref: "1 Peter 5:7", theme: "'Cast all your anxiety on him because he cares for you'" }
+      { ref: "1 Peter 1:3", text: "Blessed be the God and Father of our Lord Jesus Christ, who according to His great mercy has caused us to be born again to a living hope through the resurrection of Jesus Christ from the dead.", theme: "The Hope" },
+      { ref: "1 Peter 2:9", text: "But you are a chosen family, a royal priesthood, a holy nation, a people for God's own possession, so that you may proclaim the excellencies of Him who has called you out of darkness into His marvelous light.", theme: "The Identity" },
+      { ref: "1 Peter 5:7", text: "Casting all your anxiety on Him, because He cares for you.", theme: "The Rest" }
     ]
   },
 
@@ -748,9 +748,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "IMMEDIATELY Jesus comes, men tear through a ROOF, His own FAMILY doubts, He calms a STORM, casts demons into PIGS, John's head arrives on a PLATE, FINGERS open deaf ears, blind EYES open in stages — then Peter sees — a CLOUD at the Transfiguration, Bartimaeus throws his CLOAK, a fig tree has only LEAVES, a COIN settles the Caesar question, the WATCHMAN waits, an alabaster JAR is broken, the temple CURTAIN tears, and a STONE is rolled away.",
     keyVerses: [
-      { ref: "Mark 1:15", theme: "'The kingdom of God is at hand — repent and believe' (The thesis)" },
-      { ref: "Mark 8:29", theme: "'You are the Christ' (The hinge)" },
-      { ref: "Mark 10:45", theme: "'The Son of Man came not to be served but to serve' (The mission)" }
+      { ref: "Mark 1:15", text: "The time is fulfilled, and the kingdom of God is at hand; repent and believe in the gospel.", theme: "Thesis" },
+      { ref: "Mark 8:29", text: "And He continued to question them, 'But who do you say that I am?' Peter answered and said to Him, 'You are the Christ.'", theme: "Hinge" },
+      { ref: "Mark 10:45", text: "For even the Son of Man did not come to be served, but to serve, and to give His life a ransom for many.", theme: "Mission" }
     ]
   },
   {
@@ -785,9 +785,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "The God of COMFORT makes us a FRAGRANCE, He removes the VEIL, we carry treasure in a JAR of clay, our earthly TENT will be replaced, we are His TEMPLE, Paul weeps TEARS of relief, preaches GRACE as the model for giving, scattered SEED grows into generosity, our WEAPONS pull down strongholds, Paul plays the FOOL to defend his ministry, lives with a THORN in the flesh, and closes with a call to EXAMINE yourselves.",
     keyVerses: [
-      { ref: "2 Corinthians 1:3-4", theme: "'God of all comfort — comforts us so we may comfort others'" },
-      { ref: "2 Corinthians 4:7", theme: "'Treasure in jars of clay'" },
-      { ref: "2 Corinthians 12:9", theme: "'My grace is sufficient — power made perfect in weakness'" }
+      { ref: "2 Corinthians 1:3-4", text: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction so that we will be able to comfort those who are in any affliction, with the comfort with which we ourselves are comforted by God.", theme: "Comfort" },
+      { ref: "2 Corinthians 4:7", text: "But we have this treasure in earthen vessels, so that the surpassing greatness of the power will be of God and not from ourselves.", theme: "Treasure" },
+      { ref: "2 Corinthians 12:9", text: "And He has said to me, 'My grace is sufficient for you, for power is perfected in weakness.' Most gladly, therefore, I will rather boast about my weaknesses, so that the power of Christ may dwell in me.", theme: "Sufficiency" }
     ]
   },
   {
@@ -818,9 +818,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Paul the former BLASPHEMER urges prayer with lifted HANDS, demands that leaders manage their HOUSEHOLD, calls Timothy to the GYMNASIUM of godliness, keeps a LIST of true widows, and warns that greed has ROOTS that destroy everything.",
     keyVerses: [
-      { ref: "1 Timothy 1:15", theme: "'Christ Jesus came into the world to save sinners'" },
-      { ref: "1 Timothy 3:15", theme: "'The church of the living God — pillar and buttress of the truth'" },
-      { ref: "1 Timothy 6:6", theme: "'Godliness with contentment is great gain'" }
+      { ref: "1 Timothy 1:15", text: "It is a trustworthy statement, deserving full acceptance, that Christ Jesus came into the world to save sinners, among whom I am foremost of all.", theme: "Statement" },
+      { ref: "1 Timothy 3:15", text: "But in case I am delayed, I write so that you will know how one ought to conduct himself in the household of God, which is the church of the living God, the pillar and support of the truth.", theme: "Purpose" },
+      { ref: "1 Timothy 6:6", text: "But godliness actually is a means of great gain when accompanied by contentment.", theme: "Gain" }
     ]
   },
   {
@@ -847,9 +847,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Fan the FLAME of your gift, endure like a SOLDIER, hold fast to the SCROLL of Scripture, and reach for the CROWN that awaits.",
     keyVerses: [
-      { ref: "2 Timothy 1:7", theme: "'God gave us a spirit not of fear but of power'" },
-      { ref: "2 Timothy 3:16-17", theme: "'All Scripture is breathed out by God and profitable'" },
-      { ref: "2 Timothy 4:7", theme: "'I have fought the good fight, I have finished the race'" }
+      { ref: "2 Timothy 1:7", text: "For God has not given us a spirit of timidity, but of power and love and discipline.", theme: "Spirit" },
+      { ref: "2 Timothy 3:16-17", text: "All Scripture is God-breathed and profitable for teaching, for reproof, for correction, for training in righteousness; so that the man of God may be adequate, equipped for every good work.", theme: "Scroll" },
+      { ref: "2 Timothy 4:7", text: "I have fought the good fight, I have finished the course, I have kept the faith.", theme: "Finish" }
     ]
   },
   {
@@ -877,9 +877,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Walk out of DARKNESS, stop loving the WORLD, don't be like Cain the MURDERER, love because He loved FIRST, and trust the testimony of the WATER and the blood.",
     keyVerses: [
-      { ref: "1 John 1:9", theme: "'If we confess our sins He is faithful and just to forgive' (Assurance of confession)" },
-      { ref: "1 John 4:8", theme: "'Anyone who does not love does not know God — for God is love' (The heart of the letter)" },
-      { ref: "1 John 5:13", theme: "'I write so that you may know that you have eternal life' (The purpose statement)" }
+      { ref: "1 John 1:9", text: "If we confess our sins, He is faithful and righteous to forgive us our sins and to cleanse us from all unrighteousness.", theme: "Assurance" },
+      { ref: "1 John 4:8", text: "The one who does not love does not know God, for God is love.", theme: "Heart" },
+      { ref: "1 John 5:13", text: "These things I have written to you who believe in the name of the Son of God, so that you may know that you have eternal life.", theme: "Purpose" }
     ]
   },
   {
@@ -904,9 +904,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Plant leaders in CRETE, live in a way that is ADORNING to the gospel, for you were saved through the BATH of regeneration — not your own works.",
     keyVerses: [
-      { ref: "Titus 1:5", theme: "'Put what remains in order and appoint elders in every town'" },
-      { ref: "Titus 2:11-12", theme: "'The grace of God has appeared — training us to renounce ungodliness'" },
-      { ref: "Titus 3:5", theme: "'He saved us — not because of works but according to His own mercy'" }
+      { ref: "Titus 1:5", text: "For this reason I left you in Crete, that you would set in order what remains and appoint elders in every city as I directed you.", theme: "Mission" },
+      { ref: "Titus 2:11-12", text: "For the grace of God has appeared, bringing salvation to all men, instructing us to deny ungodliness and worldly desires and to live sensibly, righteously and godly in the present age.", theme: "Grace" },
+      { ref: "Titus 3:5", text: "He saved us, not on the basis of deeds which we have done in righteousness, but according to His mercy, by the washing of regeneration and renewing by the Holy Spirit.", theme: "Mercy" }
     ]
   },
   {
@@ -929,7 +929,7 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "The Gospel Hidden in Philemon is a parable of substitutionary atonement.",
     keyVerses: [
-      { ref: "Philemon 1:10, 16", theme: "'I appeal to you for my child Onesimus… no longer as a slave but better than a slave — as a dear brother.'" }
+      { ref: "Philemon 1:10, 16", text: "I appeal to you for my child Onesimus... no longer as a slave, but more than a slave, a beloved brother, especially to me, but how much more to you, both in the flesh and in the Lord.", theme: "Appeal" }
     ]
   },
   {
@@ -954,9 +954,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Climb the LADDER of faith, beware the false teacher who returns like a DOG to vomit, and stay ready — the Lord comes like a THIEF in the night.",
     keyVerses: [
-      { ref: "2 Peter 1:3", theme: "'His divine power has granted us everything pertaining to life and godliness'" },
-      { ref: "2 Peter 1:21", theme: "'Men spoke from God as they were carried along by the Holy Spirit' (Inspiration of Scripture)" },
-      { ref: "2 Peter 3:9", theme: "'Not wishing that any should perish but that all should reach repentance'" }
+      { ref: "2 Peter 1:3", text: "Seeing that His divine power has granted to us everything pertaining to life and godliness, through the true knowledge of Him who called us by His own glory and excellence.", theme: "Provision" },
+      { ref: "2 Peter 1:21", text: "For no prophecy was ever made by an act of human will, but men moved by the Holy Spirit spoke from God.", theme: "Inspiration" },
+      { ref: "2 Peter 3:9", text: "The Lord is not slow about His promise, as some count slowness, but is patient toward you, not wishing for any to perish but for all to come to repentance.", theme: "Patience" }
     ]
   },
   {
@@ -980,7 +980,7 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Jude is an alarm bell rung in the night to contend for the faith.",
     keyVerses: [
-      { ref: "Jude 1:24-25", theme: "'Now to Him who is able to keep you from stumbling...'" }
+      { ref: "Jude 1:24-25", text: "Now to Him who is able to keep you from stumbling, and to make you stand in the presence of His glory blameless with great joy, to the only God our Savior, through Jesus Christ our Lord, be glory, majesty, dominion and authority, before all time and now and forever. Amen.", theme: "Doxology" }
     ]
   },
   {
@@ -1004,7 +1004,7 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Walk in love toward the brethren, but do not open the door to false teachers.",
     keyVerses: [
-      { ref: "2 John 1:8", theme: "'Watch yourselves so that you may not lose what we have worked for but may win a full reward.'" }
+      { ref: "2 John 1:8", text: "Watch yourselves, that you do not lose what we have accomplished, but that you may receive a full reward.", theme: "Warning" }
     ]
   },
   {
@@ -1028,7 +1028,7 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Be faithful like Gaius, avoid the pride of Diotrephes, and keep a good reputation like Demetrius.",
     keyVerses: [
-      { ref: "3 John 1:4", theme: "'I have no greater joy than to hear that my children are walking in the truth.'" }
+      { ref: "3 John 1:4", text: "I have no greater joy than this, to hear of my children walking in the truth.", theme: "Joy" }
     ]
   },
   {
@@ -1054,9 +1054,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "The gospel came like THUNDER to Thessalonica, Paul loved them like a MOTHER, called them his CROWN, promised the dead will rise at the TRUMPET, and warned the Day comes like a THIEF — but children of light are never in the dark.",
     keyVerses: [
-      { ref: "1 Thessalonians 1:9-10", theme: "'You turned from idols to serve the living God and to wait for His Son from heaven' (The model conversion)" },
-      { ref: "1 Thessalonians 4:16-17", theme: "'The Lord himself will descend… the dead in Christ will rise first' (The great hope)" },
-      { ref: "1 Thessalonians 5:16-18", theme: "'Rejoice always, pray without ceasing, give thanks in all circumstances' (The three commands)" }
+      { ref: "1 Thessalonians 1:9-10", text: "For they themselves report about us what kind of a reception we had with you, and how you turned to God from idols to serve a living and true God, and to wait for His Son from heaven, whom He raised from the dead, that is Jesus, who rescues us from the wrath to come.", theme: "Conversion" },
+      { ref: "1 Thessalonians 4:16-17", text: "For the Lord Himself will descend from heaven with a shout, with the voice of the archangel and with the trumpet of God, and the dead in Christ will rise first. Then we who are alive and remain will be caught up together with them in the clouds to meet the Lord in the air, and so we shall always be with the Lord.", theme: "Hope" },
+      { ref: "1 Thessalonians 5:16-18", text: "Rejoice always; pray without ceasing; in everything give thanks; for this is God's will for you in Christ Jesus.", theme: "Commands" }
     ]
   },
   {
@@ -1081,9 +1081,9 @@ export const NT_STUDY_GUIDES = [
     ],
     memorySentence: "Christ returns in FIRE to repay persecutors, the RESTRAINER still holds back the man of lawlessness, so pick up your tools and earn your BREAD while you wait.",
     keyVerses: [
-      { ref: "2 Thessalonians 1:7", theme: "'Relief for you who are afflicted — when the Lord Jesus is revealed from heaven in flaming fire'" },
-      { ref: "2 Thessalonians 2:3", theme: "'That day will not come unless the rebellion comes first and the man of lawlessness is revealed'" },
-      { ref: "2 Thessalonians 3:10", theme: "'If anyone is not willing to work let him not eat'" }
+      { ref: "2 Thessalonians 1:7", text: "And to give relief to you who are afflicted and to us as well when the Lord Jesus will be revealed from heaven with His mighty angels in flaming fire.", theme: "Relief" },
+      { ref: "2 Thessalonians 2:3", text: "Let no one in any way deceive you, for it will not come unless the apostasy comes first, and the man of lawlessness is revealed, the son of destruction.", theme: "Warning" },
+      { ref: "2 Thessalonians 3:10", text: "For even when we were with you, we used to give you this order: if anyone is not willing to work, then he is not to eat, either.", theme: "Order" }
     ]
   }
 ];
