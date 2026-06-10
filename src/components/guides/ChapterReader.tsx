@@ -94,16 +94,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       
       // Extract section headings (<S> or <b>)
       let heading = '';
-      text = text.replace(/<S>(.*?)<\/S>|<b>(.*?)<\/b>/g, (_, sMatch, bMatch) => {
+      text = text.replace(/<S[^>]*>(.*?)<\/S>|<b[^>]*>(.*?)<\/b>/gi, (_, sMatch, bMatch) => {
         const hText = sMatch || bMatch;
-        heading += `<div class="mt-12 mb-5 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
+        heading += `<div class="mt-12 mb-3 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
         return '';
       });
 
-      // Extract paragraph breaks and strip </p>
+      // Extract paragraph breaks and forcefully strip all block tags to ensure inline rendering
       let hasP = false;
-      text = text.replace(/<\/?p>/g, (match) => {
-        if (match === '<p>') hasP = true;
+      text = text.replace(/<\/?(p|br|div)[^>]*>/gi, (match) => {
+        if (!match.startsWith('</')) hasP = true;
         return '';
       });
 
@@ -112,12 +112,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         html += heading;
       } else if (hasP) {
         // Visual paragraph break only if there is no heading
-        // (because heading already provides block separation)
-        html += `<div class="w-full h-5"></div>`; 
+        html += `<div class="w-full h-4"></div>`; 
       }
 
       // Add verse number and text
-      html += `<span class="inline"><sup class="text-[12px] text-accent/80 font-bold ml-1.5 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
+      html += `<span class="inline"><sup class="text-[12.5px] text-accent/90 font-bold ml-1.5 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
     });
 
     return html;
