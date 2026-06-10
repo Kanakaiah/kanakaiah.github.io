@@ -79,15 +79,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const buildChapterHtml = () => {
     let html = '';
     
-    // Add centered chapter title to match YouVersion
-    html += `
-      <div class="w-full text-center mt-2 mb-8">
-        <h1 class="text-[15px] font-bold tracking-[0.1em] uppercase text-primary">
-          ${bookTitle} ${chapter}
-        </h1>
-        <div class="h-px bg-glass-border w-full mt-8"></div>
-      </div>
-    `;
+    // The chapter title is already shown in the sticky header, no need to duplicate it here.
 
     verses.forEach((v) => {
       let text = v.text;
