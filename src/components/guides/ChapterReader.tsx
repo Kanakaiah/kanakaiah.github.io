@@ -92,27 +92,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     verses.forEach((v) => {
       let text = v.text;
       
-      // Extract section headings
+      // Extract section headings (<S> or <b>)
       let heading = '';
-      text = text.replace(/<S>(.*?)<\/S>/g, (_, match) => {
-        heading = `<div class="mt-10 mb-4 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug">${match}</div>`;
+      text = text.replace(/<S>(.*?)<\/S>|<b>(.*?)<\/b>/g, (_, sMatch, bMatch) => {
+        const hText = sMatch || bMatch;
+        heading += `<div class="mt-12 mb-5 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
         return '';
       });
 
-      // Extract paragraph breaks
+      // Extract paragraph breaks and strip </p>
       let hasP = false;
-      text = text.replace(/<p>/g, () => {
-        hasP = true;
+      text = text.replace(/<\/?p>/g, (match) => {
+        if (match === '<p>') hasP = true;
         return '';
       });
 
       // Append in correct order
       if (heading) {
         html += heading;
-      }
-      
-      if (hasP) {
-        // Visual paragraph break
+      } else if (hasP) {
+        // Visual paragraph break only if there is no heading
+        // (because heading already provides block separation)
         html += `<div class="w-full h-5"></div>`; 
       }
 
