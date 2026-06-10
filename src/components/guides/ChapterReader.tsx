@@ -78,31 +78,30 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in duration-300">
-      <div className="sticky top-0 z-10 p-4 pb-0">
-        <div className="flex items-center gap-3">
+      <div className="sticky top-0 z-10 p-4 pb-0 bg-background/80 backdrop-blur-md border-b border-glass-border">
+        <div className="flex items-center gap-3 pb-3">
           <button
             onClick={onClose}
-            className="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors"
+            className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
           >
             <ArrowLeft className="w-5 h-5 text-secondary" />
           </button>
           <div className="flex items-baseline gap-2">
-            <h2 className="text-xl font-bold tracking-tight text-primary">
+            <h2 className="text-[20px] font-bold tracking-tight text-primary font-heading">
               {bookTitle} {chapter}
             </h2>
-            <span className="text-xs font-medium text-accent tracking-wider uppercase">
+            <span className="text-[11px] font-bold text-accent tracking-widest uppercase bg-accent/10 px-2 py-0.5 rounded-full">
               LSB
             </span>
           </div>
         </div>
-        <div className="h-px bg-gradient-to-r from-accent/50 to-transparent mt-4 w-full" />
       </div>
 
       <div className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-6">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 text-secondary">
             <Loader2 className="w-6 h-6 animate-spin text-accent" />
-            <p className="text-sm">Loading scripture...</p>
+            <p className="text-sm font-medium">Loading scripture...</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 text-red-400">
@@ -115,14 +114,44 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             </button>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto pb-12">
-            <div className="text-lg leading-relaxed text-primary/90 space-y-1">
-              {verses.map((v) => (
-                <span key={v.verse} className="inline mr-2">
-                  <sup className="text-xs text-accent mr-1 font-semibold">{v.verse}</sup>
-                  <span dangerouslySetInnerHTML={{ __html: v.text.replace(/<S>.*?<\/S>/g, '') }} />
-                </span>
-              ))}
+          <div className="max-w-2xl mx-auto pb-24 pt-4">
+            <div className="text-[19px] leading-[1.8] text-primary/90 font-sans tracking-[-0.01em]">
+              {verses.map((v) => {
+                const parts = v.text.split(/(<S>.*?<\/S>)/g);
+                let renderedVerseNum = false;
+
+                return (
+                  <span key={v.verse}>
+                    {parts.map((part, i) => {
+                      if (part.startsWith('<S>') && part.endsWith('</S>')) {
+                        const heading = part.replace(/<\/?S>/g, '');
+                        return (
+                          <span key={i} className="block w-full mt-10 mb-4">
+                            <span className="text-[22px] font-bold tracking-tight text-primary font-heading italic">
+                              {heading}
+                            </span>
+                          </span>
+                        );
+                      }
+                      
+                      if (part.trim() === '') return null;
+                      
+                      const showNum = !renderedVerseNum;
+                      if (showNum) renderedVerseNum = true;
+
+                      return (
+                        <span key={i} className="inline">
+                          {showNum && (
+                            <sup className="text-[12px] text-accent/80 font-bold ml-1.5 mr-1.5 relative -top-[0.4em] select-none">{v.verse}</sup>
+                          )}
+                          <span dangerouslySetInnerHTML={{ __html: part }} />
+                          {' '}
+                        </span>
+                      );
+                    })}
+                  </span>
+                );
+              })}
             </div>
           </div>
         )}
