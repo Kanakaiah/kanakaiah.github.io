@@ -13,7 +13,7 @@ export const AppLayout: React.FC = () => {
   const isHomeScreen = location.pathname === '/';
   
   // Hide bottom/side navigation when in the reading view
-  const isReadingPage = new URLSearchParams(location.search).has('readerUrl');
+  const isReadingPage = new URLSearchParams(location.search).has('readerBook');
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const currentScrollY = e.currentTarget.scrollTop;

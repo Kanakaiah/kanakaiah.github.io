@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { NT_BOOKS } from '../data/ntBooks';
 import { BibleBrowser } from '../components/guides/BibleBrowser';
+import { ChapterReader } from '../components/guides/ChapterReader';
 
 // Special sentinel IDs
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
@@ -30,7 +31,8 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
     e.preventDefault();
     setSearchParams(prev => {
       const next = new URLSearchParams(prev);
-      next.set('readerUrl', bibleUrl);
+      next.set('readerBook', guideId);
+      next.set('readerChapter', anchor.ch.toString());
       return next;
     });
   };
@@ -73,8 +75,8 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 export const Guides: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeGuideId = searchParams.get('guide');
-  const readerUrl = searchParams.get('readerUrl');
-
+  const readerBook = searchParams.get('readerBook');
+  const readerChapter = searchParams.get('readerChapter');
   const setActiveGuideId = (id: string | null) => {
     if (id) {
       setSearchParams({ guide: id });
@@ -124,29 +126,21 @@ export const Guides: React.FC = () => {
   }, []);
 
   // ── In-App Reader view ─────────────────────────────────────────────────────
-  if (readerUrl) {
+  if (readerBook && readerChapter) {
     return (
-      <div className="flex flex-col h-full w-full animate-[fadeIn_0.3s_ease-out] bg-background">
-        <div className="flex items-center justify-center p-3 border-b border-glass-border relative">
-          <button 
-            onClick={() => {
-              setSearchParams(prev => {
-                const next = new URLSearchParams(prev);
-                next.delete('readerUrl');
-                return next;
-              });
-            }}
-            className="absolute left-3 flex items-center gap-1 text-accent hover:text-accent-hover transition-colors font-medium text-[15px]"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span>{activeGuide?.title || 'Book'}</span>
-          </button>
-          <span className="font-heading font-bold text-primary text-[17px]">Reader</span>
-        </div>
-        <div className="flex-1 w-full bg-white">
-          <iframe src={readerUrl} className="w-full h-full border-0 bg-white block" title="Bible Reader" />
-        </div>
-      </div>
+      <ChapterReader
+        bookId={readerBook}
+        chapter={parseInt(readerChapter, 10)}
+        bookTitle={NT_BOOKS.find((b) => b.id === readerBook)?.name || activeGuide?.title || 'Book'}
+        onClose={() => {
+          setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.delete('readerBook');
+            next.delete('readerChapter');
+            return next;
+          });
+        }}
+      />
     );
   }
 
@@ -298,29 +292,52 @@ export const Guides: React.FC = () => {
           {activeGuide.type === 'book-guide' && activeGuide.blocks && (
             <div className="flex flex-col gap-8">
 
-              <div className="bg-glass-bg rounded-2xl p-6 border border-glass-border flex flex-col items-center gap-4 text-center">
-                <span className="text-xs uppercase tracking-[0.2em] text-muted font-bold">Structure Overview</span>
-                <div className="text-3xl font-heading font-bold text-accent-light tracking-widest">
+              <div 
+                className="rounded-2xl p-5 flex flex-col items-center gap-3 text-center"
+                style={{ 
+                  backgroundColor: 'var(--glass-bg)', 
+                  borderLeft: '3px solid var(--accent-light)',
+                }}
+              >
+                <span className="text-[10px] uppercase tracking-[0.2em] font-bold" style={{ color: 'var(--accent-light)' }}>Structure Overview</span>
+                <div className="text-3xl font-heading font-bold text-primary tracking-widest">
                   {activeGuide.structureFormula}
                 </div>
               </div>
 
-              <div className="relative flex flex-col">
-                {/* Continuous Timeline Line */}
-                <div className="absolute left-8 top-8 bottom-12 w-[2px] bg-gradient-to-b from-accent/60 via-accent/20 to-transparent -ml-[1px] z-0" />
-                
+              <div className="flex flex-col gap-3">
                 {activeGuide.blocks.map((block: any, i: number) => (
-                  <div key={i} className="relative flex gap-6 items-start group pb-10 last:pb-0">
-                    {/* Node Box */}
-                    <div className="w-16 h-16 rounded-2xl bg-background flex flex-col items-center justify-center border-2 border-glass-border group-hover:border-accent/80 group-hover:bg-accent/10 flex-shrink-0 z-10 transition-all duration-300 shadow-sm group-hover:shadow-lg group-hover:-translate-y-0.5">
-                      <span className="text-[10px] text-muted group-hover:text-accent font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300">Ch</span>
-                      <span className="font-heading font-bold text-primary text-xl leading-none transition-colors duration-300">{block.chapters}</span>
+                  <div 
+                    key={i} 
+                    className="flex gap-4 items-center rounded-2xl p-4 transition-all duration-300 cursor-default"
+                    style={{ 
+                      backgroundColor: 'var(--glass-bg)', 
+                      borderLeft: '3px solid var(--accent-light)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--accent-glow)';
+                      e.currentTarget.style.borderLeftColor = 'var(--accent)';
+                      e.currentTarget.style.transform = 'translateX(4px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--glass-bg)';
+                      e.currentTarget.style.borderLeftColor = 'var(--accent-light)';
+                      e.currentTarget.style.transform = '';
+                    }}
+                  >
+                    {/* Chapter badge */}
+                    <div 
+                      className="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: 'var(--accent-glow-strong)' }}
+                    >
+                      <span className="text-[9px] font-bold uppercase tracking-wider mb-0.5" style={{ color: 'var(--accent-light)' }}>Ch</span>
+                      <span className="font-heading font-bold text-primary text-lg leading-none">{block.chapters}</span>
                     </div>
                     
                     {/* Content */}
-                    <div className="pt-1.5 flex flex-col gap-1.5 flex-1">
-                      <h3 className="font-bold text-primary tracking-wide text-lg group-hover:text-accent-light transition-colors duration-300 uppercase">{block.label}</h3>
-                      <p className="text-secondary leading-relaxed">{block.description}</p>
+                    <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                      <h3 className="font-bold text-primary tracking-wide text-base uppercase">{block.label}</h3>
+                      <p className="text-secondary text-sm leading-relaxed">{block.description}</p>
                     </div>
                   </div>
                 ))}
@@ -339,13 +356,19 @@ export const Guides: React.FC = () => {
 
               {activeGuide.memorySentence && (
                 <div className="mt-2 pt-6 border-t border-glass-border flex flex-col gap-4">
-                  <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em] flex items-center justify-between">
-                    <span>Memory Sentence</span>
-                    <span className="text-[10px] text-muted tracking-normal bg-glass-bg px-2 py-1 rounded hidden sm:block">Read 3-4 times to lock flow</span>
-                  </h3>
-                  <div className="bg-glass-bg border border-glass-border rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Memory Sentence</h3>
+                    <span className="text-[10px] text-muted tracking-normal px-2 py-1 rounded hidden sm:block" style={{ backgroundColor: 'var(--glass-bg)' }}>Read 3-4 times to lock flow</span>
+                  </div>
+                  <div 
+                    className="rounded-2xl p-5"
+                    style={{ 
+                      backgroundColor: 'var(--glass-bg)', 
+                      borderLeft: '3px solid var(--accent-light)',
+                    }}
+                  >
                     <p
-                      className="text-lg leading-relaxed text-secondary"
+                      className="text-base leading-relaxed text-secondary"
                       dangerouslySetInnerHTML={{
                         __html: activeGuide.memorySentence.replace(/\b([A-Z]{2,}(?:'S)?)\b/g, '<strong class="text-orange-400 font-bold">$1</strong>')
                       }}
@@ -356,13 +379,20 @@ export const Guides: React.FC = () => {
 
               {activeGuide.keyVerses && (
                 <div className="mt-2 pt-6 border-t border-glass-border flex flex-col gap-4">
-                  <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">Key Verses</h3>
+                  <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
                   <div className="flex flex-col gap-3">
                     {activeGuide.keyVerses.map((kv: any, i: number) => (
-                      <div key={i} className="bg-glass-bg border border-glass-border rounded-xl p-5 shadow-sm">
-                        <p className="font-bold text-primary mb-2 text-sm">{kv.ref}</p>
-                        {kv.text && <p className="text-secondary italic mb-2">"{kv.text}"</p>}
-                        {kv.theme && <p className="text-xs font-bold text-accent uppercase tracking-wider">{kv.theme}</p>}
+                      <div 
+                        key={i} 
+                        className="rounded-2xl p-4 transition-all duration-300"
+                        style={{ 
+                          backgroundColor: 'var(--glass-bg)', 
+                          borderLeft: '3px solid var(--accent-light)',
+                        }}
+                      >
+                        <p className="font-bold text-primary mb-1.5 text-sm">{kv.ref}</p>
+                        {kv.text && <p className="text-secondary italic mb-1.5 text-sm leading-relaxed">"{kv.text}"</p>}
+                        {kv.theme && <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: 'var(--accent-light)' }}>{kv.theme}</p>}
                       </div>
                     ))}
                   </div>
