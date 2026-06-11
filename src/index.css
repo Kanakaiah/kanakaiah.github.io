@@ -5,7 +5,7 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --bg-color: #1e293b;
+    --bg-color: #0f172a;
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
@@ -22,7 +22,7 @@
     --glass-border-hover: rgba(255, 255, 255, 0.15);
     --card-bg: #1e293b;
     --card-bg-elevated: #334155;
-    --card-border: #334155;
+    --card-border: #1e293b;
     --card-hover: #334155;
 
     --bionic-1: #ef4444;
@@ -33,7 +33,7 @@
   }
 
   [data-theme="obsidian"] {
-    --bg-color: #050505;
+    --bg-color: #000000;
     --accent: #f43f5e;
     --accent-hover: #e11d48;
     --accent-glow: rgba(244, 63, 94, 0.15);
@@ -43,14 +43,14 @@
     --glass-bg-hover: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.06);
     --glass-border-hover: rgba(255, 255, 255, 0.12);
-    --card-bg: #121212;
+    --card-bg: #0f0f0f;
     --card-bg-elevated: #1a1a1a;
-    --card-border: #2a2a2a;
+    --card-border: #0f0f0f;
     --card-hover: #1f1f1f;
   }
 
   [data-theme="midnight"] {
-    --bg-color: #040d1a;
+    --bg-color: #020617;
     --accent: #0ea5e9;
     --accent-hover: #0284c7;
     --accent-glow: rgba(14, 165, 233, 0.15);
@@ -62,7 +62,7 @@
     --glass-border-hover: rgba(255, 255, 255, 0.12);
     --card-bg: #0f172a;
     --card-bg-elevated: #1e293b;
-    --card-border: #1e293b;
+    --card-border: #0f172a;
     --card-hover: #1e293b;
   }
 
@@ -82,9 +82,9 @@
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-border-hover: rgba(0, 0, 0, 0.15);
     --card-bg: #ffffff;
-    --card-bg-elevated: #f5f0e8;
-    --card-border: #e2e8f0;
-    --card-hover: #f1f5f9;
+    --card-bg-elevated: #fcfbfa;
+    --card-border: #ffffff;
+    --card-hover: #fcfbfa;
 
     --bionic-1: #b91c1c;
     --bionic-2: #1d4ed8;
@@ -95,7 +95,7 @@
 
   [data-theme="pure-white"] {
     color-scheme: light;
-    --bg-color: #f8f9fa;
+    --bg-color: #f3f4f6;
     --text-primary: #000000;
     --text-secondary: #525252;
     --text-muted: #a3a3a3;
@@ -110,8 +110,8 @@
     --glass-border-hover: rgba(0, 0, 0, 0.15);
     --card-bg: #ffffff;
     --card-bg-elevated: #f8f9fa;
-    --card-border: #e5e5e5;
-    --card-hover: #f3f4f6;
+    --card-border: #ffffff;
+    --card-hover: #f9fafb;
 
     --bionic-1: #b91c1c;
     --bionic-2: #1d4ed8;
