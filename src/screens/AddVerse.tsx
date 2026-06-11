@@ -136,18 +136,18 @@ export const AddVerse: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-glass-bg border border-glass-border rounded-xl p-1 relative">
+      <div className="flex bg-[#222222] border border-[#333333] rounded-xl p-1 relative">
         <button
           onClick={() => setActiveTab('search')}
-          className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
-            ${activeTab === 'search' ? 'bg-accent text-white shadow' : 'text-secondary hover:text-primary'}`}
+          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
+            ${activeTab === 'search' ? 'bg-[#333333] text-white' : 'text-[#999999] hover:text-white'}`}
         >
           <Search className="w-4 h-4" /> Look Up Verse
         </button>
         <button
           onClick={() => setActiveTab('manual')}
-          className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
-            ${activeTab === 'manual' ? 'bg-accent text-white shadow' : 'text-secondary hover:text-primary'}`}
+          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
+            ${activeTab === 'manual' ? 'bg-[#333333] text-white' : 'text-[#999999] hover:text-white'}`}
         >
           <PenLine className="w-4 h-4" /> Type It Yourself
         </button>
@@ -168,7 +168,7 @@ export const AddVerse: React.FC = () => {
             <select
               value={searchTranslation}
               onChange={(e) => setSearchTranslation(e.target.value)}
-              className="h-12 px-4 rounded-xl bg-background border border-glass-border text-primary focus:outline-none focus:ring-2 focus:ring-accent w-full sm:w-auto"
+              className="h-12 px-4 rounded-xl bg-[#222222] border border-[#333333] text-primary focus:outline-none focus:ring-2 focus:ring-accent w-full sm:w-auto"
             >
               <optgroup label="Modern Versions">
                 <option value="LSB" className="bg-background text-primary">LSB (Legacy Standard Bible)</option>
@@ -229,10 +229,10 @@ export const AddVerse: React.FC = () => {
                     setSearchQuery(collection.q);
                     handleSearch();
                   }}
-                  className="bg-glass-bg border border-glass-border rounded-xl p-4 text-left hover:bg-glass-bg-hover transition-colors flex flex-col gap-1"
+                  className="bg-[#222222] border border-[#333333] rounded-xl p-4 text-left hover:bg-[#2a2a2a] transition-colors flex flex-col gap-1"
                 >
                   <span className="font-bold text-primary">{collection.topic}</span>
-                  <span className="text-xs text-secondary">{collection.desc}</span>
+                  <span className="text-xs text-[#999999]">{collection.desc}</span>
                 </button>
               ))}
             </div>

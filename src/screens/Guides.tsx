@@ -52,7 +52,7 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
     <a 
       href={bibleUrl}
       onClick={handleRead}
-      className={`relative bg-glass-bg rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[240px] group cursor-pointer ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-glass-border hover:bg-glass-bg-hover shadow-sm'}`}
+      className={`relative bg-[#222222] rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[240px] group cursor-pointer ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-[#333333] hover:bg-[#2a2a2a] shadow-sm'}`}
     >
       
       {!imgErr && (
@@ -71,7 +71,7 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
           <span className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-base shadow-inner ${!imgErr ? 'bg-black/50 backdrop-blur-md border border-white/20 text-white' : 'bg-accent/20 text-accent'}`}>
             {anchor.ch}
           </span>
-          <span className={`font-heading font-black tracking-widest uppercase text-sm px-4 py-2 rounded-full border transition-colors shadow-sm ${!imgErr ? 'text-white bg-black/60 backdrop-blur-md border-white/20 group-hover:border-accent/50' : 'text-primary bg-black/40 border-glass-border group-hover:border-accent/50'}`}>
+          <span className={`font-heading font-black tracking-widest uppercase text-sm px-4 py-2 rounded-full border transition-colors shadow-sm ${!imgErr ? 'text-white bg-black/60 backdrop-blur-md border-white/20 group-hover:border-accent/50' : 'text-primary bg-black/40 border-[#333333] group-hover:border-accent/50'}`}>
             {anchor.word}
           </span>
         </div>
@@ -205,7 +205,7 @@ export const Guides: React.FC = () => {
                {activeGuide.sections.map((sec: any, i: number) => (
                  <div key={i} className="flex flex-col gap-4">
                    {sec.heading && (
-                     <h2 className="text-xl font-bold text-accent-light border-b border-glass-border pb-2 inline-block">
+                     <h2 className="text-xl font-bold text-accent-light border-b border-[#333333] pb-2 inline-block">
                        {sec.heading}
                      </h2>
                    )}
@@ -219,13 +219,13 @@ export const Guides: React.FC = () => {
                          <thead>
                            <tr>
                              {sec.table.headers.map((h: string, hi: number) => (
-                               <th key={hi} className="p-3 border-b border-glass-border font-bold text-primary bg-glass-bg-hover">{h}</th>
+                               <th key={hi} className="p-3 border-b border-[#333333] font-bold text-primary bg-[#2a2a2a]">{h}</th>
                              ))}
                            </tr>
                          </thead>
                          <tbody>
                            {sec.table.rows.map((row: string[], ri: number) => (
-                             <tr key={ri} className="border-b border-glass-border/50 hover:bg-glass-bg transition-colors">
+                             <tr key={ri} className="border-b border-[#333333]/50 hover:bg-[#222222] transition-colors">
                                {row.map((cell: string, ci: number) => (
                                  <td key={ci} className="p-3 text-secondary">{cell}</td>
                                ))}
@@ -239,8 +239,8 @@ export const Guides: React.FC = () => {
                    {sec.entries && (
                      <div className="flex flex-col gap-4 mt-2">
                        {sec.entries.map((entry: any, ei: number) => (
-                         <div key={ei} className="bg-glass-bg border border-glass-border rounded-xl p-5 flex flex-col gap-3 shadow-sm">
-                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-glass-border/50 pb-3">
+                         <div key={ei} className="bg-[#222222] border border-[#333333] rounded-xl p-5 flex flex-col gap-3 shadow-sm">
+                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-[#333333]/50 pb-3">
                              <span className="font-bold text-accent px-3 py-1 bg-accent/10 rounded-full text-xs uppercase tracking-wider">{entry.rank}</span>
                              <span className="font-heading font-bold text-lg text-primary">{entry.person}</span>
                              <span className="text-sm font-bold text-muted sm:ml-auto">{entry.reference}</span>
@@ -248,7 +248,7 @@ export const Guides: React.FC = () => {
                            <p className="text-primary italic leading-relaxed border-l-2 border-accent/40 pl-4 my-1">"{entry.quote}"</p>
                            {entry.note && <p className="text-secondary text-sm">{entry.note}</p>}
                            {entry.resources && entry.resources.length > 0 && (
-                             <div className="flex flex-wrap gap-2 mt-1 pt-2 border-t border-glass-border/30">
+                             <div className="flex flex-wrap gap-2 mt-1 pt-2 border-t border-[#333333]/30">
                                {entry.resources.map((res: any, ri: number) => {
                                  const Icon = res.type === 'book' ? BookOpen :
                                               res.type === 'audio' ? Headphones :
@@ -291,7 +291,7 @@ export const Guides: React.FC = () => {
                    )}
 
                    {sec.keyVerse && (
-                     <div className="bg-glass-bg border-l-4 border-l-accent rounded-r-xl p-5 mt-4">
+                     <div className="bg-[#222222] border-l-4 border-l-accent rounded-r-xl p-5 mt-4">
                        <p className="font-bold text-primary mb-1">{sec.keyVerse.ref}</p>
                        <p className="text-secondary italic">"{sec.keyVerse.text}"</p>
                      </div>
@@ -393,7 +393,7 @@ export const Guides: React.FC = () => {
                   return (
                     <div 
                       key={i}
-                      className="flex rounded-xl overflow-hidden bg-glass-bg border border-glass-border/40 hover:bg-glass-bg-hover transition-colors min-h-[80px]"
+                      className="flex rounded-xl overflow-hidden bg-[#222222] border border-[#333333]/40 hover:bg-[#2a2a2a] transition-colors min-h-[80px]"
                     >
                       <div className={`w-[72px] flex-shrink-0 flex flex-col items-center justify-center border-l-4 ${color.border} border-r border-r-glass-border/30`}>
                          <span className="text-[10px] uppercase font-bold text-muted tracking-widest mb-0.5">CH</span>
@@ -429,7 +429,7 @@ export const Guides: React.FC = () => {
               )}
 
               {activeGuide.anchors && (
-                <div className="mt-4 pt-6 border-t border-glass-border flex flex-col gap-5">
+                <div className="mt-4 pt-6 border-t border-[#333333] flex flex-col gap-5">
                   <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {activeGuide.anchors.map((anchor: any, i: number) => (
@@ -440,15 +440,15 @@ export const Guides: React.FC = () => {
               )}
 
               {activeGuide.memorySentence && (
-                <div className="mt-2 pt-6 border-t border-glass-border flex flex-col gap-4">
+                <div className="mt-2 pt-6 border-t border-[#333333] flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Memory Sentence</h3>
-                    <span className="text-[10px] text-muted tracking-normal px-2 py-1 rounded hidden sm:block" style={{ backgroundColor: 'var(--glass-bg)' }}>Read 3-4 times to lock flow</span>
+                    <span className="text-[10px] text-muted tracking-normal px-2 py-1 rounded hidden sm:block" style={{ backgroundColor: '#222222' }}>Read 3-4 times to lock flow</span>
                   </div>
                   <div 
                     className="rounded-2xl p-5"
                     style={{ 
-                      backgroundColor: 'var(--glass-bg)', 
+                      backgroundColor: '#222222', 
                       borderLeft: '3px solid var(--accent-light)',
                     }}
                   >
@@ -463,7 +463,7 @@ export const Guides: React.FC = () => {
               )}
 
               {activeGuide.keyVerses && (
-                <div className="mt-2 pt-6 border-t border-glass-border flex flex-col gap-4">
+                <div className="mt-2 pt-6 border-t border-[#333333] flex flex-col gap-4">
                   <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
                   <div className="flex flex-col gap-3">
                     {activeGuide.keyVerses.map((kv: any, i: number) => (
@@ -471,7 +471,7 @@ export const Guides: React.FC = () => {
                         key={i} 
                         className="rounded-2xl p-4 transition-all duration-300"
                         style={{ 
-                          backgroundColor: 'var(--glass-bg)', 
+                          backgroundColor: '#222222', 
                           borderLeft: '3px solid var(--accent-light)',
                         }}
                       >
@@ -508,7 +508,7 @@ export const Guides: React.FC = () => {
             {/* OT Card */}
             <button
               onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
-              className="flex items-center gap-4 p-4 rounded-2xl bg-glass-bg border border-glass-border hover:bg-glass-bg-hover hover:border-accent/40 transition-all text-left group shadow-sm"
+              className="flex items-center gap-4 p-4 rounded-2xl bg-[#222222] border border-[#333333] hover:bg-[#2a2a2a] hover:border-accent/40 transition-all text-left group shadow-sm"
             >
               <div className="text-2xl">📜</div>
               <div className="flex-1 flex flex-col min-w-0">
@@ -550,7 +550,7 @@ export const Guides: React.FC = () => {
                 <button
                   key={guide.id}
                   onClick={() => setActiveGuideId(guide.id)}
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-glass-bg border border-glass-border hover:bg-glass-bg-hover hover:border-accent/40 transition-all text-left group shadow-sm"
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-[#222222] border border-[#333333] hover:bg-[#2a2a2a] hover:border-accent/40 transition-all text-left group shadow-sm"
                 >
                   <div className="text-2xl">{guide.icon}</div>
                   <div className="flex-1 flex flex-col min-w-0">

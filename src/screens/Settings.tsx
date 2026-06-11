@@ -74,7 +74,7 @@ export const Settings: React.FC = () => {
             <Palette className="w-4 h-4" /> Appearance
           </h2>
           <Card className="p-1">
-            <div className="flex flex-col divide-y divide-glass-border">
+            <div className="flex flex-col divide-y divide-[#333333]">
               
               <div className="p-4 flex items-center justify-between">
                 <div>
@@ -84,13 +84,13 @@ export const Settings: React.FC = () => {
                 <select
                   value={state.theme}
                   onChange={(e) => dispatch({ type: 'SET_THEME', payload: e.target.value })}
-                  className="bg-background border border-glass-border rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
+                  className="bg-[#222222] border border-[#333333] rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
                 >
-                  <option value="nebula" className="bg-background text-primary">Nebula (Dark Purple)</option>
-                  <option value="obsidian" className="bg-background text-primary">Obsidian (Pure Dark)</option>
-                  <option value="midnight" className="bg-background text-primary">Midnight (Dark Blue)</option>
-                  <option value="parchment" className="bg-background text-primary">Parchment (Light Warm)</option>
-                  <option value="pure-white" className="bg-background text-primary">Pure White</option>
+                  <option value="nebula" className="bg-[#222222] text-primary">Nebula (Dark Purple)</option>
+                  <option value="obsidian" className="bg-[#222222] text-primary">Obsidian (Pure Dark)</option>
+                  <option value="midnight" className="bg-[#222222] text-primary">Midnight (Dark Blue)</option>
+                  <option value="parchment" className="bg-[#222222] text-primary">Parchment (Light Warm)</option>
+                  <option value="pure-white" className="bg-[#222222] text-primary">Pure White</option>
                 </select>
               </div>
 
@@ -104,9 +104,9 @@ export const Settings: React.FC = () => {
             <Brain className="w-4 h-4" /> Practice & Reading
           </h2>
           <Card className="p-1">
-            <div className="flex flex-col divide-y divide-glass-border">
+            <div className="flex flex-col divide-y divide-[#333333]">
               
-              <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-glass-bg-hover transition-colors rounded-t-xl">
+              <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-[#2a2a2a] transition-colors rounded-t-xl">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center">
                     <Volume2 className="w-5 h-5" />
@@ -124,7 +124,7 @@ export const Settings: React.FC = () => {
                 />
               </label>
 
-              <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-glass-bg-hover transition-colors">
+              <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-[#2a2a2a] transition-colors">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center">
                     <EyeOff className="w-5 h-5" />
@@ -142,7 +142,7 @@ export const Settings: React.FC = () => {
                 />
               </label>
 
-              <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-glass-bg-hover transition-colors rounded-b-xl">
+              <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-[#2a2a2a] transition-colors rounded-b-xl">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center">
                     <Type className="w-5 h-5" />
@@ -168,12 +168,12 @@ export const Settings: React.FC = () => {
                 <select
                   value={state.settings.fontSize}
                   onChange={(e) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(e.target.value) } })}
-                  className="bg-background border border-glass-border rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
+                  className="bg-[#222222] border border-[#333333] rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
                 >
-                  <option value={0.85} className="bg-background text-primary">Small</option>
-                  <option value={1} className="bg-background text-primary">Normal</option>
-                  <option value={1.15} className="bg-background text-primary">Large</option>
-                  <option value={1.3} className="bg-background text-primary">Extra Large</option>
+                  <option value={0.85} className="bg-[#222222] text-primary">Small</option>
+                  <option value={1} className="bg-[#222222] text-primary">Normal</option>
+                  <option value={1.15} className="bg-[#222222] text-primary">Large</option>
+                  <option value={1.3} className="bg-[#222222] text-primary">Extra Large</option>
                 </select>
               </div>
 
@@ -185,7 +185,7 @@ export const Settings: React.FC = () => {
         <section className="flex flex-col gap-4">
           <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2">Data Management</h2>
           <Card className="p-1">
-            <div className="flex flex-col divide-y divide-glass-border">
+            <div className="flex flex-col divide-y divide-[#333333]">
               
               <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>

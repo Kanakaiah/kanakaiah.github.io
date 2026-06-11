@@ -23,7 +23,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             w-full h-12 px-4 rounded-xl bg-background border
             focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent
             transition-all duration-200 text-primary placeholder:text-muted
-            ${error ? 'border-red-500 focus:ring-red-500' : 'border-glass-border'}
+            ${error ? 'border-red-500 focus:ring-red-500' : 'border-[#333333]'}
             ${className}
           `}
           {...props}
