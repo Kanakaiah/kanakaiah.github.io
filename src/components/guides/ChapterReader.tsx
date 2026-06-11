@@ -152,7 +152,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             </button>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto pb-24 pt-4">
+          <div className="max-w-2xl mx-auto pb-24 pt-4 select-text">
             <div 
               className="text-[20px] leading-[1.7] text-primary/95 font-sans tracking-[-0.01em] [&>div:first-child]:mt-0"
               dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
