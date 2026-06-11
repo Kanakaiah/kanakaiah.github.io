@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { BookOpen, PlusSquare, Target, Compass, Settings } from 'lucide-react';
+import { BookOpen, PlusSquare, Target, Compass, Settings, Flame } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export const AppLayout: React.FC = () => {
@@ -87,21 +87,21 @@ export const AppLayout: React.FC = () => {
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        {/* GLOBAL HEADER (Only on Home Screen) */}
+        {/* GLOBAL HEADER (Only on Home Screen, Mobile Only) */}
         {isHomeScreen && (
           <header className={`
-            absolute top-0 left-0 w-full px-5 lg:px-8 pt-5 pb-3 flex justify-between items-center z-40
-            transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none lg:static
-            ${isNavHidden ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'}
+            absolute top-0 left-0 w-full px-5 pt-5 pb-3 flex justify-between items-center z-40 lg:hidden
+            transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md
+            ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
           `}>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-accent shadow-sm lg:hidden">
+              <div className="w-9 h-9 rounded-xl bg-card border border-card-border flex items-center justify-center text-accent shadow-sm lg:hidden">
                 <PageIcon className="w-4 h-4" />
               </div>
               <h1 className="text-xl lg:hidden font-heading font-bold tracking-wide text-primary">{currentRoute.label}</h1>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-glass-bg border border-glass-border">
-              <span className="text-orange-400 text-sm">🔥</span>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-card border border-card-border">
+              <Flame className="w-4 h-4 text-[#dfab55]" />
               <span className="text-sm font-bold font-heading text-primary">{state.streak}</span>
             </div>
           </header>

@@ -90,8 +90,8 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-1 mt-2">
+      {/* Header (Desktop Only) */}
+      <div className="hidden lg:flex items-center justify-between mb-1 mt-2">
         <div className="flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-primary" />
           <h1 className="text-2xl font-bold font-heading text-primary">Library</h1>
