@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BookOpen, ChevronLeft, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check, Play, Square, HelpCircle } from 'lucide-react';
+import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check, Play, Square, HelpCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
@@ -348,18 +348,17 @@ export const Practice: React.FC = () => {
       style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
     >
       
-      {/* Header */}
-      <div className={`flex items-center justify-between p-4 ${isImmersed ? 'absolute top-0 left-0 w-full z-10' : ''}`}>
-        <button 
-          onClick={() => {
-            if (isImmersed) setActiveMode('read');
-            else navigate(-1);
-          }}
-          className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:bg-card-hover transition-colors"
-        >
-          {isImmersed ? <ArrowLeft className="w-5 h-5" /> : <ChevronLeft className="w-6 h-6" />}
-        </button>
-      </div>
+      {/* Header - Only visible when immersed */}
+      {isImmersed && (
+        <div className="flex items-center justify-between p-4 absolute top-0 left-0 w-full z-10">
+          <button 
+            onClick={() => setActiveMode('read')}
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:bg-card-hover transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       <div className={`flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 ${isImmersed ? 'justify-center items-center h-full' : ''}`}>
         
