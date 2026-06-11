@@ -37,8 +37,8 @@ export const Practice: React.FC = () => {
   if (state.verses.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
-        <div className="w-16 h-16 bg-[#222222] rounded-full flex items-center justify-center mb-4">
-          <BookOpen className="w-8 h-8 text-[#999999]" />
+        <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center mb-4">
+          <BookOpen className="w-8 h-8 text-muted" />
         </div>
         <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
         <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
@@ -173,7 +173,7 @@ export const Practice: React.FC = () => {
     
     return (
       <div className="mb-6 p-4 rounded-xl bg-accent/10 border border-accent/20 text-secondary text-base leading-relaxed relative">
-        <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+        <div className="absolute -top-2 -left-2 bg-accent text-white text-[0.625rem] font-bold px-2 py-0.5 rounded-full shadow-sm">
           HINT {hintLevel < 4 ? `${hintLevel}/4` : '(Full)'}
         </div>
         {tokens.map((token, i) => {
@@ -355,7 +355,7 @@ export const Practice: React.FC = () => {
             if (isImmersed) setActiveMode('read');
             else navigate(-1);
           }}
-          className="w-10 h-10 rounded-full flex items-center justify-center bg-[#222222] border border-[#333333] text-primary hover:bg-[#2a2a2a] transition-colors"
+          className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:bg-card-hover transition-colors"
         >
           {isImmersed ? <ArrowLeft className="w-5 h-5" /> : <ChevronLeft className="w-6 h-6" />}
         </button>
@@ -381,18 +381,18 @@ export const Practice: React.FC = () => {
                 className={`flex-shrink-0 md:flex-shrink flex flex-col items-center p-3 rounded-xl min-w-[100px] md:min-w-0 border transition-all duration-300
                   ${activeMode === mode.id 
                     ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)] scale-105' 
-                    : 'bg-[#222222] border-[#333333] hover:bg-[#2a2a2a]'}`}
+                    : 'bg-card border-card-border hover:bg-card-hover'}`}
               >
                 <mode.icon className={`w-6 h-6 mb-2 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
                 <span className={`text-sm font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
-                <span className="text-[10px] text-muted mt-1 text-center leading-tight">{mode.sub}</span>
+                <span className="text-[0.625rem] text-muted mt-1 text-center leading-tight">{mode.sub}</span>
               </button>
             ))}
           </div>
         )}
 
         {/* Display Board */}
-        <div className={`bg-[#222222] border border-[#333333] rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-none mb-48 lg:mb-32'}`}>
+        <div className={`bg-card border border-card-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-none mb-48 lg:mb-32'}`}>
           <div className="flex-1 flex flex-col">
             <div className={`flex items-center mb-6 ${isImmersed ? 'justify-center' : 'justify-between'}`}>
               <span 
@@ -438,7 +438,7 @@ export const Practice: React.FC = () => {
             <div className="mt-12 flex items-center justify-between">
               <button 
                 onClick={handlePrev} disabled={activeVerseIndex === 0}
-                className="p-2 rounded-full hover:bg-[#333333] disabled:opacity-30 transition-colors text-[#999999] hover:text-white"
+                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-white"
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
@@ -449,7 +449,7 @@ export const Practice: React.FC = () => {
               
               <button 
                 onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
-                className="p-2 rounded-full hover:bg-[#333333] disabled:opacity-30 transition-colors text-[#999999] hover:text-white"
+                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-white"
               >
                 <ArrowRight className="w-6 h-6" />
               </button>
@@ -462,7 +462,7 @@ export const Practice: React.FC = () => {
       {/* Footer / Scoring (Hidden in Read/Immersed) */}
       {!isImmersed && activeMode !== 'read' && (
         <div className="fixed bottom-20 lg:bottom-4 left-0 lg:left-64 w-full lg:w-[calc(100%-16rem)] px-4 flex justify-center z-40">
-          <div className="max-w-md w-full bg-[#1a1a1a] border border-[#333333] rounded-2xl shadow-2xl p-4 flex flex-col gap-4">
+          <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-2xl shadow-2xl p-4 flex flex-col gap-4">
             
             {!isEvaluationOpen ? (
               <Button onClick={() => setIsEvaluationOpen(true)} className="w-full h-12 shadow-accent/20">

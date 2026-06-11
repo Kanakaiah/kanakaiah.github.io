@@ -35,12 +35,12 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
         dots.push(<span key={i} className="text-[#444444]">○</span>);
       }
     }
-    return <div className="flex gap-[3px] tracking-widest text-[10px]">{dots}</div>;
+    return <div className="flex gap-[3px] tracking-widest text-[0.625rem]">{dots}</div>;
   };
 
   return (
     <div 
-      className={`relative flex flex-row cursor-pointer hover:bg-white/5 transition-all overflow-hidden rounded-xl bg-[#222222] border border-[#333333] border-l-[3px] ${indicatorColor} p-0`}
+      className={`relative flex flex-row cursor-pointer hover:bg-card-hover transition-all overflow-hidden rounded-xl bg-card border border-card-border border-l-[3px] ${indicatorColor} p-0`}
       onClick={() => onClick(verse.id)}
       role="button"
       tabIndex={0}
@@ -50,28 +50,28 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
         <div>
           <div className="flex justify-between items-start mb-2">
             <div className="flex items-center gap-2">
-              <h3 className="font-heading font-bold text-[16px] text-white truncate">{verse.ref}</h3>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#333333] text-[#8e8e93] tracking-wider uppercase">{verse.translation}</span>
+              <h3 className="font-heading font-bold text-base text-white truncate">{verse.ref}</h3>
+              <span className="px-1.5 py-0.5 rounded text-[0.625rem] font-bold bg-card-elevated text-[#8e8e93] tracking-wider uppercase">{verse.translation}</span>
             </div>
             
-            <div className={`px-2.5 py-0.5 rounded-full border text-[11px] font-medium ${badgeBorder}`}>
+            <div className={`px-2.5 py-0.5 rounded-full border text-[0.6875rem] font-medium ${badgeBorder}`}>
               {statusText}
             </div>
           </div>
           
-          <p className="text-[15px] text-[#e5e5ea] leading-snug line-clamp-2">
+          <p className="text-[0.9375rem] text-[#e5e5ea] leading-snug line-clamp-2">
             {verse.text}
           </p>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 text-[12px] text-[#8e8e93]">
+        <div className="mt-4 flex items-center gap-2 text-xs text-[#8e8e93]">
           {renderDots()}
           <span className="ml-1">{Math.min(5, verse.sm2?.repetition || 0)} of 5</span>
         </div>
       </div>
 
       <div 
-        className="w-14 border-l border-[#333333] flex items-center justify-center hover:bg-white/5 transition-colors"
+        className="w-14 border-l border-card-border flex items-center justify-center hover:bg-card-hover transition-colors"
         onClick={(e) => { e.stopPropagation(); onPractice(verse.id); }}
       >
         <Play className="w-5 h-5 text-[#8e8e93] ml-1" />

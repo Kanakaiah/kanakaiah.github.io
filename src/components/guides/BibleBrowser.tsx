@@ -32,24 +32,24 @@ const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onCli
 
       {/* Top-right — theme word badge */}
       <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-full">
-        <span className="text-[10px] font-black tracking-widest text-amber-300 uppercase">{book.themeWord}</span>
+        <span className="text-[0.625rem] font-black tracking-widest text-amber-300 uppercase">{book.themeWord}</span>
       </div>
 
       {/* Top-left — guide badge */}
       {book.hasGuide && (
         <div className="absolute top-3 left-3 bg-accent/80 backdrop-blur-sm px-2.5 py-1 rounded-full">
-          <span className="text-[10px] font-bold text-white uppercase tracking-wide">Guide ✓</span>
+          <span className="text-[0.625rem] font-bold text-white uppercase tracking-wide">Guide ✓</span>
         </div>
       )}
 
       {/* Bottom-right — chapter count styled like theme word badge */}
       <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-full">
-        <span className="text-[10px] font-black tracking-widest text-amber-300 uppercase">{book.chapters}</span>
+        <span className="text-[0.625rem] font-black tracking-widest text-amber-300 uppercase">{book.chapters}</span>
       </div>
 
       {/* Bottom — all text overlaid on image */}
       <div className="absolute inset-0 flex flex-col justify-end pl-5 pr-32 pb-5 gap-1">
-        <span className="text-[11px] font-black tracking-[0.2em] text-sky-300 uppercase">{book.keyWord}</span>
+        <span className="text-[0.6875rem] font-black tracking-[0.2em] text-sky-300 uppercase">{book.keyWord}</span>
         <h3 className="text-white font-heading font-bold text-2xl leading-tight">{book.name}</h3>
         <p className="text-white/70 text-sm italic leading-snug">{book.subtitle}</p>
       </div>
@@ -88,7 +88,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
           <div className="flex flex-col gap-4 mb-2">
             <button
               onClick={handleBackFromGrid}
-              className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[15px] self-start"
+              className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[0.9375rem] self-start"
             >
               <ChevronLeft className="w-5 h-5" />
               <span>Guides</span>
@@ -106,7 +106,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
               <div key={section} className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 border-b border-glass-border pb-1">
                   <p className="text-xs font-bold text-muted uppercase tracking-widest">{section}</p>
-                  <span className="text-[10px] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
+                  <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
                 <div className="flex flex-col gap-2">
                   {books.map(book => (
@@ -123,7 +123,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
       {view === 'book-grid' && testament === 'OT' && (
         <>
           <div className="flex flex-col gap-4 mb-2">
-            <button onClick={handleBackFromGrid} className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[15px] self-start">
+            <button onClick={handleBackFromGrid} className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[0.9375rem] self-start">
               <ChevronLeft className="w-5 h-5" />
               <span>Guides</span>
             </button>

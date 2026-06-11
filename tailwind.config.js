@@ -15,6 +15,10 @@ export default {
         accent: 'var(--accent)',
         'accent-hover': 'var(--accent-hover)',
         'accent-light': 'var(--accent-light)',
+        card: 'var(--card-bg)',
+        'card-elevated': 'var(--card-bg-elevated)',
+        'card-border': 'var(--card-border)',
+        'card-hover': 'var(--card-hover)',
       },
       fontFamily: {
         sans: ['var(--font-primary)', 'system-ui', 'sans-serif'],

@@ -96,24 +96,24 @@ export const Dashboard: React.FC = () => {
           <BookOpen className="w-5 h-5 text-primary" />
           <h1 className="text-2xl font-bold font-heading text-primary">Library</h1>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#333333] bg-[#222222]">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-card-border bg-card">
           <Flame className="w-4 h-4 text-[#dfab55]" />
           <span className="text-sm font-bold text-primary">{state.streak || 0}</span>
         </div>
       </div>
 
       {/* Practice & Stats Card */}
-      <div className="bg-[#222222] rounded-2xl p-5 border border-[#333333]">
-        <h2 className="text-[11px] font-bold text-[#8e8e93] tracking-widest uppercase mb-4">Today's Practice</h2>
+      <div className="bg-card rounded-2xl p-5 border border-card-border">
+        <h2 className="text-[0.6875rem] font-bold text-[#8e8e93] tracking-widest uppercase mb-4">Today's Practice</h2>
         
         {stats.dueForReview.length > 0 ? (
           <>
             <div className="flex items-baseline gap-2 mb-1">
               <h3 className="text-xl font-bold font-heading text-white">{stats.dueForReview[0].ref}</h3>
-              <span className="text-[14px] text-[#8e8e93]">— and {stats.dueForReview.length - 1} others due</span>
+              <span className="text-sm text-[#8e8e93]">— and {stats.dueForReview.length - 1} others due</span>
             </div>
             
-            <p className="text-[15px] text-[#e5e5ea] italic mb-5 line-clamp-2">
+            <p className="text-[0.9375rem] text-[#e5e5ea] italic mb-5 line-clamp-2">
               "{stats.dueForReview[0].text}"
             </p>
 
@@ -129,7 +129,7 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-baseline gap-2 mb-1">
               <h3 className="text-xl font-bold font-heading text-white">All caught up!</h3>
             </div>
-            <p className="text-[15px] text-[#e5e5ea] italic mb-5">
+            <p className="text-[0.9375rem] text-[#e5e5ea] italic mb-5">
               You have no verses due for review right now.
             </p>
             <button 
@@ -141,21 +141,21 @@ export const Dashboard: React.FC = () => {
           </>
         )}
 
-        <div className="h-[1px] bg-[#333333] w-full mb-6" />
+        <div className="h-[1px] bg-card-elevated w-full mb-6" />
         
         {/* Stats Grid inside the card */}
         <div className="grid grid-cols-3 relative">
-           <div className="flex flex-col items-center justify-center border-r border-[#333333]">
-             <span className="text-[22px] font-bold font-heading text-white">{stats.memorized}</span>
-             <span className="text-[12px] text-[#8e8e93] font-medium mt-1">Memorized</span>
+           <div className="flex flex-col items-center justify-center border-r border-card-border">
+             <span className="text-[1.375rem] font-bold font-heading text-white">{stats.memorized}</span>
+             <span className="text-xs text-[#8e8e93] font-medium mt-1">Memorized</span>
            </div>
-           <div className="flex flex-col items-center justify-center border-r border-[#333333]">
-             <span className="text-[22px] font-bold font-heading text-white">{stats.learning}</span>
-             <span className="text-[12px] text-[#8e8e93] font-medium mt-1">Learning</span>
+           <div className="flex flex-col items-center justify-center border-r border-card-border">
+             <span className="text-[1.375rem] font-bold font-heading text-white">{stats.learning}</span>
+             <span className="text-xs text-[#8e8e93] font-medium mt-1">Learning</span>
            </div>
            <div className="flex flex-col items-center justify-center">
-             <span className="text-[22px] font-bold font-heading text-white">{stats.accuracy}%</span>
-             <span className="text-[12px] text-[#8e8e93] font-medium mt-1">Accuracy</span>
+             <span className="text-[1.375rem] font-bold font-heading text-white">{stats.accuracy}%</span>
+             <span className="text-xs text-[#8e8e93] font-medium mt-1">Accuracy</span>
            </div>
         </div>
       </div>
@@ -205,16 +205,16 @@ export const Dashboard: React.FC = () => {
       {/* Library Section */}
       <div className="flex flex-col gap-4 mt-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-[18px] font-bold font-heading text-primary">My library</h2>
+          <h2 className="text-lg font-bold font-heading text-primary">My library</h2>
           <button onClick={() => navigate('/add')} className="text-[#4e7cc2] hover:text-white transition-colors text-sm font-medium flex items-center gap-1">
             + Add verse
           </button>
         </div>
 
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999999]" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
           <Input 
-            className="pl-11 bg-transparent border-[#333333] placeholder:text-[#999999] rounded-xl text-primary h-12" 
+            className="pl-11 bg-transparent border-card-border placeholder:text-muted rounded-xl text-primary h-12" 
             placeholder="Search verses by reference..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -227,10 +227,10 @@ export const Dashboard: React.FC = () => {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[13px] font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[0.8125rem] font-medium transition-all ${
                 activeFilter === filter 
                   ? 'border-white text-white' 
-                  : 'border-[#333333] text-[#999999] hover:border-[#666666]'
+                  : 'border-card-border text-muted hover:border-card-hover'
               }`}>
                 {filter === 'all' ? 'All verses' : filter === 'review' ? 'Review due' : filter === 'learning' ? 'Learning' : 'Memorized'}
               </button>
@@ -240,9 +240,9 @@ export const Dashboard: React.FC = () => {
           <div className="relative">
             <button 
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-transparent border border-[#333333] text-[13px] font-medium text-white hover:border-[#666666] whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-transparent border border-card-border text-[0.8125rem] font-medium text-white hover:border-card-hover whitespace-nowrap"
             >
-              <ArrowUpDown className="w-3.5 h-3.5 text-[#999999]" />
+              <ArrowUpDown className="w-3.5 h-3.5 text-muted" />
               <span className="hidden sm:inline">
                 {state.sortOrder === 'smart' ? 'Smart' : state.sortOrder === 'bible-asc' ? 'Bible' : state.sortOrder === 'bible-desc' ? 'Bible (Rev)' : 'Shuffle'}
               </span>
@@ -251,7 +251,7 @@ export const Dashboard: React.FC = () => {
             {isSortOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setIsSortOpen(false)} />
-                <div className="absolute right-0 top-full mt-2 w-48 bg-[#1a1a1a] border border-glass-border rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-card-elevated border border-glass-border rounded-xl shadow-xl z-50 overflow-hidden">
                   {[
                     { id: 'smart', label: 'Default (Smart)' },
                     { id: 'bible-asc', label: 'Bible (Gen → Rev)' },
@@ -261,8 +261,8 @@ export const Dashboard: React.FC = () => {
                     <button
                       key={sort.id}
                       onClick={() => handleSortChange(sort.id)}
-                      className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-white/5
-                        ${state.sortOrder === sort.id ? 'text-primary font-medium' : 'text-[#999999]'}`}
+                      className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-card-hover
+                        ${state.sortOrder === sort.id ? 'text-primary font-medium' : 'text-muted'}`}
                     >
                       {sort.label}
                     </button>

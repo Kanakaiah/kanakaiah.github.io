@@ -88,7 +88,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       let heading = '';
       text = text.replace(/<S[^>]*>(.*?)<\/S>|<b[^>]*>(.*?)<\/b>/gi, (_, sMatch, bMatch) => {
         const hText = sMatch || bMatch;
-        heading += `<div class="mt-10 first-of-type:mt-0 mb-3 text-[22px] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
+        heading += `<div class="mt-10 first-of-type:mt-0 mb-3 text-[1.375rem] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
         return '';
       });
 
@@ -108,7 +108,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       }
 
       // Add verse number and text
-      html += `<span class="inline"><sup class="text-[11px] font-sans font-normal text-[#999999] ml-1 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
+      html += `<span class="inline"><sup class="text-[0.6875rem] font-sans font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
     });
 
     return html;
@@ -128,7 +128,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             <h2 className="text-[20px] font-bold tracking-tight text-primary font-heading">
               {bookTitle} {chapter}
             </h2>
-            <span className="text-[11px] font-bold text-accent tracking-widest uppercase bg-accent/10 px-2 py-0.5 rounded-full">
+            <span className="text-[0.6875rem] font-bold text-accent tracking-widest uppercase bg-accent/10 px-2 py-0.5 rounded-full">
               LSB
             </span>
           </div>
