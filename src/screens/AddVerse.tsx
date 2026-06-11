@@ -33,13 +33,66 @@ export const AddVerse: React.FC = () => {
     setSearchError(null);
     setSearchResult(null);
 
+    const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(searchTranslation);
+
     try {
-      const response = await fetch(`https://bible-api.com/${encodeURIComponent(searchQuery)}?translation=${searchTranslation}`);
+      const parseTranslation = isBolls ? 'web' : searchTranslation;
+      const response = await fetch(`https://bible-api.com/${encodeURIComponent(searchQuery)}?translation=${parseTranslation}`);
+      
       if (!response.ok) {
         throw new Error("Verse reference not found. E.g. 'John 3:16'");
       }
+      
       const data = await response.json();
-      setSearchResult(data);
+
+      if (isBolls) {
+        const bookName = data.verses[0].book_name;
+        let normalName = bookName.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (normalName === 'songofsongs') normalName = 'songofsolomon';
+        
+        const BOLLS_BOOKS = [
+          "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", 
+          "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", 
+          "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea", "Joel", 
+          "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi", 
+          "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", 
+          "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", 
+          "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation"
+        ];
+        
+        const bollsId = BOLLS_BOOKS.findIndex(b => b.toLowerCase().replace(/[^a-z0-9]/g, '') === normalName) + 1;
+        if (!bollsId) throw new Error("Could not map book to Bolls API.");
+
+        const versesByChapter: Record<number, number[]> = {};
+        data.verses.forEach((v: any) => {
+          if (!versesByChapter[v.chapter]) versesByChapter[v.chapter] = [];
+          versesByChapter[v.chapter].push(v.verse);
+        });
+
+        let combinedText = '';
+        for (const [chStr, vNums] of Object.entries(versesByChapter)) {
+          const ch = parseInt(chStr);
+          const bollsRes = await fetch(`https://bolls.life/get-text/${searchTranslation}/${bollsId}/${ch}/`);
+          if (!bollsRes.ok) throw new Error(`Could not fetch ${searchTranslation} translation.`);
+          
+          const chapterData = await bollsRes.json();
+          const requestedVerses = chapterData.filter((v: any) => vNums.includes(v.verse));
+          
+          const textChunk = requestedVerses.map((v: any) => {
+            return v.text.replace(/<br\s*\/?>/gi, ' ').replace(/<\/p>/gi, ' ').replace(/<[^>]*>/g, '').trim();
+          }).join(' ');
+          
+          combinedText += textChunk + ' ';
+        }
+
+        setSearchResult({
+          reference: data.reference,
+          text: combinedText.trim(),
+          translation_name: searchTranslation
+        });
+      } else {
+        setSearchResult(data);
+      }
     } catch (err: any) {
       setSearchError(err.message || 'Failed to search for verse');
     } finally {
@@ -117,9 +170,17 @@ export const AddVerse: React.FC = () => {
               onChange={(e) => setSearchTranslation(e.target.value)}
               className="h-12 px-4 rounded-xl bg-background border border-glass-border text-primary focus:outline-none focus:ring-2 focus:ring-accent w-full sm:w-auto"
             >
-              <option value="web" className="bg-background text-primary">WEB (World English Bible)</option>
-              <option value="kjv" className="bg-background text-primary">KJV (King James Version)</option>
-              <option value="bbe" className="bg-background text-primary">BBE (Bible in Basic English)</option>
+              <optgroup label="Modern Versions">
+                <option value="LSB" className="bg-background text-primary">LSB (Legacy Standard Bible)</option>
+                <option value="NASB" className="bg-background text-primary">NASB95 (New American Standard)</option>
+                <option value="ESV" className="bg-background text-primary">ESV (English Standard Version)</option>
+                <option value="NLT" className="bg-background text-primary">NLT (New Living Translation)</option>
+              </optgroup>
+              <optgroup label="Public Domain">
+                <option value="web" className="bg-background text-primary">WEB (World English Bible)</option>
+                <option value="kjv" className="bg-background text-primary">KJV (King James Version)</option>
+                <option value="bbe" className="bg-background text-primary">BBE (Bible in Basic English)</option>
+              </optgroup>
             </select>
           </div>
           
