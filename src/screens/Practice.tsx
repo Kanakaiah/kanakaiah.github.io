@@ -344,7 +344,7 @@ export const Practice: React.FC = () => {
 
   return (
     <div 
-      className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : ''}`}
+      className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-6 pb-24 lg:pb-8'}`}
       style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
     >
       
