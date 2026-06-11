@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ArrowUpDown, BookOpen, ArrowRight } from 'lucide-react';
+import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';
@@ -91,40 +91,66 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
       {/* Header */}
-      <div className="hidden lg:block">
-        <h1 className="text-3xl font-heading font-bold text-primary">Welcome Back</h1>
+      <div className="flex items-center justify-between mb-1 mt-2">
+        <div className="flex items-center gap-2">
+          <BookOpen className="w-5 h-5 text-primary" />
+          <h1 className="text-2xl font-bold font-heading text-primary">Library</h1>
+        </div>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-glass-border bg-white/5">
+          <Flame className="w-4 h-4 text-[#dfab55]" />
+          <span className="text-sm font-bold text-primary">{state.streak || 0}</span>
+        </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-3 lg:gap-4">
-        <div className="bg-glass-bg border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center">
-          <span className="text-2xl lg:text-3xl font-bold font-heading text-primary">{stats.memorized}</span>
-          <span className="text-xs lg:text-sm text-secondary font-medium mt-1">Memorized</span>
+      <div className="grid grid-cols-3 gap-3">
+        <div className="bg-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-1">
+          <span className="text-[13px] text-[#999999] font-medium">Memorized</span>
+          <span className="text-3xl font-bold font-heading text-primary">{stats.memorized}</span>
         </div>
-        <div className="bg-glass-bg border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center">
-          <span className="text-2xl lg:text-3xl font-bold font-heading text-primary">{stats.learning}</span>
-          <span className="text-xs lg:text-sm text-secondary font-medium mt-1">Learning</span>
+        <div className="bg-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-1">
+          <span className="text-[13px] text-[#999999] font-medium">Learning</span>
+          <span className="text-3xl font-bold font-heading text-primary">{stats.learning}</span>
         </div>
-        <div className="bg-glass-bg border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center">
-          <span className="text-2xl lg:text-3xl font-bold font-heading text-accent-light">{stats.accuracy}%</span>
-          <span className="text-xs lg:text-sm text-secondary font-medium mt-1">Accuracy</span>
+        <div className="bg-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-1">
+          <span className="text-[13px] text-[#999999] font-medium">Accuracy</span>
+          <span className="text-3xl font-bold font-heading text-primary">{stats.accuracy}%</span>
         </div>
       </div>
 
       {/* Practice Suggestion */}
       {stats.dueForReview.length > 0 && (
-        <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="text-lg font-bold font-heading text-primary">{stats.dueForReview[0].ref}</h3>
-            <p className="text-sm text-secondary">Due for review now</p>
+        <div className="relative border border-glass-border rounded-xl overflow-hidden flex flex-col p-4 pl-5 border-l-[3px] border-l-[#dfab55] bg-transparent">
+          <div className="flex justify-between items-start mb-1">
+            <div className="flex items-center gap-2">
+              <h3 className="text-[16px] font-bold font-heading text-primary">{stats.dueForReview[0].ref}</h3>
+              <span className="text-[10px] font-bold text-[#dfab55] tracking-wider uppercase">DUE NOW</span>
+            </div>
+            <button 
+              onClick={() => navigate('/practice?mode=alldue')}
+              className="hidden sm:block text-[12px] font-medium text-primary px-3 py-1.5 rounded-lg border border-glass-border hover:bg-white/5 transition-colors"
+            >
+              Practice all due ({stats.dueForReview.length})
+            </button>
           </div>
-          <div className="flex gap-2 w-full sm:w-auto">
-            <Button onClick={() => navigate('/practice?id=' + stats.dueForReview[0].id)} className="flex-1 sm:flex-none">
-              Practice <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-            <Button variant="secondary" onClick={() => navigate('/practice?mode=alldue')} className="flex-1 sm:flex-none">
-              Practice All Due ({stats.dueForReview.length})
-            </Button>
+          
+          <p className="text-[14px] text-[#999999] italic mb-4">
+            "{stats.dueForReview[0].text}"
+          </p>
+
+          <div className="flex justify-between items-center sm:justify-end">
+            <button 
+              onClick={() => navigate('/practice?mode=alldue')}
+              className="sm:hidden text-[12px] font-medium text-primary px-3 py-1.5 rounded-lg border border-glass-border hover:bg-white/5 transition-colors"
+            >
+              Practice all due ({stats.dueForReview.length})
+            </button>
+            <button 
+              onClick={() => navigate('/practice?id=' + stats.dueForReview[0].id)}
+              className="text-[13px] text-[#999999] hover:text-primary transition-colors flex items-center gap-1"
+            >
+              Practice this <ArrowRight className="w-3 h-3" />
+            </button>
           </div>
         </div>
       )}
@@ -174,16 +200,16 @@ export const Dashboard: React.FC = () => {
       {/* Library Section */}
       <div className="flex flex-col gap-4 mt-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold font-heading text-primary">My Library</h2>
-          <button onClick={() => navigate('/add')} className="text-accent hover:text-accent-hover text-sm font-bold">
-            + Add Verse
+          <h2 className="text-[18px] font-bold font-heading text-primary">My library</h2>
+          <button onClick={() => navigate('/add')} className="text-[#4e7cc2] hover:text-white transition-colors text-sm font-medium flex items-center gap-1">
+            + Add verse
           </button>
         </div>
 
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999999]" />
           <Input 
-            className="pl-11" 
+            className="pl-11 bg-transparent border-glass-border placeholder:text-[#999999] rounded-xl text-primary h-12" 
             placeholder="Search verses by reference..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -196,12 +222,12 @@ export const Dashboard: React.FC = () => {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors border
+                className={`whitespace-nowrap px-4 py-2 rounded-xl text-[13px] font-medium transition-colors border
                   ${activeFilter === filter 
-                    ? 'bg-accent text-white border-accent' 
-                    : 'bg-glass-bg border-glass-border text-secondary hover:text-primary'}`}
+                    ? 'bg-transparent text-primary border-primary' 
+                    : 'bg-transparent border-glass-border text-primary hover:border-[#999999]'}`}
               >
-                {filter === 'all' ? 'All Verses' : filter === 'review' ? 'Review Due' : filter === 'learning' ? 'Learning' : 'Memorized'}
+                {filter === 'all' ? 'All verses' : filter === 'review' ? 'Review due' : filter === 'learning' ? 'Learning' : 'Memorized'}
               </button>
             ))}
           </div>
@@ -209,9 +235,9 @@ export const Dashboard: React.FC = () => {
           <div className="relative">
             <button 
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-glass-bg border border-glass-border text-sm font-medium text-secondary hover:text-primary whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-transparent border border-glass-border text-[13px] font-medium text-primary hover:border-[#999999] whitespace-nowrap"
             >
-              <ArrowUpDown className="w-4 h-4" />
+              <ArrowUpDown className="w-3.5 h-3.5 text-[#999999]" />
               <span className="hidden sm:inline">
                 {state.sortOrder === 'smart' ? 'Smart' : state.sortOrder === 'bible-asc' ? 'Bible' : state.sortOrder === 'bible-desc' ? 'Bible (Rev)' : 'Shuffle'}
               </span>
@@ -220,7 +246,7 @@ export const Dashboard: React.FC = () => {
             {isSortOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setIsSortOpen(false)} />
-                <div className="absolute right-0 top-full mt-2 w-48 bg-background border border-glass-border rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-[#1a1a1a] border border-glass-border rounded-xl shadow-xl z-50 overflow-hidden">
                   {[
                     { id: 'smart', label: 'Default (Smart)' },
                     { id: 'bible-asc', label: 'Bible (Gen → Rev)' },
@@ -230,8 +256,8 @@ export const Dashboard: React.FC = () => {
                     <button
                       key={sort.id}
                       onClick={() => handleSortChange(sort.id)}
-                      className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-glass-bg-hover
-                        ${state.sortOrder === sort.id ? 'text-accent font-medium' : 'text-secondary'}`}
+                      className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-white/5
+                        ${state.sortOrder === sort.id ? 'text-primary font-medium' : 'text-[#999999]'}`}
                     >
                       {sort.label}
                     </button>
