@@ -30,9 +30,9 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
     const dots = [];
     for (let i = 0; i < 5; i++) {
       if (i < score) {
-        dots.push(<span key={i} className="text-[#8e8e93]">●</span>);
+        dots.push(<span key={i} className="text-accent">●</span>);
       } else {
-        dots.push(<span key={i} className="text-[#444444]">○</span>);
+        dots.push(<span key={i} className="text-muted/30">○</span>);
       }
     }
     return <div className="flex gap-[3px] tracking-widest text-[0.625rem]">{dots}</div>;
@@ -50,8 +50,8 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
         <div>
           <div className="flex justify-between items-start mb-2">
             <div className="flex items-center gap-2">
-              <h3 className="font-heading font-bold text-base text-white truncate">{verse.ref}</h3>
-              <span className="px-1.5 py-0.5 rounded text-[0.625rem] font-bold bg-card-elevated text-[#8e8e93] tracking-wider uppercase">{verse.translation}</span>
+              <h3 className="font-heading font-bold text-base text-primary truncate">{verse.ref}</h3>
+              <span className="px-1.5 py-0.5 rounded text-[0.625rem] font-bold bg-card-elevated text-muted tracking-wider uppercase">{verse.translation}</span>
             </div>
             
             <div className={`px-2.5 py-0.5 rounded-full border text-[0.6875rem] font-medium ${badgeBorder}`}>
@@ -59,12 +59,12 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
             </div>
           </div>
           
-          <p className="text-[0.9375rem] text-[#e5e5ea] leading-snug line-clamp-2">
+          <p className="text-[0.9375rem] text-secondary leading-snug line-clamp-2">
             {verse.text}
           </p>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 text-xs text-[#8e8e93]">
+        <div className="mt-4 flex items-center gap-2 text-xs text-muted">
           {renderDots()}
           <span className="ml-1">{Math.min(5, verse.sm2?.repetition || 0)} of 5</span>
         </div>
@@ -74,7 +74,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
         className="w-14 border-l border-card-border flex items-center justify-center hover:bg-card-hover transition-colors"
         onClick={(e) => { e.stopPropagation(); onPractice(verse.id); }}
       >
-        <Play className="w-5 h-5 text-[#8e8e93] ml-1" />
+        <Play className="w-5 h-5 text-muted ml-1" />
       </div>
     </div>
   );
