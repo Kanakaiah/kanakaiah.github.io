@@ -96,64 +96,69 @@ export const Dashboard: React.FC = () => {
           <BookOpen className="w-5 h-5 text-primary" />
           <h1 className="text-2xl font-bold font-heading text-primary">Library</h1>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-glass-border bg-white/5">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#333333] bg-[#222222]">
           <Flame className="w-4 h-4 text-[#dfab55]" />
           <span className="text-sm font-bold text-primary">{state.streak || 0}</span>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-1">
-          <span className="text-[13px] text-[#999999] font-medium">Memorized</span>
-          <span className="text-3xl font-bold font-heading text-primary">{stats.memorized}</span>
-        </div>
-        <div className="bg-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-1">
-          <span className="text-[13px] text-[#999999] font-medium">Learning</span>
-          <span className="text-3xl font-bold font-heading text-primary">{stats.learning}</span>
-        </div>
-        <div className="bg-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-1">
-          <span className="text-[13px] text-[#999999] font-medium">Accuracy</span>
-          <span className="text-3xl font-bold font-heading text-primary">{stats.accuracy}%</span>
+      {/* Practice & Stats Card */}
+      <div className="bg-[#222222] rounded-2xl p-5 border border-[#333333]">
+        <h2 className="text-[11px] font-bold text-[#8e8e93] tracking-widest uppercase mb-4">Today's Practice</h2>
+        
+        {stats.dueForReview.length > 0 ? (
+          <>
+            <div className="flex items-baseline gap-2 mb-1">
+              <h3 className="text-xl font-bold font-heading text-white">{stats.dueForReview[0].ref}</h3>
+              <span className="text-[14px] text-[#8e8e93]">— and {stats.dueForReview.length - 1} others due</span>
+            </div>
+            
+            <p className="text-[15px] text-[#e5e5ea] italic mb-5 line-clamp-2">
+              "{stats.dueForReview[0].text}"
+            </p>
+
+            <button 
+              onClick={() => navigate('/practice?mode=alldue')}
+              className="w-full bg-[#f2f2f7] hover:bg-white text-black font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 mb-6 transition-colors"
+            >
+              Start practice session <ArrowRight className="w-4 h-4" />
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="flex items-baseline gap-2 mb-1">
+              <h3 className="text-xl font-bold font-heading text-white">All caught up!</h3>
+            </div>
+            <p className="text-[15px] text-[#e5e5ea] italic mb-5">
+              You have no verses due for review right now.
+            </p>
+            <button 
+              onClick={() => navigate('/add')}
+              className="w-full bg-[#f2f2f7] hover:bg-white text-black font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 mb-6 transition-colors"
+            >
+              Add new verses <ArrowRight className="w-4 h-4" />
+            </button>
+          </>
+        )}
+
+        <div className="h-[1px] bg-[#333333] w-full mb-6" />
+        
+        {/* Stats Grid inside the card */}
+        <div className="grid grid-cols-3 relative">
+           <div className="flex flex-col items-center justify-center border-r border-[#333333]">
+             <span className="text-[22px] font-bold font-heading text-white">{stats.memorized}</span>
+             <span className="text-[12px] text-[#8e8e93] font-medium mt-1">Memorized</span>
+           </div>
+           <div className="flex flex-col items-center justify-center border-r border-[#333333]">
+             <span className="text-[22px] font-bold font-heading text-white">{stats.learning}</span>
+             <span className="text-[12px] text-[#8e8e93] font-medium mt-1">Learning</span>
+           </div>
+           <div className="flex flex-col items-center justify-center">
+             <span className="text-[22px] font-bold font-heading text-white">{stats.accuracy}%</span>
+             <span className="text-[12px] text-[#8e8e93] font-medium mt-1">Accuracy</span>
+           </div>
         </div>
       </div>
-
-      {/* Practice Suggestion */}
-      {stats.dueForReview.length > 0 && (
-        <div className="relative border border-glass-border rounded-xl overflow-hidden flex flex-col p-4 pl-5 border-l-[3px] border-l-[#dfab55] bg-transparent">
-          <div className="flex justify-between items-start mb-1">
-            <div className="flex items-center gap-2">
-              <h3 className="text-[16px] font-bold font-heading text-primary">{stats.dueForReview[0].ref}</h3>
-              <span className="text-[10px] font-bold text-[#dfab55] tracking-wider uppercase">DUE NOW</span>
-            </div>
-            <button 
-              onClick={() => navigate('/practice?mode=alldue')}
-              className="hidden sm:block text-[12px] font-medium text-primary px-3 py-1.5 rounded-lg border border-glass-border hover:bg-white/5 transition-colors"
-            >
-              Practice all due ({stats.dueForReview.length})
-            </button>
-          </div>
-          
-          <p className="text-[14px] text-[#999999] italic mb-4">
-            "{stats.dueForReview[0].text}"
-          </p>
-
-          <div className="flex justify-between items-center sm:justify-end">
-            <button 
-              onClick={() => navigate('/practice?mode=alldue')}
-              className="sm:hidden text-[12px] font-medium text-primary px-3 py-1.5 rounded-lg border border-glass-border hover:bg-white/5 transition-colors"
-            >
-              Practice all due ({stats.dueForReview.length})
-            </button>
-            <button 
-              onClick={() => navigate('/practice?id=' + stats.dueForReview[0].id)}
-              className="text-[13px] text-[#999999] hover:text-primary transition-colors flex items-center gap-1"
-            >
-              Practice this <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Seeder Banner for Empty Library */}
       {state.verses.length <= 2 && !state.hasSeeded100 && (
@@ -209,7 +214,7 @@ export const Dashboard: React.FC = () => {
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999999]" />
           <Input 
-            className="pl-11 bg-transparent border-glass-border placeholder:text-[#999999] rounded-xl text-primary h-12" 
+            className="pl-11 bg-transparent border-[#333333] placeholder:text-[#999999] rounded-xl text-primary h-12" 
             placeholder="Search verses by reference..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -222,11 +227,11 @@ export const Dashboard: React.FC = () => {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`whitespace-nowrap px-4 py-2 rounded-xl text-[13px] font-medium transition-colors border
-                  ${activeFilter === filter 
-                    ? 'bg-transparent text-primary border-primary' 
-                    : 'bg-transparent border-glass-border text-primary hover:border-[#999999]'}`}
-              >
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[13px] font-medium transition-all ${
+                activeFilter === filter 
+                  ? 'border-white text-white' 
+                  : 'border-[#333333] text-[#999999] hover:border-[#666666]'
+              }`}>
                 {filter === 'all' ? 'All verses' : filter === 'review' ? 'Review due' : filter === 'learning' ? 'Learning' : 'Memorized'}
               </button>
             ))}
@@ -235,7 +240,7 @@ export const Dashboard: React.FC = () => {
           <div className="relative">
             <button 
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-transparent border border-glass-border text-[13px] font-medium text-primary hover:border-[#999999] whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-transparent border border-[#333333] text-[13px] font-medium text-white hover:border-[#666666] whitespace-nowrap"
             >
               <ArrowUpDown className="w-3.5 h-3.5 text-[#999999]" />
               <span className="hidden sm:inline">
