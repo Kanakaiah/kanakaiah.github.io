@@ -104,16 +104,16 @@ export const Dashboard: React.FC = () => {
 
       {/* Practice & Stats Card */}
       <div className="bg-card rounded-2xl p-5 border border-card-border">
-        <h2 className="text-[0.6875rem] font-bold text-[#8e8e93] tracking-widest uppercase mb-4">Today's Practice</h2>
+        <h2 className="text-[0.6875rem] font-bold text-muted tracking-widest uppercase mb-4">Today's Practice</h2>
         
         {stats.dueForReview.length > 0 ? (
           <>
             <div className="flex items-baseline gap-2 mb-1">
-              <h3 className="text-xl font-bold font-heading text-white">{stats.dueForReview[0].ref}</h3>
-              <span className="text-sm text-[#8e8e93]">— and {stats.dueForReview.length - 1} others due</span>
+              <h3 className="text-xl font-bold font-heading text-primary">{stats.dueForReview[0].ref}</h3>
+              <span className="text-sm text-muted">— and {stats.dueForReview.length - 1} others due</span>
             </div>
             
-            <p className="text-[0.9375rem] text-[#e5e5ea] italic mb-5 line-clamp-2">
+            <p className="text-[0.9375rem] text-secondary italic mb-5 line-clamp-2">
               "{stats.dueForReview[0].text}"
             </p>
 
@@ -127,9 +127,9 @@ export const Dashboard: React.FC = () => {
         ) : (
           <>
             <div className="flex items-baseline gap-2 mb-1">
-              <h3 className="text-xl font-bold font-heading text-white">All caught up!</h3>
+              <h3 className="text-xl font-bold font-heading text-primary">All caught up!</h3>
             </div>
-            <p className="text-[0.9375rem] text-[#e5e5ea] italic mb-5">
+            <p className="text-[0.9375rem] text-secondary italic mb-5">
               You have no verses due for review right now.
             </p>
             <button 
@@ -146,16 +146,16 @@ export const Dashboard: React.FC = () => {
         {/* Stats Grid inside the card */}
         <div className="grid grid-cols-3 relative">
            <div className="flex flex-col items-center justify-center border-r border-card-border">
-             <span className="text-[1.375rem] font-bold font-heading text-white">{stats.memorized}</span>
-             <span className="text-xs text-[#8e8e93] font-medium mt-1">Memorized</span>
+             <span className="text-[1.375rem] font-bold font-heading text-primary">{stats.memorized}</span>
+             <span className="text-xs text-muted font-medium mt-1">Memorized</span>
            </div>
            <div className="flex flex-col items-center justify-center border-r border-card-border">
-             <span className="text-[1.375rem] font-bold font-heading text-white">{stats.learning}</span>
-             <span className="text-xs text-[#8e8e93] font-medium mt-1">Learning</span>
+             <span className="text-[1.375rem] font-bold font-heading text-primary">{stats.learning}</span>
+             <span className="text-xs text-muted font-medium mt-1">Learning</span>
            </div>
            <div className="flex flex-col items-center justify-center">
-             <span className="text-[1.375rem] font-bold font-heading text-white">{stats.accuracy}%</span>
-             <span className="text-xs text-[#8e8e93] font-medium mt-1">Accuracy</span>
+             <span className="text-[1.375rem] font-bold font-heading text-primary">{stats.accuracy}%</span>
+             <span className="text-xs text-muted font-medium mt-1">Accuracy</span>
            </div>
         </div>
       </div>
@@ -206,7 +206,7 @@ export const Dashboard: React.FC = () => {
       <div className="flex flex-col gap-4 mt-2">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold font-heading text-primary">My library</h2>
-          <button onClick={() => navigate('/add')} className="text-[#4e7cc2] hover:text-white transition-colors text-sm font-medium flex items-center gap-1">
+          <button onClick={() => navigate('/add')} className="text-accent hover:text-accent-hover transition-colors text-sm font-medium flex items-center gap-1">
             + Add verse
           </button>
         </div>
@@ -229,7 +229,7 @@ export const Dashboard: React.FC = () => {
                 onClick={() => setActiveFilter(filter)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[0.8125rem] font-medium transition-all ${
                 activeFilter === filter 
-                  ? 'border-white text-white' 
+                  ? 'border-primary text-primary bg-primary/5' 
                   : 'border-card-border text-muted hover:border-card-hover'
               }`}>
                 {filter === 'all' ? 'All verses' : filter === 'review' ? 'Review due' : filter === 'learning' ? 'Learning' : 'Memorized'}
@@ -240,7 +240,7 @@ export const Dashboard: React.FC = () => {
           <div className="relative">
             <button 
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-transparent border border-card-border text-[0.8125rem] font-medium text-white hover:border-card-hover whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-transparent border border-card-border text-[0.8125rem] font-medium text-primary hover:border-card-hover whitespace-nowrap"
             >
               <ArrowUpDown className="w-3.5 h-3.5 text-muted" />
               <span className="hidden sm:inline">

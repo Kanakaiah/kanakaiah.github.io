@@ -140,14 +140,14 @@ export const AddVerse: React.FC = () => {
         <button
           onClick={() => setActiveTab('search')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
-            ${activeTab === 'search' ? 'bg-card-elevated text-white' : 'text-muted hover:text-white'}`}
+            ${activeTab === 'search' ? 'bg-card-elevated text-primary' : 'text-muted hover:text-primary'}`}
         >
           <Search className="w-4 h-4" /> Look Up Verse
         </button>
         <button
           onClick={() => setActiveTab('manual')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
-            ${activeTab === 'manual' ? 'bg-card-elevated text-white' : 'text-muted hover:text-white'}`}
+            ${activeTab === 'manual' ? 'bg-card-elevated text-primary' : 'text-muted hover:text-primary'}`}
         >
           <PenLine className="w-4 h-4" /> Type It Yourself
         </button>

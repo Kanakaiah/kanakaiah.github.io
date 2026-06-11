@@ -437,7 +437,7 @@ export const Practice: React.FC = () => {
             <div className="mt-12 flex items-center justify-between">
               <button 
                 onClick={handlePrev} disabled={activeVerseIndex === 0}
-                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-white"
+                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
@@ -448,7 +448,7 @@ export const Practice: React.FC = () => {
               
               <button 
                 onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
-                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-white"
+                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
               >
                 <ArrowRight className="w-6 h-6" />
               </button>
