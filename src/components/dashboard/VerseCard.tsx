@@ -59,7 +59,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
             </div>
           </div>
           
-          <p className="text-lg text-secondary leading-relaxed line-clamp-2">
+          <p className="text-lg text-secondary leading-relaxed">
             {verse.text}
           </p>
         </div>

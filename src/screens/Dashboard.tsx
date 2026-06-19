@@ -122,7 +122,7 @@ export const Dashboard: React.FC = () => {
                   <span className="text-sm font-medium text-accent">+{stats.dueForReview.length - 1} more</span>
                 </div>
                 
-                <p className="text-lg md:text-xl text-primary/80 italic mb-8 line-clamp-2 md:line-clamp-3 font-serif">
+                <p className="text-lg md:text-xl text-primary/80 italic mb-8 font-serif">
                   "{stats.dueForReview[0].text}"
                 </p>
 
