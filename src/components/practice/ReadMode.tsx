@@ -38,7 +38,7 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zo
   };
 
   const renderBionicText = (str: string) => {
-    if (!state.settings.bionicReading || !isImmersed) return str;
+    if (!state.settings.bionicReading) return str;
     
     const words = str.split(/(\b[\w']+\b)/);
     return words.map((w, i) => {
@@ -57,33 +57,27 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zo
 
   return (
     <div 
-      className={`text-lg font-normal ${!isImmersed ? 'whitespace-pre-wrap leading-relaxed' : 'transition-none'}`}
+      className={`font-normal ${!isImmersed ? 'text-lg leading-relaxed' : 'transition-none'}`}
       style={isImmersed ? { fontSize: `${1.125 * zoomLevel}rem`, lineHeight: `${1.75 * zoomLevel}rem` } : {}}
     >
       {parts.map((part, index) => {
-        const isMaskEnabled = isImmersed && state.settings.recallMasking;
+        const isMaskEnabled = state.settings.recallMasking;
         const isMasked = isMaskEnabled && !unmaskedIndices.includes(index);
         
-        // Immersed mode ALWAYS splits into block sentences for focused reading
-        if (isImmersed) {
-          const displayPart = part.trim();
-          if (!displayPart) return null;
-          
-          return (
-            <span 
-              key={index}
-              onClick={isMaskEnabled ? (e) => toggleMask(index, e) : undefined}
-              className={`block mb-5 transition-all duration-300 
-                ${isMaskEnabled ? 'cursor-pointer select-none masked-sentence' : ''} 
-                ${isMasked ? 'blur-[6px] opacity-50 hover:opacity-80' : 'blur-none opacity-100'}`}
-            >
-              {renderBionicText(displayPart)}
-            </span>
-          );
-        }
-
-        // Standard mode renders inline
-        return <span key={index}>{renderBionicText(part)}</span>;
+        const displayPart = part.trim();
+        if (!displayPart) return null;
+        
+        return (
+          <span 
+            key={index}
+            onClick={isMaskEnabled ? (e) => toggleMask(index, e) : undefined}
+            className={`block mb-5 transition-all duration-300 
+              ${isMaskEnabled ? 'cursor-pointer select-none masked-sentence' : ''} 
+              ${isMasked ? 'blur-[6px] opacity-50 hover:opacity-80' : 'blur-none opacity-100'}`}
+          >
+            {renderBionicText(displayPart)}
+          </span>
+        );
       })}
     </div>
   );
