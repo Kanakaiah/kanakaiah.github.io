@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, X } from 'lucide-react';
+import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, X, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
@@ -437,11 +437,12 @@ export const Practice: React.FC = () => {
               
               {!isImmersed && activeMode === 'read' && (
                 <button 
-                  onClick={handleToggleTTS} 
+                  onClick={() => setActiveMode('immersed')} 
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent hover:bg-accent hover:text-white transition-colors text-sm font-bold"
+                  title="Immerse Reading"
                 >
-                  {isAutoPlaying ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                  <span className="hidden sm:inline">{isAutoPlaying ? 'Stop' : 'Auto Play'}</span>
+                  <Maximize className="w-4 h-4" />
+                  <span className="hidden sm:inline">Immerse</span>
                 </button>
               )}
 
