@@ -462,7 +462,7 @@ export const Practice: React.FC = () => {
             
             {!isImmersed && activeMode !== 'read' && renderProgressiveHint()}
             
-            <div key={activeMode} className="flex-1 animate-in fade-in zoom-in-95 duration-300 flex flex-col justify-center">
+            <div key={activeMode} className="flex-1 animate-in fade-in zoom-in-95 duration-300 flex flex-col justify-start mt-4">
               {renderWorkspace()}
             </div>
           </div>
