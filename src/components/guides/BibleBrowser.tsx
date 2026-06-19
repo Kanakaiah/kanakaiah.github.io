@@ -5,7 +5,7 @@ import type { NTBook } from '../../data/ntBooks';
 
 // ─── Book Card ────────────────────────────────────────────────────────────────
 
-const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onClick }) => {
+export const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onClick }) => {
   const [imgErr, setImgErr] = useState(false);
 
   return (

@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, BookOpen, Globe, Headphones, PlayCircle, Radio } from 'lucide-react';
+import { ChevronRight, BookOpen, Globe, Headphones, PlayCircle, Radio, Search } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
-import { NT_BOOKS } from '../data/ntBooks';
-import { BibleBrowser } from '../components/guides/BibleBrowser';
+import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
+import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
 import { ChapterReader } from '../components/guides/ChapterReader';
 
 // Special sentinel IDs
@@ -86,6 +86,7 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 
 export const Guides: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState('');
   const activeGuideId = searchParams.get('guide');
   const readerBook = searchParams.get('readerBook');
   const readerChapter = searchParams.get('readerChapter');
@@ -557,43 +558,44 @@ export const Guides: React.FC = () => {
         <h1 className="text-3xl font-heading font-bold text-primary">Bible</h1>
       </div>
 
+      <div className="relative mt-2">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="w-4 h-4 text-muted" />
+        </div>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search books..."
+          className="w-full bg-card border border-card-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent transition-all text-primary placeholder:text-muted shadow-sm"
+        />
+      </div>
+
       <div className="flex flex-col gap-8 pb-12">
-
-        {/* ── Bible Books — OT / NT inline ── */}
+        {/* ── Bible Books — NT Grid ── */}
         <div className="flex flex-col gap-3">
-          <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">Bible Books</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {/* OT Card */}
-            <button
-              onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
-              className="flex items-center gap-4 p-4 rounded-2xl bg-card border border-card-border hover:bg-card-hover hover:border-accent/40 transition-all text-left group shadow-sm"
-            >
-              <div className="text-2xl">📜</div>
-              <div className="flex-1 flex flex-col min-w-0">
-                <span className="font-heading font-bold text-primary text-lg truncate">Old Testament</span>
-                <span className="text-xs text-secondary">39 books · Genesis to Malachi</span>
-              </div>
-              <span className="hidden sm:inline-block px-2 py-1 rounded text-[0.625rem] font-bold bg-amber-500/10 text-amber-500 uppercase tracking-wider">
-                Soon
-              </span>
-              <ChevronRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
-            </button>
-
-            {/* NT Card */}
-            <button
-              onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
-              className="flex items-center gap-4 p-4 rounded-2xl bg-accent/5 border border-accent/30 hover:bg-accent/10 hover:border-accent/60 transition-all text-left group shadow-sm"
-            >
-              <div className="text-2xl">✝️</div>
-              <div className="flex-1 flex flex-col min-w-0">
-                <span className="font-heading font-bold text-primary text-lg truncate">New Testament</span>
-                <span className="text-xs text-secondary">27 books · Matthew to Revelation</span>
-              </div>
-              <span className="hidden sm:inline-block px-2 py-1 rounded text-[0.625rem] font-bold bg-accent/10 text-accent uppercase tracking-wider">
-                Explore
-              </span>
-              <ChevronRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
-            </button>
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">New Testament</h2>
+            <span className="text-[0.625rem] font-bold text-muted uppercase tracking-wider">27 Books</span>
+          </div>
+          
+          <div className="flex flex-col gap-6">
+            {NT_SECTIONS.map(section => {
+              const books = NT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+              if (!books.length) return null;
+              return (
+                <div key={section} className="flex flex-col gap-3">
+                  <div className="flex items-center gap-2 border-b border-glass-border pb-1">
+                    <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {books.map(book => (
+                      <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -601,7 +603,7 @@ export const Guides: React.FC = () => {
         {Object.entries(categories).map(([category, guides]) => (
           <div key={category} className="flex flex-col gap-3">
             <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">
-              {category}
+              Study Resources
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {guides.map((guide: any) => (
