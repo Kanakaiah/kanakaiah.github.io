@@ -366,6 +366,16 @@ export const Practice: React.FC = () => {
         </button>
       )}
 
+      {/* Immerse Button - Hidden when immersed */}
+      {!isImmersed && (
+        <button 
+          onClick={() => setActiveMode('immersed')}
+          className="absolute top-4 right-4 lg:top-6 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:text-accent hover:bg-card-hover transition-colors z-20 shadow-sm"
+        >
+          <Play className="w-5 h-5 ml-1" />
+        </button>
+      )}
+
       {/* Header - Only visible when immersed */}
       {isImmersed && (
         <div className="flex items-center justify-between p-4 absolute top-0 left-0 w-full z-10">
@@ -520,8 +530,7 @@ export const Practice: React.FC = () => {
               <div className="flex items-center gap-2">
                 {[
                   { id: 'scramble', label: 'Scramble' },
-                  { id: 'speech', label: 'Recite' },
-                  { id: 'immersed', label: 'Immerse' },
+                  { id: 'speech', label: 'Recite' }
                 ].map((mode, idx) => (
                   <React.Fragment key={mode.id}>
                     {idx > 0 && <span>·</span>}
