@@ -35,8 +35,8 @@ export const AddVerseSheet: React.FC<AddVerseSheetProps> = ({ isOpen, onClose })
         <div
           className="
             pointer-events-auto
-            w-full h-[90vh]
-            lg:h-auto lg:max-h-[85vh] lg:max-w-2xl lg:w-full
+            w-full h-auto max-h-[96dvh]
+            lg:max-h-[85vh] lg:max-w-2xl lg:w-full
             bg-background border-t border-glass-border
             lg:border lg:rounded-2xl
             rounded-t-2xl
