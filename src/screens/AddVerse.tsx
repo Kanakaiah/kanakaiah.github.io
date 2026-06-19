@@ -5,7 +5,6 @@ import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
 import { CustomSelect } from '../components/ui/CustomSelect';
 import type { Verse } from '../types/models';
 
@@ -149,10 +148,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full pt-4">
-      <div className="hidden lg:block">
-        <h1 className="text-3xl font-heading font-bold text-primary">Add Verse</h1>
-      </div>
+    <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full pt-1 pb-10">
 
       {/* Tabs */}
       <div className="flex bg-card border border-card-border rounded-xl p-1 relative">
@@ -174,7 +170,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
 
       {/* SEARCH TAB */}
       {activeTab === 'search' && (
-        <Card className="p-5 lg:p-8 flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
               <Input 
@@ -246,12 +242,12 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
               ))}
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* MANUAL TAB */}
       {activeTab === 'manual' && (
-        <Card className="p-5 lg:p-8 flex flex-col gap-5">
+        <div className="flex flex-col gap-5">
           <Input 
             label="Reference"
             placeholder="e.g. Genesis 1:1"
@@ -286,7 +282,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           >
             Save to Library
           </Button>
-        </Card>
+        </div>
       )}
     </div>
   );

@@ -62,7 +62,7 @@ export const AddVerseSheet: React.FC<AddVerseSheetProps> = ({ isOpen, onClose })
           </div>
 
           {/* Scrollable Body */}
-          <div className="flex-1 overflow-y-auto px-5 py-4">
+          <div className="flex-1 overflow-y-auto px-5 py-4 [&::-webkit-scrollbar]:hidden">
             <AddVerse onVerseAdded={onClose} />
           </div>
         </div>
