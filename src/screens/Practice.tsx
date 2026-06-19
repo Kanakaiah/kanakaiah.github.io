@@ -352,7 +352,7 @@ export const Practice: React.FC = () => {
 
   return (
     <div 
-      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-14 lg:pt-6 pb-6 lg:pb-8'}`}
+      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-4 lg:pt-6 pb-6 lg:pb-8'}`}
       style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
     >
       
