@@ -27,7 +27,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'search' | 'manual'>('search');
+  const [activeTab, setActiveTab] = useState<'manual' | 'search'>('manual');
   
   // Search Tab State
   const [searchQuery, setSearchQuery] = useState('');
@@ -150,21 +150,29 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full pt-1 pb-10">
 
-      {/* Tabs */}
-      <div className="flex bg-card border border-card-border rounded-xl p-1 relative">
-        <button
-          onClick={() => setActiveTab('search')}
-          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
-            ${activeTab === 'search' ? 'bg-card-elevated text-primary' : 'text-muted hover:text-primary'}`}
-        >
-          <Search className="w-4 h-4" /> Look Up Verse
-        </button>
+      {/* Mode Selection Buttons */}
+      <div className="grid grid-cols-2 gap-4">
         <button
           onClick={() => setActiveTab('manual')}
-          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2
-            ${activeTab === 'manual' ? 'bg-card-elevated text-primary' : 'text-muted hover:text-primary'}`}
+          className={`flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border-2 transition-all ${
+            activeTab === 'manual' 
+              ? 'border-accent bg-accent/5 text-accent-light' 
+              : 'border-card-border bg-card text-muted hover:border-accent/40 hover:text-primary'
+          }`}
         >
-          <PenLine className="w-4 h-4" /> Type It Yourself
+          <PenLine className="w-6 h-6 mb-1" />
+          <span className="font-heading font-bold text-lg leading-tight">Manual<br />Entry</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('search')}
+          className={`flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border-2 transition-all ${
+            activeTab === 'search' 
+              ? 'border-accent bg-accent/5 text-accent-light' 
+              : 'border-card-border bg-card text-muted hover:border-accent/40 hover:text-primary'
+          }`}
+        >
+          <Search className="w-6 h-6 mb-1" />
+          <span className="font-heading font-bold text-lg leading-tight">Pick from<br />Top Verses</span>
         </button>
       </div>
 
@@ -278,9 +286,9 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
               }
               addVerseToLibrary(manualRef, manualText, manualTranslation || 'Custom');
             }} 
-            className="w-full mt-2"
+            className="w-full mt-4 h-14 text-lg"
           >
-            Save to Library
+            Add Verse
           </Button>
         </div>
       )}
