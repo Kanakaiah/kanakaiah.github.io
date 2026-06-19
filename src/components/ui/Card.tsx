@@ -6,10 +6,11 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className = '', children, ...props }, ref) => {
+    const isOverflowVisible = className.includes('overflow-visible');
     return (
       <div
         ref={ref}
-        className={`bg-card border border-card-border rounded-2xl overflow-hidden ${className}`}
+        className={`bg-card border border-card-border rounded-2xl ${isOverflowVisible ? '' : 'overflow-hidden'} ${className}`}
         {...props}
       >
         {children}

@@ -102,7 +102,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
 
       {/* Panel */}
       <div
-        className="absolute top-0 right-0 h-full w-[85%] max-w-[400px] bg-background border-l border-glass-border flex flex-col animate-[slideInRight_0.3s_ease-out]"
+        className="absolute top-0 right-0 h-full w-full sm:w-[400px] sm:max-w-[400px] bg-background sm:border-l border-glass-border flex flex-col animate-[slideInRight_0.3s_ease-out]"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-glass-border shrink-0">
@@ -124,7 +124,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
               <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2 flex items-center gap-2">
                 <Palette className="w-4 h-4" /> Appearance
               </h2>
-              <Card className="p-1">
+              <Card className="p-1 overflow-visible">
                 <div className="flex flex-col divide-y divide-card-border">
                   <div className="p-4 flex flex-col gap-3">
                     <div>
@@ -148,7 +148,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
               <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2 flex items-center gap-2">
                 <Brain className="w-4 h-4" /> Practice & Reading
               </h2>
-              <Card className="p-1">
+              <Card className="p-1 overflow-visible">
                 <div className="flex flex-col divide-y divide-card-border">
 
                   <div onClick={() => handleToggle('ttsEnabled')} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-t-xl">
