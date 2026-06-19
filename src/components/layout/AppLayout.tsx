@@ -83,15 +83,17 @@ export const AppLayout: React.FC = () => {
         </div>
 
         {/* Desktop: Add Verse Button */}
-        <div className="hidden lg:block w-full mt-6 px-2">
-          <button
-            onClick={() => setIsAddVerseOpen(true)}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-accent text-white font-bold text-sm font-heading hover:bg-accent-hover transition-colors duration-200 shadow-md shadow-accent/20"
-          >
-            <Plus className="w-5 h-5" />
-            <span>Add Verse</span>
-          </button>
-        </div>
+        {location.pathname === '/' && (
+          <div className="hidden lg:block w-full mt-6 px-2">
+            <button
+              onClick={() => setIsAddVerseOpen(true)}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-accent text-white font-bold text-sm font-heading hover:bg-accent-hover transition-colors duration-200 shadow-md shadow-accent/20"
+            >
+              <Plus className="w-5 h-5" />
+              <span>Add Verse</span>
+            </button>
+          </div>
+        )}
 
         {/* Desktop: Settings at bottom */}
         <div className="hidden lg:flex lg:flex-col lg:mt-auto w-full lg:gap-3 px-2">
@@ -145,7 +147,7 @@ export const AppLayout: React.FC = () => {
       </main>
 
       {/* FLOATING ACTION BUTTON (Mobile: above nav, Desktop: bottom-right) */}
-      {!isFullscreenView && (
+      {location.pathname === '/' && (
         <button
           onClick={() => setIsAddVerseOpen(true)}
           className="fixed bottom-24 right-5 lg:bottom-8 lg:right-8 w-14 h-14 rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent-hover flex items-center justify-center z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105 active:scale-95 lg:hidden"
