@@ -279,14 +279,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                     <span className="text-sm font-bold text-primary">Text Size</span>
                     <div className="flex items-center gap-2 bg-card border border-card-border rounded-xl p-1">
                       <button 
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: Math.max(0.85, state.settings.fontSize - 0.15) }})}
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.max(0.85, state.settings.fontSize - 0.15).toFixed(2)) }})}
                         className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-glass-bg text-secondary hover:text-primary transition-colors"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
-                      <span className="text-xs font-bold w-4 text-center">{state.settings.fontSize}</span>
+                      <span className="text-xs font-bold w-8 text-center">{state.settings.fontSize.toFixed(2)}</span>
                       <button 
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: Math.min(1.45, state.settings.fontSize + 0.15) }})}
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.min(1.45, state.settings.fontSize + 0.15).toFixed(2)) }})}
                         className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-glass-bg text-secondary hover:text-primary transition-colors"
                       >
                         <Plus className="w-4 h-4" />
