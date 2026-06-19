@@ -57,6 +57,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
+  const [showAddOptions, setShowAddOptions] = useState(false);
 
   const lastScrollY = useRef(0);
   const [isNavHidden, setIsNavHidden] = useState(false);
@@ -205,19 +206,75 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     }
   };
 
-  const handleAddSelected = () => {
+  const handleAddClick = () => {
+    if (selectedVerses.length > 1) {
+      setShowAddOptions(true);
+    } else {
+      executeAdd('individual');
+    }
+  };
+
+  const executeAdd = (mode: 'individual' | 'combined') => {
     let addedCount = 0;
-    selectedVerses.forEach(verseNum => {
-      const v = verses.find(x => x.verse === verseNum);
-      if (v) {
-        const cleanText = v.text.replace(/<[^>]+>/g, '').trim();
-        const ref = `${bookTitle} ${chapter}:${verseNum}`;
+    
+    if (mode === 'individual') {
+      selectedVerses.forEach(verseNum => {
+        const v = verses.find(x => x.verse === verseNum);
+        if (v) {
+          const cleanText = v.text.replace(/<[^>]+>/g, '').trim();
+          const ref = `${bookTitle} ${chapter}:${verseNum}`;
+          dispatch({
+            type: 'ADD_VERSE',
+            payload: {
+              id: crypto.randomUUID(),
+              ref: ref,
+              text: cleanText,
+              translation: 'LSB',
+              addedDate: new Date().toISOString(),
+              status: 'learning',
+              sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+              streak: 0,
+              attempts: 0
+            }
+          });
+          addedCount++;
+        }
+      });
+    } else {
+      // Group contiguous verses
+      const sorted = [...selectedVerses].sort((a, b) => a - b);
+      if (sorted.length === 0) return;
+      
+      const groups: number[][] = [];
+      let currentGroup = [sorted[0]];
+      
+      for (let i = 1; i < sorted.length; i++) {
+        if (sorted[i] === sorted[i-1] + 1) {
+          currentGroup.push(sorted[i]);
+        } else {
+          groups.push(currentGroup);
+          currentGroup = [sorted[i]];
+        }
+      }
+      groups.push(currentGroup);
+      
+      groups.forEach(group => {
+        const textParts: string[] = [];
+        group.forEach(verseNum => {
+          const v = verses.find(x => x.verse === verseNum);
+          if (v) textParts.push(v.text.replace(/<[^>]+>/g, '').trim());
+        });
+        
+        const combinedText = textParts.join(' ');
+        const refStr = group.length === 1 ? `${group[0]}` : `${group[0]}-${group[group.length - 1]}`;
+        const ref = `${bookTitle} ${chapter}:${refStr}`;
+        
         dispatch({
           type: 'ADD_VERSE',
           payload: {
             id: crypto.randomUUID(),
             ref: ref,
-            text: cleanText,
+            text: combinedText,
             translation: 'LSB',
             addedDate: new Date().toISOString(),
             status: 'learning',
@@ -227,10 +284,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           }
         });
         addedCount++;
-      }
-    });
-    showToast(`Added ${addedCount} ${addedCount === 1 ? 'verse' : 'verses'} to your library!`, 'success');
+      });
+    }
+    
+    showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} to your library!`, 'success');
     setSelectedVerses([]);
+    setShowAddOptions(false);
   };
 
   const handleCopySelected = () => {
@@ -476,7 +535,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                 <Copy className="w-4 h-4" /> Copy
               </button>
               <button 
-                onClick={handleAddSelected}
+                onClick={handleAddClick}
                 className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
               >
                 <Plus className="w-4 h-4" /> Add
@@ -487,6 +546,41 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                 title="Cancel Selection"
               >
                 <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Options Modal */}
+      {showAddOptions && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-card-elevated border border-glass-border rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+            <h3 className="text-xl font-bold text-primary mb-2">How to add?</h3>
+            <p className="text-sm text-secondary mb-6">You have selected {selectedVerses.length} verses. Would you like to add them as individual verses or combine consecutive verses into single entries?</p>
+            
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={() => executeAdd('combined')}
+                className="w-full py-3 px-4 bg-accent text-white font-bold rounded-xl hover:bg-accent-hover transition-colors flex flex-col items-start"
+              >
+                <span>Combine Consecutive</span>
+                <span className="text-xs font-normal text-white/70 mt-0.5">e.g. 1:3-5 and 1:7</span>
+              </button>
+              
+              <button 
+                onClick={() => executeAdd('individual')}
+                className="w-full py-3 px-4 bg-glass-bg border border-glass-border text-primary font-bold rounded-xl hover:bg-glass-bg-hover transition-colors flex flex-col items-start"
+              >
+                <span>Individual Verses</span>
+                <span className="text-xs font-normal text-secondary mt-0.5">Add {selectedVerses.length} separate entries</span>
+              </button>
+              
+              <button 
+                onClick={() => setShowAddOptions(false)}
+                className="w-full py-2 mt-2 text-sm font-bold text-secondary hover:text-primary transition-colors"
+              >
+                Cancel
               </button>
             </div>
           </div>
