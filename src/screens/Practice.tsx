@@ -352,7 +352,7 @@ export const Practice: React.FC = () => {
 
   return (
     <div 
-      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-14 lg:pt-6 pb-24 lg:pb-8'}`}
+      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-14 lg:pt-6 pb-6 lg:pb-8'}`}
       style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
     >
       
@@ -454,7 +454,7 @@ export const Practice: React.FC = () => {
 
         {/* Mode Selector (Moved to Bottom) */}
         {!isImmersed && (
-          <div className="flex flex-col gap-4 pb-24 lg:pb-8">
+          <div className="flex flex-col gap-4 pb-4 lg:pb-8">
             {/* Primary Modes — Always visible as tabs */}
             <div className="grid grid-cols-4 gap-2">
               {[
