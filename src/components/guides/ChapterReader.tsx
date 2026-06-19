@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { useApp } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 
 interface ChapterReaderProps {
   bookId: string;
@@ -54,6 +55,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const [, setSearchParams] = useSearchParams();
   const [showOptions, setShowOptions] = useState(false);
   const { state, dispatch } = useApp();
+  const { showToast } = useToast();
+  const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
 
   const lastScrollY = useRef(0);
   const [isNavHidden, setIsNavHidden] = useState(false);
@@ -186,6 +189,50 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     fetchChapter();
   }, [bookId, chapter]);
 
+  const handleVerseClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const verseSpan = target.closest('.verse-span');
+    if (verseSpan) {
+      const verseNumStr = verseSpan.getAttribute('data-verse');
+      if (verseNumStr) {
+        const verseNum = parseInt(verseNumStr, 10);
+        setSelectedVerses(prev => 
+          prev.includes(verseNum) 
+            ? prev.filter(v => v !== verseNum)
+            : [...prev, verseNum].sort((a, b) => a - b)
+        );
+      }
+    }
+  };
+
+  const handleAddSelected = () => {
+    let addedCount = 0;
+    selectedVerses.forEach(verseNum => {
+      const v = verses.find(x => x.verse === verseNum);
+      if (v) {
+        const cleanText = v.text.replace(/<[^>]+>/g, '').trim();
+        const ref = `${bookTitle} ${chapter}:${verseNum}`;
+        dispatch({
+          type: 'ADD_VERSE',
+          payload: {
+            id: crypto.randomUUID(),
+            ref: ref,
+            text: cleanText,
+            translation: 'LSB',
+            addedDate: new Date().toISOString(),
+            status: 'learning',
+            sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+            streak: 0,
+            attempts: 0
+          }
+        });
+        addedCount++;
+      }
+    });
+    showToast(`Added ${addedCount} ${addedCount === 1 ? 'verse' : 'verses'} to your library!`, 'success');
+    setSelectedVerses([]);
+  };
+
   const buildChapterHtml = () => {
     let html = '';
     
@@ -228,7 +275,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       }
 
       // Add verse number and text
-      html += `<span class="inline"><sup class="text-[0.55em] font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
+      const isSelected = selectedVerses.includes(v.verse);
+      const selectedClass = isSelected ? 'bg-accent/20 text-primary rounded px-1 -mx-1' : '';
+      
+      html += `<span class="inline verse-span cursor-pointer transition-colors ${selectedClass}" data-verse="${v.verse}"><sup class="text-[0.55em] font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
     });
 
     return html;
@@ -357,7 +407,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             </button>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto pb-32 select-text">
+          <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleVerseClick}>
             <div 
               className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
                 state.settings.fontFamily === 'serif' ? 'font-serif' : 
@@ -374,8 +424,34 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         )}
       </div>
 
+      {/* Floating Action Bar for Selected Verses */}
+      {selectedVerses.length > 0 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
+          <div className="bg-accent text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-4">
+            <span className="font-bold text-sm whitespace-nowrap">
+              {selectedVerses.length} {selectedVerses.length === 1 ? 'verse' : 'verses'} selected
+            </span>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleAddSelected}
+                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+              >
+                <Plus className="w-4 h-4" /> Add
+              </button>
+              <button 
+                onClick={() => setSelectedVerses([])}
+                className="p-1.5 rounded-xl hover:bg-white/20 transition-colors"
+                title="Cancel Selection"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Chapter Navigation Bar */}
-      {!loading && !error && (
+      {!loading && !error && selectedVerses.length === 0 && (
         <div className={`absolute bottom-0 left-0 w-full bg-background/80 backdrop-blur-xl z-10 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
