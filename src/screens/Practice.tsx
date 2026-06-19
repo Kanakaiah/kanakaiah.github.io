@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, Grid, FileText, Mic, Maximize, Check, Play, Square, HelpCircle } from 'lucide-react';
+import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
@@ -370,64 +370,45 @@ export const Practice: React.FC = () => {
 
       <div className={`flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 ${isImmersed ? 'justify-center items-center h-full' : ''}`}>
         
-        {/* Mode Selector (Hidden in Immersed) */}
+        {/* Navigation & Header */}
         {!isImmersed && (
-          <div className="flex flex-col gap-2 pb-4 pt-2 px-2 -mx-2 mb-2">
-            {/* Primary Modes — Always visible as tabs */}
-            <div className="grid grid-cols-4 gap-2">
-              {[
-                { id: 'read', icon: Eye, label: 'Read' },
-                { id: 'eraser', icon: Eraser, label: 'Eraser' },
-                { id: 'first-letter', icon: Keyboard, label: 'Letters' },
-                { id: 'typing', icon: FileText, label: 'Typing' },
-              ].map(mode => (
-                <button
-                  key={mode.id}
-                  onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  className={`flex flex-col items-center py-3 px-2 rounded-xl border transition-all duration-300
-                    ${activeMode === mode.id 
-                      ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)]' 
-                      : 'bg-card border-card-border hover:bg-card-hover'}`}
-                >
-                  <mode.icon className={`w-5 h-5 mb-1.5 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
-                  <span className={`text-xs font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
-                </button>
-              ))}
+          <div className="flex flex-col items-center gap-2 mb-6 mt-2">
+            <span className="font-heading font-bold text-accent-light text-xl">
+              {currentVerse.ref}
+            </span>
+            <div className="flex items-center justify-between w-full max-w-xs">
+              <button 
+                onClick={handlePrev} disabled={activeVerseIndex === 0}
+                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div className="flex-1 h-[1px] bg-glass-border mx-2"></div>
+              <button 
+                onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
+                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
+              >
+                <ArrowRight className="w-6 h-6" />
+              </button>
             </div>
-
-            {/* Secondary Modes — Compact chips */}
-            <div className="flex items-center justify-center gap-2">
-              {[
-                { id: 'scramble', icon: Grid, label: 'Scramble' },
-                { id: 'speech', icon: Mic, label: 'Recite' },
-                { id: 'immersed', icon: Maximize, label: 'Immerse' },
-              ].map(mode => (
-                <button
-                  key={mode.id}
-                  onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-300
-                    ${activeMode === mode.id 
-                      ? 'border-accent bg-accent/15 text-accent shadow-sm' 
-                      : 'bg-transparent border-card-border text-muted hover:text-secondary hover:border-card-hover'}`}
-                >
-                  <mode.icon className="w-3.5 h-3.5" />
-                  {mode.label}
-                </button>
-              ))}
-            </div>
+            <span className="font-heading font-bold text-muted text-sm">
+              {activeVerseIndex + 1} / {verses.length}
+            </span>
           </div>
         )}
 
-        {/* Display Board */}
-        <div className={`bg-card border border-card-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-none mb-48 lg:mb-32'}`}>
+        {/* Display Board (Workspace) */}
+        <div className={`bg-card border border-card-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-none mb-6'}`}>
           <div className="flex-1 flex flex-col">
-            <div className={`flex items-center mb-6 ${isImmersed ? 'justify-center' : 'justify-between'}`}>
-              <span 
-                className={`font-heading font-bold transition-all duration-75 ${isImmersed ? 'text-secondary' : 'text-accent-light text-xl'}`}
-                style={isImmersed ? { fontSize: `${1.5 * zoomLevel}rem`, lineHeight: `${2 * zoomLevel}rem` } : {}}
-              >
-                {currentVerse.ref}
-              </span>
+            <div className={`flex items-center mb-4 ${isImmersed ? 'justify-center' : 'justify-end'} min-h-[2rem]`}>
+              {isImmersed && (
+                <span 
+                  className="font-heading font-bold transition-all duration-75 text-secondary"
+                  style={{ fontSize: `${1.5 * zoomLevel}rem`, lineHeight: `${2 * zoomLevel}rem` }}
+                >
+                  {currentVerse.ref}
+                </span>
+              )}
               
               {!isImmersed && activeMode === 'read' && (
                 <button 
@@ -455,35 +436,60 @@ export const Practice: React.FC = () => {
             
             {!isImmersed && activeMode !== 'read' && renderProgressiveHint()}
             
-            <div key={activeMode} className="flex-1 animate-in fade-in zoom-in-95 duration-300">
+            <div key={activeMode} className="flex-1 animate-in fade-in zoom-in-95 duration-300 flex flex-col justify-center">
               {renderWorkspace()}
             </div>
           </div>
-
-          {/* Navigation Arrows */}
-          {!isImmersed && (
-            <div className="mt-12 flex items-center justify-between">
-              <button 
-                onClick={handlePrev} disabled={activeVerseIndex === 0}
-                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
-              >
-                <ArrowLeft className="w-6 h-6" />
-              </button>
-              
-              <span className="font-heading font-bold text-muted text-sm">
-                {activeVerseIndex + 1} / {verses.length}
-              </span>
-              
-              <button 
-                onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
-                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
-              >
-                <ArrowRight className="w-6 h-6" />
-              </button>
-            </div>
-          )}
         </div>
 
+        {/* Mode Selector (Moved to Bottom) */}
+        {!isImmersed && (
+          <div className="flex flex-col gap-4 pb-24 lg:pb-8">
+            {/* Primary Modes — Always visible as tabs */}
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { id: 'read', icon: Eye, label: 'Read' },
+                { id: 'eraser', icon: Eraser, label: 'Erase' },
+                { id: 'first-letter', icon: Keyboard, label: 'Letters' },
+                { id: 'typing', icon: FileText, label: 'Type' },
+              ].map(mode => (
+                <button
+                  key={mode.id}
+                  onClick={() => setActiveMode(mode.id as PracticeMode)}
+                  className={`flex flex-col items-center py-3 px-2 rounded-xl border transition-all duration-300
+                    ${activeMode === mode.id 
+                      ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)]' 
+                      : 'bg-card border-card-border hover:bg-card-hover'}`}
+                >
+                  <mode.icon className={`w-5 h-5 mb-1.5 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
+                  <span className={`text-xs font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Secondary Modes — Compact chips */}
+            <div className="flex items-center justify-center gap-3 mt-2 text-sm font-medium text-muted">
+              <span>More:</span>
+              <div className="flex items-center gap-2">
+                {[
+                  { id: 'scramble', label: 'Scramble' },
+                  { id: 'speech', label: 'Recite' },
+                  { id: 'immersed', label: 'Immerse' },
+                ].map((mode, idx) => (
+                  <React.Fragment key={mode.id}>
+                    {idx > 0 && <span>·</span>}
+                    <button
+                      onClick={() => setActiveMode(mode.id as PracticeMode)}
+                      className={`transition-colors ${activeMode === mode.id ? 'text-accent font-bold' : 'hover:text-primary'}`}
+                    >
+                      {mode.label}
+                    </button>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer / Scoring (Hidden in Read/Immersed) */}
