@@ -59,7 +59,7 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zo
     <div 
       className={`font-normal ${!isImmersed ? 'transition-none' : 'transition-none'} ${
         state.settings.fontFamily === 'serif' ? 'font-serif' : 
-        state.settings.fontFamily === 'mono' ? 'font-mono tracking-normal' : 
+        state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
         'font-sans'
       }`}
       style={{

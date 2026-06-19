@@ -304,19 +304,19 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'sans' }})}
                         className={`px-2 py-1 text-xs font-sans rounded-lg transition-colors ${(!state.settings.fontFamily || state.settings.fontFamily === 'sans') ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
                       >
-                        Sans
+                        Inter
                       </button>
                       <button 
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'serif' }})}
                         className={`px-2 py-1 text-xs font-serif rounded-lg transition-colors ${state.settings.fontFamily === 'serif' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
                       >
-                        Serif
+                        Merriweather
                       </button>
                       <button 
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'mono' }})}
-                        className={`px-2 py-1 text-xs font-mono rounded-lg transition-colors ${state.settings.fontFamily === 'mono' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'hyper' }})}
+                        className={`px-2 py-1 text-xs font-hyper rounded-lg transition-colors ${state.settings.fontFamily === 'hyper' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
                       >
-                        Mono
+                        Atkinson
                       </button>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             <div 
               className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
                 state.settings.fontFamily === 'serif' ? 'font-serif' : 
-                state.settings.fontFamily === 'mono' ? 'font-mono tracking-normal' : 
+                state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
                 'font-sans'
               }`}
               style={{

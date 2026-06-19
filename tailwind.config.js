@@ -23,6 +23,8 @@ export default {
       fontFamily: {
         sans: ['var(--font-primary)', 'system-ui', 'sans-serif'],
         heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
+        serif: ['Merriweather', 'Georgia', 'serif'],
+        hyper: ['"Atkinson Hyperlegible"', 'sans-serif'],
       }
     },
   },
