@@ -398,7 +398,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       if (isSelected) {
         extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
       } else if (inLibrary) {
-        extraClass = 'bg-accent/10 border-b-2 border-accent/30 rounded-t px-1 -mx-1';
+        extraClass = 'bg-yellow-400/25 rounded px-1 -mx-1';
       }
       
       html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}"><sup class="text-[0.55em] font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
