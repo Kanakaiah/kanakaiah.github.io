@@ -115,7 +115,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Apply theme to document
     document.documentElement.setAttribute('data-theme', state.theme);
     // Apply global font scale by adjusting the root HTML font size (scales all rem units)
-    document.documentElement.style.fontSize = `${(state.settings.fontSize || 1) * 100}%`;
+    if (!state.settings.fontSize || state.settings.fontSize === 1) {
+      document.documentElement.style.fontSize = ''; // Use system default / Dynamic Type
+    } else {
+      document.documentElement.style.fontSize = `${state.settings.fontSize * 100}%`;
+    }
   }, [state]);
 
   return (

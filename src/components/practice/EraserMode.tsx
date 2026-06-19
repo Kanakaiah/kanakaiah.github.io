@@ -63,7 +63,7 @@ export const EraserMode: React.FC<EraserModeProps> = ({ text }) => {
         <span className="text-sm font-bold text-primary w-12 text-right">{sliderValue}%</span>
       </div>
 
-      <div className="text-xl leading-relaxed text-primary whitespace-pre-wrap">
+      <div className="text-lg leading-relaxed text-primary whitespace-pre-wrap">
         {words.map((word, idx) => {
           if (word.trim().length === 0) {
             return <span key={idx}>{word}</span>;

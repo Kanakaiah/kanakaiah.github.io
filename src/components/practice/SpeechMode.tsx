@@ -76,7 +76,7 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
 
   return (
     <div className="flex flex-col gap-6 items-center">
-      <div className="w-full text-xl leading-relaxed whitespace-pre-wrap mb-4 text-center">
+      <div className="w-full text-lg leading-relaxed whitespace-pre-wrap mb-4 text-center">
         {targetWords.map((word, idx) => {
           const cleanTarget = word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
           const cleanSpoken = spokenWords[idx] ? spokenWords[idx].replace(/[^a-zA-Z0-9]/g, '').toLowerCase() : null;

@@ -75,7 +75,7 @@ export const AppLayout: React.FC = () => {
               `}
             >
               <link.icon className={`w-5 h-5 lg:w-5 lg:h-5 lg:mr-3 ${location.pathname === link.to ? 'text-white lg:text-accent-light' : ''}`} />
-              <span className={`text-[9px] lg:text-sm font-bold mt-1 lg:mt-0 ${location.pathname === link.to ? 'text-white lg:text-accent-light' : ''}`}>
+              <span className={`text-[10px] lg:text-sm font-bold mt-1 lg:mt-0 ${location.pathname === link.to ? 'text-white lg:text-accent-light' : ''}`}>
                 {link.label}
               </span>
               {/* Desktop active indicator pill */}

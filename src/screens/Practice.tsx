@@ -154,6 +154,14 @@ export const Practice: React.FC = () => {
     showToast(`Score logged. Next review in ${newSM2.interval} days.`, 'success');
   };
 
+  const formatInterval = (days: number) => {
+    if (days === 0) return '<10m';
+    if (days === 1) return '1d';
+    if (days < 30) return `${days}d`;
+    if (days < 365) return `${Math.round(days / 30)}mo`;
+    return `${Math.round(days / 365)}y`;
+  };
+
   const handleHintClick = () => {
     if (hintLevel >= 4) {
       setHintLevel(0);
@@ -172,7 +180,7 @@ export const Practice: React.FC = () => {
     const tokens = currentVerse.text.split(/(\s+)/);
     
     return (
-      <div className="mb-6 p-4 rounded-xl bg-accent/10 border border-accent/20 text-secondary text-base leading-relaxed relative">
+      <div className="mb-6 p-4 rounded-xl bg-accent/10 border border-accent/20 text-secondary text-lg leading-relaxed relative">
         <div className="absolute -top-2 -left-2 bg-accent text-white text-[0.625rem] font-bold px-2 py-0.5 rounded-full shadow-sm">
           HINT {hintLevel < 4 ? `${hintLevel}/4` : '(Full)'}
         </div>
@@ -471,10 +479,22 @@ export const Practice: React.FC = () => {
               <div className="flex flex-col gap-3">
                 <p className="text-center font-medium text-secondary text-sm">How well did you remember it?</p>
                 <div className="grid grid-cols-4 gap-2">
-                  <button onClick={() => handleScore(1)} className="py-3 rounded-xl bg-red-500/10 text-red-500 font-bold hover:bg-red-500/20 transition-colors text-sm border border-red-500/20">Blank (1)</button>
-                  <button onClick={() => handleScore(2)} className="py-3 rounded-xl bg-orange-500/10 text-orange-500 font-bold hover:bg-orange-500/20 transition-colors text-sm border border-orange-500/20">Hard (2)</button>
-                  <button onClick={() => handleScore(4)} className="py-3 rounded-xl bg-blue-500/10 text-blue-500 font-bold hover:bg-blue-500/20 transition-colors text-sm border border-blue-500/20">Good (4)</button>
-                  <button onClick={() => handleScore(5)} className="py-3 rounded-xl bg-green-500/10 text-green-500 font-bold hover:bg-green-500/20 transition-colors text-sm border border-green-500/20">Easy (5)</button>
+                  <button onClick={() => handleScore(1)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20">
+                    <span className="text-sm font-bold leading-tight">Blank</span>
+                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 1).newSM2.interval)}</span>
+                  </button>
+                  <button onClick={() => handleScore(2)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20">
+                    <span className="text-sm font-bold leading-tight">Hard</span>
+                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 2).newSM2.interval)}</span>
+                  </button>
+                  <button onClick={() => handleScore(4)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
+                    <span className="text-sm font-bold leading-tight">Good</span>
+                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 4).newSM2.interval)}</span>
+                  </button>
+                  <button onClick={() => handleScore(5)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20">
+                    <span className="text-sm font-bold leading-tight">Easy</span>
+                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 5).newSM2.interval)}</span>
+                  </button>
                 </div>
                 <button onClick={() => setIsEvaluationOpen(false)} className="text-muted text-xs hover:text-primary mt-1">Cancel</button>
               </div>

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { NT_BOOKS } from '../../data/ntBooks';
 
 interface ChapterReaderProps {
   bookId: string;
@@ -48,6 +50,76 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [, setSearchParams] = useSearchParams();
+
+  const handleNextChapter = () => {
+    const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
+    if (bookIndex === -1) return;
+    const currentBook = NT_BOOKS[bookIndex];
+    
+    if (chapter < currentBook.chapters) {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('readerChapter', (chapter + 1).toString());
+        return next;
+      });
+    } else if (bookIndex < NT_BOOKS.length - 1) {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('readerBook', NT_BOOKS[bookIndex + 1].id);
+        next.set('readerChapter', '1');
+        return next;
+      });
+    }
+  };
+
+  const handlePrevChapter = () => {
+    const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
+    if (bookIndex === -1) return;
+    
+    if (chapter > 1) {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('readerChapter', (chapter - 1).toString());
+        return next;
+      });
+    } else if (bookIndex > 0) {
+      const prevBook = NT_BOOKS[bookIndex - 1];
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('readerBook', prevBook.id);
+        next.set('readerChapter', prevBook.chapters.toString());
+        return next;
+      });
+    }
+  };
+
+  const [touchStartPos, setTouchStartPos] = useState<{x: number, y: number} | null>(null);
+  const [touchEndPos, setTouchEndPos] = useState<{x: number, y: number} | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndPos(null);
+    setTouchStartPos({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndPos({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartPos || !touchEndPos) return;
+    const distanceX = touchStartPos.x - touchEndPos.x;
+    const distanceY = touchStartPos.y - touchEndPos.y;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > minSwipeDistance) {
+      if (distanceX > 0) {
+        handleNextChapter();
+      } else {
+        handlePrevChapter();
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchChapter = async () => {
@@ -115,34 +187,39 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in duration-300">
-      <div className="sticky top-0 z-10 p-4 pb-0 bg-background/80 backdrop-blur-md border-b border-glass-border">
-        <div className="flex items-center gap-3 pb-3">
+    <div 
+      className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in duration-300"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-6">
+        
+        <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative">
           <button
             onClick={onClose}
-            className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+            className="absolute left-0 top-0 p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+            title="Go back"
           >
-            <ArrowLeft className="w-5 h-5 text-secondary" />
+            <ArrowLeft className="w-6 h-6 text-secondary" />
           </button>
-          <div className="flex items-baseline gap-2">
-            <h2 className="text-[20px] font-bold tracking-tight text-primary font-heading">
+          <div className="flex flex-col items-center justify-center pt-1">
+            <h2 className="text-4xl font-bold tracking-tight text-primary font-heading mb-2">
               {bookTitle} {chapter}
             </h2>
-            <span className="text-[0.6875rem] font-bold text-accent tracking-widest uppercase bg-accent/10 px-2 py-0.5 rounded-full">
-              LSB
+            <span className="text-[0.6875rem] font-bold text-accent tracking-widest uppercase bg-accent/10 px-2.5 py-0.5 rounded-full">
+              LSB Translation
             </span>
           </div>
         </div>
-      </div>
 
-      <div className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-6">
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-full gap-3 text-secondary">
+          <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-secondary">
             <Loader2 className="w-6 h-6 animate-spin text-accent" />
             <p className="text-sm font-medium">Loading scripture...</p>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center h-full gap-3 text-red-400">
+          <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-red-400">
             <p>{error}</p>
             <button 
               onClick={onClose}
@@ -152,7 +229,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             </button>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto pb-24 pt-4 select-text">
+          <div className="max-w-2xl mx-auto pb-24 select-text">
             <div 
               className="text-[20px] leading-[1.7] text-primary/95 font-sans tracking-[-0.01em] [&>div:first-child]:mt-0"
               dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}

@@ -113,7 +113,7 @@ export const Dashboard: React.FC = () => {
               <span className="text-sm text-muted">— and {stats.dueForReview.length - 1} others due</span>
             </div>
             
-            <p className="text-[0.9375rem] text-secondary italic mb-5 line-clamp-2">
+            <p className="text-lg text-secondary italic mb-5 line-clamp-2">
               "{stats.dueForReview[0].text}"
             </p>
 
@@ -165,7 +165,7 @@ export const Dashboard: React.FC = () => {
         <div className="bg-gradient-to-br from-purple-500/15 to-purple-500/5 border border-purple-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-bold font-heading text-primary">Get Started Quickly!</h3>
-            <p className="text-sm text-secondary">Load 100+ highly popular Bible verses into your library to start practicing immediately.</p>
+            <p className="text-sm text-secondary">Load 110 highly popular Bible verses into your library to start practicing immediately.</p>
           </div>
           <Button 
             onClick={async () => {
@@ -190,14 +190,14 @@ export const Dashboard: React.FC = () => {
                 }));
                 dispatch({ type: 'HYDRATE_VERSES', payload: newVerses });
                 dispatch({ type: 'UPDATE_SETTINGS', payload: {} }); // Just to trigger a save, though HYDRATE_VERSES does it
-                showToast('100 verses loaded successfully!', 'success');
+                showToast('110 verses loaded successfully!', 'success');
               } catch (err) {
                 showToast('Failed to load verses.', 'error');
               }
             }} 
             className="whitespace-nowrap w-full sm:w-auto shadow-lg shadow-purple-500/20"
           >
-            Load 100 Verses ✨
+            Load 110 Verses ✨
           </Button>
         </div>
       )}

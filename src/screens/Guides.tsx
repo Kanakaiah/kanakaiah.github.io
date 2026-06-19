@@ -11,13 +11,13 @@ const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
 const DISTRIBUTION_COLORS = [
-  { bg: 'bg-[#dfab55]', text: 'text-[#dfab55]', border: 'border-l-[#dfab55]' },
-  { bg: 'bg-[#4e7cc2]', text: 'text-[#4e7cc2]', border: 'border-l-[#4e7cc2]' },
-  { bg: 'bg-[#49a274]', text: 'text-[#49a274]', border: 'border-l-[#49a274]' },
-  { bg: 'bg-[#cc6c4d]', text: 'text-[#cc6c4d]', border: 'border-l-[#cc6c4d]' },
-  { bg: 'bg-[#7873df]', text: 'text-[#7873df]', border: 'border-l-[#7873df]' },
-  { bg: 'bg-[#98968f]', text: 'text-[#98968f]', border: 'border-l-[#98968f]' },
-  { bg: 'bg-[#d95d8e]', text: 'text-[#d95d8e]', border: 'border-l-[#d95d8e]' },
+  { bg: 'bg-amber-500', text: 'text-amber-500', border: 'border-l-amber-500' },
+  { bg: 'bg-blue-500', text: 'text-blue-500', border: 'border-l-blue-500' },
+  { bg: 'bg-emerald-500', text: 'text-emerald-500', border: 'border-l-emerald-500' },
+  { bg: 'bg-orange-500', text: 'text-orange-500', border: 'border-l-orange-500' },
+  { bg: 'bg-indigo-500', text: 'text-indigo-500', border: 'border-l-indigo-500' },
+  { bg: 'bg-slate-500', text: 'text-slate-500', border: 'border-l-slate-500' },
+  { bg: 'bg-pink-500', text: 'text-pink-500', border: 'border-l-pink-500' },
 ];
 
 
@@ -50,6 +50,7 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 
   return (
     <a 
+      id={`chapter-anchor-${anchor.ch}`}
       href={bibleUrl}
       onClick={handleRead}
       className={`relative bg-card rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[240px] group cursor-pointer ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-card-border hover:bg-card-hover shadow-sm'}`}
@@ -93,6 +94,50 @@ export const Guides: React.FC = () => {
       setSearchParams({ guide: id });
     } else {
       setSearchParams({});
+    }
+  };
+
+  const handleScrollToChapter = (ch: number) => {
+    const el = document.getElementById(`chapter-anchor-${ch}`);
+    if (el) {
+      // Scroll the element slightly into view so it's not hidden by potential fixed headers
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  const [touchStartPos, setTouchStartPos] = useState<{x: number, y: number} | null>(null);
+  const [touchEndPos, setTouchEndPos] = useState<{x: number, y: number} | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndPos(null);
+    setTouchStartPos({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndPos({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartPos || !touchEndPos) return;
+    const distanceX = touchStartPos.x - touchEndPos.x;
+    const distanceY = touchStartPos.y - touchEndPos.y;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > minSwipeDistance) {
+      if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
+        const currentIndex = NT_BOOKS.findIndex(b => b.id === activeGuideId);
+        if (currentIndex !== -1) {
+          if (distanceX > 0) {
+            // Swipe left -> Previous (as requested: left swipe on matthew goes to revelation)
+            const prevIndex = (currentIndex - 1 + NT_BOOKS.length) % NT_BOOKS.length;
+            setActiveGuideId(NT_BOOKS[prevIndex].id);
+          } else {
+            // Swipe right -> Next
+            const nextIndex = (currentIndex + 1) % NT_BOOKS.length;
+            setActiveGuideId(NT_BOOKS[nextIndex].id);
+          }
+        }
+      }
     }
   };
 
@@ -171,7 +216,12 @@ export const Guides: React.FC = () => {
   // ── Individual guide detail view ───────────────────────────────────────────
   if (activeGuide) {
     return (
-      <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]">
+      <div 
+        className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className="flex flex-col gap-4 mb-2">
           <button
             onClick={() => {
@@ -219,7 +269,7 @@ export const Guides: React.FC = () => {
                          <thead>
                            <tr>
                              {sec.table.headers.map((h: string, hi: number) => (
-                               <th key={hi} className="p-3 border-b border-card-border font-bold text-primary bg-[#2a2a2a]">{h}</th>
+                               <th key={hi} className="p-3 border-b border-card-border font-bold text-primary bg-card-elevated">{h}</th>
                              ))}
                            </tr>
                          </thead>
@@ -245,7 +295,7 @@ export const Guides: React.FC = () => {
                              <span className="font-heading font-bold text-lg text-primary">{entry.person}</span>
                              <span className="text-sm font-bold text-muted sm:ml-auto">{entry.reference}</span>
                            </div>
-                           <p className="text-primary italic leading-relaxed border-l-2 border-accent/40 pl-4 my-1">"{entry.quote}"</p>
+                           <p className="text-lg text-primary italic leading-relaxed border-l-2 border-accent/40 pl-4 my-1">"{entry.quote}"</p>
                            {entry.note && <p className="text-secondary text-sm">{entry.note}</p>}
                            {entry.resources && entry.resources.length > 0 && (
                              <div className="flex flex-wrap gap-2 mt-1 pt-2 border-t border-card-border/30">
@@ -293,7 +343,7 @@ export const Guides: React.FC = () => {
                    {sec.keyVerse && (
                      <div className="bg-card border-l-4 border-l-accent rounded-r-xl p-5 mt-4">
                        <p className="font-bold text-primary mb-1">{sec.keyVerse.ref}</p>
-                       <p className="text-secondary italic">"{sec.keyVerse.text}"</p>
+                       <p className="text-lg text-secondary italic">"{sec.keyVerse.text}"</p>
                      </div>
                    )}
                  </div>
@@ -330,14 +380,16 @@ export const Guides: React.FC = () => {
                      const widthPercent = (count / totalChapters) * 100;
                      const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
                      return (
-                       <div 
+                       <button 
                          key={i} 
-                         className={`${color.bg} flex flex-col items-center justify-center border-r border-background/20 last:border-0`}
+                         onClick={() => handleScrollToChapter(start)}
+                         className={`${color.bg} flex flex-col items-center justify-center border-r border-background/20 last:border-0 hover:opacity-80 transition-opacity focus:outline-none`}
                          style={{ width: `${widthPercent}%` }}
+                         title={`Scroll to chapter ${start}`}
                        >
                          <span className="font-bold text-white/90 text-sm">{block.chapters.replace('–', '-')}</span>
                          <span className="text-white/70 text-[0.625rem]">{count}ch</span>
-                       </div>
+                       </button>
                      );
                   })}
                 </div>
@@ -391,9 +443,10 @@ export const Guides: React.FC = () => {
                   }
                   
                   return (
-                    <div 
+                    <button 
                       key={i}
-                      className="flex rounded-xl overflow-hidden bg-card border border-card-border/40 hover:bg-card-hover transition-colors min-h-[80px]"
+                      onClick={() => handleScrollToChapter(start)}
+                      className="w-full text-left flex rounded-xl overflow-hidden bg-card border border-card-border/40 hover:bg-card-hover transition-colors min-h-[80px]"
                     >
                       <div className={`w-[72px] flex-shrink-0 flex flex-col items-center justify-center border-l-4 ${color.border} border-r border-r-glass-border/30`}>
                          <span className="text-[0.625rem] uppercase font-bold text-muted tracking-widest mb-0.5">CH</span>
@@ -416,17 +469,10 @@ export const Guides: React.FC = () => {
                           <span className="text-[0.6875rem] text-muted font-medium mt-auto">{percent}</span>
                         </div>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
-
-              {/* FOOTER FORMULA */}
-              {activeGuide.structureFormula && (
-                <div className="mt-8 mb-4 text-center text-[0.625rem] uppercase tracking-[0.2em] font-bold text-muted">
-                  FIVE MOSAIC DISCOURSES · {activeGuide.structureFormula.replace(/→/g, '->')}
-                </div>
-              )}
 
               {activeGuide.anchors && (
                 <div className="mt-4 pt-6 border-t border-card-border flex flex-col gap-5">
@@ -443,12 +489,11 @@ export const Guides: React.FC = () => {
                 <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Memory Sentence</h3>
-                    <span className="text-[0.625rem] text-muted tracking-normal px-2 py-1 rounded hidden sm:block" style={{ backgroundColor: '#222222' }}>Read 3-4 times to lock flow</span>
+                    <span className="text-[0.625rem] text-muted tracking-normal px-2 py-1 rounded hidden sm:block bg-card-elevated border border-card-border">Read 3-4 times to lock flow</span>
                   </div>
                   <div 
-                    className="rounded-2xl p-5"
+                    className="rounded-2xl p-5 bg-card-elevated border border-card-border/50"
                     style={{ 
-                      backgroundColor: '#222222', 
                       borderLeft: '3px solid var(--accent-light)',
                     }}
                   >
@@ -469,14 +514,13 @@ export const Guides: React.FC = () => {
                     {activeGuide.keyVerses.map((kv: any, i: number) => (
                       <div 
                         key={i} 
-                        className="rounded-2xl p-4 transition-all duration-300"
+                        className="rounded-2xl p-4 transition-all duration-300 bg-card-elevated border border-card-border/50"
                         style={{ 
-                          backgroundColor: '#222222', 
                           borderLeft: '3px solid var(--accent-light)',
                         }}
                       >
                         <p className="font-bold text-primary mb-1.5 text-sm">{kv.ref}</p>
-                        {kv.text && <p className="text-secondary italic mb-1.5 text-sm leading-relaxed">"{kv.text}"</p>}
+                        {kv.text && <p className="text-lg text-secondary italic mb-1.5 leading-relaxed">"{kv.text}"</p>}
                         {kv.theme && <p className="text-[0.6875rem] font-bold uppercase tracking-wider" style={{ color: 'var(--accent-light)' }}>{kv.theme}</p>}
                       </div>
                     ))}

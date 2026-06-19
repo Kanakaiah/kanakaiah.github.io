@@ -20,7 +20,7 @@ export const FirstLetterMode: React.FC<FirstLetterModeProps> = ({ text }) => {
   }, [text]);
 
   return (
-    <div className="text-2xl leading-relaxed font-semibold tracking-[0.1em] text-primary whitespace-pre-wrap">
+    <div className="text-lg leading-relaxed font-semibold tracking-[0.1em] text-primary whitespace-pre-wrap">
       {convertedText}
     </div>
   );

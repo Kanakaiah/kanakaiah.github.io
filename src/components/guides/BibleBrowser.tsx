@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Search } from 'lucide-react';
 import { NT_BOOKS, NT_SECTIONS } from '../../data/ntBooks';
 import type { NTBook } from '../../data/ntBooks';
 
@@ -70,6 +70,7 @@ type View = 'book-grid';
 export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack, initialTestament }) => {
   const [testament] = useState<'OT' | 'NT' | null>(initialTestament ?? 'NT');
   const [view] = useState<View>('book-grid');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSelectBook = (book: NTBook) => {
     onOpenGuide(book.id);
@@ -97,10 +98,24 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
               <h2 className="text-3xl font-bold font-heading text-primary">New Testament</h2>
               <p className="text-secondary text-sm mt-1">27 books — tap any to explore</p>
             </div>
+            
+            {/* Search Bar */}
+            <div className="relative mt-2">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="w-4 h-4 text-muted" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search books..."
+                className="w-full bg-card border border-card-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent transition-all text-primary placeholder:text-muted shadow-sm"
+              />
+            </div>
           </div>
 
           {NT_SECTIONS.map(section => {
-            const books = NT_BOOKS.filter(b => b.section === section);
+            const books = NT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
             if (!books.length) return null;
             return (
               <div key={section} className="flex flex-col gap-3">

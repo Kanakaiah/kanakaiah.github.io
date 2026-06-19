@@ -141,6 +141,13 @@ html, body {
   -webkit-overflow-scrolling: touch;
 }
 
+@supports (font: -apple-system-body) {
+  html {
+    font: -apple-system-body;
+    font-family: var(--font-primary), system-ui, sans-serif;
+  }
+}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);

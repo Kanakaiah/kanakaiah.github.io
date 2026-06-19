@@ -6,7 +6,18 @@ import { useToast } from '../context/ToastContext';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { CustomSelect } from '../components/ui/CustomSelect';
 import type { Verse } from '../types/models';
+
+const TRANSLATION_OPTIONS = [
+  { value: 'LSB', label: 'LSB (Legacy Standard)' },
+  { value: 'NASB', label: 'NASB95' },
+  { value: 'ESV', label: 'ESV' },
+  { value: 'NLT', label: 'NLT' },
+  { value: 'web', label: 'WEB (World English)' },
+  { value: 'kjv', label: 'KJV' },
+  { value: 'bbe', label: 'BBE (Basic English)' },
+];
 
 export const AddVerse: React.FC = () => {
   const { state, dispatch } = useApp();
@@ -165,23 +176,13 @@ export const AddVerse: React.FC = () => {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
-            <select
-              value={searchTranslation}
-              onChange={(e) => setSearchTranslation(e.target.value)}
-              className="h-12 px-4 rounded-xl bg-card border border-card-border text-primary focus:outline-none focus:ring-2 focus:ring-accent w-full sm:w-auto"
-            >
-              <optgroup label="Modern Versions">
-                <option value="LSB" className="bg-background text-primary">LSB (Legacy Standard Bible)</option>
-                <option value="NASB" className="bg-background text-primary">NASB95 (New American Standard)</option>
-                <option value="ESV" className="bg-background text-primary">ESV (English Standard Version)</option>
-                <option value="NLT" className="bg-background text-primary">NLT (New Living Translation)</option>
-              </optgroup>
-              <optgroup label="Public Domain">
-                <option value="web" className="bg-background text-primary">WEB (World English Bible)</option>
-                <option value="kjv" className="bg-background text-primary">KJV (King James Version)</option>
-                <option value="bbe" className="bg-background text-primary">BBE (Bible in Basic English)</option>
-              </optgroup>
-            </select>
+            <div className="w-full sm:w-56 shrink-0">
+              <CustomSelect
+                value={searchTranslation}
+                onChange={setSearchTranslation}
+                options={TRANSLATION_OPTIONS}
+              />
+            </div>
           </div>
           
           <Button onClick={handleSearch} isLoading={isLoading} className="w-full">

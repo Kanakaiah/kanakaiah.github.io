@@ -13,7 +13,7 @@ export const TypingMode: React.FC<TypingModeProps> = ({ text }) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="text-xl leading-relaxed whitespace-pre-wrap">
+      <div className="text-lg leading-relaxed whitespace-pre-wrap">
         {targetWords.map((word, idx) => {
           const cleanTarget = word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
           const cleanInput = inputWords[idx] ? inputWords[idx].replace(/[^a-zA-Z0-9]/g, '').toLowerCase() : null;

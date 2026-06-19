@@ -4,6 +4,22 @@ import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { CustomSelect } from '../components/ui/CustomSelect';
+
+const THEME_OPTIONS = [
+  { value: 'nebula', label: 'Nebula (Dark Purple)' },
+  { value: 'obsidian', label: 'Obsidian (Pure Dark)' },
+  { value: 'midnight', label: 'Midnight (Dark Blue)' },
+  { value: 'parchment', label: 'Parchment (Light Warm)' },
+  { value: 'pure-white', label: 'Pure White' },
+];
+
+const FONT_SIZE_OPTIONS = [
+  { value: '0.85', label: 'Small' },
+  { value: '1', label: 'Normal / System Match' },
+  { value: '1.15', label: 'Large' },
+  { value: '1.3', label: 'Extra Large' },
+];
 
 export const Settings: React.FC = () => {
   const { state, dispatch } = useApp();
@@ -81,17 +97,13 @@ export const Settings: React.FC = () => {
                   <h3 className="font-bold text-primary">Theme</h3>
                   <p className="text-xs text-secondary">Choose your preferred color scheme</p>
                 </div>
-                <select
-                  value={state.theme}
-                  onChange={(e) => dispatch({ type: 'SET_THEME', payload: e.target.value })}
-                  className="bg-card border border-card-border rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
-                >
-                  <option value="nebula" className="bg-card text-primary">Nebula (Dark Purple)</option>
-                  <option value="obsidian" className="bg-card text-primary">Obsidian (Pure Dark)</option>
-                  <option value="midnight" className="bg-card text-primary">Midnight (Dark Blue)</option>
-                  <option value="parchment" className="bg-card text-primary">Parchment (Light Warm)</option>
-                  <option value="pure-white" className="bg-card text-primary">Pure White</option>
-                </select>
+                <div className="w-full sm:w-56 shrink-0">
+                  <CustomSelect
+                    value={state.theme}
+                    onChange={(v) => dispatch({ type: 'SET_THEME', payload: v })}
+                    options={THEME_OPTIONS}
+                  />
+                </div>
               </div>
 
             </div>
@@ -165,16 +177,13 @@ export const Settings: React.FC = () => {
                   <h3 className="font-bold text-primary">Global Text Size</h3>
                   <p className="text-xs text-secondary">Scale the font size for the entire app</p>
                 </div>
-                <select
-                  value={state.settings.fontSize}
-                  onChange={(e) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(e.target.value) } })}
-                  className="bg-card border border-card-border rounded-lg px-3 py-2 text-sm text-primary focus:ring-2 focus:ring-accent outline-none"
-                >
-                  <option value={0.85} className="bg-card text-primary">Small</option>
-                  <option value={1} className="bg-card text-primary">Normal</option>
-                  <option value={1.15} className="bg-card text-primary">Large</option>
-                  <option value={1.3} className="bg-card text-primary">Extra Large</option>
-                </select>
+                <div className="w-full sm:w-56 shrink-0">
+                  <CustomSelect
+                    value={state.settings.fontSize.toString()}
+                    onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(v) } })}
+                    options={FONT_SIZE_OPTIONS}
+                  />
+                </div>
               </div>
 
             </div>
@@ -246,14 +255,14 @@ export const Settings: React.FC = () => {
                         attempts: 0
                       }));
                       dispatch({ type: 'HYDRATE_VERSES', payload: newVerses });
-                      showToast('100 verses loaded successfully!', 'success');
+                      showToast('110 verses loaded successfully!', 'success');
                     } catch (err) {
                       showToast('Failed to load verses.', 'error');
                     }
                   }} 
                   className="whitespace-nowrap"
                 >
-                  Load 100 Verses
+                  Load 110 Verses
                 </Button>
               </div>
 
