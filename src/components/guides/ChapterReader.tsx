@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus, X, Copy } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
@@ -190,6 +190,26 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     fetchChapter();
   }, [bookId, chapter]);
 
+  const memorizedVerses = useMemo(() => {
+    const memSet = new Set<number>();
+    const prefix = `${bookTitle} ${chapter}:`;
+    
+    state.verses.forEach(v => {
+      if (v.ref.startsWith(prefix)) {
+        const versePart = v.ref.substring(prefix.length);
+        if (versePart.includes('-')) {
+          const [start, end] = versePart.split('-').map(n => parseInt(n, 10));
+          for (let i = start; i <= end; i++) memSet.add(i);
+        } else if (versePart.includes(',')) {
+          versePart.split(',').forEach(n => memSet.add(parseInt(n, 10)));
+        } else {
+          memSet.add(parseInt(versePart, 10));
+        }
+      }
+    });
+    return memSet;
+  }, [state.verses, bookTitle, chapter]);
+
   const handleVerseClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const verseSpan = target.closest('.verse-span');
@@ -371,10 +391,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       }
 
       // Add verse number and text
+      const inLibrary = memorizedVerses.has(v.verse);
       const isSelected = selectedVerses.includes(v.verse);
-      const selectedClass = isSelected ? 'bg-accent/20 text-primary rounded px-1 -mx-1' : '';
       
-      html += `<span class="inline verse-span cursor-pointer transition-colors ${selectedClass}" data-verse="${v.verse}"><sup class="text-[0.55em] font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
+      let extraClass = '';
+      if (isSelected) {
+        extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
+      } else if (inLibrary) {
+        extraClass = 'bg-accent/10 border-b-2 border-accent/30 rounded-t px-1 -mx-1';
+      }
+      
+      html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}"><sup class="text-[0.55em] font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
     });
 
     return html;
