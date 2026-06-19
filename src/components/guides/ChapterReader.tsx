@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
@@ -54,6 +54,19 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const [, setSearchParams] = useSearchParams();
   const [showOptions, setShowOptions] = useState(false);
   const { state, dispatch } = useApp();
+
+  const lastScrollY = useRef(0);
+  const [isNavHidden, setIsNavHidden] = useState(false);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const currentScrollY = e.currentTarget.scrollTop;
+    if (currentScrollY > lastScrollY.current + 10 && currentScrollY > 50) {
+      setIsNavHidden(true);
+    } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY < 50) {
+      setIsNavHidden(false);
+    }
+    lastScrollY.current = currentScrollY;
+  };
 
   // Compute prev/next labels for the navigation bar
   const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
@@ -227,7 +240,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-6">
+      <div 
+        className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-6"
+        onScroll={handleScroll}
+      >
         
         <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative flex items-start justify-between">
           <button
@@ -325,7 +341,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {/* Bottom Chapter Navigation Bar */}
       {!loading && !error && (
-        <div className="sticky bottom-0 left-0 w-full bg-background/80 backdrop-blur-xl border-t border-glass-border z-10">
+        <div className={`absolute bottom-0 left-0 w-full bg-background/80 backdrop-blur-xl border-t border-glass-border z-10 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
               onClick={handlePrevChapter}
