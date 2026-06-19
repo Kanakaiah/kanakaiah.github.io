@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, BookOpen, Globe, Headphones, PlayCircle, Radio, Search } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
@@ -87,6 +87,9 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 export const Guides: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isOTExpanded, setIsOTExpanded] = useState(false);
+  const [isNTExpanded, setIsNTExpanded] = useState(true);
+  
   const activeGuideId = searchParams.get('guide');
   const readerBook = searchParams.get('readerBook');
   const readerChapter = searchParams.get('readerChapter');
@@ -572,31 +575,64 @@ export const Guides: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-8 pb-12">
-        {/* ── Bible Books — NT Grid ── */}
+        {/* ── Bible Books — OT ── */}
         <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">New Testament</h2>
-            <span className="text-[0.625rem] font-bold text-muted uppercase tracking-wider">27 Books</span>
-          </div>
+          <button 
+            onClick={() => setIsOTExpanded(!isOTExpanded)}
+            className="flex items-center justify-between py-2 border-b border-card-border/50 group"
+          >
+            <h2 className="text-sm uppercase tracking-[0.15em] font-bold text-muted group-hover:text-primary transition-colors flex items-center gap-2">
+              <span className="text-xl">📜</span> Old Testament
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-[0.625rem] font-bold text-muted uppercase tracking-wider bg-card-elevated px-2 py-0.5 rounded">39 Books</span>
+              {isOTExpanded ? <ChevronDown className="w-4 h-4 text-muted" /> : <ChevronRight className="w-4 h-4 text-muted" />}
+            </div>
+          </button>
           
-          <div className="flex flex-col gap-6">
-            {NT_SECTIONS.map(section => {
-              const books = NT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
-              if (!books.length) return null;
-              return (
-                <div key={section} className="flex flex-col gap-3">
-                  <div className="flex items-center gap-2 border-b border-glass-border pb-1">
-                    <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
+          {isOTExpanded && (
+            <div className="flex flex-col items-center justify-center py-10 gap-3 text-center bg-card/30 rounded-2xl border border-card-border/30 animate-[fadeIn_0.2s_ease-out]">
+              <h3 className="text-lg font-bold font-heading text-primary">Coming Soon</h3>
+              <p className="text-secondary max-w-xs text-sm">Old Testament book guides with visual chapter maps are being crafted. Check back soon!</p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Bible Books — NT ── */}
+        <div className="flex flex-col gap-3">
+          <button 
+            onClick={() => setIsNTExpanded(!isNTExpanded)}
+            className="flex items-center justify-between py-2 border-b border-card-border/50 group"
+          >
+            <h2 className="text-sm uppercase tracking-[0.15em] font-bold text-muted group-hover:text-primary transition-colors flex items-center gap-2">
+              <span className="text-xl">✝️</span> New Testament
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-[0.625rem] font-bold text-accent uppercase tracking-wider bg-accent/10 px-2 py-0.5 rounded">27 Books</span>
+              {isNTExpanded ? <ChevronDown className="w-4 h-4 text-accent" /> : <ChevronRight className="w-4 h-4 text-accent" />}
+            </div>
+          </button>
+          
+          {isNTExpanded && (
+            <div className="flex flex-col gap-6 animate-[fadeIn_0.2s_ease-out]">
+              {NT_SECTIONS.map(section => {
+                const books = NT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                if (!books.length) return null;
+                return (
+                  <div key={section} className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2 border-b border-glass-border pb-1">
+                      <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {books.map(book => (
+                        <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
+                      ))}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {books.map(book => (
-                      <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* ── Reference guides & others ── */}
