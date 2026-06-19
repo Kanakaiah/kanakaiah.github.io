@@ -352,7 +352,7 @@ export const Practice: React.FC = () => {
 
   return (
     <div 
-      className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-6 pb-24 lg:pb-8'}`}
+      className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-20 lg:pt-6 pb-24 lg:pb-8'}`}
       style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
     >
       
@@ -372,8 +372,8 @@ export const Practice: React.FC = () => {
         
         {/* Navigation & Header */}
         {!isImmersed && (
-          <div className="flex flex-col items-center gap-2 mb-6 mt-2">
-            <span className="font-heading font-bold text-accent-light text-xl">
+          <div className="flex flex-col items-center gap-2 mb-6 mt-2 lg:mt-0">
+            <span className="font-heading font-bold text-primary text-xl tracking-wide">
               {currentVerse.ref}
             </span>
             <div className="flex items-center justify-between w-full max-w-xs">
@@ -383,7 +383,7 @@ export const Practice: React.FC = () => {
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
-              <div className="flex-1 h-[1px] bg-glass-border mx-2"></div>
+              <div className="flex-1 h-[1px] bg-card-border mx-2"></div>
               <button 
                 onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
                 className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
