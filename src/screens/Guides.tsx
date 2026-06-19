@@ -588,7 +588,7 @@ export const Guides: React.FC = () => {
                   <div className="flex items-center gap-2 border-b border-glass-border pb-1">
                     <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {books.map(book => (
                       <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
                     ))}
