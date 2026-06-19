@@ -13,8 +13,10 @@ export const AppLayout: React.FC = () => {
   const [isAddVerseOpen, setIsAddVerseOpen] = useState(false);
   const lastScrollY = useRef(0);
 
-  // Hide bottom/side navigation when in the reading view
+  // Hide bottom/side navigation when in the reading view or practice view
   const isReadingPage = new URLSearchParams(location.search).has('readerBook');
+  const isPracticePage = location.pathname === '/practice';
+  const isFullscreenView = isReadingPage || isPracticePage;
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const currentScrollY = e.currentTarget.scrollTop;
@@ -45,7 +47,7 @@ export const AppLayout: React.FC = () => {
         px-6 py-3 lg:p-6 shadow-lg lg:shadow-none
         transition-transform duration-300 ease-in-out
         ${isNavHidden ? 'translate-y-[150px] lg:translate-y-0' : 'translate-y-0'}
-        ${isReadingPage ? 'hidden' : ''}
+        ${isFullscreenView ? 'hidden' : ''}
       `}>
         {/* Desktop Logo */}
         <div className="hidden lg:flex items-center gap-3 mb-8 w-full px-2">
@@ -110,6 +112,7 @@ export const AppLayout: React.FC = () => {
           absolute top-0 left-0 w-full px-5 pt-5 pb-3 flex justify-between items-center z-40 lg:hidden
           transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md
           ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
+          ${isFullscreenView ? 'hidden' : ''}
         `}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-card border border-card-border flex items-center justify-center text-accent shadow-sm">
@@ -142,7 +145,7 @@ export const AppLayout: React.FC = () => {
       </main>
 
       {/* FLOATING ACTION BUTTON (Mobile: above nav, Desktop: bottom-right) */}
-      {!isReadingPage && (
+      {!isFullscreenView && (
         <button
           onClick={() => setIsAddVerseOpen(true)}
           className="fixed bottom-24 right-5 lg:bottom-8 lg:right-8 w-14 h-14 rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent-hover flex items-center justify-center z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105 active:scale-95 lg:hidden"

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle } from 'lucide-react';
+import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
@@ -352,10 +352,20 @@ export const Practice: React.FC = () => {
 
   return (
     <div 
-      className={`flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-20 lg:pt-6 pb-24 lg:pb-8'}`}
+      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-14 lg:pt-6 pb-24 lg:pb-8'}`}
       style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
     >
       
+      {/* Exit Button - Hidden when immersed */}
+      {!isImmersed && (
+        <button 
+          onClick={() => navigate('/')}
+          className="absolute top-4 left-4 lg:top-6 lg:left-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors z-20 shadow-sm"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      )}
+
       {/* Header - Only visible when immersed */}
       {isImmersed && (
         <div className="flex items-center justify-between p-4 absolute top-0 left-0 w-full z-10">
