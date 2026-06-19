@@ -35,20 +35,15 @@ export const AddVerseSheet: React.FC<AddVerseSheetProps> = ({ isOpen, onClose })
         <div
           className="
             pointer-events-auto
-            w-full h-auto max-h-[96dvh]
-            lg:max-h-[85vh] lg:max-w-2xl lg:w-full
-            bg-background border-t border-glass-border
-            lg:border lg:rounded-2xl
-            rounded-t-2xl
+            w-full h-[100dvh]
+            lg:h-auto lg:max-h-[85vh] lg:max-w-2xl lg:w-full
+            bg-background
+            lg:border lg:border-glass-border lg:rounded-2xl
             flex flex-col
             animate-[slideInUp_0.3s_ease-out]
             lg:animate-[fadeScaleIn_0.25s_ease-out]
           "
         >
-          {/* Drag Handle (mobile only) */}
-          <div className="flex justify-center pt-3 pb-1 lg:hidden">
-            <div className="w-10 h-1 rounded-full bg-glass-border" />
-          </div>
 
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-glass-border shrink-0">
