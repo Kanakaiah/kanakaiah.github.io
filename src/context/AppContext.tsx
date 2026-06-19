@@ -114,12 +114,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('remora_data', JSON.stringify(state));
     // Apply theme to document
     document.documentElement.setAttribute('data-theme', state.theme);
-    // Apply global font scale by adjusting the root HTML font size (scales all rem units)
-    if (!state.settings.fontSize || state.settings.fontSize === 1) {
-      document.documentElement.style.fontSize = ''; // Use system default / Dynamic Type
-    } else {
-      document.documentElement.style.fontSize = `${state.settings.fontSize * 100}%`;
-    }
+    // Remove global font scaling on root HTML; font size will be applied directly to verse text instead.
+    document.documentElement.style.fontSize = '';
   }, [state]);
 
   return (

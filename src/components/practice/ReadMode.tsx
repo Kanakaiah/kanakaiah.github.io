@@ -57,8 +57,15 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zo
 
   return (
     <div 
-      className={`font-normal ${!isImmersed ? 'text-lg leading-relaxed' : 'transition-none'}`}
-      style={isImmersed ? { fontSize: `${1.125 * zoomLevel}rem`, lineHeight: `${1.75 * zoomLevel}rem` } : {}}
+      className={`font-normal ${!isImmersed ? 'transition-none' : 'transition-none'}`}
+      style={{
+        fontSize: isImmersed 
+          ? `${1.125 * zoomLevel * (state.settings.fontSize || 1)}rem`
+          : `${1.125 * (state.settings.fontSize || 1)}rem`,
+        lineHeight: isImmersed
+          ? `${1.75 * zoomLevel * (state.settings.fontSize || 1)}rem`
+          : `${1.625 * (state.settings.fontSize || 1)}rem`
+      }}
     >
       {parts.map((part, index) => {
         const isMaskEnabled = state.settings.recallMasking;

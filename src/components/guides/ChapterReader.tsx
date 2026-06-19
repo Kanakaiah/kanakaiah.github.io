@@ -227,7 +227,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       }
 
       // Add verse number and text
-      html += `<span class="inline"><sup class="text-[0.6875rem] font-sans font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
+      html += `<span class="inline"><sup class="text-[0.55em] font-sans font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
     });
 
     return html;
@@ -332,7 +332,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         ) : (
           <div className="max-w-2xl mx-auto pb-32 select-text">
             <div 
-              className="text-[20px] leading-[1.7] text-primary/95 font-sans tracking-[-0.01em] [&>div:first-child]:mt-0"
+              className="font-sans tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0"
+              style={{
+                fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
+                lineHeight: `${1.7 * (state.settings.fontSize || 1)}rem`
+              }}
               dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
             />
           </div>
