@@ -228,7 +228,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       }
 
       // Add verse number and text
-      html += `<span class="inline"><sup class="text-[0.55em] font-sans font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
+      html += `<span class="inline"><sup class="text-[0.55em] font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none">${v.verse}</sup><span class="inline">${text}</span> </span>`;
     });
 
     return html;
@@ -297,6 +297,32 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                   
                   <div className="h-[1px] bg-card-border w-full" />
                   
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-primary">Font</span>
+                    <div className="flex items-center bg-card border border-card-border rounded-xl p-1 gap-1">
+                      <button 
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'sans' }})}
+                        className={`px-2 py-1 text-xs font-sans rounded-lg transition-colors ${(!state.settings.fontFamily || state.settings.fontFamily === 'sans') ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
+                      >
+                        Sans
+                      </button>
+                      <button 
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'serif' }})}
+                        className={`px-2 py-1 text-xs font-serif rounded-lg transition-colors ${state.settings.fontFamily === 'serif' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
+                      >
+                        Serif
+                      </button>
+                      <button 
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'mono' }})}
+                        className={`px-2 py-1 text-xs font-mono rounded-lg transition-colors ${state.settings.fontFamily === 'mono' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
+                      >
+                        Mono
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="h-[1px] bg-card-border w-full" />
+                  
                   <label className="flex items-center justify-between cursor-pointer group">
                     <div>
                       <span className="text-sm font-bold text-primary block">Bionic Reading</span>
@@ -333,7 +359,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         ) : (
           <div className="max-w-2xl mx-auto pb-32 select-text">
             <div 
-              className="font-sans tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0"
+              className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
+                state.settings.fontFamily === 'serif' ? 'font-serif' : 
+                state.settings.fontFamily === 'mono' ? 'font-mono tracking-normal' : 
+                'font-sans'
+              }`}
               style={{
                 fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
                 lineHeight: `${1.7 * (state.settings.fontSize || 1)}rem`

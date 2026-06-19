@@ -57,7 +57,11 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zo
 
   return (
     <div 
-      className={`font-normal ${!isImmersed ? 'transition-none' : 'transition-none'}`}
+      className={`font-normal ${!isImmersed ? 'transition-none' : 'transition-none'} ${
+        state.settings.fontFamily === 'serif' ? 'font-serif' : 
+        state.settings.fontFamily === 'mono' ? 'font-mono tracking-normal' : 
+        'font-sans'
+      }`}
       style={{
         fontSize: isImmersed 
           ? `${1.125 * zoomLevel * (state.settings.fontSize || 1)}rem`

@@ -15,7 +15,8 @@ const initialState: AppState = {
     notificationsEnabled: false,
     recallMasking: false,
     bionicReading: false,
-    fontSize: 1
+    fontSize: 1,
+    fontFamily: 'sans'
   }
 };
 

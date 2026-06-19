@@ -23,6 +23,7 @@ export interface UserSettings {
   recallMasking: boolean;
   bionicReading: boolean;
   fontSize: number;
+  fontFamily?: 'sans' | 'serif' | 'mono';
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';
