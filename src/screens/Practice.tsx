@@ -425,44 +425,43 @@ export const Practice: React.FC = () => {
         {/* Display Board (Workspace) */}
         <div className={`bg-card border border-card-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-none mb-6'}`}>
           <div className="flex-1 flex flex-col">
-            <div className={`flex items-center mb-4 ${isImmersed ? 'justify-center' : 'justify-end'} min-h-[2rem]`}>
-              {isImmersed && (
+            {isImmersed && (
+              <div className="flex items-center justify-center mb-4 min-h-[2rem]">
                 <span 
                   className="font-heading font-bold transition-all duration-75 text-secondary"
                   style={{ fontSize: `${1.5 * zoomLevel}rem`, lineHeight: `${2 * zoomLevel}rem` }}
                 >
                   {currentVerse.ref}
                 </span>
-              )}
-              
-              {!isImmersed && activeMode === 'read' && (
-                <button 
-                  onClick={() => setActiveMode('immersed')} 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent hover:bg-accent hover:text-white transition-colors text-sm font-bold"
-                  title="Immerse Reading"
-                >
-                  <Maximize className="w-4 h-4" />
-                  <span className="hidden sm:inline">Immerse</span>
-                </button>
-              )}
+              </div>
+            )}
+            
+            {!isImmersed && activeMode === 'read' && (
+              <button 
+                onClick={() => setActiveMode('immersed')} 
+                className="absolute top-4 right-4 lg:top-6 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-accent/10 text-accent hover:bg-accent hover:text-white transition-colors"
+                title="Immerse Reading"
+              >
+                <Maximize className="w-5 h-5" />
+              </button>
+            )}
 
-              {!isImmersed && activeMode !== 'read' && (
-                <button 
-                  onClick={handleHintClick} 
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-colors text-sm font-bold
-                    ${hintLevel > 0 ? 'bg-accent text-white' : 'bg-accent/10 text-accent hover:bg-accent hover:text-white'}`}
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="hidden sm:inline">
-                    {hintLevel === 0 ? 'Show Hint' : hintLevel < 4 ? 'More Hint' : 'Hide Hint'}
-                  </span>
-                </button>
-              )}
+            {!isImmersed && activeMode !== 'read' && (
+              <button 
+                onClick={handleHintClick} 
+                className={`absolute top-4 right-4 lg:top-6 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm
+                  ${hintLevel > 0 ? 'bg-accent text-white' : 'bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover'}`}
+                title={hintLevel === 0 ? 'Show Hint' : hintLevel < 4 ? 'More Hint' : 'Hide Hint'}
+              >
+                <HelpCircle className="w-5 h-5" />
+              </button>
+            )}
+
+            <div className="mt-4">
+              {!isImmersed && activeMode !== 'read' && renderProgressiveHint()}
             </div>
             
-            {!isImmersed && activeMode !== 'read' && renderProgressiveHint()}
-            
-            <div key={activeMode} className="flex-1 animate-in fade-in zoom-in-95 duration-300 flex flex-col justify-start mt-4">
+            <div key={activeMode} className="flex-1 animate-in fade-in zoom-in-95 duration-300 flex flex-col justify-start">
               {renderWorkspace()}
             </div>
           </div>
