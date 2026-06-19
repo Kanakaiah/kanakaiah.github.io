@@ -5,10 +5,8 @@ import { AppLayout } from './components/layout/AppLayout';
 import { ToastProvider } from './context/ToastContext';
 
 import { Dashboard } from './screens/Dashboard';
-import { AddVerse } from './screens/AddVerse';
 import { Practice } from './screens/Practice';
 import { Guides } from './screens/Guides';
-import { Settings } from './screens/Settings';
 
 const App: React.FC = () => {
   return (
@@ -18,10 +16,8 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Dashboard />} />
-              <Route path="add" element={<AddVerse />} />
               <Route path="practice" element={<Practice />} />
               <Route path="guides" element={<Guides />} />
-              <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
         </BrowserRouter>

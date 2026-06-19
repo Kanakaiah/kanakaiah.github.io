@@ -372,29 +372,49 @@ export const Practice: React.FC = () => {
         
         {/* Mode Selector (Hidden in Immersed) */}
         {!isImmersed && (
-          <div className="flex md:grid md:grid-cols-7 overflow-x-auto pb-6 pt-2 px-2 -mx-2 mb-2 scrollbar-hide gap-3">
-            {[
-              { id: 'read', icon: Eye, label: 'Read', sub: 'Read the full text' },
-              { id: 'eraser', icon: Eraser, label: 'Eraser', sub: 'Hide words gradually' },
-              { id: 'first-letter', icon: Keyboard, label: 'Letters', sub: 'First letters only' },
-              { id: 'scramble', icon: Grid, label: 'Scramble', sub: 'Reorder words' },
-              { id: 'typing', icon: FileText, label: 'Typing', sub: 'Type from memory' },
-              { id: 'speech', icon: Mic, label: 'Recite', sub: 'Speak it aloud' },
-              { id: 'immersed', icon: Maximize, label: 'Immersed', sub: 'Focus reading' },
-            ].map(mode => (
-              <button
-                key={mode.id}
-                onClick={() => setActiveMode(mode.id as PracticeMode)}
-                className={`flex-shrink-0 md:flex-shrink flex flex-col items-center p-3 rounded-xl min-w-[100px] md:min-w-0 border transition-all duration-300
-                  ${activeMode === mode.id 
-                    ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)] scale-105' 
-                    : 'bg-card border-card-border hover:bg-card-hover'}`}
-              >
-                <mode.icon className={`w-6 h-6 mb-2 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
-                <span className={`text-sm font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
-                <span className="text-[0.625rem] text-muted mt-1 text-center leading-tight">{mode.sub}</span>
-              </button>
-            ))}
+          <div className="flex flex-col gap-2 pb-4 pt-2 px-2 -mx-2 mb-2">
+            {/* Primary Modes — Always visible as tabs */}
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { id: 'read', icon: Eye, label: 'Read' },
+                { id: 'eraser', icon: Eraser, label: 'Eraser' },
+                { id: 'first-letter', icon: Keyboard, label: 'Letters' },
+                { id: 'typing', icon: FileText, label: 'Typing' },
+              ].map(mode => (
+                <button
+                  key={mode.id}
+                  onClick={() => setActiveMode(mode.id as PracticeMode)}
+                  className={`flex flex-col items-center py-3 px-2 rounded-xl border transition-all duration-300
+                    ${activeMode === mode.id 
+                      ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)]' 
+                      : 'bg-card border-card-border hover:bg-card-hover'}`}
+                >
+                  <mode.icon className={`w-5 h-5 mb-1.5 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
+                  <span className={`text-xs font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Secondary Modes — Compact chips */}
+            <div className="flex items-center justify-center gap-2">
+              {[
+                { id: 'scramble', icon: Grid, label: 'Scramble' },
+                { id: 'speech', icon: Mic, label: 'Recite' },
+                { id: 'immersed', icon: Maximize, label: 'Immerse' },
+              ].map(mode => (
+                <button
+                  key={mode.id}
+                  onClick={() => setActiveMode(mode.id as PracticeMode)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-300
+                    ${activeMode === mode.id 
+                      ? 'border-accent bg-accent/15 text-accent shadow-sm' 
+                      : 'bg-transparent border-card-border text-muted hover:text-secondary hover:border-card-hover'}`}
+                >
+                  <mode.icon className="w-3.5 h-3.5" />
+                  {mode.label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
@@ -435,7 +455,7 @@ export const Practice: React.FC = () => {
             
             {!isImmersed && activeMode !== 'read' && renderProgressiveHint()}
             
-            <div className="flex-1">
+            <div key={activeMode} className="flex-1 animate-in fade-in zoom-in-95 duration-300">
               {renderWorkspace()}
             </div>
           </div>

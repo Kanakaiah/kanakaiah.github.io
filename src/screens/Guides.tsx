@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, ChevronLeft, BookOpen, Globe, Headphones, PlayCircle, Radio } from 'lucide-react';
+import { ChevronRight, BookOpen, Globe, Headphones, PlayCircle, Radio } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { NT_BOOKS } from '../data/ntBooks';
@@ -223,20 +223,34 @@ export const Guides: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         <div className="flex flex-col gap-4 mb-2">
-          <button
-            onClick={() => {
-              // If it was a book-guide opened from BibleBrowser, go back to browser
-              if (activeGuide.type === 'book-guide') {
-                setActiveGuideId(BIBLE_BROWSER_NT);
-              } else {
-                setActiveGuideId(null);
-              }
-            }}
-            className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[0.9375rem] self-start"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span>{activeGuide.type === 'book-guide' ? 'Bible Books' : 'Guides'}</span>
-          </button>
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center gap-1 text-[0.8125rem] font-medium flex-wrap">
+            <button
+              onClick={() => setActiveGuideId(null)}
+              className="text-accent hover:text-accent-hover transition-colors"
+            >
+              Bible
+            </button>
+            {activeGuide.type === 'book-guide' && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-muted" />
+                <button
+                  onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
+                  className="text-accent hover:text-accent-hover transition-colors"
+                >
+                  New Testament
+                </button>
+                <ChevronRight className="w-3.5 h-3.5 text-muted" />
+                <span className="text-primary font-bold">{activeGuide.title}</span>
+              </>
+            )}
+            {activeGuide.type !== 'book-guide' && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-muted" />
+                <span className="text-primary font-bold">{activeGuide.title}</span>
+              </>
+            )}
+          </div>
           {activeGuide.type !== 'book-guide' && (
             <div>
               <h1 className="text-3xl font-bold font-heading text-primary flex items-center gap-2">
@@ -540,7 +554,7 @@ export const Guides: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4">
       <div className="hidden lg:block mb-2">
-        <h1 className="text-3xl font-heading font-bold text-primary">Study Guides</h1>
+        <h1 className="text-3xl font-heading font-bold text-primary">Bible</h1>
       </div>
 
       <div className="flex flex-col gap-8 pb-12">

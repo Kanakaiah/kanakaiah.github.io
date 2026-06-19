@@ -1,17 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { BookOpen, PlusSquare, Target, Compass, Settings, Flame } from 'lucide-react';
+import { Home, BookOpen, Target, Settings2, Flame, Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { SettingsDrawer } from '../../components/layout/SettingsDrawer';
+import { AddVerseSheet } from '../../components/layout/AddVerseSheet';
 
 export const AppLayout: React.FC = () => {
   const { state } = useApp();
   const location = useLocation();
   const [isNavHidden, setIsNavHidden] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isAddVerseOpen, setIsAddVerseOpen] = useState(false);
   const lastScrollY = useRef(0);
 
-  // Hide header on all screens except the Home (Library) screen
-  const isHomeScreen = location.pathname === '/';
-  
   // Hide bottom/side navigation when in the reading view
   const isReadingPage = new URLSearchParams(location.search).has('readerBook');
 
@@ -26,15 +27,10 @@ export const AppLayout: React.FC = () => {
   };
 
   const navLinks = [
-    { to: "/", icon: BookOpen, label: "Library" },
-    { to: "/add", icon: PlusSquare, label: "Add" },
+    { to: "/", icon: Home, label: "Today" },
     { to: "/practice", icon: Target, label: "Practice" },
-    { to: "/guides", icon: Compass, label: "Guides" },
-    { to: "/settings", icon: Settings, label: "Settings" },
+    { to: "/guides", icon: BookOpen, label: "Bible" },
   ];
-
-  const currentRoute = navLinks.find(link => location.pathname === link.to || (link.to !== '/' && location.pathname.startsWith(link.to))) || navLinks[0];
-  const PageIcon = currentRoute.icon;
 
   return (
     <div className="flex flex-col lg:flex-row h-screen w-full overflow-hidden bg-background">
@@ -83,38 +79,84 @@ export const AppLayout: React.FC = () => {
             </NavLink>
           ))}
         </div>
+
+        {/* Desktop: Add Verse Button */}
+        <div className="hidden lg:block w-full mt-6 px-2">
+          <button
+            onClick={() => setIsAddVerseOpen(true)}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-accent text-white font-bold text-sm font-heading hover:bg-accent-hover transition-colors duration-200 shadow-md shadow-accent/20"
+          >
+            <Plus className="w-5 h-5" />
+            <span>Add Verse</span>
+          </button>
+        </div>
+
+        {/* Desktop: Settings at bottom */}
+        <div className="hidden lg:flex lg:flex-col lg:mt-auto w-full lg:gap-3 px-2">
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted hover:text-secondary hover:bg-glass-bg-hover transition-all duration-200"
+          >
+            <Settings2 className="w-5 h-5" />
+            <span className="text-sm font-bold">Settings</span>
+          </button>
+        </div>
       </nav>
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        {/* GLOBAL HEADER (Only on Home Screen, Mobile Only) */}
-        {isHomeScreen && (
-          <header className={`
-            absolute top-0 left-0 w-full px-5 pt-5 pb-3 flex justify-between items-center z-40 lg:hidden
-            transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md
-            ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
-          `}>
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-card border border-card-border flex items-center justify-center text-accent shadow-sm lg:hidden">
-                <PageIcon className="w-4 h-4" />
-              </div>
-              <h1 className="text-xl lg:hidden font-heading font-bold tracking-wide text-primary">{currentRoute.label}</h1>
+        {/* GLOBAL HEADER (All Screens, Mobile Only) */}
+        <header className={`
+          absolute top-0 left-0 w-full px-5 pt-5 pb-3 flex justify-between items-center z-40 lg:hidden
+          transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md
+          ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
+        `}>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-card border border-card-border flex items-center justify-center text-accent shadow-sm">
+              <BookOpen className="w-4 h-4" />
             </div>
+            <h1 className="text-xl font-heading font-bold tracking-wide text-primary">Remora</h1>
+          </div>
+          <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-card border border-card-border">
               <Flame className="w-4 h-4 text-[#dfab55]" />
               <span className="text-sm font-bold font-heading text-primary">{state.streak}</span>
             </div>
-          </header>
-        )}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="w-9 h-9 rounded-xl bg-card border border-card-border flex items-center justify-center text-muted hover:text-primary transition-colors duration-200"
+              aria-label="Settings"
+            >
+              <Settings2 className="w-4 h-4" />
+            </button>
+          </div>
+        </header>
 
         {/* SCROLLABLE PAGE CONTENT */}
         <div 
-          className={`flex-1 overflow-y-auto w-full ${isHomeScreen ? 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8' : (location.pathname === '/practice' || isReadingPage) ? '' : 'px-5 lg:px-8 pt-6 pb-24 lg:pb-8'}`}
+          className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8'}`}
           onScroll={handleScroll}
         >
           <Outlet />
         </div>
       </main>
+
+      {/* FLOATING ACTION BUTTON (Mobile: above nav, Desktop: bottom-right) */}
+      {!isReadingPage && (
+        <button
+          onClick={() => setIsAddVerseOpen(true)}
+          className="fixed bottom-24 right-5 lg:bottom-8 lg:right-8 w-14 h-14 rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent-hover flex items-center justify-center z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105 active:scale-95 lg:hidden"
+          aria-label="Add Verse"
+        >
+          <Plus className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Settings Drawer */}
+      <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+
+      {/* Add Verse Sheet */}
+      <AddVerseSheet isOpen={isAddVerseOpen} onClose={() => setIsAddVerseOpen(false)} />
 
     </div>
   );

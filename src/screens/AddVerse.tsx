@@ -19,7 +19,11 @@ const TRANSLATION_OPTIONS = [
   { value: 'bbe', label: 'BBE (Basic English)' },
 ];
 
-export const AddVerse: React.FC = () => {
+interface AddVerseProps {
+  onVerseAdded?: () => void;
+}
+
+export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -137,7 +141,11 @@ export const AddVerse: React.FC = () => {
 
     dispatch({ type: 'ADD_VERSE', payload: newVerse });
     showToast('Verse added to library!', 'success');
-    navigate('/');
+    if (onVerseAdded) {
+      onVerseAdded();
+    } else {
+      navigate('/');
+    }
   };
 
   return (

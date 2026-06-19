@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame } from 'lucide-react';
+import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame, Target } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';
@@ -91,10 +91,9 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
       {/* Header (Desktop Only) */}
-      <div className="hidden lg:flex items-center justify-between mb-1 mt-2">
+      <div className="hidden lg:flex items-center justify-between mb-2 mt-2">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-bold font-heading text-primary">Library</h1>
+          <h1 className="text-3xl font-bold font-heading text-primary">Today</h1>
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-card-border bg-card">
           <Flame className="w-4 h-4 text-[#dfab55]" />
@@ -102,61 +101,73 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Practice & Stats Card */}
-      <div className="bg-card rounded-2xl p-5 border border-card-border">
-        <h2 className="text-[0.6875rem] font-bold text-muted tracking-widest uppercase mb-4">Today's Practice</h2>
+      {/* Hero: Today's Practice */}
+      <div className="relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-br from-accent/20 to-transparent border border-accent/20 shadow-lg shadow-accent/5">
+        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+          <Target className="w-32 h-32 text-accent" />
+        </div>
         
-        {stats.dueForReview.length > 0 ? (
-          <>
-            <div className="flex items-baseline gap-2 mb-1">
-              <h3 className="text-xl font-bold font-heading text-primary">{stats.dueForReview[0].ref}</h3>
-              <span className="text-sm text-muted">— and {stats.dueForReview.length - 1} others due</span>
-            </div>
+        <div className="relative z-10 flex flex-col h-full justify-between">
+          <div>
+            <h2 className="text-xs font-bold text-accent tracking-widest uppercase mb-4 flex items-center gap-2">
+              <Flame className="w-4 h-4" /> Daily Practice
+            </h2>
             
-            <p className="text-lg text-secondary italic mb-5 line-clamp-2">
-              "{stats.dueForReview[0].text}"
-            </p>
+            {stats.dueForReview.length > 0 ? (
+              <>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <h3 className="text-2xl md:text-3xl font-bold font-heading text-primary leading-tight">
+                    {stats.dueForReview[0].ref}
+                  </h3>
+                  <span className="text-sm font-medium text-accent">+{stats.dueForReview.length - 1} more</span>
+                </div>
+                
+                <p className="text-lg md:text-xl text-primary/80 italic mb-8 line-clamp-2 md:line-clamp-3 font-serif">
+                  "{stats.dueForReview[0].text}"
+                </p>
 
-            <button 
-              onClick={() => navigate('/practice?mode=alldue')}
-              className="w-full bg-[#f2f2f7] hover:bg-white text-black font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 mb-6 transition-colors"
-            >
-              Start practice session <ArrowRight className="w-4 h-4" />
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="flex items-baseline gap-2 mb-1">
-              <h3 className="text-xl font-bold font-heading text-primary">All caught up!</h3>
-            </div>
-            <p className="text-[0.9375rem] text-secondary italic mb-5">
-              You have no verses due for review right now.
-            </p>
-            <button 
-              onClick={() => navigate('/add')}
-              className="w-full bg-[#f2f2f7] hover:bg-white text-black font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 mb-6 transition-colors"
-            >
-              Add new verses <ArrowRight className="w-4 h-4" />
-            </button>
-          </>
-        )}
+                <button 
+                  onClick={() => navigate('/practice?mode=alldue')}
+                  className="w-full sm:w-auto bg-accent hover:bg-accent-hover text-white font-bold py-3.5 px-8 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-accent/20 active:scale-95"
+                >
+                  Start Session <ArrowRight className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="mb-2">
+                  <h3 className="text-2xl md:text-3xl font-bold font-heading text-primary leading-tight">
+                    All caught up! 🎉
+                  </h3>
+                </div>
+                <p className="text-base text-secondary mb-8 max-w-md">
+                  You have no verses due for review right now. Add some new verses or review your memorized ones.
+                </p>
+                <button 
+                  onClick={() => navigate('/guides')}
+                  className="w-full sm:w-auto bg-accent hover:bg-accent-hover text-white font-bold py-3.5 px-8 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-accent/20 active:scale-95"
+                >
+                  Explore Bible <ArrowRight className="w-4 h-4" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
 
-        <div className="h-[1px] bg-card-elevated w-full mb-6" />
-        
-        {/* Stats Grid inside the card */}
-        <div className="grid grid-cols-3 relative">
-           <div className="flex flex-col items-center justify-center border-r border-card-border">
-             <span className="text-[1.375rem] font-bold font-heading text-primary">{stats.memorized}</span>
-             <span className="text-xs text-muted font-medium mt-1">Memorized</span>
-           </div>
-           <div className="flex flex-col items-center justify-center border-r border-card-border">
-             <span className="text-[1.375rem] font-bold font-heading text-primary">{stats.learning}</span>
-             <span className="text-xs text-muted font-medium mt-1">Learning</span>
-           </div>
-           <div className="flex flex-col items-center justify-center">
-             <span className="text-[1.375rem] font-bold font-heading text-primary">{stats.accuracy}%</span>
-             <span className="text-xs text-muted font-medium mt-1">Accuracy</span>
-           </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-3 gap-3 md:gap-4">
+        <div className="bg-card border border-card-border rounded-2xl p-4 flex flex-col items-center justify-center">
+          <span className="text-2xl font-bold font-heading text-primary">{stats.memorized}</span>
+          <span className="text-xs text-muted font-medium mt-1">Memorized</span>
+        </div>
+        <div className="bg-card border border-card-border rounded-2xl p-4 flex flex-col items-center justify-center">
+          <span className="text-2xl font-bold font-heading text-primary">{stats.learning}</span>
+          <span className="text-xs text-muted font-medium mt-1">Learning</span>
+        </div>
+        <div className="bg-card border border-card-border rounded-2xl p-4 flex flex-col items-center justify-center">
+          <span className="text-2xl font-bold font-heading text-primary">{stats.accuracy}%</span>
+          <span className="text-xs text-muted font-medium mt-1">Accuracy</span>
         </div>
       </div>
 
@@ -203,12 +214,9 @@ export const Dashboard: React.FC = () => {
       )}
 
       {/* Library Section */}
-      <div className="flex flex-col gap-4 mt-2">
+      <div className="flex flex-col gap-4 mt-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold font-heading text-primary">My library</h2>
-          <button onClick={() => navigate('/add')} className="text-accent hover:text-accent-hover transition-colors text-sm font-medium flex items-center gap-1">
-            + Add verse
-          </button>
+          <h2 className="text-lg font-bold font-heading text-primary">Your Verses</h2>
         </div>
 
         <div className="relative">

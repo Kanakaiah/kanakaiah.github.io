@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
+import { useApp } from '../../context/AppContext';
 
 interface ChapterReaderProps {
   bookId: string;
@@ -51,6 +52,30 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [, setSearchParams] = useSearchParams();
+  const [showOptions, setShowOptions] = useState(false);
+  const { state, dispatch } = useApp();
+
+  // Compute prev/next labels for the navigation bar
+  const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
+  const currentBook = bookIndex !== -1 ? NT_BOOKS[bookIndex] : null;
+
+  let prevLabel: string | null = null;
+  let nextLabel: string | null = null;
+
+  if (currentBook) {
+    if (chapter > 1) {
+      prevLabel = `${bookTitle} ${chapter - 1}`;
+    } else if (bookIndex > 0) {
+      const prev = NT_BOOKS[bookIndex - 1];
+      prevLabel = `${prev.name} ${prev.chapters}`;
+    }
+
+    if (chapter < currentBook.chapters) {
+      nextLabel = `${bookTitle} ${chapter + 1}`;
+    } else if (bookIndex < NT_BOOKS.length - 1) {
+      nextLabel = `${NT_BOOKS[bookIndex + 1].name} 1`;
+    }
+  }
 
   const handleNextChapter = () => {
     const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
@@ -156,6 +181,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     verses.forEach((v) => {
       let text = v.text;
       
+      if (state.settings.bionicReading) {
+        text = text.split(' ').map(word => {
+          if (word.length <= 1) return `<b>${word}</b>`;
+          if (word.length <= 3) return `<b>${word.substring(0, 1)}</b>${word.substring(1)}`;
+          const half = Math.ceil(word.length / 2);
+          return `<b>${word.substring(0, half)}</b>${word.substring(half)}`;
+        }).join(' ');
+      }
+      
       // Extract section headings (<S> or <b>)
       let heading = '';
       text = text.replace(/<S[^>]*>(.*?)<\/S>|<b[^>]*>(.*?)<\/b>/gi, (_, sMatch, bMatch) => {
@@ -195,10 +229,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     >
       <div className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-6">
         
-        <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative">
+        <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative flex items-start justify-between">
           <button
             onClick={onClose}
-            className="absolute left-0 top-0 p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+            className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
             title="Go back"
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
@@ -210,6 +244,57 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             <span className="text-[0.6875rem] font-bold text-accent tracking-widest uppercase bg-accent/10 px-2.5 py-0.5 rounded-full">
               LSB Translation
             </span>
+          </div>
+          
+          <div className="relative">
+            <button
+              onClick={() => setShowOptions(!showOptions)}
+              className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-glass-bg text-primary' : 'hover:bg-glass-bg text-secondary'}`}
+              title="Reading Options"
+            >
+              <Type className="w-5 h-5" />
+            </button>
+            
+            {showOptions && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowOptions(false)} />
+                <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-glass-border rounded-2xl shadow-2xl z-50 overflow-hidden p-4 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-primary">Text Size</span>
+                    <div className="flex items-center gap-2 bg-card border border-card-border rounded-xl p-1">
+                      <button 
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: Math.max(0.85, state.settings.fontSize - 0.15) }})}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-glass-bg text-secondary hover:text-primary transition-colors"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                      <span className="text-xs font-bold w-4 text-center">{state.settings.fontSize}</span>
+                      <button 
+                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: Math.min(1.45, state.settings.fontSize + 0.15) }})}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-glass-bg text-secondary hover:text-primary transition-colors"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="h-[1px] bg-card-border w-full" />
+                  
+                  <label className="flex items-center justify-between cursor-pointer group">
+                    <div>
+                      <span className="text-sm font-bold text-primary block">Bionic Reading</span>
+                      <span className="text-[0.625rem] text-secondary">Bold first letters</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={state.settings.bionicReading}
+                      onChange={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { bionicReading: !state.settings.bionicReading }})}
+                      className="w-4 h-4 accent-accent"
+                    />
+                  </label>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -229,7 +314,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             </button>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto pb-24 select-text">
+          <div className="max-w-2xl mx-auto pb-32 select-text">
             <div 
               className="text-[20px] leading-[1.7] text-primary/95 font-sans tracking-[-0.01em] [&>div:first-child]:mt-0"
               dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
@@ -237,6 +322,35 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           </div>
         )}
       </div>
+
+      {/* Bottom Chapter Navigation Bar */}
+      {!loading && !error && (
+        <div className="sticky bottom-0 left-0 w-full bg-background/80 backdrop-blur-xl border-t border-glass-border z-10">
+          <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
+            <button
+              onClick={handlePrevChapter}
+              disabled={!prevLabel}
+              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-glass-bg text-secondary hover:text-primary"
+            >
+              <ChevronLeft className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate max-w-[120px]">{prevLabel || 'Start'}</span>
+            </button>
+
+            <span className="text-xs font-bold text-muted uppercase tracking-wider">
+              Ch {chapter}
+            </span>
+
+            <button
+              onClick={handleNextChapter}
+              disabled={!nextLabel}
+              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-glass-bg text-secondary hover:text-primary"
+            >
+              <span className="truncate max-w-[120px]">{nextLabel || 'End'}</span>
+              <ChevronRight className="w-4 h-4 flex-shrink-0" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
