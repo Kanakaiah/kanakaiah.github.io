@@ -5,25 +5,25 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --bg-color: #0f172a;
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
+    --bg-color: #000000;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
     
-    --accent: #8b5cf6;
-    --accent-hover: #7c3aed;
-    --accent-light: #a78bfa;
-    --accent-glow: rgba(139, 92, 246, 0.15);
-    --accent-glow-strong: rgba(139, 92, 246, 0.3);
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-light: #60a5fa;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --accent-glow-strong: rgba(59, 130, 246, 0.3);
 
-    --glass-bg: rgba(51, 65, 85, 0.6);
-    --glass-bg-hover: rgba(71, 85, 105, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg-hover: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.1);
     --glass-border-hover: rgba(255, 255, 255, 0.15);
-    --card-bg: #1e293b;
-    --card-bg-elevated: #334155;
-    --card-border: #1e293b;
-    --card-hover: #334155;
+    --card-bg: #09090b;
+    --card-bg-elevated: #18181b;
+    --card-border: #27272a;
+    --card-hover: #18181b;
 
     --bionic-1: #ef4444;
     --bionic-2: #3b82f6;
@@ -32,86 +32,27 @@
     --bionic-5: #8b5cf6;
   }
 
-  [data-theme="obsidian"] {
-    --bg-color: #000000;
-    --accent: #f43f5e;
-    --accent-hover: #e11d48;
-    --accent-glow: rgba(244, 63, 94, 0.15);
-    --accent-glow-strong: rgba(244, 63, 94, 0.4);
-    --accent-light: #fb7185;
-    --glass-bg: rgba(255, 255, 255, 0.02);
-    --glass-bg-hover: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.06);
-    --glass-border-hover: rgba(255, 255, 255, 0.12);
-    --card-bg: #0f0f0f;
-    --card-bg-elevated: #1a1a1a;
-    --card-border: #0f0f0f;
-    --card-hover: #1f1f1f;
-  }
-
-  [data-theme="midnight"] {
-    --bg-color: #020617;
-    --accent: #0ea5e9;
-    --accent-hover: #0284c7;
-    --accent-glow: rgba(14, 165, 233, 0.15);
-    --accent-glow-strong: rgba(14, 165, 233, 0.4);
-    --accent-light: #38bdf8;
-    --glass-bg: rgba(255, 255, 255, 0.02);
-    --glass-bg-hover: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.06);
-    --glass-border-hover: rgba(255, 255, 255, 0.12);
-    --card-bg: #0f172a;
-    --card-bg-elevated: #1e293b;
-    --card-border: #0f172a;
-    --card-hover: #1e293b;
-  }
-
-  [data-theme="parchment"] {
+  [data-theme="white"] {
     color-scheme: light;
-    --bg-color: #f5f0e8;
-    --text-primary: #2c2417;
-    --text-secondary: #6b5d4f;
-    --text-muted: #9a8d7f;
-    --accent: #7c5c3c;
-    --accent-hover: #60452d;
-    --accent-glow: rgba(124, 92, 60, 0.12);
-    --accent-glow-strong: rgba(124, 92, 60, 0.3);
-    --accent-light: #9a7856;
+    --bg-color: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #52525b;
+    --text-muted: #a1a1aa;
+    
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-light: #3b82f6;
+    --accent-glow: rgba(37, 99, 235, 0.1);
+    --accent-glow-strong: rgba(37, 99, 235, 0.2);
+
     --glass-bg: rgba(0, 0, 0, 0.03);
     --glass-bg-hover: rgba(0, 0, 0, 0.06);
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-border-hover: rgba(0, 0, 0, 0.15);
-    --card-bg: #ffffff;
-    --card-bg-elevated: #fcfbfa;
-    --card-border: #ffffff;
-    --card-hover: #fcfbfa;
-
-    --bionic-1: #b91c1c;
-    --bionic-2: #1d4ed8;
-    --bionic-3: #047857;
-    --bionic-4: #b45309;
-    --bionic-5: #6d28d9;
-  }
-
-  [data-theme="pure-white"] {
-    color-scheme: light;
-    --bg-color: #f3f4f6;
-    --text-primary: #000000;
-    --text-secondary: #525252;
-    --text-muted: #a3a3a3;
-    --accent: #000000;
-    --accent-hover: #404040;
-    --accent-glow: rgba(0, 0, 0, 0.05);
-    --accent-glow-strong: rgba(0, 0, 0, 0.15);
-    --accent-light: #404040;
-    --glass-bg: #ffffff;
-    --glass-bg-hover: rgba(0, 0, 0, 0.06);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-border-hover: rgba(0, 0, 0, 0.15);
-    --card-bg: #ffffff;
-    --card-bg-elevated: #f8f9fa;
-    --card-border: #ffffff;
-    --card-hover: #f9fafb;
+    --card-bg: #f4f4f5;
+    --card-bg-elevated: #ffffff;
+    --card-border: #e4e4e7;
+    --card-hover: #fafafa;
 
     --bionic-1: #b91c1c;
     --bionic-2: #1d4ed8;

@@ -7,7 +7,7 @@ const initialState: AppState = {
   verses: SEED_VERSES,
   streak: 0,
   lastActiveDate: null,
-  theme: "nebula",
+  theme: "black",
   sortOrder: "smart",
   hasSeeded100: false,
   settings: {
@@ -102,6 +102,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const parsed = JSON.parse(stored);
         // Basic schema validation
         if (parsed && Array.isArray(parsed.verses)) {
+          // Migrate old themes
+          if (parsed.theme && !['black', 'white'].includes(parsed.theme)) {
+            parsed.theme = 'black';
+          }
           dispatch({ type: 'HYDRATE', payload: parsed as AppState });
         }
       }

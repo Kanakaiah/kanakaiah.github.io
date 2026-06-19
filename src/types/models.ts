@@ -27,7 +27,7 @@ export interface UserSettings {
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';
-export type Theme = 'nebula' | 'midnight' | 'obsidian'; // or other themes from the app
+export type Theme = 'black' | 'white';
 
 export interface AppState {
   verses: Verse[];

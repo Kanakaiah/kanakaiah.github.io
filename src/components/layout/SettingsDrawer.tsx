@@ -7,11 +7,8 @@ import { Button } from '../ui/Button';
 import { CustomSelect } from '../ui/CustomSelect';
 
 const THEME_OPTIONS = [
-  { value: 'nebula', label: 'Nebula (Dark Purple)' },
-  { value: 'obsidian', label: 'Obsidian (Pure Dark)' },
-  { value: 'midnight', label: 'Midnight (Dark Blue)' },
-  { value: 'parchment', label: 'Parchment (Light Warm)' },
-  { value: 'pure-white', label: 'Pure White' },
+  { value: 'black', label: 'Black (Default)' },
+  { value: 'white', label: 'White' },
 ];
 
 const FONT_SIZE_OPTIONS = [
