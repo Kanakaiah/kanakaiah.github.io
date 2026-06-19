@@ -366,13 +366,18 @@ export const Practice: React.FC = () => {
         </button>
       )}
 
-      {/* Immerse Button - Hidden when immersed */}
+      {/* Audio Play/Pause Button - Hidden when immersed */}
       {!isImmersed && (
         <button 
-          onClick={() => setActiveMode('immersed')}
+          onClick={handleToggleTTS}
           className="absolute top-4 right-4 lg:top-6 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:text-accent hover:bg-card-hover transition-colors z-20 shadow-sm"
+          title="Play Audio"
         >
-          <Play className="w-5 h-5 ml-1" />
+          {isAutoPlaying ? (
+            <Square className="w-4 h-4 text-accent fill-accent" />
+          ) : (
+            <Play className="w-5 h-5 ml-1" />
+          )}
         </button>
       )}
 
