@@ -120,7 +120,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
           <div className="flex flex-col gap-8 pb-8">
 
             {/* Appearance Section */}
-            <section className="flex flex-col gap-4">
+            <section className="flex flex-col gap-4 relative z-30">
               <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2 flex items-center gap-2">
                 <Palette className="w-4 h-4" /> Appearance
               </h2>
@@ -144,14 +144,14 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
             </section>
 
             {/* Practice & Reading Section */}
-            <section className="flex flex-col gap-4">
+            <section className="flex flex-col gap-4 relative z-20">
               <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2 flex items-center gap-2">
                 <Brain className="w-4 h-4" /> Practice & Reading
               </h2>
               <Card className="p-1">
                 <div className="flex flex-col divide-y divide-card-border">
 
-                  <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-t-xl">
+                  <div onClick={() => handleToggle('ttsEnabled')} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-t-xl">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
                         <Volume2 className="w-4 h-4" />
@@ -161,15 +161,12 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Read verses aloud during practice</p>
                       </div>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={state.settings.ttsEnabled}
-                      onChange={() => handleToggle('ttsEnabled')}
-                      className="w-5 h-5 accent-accent shrink-0"
-                    />
-                  </label>
+                    <div className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 shrink-0 ${state.settings.ttsEnabled ? 'bg-accent' : 'bg-glass-border'}`}>
+                      <div className={`w-4 h-4 rounded-full bg-white transition-transform ${state.settings.ttsEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
+                    </div>
+                  </div>
 
-                  <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors">
+                  <div onClick={() => handleToggle('recallMasking')} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center shrink-0">
                         <EyeOff className="w-4 h-4" />
@@ -179,15 +176,12 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Hide parts of verses in the dashboard</p>
                       </div>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={state.settings.recallMasking}
-                      onChange={() => handleToggle('recallMasking')}
-                      className="w-5 h-5 accent-accent shrink-0"
-                    />
-                  </label>
+                    <div className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 shrink-0 ${state.settings.recallMasking ? 'bg-accent' : 'bg-glass-border'}`}>
+                      <div className={`w-4 h-4 rounded-full bg-white transition-transform ${state.settings.recallMasking ? 'translate-x-6' : 'translate-x-0'}`} />
+                    </div>
+                  </div>
 
-                  <label className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors">
+                  <div onClick={() => handleToggle('bionicReading')} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
                         <Type className="w-4 h-4" />
@@ -197,13 +191,10 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Bold first letters to read faster</p>
                       </div>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={state.settings.bionicReading}
-                      onChange={() => handleToggle('bionicReading')}
-                      className="w-5 h-5 accent-accent shrink-0"
-                    />
-                  </label>
+                    <div className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 shrink-0 ${state.settings.bionicReading ? 'bg-accent' : 'bg-glass-border'}`}>
+                      <div className={`w-4 h-4 rounded-full bg-white transition-transform ${state.settings.bionicReading ? 'translate-x-6' : 'translate-x-0'}`} />
+                    </div>
+                  </div>
 
                   <div className="p-4 flex flex-col gap-3">
                     <div>
@@ -224,7 +215,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
             </section>
 
             {/* Data Management Section */}
-            <section className="flex flex-col gap-4">
+            <section className="flex flex-col gap-4 relative z-10">
               <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2">Data Management</h2>
               <Card className="p-1">
                 <div className="flex flex-col divide-y divide-card-border">
