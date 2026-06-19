@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus, X } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus, X, Copy } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { useApp } from '../../context/AppContext';
@@ -233,6 +233,43 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     setSelectedVerses([]);
   };
 
+  const handleCopySelected = () => {
+    if (selectedVerses.length === 0) return;
+
+    const sorted = [...selectedVerses].sort((a, b) => a - b);
+    const textParts: string[] = [];
+    
+    sorted.forEach(verseNum => {
+      const v = verses.find(x => x.verse === verseNum);
+      if (v) {
+        textParts.push(v.text.replace(/<[^>]+>/g, '').trim());
+      }
+    });
+
+    const combinedText = textParts.join(' ');
+    
+    // Format the reference
+    let refStr = '';
+    const isContiguous = sorted.length > 1 && (sorted[sorted.length - 1] - sorted[0] === sorted.length - 1);
+    
+    if (sorted.length === 1) {
+      refStr = `${sorted[0]}`;
+    } else if (isContiguous) {
+      refStr = `${sorted[0]}-${sorted[sorted.length - 1]}`;
+    } else {
+      refStr = sorted.join(',');
+    }
+
+    const finalString = `'${combinedText}'\n\n${bookTitle} ${chapter}:${refStr} (LSB)`;
+
+    navigator.clipboard.writeText(finalString).then(() => {
+      showToast('Copied to clipboard!', 'success');
+      setSelectedVerses([]);
+    }).catch(() => {
+      showToast('Failed to copy', 'error');
+    });
+  };
+
   const buildChapterHtml = () => {
     let html = '';
     
@@ -433,6 +470,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             </span>
             <div className="flex items-center gap-2">
               <button 
+                onClick={handleCopySelected}
+                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+              >
+                <Copy className="w-4 h-4" /> Copy
+              </button>
+              <button 
                 onClick={handleAddSelected}
                 className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
               >
@@ -440,7 +483,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               </button>
               <button 
                 onClick={() => setSelectedVerses([])}
-                className="p-1.5 rounded-xl hover:bg-white/20 transition-colors"
+                className="p-1.5 rounded-xl hover:bg-white/20 transition-colors ml-1"
                 title="Cancel Selection"
               >
                 <X className="w-4 h-4" />
