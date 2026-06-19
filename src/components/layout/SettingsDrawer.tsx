@@ -161,8 +161,8 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Read verses aloud during practice</p>
                       </div>
                     </div>
-                    <div className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 shrink-0 ${state.settings.ttsEnabled ? 'bg-accent' : 'bg-glass-border'}`}>
-                      <div className={`w-4 h-4 rounded-full bg-white transition-transform ${state.settings.ttsEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
+                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 ${state.settings.ttsEnabled ? 'bg-accent' : 'bg-secondary/30'}`}>
+                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/5 transition-transform ${state.settings.ttsEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
                     </div>
                   </div>
 
@@ -176,8 +176,8 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Hide parts of verses in the dashboard</p>
                       </div>
                     </div>
-                    <div className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 shrink-0 ${state.settings.recallMasking ? 'bg-accent' : 'bg-glass-border'}`}>
-                      <div className={`w-4 h-4 rounded-full bg-white transition-transform ${state.settings.recallMasking ? 'translate-x-6' : 'translate-x-0'}`} />
+                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 ${state.settings.recallMasking ? 'bg-accent' : 'bg-secondary/30'}`}>
+                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/5 transition-transform ${state.settings.recallMasking ? 'translate-x-5' : 'translate-x-0'}`} />
                     </div>
                   </div>
 
@@ -191,8 +191,8 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Bold first letters to read faster</p>
                       </div>
                     </div>
-                    <div className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 shrink-0 ${state.settings.bionicReading ? 'bg-accent' : 'bg-glass-border'}`}>
-                      <div className={`w-4 h-4 rounded-full bg-white transition-transform ${state.settings.bionicReading ? 'translate-x-6' : 'translate-x-0'}`} />
+                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 ${state.settings.bionicReading ? 'bg-accent' : 'bg-secondary/30'}`}>
+                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/5 transition-transform ${state.settings.bionicReading ? 'translate-x-5' : 'translate-x-0'}`} />
                     </div>
                   </div>
 
