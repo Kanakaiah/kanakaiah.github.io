@@ -194,16 +194,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     verses.forEach((v) => {
       let text = v.text;
       
-      if (state.settings.bionicReading) {
-        text = text.split(' ').map(word => {
-          if (word.length <= 1) return `<b>${word}</b>`;
-          if (word.length <= 3) return `<b>${word.substring(0, 1)}</b>${word.substring(1)}`;
-          const half = Math.ceil(word.length / 2);
-          return `<b>${word.substring(0, half)}</b>${word.substring(half)}`;
-        }).join(' ');
-      }
-      
-      // Extract section headings (<S> or <b>)
+      // Extract section headings (<S> or <b>) FIRST
       let heading = '';
       text = text.replace(/<S[^>]*>(.*?)<\/S>|<b[^>]*>(.*?)<\/b>/gi, (_, sMatch, bMatch) => {
         const hText = sMatch || bMatch;
@@ -217,6 +208,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         if (!match.startsWith('</')) hasP = true;
         return '';
       });
+
+      // Apply Bionic Reading safely (only to text outside HTML tags)
+      if (state.settings.bionicReading) {
+        text = text.replace(/([a-zA-Z\u00C0-\u024F]+)(?![^<]*>)/g, (word) => {
+          if (word.length <= 1) return `<strong class="font-bold">${word}</strong>`;
+          if (word.length <= 3) return `<strong class="font-bold">${word.substring(0, 1)}</strong>${word.substring(1)}`;
+          const half = Math.ceil(word.length / 2);
+          return `<strong class="font-bold">${word.substring(0, half)}</strong>${word.substring(half)}`;
+        });
+      }
 
       // Append in correct order
       if (heading) {
