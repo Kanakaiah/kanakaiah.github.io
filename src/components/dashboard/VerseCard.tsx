@@ -1,14 +1,12 @@
 import React from 'react';
-import { Play } from 'lucide-react';
 import type { Verse } from '../../types/models';
 
 interface VerseCardProps {
   verse: Verse;
-  onPractice: (id: string) => void;
   onClick: (id: string) => void;
 }
 
-export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick }) => {
+export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
   const masteryPct = Math.min(100, Math.round(((verse.sm2?.repetition || 0) / 6) * 100));
   
   let indicatorColor = 'border-l-[#4e7cc2]'; // learning (blue)
@@ -68,13 +66,6 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onPractice, onClick
           {renderDots()}
           <span className="ml-1">{Math.min(5, verse.sm2?.repetition || 0)} of 5</span>
         </div>
-      </div>
-
-      <div 
-        className="w-14 border-l border-card-border flex items-center justify-center hover:bg-card-hover transition-colors"
-        onClick={(e) => { e.stopPropagation(); onPractice(verse.id); }}
-      >
-        <Play className="w-5 h-5 text-muted ml-1" />
       </div>
     </div>
   );

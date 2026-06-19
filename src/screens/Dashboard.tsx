@@ -288,7 +288,6 @@ export const Dashboard: React.FC = () => {
               <VerseCard 
                 key={verse.id} 
                 verse={verse} 
-                onPractice={() => navigate('/practice?id=' + verse.id)} 
                 onClick={() => setSelectedVerse(verse)} 
               />
             ))
