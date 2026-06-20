@@ -1,38 +1,29 @@
 const fs = require('fs');
 const path = require('path');
 
-let tsContent = fs.readFileSync('src/data/guides.ts', 'utf-8');
+const anchors = JSON.parse(fs.readFileSync('anchors.json', 'utf8'));
+const publicDir = path.join(__dirname, 'public', 'chapters');
 
-// remove imports
-tsContent = tsContent.replace(/^import\s+.*$/gm, '');
-// replace export const NT_STUDY_GUIDES = [ with const NT_STUDY_GUIDES = [
-tsContent = tsContent.replace(/export\s+const\s+NT_STUDY_GUIDES\s*=\s*/, 'const NT_STUDY_GUIDES = ');
+const books = ['matthew', 'mark', 'luke', '1corinthians', '2corinthians', 'colossians', '1thessalonians', '2thessalonians', '1timothy', '2timothy', 'titus', 'philemon', 'james', '1peter', '2peter', '1john', '2john', '3john', 'jude', 'revelation'];
 
-// we need to provide a mock PREACHERS_GUIDE since it is imported
-const PREACHERS_GUIDE = { id: 'preachers', anchors: [] };
+const missing = [];
 
-let missing = [];
-try {
-    eval(tsContent + '\n\n' + `
-        NT_STUDY_GUIDES.forEach(guide => {
-            if (!guide.anchors) return;
-            guide.anchors.forEach(anchor => {
-                const guideId = guide.id;
-                const ch = anchor.ch;
-                const word = anchor.word;
-                const scene = anchor.scene;
-                
-                const dirPath = path.join('public', 'chapters', guideId);
-                const imagePath = path.join(dirPath, \`ch\${ch}.png\`);
-                
-                if (!fs.existsSync(imagePath)) {
-                    missing.push({ guideId, ch, word, scene, imagePath, dirPath });
-                }
-            });
-        });
-    `);
-    fs.writeFileSync('missing_images.json', JSON.stringify(missing, null, 2));
-    console.log("Success! Found", missing.length, "missing images.");
-} catch(e) {
-    console.error("Eval failed:", e);
+for (const book of books) {
+  if (!anchors[book]) continue;
+  const bookDir = path.join(publicDir, book);
+  for (const anchor of anchors[book]) {
+    const ch = anchor.ch;
+    const filePath = path.join(bookDir, `ch${ch}.png`);
+    if (!fs.existsSync(filePath)) {
+      missing.push({
+        book,
+        ch,
+        word: anchor.word,
+        scene: anchor.scene
+      });
+    }
+  }
 }
+
+fs.writeFileSync('missing.json', JSON.stringify(missing, null, 2));
+console.log(`Total missing: ${missing.length}`);

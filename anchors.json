@@ -1,0 +1,872 @@
+{
+  "matthew": [
+    {
+      "ch": 1,
+      "word": "GENEALOGY",
+      "scene": "'Son of David, Son of Abraham' — the royal line"
+    },
+    {
+      "ch": 2,
+      "word": "STAR",
+      "scene": "Magi follow the star — Herod slaughters the innocents"
+    },
+    {
+      "ch": 3,
+      "word": "DOVE",
+      "scene": "Baptism — Spirit descends like a dove"
+    },
+    {
+      "ch": 4,
+      "word": "DESERT",
+      "scene": "Temptation in the desert — 'It is written' three times"
+    },
+    {
+      "ch": 5,
+      "word": "BEATITUDES",
+      "scene": "Blessed are the poor in spirit — salt and light"
+    },
+    {
+      "ch": 6,
+      "word": "PRAYER",
+      "scene": "The Lord's Prayer — treasures in heaven"
+    },
+    {
+      "ch": 7,
+      "word": "ROCK",
+      "scene": "Build on the rock — two gates, two trees, two builders"
+    },
+    {
+      "ch": 8,
+      "word": "CENTURION",
+      "scene": "'I have not found such faith in Israel'"
+    },
+    {
+      "ch": 9,
+      "word": "HARVEST",
+      "scene": "'The harvest is plentiful but workers are few'"
+    },
+    {
+      "ch": 10,
+      "word": "SWORD",
+      "scene": "'I came not to bring peace but a sword' — mission discourse"
+    },
+    {
+      "ch": 11,
+      "word": "YOKE",
+      "scene": "'Come to me… my yoke is easy, my burden is light'"
+    },
+    {
+      "ch": 12,
+      "word": "SIGN",
+      "scene": "No sign given except the sign of Jonah"
+    },
+    {
+      "ch": 13,
+      "word": "SOWER",
+      "scene": "Sower, wheat and tares, mustard seed — seven parables"
+    },
+    {
+      "ch": 14,
+      "word": "WAVES",
+      "scene": "Peter walks on water — then sinks"
+    },
+    {
+      "ch": 15,
+      "word": "CRUMBS",
+      "scene": "Canaanite woman — 'even dogs eat the crumbs'"
+    },
+    {
+      "ch": 16,
+      "word": "KEYS",
+      "scene": "'You are Peter… I will give you the keys of the kingdom'"
+    },
+    {
+      "ch": 17,
+      "word": "CLOUD",
+      "scene": "Transfiguration — voice from the cloud: 'Listen to Him'"
+    },
+    {
+      "ch": 18,
+      "word": "CHILD",
+      "scene": "'Unless you become like a child' — community discourse"
+    },
+    {
+      "ch": 19,
+      "word": "CAMEL",
+      "scene": "Camel through the eye of a needle — rich young ruler"
+    },
+    {
+      "ch": 20,
+      "word": "LAST",
+      "scene": "'The last shall be first' — workers in the vineyard"
+    },
+    {
+      "ch": 21,
+      "word": "DONKEY",
+      "scene": "Triumphal entry — temple cleansed, fig tree cursed"
+    },
+    {
+      "ch": 22,
+      "word": "WEDDING",
+      "scene": "Wedding banquet parable — 'Many called, few chosen'"
+    },
+    {
+      "ch": 23,
+      "word": "WOES",
+      "scene": "Seven woes to the Pharisees — 'Blind guides!'"
+    },
+    {
+      "ch": 24,
+      "word": "EAGLES",
+      "scene": "Olivet Discourse — signs of the end"
+    },
+    {
+      "ch": 25,
+      "word": "OIL",
+      "scene": "Ten virgins — five with oil, five without"
+    },
+    {
+      "ch": 26,
+      "word": "JAR",
+      "scene": "Woman breaks alabaster jar — Last Supper, Gethsemane"
+    },
+    {
+      "ch": 27,
+      "word": "CURTAIN",
+      "scene": "Curtain torn — darkness, earthquake, 'Son of God!'"
+    },
+    {
+      "ch": 28,
+      "word": "MOUNTAIN",
+      "scene": "Great Commission on the mountain — 'Go therefore'"
+    }
+  ],
+  "mark": [
+    {
+      "ch": 1,
+      "word": "IMMEDIATELY",
+      "scene": "Baptism → temptation → calling → healing — all in one chapter"
+    },
+    {
+      "ch": 2,
+      "word": "ROOF",
+      "scene": "Four friends tear through a roof to lower the paralyzed man"
+    },
+    {
+      "ch": 3,
+      "word": "FAMILY",
+      "scene": "Jesus' family thinks He is out of His mind"
+    },
+    {
+      "ch": 4,
+      "word": "STORM",
+      "scene": "Jesus asleep in the boat — 'Peace, be still!'"
+    },
+    {
+      "ch": 5,
+      "word": "PIGS",
+      "scene": "Legion cast into pigs — man clothed and in his right mind"
+    },
+    {
+      "ch": 6,
+      "word": "PLATE",
+      "scene": "John the Baptist's head brought on a plate"
+    },
+    {
+      "ch": 7,
+      "word": "FINGERS",
+      "scene": "Jesus puts fingers in the deaf man's ears — 'Ephphatha'"
+    },
+    {
+      "ch": 8,
+      "word": "EYES",
+      "scene": "Blind man healed in two stages — then Peter sees who Jesus is"
+    },
+    {
+      "ch": 9,
+      "word": "CLOUD",
+      "scene": "Transfiguration — cloud overshadows"
+    },
+    {
+      "ch": 10,
+      "word": "CLOAK",
+      "scene": "Blind Bartimaeus throws off his cloak and runs to Jesus"
+    },
+    {
+      "ch": 11,
+      "word": "LEAVES",
+      "scene": "Fig tree cursed — all leaves, no fruit; temple cleansed"
+    },
+    {
+      "ch": 12,
+      "word": "COIN",
+      "scene": "Coin of Caesar — 'Render to Caesar… render to God'"
+    },
+    {
+      "ch": 13,
+      "word": "WATCHMAN",
+      "scene": "Olivet Discourse — 'Watch! You do not know when'"
+    },
+    {
+      "ch": 14,
+      "word": "JAR",
+      "scene": "Woman breaks alabaster jar — Last Supper, Gethsemane, Peter denies"
+    },
+    {
+      "ch": 15,
+      "word": "CURTAIN",
+      "scene": "Crucifixion — curtain torn; centurion: 'Truly this was the Son of God'"
+    },
+    {
+      "ch": 16,
+      "word": "STONE",
+      "scene": "Stone rolled away — 'He is risen, He is not here'"
+    }
+  ],
+  "luke": [
+    {
+      "ch": 1,
+      "word": "SONG",
+      "scene": "Mary's Magnificat + Zechariah's Benedictus"
+    },
+    {
+      "ch": 2,
+      "word": "MANGER",
+      "scene": "Birth in a manger — shepherds and angels"
+    },
+    {
+      "ch": 3,
+      "word": "GENEALOGY",
+      "scene": "Baptism + Luke's genealogy traced back to Adam"
+    },
+    {
+      "ch": 4,
+      "word": "SCROLL",
+      "scene": "Jesus reads Isaiah in Nazareth — 'Today this is fulfilled'"
+    },
+    {
+      "ch": 5,
+      "word": "NET",
+      "scene": "Peter's miraculous catch — 'I am a sinful man'"
+    },
+    {
+      "ch": 6,
+      "word": "PLAIN",
+      "scene": "Sermon on the Plain — Beatitudes and woes"
+    },
+    {
+      "ch": 7,
+      "word": "TEARS",
+      "scene": "Sinful woman washes feet with tears and hair"
+    },
+    {
+      "ch": 8,
+      "word": "LAMP",
+      "scene": "Lamp on a stand — don't hide the light"
+    },
+    {
+      "ch": 9,
+      "word": "FACE",
+      "scene": "Transfiguration — Jesus' face changed; 'set his face toward Jerusalem'"
+    },
+    {
+      "ch": 10,
+      "word": "FEET",
+      "scene": "Mary sits at Jesus' feet — Martha bustles around"
+    },
+    {
+      "ch": 11,
+      "word": "KNOCK",
+      "scene": "'Ask, seek, knock' — friend at midnight"
+    },
+    {
+      "ch": 12,
+      "word": "BARNS",
+      "scene": "Rich fool builds bigger barns"
+    },
+    {
+      "ch": 13,
+      "word": "FIG",
+      "scene": "Parable of the barren fig tree — one more year"
+    },
+    {
+      "ch": 14,
+      "word": "TABLE",
+      "scene": "Great Banquet — 'Come, for everything is ready'"
+    },
+    {
+      "ch": 15,
+      "word": "COIN",
+      "scene": "Lost sheep, lost coin, lost son — three parables of lostness"
+    },
+    {
+      "ch": 16,
+      "word": "RICH",
+      "scene": "Rich man and Lazarus — great chasm fixed"
+    },
+    {
+      "ch": 17,
+      "word": "TEN",
+      "scene": "Ten lepers healed — only one returns"
+    },
+    {
+      "ch": 18,
+      "word": "WIDOW",
+      "scene": "Persistent widow — Pharisee and tax collector"
+    },
+    {
+      "ch": 19,
+      "word": "TREE",
+      "scene": "Zacchaeus climbs a sycamore tree"
+    },
+    {
+      "ch": 20,
+      "word": "STONE",
+      "scene": "Cornerstone rejected"
+    },
+    {
+      "ch": 21,
+      "word": "WIDOW",
+      "scene": "Widow's mite — signs of the end"
+    },
+    {
+      "ch": 22,
+      "word": "CUP",
+      "scene": "Last Supper — 'This cup is the new covenant in my blood'"
+    },
+    {
+      "ch": 23,
+      "word": "PARADISE",
+      "scene": "'Today you will be with me in Paradise' — thief on the cross"
+    },
+    {
+      "ch": 24,
+      "word": "ROAD",
+      "scene": "Emmaus road — 'Did not our hearts burn within us?'"
+    }
+  ],
+  "1corinthians": [
+    {
+      "ch": 1,
+      "word": "CROSS",
+      "scene": "'The message of the cross is foolishness to those perishing'"
+    },
+    {
+      "ch": 2,
+      "word": "SPIRIT",
+      "scene": "'The Spirit searches all things — even the depths of God'"
+    },
+    {
+      "ch": 3,
+      "word": "FIRE",
+      "scene": "Each builder's work tested by fire — gold or straw"
+    },
+    {
+      "ch": 4,
+      "word": "FOOLS",
+      "scene": "'We are fools for Christ' — apostles as spectacle"
+    },
+    {
+      "ch": 5,
+      "word": "YEAST",
+      "scene": "A little yeast leavens the whole lump"
+    },
+    {
+      "ch": 6,
+      "word": "TEMPLE",
+      "scene": "'Your body is a temple of the Holy Spirit'"
+    },
+    {
+      "ch": 7,
+      "word": "MARRIED",
+      "scene": "Marriage, divorce, and singleness"
+    },
+    {
+      "ch": 8,
+      "word": "IDOL",
+      "scene": "Food sacrificed to idols — knowledge puffs up"
+    },
+    {
+      "ch": 9,
+      "word": "RACE",
+      "scene": "'Run in such a way as to win the prize'"
+    },
+    {
+      "ch": 10,
+      "word": "ROCK",
+      "scene": "The rock that followed them was Christ"
+    },
+    {
+      "ch": 11,
+      "word": "TABLE",
+      "scene": "Lord's Supper abused — 'examine yourselves'"
+    },
+    {
+      "ch": 12,
+      "word": "BODY",
+      "scene": "One body, many members"
+    },
+    {
+      "ch": 13,
+      "word": "LOVE",
+      "scene": "'If I have not love I am nothing' — love never fails"
+    },
+    {
+      "ch": 14,
+      "word": "TONGUE",
+      "scene": "Tongues and prophecy — 'all things decently and in order'"
+    },
+    {
+      "ch": 15,
+      "word": "SEED",
+      "scene": "Resurrection body like a seed — 'O death, where is your sting?'"
+    },
+    {
+      "ch": 16,
+      "word": "DOOR",
+      "scene": "'A great door of effective work has opened'"
+    }
+  ],
+  "2corinthians": [
+    {
+      "ch": 1,
+      "word": "COMFORT",
+      "scene": "'The God of all comfort — comforts us in all our affliction'"
+    },
+    {
+      "ch": 2,
+      "word": "FRAGRANCE",
+      "scene": "'We are the aroma of Christ — fragrance of life or death'"
+    },
+    {
+      "ch": 3,
+      "word": "VEIL",
+      "scene": "Moses' veil — we with unveiled face behold His glory"
+    },
+    {
+      "ch": 4,
+      "word": "JAR",
+      "scene": "Treasure in jars of clay — struck down but not destroyed"
+    },
+    {
+      "ch": 5,
+      "word": "TENT",
+      "scene": "Earthly tent destroyed — we have a building from God"
+    },
+    {
+      "ch": 6,
+      "word": "TEMPLE",
+      "scene": "'We are the temple of the living God'"
+    },
+    {
+      "ch": 7,
+      "word": "TEARS",
+      "scene": "Titus brings good news — Paul's tears of joy over Corinth"
+    },
+    {
+      "ch": 8,
+      "word": "GRACE",
+      "scene": "'The grace of our Lord Jesus — though He was rich, became poor'"
+    },
+    {
+      "ch": 9,
+      "word": "SEED",
+      "scene": "'Whoever sows sparingly reaps sparingly — God loves a cheerful giver'"
+    },
+    {
+      "ch": 10,
+      "word": "WEAPONS",
+      "scene": "'Our weapons are not of the flesh — we demolish arguments'"
+    },
+    {
+      "ch": 11,
+      "word": "FOOL",
+      "scene": "Paul becomes a 'fool' to list his sufferings"
+    },
+    {
+      "ch": 12,
+      "word": "THORN",
+      "scene": "'A thorn in the flesh — my grace is sufficient for you'"
+    },
+    {
+      "ch": 13,
+      "word": "EXAMINE",
+      "scene": "'Examine yourselves to see whether you are in the faith'"
+    }
+  ],
+  "colossians": [
+    {
+      "ch": 1,
+      "word": "IMAGE",
+      "scene": "'He is the image of the invisible God — firstborn over all creation'"
+    },
+    {
+      "ch": 2,
+      "word": "SHADOW",
+      "scene": "Old rituals are shadows — the substance belongs to Christ"
+    },
+    {
+      "ch": 3,
+      "word": "ABOVE",
+      "scene": "'Set your minds on things above' — put off the old self"
+    },
+    {
+      "ch": 4,
+      "word": "SALT",
+      "scene": "'Let your speech always be gracious, seasoned with salt'"
+    }
+  ],
+  "1thessalonians": [
+    {
+      "ch": 1,
+      "word": "THUNDER",
+      "scene": "'Our gospel came to you not in word only but in power — you became an example to all Macedonia'"
+    },
+    {
+      "ch": 2,
+      "word": "MOTHER",
+      "scene": "'We were gentle among you like a nursing mother caring for her children'"
+    },
+    {
+      "ch": 3,
+      "word": "CROWN",
+      "scene": "'You are our glory and joy — our crown' — Timothy's good report"
+    },
+    {
+      "ch": 4,
+      "word": "TRUMPET",
+      "scene": "'The Lord will descend with a trumpet call — the dead in Christ rise first'"
+    },
+    {
+      "ch": 5,
+      "word": "THIEF",
+      "scene": "'The Day of the Lord comes like a thief in the night — but you are children of light'"
+    }
+  ],
+  "2thessalonians": [
+    {
+      "ch": 1,
+      "word": "FIRE",
+      "scene": "'The Lord Jesus revealed from heaven in flaming fire — taking vengeance on those who do not know God'"
+    },
+    {
+      "ch": 2,
+      "word": "RESTRAINER",
+      "scene": "'The one who restrains will be taken out of the way — then the lawless one will be revealed'"
+    },
+    {
+      "ch": 3,
+      "word": "BREAD",
+      "scene": "'If anyone is not willing to work let him not eat' — Paul worked for his own bread"
+    }
+  ],
+  "1timothy": [
+    {
+      "ch": 1,
+      "word": "BLASPHEMER",
+      "scene": "'I was a blasphemer, persecutor, violent man — but I received mercy'"
+    },
+    {
+      "ch": 2,
+      "word": "HANDS",
+      "scene": "'I desire men to pray lifting holy hands'"
+    },
+    {
+      "ch": 3,
+      "word": "HOUSEHOLD",
+      "scene": "'If a man cannot manage his own household how can he care for God's church?'"
+    },
+    {
+      "ch": 4,
+      "word": "GYMNASIUM",
+      "scene": "'Train yourself for godliness'"
+    },
+    {
+      "ch": 5,
+      "word": "LIST",
+      "scene": "The widow's list — qualifications for enrollment"
+    },
+    {
+      "ch": 6,
+      "word": "ROOTS",
+      "scene": "'Love of money is a root of all kinds of evil'"
+    }
+  ],
+  "2timothy": [
+    {
+      "ch": 1,
+      "word": "FLAME",
+      "scene": "'Fan into flame the gift of God' — guard the good deposit"
+    },
+    {
+      "ch": 2,
+      "word": "SOLDIER",
+      "scene": "Soldier, athlete, farmer — suffer hardship with Christ"
+    },
+    {
+      "ch": 3,
+      "word": "SCROLL",
+      "scene": "'All Scripture is breathed out by God' — sacred writings"
+    },
+    {
+      "ch": 4,
+      "word": "CROWN",
+      "scene": "'I have fought the good fight… the crown of righteousness awaits me'"
+    }
+  ],
+  "titus": [
+    {
+      "ch": 1,
+      "word": "CRETE",
+      "scene": "'Cretans are always liars, evil beasts, lazy gluttons' — appoint elders anyway"
+    },
+    {
+      "ch": 2,
+      "word": "ADORNING",
+      "scene": "'Adorn the doctrine of God our Savior in everything'"
+    },
+    {
+      "ch": 3,
+      "word": "BATH",
+      "scene": "'He saved us through the washing of regeneration and renewing of the Holy Spirit'"
+    }
+  ],
+  "philemon": [
+    {
+      "ch": 1,
+      "word": "CHARGE",
+      "scene": "'If he has wronged you or owes you anything — charge that to my account' (v.18)"
+    }
+  ],
+  "james": [
+    {
+      "ch": 1,
+      "word": "MIRROR",
+      "scene": "Hear the word and do it — don't be like a man who forgets his face in a mirror"
+    },
+    {
+      "ch": 2,
+      "word": "RING",
+      "scene": "Man with gold rings welcomed — poor man told to sit on the floor"
+    },
+    {
+      "ch": 3,
+      "word": "FIRE",
+      "scene": "The tongue — a small fire that sets a great forest ablaze"
+    },
+    {
+      "ch": 4,
+      "word": "FOG",
+      "scene": "'You are a mist that appears for a little while then vanishes'"
+    },
+    {
+      "ch": 5,
+      "word": "RAIN",
+      "scene": "Be patient like the farmer waiting for the early and late rains"
+    }
+  ],
+  "1peter": [
+    {
+      "ch": 1,
+      "word": "GOLD",
+      "scene": "Faith more precious than gold refined by fire"
+    },
+    {
+      "ch": 2,
+      "word": "STONE",
+      "scene": "Jesus the living cornerstone — you are a chosen people, a royal priesthood"
+    },
+    {
+      "ch": 3,
+      "word": "ARK",
+      "scene": "Eight people saved through water — baptism now saves you"
+    },
+    {
+      "ch": 4,
+      "word": "FIERY",
+      "scene": "'Do not be surprised at the fiery trial'"
+    },
+    {
+      "ch": 5,
+      "word": "LION",
+      "scene": "'Your adversary the devil prowls like a roaring lion'"
+    }
+  ],
+  "2peter": [
+    {
+      "ch": 1,
+      "word": "LADDER",
+      "scene": "Add to faith: virtue → knowledge → self-control → steadfastness → godliness → love"
+    },
+    {
+      "ch": 2,
+      "word": "DOG",
+      "scene": "'The dog returns to its vomit — the sow to the mud' — false teachers"
+    },
+    {
+      "ch": 3,
+      "word": "THIEF",
+      "scene": "'The Day of the Lord will come like a thief — the heavens will pass away with a roar'"
+    }
+  ],
+  "1john": [
+    {
+      "ch": 1,
+      "word": "DARKNESS",
+      "scene": "'If we say we have fellowship with Him but walk in darkness we lie'"
+    },
+    {
+      "ch": 2,
+      "word": "WORLD",
+      "scene": "'Do not love the world — the world is passing away'"
+    },
+    {
+      "ch": 3,
+      "word": "MURDER",
+      "scene": "'Whoever hates his brother is a murderer' — Cain as warning"
+    },
+    {
+      "ch": 4,
+      "word": "FIRST",
+      "scene": "'We love because He first loved us'"
+    },
+    {
+      "ch": 5,
+      "word": "WATER",
+      "scene": "'This is He who came by water and blood — Jesus Christ'"
+    }
+  ],
+  "2john": [
+    {
+      "ch": 1,
+      "word": "DOOR",
+      "scene": "'Do not receive him into your house or give him any greeting' (v.10) — the false teacher at the door"
+    }
+  ],
+  "3john": [
+    {
+      "ch": 1,
+      "word": "FIRST",
+      "scene": "'Diotrephes who likes to put himself first does not acknowledge our authority' (v.9)"
+    }
+  ],
+  "jude": [
+    {
+      "ch": 1,
+      "word": "CREPT",
+      "scene": "'Certain people have crept in unnoticed — who long ago were designated for condemnation' (v.4)"
+    }
+  ],
+  "revelation": [
+    {
+      "ch": 1,
+      "word": "ROBE",
+      "scene": "Christ in a long robe — eyes like fire"
+    },
+    {
+      "ch": 2,
+      "word": "LETTERS",
+      "scene": "Four letters — Ephesus, Smyrna, Pergamum, Thyatira"
+    },
+    {
+      "ch": 3,
+      "word": "DOOR",
+      "scene": "Three letters — 'Behold I stand at the door and knock'"
+    },
+    {
+      "ch": 4,
+      "word": "THRONE",
+      "scene": "Throne room — four living creatures, 24 elders"
+    },
+    {
+      "ch": 5,
+      "word": "LAMB",
+      "scene": "The slain Lamb takes the scroll — worthy to open it"
+    },
+    {
+      "ch": 6,
+      "word": "HORSE",
+      "scene": "Four horsemen — white, red, black, pale"
+    },
+    {
+      "ch": 7,
+      "word": "SEALED",
+      "scene": "144,000 sealed — great multitude no one can number"
+    },
+    {
+      "ch": 8,
+      "word": "INCENSE",
+      "scene": "Golden censer of incense — silence in heaven"
+    },
+    {
+      "ch": 9,
+      "word": "LOCUSTS",
+      "scene": "Demonic locusts from the abyss"
+    },
+    {
+      "ch": 10,
+      "word": "SCROLL",
+      "scene": "Little scroll — sweet in the mouth, bitter in the stomach"
+    },
+    {
+      "ch": 11,
+      "word": "WITNESSES",
+      "scene": "Two witnesses — killed, raised, ascend"
+    },
+    {
+      "ch": 12,
+      "word": "DRAGON",
+      "scene": "Red dragon pursues the woman and her child"
+    },
+    {
+      "ch": 13,
+      "word": "BEAST",
+      "scene": "Beast from the sea — 666, mark of the beast"
+    },
+    {
+      "ch": 14,
+      "word": "HARVEST",
+      "scene": "The Lamb on Mount Zion — the great harvest"
+    },
+    {
+      "ch": 15,
+      "word": "SONG",
+      "scene": "Song of Moses and the Lamb"
+    },
+    {
+      "ch": 16,
+      "word": "ARMAGEDDON",
+      "scene": "Seven bowls poured — kings gathered at Armageddon"
+    },
+    {
+      "ch": 17,
+      "word": "HARLOT",
+      "scene": "Harlot Babylon riding the scarlet beast"
+    },
+    {
+      "ch": 18,
+      "word": "SMOKE",
+      "scene": "Babylon falls — merchants weep, smoke rises"
+    },
+    {
+      "ch": 19,
+      "word": "SWORD",
+      "scene": "Rider on a white horse — sword from His mouth"
+    },
+    {
+      "ch": 20,
+      "word": "CHAINS",
+      "scene": "Satan bound in chains — great white throne judgment"
+    },
+    {
+      "ch": 21,
+      "word": "CITY",
+      "scene": "New Jerusalem descends — no more tears, no more death"
+    },
+    {
+      "ch": 22,
+      "word": "RIVER",
+      "scene": "River of life — tree of life — 'Come, Lord Jesus'"
+    }
+  ]
+}
