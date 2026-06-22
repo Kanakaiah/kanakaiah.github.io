@@ -705,7 +705,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {/* Bottom Chapter Navigation Bar */}
       {!loading && !error && selectedVerses.length === 0 && (
-        <div className={`absolute bottom-0 left-0 w-full bg-glass-bg backdrop-blur-xl z-10 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
+        <div className={`absolute bottom-0 left-0 w-full bg-background/60 backdrop-blur-xl z-10 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
               onClick={handlePrevChapter}
@@ -740,7 +740,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {/* Book/Chapter Navigator */}
       {showNavigator && (
-        <div className="fixed inset-0 z-[70] flex flex-col bg-glass-bg backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
+        <div className="fixed inset-0 z-[70] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border">
             <button
