@@ -7,6 +7,9 @@ import { OT_BOOKS } from '../../data/otBooks';
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
+import otQuotesData from '../../data/otQuotes.json';
+
+const otQuotes = otQuotesData as Record<string, Record<string, number[]>>;
 
 interface ChapterReaderProps {
   bookId: string;
@@ -346,8 +349,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     
     // The chapter title is already shown in the sticky header, no need to duplicate it here.
 
+    const bollsId = BOLLS_BIBLE_MAP[bookId];
+
     verses.forEach((v) => {
       let text = v.text;
+      
+      const isOtQuoteVerse = otQuotes[bollsId]?.[chapter]?.includes(v.verse);
+      if (isOtQuoteVerse) {
+        text = text.replace(/(["“])([^"”]+)(["”])/g, (_match, startQuote, innerText, endQuote) => {
+          return `${startQuote}<span class="uppercase">${innerText}</span>${endQuote}`;
+        });
+      }
       
       // Extract section headings (<S> or <b>) FIRST
       let heading = '';
@@ -359,8 +371,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       // Extract paragraph breaks and forcefully strip all block tags to ensure inline rendering
       let hasP = false;
-      text = text.replace(/<\/?(p|br|div)[^>]*>/gi, (match) => {
-        if (!match.startsWith('</')) hasP = true;
+      text = text.replace(/<\/?(p|br|div)[^>]*>/gi, (matchStr) => {
+        if (!matchStr.startsWith('</')) hasP = true;
         return '';
       });
 
