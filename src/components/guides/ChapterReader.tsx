@@ -184,7 +184,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       next.set('readerBook', targetBookId);
       next.set('readerChapter', targetChapter.toString());
       return next;
-    });
+    }, { replace: true });
     setShowNavigator(false);
   };
 
