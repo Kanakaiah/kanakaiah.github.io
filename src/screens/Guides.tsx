@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
@@ -121,6 +121,26 @@ export const Guides: React.FC = () => {
   const [touchStartPos, setTouchStartPos] = useState<{x: number, y: number} | null>(null);
   const [touchEndPos, setTouchEndPos] = useState<{x: number, y: number} | null>(null);
 
+  const handlePrevBook = () => {
+    if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
+      const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
+      if (currentIndex !== -1) {
+        const prevIndex = (currentIndex - 1 + ALL_BOOKS.length) % ALL_BOOKS.length;
+        setActiveGuideId(ALL_BOOKS[prevIndex].id);
+      }
+    }
+  };
+
+  const handleNextBook = () => {
+    if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
+      const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
+      if (currentIndex !== -1) {
+        const nextIndex = (currentIndex + 1) % ALL_BOOKS.length;
+        setActiveGuideId(ALL_BOOKS[nextIndex].id);
+      }
+    }
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEndPos(null);
     setTouchStartPos({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
@@ -137,19 +157,12 @@ export const Guides: React.FC = () => {
     const minSwipeDistance = 50;
 
     if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > minSwipeDistance) {
-      if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
-        const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
-        if (currentIndex !== -1) {
-          if (distanceX > 0) {
-            // Swipe left (drag finger left) -> Next
-            const nextIndex = (currentIndex + 1) % ALL_BOOKS.length;
-            setActiveGuideId(ALL_BOOKS[nextIndex].id);
-          } else {
-            // Swipe right (drag finger right) -> Previous
-            const prevIndex = (currentIndex - 1 + ALL_BOOKS.length) % ALL_BOOKS.length;
-            setActiveGuideId(ALL_BOOKS[prevIndex].id);
-          }
-        }
+      if (distanceX > 0) {
+        // Swipe left (drag finger left) -> Next
+        handleNextBook();
+      } else {
+        // Swipe right (drag finger right) -> Previous
+        handlePrevBook();
       }
     }
   };
@@ -249,7 +262,7 @@ export const Guides: React.FC = () => {
   if (activeGuide) {
     return (
       <div 
-        className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]"
+        className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 pb-24 animate-[fadeIn_0.3s_ease-out]"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -580,6 +593,28 @@ export const Guides: React.FC = () => {
             </div>
           )}
 
+        </div>
+
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-safe bg-background/80 backdrop-blur-xl border-t border-glass-border shadow-up z-40 lg:ml-64">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <button onClick={handlePrevBook} className="p-3 text-secondary hover:text-primary transition-colors hover:bg-white/5 rounded-xl">
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            
+            <button 
+              onClick={() => setActiveGuideId(null)}
+              className="flex flex-col items-center group px-4 py-2 hover:bg-white/5 rounded-xl transition-colors"
+            >
+              <span className="text-sm font-medium text-primary flex items-center gap-1 group-hover:text-accent transition-colors">
+                <BookOpen className="w-4 h-4 mr-1 opacity-70" />
+                Index
+              </span>
+            </button>
+
+            <button onClick={handleNextBook} className="p-3 text-secondary hover:text-primary transition-colors hover:bg-white/5 rounded-xl">
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
         </div>
       </div>
     );
