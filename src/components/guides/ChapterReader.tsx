@@ -92,20 +92,34 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const currentBook = bookIndex !== -1 ? ALL_BOOKS[bookIndex] : null;
 
   let prevLabel: string | null = null;
+  let prevAbbrLabel: string | null = null;
   let nextLabel: string | null = null;
+  let nextAbbrLabel: string | null = null;
+
+  const getAbbr = (name: string) => {
+    if (name.length <= 4) return name;
+    if (name.startsWith('1 ') || name.startsWith('2 ') || name.startsWith('3 ')) {
+      return name.substring(0, 5).replace(' ', '');
+    }
+    return name.substring(0, 3);
+  };
 
   if (currentBook) {
     if (chapter > 1) {
       prevLabel = `${bookTitle} ${chapter - 1}`;
+      prevAbbrLabel = `${getAbbr(bookTitle)} ${chapter - 1}`;
     } else if (bookIndex > 0) {
       const prev = ALL_BOOKS[bookIndex - 1];
       prevLabel = `${prev.name} ${prev.chapters}`;
+      prevAbbrLabel = `${getAbbr(prev.name)} ${prev.chapters}`;
     }
 
     if (chapter < currentBook.chapters) {
       nextLabel = `${bookTitle} ${chapter + 1}`;
+      nextAbbrLabel = `${getAbbr(bookTitle)} ${chapter + 1}`;
     } else if (bookIndex < ALL_BOOKS.length - 1) {
       nextLabel = `${ALL_BOOKS[bookIndex + 1].name} 1`;
+      nextAbbrLabel = `${getAbbr(ALL_BOOKS[bookIndex + 1].name)} 1`;
     }
   }
 
@@ -699,7 +713,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-glass-bg text-secondary hover:text-primary"
             >
               <ChevronLeft className="w-4 h-4 flex-shrink-0" />
-              <span className="truncate max-w-[120px]">{prevLabel || 'Start'}</span>
+              <span className="hidden sm:block truncate max-w-[120px]">{prevLabel || 'Start'}</span>
+              <span className="sm:hidden truncate max-w-[80px]">{prevAbbrLabel || 'Start'}</span>
             </button>
 
             <button 
@@ -715,7 +730,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               disabled={!nextLabel}
               className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-glass-bg text-secondary hover:text-primary"
             >
-              <span className="truncate max-w-[120px]">{nextLabel || 'End'}</span>
+              <span className="hidden sm:block truncate max-w-[120px]">{nextLabel || 'End'}</span>
+              <span className="sm:hidden truncate max-w-[80px]">{nextAbbrLabel || 'End'}</span>
               <ChevronRight className="w-4 h-4 flex-shrink-0" />
             </button>
           </div>
