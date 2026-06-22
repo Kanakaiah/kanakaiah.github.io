@@ -144,6 +144,14 @@ export const Guides: React.FC = () => {
     return () => scrollContainer.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Scroll to top when switching books
+  useEffect(() => {
+    const scrollContainer = document.getElementById('main-scroll-container');
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0;
+    }
+  }, [activeGuideId]);
+
   const handlePrevBook = () => {
     if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
       const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
