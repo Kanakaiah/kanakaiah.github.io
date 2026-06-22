@@ -183,6 +183,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       const next = new URLSearchParams(prev);
       next.set('readerBook', targetBookId);
       next.set('readerChapter', targetChapter.toString());
+      // Also update the guide param so closing the reader lands on the correct book's page
+      if (next.has('guide')) {
+        next.set('guide', targetBookId);
+      }
       return next;
     }, { replace: true });
     setShowNavigator(false);
