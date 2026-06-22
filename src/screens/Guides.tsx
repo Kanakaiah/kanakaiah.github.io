@@ -152,25 +152,20 @@ export const Guides: React.FC = () => {
     }
   }, [activeGuideId]);
 
-  const handlePrevBook = () => {
-    if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
-      const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
-      if (currentIndex !== -1) {
-        const prevIndex = (currentIndex - 1 + ALL_BOOKS.length) % ALL_BOOKS.length;
-        setActiveGuideId(ALL_BOOKS[prevIndex].id);
-      }
+  const { prevBook, nextBook } = useMemo(() => {
+    if (!activeGuideId || activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) {
+      return { prevBook: null, nextBook: null };
     }
-  };
+    const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
+    if (currentIndex === -1) return { prevBook: null, nextBook: null };
+    return {
+      prevBook: ALL_BOOKS[(currentIndex - 1 + ALL_BOOKS.length) % ALL_BOOKS.length],
+      nextBook: ALL_BOOKS[(currentIndex + 1) % ALL_BOOKS.length]
+    };
+  }, [activeGuideId]);
 
-  const handleNextBook = () => {
-    if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
-      const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
-      if (currentIndex !== -1) {
-        const nextIndex = (currentIndex + 1) % ALL_BOOKS.length;
-        setActiveGuideId(ALL_BOOKS[nextIndex].id);
-      }
-    }
-  };
+  const handlePrevBook = () => { if (prevBook) setActiveGuideId(prevBook.id); };
+  const handleNextBook = () => { if (nextBook) setActiveGuideId(nextBook.id); };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEndPos(null);
@@ -639,28 +634,41 @@ export const Guides: React.FC = () => {
 
         <div className={`
           fixed bottom-24 lg:bottom-10 left-1/2 -translate-x-1/2 
-          w-auto min-w-[280px] max-w-[400px]
+          w-auto min-w-[320px] max-w-[500px]
           flex items-center justify-between px-3 py-2 
           bg-glass-bg backdrop-blur-xl border border-glass-border rounded-full shadow-2xl shadow-black/50
           z-40 lg:ml-64 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${isNavHidden ? 'translate-y-32 opacity-0 scale-95' : 'translate-y-0 opacity-100 scale-100'}
         `}>
-          <button onClick={handlePrevBook} className="p-3 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center justify-center">
-            <ChevronLeft className="w-6 h-6" />
+          <button 
+            onClick={handlePrevBook} 
+            className="px-3 py-2 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center gap-1.5"
+            title={prevBook?.name || ''}
+          >
+            <ChevronLeft className="w-5 h-5 flex-shrink-0" />
+            <span className="text-sm font-medium hidden sm:block truncate max-w-[120px]">{prevBook?.name}</span>
+            <span className="text-sm font-medium sm:hidden truncate max-w-[80px]">
+              {prevBook ? (prevBook.name.length <= 4 ? prevBook.name : (prevBook.name.startsWith('1 ') || prevBook.name.startsWith('2 ') || prevBook.name.startsWith('3 ') ? prevBook.name.substring(0, 5).replace(' ', '') : prevBook.name.substring(0, 3))) : ''}
+            </span>
           </button>
           
           <button 
             onClick={() => setActiveGuideId(null)}
-            className="flex items-center gap-2 px-6 py-2.5 hover:bg-white/10 rounded-full transition-colors group"
+            className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-glass-border rounded-lg px-3 py-1.5"
           >
-            <BookOpen className="w-5 h-5 opacity-70 group-hover:opacity-100 group-hover:text-accent transition-all" />
-            <span className="text-sm font-bold text-primary group-hover:text-accent transition-colors">
-              Index
-            </span>
+            INDEX
           </button>
 
-          <button onClick={handleNextBook} className="p-3 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center justify-center">
-            <ChevronRight className="w-6 h-6" />
+          <button 
+            onClick={handleNextBook} 
+            className="px-3 py-2 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center gap-1.5"
+            title={nextBook?.name || ''}
+          >
+            <span className="text-sm font-medium hidden sm:block truncate max-w-[120px]">{nextBook?.name}</span>
+            <span className="text-sm font-medium sm:hidden truncate max-w-[80px]">
+              {nextBook ? (nextBook.name.length <= 4 ? nextBook.name : (nextBook.name.startsWith('1 ') || nextBook.name.startsWith('2 ') || nextBook.name.startsWith('3 ') ? nextBook.name.substring(0, 5).replace(' ', '') : nextBook.name.substring(0, 3))) : ''}
+            </span>
+            <ChevronRight className="w-5 h-5 flex-shrink-0" />
           </button>
         </div>
       </div>
