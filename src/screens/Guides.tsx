@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
@@ -299,36 +299,47 @@ export const Guides: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         <div className="flex flex-col gap-4 mb-2">
-          {/* Breadcrumb Navigation */}
-          <div className="flex items-center gap-1 text-[0.8125rem] font-medium flex-wrap">
-            <button
-              onClick={() => setActiveGuideId(null)}
-              className="text-accent hover:text-accent-hover transition-colors"
-            >
-              Bible
-            </button>
-            {activeGuide.type === 'book-guide' && (() => {
-              const isOT = OT_BOOKS.some(b => b.id === activeGuide.id);
-              return (
+          <div className="flex items-center justify-between gap-4">
+            {/* Breadcrumb Navigation */}
+            <div className="flex items-center gap-1 text-[0.8125rem] font-medium flex-wrap">
+              <button
+                onClick={() => setActiveGuideId(null)}
+                className="text-accent hover:text-accent-hover transition-colors"
+              >
+                Bible
+              </button>
+              {activeGuide.type === 'book-guide' && (() => {
+                const isOT = OT_BOOKS.some(b => b.id === activeGuide.id);
+                return (
+                  <>
+                    <ChevronRight className="w-3.5 h-3.5 text-muted" />
+                    <button
+                      onClick={() => setActiveGuideId(isOT ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)}
+                      className="text-accent hover:text-accent-hover transition-colors"
+                    >
+                      {isOT ? 'Old Testament' : 'New Testament'}
+                    </button>
+                    <ChevronRight className="w-3.5 h-3.5 text-muted" />
+                    <span className="text-primary font-bold">{activeGuide.title}</span>
+                  </>
+                );
+              })()}
+              {activeGuide.type !== 'book-guide' && (
                 <>
-                  <ChevronRight className="w-3.5 h-3.5 text-muted" />
-                  <button
-                    onClick={() => setActiveGuideId(isOT ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)}
-                    className="text-accent hover:text-accent-hover transition-colors"
-                  >
-                    {isOT ? 'Old Testament' : 'New Testament'}
-                  </button>
                   <ChevronRight className="w-3.5 h-3.5 text-muted" />
                   <span className="text-primary font-bold">{activeGuide.title}</span>
                 </>
-              );
-            })()}
-            {activeGuide.type !== 'book-guide' && (
-              <>
-                <ChevronRight className="w-3.5 h-3.5 text-muted" />
-                <span className="text-primary font-bold">{activeGuide.title}</span>
-              </>
-            )}
+              )}
+            </div>
+
+            {/* Close Button */}
+            <button 
+              onClick={() => setActiveGuideId(null)}
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors shadow-sm flex-shrink-0"
+              aria-label="Close Guide"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
           {activeGuide.type !== 'book-guide' && (
             <div>

@@ -15,8 +15,9 @@ export const AppLayout: React.FC = () => {
 
   // Hide bottom/side navigation when in the reading view or practice view
   const isReadingPage = new URLSearchParams(location.search).has('readerBook');
+  const isGuidePage = new URLSearchParams(location.search).has('guide');
   const isPracticePage = location.pathname === '/practice';
-  const isFullscreenView = isReadingPage || isPracticePage;
+  const isFullscreenView = isReadingPage || isPracticePage || isGuidePage;
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const currentScrollY = e.currentTarget.scrollTop;
