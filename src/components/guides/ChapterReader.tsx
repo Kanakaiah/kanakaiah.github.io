@@ -398,9 +398,19 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       
       const isOtQuoteVerse = otQuotes[bollsId]?.[chapter]?.includes(v.verse);
       if (isOtQuoteVerse) {
-        text = text.replace(/(["“])([^"”]+)(["”])/g, (_match, startQuote, innerText, endQuote) => {
+        // First try: uppercase text inside matched quote pairs (single-verse quotes)
+        let hasQuotePair = false;
+        text = text.replace(/([""\u2018])([^""\u2019]+)([""\u2019])/g, (_match, startQuote, innerText, endQuote) => {
+          hasQuotePair = true;
           return `${startQuote}<span class="uppercase">${innerText}</span>${endQuote}`;
         });
+        // Fallback: if no matched pairs found (multi-verse spanning quote),
+        // uppercase all plain text content (preserving HTML tags)
+        if (!hasQuotePair) {
+          text = text.replace(/([^<>]+)(?=<|$)/g, (segment) => {
+            return segment.toUpperCase();
+          });
+        }
       }
       
       // Extract section headings (<S> or <b>) FIRST
