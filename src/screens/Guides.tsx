@@ -125,8 +125,13 @@ export const Guides: React.FC = () => {
   const [isNavHidden, setIsNavHidden] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+    const scrollContainer = document.getElementById('main-scroll-container');
+    if (!scrollContainer) return;
+
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLDivElement;
+      const currentScrollY = target.scrollTop;
+      
       if (currentScrollY > lastScrollY.current + 10 && currentScrollY > 50) {
         setIsNavHidden(true);
       } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY < 50) {
@@ -135,8 +140,8 @@ export const Guides: React.FC = () => {
       lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    return () => scrollContainer.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handlePrevBook = () => {

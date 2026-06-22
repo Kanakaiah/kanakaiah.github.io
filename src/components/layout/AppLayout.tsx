@@ -139,6 +139,7 @@ export const AppLayout: React.FC = () => {
 
         {/* SCROLLABLE PAGE CONTENT */}
         <div 
+          id="main-scroll-container"
           className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8'}`}
           onScroll={handleScroll}
         >
