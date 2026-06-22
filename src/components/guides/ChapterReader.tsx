@@ -392,25 +392,44 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     // The chapter title is already shown in the sticky header, no need to duplicate it here.
 
     const bollsId = BOLLS_BIBLE_MAP[bookId];
+    let quoteLevel = 0; // Track quote nesting across verses
 
     verses.forEach((v) => {
       let text = v.text;
       
       const isOtQuoteVerse = otQuotes[bollsId]?.[chapter]?.includes(v.verse);
       if (isOtQuoteVerse) {
-        // First try: uppercase text inside matched quote pairs (single-verse quotes)
-        let hasQuotePair = false;
-        text = text.replace(/([""\u2018])([^""\u2019]+)([""\u2019])/g, (_match, startQuote, innerText, endQuote) => {
-          hasQuotePair = true;
-          return `${startQuote}<span class="uppercase">${innerText}</span>${endQuote}`;
-        });
-        // Fallback: if no matched pairs found (multi-verse spanning quote),
-        // uppercase all plain text content (preserving HTML tags)
-        if (!hasQuotePair) {
-          text = text.replace(/([^<>]+)(?=<|$)/g, (segment) => {
-            return segment.toUpperCase();
-          });
+        // Split by quote characters. 
+        // We use lookarounds for the right single quote ’ (U+2019) so we don't accidentally split on apostrophes (like "Abraham’s")
+        let parts = text.split(/(["“‘”]|(?<!\w)’|’(?!\w))/);
+        let newText = '';
+
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          if (!part) continue; // skip empty strings from split
+
+          if (part === '"') {
+            if (quoteLevel > 0) quoteLevel--; else quoteLevel++;
+            newText += part;
+          } else if (part === '“' || part === '‘') {
+            quoteLevel++;
+            newText += part;
+          } else if (part === '”' || part === '’') {
+            quoteLevel = Math.max(0, quoteLevel - 1);
+            newText += part;
+          } else {
+            // It's text content. If we're inside a quote, uppercase it.
+            if (quoteLevel > 0 && part.trim().length > 0) {
+              newText += `<span class="uppercase">${part}</span>`;
+            } else {
+              newText += part;
+            }
+          }
         }
+        text = newText;
+      } else {
+        // If we exit an OT quote block, reset the quote level to prevent bleeding into non-OT verses
+        quoteLevel = 0;
       }
       
       // Extract section headings (<S> or <b>) FIRST
