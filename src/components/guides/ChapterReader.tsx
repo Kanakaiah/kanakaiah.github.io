@@ -778,7 +778,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                     <React.Fragment key={`row-${i}`}>
                       <button
                         onClick={() => ot && setNavigatorBook(ot.id)}
-                        className={`text-right pr-4 py-1.5 text-[13px] transition-colors ${
+                        className={`text-right pr-4 py-2 text-[15px] transition-colors ${
                           isOtSelected
                             ? 'text-accent font-bold bg-accent/10 rounded-r-lg'
                             : ot ? 'text-secondary hover:text-primary' : 'pointer-events-none'
@@ -789,7 +789,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                       </button>
                       <button
                         onClick={() => nt && setNavigatorBook(nt.id)}
-                        className={`text-left pl-4 py-1.5 text-[13px] font-medium transition-colors ${
+                        className={`text-left pl-4 py-2 text-[15px] font-medium transition-colors ${
                           isNtSelected
                             ? 'text-accent font-bold bg-accent/10 rounded-l-lg'
                             : nt ? 'text-secondary hover:text-primary' : 'pointer-events-none'
@@ -817,7 +817,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                               <button
                                 key={ch}
                                 onClick={() => handleNavigate(navigatorBook, ch)}
-                                className={`aspect-square rounded-lg text-sm font-bold transition-all flex items-center justify-center ${
+                                className={`aspect-square rounded-lg text-base font-bold transition-all flex items-center justify-center ${
                                   isCurrent
                                     ? 'bg-accent text-white shadow-lg shadow-accent/30'
                                     : 'text-secondary hover:bg-glass-bg hover:text-primary'
