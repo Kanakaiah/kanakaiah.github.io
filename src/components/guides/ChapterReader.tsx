@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus, X, Copy } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
@@ -37,6 +37,23 @@ const BOLLS_BIBLE_MAP: Record<string, number> = {
   '1john': 62, '2john': 63, '3john': 64, jude: 65, revelation: 66,
 };
 
+const BOOK_SHORT: Record<string, string> = {
+  genesis: 'Gen', exodus: 'Exod', leviticus: 'Lev', numbers: 'Num',
+  deuteronomy: 'Deut', joshua: 'Josh', judges: 'Judg', ruth: 'Ruth',
+  '1samuel': '1 Sam', '2samuel': '2 Sam', '1kings': '1 Kgs', '2kings': '2 Kgs',
+  '1chronicles': '1 Chr', '2chronicles': '2 Chr', nehemiah: 'Neh',
+  songofsolomon: 'Song', ecclesiastes: 'Eccl', jeremiah: 'Jer',
+  lamentations: 'Lam', ezekiel: 'Ezek', habakkuk: 'Hab', zephaniah: 'Zeph',
+  haggai: 'Hag', zechariah: 'Zech', malachi: 'Mal',
+  matthew: 'Matt', '1corinthians': '1 Cor', '2corinthians': '2 Cor',
+  galatians: 'Gal', ephesians: 'Eph', philippians: 'Phil', colossians: 'Col',
+  '1thessalonians': '1 Thess', '2thessalonians': '2 Thess',
+  '1timothy': '1 Tim', '2timothy': '2 Tim', philemon: 'Philem',
+  hebrews: 'Heb', '1peter': '1 Pet', '2peter': '2 Pet',
+  '1john': '1 John', '2john': '2 John', '3john': '3 John',
+  revelation: 'Rev',
+};
+
 interface Verse {
   pk: number;
   verse: number;
@@ -53,6 +70,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const { showToast } = useToast();
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
   const [showAddOptions, setShowAddOptions] = useState(false);
+  const [showNavigator, setShowNavigator] = useState(false);
+  const [navigatorBook, setNavigatorBook] = useState(bookId);
+  const chapterGridRef = useRef<HTMLDivElement>(null);
 
   const lastScrollY = useRef(0);
   const [isNavHidden, setIsNavHidden] = useState(false);
@@ -157,6 +177,24 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       }
     }
   };
+
+  const handleNavigate = (targetBookId: string, targetChapter: number) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.set('readerBook', targetBookId);
+      next.set('readerChapter', targetChapter.toString());
+      return next;
+    });
+    setShowNavigator(false);
+  };
+
+  useEffect(() => {
+    if (showNavigator && chapterGridRef.current) {
+      setTimeout(() => {
+        chapterGridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
+    }
+  }, [navigatorBook, showNavigator]);
 
   useEffect(() => {
     const fetchChapter = async () => {
@@ -631,9 +669,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               <span className="truncate max-w-[120px]">{prevLabel || 'Start'}</span>
             </button>
 
-            <span className="text-xs font-bold text-muted uppercase tracking-wider">
+            <button 
+              onClick={() => { setNavigatorBook(bookId); setShowNavigator(true); }}
+              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-glass-border rounded-lg px-3 py-1.5"
+            >
               Ch {chapter}
-            </span>
+              <ChevronDown className="w-3 h-3" />
+            </button>
 
             <button
               onClick={handleNextChapter}
@@ -643,6 +685,108 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               <span className="truncate max-w-[120px]">{nextLabel || 'End'}</span>
               <ChevronRight className="w-4 h-4 flex-shrink-0" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Book/Chapter Navigator */}
+      {showNavigator && (
+        <div className="fixed inset-0 z-[70] flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
+          {/* Header */}
+          <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border">
+            <button
+              onClick={() => setShowNavigator(false)}
+              className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+            >
+              <X className="w-5 h-5 text-secondary" />
+            </button>
+            <span className="text-sm font-bold text-primary tracking-wide">Go to...</span>
+            <div className="w-9" />
+          </div>
+
+          {/* Book list */}
+          <div className="flex-1 overflow-y-auto px-4 py-3">
+            {/* Column headers */}
+            <div className="grid grid-cols-2 mb-2">
+              <span className="text-right pr-4 text-[10px] font-bold text-muted uppercase tracking-widest">Old Testament</span>
+              <span className="text-left pl-4 text-[10px] font-bold text-muted uppercase tracking-widest">New Testament</span>
+            </div>
+
+            {/* Book rows with inline chapter grid */}
+            <div className="grid grid-cols-2">
+              {(() => {
+                const rows: React.ReactNode[] = [];
+                const maxLen = Math.max(OT_BOOKS.length, NT_BOOKS.length);
+                const selectedBookData = ALL_BOOKS.find(b => b.id === navigatorBook);
+
+                for (let i = 0; i < maxLen; i++) {
+                  const ot = i < OT_BOOKS.length ? OT_BOOKS[i] : null;
+                  const nt = i < NT_BOOKS.length ? NT_BOOKS[i] : null;
+                  const isOtSelected = ot?.id === navigatorBook;
+                  const isNtSelected = nt?.id === navigatorBook;
+
+                  rows.push(
+                    <React.Fragment key={`row-${i}`}>
+                      <button
+                        onClick={() => ot && setNavigatorBook(ot.id)}
+                        className={`text-right pr-4 py-1.5 text-[13px] transition-colors ${
+                          isOtSelected
+                            ? 'text-accent font-bold bg-accent/10 rounded-r-lg'
+                            : ot ? 'text-secondary hover:text-primary' : 'pointer-events-none'
+                        }`}
+                        disabled={!ot}
+                      >
+                        {ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}
+                      </button>
+                      <button
+                        onClick={() => nt && setNavigatorBook(nt.id)}
+                        className={`text-left pl-4 py-1.5 text-[13px] font-medium transition-colors ${
+                          isNtSelected
+                            ? 'text-accent font-bold bg-accent/10 rounded-l-lg'
+                            : nt ? 'text-secondary hover:text-primary' : 'pointer-events-none'
+                        }`}
+                        disabled={!nt}
+                      >
+                        {nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}
+                      </button>
+                    </React.Fragment>
+                  );
+
+                  {/* Full-width chapter grid if this row's book is selected */}
+                  if ((isOtSelected || isNtSelected) && selectedBookData) {
+                    rows.push(
+                      <div
+                        key="chapter-grid"
+                        ref={chapterGridRef}
+                        className="py-3 px-2 border-y border-glass-border/50 my-1"
+                        style={{ gridColumn: '1 / -1' }}
+                      >
+                        <div className="grid grid-cols-7 gap-1.5 max-w-xs mx-auto">
+                          {Array.from({ length: selectedBookData.chapters }, (_, j) => j + 1).map(ch => {
+                            const isCurrent = navigatorBook === bookId && ch === chapter;
+                            return (
+                              <button
+                                key={ch}
+                                onClick={() => handleNavigate(navigatorBook, ch)}
+                                className={`aspect-square rounded-lg text-sm font-bold transition-all flex items-center justify-center ${
+                                  isCurrent
+                                    ? 'bg-accent text-white shadow-lg shadow-accent/30'
+                                    : 'text-secondary hover:bg-glass-bg hover:text-primary'
+                                }`}
+                              >
+                                {ch}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  }
+                }
+
+                return rows;
+              })()}
+            </div>
           </div>
         </div>
       )}
