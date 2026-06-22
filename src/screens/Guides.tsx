@@ -618,26 +618,31 @@ export const Guides: React.FC = () => {
 
         </div>
 
-        <div className={`fixed bottom-0 left-0 right-0 p-4 pb-safe bg-background/80 backdrop-blur-xl z-40 lg:ml-64 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <button onClick={handlePrevBook} className="p-3 text-secondary hover:text-primary transition-colors hover:bg-white/5 rounded-xl">
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            
-            <button 
-              onClick={() => setActiveGuideId(null)}
-              className="flex flex-col items-center group px-4 py-2 hover:bg-white/5 rounded-xl transition-colors"
-            >
-              <span className="text-sm font-medium text-primary flex items-center gap-1 group-hover:text-accent transition-colors">
-                <BookOpen className="w-4 h-4 mr-1 opacity-70" />
-                Index
-              </span>
-            </button>
+        <div className={`
+          fixed bottom-24 lg:bottom-10 left-1/2 -translate-x-1/2 
+          w-auto min-w-[280px] max-w-[400px]
+          flex items-center justify-between px-3 py-2 
+          bg-glass-bg backdrop-blur-xl border border-glass-border rounded-full shadow-2xl shadow-black/50
+          z-40 lg:ml-64 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${isNavHidden ? 'translate-y-32 opacity-0 scale-95' : 'translate-y-0 opacity-100 scale-100'}
+        `}>
+          <button onClick={handlePrevBook} className="p-3 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center justify-center">
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          
+          <button 
+            onClick={() => setActiveGuideId(null)}
+            className="flex items-center gap-2 px-6 py-2.5 hover:bg-white/10 rounded-full transition-colors group"
+          >
+            <BookOpen className="w-5 h-5 opacity-70 group-hover:opacity-100 group-hover:text-accent transition-all" />
+            <span className="text-sm font-bold text-primary group-hover:text-accent transition-colors">
+              Index
+            </span>
+          </button>
 
-            <button onClick={handleNextBook} className="p-3 text-secondary hover:text-primary transition-colors hover:bg-white/5 rounded-xl">
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
+          <button onClick={handleNextBook} className="p-3 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center justify-center">
+            <ChevronRight className="w-6 h-6" />
+          </button>
         </div>
       </div>
     );
