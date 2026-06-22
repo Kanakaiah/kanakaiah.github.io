@@ -141,13 +141,13 @@ export const Guides: React.FC = () => {
         const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
         if (currentIndex !== -1) {
           if (distanceX > 0) {
-            // Swipe left -> Previous
-            const prevIndex = (currentIndex - 1 + ALL_BOOKS.length) % ALL_BOOKS.length;
-            setActiveGuideId(ALL_BOOKS[prevIndex].id);
-          } else {
-            // Swipe right -> Next
+            // Swipe left (drag finger left) -> Next
             const nextIndex = (currentIndex + 1) % ALL_BOOKS.length;
             setActiveGuideId(ALL_BOOKS[nextIndex].id);
+          } else {
+            // Swipe right (drag finger right) -> Previous
+            const prevIndex = (currentIndex - 1 + ALL_BOOKS.length) % ALL_BOOKS.length;
+            setActiveGuideId(ALL_BOOKS[prevIndex].id);
           }
         }
       }
