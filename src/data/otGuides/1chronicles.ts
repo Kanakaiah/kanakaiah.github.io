@@ -1,0 +1,52 @@
+export const FIRST_CHRONICLES_GUIDE = {
+  id: '1chronicles',
+  title: '1 Chronicles',
+  subtitle: 'Tracing the Line of Promise',
+  chapters: 29,
+  icon: '📖',
+  type: 'book-guide',
+  tier: 3,
+  category: 'Tier 3 — Old Testament',
+  structureFormula: '9 → 12 → 8',
+  blocks: [
+    { chapters: '1–9', label: 'GENEALOGIES', description: 'The Roots of the Kingdom' },
+    { chapters: '10–21', label: 'REIGN', description: 'David’s Triumphs and Rule' },
+    { chapters: '22–29', label: 'PREPARATION', description: 'Preparing for the Temple' }
+  ],
+  anchors: [
+    { ch: 1, word: 'NAMES', scene: 'A long scroll of names from Adam to Abraham' },
+    { ch: 2, word: 'LINEAGE', scene: 'Tracing the royal lineage of Judah' },
+    { ch: 3, word: 'CROWN', scene: 'Listing the royal descendants of David’s crown' },
+    { ch: 4, word: 'TENT', scene: 'Jabez praying to expand his tent and territory' },
+    { ch: 5, word: 'CAMELS', scene: 'Taking fifty thousand camels from the Hagrites' },
+    { ch: 6, word: 'EPHOD', scene: 'The priestly line wearing the linen ephod' },
+    { ch: 7, word: 'SHIELD', scene: 'The mighty warriors of Issachar holding shields' },
+    { ch: 8, word: 'ARCHERS', scene: 'Benjamin’s expert archers with their bows' },
+    { ch: 9, word: 'GATES', scene: 'Gatekeepers standing watch at the temple gates' },
+    { ch: 10, word: 'ARROWS', scene: 'Saul struck by Philistine arrows on Mount Gilboa' },
+    { ch: 11, word: 'WATER', scene: 'David refusing to drink the water from Bethlehem' },
+    { ch: 12, word: 'SHIELDS', scene: 'Fierce Gadite warriors with faces like lions holding shields' },
+    { ch: 13, word: 'CART', scene: 'Uzzah struck down while steadying the oxen cart' },
+    { ch: 14, word: 'TREES', scene: 'The sound of marching in the tops of the balsam trees' },
+    { ch: 15, word: 'ROBE', scene: 'David leaping and dancing in a robe of fine linen' },
+    { ch: 16, word: 'TENT', scene: 'Placing the Ark inside the pitched tent with singing' },
+    { ch: 17, word: 'HOUSE', scene: 'God promising to build a house for David’s descendants' },
+    { ch: 18, word: 'BRONZE', scene: 'David taking vast amounts of bronze from Tibhath' },
+    { ch: 19, word: 'GARMENTS', scene: 'Ambassadors returning with their garments cut in half' },
+    { ch: 20, word: 'CROWN', scene: 'Taking the heavy jeweled crown from the idol of Milcom' },
+    { ch: 21, word: 'SWORD', scene: 'The angel standing over Jerusalem with a drawn sword' },
+    { ch: 22, word: 'STONE', scene: 'Stonemasons hewing stone to build the house of God' },
+    { ch: 23, word: 'CENSUS', scene: 'David taking a census of the Levites' },
+    { ch: 24, word: 'LOTS', scene: 'Casting lots to organize the divisions of priests' },
+    { ch: 25, word: 'HARPS', scene: 'Musicians prophesying with harps, lyres, and cymbals' },
+    { ch: 26, word: 'DOORS', scene: 'Gatekeepers guarding the storehouses and temple doors' },
+    { ch: 27, word: 'MONTHS', scene: 'Army commanders organized to serve by the months' },
+    { ch: 28, word: 'PLANS', scene: 'David handing Solomon the architectural plans for the temple' },
+    { ch: 29, word: 'GOLD', scene: 'The people offering immense heaps of gold willingly' }
+  ],
+  memorySentence: 'NAMES and a LINEAGE brought a CROWN to the TENT, CAMELS and an EPHOD led a SHIELD and ARCHERS to the GATES, ARROWS and WATER united SHIELDS at the CART, marching through TREES in a ROBE, the TENT became a HOUSE, taking BRONZE and GARMENTS and a CROWN, as a SWORD brought a STONE, a CENSUS for LOTS, HARPS and DOORS for the MONTHS, making PLANS for GOLD.',
+  keyVerses: [
+    { ref: '1 Chronicles 16:34', text: 'O give thanks to Yahweh, for He is good; For His lovingkindness endures forever.', theme: 'Thanksgiving' },
+    { ref: '1 Chronicles 29:14', text: '"But who am I and who are my people that we should be able to offer as generously as this? For all things come from You, and from Your hand we have given You."', theme: 'Offering' }
+  ]
+};

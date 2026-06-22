@@ -1,0 +1,52 @@
+import type { StudyGuide } from '../types';
+
+export const EXODUS_GUIDE: StudyGuide = {
+  id: 'exodus',
+  anchors: [
+    { ch: 1, word: 'OPPRESSION', scene: 'Hebrew slaves hauling heavy mud bricks under the Egyptian sun' },
+    { ch: 2, word: 'BASKET', scene: 'A woven bulrush basket floating among the reeds of the Nile' },
+    { ch: 3, word: 'BURNING', scene: 'A desert bush blazing with fire but not consumed' },
+    { ch: 4, word: 'STAFF', scene: 'A wooden shepherd staff turning into a slithering snake' },
+    { ch: 5, word: 'BRICKS', scene: 'Slaves desperately searching for stubble to make bricks without straw' },
+    { ch: 6, word: 'PROMISE', scene: 'God speaking from a glowing cloud of glory' },
+    { ch: 7, word: 'BLOOD', scene: 'The mighty Nile river turned completely to thick red blood' },
+    { ch: 8, word: 'PLAGUES', scene: 'Swarms of frogs and flies covering the land of Egypt' },
+    { ch: 9, word: 'HAIL', scene: 'Fiery hail raining down, destroying crops and trees' },
+    { ch: 10, word: 'DARKNESS', scene: 'A thick, oppressive pitch-black darkness covering the land' },
+    { ch: 11, word: 'WARNING', scene: 'Moses pointing a warning finger at a hardened Pharaoh' },
+    { ch: 12, word: 'PASSOVER', scene: 'Red blood smeared on the wooden doorposts of a stone house' },
+    { ch: 13, word: 'PILLAR', scene: 'A towering pillar of fire leading a massive crowd through the night' },
+    { ch: 14, word: 'SEA', scene: 'The Red Sea split in half, walls of water standing like glass' },
+    { ch: 15, word: 'SONG', scene: 'Miriam playing a tambourine, women dancing in victory' },
+    { ch: 16, word: 'MANNA', scene: 'White, flaky bread scattered like frost on the desert ground' },
+    { ch: 17, word: 'ROCK', scene: 'Water gushing out of a struck rock in the dry wilderness' },
+    { ch: 18, word: 'COUNSEL', scene: 'Jethro giving wise advice to an exhausted Moses' },
+    { ch: 19, word: 'MOUNTAIN', scene: 'Mount Sinai wrapped in dark smoke, lightning, and fire' },
+    { ch: 20, word: 'COMMANDS', scene: 'Ten commands glowing as words spoken by God' },
+    { ch: 21, word: 'SERVANTS', scene: 'An awl piercing an earlobe against a wooden door' },
+    { ch: 22, word: 'RESTITUTION', scene: 'Scales of justice measuring out silver and grain' },
+    { ch: 23, word: 'FESTIVALS', scene: 'Three annual feasts, offerings of firstfruits at the altar' },
+    { ch: 24, word: 'COVENANT', scene: 'Blood sprinkled on an altar and on a gathered crowd' },
+    { ch: 25, word: 'ARK', scene: 'A golden chest covered by two bowing, winged cherubim' },
+    { ch: 26, word: 'TABERNACLE', scene: 'Richly embroidered linen curtains of blue, purple, and scarlet' },
+    { ch: 27, word: 'ALTAR', scene: 'A bronze altar of burnt offering with horns on its corners' },
+    { ch: 28, word: 'GARMENTS', scene: 'A high priest wearing a breastpiece with twelve precious stones' },
+    { ch: 29, word: 'CONSECRATE', scene: 'Oil poured over the head of Aaron the high priest' },
+    { ch: 30, word: 'INCENSE', scene: 'Sweet smoke rising from a golden altar before the veil' },
+    { ch: 31, word: 'SKILL', scene: 'Artisans crafting intricate golden designs by candlelight' },
+    { ch: 32, word: 'CALF', scene: 'A golden calf idol surrounded by revelry and dancing' },
+    { ch: 33, word: 'TENT', scene: 'A pillar of cloud descending at the entrance of a meeting tent' },
+    { ch: 34, word: 'RADIANT', scene: 'Moses coming down the mountain, his face shining brightly' },
+    { ch: 35, word: 'OFFERING', scene: 'People eagerly bringing gold, silver, and dyed yarn' },
+    { ch: 36, word: 'BUILDERS', scene: 'Skilled workers framing the boards of the tabernacle' },
+    { ch: 37, word: 'CRAFT', scene: 'Bezalel hammering pure gold to form the mercy seat' },
+    { ch: 38, word: 'COURTYARD', scene: 'Bronze pillars and fine linen hanging to form an enclosure' },
+    { ch: 39, word: 'FINISHED', scene: 'The magnificent priestly garments laid out and completed' },
+    { ch: 40, word: 'GLORY', scene: 'A blinding, glorious cloud filling the newly assembled tabernacle' }
+  ],
+  architecture: [
+    { name: 'Deliverance', chapters: [1, 18] },
+    { name: 'Covenant', chapters: [19, 24] },
+    { name: 'Tabernacle', chapters: [25, 40] }
+  ]
+};

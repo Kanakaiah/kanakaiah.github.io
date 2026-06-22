@@ -1,28 +1,29 @@
-import { NT_STUDY_GUIDES } from './src/data/guides.js'; // Might need .ts or tsx will handle it
-import fs from 'fs';
-import path from 'path';
+import { NT_STUDY_GUIDES } from './src/data/guides';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const publicDir = path.join(process.cwd(), 'public', 'chapters');
 
 const missing = [];
 
 for (const guide of NT_STUDY_GUIDES) {
   if (!guide.anchors) continue;
   
-  const guideId = guide.id;
-  const dirPath = path.join(process.cwd(), 'public', 'chapters', guideId);
-  
   for (const anchor of guide.anchors) {
-    const ch = anchor.ch;
-    const imgPath = path.join(dirPath, `ch${ch}.png`);
+    const dir = path.join(publicDir, guide.id);
+    const pngPath = path.join(dir, `ch${anchor.ch}.png`);
+    const jpgPath = path.join(dir, `ch${anchor.ch}.jpg`);
     
-    if (!fs.existsSync(imgPath)) {
+    if (!fs.existsSync(pngPath) && !fs.existsSync(jpgPath)) {
       missing.push({
-        guideId,
-        ch,
+        guide_id: guide.id,
+        ch: anchor.ch,
         word: anchor.word,
-        scene: anchor.scene,
+        scene: anchor.scene
       });
     }
   }
 }
 
-console.log(JSON.stringify(missing, null, 2));
+fs.writeFileSync('missing_images.json', JSON.stringify(missing, null, 2));
+console.log(`Found ${missing.length} missing images.`);

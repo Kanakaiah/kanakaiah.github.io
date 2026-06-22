@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Type, Plus, Minus, X, Copy } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
+import { OT_BOOKS } from '../../data/otBooks';
+
+const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 
@@ -12,34 +15,23 @@ interface ChapterReaderProps {
   onClose: () => void;
 }
 
-const BOLLS_NT_MAP: Record<string, number> = {
-  matthew: 40,
-  mark: 41,
-  luke: 42,
-  john: 43,
-  acts: 44,
-  romans: 45,
-  '1corinthians': 46,
-  '2corinthians': 47,
-  galatians: 48,
-  ephesians: 49,
-  philippians: 50,
-  colossians: 51,
-  '1thessalonians': 52,
-  '2thessalonians': 53,
-  '1timothy': 54,
-  '2timothy': 55,
-  titus: 56,
-  philemon: 57,
-  hebrews: 58,
-  james: 59,
-  '1peter': 60,
-  '2peter': 61,
-  '1john': 62,
-  '2john': 63,
-  '3john': 64,
-  jude: 65,
-  revelation: 66,
+const BOLLS_BIBLE_MAP: Record<string, number> = {
+  // OT
+  genesis: 1, exodus: 2, leviticus: 3, numbers: 4, deuteronomy: 5,
+  joshua: 6, judges: 7, ruth: 8, '1samuel': 9, '2samuel': 10,
+  '1kings': 11, '2kings': 12, '1chronicles': 13, '2chronicles': 14,
+  ezra: 15, nehemiah: 16, esther: 17, job: 18, psalms: 19, proverbs: 20,
+  ecclesiastes: 21, songofsolomon: 22, isaiah: 23, jeremiah: 24, lamentations: 25,
+  ezekiel: 26, daniel: 27, hosea: 28, joel: 29, amos: 30, obadiah: 31,
+  jonah: 32, micah: 33, nahum: 34, habakkuk: 35, zephaniah: 36,
+  haggai: 37, zechariah: 38, malachi: 39,
+  // NT
+  matthew: 40, mark: 41, luke: 42, john: 43, acts: 44,
+  romans: 45, '1corinthians': 46, '2corinthians': 47, galatians: 48,
+  ephesians: 49, philippians: 50, colossians: 51, '1thessalonians': 52,
+  '2thessalonians': 53, '1timothy': 54, '2timothy': 55, titus: 56,
+  philemon: 57, hebrews: 58, james: 59, '1peter': 60, '2peter': 61,
+  '1john': 62, '2john': 63, '3john': 64, jude: 65, revelation: 66,
 };
 
 interface Verse {
@@ -73,8 +65,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   };
 
   // Compute prev/next labels for the navigation bar
-  const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
-  const currentBook = bookIndex !== -1 ? NT_BOOKS[bookIndex] : null;
+  const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
+  const currentBook = bookIndex !== -1 ? ALL_BOOKS[bookIndex] : null;
 
   let prevLabel: string | null = null;
   let nextLabel: string | null = null;
@@ -83,21 +75,21 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     if (chapter > 1) {
       prevLabel = `${bookTitle} ${chapter - 1}`;
     } else if (bookIndex > 0) {
-      const prev = NT_BOOKS[bookIndex - 1];
+      const prev = ALL_BOOKS[bookIndex - 1];
       prevLabel = `${prev.name} ${prev.chapters}`;
     }
 
     if (chapter < currentBook.chapters) {
       nextLabel = `${bookTitle} ${chapter + 1}`;
-    } else if (bookIndex < NT_BOOKS.length - 1) {
-      nextLabel = `${NT_BOOKS[bookIndex + 1].name} 1`;
+    } else if (bookIndex < ALL_BOOKS.length - 1) {
+      nextLabel = `${ALL_BOOKS[bookIndex + 1].name} 1`;
     }
   }
 
   const handleNextChapter = () => {
-    const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
+    const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
     if (bookIndex === -1) return;
-    const currentBook = NT_BOOKS[bookIndex];
+    const currentBook = ALL_BOOKS[bookIndex];
     
     if (chapter < currentBook.chapters) {
       setSearchParams(prev => {
@@ -105,10 +97,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         next.set('readerChapter', (chapter + 1).toString());
         return next;
       });
-    } else if (bookIndex < NT_BOOKS.length - 1) {
+    } else if (bookIndex < ALL_BOOKS.length - 1) {
       setSearchParams(prev => {
         const next = new URLSearchParams(prev);
-        next.set('readerBook', NT_BOOKS[bookIndex + 1].id);
+        next.set('readerBook', ALL_BOOKS[bookIndex + 1].id);
         next.set('readerChapter', '1');
         return next;
       });
@@ -116,7 +108,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   };
 
   const handlePrevChapter = () => {
-    const bookIndex = NT_BOOKS.findIndex(b => b.id === bookId);
+    const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
     if (bookIndex === -1) return;
     
     if (chapter > 1) {
@@ -126,7 +118,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         return next;
       });
     } else if (bookIndex > 0) {
-      const prevBook = NT_BOOKS[bookIndex - 1];
+      const prevBook = ALL_BOOKS[bookIndex - 1];
       setSearchParams(prev => {
         const next = new URLSearchParams(prev);
         next.set('readerBook', prevBook.id);
@@ -168,7 +160,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       setLoading(true);
       setError(null);
       try {
-        const bollsId = BOLLS_NT_MAP[bookId];
+        const bollsId = BOLLS_BIBLE_MAP[bookId];
         if (!bollsId) {
           throw new Error('Book not found in Bible API map.');
         }

@@ -1,0 +1,250 @@
+{
+  "totalAnchors": 166,
+  "totalGenerated": 62,
+  "totalMissing": 104,
+  "details": {
+    "matthew": {
+      "total": 28,
+      "generated": 25,
+      "missing": 3,
+      "missingChapters": [
+        20,
+        21,
+        23
+      ]
+    },
+    "mark": {
+      "total": 16,
+      "generated": 0,
+      "missing": 16,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    "luke": {
+      "total": 24,
+      "generated": 15,
+      "missing": 9,
+      "missingChapters": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    "1corinthians": {
+      "total": 16,
+      "generated": 0,
+      "missing": 16,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    "2corinthians": {
+      "total": 13,
+      "generated": 0,
+      "missing": 13,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    "colossians": {
+      "total": 4,
+      "generated": 0,
+      "missing": 4,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "1thessalonians": {
+      "total": 5,
+      "generated": 0,
+      "missing": 5,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "2thessalonians": {
+      "total": 3,
+      "generated": 0,
+      "missing": 3,
+      "missingChapters": [
+        1,
+        2,
+        3
+      ]
+    },
+    "1timothy": {
+      "total": 6,
+      "generated": 0,
+      "missing": 6,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    "2timothy": {
+      "total": 4,
+      "generated": 0,
+      "missing": 4,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "titus": {
+      "total": 3,
+      "generated": 0,
+      "missing": 3,
+      "missingChapters": [
+        1,
+        2,
+        3
+      ]
+    },
+    "philemon": {
+      "total": 1,
+      "generated": 0,
+      "missing": 1,
+      "missingChapters": [
+        1
+      ]
+    },
+    "james": {
+      "total": 5,
+      "generated": 0,
+      "missing": 5,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "1peter": {
+      "total": 5,
+      "generated": 0,
+      "missing": 5,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "2peter": {
+      "total": 3,
+      "generated": 0,
+      "missing": 3,
+      "missingChapters": [
+        1,
+        2,
+        3
+      ]
+    },
+    "1john": {
+      "total": 5,
+      "generated": 0,
+      "missing": 5,
+      "missingChapters": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "2john": {
+      "total": 1,
+      "generated": 0,
+      "missing": 1,
+      "missingChapters": [
+        1
+      ]
+    },
+    "3john": {
+      "total": 1,
+      "generated": 0,
+      "missing": 1,
+      "missingChapters": [
+        1
+      ]
+    },
+    "jude": {
+      "total": 1,
+      "generated": 0,
+      "missing": 1,
+      "missingChapters": [
+        1
+      ]
+    },
+    "revelation": {
+      "total": 22,
+      "generated": 22,
+      "missing": 0,
+      "missingChapters": []
+    }
+  }
+}

@@ -2,8 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
+import { OT_STUDY_GUIDES } from '../data/otGuides';
 import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
+import { OT_BOOKS, OT_SECTIONS } from '../data/otBooks';
 import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
+
+const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { ChapterReader } from '../components/guides/ChapterReader';
 
 // Special sentinel IDs
@@ -87,8 +91,13 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 export const Guides: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [isOTExpanded, setIsOTExpanded] = useState(false);
+  const [isOTExpanded, setIsOTExpanded] = useState(true);
   const [isNTExpanded, setIsNTExpanded] = useState(true);
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
+
+  const toggleSection = (section: string) => {
+    setCollapsedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
   
   const activeGuideId = searchParams.get('guide');
   const readerBook = searchParams.get('readerBook');
@@ -129,16 +138,16 @@ export const Guides: React.FC = () => {
 
     if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > minSwipeDistance) {
       if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
-        const currentIndex = NT_BOOKS.findIndex(b => b.id === activeGuideId);
+        const currentIndex = ALL_BOOKS.findIndex(b => b.id === activeGuideId);
         if (currentIndex !== -1) {
           if (distanceX > 0) {
-            // Swipe left -> Previous (as requested: left swipe on matthew goes to revelation)
-            const prevIndex = (currentIndex - 1 + NT_BOOKS.length) % NT_BOOKS.length;
-            setActiveGuideId(NT_BOOKS[prevIndex].id);
+            // Swipe left -> Previous
+            const prevIndex = (currentIndex - 1 + ALL_BOOKS.length) % ALL_BOOKS.length;
+            setActiveGuideId(ALL_BOOKS[prevIndex].id);
           } else {
             // Swipe right -> Next
-            const nextIndex = (currentIndex + 1) % NT_BOOKS.length;
-            setActiveGuideId(NT_BOOKS[nextIndex].id);
+            const nextIndex = (currentIndex + 1) % ALL_BOOKS.length;
+            setActiveGuideId(ALL_BOOKS[nextIndex].id);
           }
         }
       }
@@ -148,12 +157,31 @@ export const Guides: React.FC = () => {
   const activeGuide: any = useMemo(() => {
     if (!activeGuideId || activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) return null;
     
-    // Check if we have a hand-written guide
-    const existingGuide = NT_STUDY_GUIDES.find((g: any) => g.id === activeGuideId);
-    if (existingGuide) return existingGuide;
+    const book = ALL_BOOKS.find(b => b.id === activeGuideId);
+    const existingGuide = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES].find((g: any) => g.id === activeGuideId);
+    
+    if (existingGuide) {
+      const merged: any = { ...existingGuide };
+      if (!merged.type) merged.type = 'book-guide';
+      if (!merged.title && book) merged.title = book.name;
+      if (!merged.subtitle && book) merged.subtitle = book.subtitle;
+      if (!merged.icon) merged.icon = '📖';
+      if (!merged.chapters && book) merged.chapters = book.chapters;
 
-    // Otherwise check if it's an NT book and generate a placeholder
-    const book = NT_BOOKS.find(b => b.id === activeGuideId);
+      if (!merged.blocks && merged.architecture) {
+        merged.blocks = merged.architecture.map((arch: any) => {
+          const start = arch.chapters[0];
+          const end = arch.chapters[1];
+          return {
+            chapters: start === end ? `${start}` : `${start}–${end}`,
+            label: arch.name,
+            description: ''
+          };
+        });
+      }
+      return merged;
+    }
+
     if (book) {
       return {
         id: book.id,
@@ -175,9 +203,9 @@ export const Guides: React.FC = () => {
 
   const categories = useMemo(() => {
     const map: Record<string, any[]> = {};
-    NT_STUDY_GUIDES.forEach((g: any) => {
+    [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES].forEach((g: any) => {
       // Skip book-guide entries from the category listing — they live in BibleBrowser
-      if (g.type === 'book-guide') return;
+      if (g.type === 'book-guide' || (!g.type && ALL_BOOKS.some(b => b.id === g.id))) return;
       const cat = g.category || 'Other';
       if (!map[cat]) map[cat] = [];
       map[cat].push(g);
@@ -191,7 +219,7 @@ export const Guides: React.FC = () => {
       <ChapterReader
         bookId={readerBook}
         chapter={parseInt(readerChapter, 10)}
-        bookTitle={NT_BOOKS.find((b) => b.id === readerBook)?.name || activeGuide?.title || 'Book'}
+        bookTitle={ALL_BOOKS.find((b) => b.id === readerBook)?.name || activeGuide?.title || 'Book'}
         onClose={() => {
           setSearchParams((prev) => {
             const next = new URLSearchParams(prev);
@@ -235,19 +263,22 @@ export const Guides: React.FC = () => {
             >
               Bible
             </button>
-            {activeGuide.type === 'book-guide' && (
-              <>
-                <ChevronRight className="w-3.5 h-3.5 text-muted" />
-                <button
-                  onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
-                  className="text-accent hover:text-accent-hover transition-colors"
-                >
-                  New Testament
-                </button>
-                <ChevronRight className="w-3.5 h-3.5 text-muted" />
-                <span className="text-primary font-bold">{activeGuide.title}</span>
-              </>
-            )}
+            {activeGuide.type === 'book-guide' && (() => {
+              const isOT = OT_BOOKS.some(b => b.id === activeGuide.id);
+              return (
+                <>
+                  <ChevronRight className="w-3.5 h-3.5 text-muted" />
+                  <button
+                    onClick={() => setActiveGuideId(isOT ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)}
+                    className="text-accent hover:text-accent-hover transition-colors"
+                  >
+                    {isOT ? 'Old Testament' : 'New Testament'}
+                  </button>
+                  <ChevronRight className="w-3.5 h-3.5 text-muted" />
+                  <span className="text-primary font-bold">{activeGuide.title}</span>
+                </>
+              );
+            })()}
             {activeGuide.type !== 'book-guide' && (
               <>
                 <ChevronRight className="w-3.5 h-3.5 text-muted" />
@@ -392,7 +423,7 @@ export const Guides: React.FC = () => {
                 {/* Bar chart */}
                 <div className="flex w-full h-14 rounded-md overflow-hidden shadow-sm">
                   {activeGuide.blocks.map((block: any, i: number) => {
-                     const [start, end] = block.chapters.split('–').map(Number);
+                     const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
                      const totalChapters = activeGuide.chapters || 28;
                      const count = (end || start) - start + 1;
                      const widthPercent = (count / totalChapters) * 100;
@@ -419,7 +450,7 @@ export const Guides: React.FC = () => {
                      const totalChapters = activeGuide.chapters || 28;
                      return activeGuide.blocks.map((block: any, i: number) => {
                        const leftPercent = (chaptersBefore / totalChapters) * 100;
-                       const [start, end] = block.chapters.split('–').map(Number);
+                       const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
                        const count = (end || start) - start + 1;
                        chaptersBefore += count;
                        return (
@@ -447,7 +478,7 @@ export const Guides: React.FC = () => {
                     .replace('1', 'I').replace('2', 'II').replace('3', 'III')
                     .replace('4', 'IV').replace('5', 'V');
                   
-                  const [start, end] = block.chapters.split('–').map(Number);
+                  const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
                   const count = (end || start) - start + 1;
                   const totalChapters = activeGuide.chapters || 28;
                   const percent = ((count / totalChapters) * 100).toFixed(1) + '%';
@@ -591,9 +622,33 @@ export const Guides: React.FC = () => {
           </button>
           
           {isOTExpanded && (
-            <div className="flex flex-col items-center justify-center py-10 gap-3 text-center bg-card/30 rounded-2xl border border-card-border/30 animate-[fadeIn_0.2s_ease-out]">
-              <h3 className="text-lg font-bold font-heading text-primary">Coming Soon</h3>
-              <p className="text-secondary max-w-xs text-sm">Old Testament book guides with visual chapter maps are being crafted. Check back soon!</p>
+            <div className="flex flex-col gap-6 animate-[fadeIn_0.2s_ease-out]">
+              {OT_SECTIONS.map(section => {
+                const books = OT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                if (!books.length) return null;
+                return (
+                  <div key={section} className="flex flex-col gap-3">
+                    <button 
+                      onClick={() => toggleSection(section)}
+                      className="flex items-center justify-between border-b border-glass-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
+                    >
+                      <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
+                      {collapsedSections[section] ? (
+                        <ChevronRight className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
+                      ) : (
+                        <ChevronDown className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
+                      )}
+                    </button>
+                    {!collapsedSections[section] && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {books.map(book => (
+                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -620,14 +675,24 @@ export const Guides: React.FC = () => {
                 if (!books.length) return null;
                 return (
                   <div key={section} className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2 border-b border-glass-border pb-1">
+                    <button 
+                      onClick={() => toggleSection(section)}
+                      className="flex items-center justify-between border-b border-glass-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
+                    >
                       <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {books.map(book => (
-                        <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
-                      ))}
-                    </div>
+                      {collapsedSections[section] ? (
+                        <ChevronRight className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
+                      ) : (
+                        <ChevronDown className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
+                      )}
+                    </button>
+                    {!collapsedSections[section] && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {books.map(book => (
+                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })}

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Search } from 'lucide-react';
-import { NT_BOOKS, NT_SECTIONS } from '../../data/ntBooks';
-import type { NTBook } from '../../data/ntBooks';
+import { NT_BOOKS, NT_SECTIONS, type NTBook } from '../../data/ntBooks';
+import { OT_BOOKS, OT_SECTIONS, type OTBook } from '../../data/otBooks';
+
+type Book = NTBook | OTBook;
 
 // ─── Book Card ────────────────────────────────────────────────────────────────
 
-export const BookCard: React.FC<{ book: NTBook; onClick: () => void }> = ({ book, onClick }) => {
+export const BookCard: React.FC<{ book: Book; onClick: () => void }> = ({ book, onClick }) => {
   const [imgErr, setImgErr] = useState(false);
 
   return (
@@ -72,7 +74,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
   const [view] = useState<View>('book-grid');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSelectBook = (book: NTBook) => {
+  const handleSelectBook = (book: Book) => {
     onOpenGuide(book.id);
   };
 
@@ -134,21 +136,54 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
         </>
       )}
 
-      {/* ── OT Coming Soon ───────────────────────────────────────────────────── */}
+      {/* ── OT Book Grid ─────────────────────────────────────────────────────── */}
       {view === 'book-grid' && testament === 'OT' && (
         <>
           <div className="flex flex-col gap-4 mb-2">
-            <button onClick={handleBackFromGrid} className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[0.9375rem] self-start">
+            <button
+              onClick={handleBackFromGrid}
+              className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[0.9375rem] self-start"
+            >
               <ChevronLeft className="w-5 h-5" />
               <span>Guides</span>
             </button>
-            <h2 className="text-3xl font-bold font-heading text-primary">Old Testament</h2>
+            <div>
+              <h2 className="text-3xl font-bold font-heading text-primary">Old Testament</h2>
+              <p className="text-secondary text-sm mt-1">39 books — tap any to explore</p>
+            </div>
+            
+            {/* Search Bar */}
+            <div className="relative mt-2">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="w-4 h-4 text-muted" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search books..."
+                className="w-full bg-card border border-card-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent transition-all text-primary placeholder:text-muted shadow-sm"
+              />
+            </div>
           </div>
-          <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-            <div className="text-6xl">📜</div>
-            <h3 className="text-2xl font-bold font-heading text-primary">Coming Soon</h3>
-            <p className="text-secondary max-w-xs text-sm">Old Testament book guides with visual chapter maps are being crafted. Check back soon!</p>
-          </div>
+
+          {OT_SECTIONS.map(section => {
+            const books = OT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+            if (!books.length) return null;
+            return (
+              <div key={section} className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 border-b border-glass-border pb-1">
+                  <p className="text-xs font-bold text-muted uppercase tracking-widest">{section}</p>
+                  <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {books.map(book => (
+                    <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </>
       )}
 
