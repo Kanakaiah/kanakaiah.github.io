@@ -634,7 +634,7 @@ export const Guides: React.FC = () => {
 
         <div className={`
           fixed bottom-0 left-0 right-0 lg:left-64
-          bg-background/90 backdrop-blur-xl
+          bg-glass-bg backdrop-blur-xl
           z-40 transition-transform duration-300 ease-in-out
           ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}
         `}>

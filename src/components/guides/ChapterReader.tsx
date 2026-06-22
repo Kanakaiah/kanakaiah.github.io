@@ -705,7 +705,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {/* Bottom Chapter Navigation Bar */}
       {!loading && !error && selectedVerses.length === 0 && (
-        <div className={`absolute bottom-0 left-0 w-full bg-background/80 backdrop-blur-xl z-10 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
+        <div className={`absolute bottom-0 left-0 w-full bg-glass-bg backdrop-blur-xl z-10 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
               onClick={handlePrevChapter}
