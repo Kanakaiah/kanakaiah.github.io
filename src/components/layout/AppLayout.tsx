@@ -114,7 +114,7 @@ export const AppLayout: React.FC = () => {
           absolute top-0 left-0 w-full px-5 pt-5 pb-3 flex justify-between items-center z-40 lg:hidden
           transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md
           ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
-          ${isFullscreenView ? 'hidden' : ''}
+          ${(isFullscreenView || location.pathname === '/guides') ? 'hidden' : ''}
         `}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-card border border-card-border flex items-center justify-center text-accent shadow-sm">
@@ -140,7 +140,7 @@ export const AppLayout: React.FC = () => {
         {/* SCROLLABLE PAGE CONTENT */}
         <div 
           id="main-scroll-container"
-          className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8'}`}
+          className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : (location.pathname === '/guides' ? 'px-5 lg:px-8 pt-5 lg:pt-6 pb-24 lg:pb-8' : 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8')}`}
           onScroll={handleScroll}
         >
           <Outlet />
