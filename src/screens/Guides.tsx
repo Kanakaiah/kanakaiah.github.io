@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
@@ -120,6 +120,24 @@ export const Guides: React.FC = () => {
 
   const [touchStartPos, setTouchStartPos] = useState<{x: number, y: number} | null>(null);
   const [touchEndPos, setTouchEndPos] = useState<{x: number, y: number} | null>(null);
+  
+  const lastScrollY = useRef(0);
+  const [isNavHidden, setIsNavHidden] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current + 10 && currentScrollY > 50) {
+        setIsNavHidden(true);
+      } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY < 50) {
+        setIsNavHidden(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handlePrevBook = () => {
     if (activeGuideId && activeGuideId !== BIBLE_BROWSER_NT && activeGuideId !== BIBLE_BROWSER_OT) {
@@ -595,7 +613,7 @@ export const Guides: React.FC = () => {
 
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 p-4 pb-safe bg-background/80 backdrop-blur-xl border-t border-glass-border shadow-up z-40 lg:ml-64">
+        <div className={`fixed bottom-0 left-0 right-0 p-4 pb-safe bg-background/80 backdrop-blur-xl z-40 lg:ml-64 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <button onClick={handlePrevBook} className="p-3 text-secondary hover:text-primary transition-colors hover:bg-white/5 rounded-xl">
               <ChevronLeft className="w-6 h-6" />
