@@ -633,43 +633,43 @@ export const Guides: React.FC = () => {
         </div>
 
         <div className={`
-          fixed bottom-24 lg:bottom-10 left-1/2 -translate-x-1/2 
-          w-auto min-w-[320px] max-w-[500px]
-          flex items-center justify-between px-3 py-2 
-          bg-glass-bg backdrop-blur-xl border border-glass-border rounded-full shadow-2xl shadow-black/50
-          z-40 lg:ml-64 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
-          ${isNavHidden ? 'translate-y-32 opacity-0 scale-95' : 'translate-y-0 opacity-100 scale-100'}
+          fixed bottom-0 left-0 right-0 lg:left-64
+          bg-background/90 backdrop-blur-xl border-t border-glass-border
+          z-40 transition-transform duration-300 ease-in-out
+          ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}
         `}>
-          <button 
-            onClick={handlePrevBook} 
-            className="px-3 py-2 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center gap-1.5"
-            title={prevBook?.name || ''}
-          >
-            <ChevronLeft className="w-5 h-5 flex-shrink-0" />
-            <span className="text-sm font-medium hidden sm:block truncate max-w-[120px]">{prevBook?.name}</span>
-            <span className="text-sm font-medium sm:hidden truncate max-w-[80px]">
-              {prevBook ? (prevBook.name.length <= 4 ? prevBook.name : (prevBook.name.startsWith('1 ') || prevBook.name.startsWith('2 ') || prevBook.name.startsWith('3 ') ? prevBook.name.substring(0, 5).replace(' ', '') : prevBook.name.substring(0, 3))) : ''}
-            </span>
-          </button>
-          
-          <button 
-            onClick={() => setActiveGuideId(null)}
-            className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-glass-border rounded-lg px-3 py-1.5"
-          >
-            INDEX
-          </button>
+          <div className="max-w-4xl mx-auto flex items-center justify-between px-4 py-3 pb-safe">
+            <button 
+              onClick={handlePrevBook} 
+              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all hover:bg-glass-bg text-secondary hover:text-primary"
+              title={prevBook?.name || ''}
+            >
+              <ChevronLeft className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:block truncate max-w-[120px]">{prevBook?.name}</span>
+              <span className="sm:hidden truncate max-w-[80px]">
+                {prevBook ? (prevBook.name.length <= 4 ? prevBook.name : (prevBook.name.startsWith('1 ') || prevBook.name.startsWith('2 ') || prevBook.name.startsWith('3 ') ? prevBook.name.substring(0, 5).replace(' ', '') : prevBook.name.substring(0, 3))) : ''}
+              </span>
+            </button>
+            
+            <button 
+              onClick={() => setActiveGuideId(null)}
+              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-glass-border rounded-lg px-3 py-1.5"
+            >
+              INDEX
+            </button>
 
-          <button 
-            onClick={handleNextBook} 
-            className="px-3 py-2 text-secondary hover:text-white transition-colors hover:bg-white/10 rounded-full flex items-center gap-1.5"
-            title={nextBook?.name || ''}
-          >
-            <span className="text-sm font-medium hidden sm:block truncate max-w-[120px]">{nextBook?.name}</span>
-            <span className="text-sm font-medium sm:hidden truncate max-w-[80px]">
-              {nextBook ? (nextBook.name.length <= 4 ? nextBook.name : (nextBook.name.startsWith('1 ') || nextBook.name.startsWith('2 ') || nextBook.name.startsWith('3 ') ? nextBook.name.substring(0, 5).replace(' ', '') : nextBook.name.substring(0, 3))) : ''}
-            </span>
-            <ChevronRight className="w-5 h-5 flex-shrink-0" />
-          </button>
+            <button 
+              onClick={handleNextBook} 
+              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all hover:bg-glass-bg text-secondary hover:text-primary"
+              title={nextBook?.name || ''}
+            >
+              <span className="hidden sm:block truncate max-w-[120px]">{nextBook?.name}</span>
+              <span className="sm:hidden truncate max-w-[80px]">
+                {nextBook ? (nextBook.name.length <= 4 ? nextBook.name : (nextBook.name.startsWith('1 ') || nextBook.name.startsWith('2 ') || nextBook.name.startsWith('3 ') ? nextBook.name.substring(0, 5).replace(' ', '') : nextBook.name.substring(0, 3))) : ''}
+              </span>
+              <ChevronRight className="w-4 h-4 flex-shrink-0" />
+            </button>
+          </div>
         </div>
       </div>
     );
