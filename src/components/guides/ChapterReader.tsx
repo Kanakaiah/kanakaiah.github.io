@@ -740,7 +740,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {/* Book/Chapter Navigator */}
       {showNavigator && (
-        <div className="fixed inset-0 z-[70] flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
+        <div className="fixed inset-0 z-[70] flex flex-col bg-glass-bg backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border">
             <button
