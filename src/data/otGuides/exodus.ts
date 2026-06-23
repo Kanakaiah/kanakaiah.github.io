@@ -2,15 +2,26 @@ import type { StudyGuide } from '../types';
 
 export const EXODUS_GUIDE: StudyGuide = {
   id: 'exodus',
+  structureFormula: 'Deliverance (1-18) + Covenant & Tabernacle (19-40)',
+  memorySentence: 'God descends to redeem His people from slavery, brings them to His mountain, and dwells among them.',
+  blocks: [
+    { chapters: '1-18', label: 'Deliverance', description: 'God rescues Israel from Egypt through the plagues and Red Sea.' },
+    { chapters: '19-24', label: 'Covenant', description: 'God gives the Law at Sinai and establishes a relationship.' },
+    { chapters: '25-40', label: 'Tabernacle', description: 'Instructions and construction of God’s dwelling place.' }
+  ],
+  keyVerses: [
+    { ref: 'Exodus 3:14', text: 'God said to Moses, "I AM WHO I AM." And he said, "Say this to the people of Israel: ‘I AM has sent me to you.’"', theme: 'Identity' },
+    { ref: 'Exodus 6:6', text: 'Say therefore to the people of Israel, ‘I am the LORD, and I will bring you out from under the burdens of the Egyptians, and I will deliver you from slavery to them, and I will redeem you with an outstretched arm and with great acts of judgment.’', theme: 'Redemption' }
+  ],
   anchors: [
     { ch: 1, word: 'OPPRESSION', scene: 'Hebrew slaves hauling heavy mud bricks under the Egyptian sun' },
     { ch: 2, word: 'BASKET', scene: 'A woven bulrush basket floating among the reeds of the Nile' },
     { ch: 3, word: 'BURNING', scene: 'A desert bush blazing with fire but not consumed' },
     { ch: 4, word: 'STAFF', scene: 'A wooden shepherd staff turning into a slithering snake' },
-    { ch: 5, word: 'BRICKS', scene: 'Slaves desperately searching for stubble to make bricks without straw' },
+    { ch: 5, word: 'BRICKS', scene: 'Slaves desperately searching for stubble to make bricks' },
     { ch: 6, word: 'PROMISE', scene: 'God speaking from a glowing cloud of glory' },
     { ch: 7, word: 'BLOOD', scene: 'The mighty Nile river turned completely to thick red blood' },
-    { ch: 8, word: 'PLAGUES', scene: 'Swarms of frogs and flies covering the land of Egypt' },
+    { ch: 8, word: 'FROGS', scene: 'Swarms of frogs and flies covering the land of Egypt' },
     { ch: 9, word: 'HAIL', scene: 'Fiery hail raining down, destroying crops and trees' },
     { ch: 10, word: 'DARKNESS', scene: 'A thick, oppressive pitch-black darkness covering the land' },
     { ch: 11, word: 'WARNING', scene: 'Moses pointing a warning finger at a hardened Pharaoh' },
@@ -43,10 +54,5 @@ export const EXODUS_GUIDE: StudyGuide = {
     { ch: 38, word: 'COURTYARD', scene: 'Bronze pillars and fine linen hanging to form an enclosure' },
     { ch: 39, word: 'FINISHED', scene: 'The magnificent priestly garments laid out and completed' },
     { ch: 40, word: 'GLORY', scene: 'A blinding, glorious cloud filling the newly assembled tabernacle' }
-  ],
-  architecture: [
-    { name: 'Deliverance', chapters: [1, 18] },
-    { name: 'Covenant', chapters: [19, 24] },
-    { name: 'Tabernacle', chapters: [25, 40] }
   ]
 };

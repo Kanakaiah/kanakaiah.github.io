@@ -2,6 +2,17 @@ import type { StudyGuide } from '../types';
 
 export const NUMBERS_GUIDE: StudyGuide = {
   id: 'numbers',
+  structureFormula: 'Sinai (1-10) + Wilderness (11-25) + Moab (26-36)',
+  memorySentence: 'An entire generation wanders for forty years in the wilderness, learning the high cost of unbelief.',
+  blocks: [
+    { chapters: '1-10', label: 'Preparation at Sinai', description: 'Counting the people and preparing to march.' },
+    { chapters: '11-25', label: 'Wilderness Failures', description: 'Rebellion, complaining, and forty years of wandering.' },
+    { chapters: '26-36', label: 'A New Generation', description: 'Preparing the next generation to enter the promised land.' }
+  ],
+  keyVerses: [
+    { ref: 'Numbers 14:28', text: 'Say to them, "As I live, declares the LORD, what you have said in my hearing I will do to you."', theme: 'Judgment' },
+    { ref: 'Numbers 21:9', text: 'So Moses made a bronze serpent and set it on a pole. And if a serpent bit anyone, he would look at the bronze serpent and live.', theme: 'Salvation' }
+  ],
   anchors: [
     { ch: 1, word: 'CENSUS', scene: 'Tribes gathering in the wilderness, being counted by their clans' },
     { ch: 2, word: 'CAMP', scene: 'Tents arranged in a precise square around the tabernacle' },
@@ -25,10 +36,10 @@ export const NUMBERS_GUIDE: StudyGuide = {
     { ch: 20, word: 'STRIKE', scene: 'Moses angrily striking the rock twice with his staff' },
     { ch: 21, word: 'SNAKE', scene: 'A bronze serpent lifted high on a pole for healing' },
     { ch: 22, word: 'BALAAM', scene: 'A prophet’s donkey refusing to move, seeing an angel with a sword' },
-    { ch: 23, word: 'ORACLES', scene: 'Balaam looking over the tents of Israel, speaking blessing instead of curse' },
+    { ch: 23, word: 'ORACLES', scene: 'Balaam looking over the tents of Israel, speaking blessing' },
     { ch: 24, word: 'STAR', scene: 'A vision of a star coming out of Jacob, a scepter out of Israel' },
     { ch: 25, word: 'ZEAL', scene: 'Phinehas holding a spear, stopping the plague among the people' },
-    { ch: 26, word: 'SECOND CENSUS', scene: 'A new generation being counted on the plains of Moab' },
+    { ch: 26, word: 'RECOUNT', scene: 'A new generation being counted on the plains of Moab' },
     { ch: 27, word: 'DAUGHTERS', scene: 'Zelophehad’s daughters standing before Moses to claim their inheritance' },
     { ch: 28, word: 'DAILY', scene: 'The continual burnt offering of lambs, morning and twilight' },
     { ch: 29, word: 'FESTIVALS', scene: 'The autumn feasts, blowing of trumpets, and sacrifices' },
@@ -39,10 +50,5 @@ export const NUMBERS_GUIDE: StudyGuide = {
     { ch: 34, word: 'BORDERS', scene: 'The outlined boundaries of the promised land of Canaan' },
     { ch: 35, word: 'REFUGE', scene: 'Cities designated as safe havens for the manslayer' },
     { ch: 36, word: 'INHERITANCE', scene: 'Tribal elders ensuring their land remains within the tribe' }
-  ],
-  architecture: [
-    { name: 'Sinai Preparation', chapters: [1, 10] },
-    { name: 'Wilderness Failures', chapters: [11, 25] },
-    { name: 'A New Generation', chapters: [26, 36] }
   ]
 };

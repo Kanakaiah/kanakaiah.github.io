@@ -2,9 +2,21 @@ import type { StudyGuide } from '../types';
 
 export const DEUTERONOMY_GUIDE: StudyGuide = {
   id: 'deuteronomy',
+  structureFormula: 'History (1-4) + Law (5-26) + Covenant (27-30) + Final Words (31-34)',
+  memorySentence: 'Moses speaks his final words, urging the new generation to remember the covenant and choose life.',
+  blocks: [
+    { chapters: '1-4', label: 'History', description: 'A review of what God has done in the wilderness.' },
+    { chapters: '5-26', label: 'Law', description: 'An exposition of the Ten Commandments and specific laws.' },
+    { chapters: '27-30', label: 'Covenant', description: 'Blessings, curses, and the call to choose life.' },
+    { chapters: '31-34', label: 'Final Words', description: 'Joshua appointed, a song taught, and Moses dies.' }
+  ],
+  keyVerses: [
+    { ref: 'Deuteronomy 6:4-5', text: 'Hear, O Israel: The LORD our God, the LORD is one. You shall love the LORD your God with all your heart and with all your soul and with all your might.', theme: 'Love God' },
+    { ref: 'Deuteronomy 30:19', text: 'I call heaven and earth to witness against you today, that I have set before you life and death, blessing and curse. Therefore choose life, that you and your offspring may live.', theme: 'Choose Life' }
+  ],
   anchors: [
     { ch: 1, word: 'REVIEW', scene: 'Moses addressing a massive crowd on the dusty plains of Moab' },
-    { ch: 2, word: 'WANDERINGS', scene: 'Footprints winding through the barren wilderness of Seir' },
+    { ch: 2, word: 'WANDER', scene: 'Footprints winding through the barren wilderness of Seir' },
     { ch: 3, word: 'BASHAN', scene: 'The iron bed of Og, a giant king defeated by Israel' },
     { ch: 4, word: 'LISTEN', scene: 'A fiery mountain speaking with a voice out of the darkness' },
     { ch: 5, word: 'COVENANT', scene: 'Two stone tablets of the Ten Commandments held high' },
@@ -12,7 +24,7 @@ export const DEUTERONOMY_GUIDE: StudyGuide = {
     { ch: 7, word: 'CHOSEN', scene: 'A treasured people standing apart from the nations' },
     { ch: 8, word: 'REMEMBER', scene: 'Manna raining in the desert to teach that man lives by every word' },
     { ch: 9, word: 'STUBBORN', scene: 'Moses breaking the stone tablets at the sight of the golden calf' },
-    { ch: 10, word: 'REWRITE', scene: 'New stone tablets placed carefully inside an ark of acacia wood' },
+    { ch: 10, word: 'TABLETS', scene: 'New stone tablets placed carefully inside an ark of acacia wood' },
     { ch: 11, word: 'RAIN', scene: 'Lush hills drinking water from the rain of heaven' },
     { ch: 12, word: 'SANCTUARY', scene: 'A single, chosen place where the Lord’s name will dwell' },
     { ch: 13, word: 'PROPHETS', scene: 'A false dreamer pointing toward foreign, carved idols' },
@@ -37,11 +49,5 @@ export const DEUTERONOMY_GUIDE: StudyGuide = {
     { ch: 32, word: 'SONG', scene: 'Moses singing a prophetic song of God as the Rock' },
     { ch: 33, word: 'BLESSING', scene: 'Moses pronouncing final, beautiful blessings over the twelve tribes' },
     { ch: 34, word: 'NEBO', scene: 'An old prophet looking out over the promised land from a mountaintop' }
-  ],
-  architecture: [
-    { name: 'First Address: History', chapters: [1, 4] },
-    { name: 'Second Address: Law', chapters: [5, 26] },
-    { name: 'Third Address: Covenant', chapters: [27, 30] },
-    { name: 'Final Words & Death', chapters: [31, 34] }
   ]
 };

@@ -2,14 +2,26 @@ import type { StudyGuide } from '../types';
 
 export const GENESIS_GUIDE: StudyGuide = {
   id: 'genesis',
+  structureFormula: '4 Events (1-11) + 4 People (12-50)',
+  memorySentence: 'God created a perfect world, but humanity fell, so He called one family to bless all nations.',
+  blocks: [
+    { chapters: '1-11', label: 'Primeval History', description: 'Four key events: Creation, Fall, Flood, Nations.' },
+    { chapters: '12-25', label: 'Abraham', description: 'The covenant promise of land and offspring.' },
+    { chapters: '26-36', label: 'Isaac & Jacob', description: 'The family grows and wrestles with God.' },
+    { chapters: '37-50', label: 'Joseph', description: 'Preservation in Egypt through providence.' }
+  ],
+  keyVerses: [
+    { ref: 'Genesis 1:1', text: 'In the beginning, God created the heavens and the earth.', theme: 'Creation' },
+    { ref: 'Genesis 3:15', text: 'I will put enmity between you and the woman, and between your offspring and her offspring; he shall bruise your head, and you shall bruise his heel.', theme: 'Promise' }
+  ],
   anchors: [
-    { ch: 1, word: 'CREATION', scene: 'God speaking light into the void, galaxies forming' },
-    { ch: 2, word: 'BREATH', scene: 'God breathing life into dust, the first man awakening' },
-    { ch: 3, word: 'FALL', scene: 'A shadowed serpent in a beautiful garden, a bitten fruit' },
-    { ch: 4, word: 'BLOOD', scene: 'Abel’s blood crying out from the cracked earth' },
+    { ch: 1, word: 'CREATION', scene: 'God speaking light into the void' },
+    { ch: 2, word: 'BREATH', scene: 'God breathing life into dust' },
+    { ch: 3, word: 'FALL', scene: 'A shadowed serpent in a beautiful garden' },
+    { ch: 4, word: 'BLOOD', scene: 'Abel’s blood crying out from the earth' },
     { ch: 5, word: 'LINEAGE', scene: 'An ancient scroll unrolling, filled with generations' },
-    { ch: 6, word: 'ARK', scene: 'Noah building a massive wooden vessel under dark clouds' },
-    { ch: 7, word: 'FLOOD', scene: 'Violent rain pouring down, waters covering the mountains' },
+    { ch: 6, word: 'ARK', scene: 'Noah building a massive wooden vessel' },
+    { ch: 7, word: 'FLOOD', scene: 'Violent rain pouring down, covering the mountains' },
     { ch: 8, word: 'DOVE', scene: 'A white dove returning with an olive branch' },
     { ch: 9, word: 'BOW', scene: 'A brilliant rainbow breaking through stormy skies' },
     { ch: 10, word: 'NATIONS', scene: 'A vast map of ancient lands and scattered tribes' },
@@ -27,10 +39,10 @@ export const GENESIS_GUIDE: StudyGuide = {
     { ch: 22, word: 'SACRIFICE', scene: 'Abraham raising a knife over Isaac on the altar' },
     { ch: 23, word: 'BURIAL', scene: 'Abraham weeping at the cave of Machpelah' },
     { ch: 24, word: 'BRIDE', scene: 'Rebekah drawing water for camels at a well' },
-    { ch: 25, word: 'STEW', scene: 'Esau trading his birthright for a bowl of red lentil stew' },
+    { ch: 25, word: 'STEW', scene: 'Esau trading his birthright for a bowl of red stew' },
     { ch: 26, word: 'WELLS', scene: 'Isaac’s servants digging fresh wells in the valley' },
     { ch: 27, word: 'STOLEN', scene: 'Jacob wearing animal skins, receiving Isaac’s blessing' },
-    { ch: 28, word: 'LADDER', scene: 'Angels ascending and descending a glowing stairway to heaven' },
+    { ch: 28, word: 'LADDER', scene: 'Angels ascending and descending a glowing stairway' },
     { ch: 29, word: 'DECEIVED', scene: 'Jacob realizing he has married Leah instead of Rachel' },
     { ch: 30, word: 'FLOCKS', scene: 'Speckled and spotted sheep grazing in a vast field' },
     { ch: 31, word: 'FLEE', scene: 'Jacob secretly fleeing with his family and flocks' },
@@ -45,19 +57,13 @@ export const GENESIS_GUIDE: StudyGuide = {
     { ch: 40, word: 'DREAMS', scene: 'A cupbearer and baker having disturbing visions' },
     { ch: 41, word: 'PHARAOH', scene: 'Seven gaunt cows emerging from the Nile river' },
     { ch: 42, word: 'BOWING', scene: 'Ten brothers bowing low before an Egyptian ruler' },
-    { ch: 43, word: 'FEAST', scene: 'A lavish Egyptian banquet table, Benjamin’s portion five times larger' },
+    { ch: 43, word: 'FEAST', scene: 'A lavish Egyptian banquet table, Benjamin’s portion larger' },
     { ch: 44, word: 'CUP', scene: 'A silver cup found inside a sack of grain' },
-    { ch: 45, word: 'REVEAL', scene: 'Joseph weeping loudly, revealing his identity to his brothers' },
-    { ch: 46,   word: 'JOURNEY', scene: 'An old man in a wagon traveling down to Egypt' },
+    { ch: 45, word: 'REVEAL', scene: 'Joseph weeping loudly, revealing his identity' },
+    { ch: 46, word: 'JOURNEY', scene: 'An old man in a wagon traveling down to Egypt' },
     { ch: 47, word: 'FAMINE', scene: 'Desolate, dry land across all of Egypt and Canaan' },
     { ch: 48, word: 'BLESS', scene: 'Jacob crossing his arms to bless Ephraim and Manasseh' },
     { ch: 49, word: 'PROPHECY', scene: 'An old dying patriarch speaking over his twelve sons' },
-    { ch: 50, word: 'BONES', scene: 'A solemn pledge to carry Joseph’s bones back to the promised land' }
-  ],
-  architecture: [
-    { name: 'Primeval History', chapters: [1, 11] },
-    { name: 'Abraham', chapters: [12, 25] },
-    { name: 'Isaac & Jacob', chapters: [26, 36] },
-    { name: 'Joseph', chapters: [37, 50] }
+    { ch: 50, word: 'BONES', scene: 'A solemn pledge to carry Joseph’s bones back' }
   ]
 };
