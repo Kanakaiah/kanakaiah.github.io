@@ -287,6 +287,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
   const executeAdd = (mode: 'individual' | 'combined') => {
     let addedCount = 0;
+    let skippedCount = 0;
     
     if (mode === 'individual') {
       selectedVerses.forEach(verseNum => {
@@ -294,6 +295,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         if (v) {
           const cleanText = v.text.replace(/<[^>]+>/g, '').trim();
           const ref = `${bookTitle} ${chapter}:${verseNum}`;
+          
+          if (state.verses.some(verse => verse.ref === ref)) {
+            skippedCount++;
+            return;
+          }
+          
           dispatch({
             type: 'ADD_VERSE',
             payload: {
@@ -340,6 +347,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         const refStr = group.length === 1 ? `${group[0]}` : `${group[0]}-${group[group.length - 1]}`;
         const ref = `${bookTitle} ${chapter}:${refStr}`;
         
+        if (state.verses.some(verse => verse.ref === ref)) {
+          skippedCount++;
+          return;
+        }
+        
         dispatch({
           type: 'ADD_VERSE',
           payload: {
@@ -358,7 +370,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       });
     }
     
-    showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} to your library!`, 'success');
+    if (addedCount > 0 && skippedCount > 0) {
+      showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} (${skippedCount} skipped as duplicate)`, 'success');
+    } else if (addedCount > 0) {
+      showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} to your library!`, 'success');
+    } else if (skippedCount > 0) {
+      showToast(`${skippedCount} ${skippedCount === 1 ? 'entry' : 'entries'} already in your library!`, 'info');
+    }
+    
     setSelectedVerses([]);
     setShowAddOptions(false);
   };
