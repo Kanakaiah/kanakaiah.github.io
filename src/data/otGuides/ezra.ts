@@ -1,7 +1,7 @@
 export const EZRA_GUIDE = {
   id: 'ezra',
   title: 'Ezra',
-  subtitle: 'Rebuilding the House of God',
+  subtitle: 'Return, Rebuild, Reform — God\'s Exiles Come Home',
   chapters: 10,
   icon: '📖',
   type: 'book-guide',
@@ -9,24 +9,25 @@ export const EZRA_GUIDE = {
   category: 'Tier 3 — Old Testament',
   structureFormula: '6 → 4',
   blocks: [
-    { chapters: '1–6', label: 'THE TEMPLE', description: 'Zerubbabel rebuilds the house' },
-    { chapters: '7–10', label: 'THE PEOPLE', description: 'Ezra reforms the heart' }
+    { chapters: '1–6', label: 'FIRST RETURN', description: 'Zerubbabel leads — temple rebuilt' },
+    { chapters: '7–10', label: 'SECOND RETURN', description: 'Ezra leads — the law renewed' }
   ],
   anchors: [
-    { ch: 1, word: 'VESSELS', scene: 'Cyrus bringing out the stolen gold vessels of the temple' },
-    { ch: 2, word: 'LIST', scene: 'Reading the long list of returning exiles by their families' },
-    { ch: 3, word: 'FOUNDATION', scene: 'Laying the temple foundation amid weeping and joyful shouting' },
-    { ch: 4, word: 'LETTER', scene: 'Enemies writing a letter to the king to stop the building' },
-    { ch: 5, word: 'EYE', scene: 'The eye of their God watching over the elders as they build' },
-    { ch: 6, word: 'DECREE', scene: 'Finding the scroll with Cyrus’s decree to rebuild' },
-    { ch: 7, word: 'SCROLL', scene: 'Ezra arriving in Jerusalem with the scroll of the Law' },
-    { ch: 8, word: 'GOLD', scene: 'Carefully weighing the gold and silver for the journey' },
-    { ch: 9, word: 'CLOAK', scene: 'Ezra tearing his cloak and pulling his hair in grief' },
-    { ch: 10, word: 'RAIN', scene: 'The people shivering in the courtyard in the heavy rain' }
+    { ch: 1, word: 'DECREE', scene: 'Cyrus\'s decree — the Spirit of the king is moved by God' },
+    { ch: 2, word: 'LIST', scene: 'The list of returning exiles — 49,897 people by name' },
+    { ch: 3, word: 'SHOUT', scene: 'Foundation laid — weeping and shouting mixed together' },
+    { ch: 4, word: 'LETTER', scene: 'Enemies write letters to stop the building — work halted' },
+    { ch: 5, word: 'PROPHETS', scene: 'Haggai and Zechariah stir the people — building resumes' },
+    { ch: 6, word: 'PASSOVER', scene: 'Temple completed — Passover celebrated with great joy' },
+    { ch: 7, word: 'HAND', scene: '"The hand of the LORD his God was on him" — Ezra arrives' },
+    { ch: 8, word: 'FASTING', scene: 'Ezra proclaims a fast by the river — "I was ashamed to ask the king for soldiers"' },
+    { ch: 9, word: 'GARMENT', scene: 'Ezra tears his garment — the intermarriage crisis' },
+    { ch: 10, word: 'RAIN', scene: 'The people stand in the rain — the foreign wives sent away' }
   ],
-  memorySentence: 'VESSELS and a LIST laid a FOUNDATION, a LETTER caught an EYE, a DECREE brought a SCROLL and GOLD, a CLOAK in the RAIN.',
+  memorySentence: '"CYRUS\'S DECREE moves the exiles, a LIST of names returns with them, the foundation is laid with WEEPING AND SHOUTING, LETTERS halt the work, PROPHETS restart it, the PASSOVER marks completion, EZRA\'S HAND is God\'s hand, a FAST by the river, a TORN GARMENT over the intermarriage crisis, and the whole community stands in the RAIN to make it right."',
   keyVerses: [
-    { ref: 'Ezra 7:10', text: 'For Ezra had set his heart to study the law of Yahweh and to practice it, and to teach His statute and judgment in Israel.', theme: 'Devotion' },
-    { ref: 'Ezra 9:8', text: 'But now for a brief moment grace has been shown from Yahweh our God, to leave us an escaped remnant and to give us a peg in His holy place...', theme: 'Grace' }
+    { ref: 'Ezra 1:3', text: 'Whoever is among his people — may his God be with him — let him go up to Jerusalem', theme: 'The great return begins' },
+    { ref: 'Ezra 7:10', text: 'Ezra had devoted himself to the study and observance of the Law — and to teaching its decrees', theme: 'The model of a biblical scholar' },
+    { ref: 'Ezra 9:9', text: 'Though we are slaves our God has not forsaken us — he has extended kindness to us', theme: 'Grace in the middle of failure' }
   ]
 };

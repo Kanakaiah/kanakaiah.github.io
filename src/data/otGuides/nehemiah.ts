@@ -1,35 +1,37 @@
 export const NEHEMIAH_GUIDE = {
   id: 'nehemiah',
   title: 'Nehemiah',
-  subtitle: 'Rebuilding the City of God',
+  subtitle: 'Walls Built with One Hand, Sword in the Other',
   chapters: 13,
   icon: '📖',
   type: 'book-guide',
   tier: 3,
   category: 'Tier 3 — Old Testament',
-  structureFormula: '7 → 6',
+  structureFormula: '7 → 3 → 3',
   blocks: [
-    { chapters: '1–7', label: 'THE WALL', description: 'Rebuilding the defenses' },
-    { chapters: '8–13', label: 'THE WORD', description: 'Renewing the covenant' }
+    { chapters: '1–7', label: 'THE WALL', description: 'Prayer, inspection, building, opposition, completion' },
+    { chapters: '8–10', label: 'THE WORD', description: 'Ezra reads the law — covenant renewed' },
+    { chapters: '11–13', label: 'THE COMMUNITY', description: 'Population, dedication, and reform' }
   ],
   anchors: [
-    { ch: 1, word: 'TEARS', scene: 'Nehemiah weeping and fasting over the ruined walls of Jerusalem' },
-    { ch: 2, word: 'LETTERS', scene: 'Receiving letters of safe passage from the Persian king' },
-    { ch: 3, word: 'GATES', scene: 'Families working side-by-side to repair the city gates' },
-    { ch: 4, word: 'SWORD', scene: 'Builders working with a load in one hand and a sword in the other' },
-    { ch: 5, word: 'FIELDS', scene: 'Nobles returning exacted fields and vineyards to the poor' },
-    { ch: 6, word: 'WALL', scene: 'The massive wall miraculously completed in just 52 days' },
-    { ch: 7, word: 'ROSTER', scene: 'Finding the genealogical roster of the first returning exiles' },
-    { ch: 8, word: 'PLATFORM', scene: 'Ezra reading the Law from a high wooden platform' },
-    { ch: 9, word: 'SACKCLOTH', scene: 'The people fasting and confessing their sins in sackcloth' },
-    { ch: 10, word: 'SEAL', scene: 'Leaders setting a sealed document to keep the covenant' },
-    { ch: 11, word: 'LOTS', scene: 'Casting lots to bring one out of ten to live in Jerusalem' },
-    { ch: 12, word: 'CHOIRS', scene: 'Two great choirs walking along the top of the new wall' },
-    { ch: 13, word: 'DOORS', scene: 'Nehemiah angrily shutting the city doors on the Sabbath' }
+    { ch: 1, word: 'TEARS', scene: 'Nehemiah weeps, fasts, and prays for four months' },
+    { ch: 2, word: 'NIGHT', scene: 'Nehemiah inspects the broken walls alone at night on a donkey' },
+    { ch: 3, word: 'GATES', scene: 'Every gate and section of the wall assigned to specific builders' },
+    { ch: 4, word: 'SWORD', scene: 'Workers build with one hand and hold a sword in the other' },
+    { ch: 5, word: 'DEBT', scene: 'Nehemiah confronts the nobles for charging interest on the poor' },
+    { ch: 6, word: 'LETTER', scene: 'Sanballat\'s fifth letter — "Come and meet with me" — Nehemiah refuses' },
+    { ch: 7, word: 'LIST', scene: 'The same list of returning exiles — Nehemiah finds it in the archives' },
+    { ch: 8, word: 'READING', scene: 'Ezra reads the law from dawn to midday — people weep — then rejoice' },
+    { ch: 9, word: 'DUST', scene: 'Great prayer of confession — from creation to exile — "We are now slaves"' },
+    { ch: 10, word: 'SEAL', scene: 'The covenant document signed and sealed — 84 names listed' },
+    { ch: 11, word: 'LOTS', scene: 'Lots cast to choose one in ten to live inside Jerusalem' },
+    { ch: 12, word: 'CHOIRS', scene: 'Two great choirs walk the wall in opposite directions and meet' },
+    { ch: 13, word: 'SABBATH', scene: 'Nehemiah returns — drives out Tobiah — closes gates on the Sabbath' }
   ],
-  memorySentence: 'TEARS and LETTERS built GATES with a SWORD in the FIELDS, a WALL and ROSTER heard from the PLATFORM, in SACKCLOTH putting a SEAL and LOTS for CHOIRS at the DOORS.',
+  memorySentence: '"TEARS become a prayer, a NIGHT inspection reveals the damage, every GATE gets a builder, a SWORD in one hand and trowel in the other, DEBT confronted, threatening LETTERS refused, the founding LIST found in the archives, the LAW READ from dawn to midday, a long DUST AND ASHES prayer of confession, the SEAL on a new covenant, LOTS populate the city, two CHOIRS walk the completed wall, and NEHEMIAH RETURNS to close the gates on the Sabbath."',
   keyVerses: [
-    { ref: 'Nehemiah 4:14', text: 'When I saw their fear, I arose and spoke to the nobles, the officials and the rest of the people: "Do not be afraid of them; remember the Lord who is great and fearsome, and fight for your brothers, your sons, your daughters, your wives and your houses."', theme: 'Courage' },
-    { ref: 'Nehemiah 8:10', text: 'Then he said to them, "Go, eat of the fat, drink of the sweet, and send portions to him who has nothing prepared; for this day is holy to our Lord. Do not be grieved, for the joy of Yahweh is your strength."', theme: 'Joy' }
+    { ref: 'Nehemiah 2:20', text: 'The God of heaven will give us success — we his servants will start rebuilding', theme: 'The confidence of faith' },
+    { ref: 'Nehemiah 6:9', text: 'They were all trying to frighten us — but I prayed, \'Now strengthen my hands\'', theme: 'Prayer as the weapon' },
+    { ref: 'Nehemiah 8:10', text: 'Do not grieve — for the joy of the LORD is your strength', theme: 'The most quoted verse of Nehemiah' }
   ]
 };

@@ -1,7 +1,7 @@
 export const RUTH_GUIDE = {
   id: 'ruth',
   title: 'Ruth',
-  subtitle: 'A Quiet Story of Unseen Providence',
+  subtitle: 'A Gentile Woman Who Found Her Home in God\'s Covenant',
   chapters: 4,
   icon: '📖',
   type: 'book-guide',
@@ -9,20 +9,21 @@ export const RUTH_GUIDE = {
   category: 'Tier 3 — Old Testament',
   structureFormula: '1 → 1 → 1 → 1',
   blocks: [
-    { chapters: '1', label: 'RETURN', description: 'Famine and empty return to Bethlehem' },
-    { chapters: '2', label: 'GLEANING', description: 'Working in the fields of Boaz' },
-    { chapters: '3', label: 'PROPOSAL', description: 'The midnight meeting at the threshing floor' },
-    { chapters: '4', label: 'REDEMPTION', description: 'The transaction at the gate' }
+    { chapters: '1', label: 'EMPTIED', description: 'Naomi returns from Moab — empty and bitter' },
+    { chapters: '2', label: 'PROVIDED', description: 'Ruth gleans in Boaz\'s field — grace noticed' },
+    { chapters: '3', label: 'CLAIMED', description: 'Ruth at the threshing floor — "spread your wing"' },
+    { chapters: '4', label: 'REDEEMED', description: 'Boaz redeems — Obed born — David\'s line secured' }
   ],
   anchors: [
-    { ch: 1, word: 'TEARS', scene: 'Naomi and Ruth weeping on the road to Judah' },
-    { ch: 2, word: 'GRAIN', scene: 'Ruth gleaning heads of grain behind the harvesters' },
-    { ch: 3, word: 'THRESHING-FLOOR', scene: 'Ruth uncovering Boaz’s feet at the threshing-floor' },
-    { ch: 4, word: 'SANDAL', scene: 'A relative taking off his sandal to seal the redemption' }
+    { ch: 1, word: 'RETURN', scene: '"Where you go I will go — your God shall be my God"' },
+    { ch: 2, word: 'GLEANING', scene: 'Ruth gleans behind the harvesters — Boaz notices and protects her' },
+    { ch: 3, word: 'THRESHING FLOOR', scene: 'Ruth uncovers Boaz\'s feet at night — "Spread your wing over me"' },
+    { ch: 4, word: 'SANDAL', scene: 'The nearer kinsman removes his sandal — Boaz redeems Ruth' }
   ],
-  memorySentence: 'Through TEARS she gathered GRAIN, waiting at the THRESHING-FLOOR for a SANDAL.',
+  memorySentence: '"Naomi says RETURN and Ruth clings to her God, GLEANING brings her to Boaz\'s field, the THRESHING FLOOR becomes a place of covenant request, and the SANDAL is removed so the redeemer can act."',
   keyVerses: [
-    { ref: 'Ruth 1:16', text: 'But Ruth said, "Do not urge me to leave you or turn back from following you; for where you go, I will go, and where you lodge, I will lodge. Your people shall be my people, and your God, my God."', theme: 'Loyalty' },
-    { ref: 'Ruth 4:14', text: 'Then the women said to Naomi, "Blessed is Yahweh who has not left you without a redeemer today, and may his name become famous in Israel."', theme: 'Redemption' }
+    { ref: 'Ruth 1:16', text: 'Where you go I will go — your people shall be my people, your God my God', theme: 'The covenant of love' },
+    { ref: 'Ruth 2:12', text: 'May you be richly rewarded by the LORD under whose wings you have come to take refuge', theme: 'The wing of Boaz = the wing of God' },
+    { ref: 'Ruth 4:14', text: 'Blessed be the LORD who has not left you without a redeemer', theme: 'The heart of the book' }
   ]
 };
