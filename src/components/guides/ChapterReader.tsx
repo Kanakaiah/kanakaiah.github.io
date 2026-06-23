@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
@@ -382,6 +382,37 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     setShowAddOptions(false);
   };
 
+  const handleDeleteSelected = () => {
+    const prefix = `${bookTitle} ${chapter}:`;
+    
+    // Find all verses in the library that overlap with the selected verses
+    const versesToDelete = state.verses.filter(v => {
+      if (!v.ref.startsWith(prefix)) return false;
+      const versePart = v.ref.substring(prefix.length);
+      let memSet = new Set<number>();
+      if (versePart.includes('-')) {
+        const [start, end] = versePart.split('-').map(n => parseInt(n, 10));
+        for (let i = start; i <= end; i++) memSet.add(i);
+      } else if (versePart.includes(',')) {
+        versePart.split(',').forEach(n => memSet.add(parseInt(n, 10)));
+      } else {
+        memSet.add(parseInt(versePart, 10));
+      }
+      
+      return selectedVerses.some(sv => memSet.has(sv));
+    });
+
+    if (versesToDelete.length > 0) {
+      versesToDelete.forEach(v => {
+        dispatch({ type: 'DELETE_VERSE', payload: v.id });
+      });
+      showToast(`Removed ${versesToDelete.length} ${versesToDelete.length === 1 ? 'entry' : 'entries'} from your library.`, 'success');
+    }
+    
+    setSelectedVerses([]);
+    setShowAddOptions(false);
+  };
+
   const handleCopySelected = () => {
     if (selectedVerses.length === 0) return;
 
@@ -669,12 +700,21 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               >
                 <Copy className="w-4 h-4" /> Copy
               </button>
-              <button 
-                onClick={handleAddClick}
-                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
-              >
-                <Plus className="w-4 h-4" /> Add
-              </button>
+              {selectedVerses.every(v => memorizedVerses.has(v)) ? (
+                <button 
+                  onClick={handleDeleteSelected}
+                  className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+                >
+                  <Trash2 className="w-4 h-4" /> Remove
+                </button>
+              ) : (
+                <button 
+                  onClick={handleAddClick}
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+                >
+                  <Plus className="w-4 h-4" /> Add
+                </button>
+              )}
               <button 
                 onClick={() => setSelectedVerses([])}
                 className="p-1.5 rounded-xl hover:bg-white/20 transition-colors ml-1"
