@@ -293,7 +293,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       selectedVerses.forEach(verseNum => {
         const v = verses.find(x => x.verse === verseNum);
         if (v) {
-          const cleanText = v.text.replace(/<[^>]+>/g, '').trim();
+          const cleanText = v.text
+            .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
+            .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
+            .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
+            .replace(/<br\s*\/?>/gi, ' ')
+            .replace(/<\/p>/gi, ' ')
+            .replace(/<[^>]+>/g, '')
+            .trim();
           const ref = `${bookTitle} ${chapter}:${verseNum}`;
           
           if (state.verses.some(verse => verse.ref === ref)) {
@@ -340,7 +347,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         const textParts: string[] = [];
         group.forEach(verseNum => {
           const v = verses.find(x => x.verse === verseNum);
-          if (v) textParts.push(v.text.replace(/<[^>]+>/g, '').trim());
+          if (v) {
+            textParts.push(
+              v.text
+                .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
+                .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
+                .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
+                .replace(/<br\s*\/?>/gi, ' ')
+                .replace(/<\/p>/gi, ' ')
+                .replace(/<[^>]+>/g, '')
+                .trim()
+            );
+          }
         });
         
         const combinedText = textParts.join(' ');

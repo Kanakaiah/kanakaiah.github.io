@@ -93,7 +93,14 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           const requestedVerses = chapterData.filter((v: any) => vNums.includes(v.verse));
           
           const textChunk = requestedVerses.map((v: any) => {
-            return v.text.replace(/<br\s*\/?>/gi, ' ').replace(/<\/p>/gi, ' ').replace(/<[^>]*>/g, '').trim();
+            return v.text
+              .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
+              .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
+              .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
+              .replace(/<br\s*\/?>/gi, ' ')
+              .replace(/<\/p>/gi, ' ')
+              .replace(/<[^>]*>/g, '')
+              .trim();
           }).join(' ');
           
           combinedText += textChunk + ' ';
