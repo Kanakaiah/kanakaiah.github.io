@@ -226,7 +226,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                 return (
                   <div 
                     key={`${gi}-${i}`} 
-                    className="px-5 py-4 relative active:bg-glass-bg transition-colors"
+                    className="px-5 py-3 relative active:bg-glass-bg transition-colors"
                     onClick={() => {
                       if (bookInfo) {
                         onNavigateToVerse(bookInfo.id, r.chapter, r.verse);
@@ -247,7 +247,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                     ) : r.error ? (
                       <p className="text-xs text-red-400">{r.error}</p>
                     ) : (
-                      <p className="text-sm leading-relaxed text-primary/80">{r.text}</p>
+                      <p className="text-sm leading-snug text-primary/80">{r.text}</p>
                     )}
 
                     {/* Modern gradient divider between items */}
