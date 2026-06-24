@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { X, AlignLeft, Trash2, BookOpen } from 'lucide-react';
 import type { Verse } from '../../types/models';
@@ -46,7 +47,7 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
     weekday: 'short', month: 'short', day: 'numeric' 
   });
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-background/80 backdrop-blur-sm p-4">
       <div 
         className="fixed inset-0" 
@@ -96,6 +97,7 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
           </div>
         </div>
       </Card>
-    </div>
+    </div>,
+    document.body
   );
 };
