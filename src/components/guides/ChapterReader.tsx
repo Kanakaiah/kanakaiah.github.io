@@ -64,7 +64,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const highlightVerse = searchParams.get('highlightVerse');
   const [showOptions, setShowOptions] = useState(false);
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
@@ -240,6 +241,22 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
     fetchChapter();
   }, [bookId, chapter]);
+
+  useEffect(() => {
+    if (verses.length > 0 && highlightVerse && !loading) {
+      setTimeout(() => {
+        const el = document.querySelector(`[data-verse="${highlightVerse}"]`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Add a temporary highlight effect
+          el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
+          setTimeout(() => {
+            el.classList.remove('bg-accent/30');
+          }, 2000);
+        }
+      }, 100);
+    }
+  }, [verses, highlightVerse, loading]);
 
   const memorizedVerses = useMemo(() => {
     const memSet = new Set<number>();

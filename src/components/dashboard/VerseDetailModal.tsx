@@ -28,10 +28,11 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
     if (match) {
       const bookName = match[1];
       const chapter = match[2];
+      const verseNum = match[3];
       const book = ALL_BOOKS.find(b => b.name.toLowerCase() === bookName.toLowerCase());
       if (book) {
         onClose();
-        navigate(`/guides?readerBook=${book.id}&readerChapter=${chapter}`);
+        navigate(`/guides?readerBook=${book.id}&readerChapter=${chapter}&highlightVerse=${verseNum}`);
       } else {
         alert("Could not locate this book in the reader.");
       }
