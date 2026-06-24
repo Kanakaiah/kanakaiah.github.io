@@ -69,7 +69,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const highlightVerse = searchParams.get('highlightVerse');
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
-  const [showCrossReferences, setShowCrossReferences] = useState<string | null>(null);
+  const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
@@ -757,14 +757,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               >
                 <Copy className="w-3.5 h-3.5" /> Copy
               </button>
-              {selectedVerses.length === 1 && (
-                <button 
-                  onClick={() => setShowCrossReferences(`${bookTitle.toLowerCase()} ${chapter}:${selectedVerses[0]}`)}
+              <button 
+                  onClick={() => {
+                    const sorted = [...selectedVerses].sort((a, b) => a - b);
+                    setShowCrossReferences(sorted.map(v => `${bookTitle.toLowerCase()} ${chapter}:${v}`));
+                  }}
                   className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
                   <BookOpen className="w-3.5 h-3.5" /> Refs
                 </button>
-              )}
               {selectedVerses.every(v => memorizedVerses.has(v)) ? (
                 <button 
                   onClick={handleDeleteSelected}
@@ -959,7 +960,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {showCrossReferences && (
         <CrossReferenceModal 
-          verseRef={showCrossReferences}
+          verseRefs={showCrossReferences}
           onClose={() => setShowCrossReferences(null)}
           onNavigateToVerse={(navBookId, ch, v) => {
             setShowCrossReferences(null);

@@ -7,7 +7,7 @@ import { BOLLS_BIBLE_MAP } from './ChapterReader';
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
 interface CrossReferenceModalProps {
-  verseRef: string; // e.g. "genesis 1:1"
+  verseRefs: string[]; // e.g. ["genesis 1:1", "genesis 1:2"]
   onClose: () => void;
   onNavigateToVerse: (bookId: string, chapter: number, verse: number) => void;
 }
@@ -22,7 +22,7 @@ interface CrossRefData {
   error?: string;
 }
 
-export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseRef, onClose, onNavigateToVerse }) => {
+export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseRefs, onClose, onNavigateToVerse }) => {
   const [refs, setRefs] = useState<CrossRefData[]>([]);
   const [loadingRefs, setLoadingRefs] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +37,19 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
         if (!res.ok) throw new Error('Failed to load cross references database');
         
         const data = await res.json();
-        const related = data[verseRef.toLowerCase()] || [];
+        
+        // Merge cross-references from all selected verses and deduplicate
+        const seen = new Set<string>();
+        const related: string[] = [];
+        for (const vRef of verseRefs) {
+          const verseRefs_data = data[vRef.toLowerCase()] || [];
+          for (const ref of verseRefs_data) {
+            if (!seen.has(ref)) {
+              seen.add(ref);
+              related.push(ref);
+            }
+          }
+        }
 
         if (related.length === 0) {
           if (mounted) {
@@ -125,9 +137,12 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
     loadRefs();
 
     return () => { mounted = false; };
-  }, [verseRef]);
+  }, [verseRefs]);
 
   const capitalize = (s: string) => s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+  // Build a display label like "Genesis 1:1-3" or "Genesis 1:1, 1:5"
+  const displayLabel = verseRefs.map(v => capitalize(v)).join(', ');
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
@@ -137,7 +152,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
           <BookOpen className="w-5 h-5 text-accent" />
           <div>
             <h2 className="text-base font-bold text-primary">Cross References</h2>
-            <p className="text-xs text-secondary">{capitalize(verseRef)}</p>
+            <p className="text-xs text-secondary">{displayLabel}</p>
           </div>
         </div>
         <button 
