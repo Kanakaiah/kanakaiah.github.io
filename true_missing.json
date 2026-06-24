@@ -1,7 +1,7 @@
 {
   "totalAnchors": 260,
-  "totalGenerated": 200,
-  "totalMissing": 60,
+  "totalGenerated": 216,
+  "totalMissing": 44,
   "completedBooks": [
     "john",
     "romans",
@@ -16,39 +16,16 @@
     "philippians",
     "colossians",
     "james",
-    "1peter"
+    "1peter",
+    "mark"
   ],
   "missingDetails": [
     {
-      "book": "mark",
-      "total": 16,
-      "generated": 2,
-      "missing": 14,
-      "missingChapters": [
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16
-      ]
-    },
-    {
       "book": "2corinthians",
       "total": 13,
-      "generated": 0,
-      "missing": 13,
+      "generated": 2,
+      "missing": 11,
       "missingChapters": [
-        1,
-        2,
         3,
         4,
         5,

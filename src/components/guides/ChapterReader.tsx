@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2 } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2, BookOpen } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
+import { CrossReferenceModal } from './CrossReferenceModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
@@ -18,7 +19,7 @@ interface ChapterReaderProps {
   onClose: () => void;
 }
 
-const BOLLS_BIBLE_MAP: Record<string, number> = {
+export const BOLLS_BIBLE_MAP: Record<string, number> = {
   // OT
   genesis: 1, exodus: 2, leviticus: 3, numbers: 4, deuteronomy: 5,
   joshua: 6, judges: 7, ruth: 8, '1samuel': 9, '2samuel': 10,
@@ -68,6 +69,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const highlightVerse = searchParams.get('highlightVerse');
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
+  const [showCrossReferences, setShowCrossReferences] = useState<string | null>(null);
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
@@ -409,8 +411,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     const actionObj = {
       label: 'Go to Library',
       onClick: () => {
-        onClose();
-        navigate('/');
+        setTimeout(() => {
+          onClose();
+          navigate(`/?search=${encodeURIComponent(bookTitle + ' ' + chapter + ':')}`);
+        }, 300);
       }
     };
     
@@ -744,6 +748,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               >
                 <Copy className="w-4 h-4" /> Copy
               </button>
+              {selectedVerses.length === 1 && (
+                <button 
+                  onClick={() => setShowCrossReferences(`${bookTitle.toLowerCase()} ${chapter}:${selectedVerses[0]}`)}
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+                >
+                  <BookOpen className="w-4 h-4" /> Refs
+                </button>
+              )}
               {selectedVerses.every(v => memorizedVerses.has(v)) ? (
                 <button 
                   onClick={handleDeleteSelected}
@@ -942,6 +954,35 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           </div>
         </div>
       )}
+
+      {showCrossReferences && (
+        <CrossReferenceModal 
+          verseRef={showCrossReferences}
+          onClose={() => setShowCrossReferences(null)}
+          onNavigateToVerse={(navBookId, ch, v) => {
+            setShowCrossReferences(null);
+            setSelectedVerses([v]);
+            // Navigate if it's a different chapter or book
+            if (navBookId !== bookId || ch !== chapter) {
+              setSearchParams(prev => {
+                const next = new URLSearchParams(prev);
+                next.set('readerBook', navBookId);
+                next.set('readerChapter', ch.toString());
+                next.set('highlightVerse', v.toString());
+                return next;
+              }, { replace: true });
+            } else {
+              // Same chapter, just scroll
+              const el = document.querySelector(`[data-verse="${v}"]`);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
+                setTimeout(() => el.classList.remove('bg-accent/30'), 2000);
+              }
+            }
+          }}
+        />
+      )}
     </div>
   );
-}
+};

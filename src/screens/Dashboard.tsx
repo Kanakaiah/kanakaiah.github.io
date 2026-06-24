@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame, Target } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { VerseCard } from '../components/dashboard/VerseCard';
@@ -15,7 +15,8 @@ export const Dashboard: React.FC = () => {
   const { state, dispatch } = useApp();
   const navigate = useNavigate();
   
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
