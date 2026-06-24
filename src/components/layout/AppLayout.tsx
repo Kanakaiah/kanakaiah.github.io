@@ -40,7 +40,7 @@ export const AppLayout: React.FC = () => {
       
       {/* LEFT SIDEBAR (Desktop) / BOTTOM NAV (Mobile) */}
       <nav className={`
-        fixed lg:static bottom-4 lg:bottom-0 left-1/2 lg:left-0 transform -translate-x-1/2 lg:translate-x-0
+        fixed lg:static lg:bottom-0 left-1/2 lg:left-0 transform -translate-x-1/2 lg:translate-x-0
         w-[92%] max-w-[400px] lg:w-64 lg:max-w-none lg:h-full
         bg-glass-bg backdrop-blur-xl lg:backdrop-blur-none lg:bg-background/50 lg:border-r border-glass-border
         rounded-full lg:rounded-none z-50
@@ -49,7 +49,9 @@ export const AppLayout: React.FC = () => {
         transition-transform duration-300 ease-in-out
         ${isNavHidden ? 'translate-y-[150px] lg:translate-y-0' : 'translate-y-0'}
         ${isFullscreenView ? 'hidden' : ''}
-      `}>
+      `}
+      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}
+      >
         {/* Desktop Logo */}
         <div className="hidden lg:flex items-center gap-3 mb-8 w-full px-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white shadow-md shadow-accent/20">
@@ -149,7 +151,10 @@ export const AppLayout: React.FC = () => {
               ? '0px' 
               : (location.pathname === '/guides' 
                   ? '0px' 
-                  : 'calc(env(safe-area-inset-top, 0px) + 5rem)') 
+                  : 'calc(env(safe-area-inset-top, 0px) + 5rem)'),
+            paddingBottom: (location.pathname === '/practice' || isReadingPage)
+              ? '0px'
+              : 'calc(env(safe-area-inset-bottom, 0px) + 7rem)'
           }}
           onScroll={handleScroll}
         >
@@ -162,8 +167,9 @@ export const AppLayout: React.FC = () => {
         <button
           onClick={() => setIsAddVerseOpen(true)}
           className={`fixed right-5 lg:right-8 w-14 h-14 rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent-hover flex items-center justify-center z-40 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105 active:scale-95 lg:hidden
-            ${isNavHidden ? 'bottom-8 lg:bottom-8 translate-y-32 opacity-0' : 'bottom-24 lg:bottom-8 translate-y-0 opacity-100'}
+            ${isNavHidden ? 'lg:bottom-8 translate-y-32 opacity-0' : 'lg:bottom-8 translate-y-0 opacity-100'}
           `}
+          style={{ bottom: isNavHidden ? 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' : 'calc(env(safe-area-inset-bottom, 0px) + 6rem)' }}
           aria-label="Add Verse"
         >
           <Plus className="w-6 h-6" />

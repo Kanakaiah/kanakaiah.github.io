@@ -47,7 +47,7 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-background/80 backdrop-blur-sm p-4">
       <div 
         className="fixed inset-0" 
         onClick={onClose}

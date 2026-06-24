@@ -351,10 +351,13 @@ export const Practice: React.FC = () => {
   }, [isImmersed, zoomLevel]);
 
   return (
-    <div 
-      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pb-6 lg:pb-8'}`}
-      style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-    >
+      <div 
+        className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pb-6 lg:pb-8'}`}
+        style={{ 
+          backgroundColor: isImmersed ? 'var(--bg-color)' : undefined, 
+          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' 
+        }}
+      >
       
       {/* Exit Button - Hidden when immersed */}
       {!isImmersed && (
