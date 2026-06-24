@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { X, ArrowRight, Loader2, BookOpen } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 import { BOLLS_BIBLE_MAP } from './ChapterReader';
