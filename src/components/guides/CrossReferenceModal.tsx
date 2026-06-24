@@ -249,9 +249,6 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                     ) : (
                       <p className="text-sm leading-snug text-primary/80">{r.text}</p>
                     )}
-
-                    {/* Modern gradient divider between items */}
-                    <div className="absolute bottom-0 left-5 right-5 h-[1px] bg-gradient-to-r from-glass-border to-transparent opacity-50" />
                   </div>
                 );
               })}
