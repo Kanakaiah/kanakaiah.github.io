@@ -313,10 +313,6 @@ export const Dashboard: React.FC = () => {
             setSelectedVerse(null);
             navigate('/practice?id=' + selectedVerse.id);
           }}
-          onSave={(updatedVerse) => {
-            dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
-            showToast('Verse updated', 'success');
-          }}
           onDelete={() => {
             dispatch({ type: 'DELETE_VERSE', payload: selectedVerse.id });
             setSelectedVerse(null);
