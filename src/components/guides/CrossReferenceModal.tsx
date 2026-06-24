@@ -207,11 +207,11 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
             <div key={gi}>
               {/* Parent verse section header — shown when multi-verse */}
               {isMultiVerse && (
-                <div className="sticky top-0 z-10 px-5 py-2.5 bg-card-elevated/90 backdrop-blur-md border-b border-glass-border">
-                  <span className="text-xs font-bold text-accent uppercase tracking-wider">
+                <div className="sticky top-0 z-10 px-5 py-3 bg-accent/10 backdrop-blur-md border-b border-accent/20 border-l-4 border-l-accent flex items-center justify-between">
+                  <span className="text-sm font-bold text-accent">
                     {capitalize(group.parentRef)}
                   </span>
-                  <span className="text-xs text-muted ml-2">
+                  <span className="text-[10px] font-bold text-accent/60 bg-accent/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
                     {group.refs.length} {group.refs.length === 1 ? 'ref' : 'refs'}
                   </span>
                 </div>
