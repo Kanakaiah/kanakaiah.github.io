@@ -51,7 +51,10 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             <span>{toast.message}</span>
             {toast.action && (
               <button 
-                onClick={toast.action.onClick}
+                onClick={() => {
+                  setToasts(prev => prev.filter(t => t.id !== toast.id));
+                  toast.action!.onClick();
+                }}
                 className="ml-4 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors whitespace-nowrap active:scale-95"
               >
                 {toast.action.label}
