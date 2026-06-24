@@ -158,7 +158,9 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border">
+      <div className="flex items-center justify-between px-5 py-4 relative">
+        {/* Modern gradient border under header */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-glass-border to-transparent" />
         <div className="flex items-center gap-3">
           <BookOpen className="w-5 h-5 text-accent" />
           <div>
@@ -224,7 +226,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                 return (
                   <div 
                     key={`${gi}-${i}`} 
-                    className="px-5 py-4 border-b border-glass-border active:bg-glass-bg transition-colors"
+                    className="px-5 py-4 relative active:bg-glass-bg transition-colors"
                     onClick={() => {
                       if (bookInfo) {
                         onNavigateToVerse(bookInfo.id, r.chapter, r.verse);
@@ -247,6 +249,9 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                     ) : (
                       <p className="text-sm leading-relaxed text-primary/80">{r.text}</p>
                     )}
+
+                    {/* Modern gradient divider between items */}
+                    <div className="absolute bottom-0 left-5 right-5 h-[1px] bg-gradient-to-r from-glass-border to-transparent opacity-50" />
                   </div>
                 );
               })}
