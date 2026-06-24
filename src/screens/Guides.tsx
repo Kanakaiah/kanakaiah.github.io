@@ -274,7 +274,10 @@ export const Guides: React.FC = () => {
   // ── BibleBrowser view ──────────────────────────────────────────────────────
   if (activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) {
     return (
-      <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 animate-[fadeIn_0.3s_ease-out]">
+      <div 
+        className="flex flex-col gap-6 max-w-4xl mx-auto w-full animate-[fadeIn_0.3s_ease-out]"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+      >
         <BibleBrowser
           initialTestament={activeGuideId === BIBLE_BROWSER_NT ? 'NT' : 'OT'}
           onOpenGuide={(guideId) => setActiveGuideId(guideId)}
@@ -288,7 +291,8 @@ export const Guides: React.FC = () => {
   if (activeGuide) {
     return (
       <div 
-        className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4 pb-24 animate-[fadeIn_0.3s_ease-out]"
+        className="flex flex-col gap-6 max-w-4xl mx-auto w-full pb-24 animate-[fadeIn_0.3s_ease-out]"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
