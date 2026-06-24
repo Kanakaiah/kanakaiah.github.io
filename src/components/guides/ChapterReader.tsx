@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2 } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 
@@ -66,6 +66,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const [error, setError] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const highlightVerse = searchParams.get('highlightVerse');
+  const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
@@ -405,12 +406,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       });
     }
     
+    const actionObj = {
+      label: 'Go to Library',
+      onClick: () => {
+        onClose();
+        navigate('/');
+      }
+    };
+    
     if (addedCount > 0 && skippedCount > 0) {
-      showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} (${skippedCount} skipped as duplicate)`, 'success');
+      showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} (${skippedCount} skipped as duplicate)`, 'success', actionObj);
     } else if (addedCount > 0) {
-      showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} to your library!`, 'success');
+      showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} to your library!`, 'success', actionObj);
     } else if (skippedCount > 0) {
-      showToast(`${skippedCount} ${skippedCount === 1 ? 'entry' : 'entries'} already in your library!`, 'info');
+      showToast(`${skippedCount} ${skippedCount === 1 ? 'entry' : 'entries'} already in your library!`, 'info', actionObj);
     }
     
     setSelectedVerses([]);

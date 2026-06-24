@@ -3,14 +3,20 @@ import type { ReactNode } from 'react';
 
 type ToastType = 'success' | 'error' | 'info';
 
+interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
 interface ToastMessage {
   id: string;
   message: string;
   type: ToastType;
+  action?: ToastAction;
 }
 
 interface ToastContextProps {
-  showToast: (message: string, type?: ToastType) => void;
+  showToast: (message: string, type?: ToastType, action?: ToastAction) => void;
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
@@ -18,13 +24,13 @@ const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const showToast = useCallback((message: string, type: ToastType = 'info') => {
+  const showToast = useCallback((message: string, type: ToastType = 'info', action?: ToastAction) => {
     const id = Math.random().toString(36).substr(2, 9);
-    setToasts(prev => [...prev, { id, message, type }]);
+    setToasts(prev => [...prev, { id, message, type, action }]);
 
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
-    }, 3000);
+    }, action ? 5000 : 3000); // give a bit more time if there's an action
   }, []);
 
   return (
@@ -35,14 +41,22 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           <div
             key={toast.id}
             className={`
-              px-4 py-3 rounded-xl shadow-lg border text-sm font-medium
-              animate-[fadeIn_0.3s_ease-out_forwards] backdrop-blur-md
+              pointer-events-auto px-4 py-3 rounded-xl shadow-lg border text-sm font-medium
+              animate-[fadeIn_0.3s_ease-out_forwards] backdrop-blur-md flex items-center justify-between
               ${toast.type === 'success' ? 'bg-green-500/20 border-green-500/30 text-green-100' : ''}
               ${toast.type === 'error' ? 'bg-red-500/20 border-red-500/30 text-red-100' : ''}
               ${toast.type === 'info' ? 'bg-blue-500/20 border-blue-500/30 text-blue-100' : ''}
             `}
           >
-            {toast.message}
+            <span>{toast.message}</span>
+            {toast.action && (
+              <button 
+                onClick={toast.action.onClick}
+                className="ml-4 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors whitespace-nowrap active:scale-95"
+              >
+                {toast.action.label}
+              </button>
+            )}
           </div>
         ))}
       </div>
