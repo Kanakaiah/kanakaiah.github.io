@@ -736,48 +736,50 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {/* Floating Action Bar for Selected Verses */}
       {selectedVerses.length > 0 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
-          <div className="bg-accent text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-4">
-            <span className="font-bold text-sm whitespace-nowrap">
-              {selectedVerses.length} {selectedVerses.length === 1 ? 'verse' : 'verses'} selected
-            </span>
-            <div className="flex items-center gap-2">
+        <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom-4 fade-in duration-300 px-3 pb-3 sm:pb-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
+          <div className="bg-accent text-white rounded-2xl shadow-2xl max-w-md mx-auto overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2.5">
+              <span className="font-bold text-sm">
+                {selectedVerses.length} {selectedVerses.length === 1 ? 'verse' : 'verses'} selected
+              </span>
+              <button 
+                onClick={() => setSelectedVerses([])}
+                className="p-1 rounded-lg hover:bg-white/20 transition-colors"
+                title="Cancel Selection"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex items-center gap-2 px-4 pb-3 flex-wrap">
               <button 
                 onClick={handleCopySelected}
-                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
               >
-                <Copy className="w-4 h-4" /> Copy
+                <Copy className="w-3.5 h-3.5" /> Copy
               </button>
               {selectedVerses.length === 1 && (
                 <button 
                   onClick={() => setShowCrossReferences(`${bookTitle.toLowerCase()} ${chapter}:${selectedVerses[0]}`)}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
-                  <BookOpen className="w-4 h-4" /> Refs
+                  <BookOpen className="w-3.5 h-3.5" /> Refs
                 </button>
               )}
               {selectedVerses.every(v => memorizedVerses.has(v)) ? (
                 <button 
                   onClick={handleDeleteSelected}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+                  className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
-                  <Trash2 className="w-4 h-4" /> Remove
+                  <Trash2 className="w-3.5 h-3.5" /> Remove
                 </button>
               ) : (
                 <button 
                   onClick={handleAddClick}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1"
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
-                  <Plus className="w-4 h-4" /> Add
+                  <Plus className="w-3.5 h-3.5" /> Add
                 </button>
               )}
-              <button 
-                onClick={() => setSelectedVerses([])}
-                className="p-1.5 rounded-xl hover:bg-white/20 transition-colors ml-1"
-                title="Cancel Selection"
-              >
-                <X className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>
