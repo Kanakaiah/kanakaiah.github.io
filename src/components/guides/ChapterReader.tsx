@@ -70,6 +70,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
+  const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(null);
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
@@ -209,6 +210,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     }, { replace: true });
     setShowNavigator(false);
   };
+
+  useEffect(() => {
+    let mounted = true;
+    fetch('/data/cross_references.json')
+      .then(res => res.json())
+      .then(data => {
+        if (mounted) setCrossRefMap(data);
+      })
+      .catch(console.error);
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     if (showNavigator && chapterGridRef.current) {
@@ -594,6 +606,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     return html;
   };
 
+  const hasRefs = !crossRefMap || selectedVerses.some(v => {
+    const refs = crossRefMap[`${bookTitle.toLowerCase()} ${chapter}:${v}`];
+    return refs && refs.length > 0;
+  });
+
   return (
     <div 
       className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in duration-300"
@@ -757,7 +774,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               >
                 <Copy className="w-3.5 h-3.5" /> Copy
               </button>
-              <button 
+              {hasRefs && (
+                <button 
                   onClick={() => {
                     const sorted = [...selectedVerses].sort((a, b) => a - b);
                     setShowCrossReferences(sorted.map(v => `${bookTitle.toLowerCase()} ${chapter}:${v}`));
@@ -766,6 +784,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                 >
                   <BookOpen className="w-3.5 h-3.5" /> Refs
                 </button>
+              )}
               {selectedVerses.every(v => memorizedVerses.has(v)) ? (
                 <button 
                   onClick={handleDeleteSelected}
