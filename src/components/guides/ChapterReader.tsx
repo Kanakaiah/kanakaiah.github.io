@@ -619,7 +619,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       onTouchEnd={handleTouchEnd}
     >
       <div 
-        className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-6"
+        className="flex-1 overflow-y-auto overscroll-y-contain px-5 pb-6"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.5rem)' }}
         onScroll={handleScroll}
       >
         

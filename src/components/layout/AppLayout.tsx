@@ -112,11 +112,13 @@ export const AppLayout: React.FC = () => {
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* GLOBAL HEADER (All Screens, Mobile Only) */}
         <header className={`
-          absolute top-0 left-0 w-full px-5 pt-5 pb-3 flex justify-between items-center z-40 lg:hidden
+          absolute top-0 left-0 w-full px-5 pb-3 flex justify-between items-center z-40 lg:hidden
           transition-transform duration-300 ease-in-out bg-background/80 backdrop-blur-md
           ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
           ${(isFullscreenView || location.pathname === '/guides') ? 'hidden' : ''}
-        `}>
+        `}
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.25rem)' }}
+        >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-card border border-card-border flex items-center justify-center text-accent shadow-sm">
               <BookOpen className="w-4 h-4" />
@@ -141,7 +143,14 @@ export const AppLayout: React.FC = () => {
         {/* SCROLLABLE PAGE CONTENT */}
         <div 
           id="main-scroll-container"
-          className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : (location.pathname === '/guides' ? 'px-5 lg:px-8 pt-5 lg:pt-6 pb-24 lg:pb-8' : 'px-5 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-8')}`}
+          className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : (location.pathname === '/guides' ? 'px-5 lg:px-8 pb-24 lg:pb-8' : 'px-5 lg:px-8 pb-24 lg:pb-8')}`}
+          style={{ 
+            paddingTop: (location.pathname === '/practice' || isReadingPage) 
+              ? '0px' 
+              : (location.pathname === '/guides' 
+                  ? '0px' 
+                  : 'calc(env(safe-area-inset-top, 0px) + 5rem)') 
+          }}
           onScroll={handleScroll}
         >
           <Outlet />

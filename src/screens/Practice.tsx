@@ -352,15 +352,16 @@ export const Practice: React.FC = () => {
 
   return (
     <div 
-      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pt-4 lg:pt-6 pb-6 lg:pb-8'}`}
-      style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : {}}
+      className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pb-6 lg:pb-8'}`}
+      style={isImmersed ? { backgroundColor: 'var(--bg-color)' } : { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
     >
       
       {/* Exit Button - Hidden when immersed */}
       {!isImmersed && (
         <button 
           onClick={() => navigate('/')}
-          className="absolute top-4 left-4 lg:top-6 lg:left-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors z-20 shadow-sm"
+          className="absolute left-4 lg:left-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors z-20 shadow-sm"
+          style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         >
           <X className="w-5 h-5" />
         </button>
@@ -370,8 +371,9 @@ export const Practice: React.FC = () => {
       {!isImmersed && (
         <button 
           onClick={handleToggleTTS}
-          className="absolute top-4 right-4 lg:top-6 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:text-accent hover:bg-card-hover transition-colors z-20 shadow-sm"
+          className="absolute right-4 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:text-accent hover:bg-card-hover transition-colors z-20 shadow-sm"
           title="Play Audio"
+          style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         >
           {isAutoPlaying ? (
             <Square className="w-4 h-4 text-accent fill-accent" />
