@@ -250,7 +250,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                     ) : r.error ? (
                       <p className="text-sm text-red-400">{r.error}</p>
                     ) : (
-                      <p className="text-lg leading-relaxed text-primary/90">{r.text}</p>
+                      <p className="text-lg leading-loose text-primary/90">{r.text}</p>
                     )}
                   </div>
                 );
