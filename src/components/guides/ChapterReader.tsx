@@ -1042,10 +1042,30 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                   }, 200);
                 }
               }}
-              className="text-[15px] font-medium transition-colors"
+              className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
+              title="Go back"
             >
-              Click here to go back to <span className="font-bold">{ALL_BOOKS.find(b => b.id === returnBook)?.name || returnBook} {returnChapter}:{returnVerse || ''}</span>
+              <ArrowLeft className="w-4 h-4" /> Go back to <span className="font-bold">{ALL_BOOKS.find(b => b.id === returnBook)?.name || returnBook} {returnChapter}:{returnVerse || ''}</span>
             </button>
+
+            {returnVerse && (
+              <>
+                <div className="w-[1px] h-4 bg-white/20" />
+                <button
+                  onClick={() => {
+                    const bookName = ALL_BOOKS.find(b => b.id === returnBook)?.name.toLowerCase() || returnBook;
+                    setShowCrossReferences([`${bookName} ${returnChapter}:${returnVerse}`]);
+                  }}
+                  className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
+                  title="View references for original verse"
+                >
+                  <BookOpen className="w-4 h-4" /> Refs
+                </button>
+              </>
+            )}
+
+            <div className="w-[1px] h-4 bg-white/20" />
+
             <button
               onClick={() => {
                 setSearchParams(prev => {
