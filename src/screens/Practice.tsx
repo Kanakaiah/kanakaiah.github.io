@@ -386,9 +386,27 @@ export const Practice: React.FC = () => {
         </button>
       )}
 
+      {/* Practice Navigation (Top Bar) - Hidden when immersed */}
+      {!isImmersed && (
+        <div 
+          className="flex items-center justify-between px-4 py-2 absolute top-0 left-0 w-full z-10"
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        >
+          <button 
+            onClick={() => setActiveMode('read')}
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:bg-card-hover transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
       {/* Header - Only visible when immersed */}
       {isImmersed && (
-        <div className="flex items-center justify-between p-4 absolute top-0 left-0 w-full z-10">
+        <div 
+          className="flex items-center justify-between px-4 py-2 absolute top-0 left-0 w-full z-10"
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        >
           <button 
             onClick={() => setActiveMode('read')}
             className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:bg-card-hover transition-colors"
