@@ -167,8 +167,8 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
         <div className="flex items-center gap-3">
           <BookOpen className="w-5 h-5 text-accent" />
           <div>
-            <h2 className="text-base font-bold text-primary">Cross References</h2>
-            <p className="text-xs text-secondary">
+            <h2 className="text-lg font-bold text-primary">Cross References</h2>
+            <p className="text-sm text-secondary">
               {isMultiVerse 
                 ? `${verseRefs.length} verses · ${totalRefs} references`
                 : capitalize(verseRefs[0])
@@ -213,10 +213,10 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
               {/* Parent verse section header — shown when multi-verse */}
               {isMultiVerse && (
                 <div className="sticky top-0 z-10 px-5 py-3 bg-accent/10 backdrop-blur-md border-b border-accent/20 border-l-4 border-l-accent flex items-center justify-between">
-                  <span className="text-sm font-bold text-accent">
+                  <span className="text-base font-bold text-accent">
                     {capitalize(group.parentRef)}
                   </span>
-                  <span className="text-[10px] font-bold text-accent/60 bg-accent/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  <span className="text-xs font-bold text-accent/60 bg-accent/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
                     {group.refs.length} {group.refs.length === 1 ? 'ref' : 'refs'}
                   </span>
                 </div>
@@ -229,28 +229,28 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                 return (
                   <div 
                     key={`${gi}-${i}`} 
-                    className="px-5 py-1.5 relative active:bg-glass-bg transition-colors"
+                    className="px-5 py-2.5 relative active:bg-glass-bg transition-colors"
                     onClick={() => {
                       if (bookInfo) {
                         onNavigateToVerse(bookInfo.id, r.chapter, r.verse);
                       }
                     }}
                   >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <h3 className="font-bold text-accent text-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-bold text-accent text-base">
                         {bookInfo?.name || capitalize(r.bookName)} {r.chapter}:{r.verse}
                       </h3>
-                      <ArrowRight className="w-3.5 h-3.5 text-muted flex-shrink-0" />
+                      <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
                     </div>
                     
                     {r.loading ? (
-                      <div className="flex items-center gap-2 text-xs text-secondary animate-pulse">
-                        <Loader2 className="w-3 h-3 animate-spin" /> Loading...
+                      <div className="flex items-center gap-2 text-sm text-secondary animate-pulse">
+                        <Loader2 className="w-4 h-4 animate-spin" /> Loading...
                       </div>
                     ) : r.error ? (
-                      <p className="text-xs text-red-400">{r.error}</p>
+                      <p className="text-sm text-red-400">{r.error}</p>
                     ) : (
-                      <p className="text-base leading-snug text-primary/80">{r.text}</p>
+                      <p className="text-lg leading-relaxed text-primary/90">{r.text}</p>
                     )}
                   </div>
                 );
