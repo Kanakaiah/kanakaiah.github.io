@@ -69,6 +69,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const highlightVerse = searchParams.get('highlightVerse');
   const returnBook = searchParams.get('returnBook');
   const returnChapter = searchParams.get('returnChapter');
+  const returnVerse = searchParams.get('returnVerse');
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
@@ -628,23 +629,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         
         <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative flex items-start justify-between">
           <button
-            onClick={() => {
-              if (returnBook && returnChapter) {
-                setSearchParams(prev => {
-                  const next = new URLSearchParams(prev);
-                  next.set('readerBook', returnBook);
-                  next.set('readerChapter', returnChapter);
-                  next.delete('returnBook');
-                  next.delete('returnChapter');
-                  next.delete('highlightVerse');
-                  return next;
-                });
-              } else {
-                onClose();
-              }
-            }}
+            onClick={onClose}
             className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
-            title={returnBook ? `Return to ${ALL_BOOKS.find(b => b.id === returnBook)?.name || 'Previous'} ${returnChapter}` : "Go back"}
+            title="Go back"
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
           </button>
@@ -1000,28 +987,96 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           onClose={() => setShowCrossReferences(null)}
           onNavigateToVerse={(navBookId, ch, v) => {
             setShowCrossReferences(null);
-            // Navigate if it's a different chapter or book
-            if (navBookId !== bookId || ch !== chapter) {
-              setSearchParams(prev => {
-                const next = new URLSearchParams(prev);
-                next.set('readerBook', navBookId);
-                next.set('readerChapter', ch.toString());
-                next.set('highlightVerse', v.toString());
-                next.set('returnBook', bookId);
-                next.set('returnChapter', chapter.toString());
-                return next;
-              }, { replace: true });
-            } else {
-              // Same chapter, just scroll
-              const el = document.querySelector(`[data-verse="${v}"]`);
-              if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
-                setTimeout(() => el.classList.remove('bg-accent/30'), 2000);
+            
+            let originalVerse = '';
+            if (showCrossReferences && showCrossReferences.length > 0) {
+               // Extract the original verse from the reference string
+               // e.g., "romans 1:1" -> "1"
+               const refParts = showCrossReferences[0].split(':');
+               if (refParts.length > 1) {
+                 originalVerse = refParts[1];
+               }
+            }
+
+            setSearchParams(prev => {
+              const next = new URLSearchParams(prev);
+              next.set('readerBook', navBookId);
+              next.set('readerChapter', ch.toString());
+              next.set('highlightVerse', v.toString());
+              next.set('returnBook', bookId);
+              next.set('returnChapter', chapter.toString());
+              if (originalVerse) {
+                next.set('returnVerse', originalVerse);
               }
+              return next;
+            }, { replace: true });
+
+            if (navBookId === bookId && ch === chapter) {
+              setTimeout(() => {
+                const el = document.querySelector(`[data-verse="${v}"]`);
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
+                  setTimeout(() => el.classList.remove('bg-accent/30'), 2000);
+                }
+              }, 50);
             }
           }}
         />
+      )}
+
+      {returnBook && returnChapter && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none bg-gradient-to-t from-background via-background/80 to-transparent animate-in slide-in-from-bottom fade-in duration-300">
+          <div className="bg-[#414141] text-white shadow-xl rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">
+            <button 
+              onClick={() => {
+                setSearchParams(prev => {
+                  const next = new URLSearchParams(prev);
+                  next.set('readerBook', returnBook);
+                  next.set('readerChapter', returnChapter);
+                  next.delete('returnBook');
+                  next.delete('returnChapter');
+                  next.delete('returnVerse');
+                  next.delete('highlightVerse');
+                  if (returnVerse) {
+                    next.set('highlightVerse', returnVerse);
+                  }
+                  return next;
+                }, { replace: true });
+                
+                // If returning to same chapter, manually scroll
+                if (returnBook === bookId && returnChapter === chapter.toString()) {
+                  setTimeout(() => {
+                    const el = document.querySelector(`[data-verse="${returnVerse}"]`);
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
+                      setTimeout(() => el.classList.remove('bg-accent/30'), 2000);
+                    }
+                  }, 50);
+                }
+              }}
+              className="text-[15px] font-medium transition-colors"
+            >
+              Click here to go back to <span className="font-bold">{ALL_BOOKS.find(b => b.id === returnBook)?.name || returnBook} {returnChapter}:{returnVerse || ''}</span>
+            </button>
+            <button
+              onClick={() => {
+                setSearchParams(prev => {
+                  const next = new URLSearchParams(prev);
+                  next.delete('returnBook');
+                  next.delete('returnChapter');
+                  next.delete('returnVerse');
+                  return next;
+                }, { replace: true });
+              }}
+              className="p-1 -mr-2 -my-2 rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Dismiss"
+            >
+              <X className="w-[18px] h-[18px] opacity-80" />
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
