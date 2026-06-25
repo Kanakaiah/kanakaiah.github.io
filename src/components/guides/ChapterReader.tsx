@@ -1026,7 +1026,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       )}
 
       {returnBook && returnChapter && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none bg-gradient-to-t from-background via-background/80 to-transparent animate-in slide-in-from-bottom fade-in duration-300">
+        <div 
+          className={`fixed left-0 right-0 z-40 flex justify-center px-4 pointer-events-none transition-all duration-300 animate-in slide-in-from-bottom fade-in ${
+            selectedVerses.length > 0 ? 'bottom-28' : 'bottom-0 pb-8 pt-6 bg-gradient-to-t from-background via-background/80 to-transparent'
+          }`}
+        >
           <div className="bg-[#414141] text-white shadow-xl rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">
             <button 
               onClick={() => {
