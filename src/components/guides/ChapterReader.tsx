@@ -250,6 +250,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         
         const data: Verse[] = await res.json();
         setVerses(data);
+        setSelectedVerses([]); // Clear any previous selection when loading a new chapter
       } catch (err: any) {
         setError(err.message || 'An error occurred while loading the chapter.');
       } finally {
@@ -987,6 +988,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           onClose={() => setShowCrossReferences(null)}
           onNavigateToVerse={(navBookId, ch, v) => {
             setShowCrossReferences(null);
+            setSelectedVerses([]); // Ensure we drop the previous selection so the toast disappears!
             
             let originalVerse = '';
             if (showCrossReferences && showCrossReferences.length > 0) {
