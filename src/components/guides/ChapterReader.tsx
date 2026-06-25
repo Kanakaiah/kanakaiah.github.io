@@ -972,13 +972,25 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             setShowCrossReferences(null);
             setSelectedVerses([]); // Ensure we drop the previous selection so the toast disappears!
             
+            let originalBook = bookId;
+            let originalChapter = chapter.toString();
             let originalVerse = '';
+
             if (showCrossReferences && showCrossReferences.length > 0) {
-               // Extract the original verse from the reference string
-               // e.g., "romans 1:1" -> "1"
-               const refParts = showCrossReferences[0].split(':');
-               if (refParts.length > 1) {
-                 originalVerse = refParts[1];
+               const match = showCrossReferences[0].match(/^(\d?\s*[a-zA-Z]+)\s+(\d+):(\d+)$/);
+               if (match) {
+                 const bName = match[1].toLowerCase().trim();
+                 const foundBook = ALL_BOOKS.find(b => b.name.toLowerCase() === bName || b.id === bName);
+                 if (foundBook) {
+                   originalBook = foundBook.id;
+                 }
+                 originalChapter = match[2];
+                 originalVerse = match[3];
+               } else {
+                 const refParts = showCrossReferences[0].split(':');
+                 if (refParts.length > 1) {
+                   originalVerse = refParts[1];
+                 }
                }
             }
 
@@ -987,8 +999,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               next.set('readerBook', navBookId);
               next.set('readerChapter', ch.toString());
               next.set('highlightVerse', v.toString());
-              next.set('returnBook', bookId);
-              next.set('returnChapter', chapter.toString());
+              next.set('returnBook', originalBook);
+              next.set('returnChapter', originalChapter);
               if (originalVerse) {
                 next.set('returnVerse', originalVerse);
               }
