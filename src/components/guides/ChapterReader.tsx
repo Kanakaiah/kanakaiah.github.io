@@ -67,6 +67,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
   const [error, setError] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const highlightVerse = searchParams.get('highlightVerse');
+  const returnBook = searchParams.get('returnBook');
+  const returnChapter = searchParams.get('returnChapter');
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
@@ -626,9 +628,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         
         <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative flex items-start justify-between">
           <button
-            onClick={onClose}
+            onClick={() => {
+              if (returnBook && returnChapter) {
+                setSearchParams(prev => {
+                  const next = new URLSearchParams(prev);
+                  next.set('readerBook', returnBook);
+                  next.set('readerChapter', returnChapter);
+                  next.delete('returnBook');
+                  next.delete('returnChapter');
+                  next.delete('highlightVerse');
+                  return next;
+                });
+              } else {
+                onClose();
+              }
+            }}
             className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
-            title="Go back"
+            title={returnBook ? `Return to ${ALL_BOOKS.find(b => b.id === returnBook)?.name || 'Previous'} ${returnChapter}` : "Go back"}
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
           </button>
@@ -984,7 +1000,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           onClose={() => setShowCrossReferences(null)}
           onNavigateToVerse={(navBookId, ch, v) => {
             setShowCrossReferences(null);
-            setSelectedVerses([v]);
             // Navigate if it's a different chapter or book
             if (navBookId !== bookId || ch !== chapter) {
               setSearchParams(prev => {
@@ -992,6 +1007,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                 next.set('readerBook', navBookId);
                 next.set('readerChapter', ch.toString());
                 next.set('highlightVerse', v.toString());
+                next.set('returnBook', bookId);
+                next.set('returnChapter', chapter.toString());
                 return next;
               }, { replace: true });
             } else {
