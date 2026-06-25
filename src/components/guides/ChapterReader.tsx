@@ -255,7 +255,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             el.classList.remove('bg-green-500/30');
           }, 2500);
         }
-      }, 100);
+      }, 300);
     }
   }, [verses, highlightVerse, loading]);
 
@@ -1003,7 +1003,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                   el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
                   setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
                 }
-              }, 50);
+              }, 200);
             }
           }}
         />
@@ -1039,7 +1039,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                       el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
                       setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
                     }
-                  }, 50);
+                  }, 200);
                 }
               }}
               className="text-[15px] font-medium transition-colors"
