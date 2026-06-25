@@ -681,7 +681,10 @@ export const Guides: React.FC = () => {
 
   // ── Main listing view ──────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4">
+    <div 
+      className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4"
+      style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+    >
       <div className="hidden lg:block mb-2">
         <h1 className="text-3xl font-heading font-bold text-primary">Bible</h1>
       </div>

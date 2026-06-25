@@ -158,7 +158,10 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 relative">
+      <div 
+        className="flex items-center justify-between px-5 py-4 relative"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+      >
         {/* Modern gradient border under header */}
         <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-glass-border to-transparent" />
         <div className="flex items-center gap-3">
