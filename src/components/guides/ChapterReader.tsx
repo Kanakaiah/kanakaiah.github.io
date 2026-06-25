@@ -266,11 +266,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         const el = document.querySelector(`[data-verse="${highlightVerse}"]`);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          // Add a temporary highlight effect
-          el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
+          // Add a temporary highlight effect (light green)
+          el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
           setTimeout(() => {
-            el.classList.remove('bg-accent/30');
-          }, 2000);
+            el.classList.remove('bg-green-500/30');
+          }, 2500);
         }
       }, 100);
     }
@@ -1016,8 +1016,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                 const el = document.querySelector(`[data-verse="${v}"]`);
                 if (el) {
                   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
-                  setTimeout(() => el.classList.remove('bg-accent/30'), 2000);
+                  el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
+                  setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
                 }
               }, 50);
             }
@@ -1052,8 +1052,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
                     const el = document.querySelector(`[data-verse="${returnVerse}"]`);
                     if (el) {
                       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      el.classList.add('bg-accent/30', 'transition-colors', 'duration-500');
-                      setTimeout(() => el.classList.remove('bg-accent/30'), 2000);
+                      el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
+                      setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
                     }
                   }, 50);
                 }
