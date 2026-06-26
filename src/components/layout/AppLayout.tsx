@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Outlet, NavLink, useLocation, useSearchParams } from 'react-router-dom';
 import { Home, BookOpen, Target, Settings2, Flame, Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { SettingsDrawer } from '../../components/layout/SettingsDrawer';
@@ -11,7 +11,19 @@ export const AppLayout: React.FC = () => {
   const [isNavHidden, setIsNavHidden] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAddVerseOpen, setIsAddVerseOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    if (searchParams.get('add') === 'true') {
+      setIsAddVerseOpen(true);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.delete('add');
+        return next;
+      }, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   // Hide bottom/side navigation when in the reading view or practice view
   const isReadingPage = new URLSearchParams(location.search).has('readerBook');

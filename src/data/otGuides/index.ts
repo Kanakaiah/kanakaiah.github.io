@@ -29,18 +29,18 @@ import { LAMENTATIONS_GUIDE } from './lamentations';
 import { EZEKIEL_GUIDE } from './ezekiel';
 import { DANIEL_GUIDE } from './daniel';
 
-import { hoseaGuide as HOSEA_GUIDE } from './hosea';
-import { joelGuide as JOEL_GUIDE } from './joel';
-import { amosGuide as AMOS_GUIDE } from './amos';
-import { obadiahGuide as OBADIAH_GUIDE } from './obadiah';
-import { jonahGuide as JONAH_GUIDE } from './jonah';
-import { micahGuide as MICAH_GUIDE } from './micah';
-import { nahumGuide as NAHUM_GUIDE } from './nahum';
-import { habakkukGuide as HABAKKUK_GUIDE } from './habakkuk';
-import { zephaniahGuide as ZEPHANIAH_GUIDE } from './zephaniah';
-import { haggaiGuide as HAGGAI_GUIDE } from './haggai';
-import { zechariahGuide as ZECHARIAH_GUIDE } from './zechariah';
-import { malachiGuide as MALACHI_GUIDE } from './malachi';
+import { HOSEA_GUIDE } from './hosea';
+import { JOEL_GUIDE } from './joel';
+import { AMOS_GUIDE } from './amos';
+import { OBADIAH_GUIDE } from './obadiah';
+import { JONAH_GUIDE } from './jonah';
+import { MICAH_GUIDE } from './micah';
+import { NAHUM_GUIDE } from './nahum';
+import { HABAKKUK_GUIDE } from './habakkuk';
+import { ZEPHANIAH_GUIDE } from './zephaniah';
+import { HAGGAI_GUIDE } from './haggai';
+import { ZECHARIAH_GUIDE } from './zechariah';
+import { MALACHI_GUIDE } from './malachi';
 
 export const OT_STUDY_GUIDES = [
   GENESIS_GUIDE, EXODUS_GUIDE, LEVITICUS_GUIDE, NUMBERS_GUIDE, DEUTERONOMY_GUIDE,

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useApp } from '../../context/AppContext';
 import type { Verse } from '../../types/models';
 
 interface VerseCardProps {
@@ -7,6 +8,7 @@ interface VerseCardProps {
 }
 
 export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
+  const { state } = useApp();
   const masteryPct = Math.min(100, Math.round(((verse.sm2?.repetition || 0) / 6) * 100));
   
   let indicatorColor = 'border-l-[#4e7cc2]'; // learning (blue)
@@ -36,9 +38,48 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
     return <div className="flex gap-[3px] tracking-widest text-[0.625rem]">{dots}</div>;
   };
 
+  const renderBionicText = (str: string) => {
+    if (!state.settings.bionicReading) return str;
+    const words = str.split(/(\b[\w']+\b)/);
+    return words.map((w, i) => {
+      if (/^[\w']+$/.test(w)) {
+        const boldLen = Math.ceil(w.length / 2);
+        return (
+          <React.Fragment key={i}>
+            <b className="font-bold opacity-100">{w.slice(0, boldLen)}</b>
+            <span className="opacity-80">{w.slice(boldLen)}</span>
+          </React.Fragment>
+        );
+      }
+      return <React.Fragment key={i}>{w}</React.Fragment>;
+    });
+  };
+
+  const renderMaskedText = (text: string) => {
+    if (!state.settings.recallMasking) return renderBionicText(text);
+    
+    // Split into words to mask the second half
+    const words = text.split(' ');
+    const half = Math.floor(words.length / 2);
+    
+    const firstHalf = words.slice(0, half).join(' ');
+    const secondHalf = words.slice(half).join(' ');
+    
+    return (
+      <React.Fragment>
+        {renderBionicText(firstHalf)}{' '}
+        {secondHalf && (
+          <span className="blur-[4px] opacity-60 group-hover:blur-none group-hover:opacity-100 transition-all duration-300">
+            {renderBionicText(secondHalf)}
+          </span>
+        )}
+      </React.Fragment>
+    );
+  };
+
   return (
     <div 
-      className={`relative flex flex-row cursor-pointer hover:bg-card-hover transition-all overflow-hidden rounded-xl bg-card border border-card-border border-l-[3px] ${indicatorColor} p-0`}
+      className={`group relative flex flex-row cursor-pointer hover:bg-card-hover transition-all overflow-hidden rounded-xl bg-card border border-card-border border-l-[3px] ${indicatorColor} p-0`}
       onClick={() => onClick(verse.id)}
       role="button"
       tabIndex={0}
@@ -57,8 +98,18 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
             </div>
           </div>
           
-          <p className="text-lg text-secondary leading-relaxed">
-            {verse.text}
+          <p 
+            className={`text-secondary leading-relaxed ${
+              state.settings.fontFamily === 'serif' ? 'font-serif' : 
+              state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
+              'font-sans'
+            }`}
+            style={{ 
+              fontSize: `${1.125 * (state.settings.fontSize || 1)}rem`,
+              lineHeight: `${1.75 * (state.settings.fontSize || 1)}rem`
+            }}
+          >
+            {renderMaskedText(verse.text)}
           </p>
         </div>
 

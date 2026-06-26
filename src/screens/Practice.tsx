@@ -26,7 +26,13 @@ export const Practice: React.FC = () => {
   const [activeMode, setActiveMode] = useState<PracticeMode>('read');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(state.settings.ttsEnabled);
+
+  // Sync with global TTS setting
+  React.useEffect(() => {
+    setIsAutoPlaying(state.settings.ttsEnabled);
+  }, [state.settings.ttsEnabled]);
+
   const [hintLevel, setHintLevel] = useState(0);
 
   const [zoomLevel, setZoomLevel] = useState(1);

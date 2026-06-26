@@ -203,7 +203,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                     </div>
                     <div className="w-full">
                       <CustomSelect
-                        value={state.settings.fontSize.toString()}
+                        value={(state.settings.fontSize || 1).toString()}
                         onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(v) } })}
                         options={FONT_SIZE_OPTIONS}
                       />

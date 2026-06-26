@@ -14,6 +14,23 @@ import { ChapterReader } from '../components/guides/ChapterReader';
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
+const BOOK_SHORT: Record<string, string> = {
+  genesis: 'Gen', exodus: 'Exod', leviticus: 'Lev', numbers: 'Num',
+  deuteronomy: 'Deut', joshua: 'Josh', judges: 'Judg', ruth: 'Ruth',
+  '1samuel': '1 Sam', '2samuel': '2 Sam', '1kings': '1 Kgs', '2kings': '2 Kgs',
+  '1chronicles': '1 Chr', '2chronicles': '2 Chr', nehemiah: 'Neh',
+  songofsolomon: 'Song', ecclesiastes: 'Eccl', jeremiah: 'Jer',
+  lamentations: 'Lam', ezekiel: 'Ezek', habakkuk: 'Hab', zephaniah: 'Zeph',
+  haggai: 'Hag', zechariah: 'Zech', malachi: 'Mal',
+  matthew: 'Matt', '1corinthians': '1 Cor', '2corinthians': '2 Cor',
+  galatians: 'Gal', ephesians: 'Eph', philippians: 'Phil', colossians: 'Col',
+  '1thessalonians': '1 Thess', '2thessalonians': '2 Thess',
+  '1timothy': '1 Tim', '2timothy': '2 Tim', philemon: 'Philem',
+  hebrews: 'Heb', '1peter': '1 Pet', '2peter': '2 Pet',
+  '1john': '1 John', '2john': '2 John', '3john': '3 John',
+  revelation: 'Rev',
+};
+
 const DISTRIBUTION_COLORS = [
   { bg: 'bg-amber-500', text: 'text-amber-500', border: 'border-l-amber-500' },
   { bg: 'bg-blue-500', text: 'text-blue-500', border: 'border-l-blue-500' },
@@ -123,6 +140,7 @@ export const Guides: React.FC = () => {
   
   const lastScrollY = useRef(0);
   const [isNavHidden, setIsNavHidden] = useState(false);
+  const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
 
   useEffect(() => {
     const scrollContainer = document.getElementById('main-scroll-container');
@@ -211,10 +229,19 @@ export const Guides: React.FC = () => {
         merged.blocks = merged.architecture.map((arch: any) => {
           const start = arch.chapters[0];
           const end = arch.chapters[1];
+          
+          let label = arch.name;
+          let description = '';
+          const match = arch.name.match(/^(.*?)\s*\((.*?)\)$/);
+          if (match) {
+            label = match[1].trim();
+            description = match[2].trim();
+          }
+          
           return {
             chapters: start === end ? `${start}` : `${start}–${end}`,
-            label: arch.name,
-            description: ''
+            label: label,
+            description: description
           };
         });
       }
@@ -656,7 +683,7 @@ export const Guides: React.FC = () => {
             </button>
             
             <button 
-              onClick={() => setActiveGuideId(null)}
+              onClick={() => setIsIndexModalOpen(true)}
               className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-glass-border rounded-lg px-3 py-1.5"
             >
               INDEX
@@ -675,6 +702,85 @@ export const Guides: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* ── Index Modal ── */}
+        {isIndexModalOpen && (
+          <div className="fixed inset-0 z-[70] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border">
+              <button
+                onClick={() => setIsIndexModalOpen(false)}
+                className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+              >
+                <X className="w-5 h-5 text-secondary" />
+              </button>
+              <span className="text-sm font-bold text-primary tracking-wide">Bible Books</span>
+              <div className="w-9" />
+            </div>
+
+            {/* Book list */}
+            <div className="flex-1 overflow-y-auto px-4 py-3 pb-32">
+              {/* Column headers */}
+              <div className="grid grid-cols-2 mb-2">
+                <span className="text-right pr-4 text-[10px] font-bold text-muted uppercase tracking-widest">Old Testament</span>
+                <span className="text-left pl-4 text-[10px] font-bold text-muted uppercase tracking-widest">New Testament</span>
+              </div>
+
+              {/* Book rows */}
+              <div className="grid grid-cols-2">
+                {(() => {
+                  const rows: React.ReactNode[] = [];
+                  const maxLen = Math.max(OT_BOOKS.length, NT_BOOKS.length);
+
+                  for (let i = 0; i < maxLen; i++) {
+                    const ot = i < OT_BOOKS.length ? OT_BOOKS[i] : null;
+                    const nt = i < NT_BOOKS.length ? NT_BOOKS[i] : null;
+                    const isOtSelected = ot?.id === activeGuideId;
+                    const isNtSelected = nt?.id === activeGuideId;
+
+                    rows.push(
+                      <React.Fragment key={`row-${i}`}>
+                        <button
+                          onClick={() => {
+                            if (ot) {
+                              setActiveGuideId(ot.id);
+                              setIsIndexModalOpen(false);
+                            }
+                          }}
+                          className={`text-right pr-4 py-2 text-[15px] transition-colors ${
+                            isOtSelected
+                              ? 'text-accent font-bold bg-accent/10 rounded-r-lg'
+                              : ot ? 'text-secondary hover:text-primary' : 'pointer-events-none'
+                          }`}
+                          disabled={!ot}
+                        >
+                          {ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (nt) {
+                              setActiveGuideId(nt.id);
+                              setIsIndexModalOpen(false);
+                            }
+                          }}
+                          className={`text-left pl-4 py-2 text-[15px] font-medium transition-colors ${
+                            isNtSelected
+                              ? 'text-accent font-bold bg-accent/10 rounded-l-lg'
+                              : nt ? 'text-secondary hover:text-primary' : 'pointer-events-none'
+                          }`}
+                          disabled={!nt}
+                        >
+                          {nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}
+                        </button>
+                      </React.Fragment>
+                    );
+                  }
+                  return rows;
+                })()}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

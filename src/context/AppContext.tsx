@@ -47,7 +47,15 @@ function appReducer(state: AppState, action: AppAction): AppState {
           uniqueVerses.push(v);
         }
       }
-      return { ...state, ...action.payload, verses: uniqueVerses };
+      return { 
+        ...state, 
+        ...action.payload, 
+        verses: uniqueVerses,
+        settings: {
+          ...state.settings,
+          ...(action.payload.settings || {})
+        }
+      };
     }
     case 'ADD_VERSE':
       return { ...state, verses: [...state.verses, action.payload] };

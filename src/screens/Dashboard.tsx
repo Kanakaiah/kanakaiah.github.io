@@ -297,7 +297,7 @@ export const Dashboard: React.FC = () => {
               <BookOpen className="w-12 h-12 text-muted mb-4 opacity-50" />
               <p className="text-secondary font-medium mb-4">No verses found.</p>
               {state.verses.length === 0 && (
-                <Button onClick={() => navigate('/add')}>Add Your First Verse</Button>
+                <Button onClick={() => navigate('?add=true')}>Add Your First Verse</Button>
               )}
             </div>
           )}
