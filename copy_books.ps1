@@ -3,7 +3,7 @@ $destDir = "public\books"
 
 New-Item -ItemType Directory -Force -Path $destDir | Out-Null
 
-$books = @("1chronicles", "2chronicles", "ezra", "nehemiah", "esther", "job", "psalms", "proverbs", "ecclesiastes", "songofsolomon", "isaiah", "jeremiah", "lamentations", "ezekiel", "daniel", "hosea")
+$books = @("joel", "amos", "obadiah", "jonah", "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah", "malachi")
 
 foreach ($book in $books) {
     # Find the most recently generated image for this book
