@@ -99,7 +99,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
           </div>
           
           <p 
-            className={`text-secondary leading-relaxed ${
+            className={`text-secondary leading-relaxed whitespace-pre-wrap ${
               state.settings.fontFamily === 'serif' ? 'font-serif' : 
               state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
               'font-sans'

@@ -312,12 +312,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         const v = verses.find(x => x.verse === verseNum);
         if (v) {
           const cleanText = v.text
-            .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
-            .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
-            .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
-            .replace(/<br\s*\/?>/gi, ' ')
-            .replace(/<\/p>/gi, ' ')
-            .replace(/<[^>]+>/g, '')
+            .replace(/<b>.*?<\/b>/gi, '')       // Remove section headings
+            .replace(/<br\s*\/?>/gi, '\n')       // Line breaks → newlines
+            .replace(/<[^>]+>/g, '')              // Strip remaining tags (<i>, etc.)
+            .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
+            .replace(/[ \t]+/g, ' ')
             .trim();
           const ref = `${bookTitle} ${chapter}:${verseNum}`;
           
@@ -368,12 +367,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           if (v) {
             textParts.push(
               v.text
-                .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
-                .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
-                .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
-                .replace(/<br\s*\/?>/gi, ' ')
-                .replace(/<\/p>/gi, ' ')
-                .replace(/<[^>]+>/g, '')
+                .replace(/<b>.*?<\/b>/gi, '')       // Remove section headings
+                .replace(/<br\s*\/?>/gi, '\n')       // Line breaks → newlines
+                .replace(/<[^>]+>/g, '')              // Strip remaining tags (<i>, etc.)
+                .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
+                .replace(/[ \t]+/g, ' ')
                 .trim()
             );
           }
@@ -468,7 +466,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     sorted.forEach(verseNum => {
       const v = verses.find(x => x.verse === verseNum);
       if (v) {
-        textParts.push(v.text.replace(/<[^>]+>/g, '').trim());
+        const plainText = v.text
+          .replace(/<b>.*?<\/b>/gi, '')       // Remove section headings
+          .replace(/<br\s*\/?>/gi, '\n')       // Line breaks → newlines
+          .replace(/<[^>]+>/g, '')              // Strip remaining tags (<i>, etc.)
+          .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
+          .replace(/[ \t]+/g, ' ')
+          .trim();
+        textParts.push(plainText);
       }
     });
 
@@ -507,11 +512,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
     verses.forEach((v) => {
       let text = v.text;
       
+      // === Fix #5 & #2: Extract section headings (<b>) BEFORE OT quote processing ===
+      // This prevents heading text from confusing the quote-level tracker.
+      // Only <b> tags exist in the API (no <S>, <h1-6>, or <div> headings).
+      let heading = '';
+      text = text.replace(/<b>(.*?)<\/b>/gi, (_, hText) => {
+        heading += `<div class="mt-10 first-of-type:mt-0 mb-3 text-[1.1em] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
+        return '';
+      });
+
+      // === Fix #3: Strip leading AND trailing <br/> tags ===
+      // Leading <br/> after heading extraction would strand the verse number on its own line.
+      // Trailing <br/> would add unwanted whitespace.
+      text = text.replace(/^(?:\s*<br\s*\/?>\s*)+/gi, '');
+      text = text.replace(/(?:\s*<br\s*\/?>\s*)+$/gi, '');
+
+      // === OT Quote uppercasing (now runs after headings are safely removed) ===
       const isOtQuoteVerse = otQuotes[bollsId]?.[chapter]?.includes(v.verse);
       if (isOtQuoteVerse) {
         // Split by quote characters. 
-        // We use lookarounds for the right single quote ’ (U+2019) so we don't accidentally split on apostrophes (like "Abraham’s")
-        let parts = text.split(/(["“‘”]|(?<!\w)’|’(?!\w))/);
+        // We use lookarounds for the right single quote \u2019 so we don't accidentally split on apostrophes (like "Abraham's")
+        let parts = text.split(/([\u201c\u201d\u2018\u2019]|(?<!\w)\u2019|\u2019(?!\w))/);
         let newText = '';
 
         for (let i = 0; i < parts.length; i++) {
@@ -521,10 +542,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
           if (part === '"') {
             if (quoteLevel > 0) quoteLevel--; else quoteLevel++;
             newText += part;
-          } else if (part === '“' || part === '‘') {
+          } else if (part === '\u201c' || part === '\u2018') {
             quoteLevel++;
             newText += part;
-          } else if (part === '”' || part === '’') {
+          } else if (part === '\u201d' || part === '\u2019') {
             quoteLevel = Math.max(0, quoteLevel - 1);
             newText += part;
           } else {
@@ -542,20 +563,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         quoteLevel = 0;
       }
       
-      // Extract section headings (<S> or <b>) FIRST
-      let heading = '';
-      text = text.replace(/<S[^>]*>(.*?)<\/S>|<b[^>]*>(.*?)<\/b>/gi, (_, sMatch, bMatch) => {
-        const hText = sMatch || bMatch;
-        heading += `<div class="mt-10 first-of-type:mt-0 mb-3 text-[1.1em] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
-        return '';
-      });
+      // === Fix #4: Parse Psalm titles (robust) ===
+      let psalmTitle = '';
+      if (bookId === 'psalms' && v.verse === 1) {
+        const titleMatch = text.match(/^([\s\S]*?[a-z]\.)([A-Z][\s\S]*)$/);
+        if (titleMatch) {
+          psalmTitle = `<div class="text-sm font-medium text-muted italic mb-2 tracking-wide leading-relaxed">${titleMatch[1]}</div>`;
+          text = titleMatch[2]; // The rest of the verse
+        }
+      }
+      
+      // Fix missing spaces after punctuation globally in the text (like "Of David.Yahweh")
+      text = text.replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2');
 
-      // Extract paragraph breaks and forcefully strip all block tags to ensure inline rendering
-      let hasP = false;
-      text = text.replace(/<\/?(p|br|div)[^>]*>/gi, (matchStr) => {
-        if (!matchStr.startsWith('</')) hasP = true;
-        return '';
-      });
+      // === Fix #1: Style <i> tags as translator-supplied words ===
+      // The LSB uses <i> to mark words added by the translator for English readability.
+      // Render them with reduced opacity so readers can distinguish original from supplied text.
+      text = text.replace(/<i>(.*?)<\/i>/gi, '<span class="opacity-60 italic">$1</span>');
 
       // Apply Bionic Reading safely (only to text outside HTML tags)
       if (state.settings.bionicReading) {
@@ -570,9 +594,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       // Append in correct order
       if (heading) {
         html += heading;
-      } else if (hasP) {
-        // Visual paragraph break only if there is no heading
-        html += `<div class="w-full h-4"></div>`; 
+      }
+
+      if (psalmTitle) {
+        html += psalmTitle;
       }
 
       // Add verse number and text
@@ -586,7 +611,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         extraClass = 'bg-yellow-400/25 rounded px-1 -mx-1';
       }
       
-      html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}"><sup class="text-[0.55em] font-normal text-muted ml-1 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
+      // Since the API doesn't provide explicit paragraph tags for verses without headings
+      // (like John 1:9), we use the presence of a section heading as our primary paragraph indicator.
+      const isParagraphStart = !!heading;
+      const pilcrowHtml = isParagraphStart ? `<span class="text-muted/50 font-sans mr-0.5 select-none pointer-events-none">¶</span>` : '';
+      const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
+      
+      html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}">${pilcrowHtml}<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
     });
 
     return html;
