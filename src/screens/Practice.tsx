@@ -547,7 +547,7 @@ export const Practice: React.FC = () => {
                 <button
                   key={mode.id}
                   onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  className={`flex flex-col items-center py-3 px-2 rounded-xl border transition-all duration-300
+                  className={`flex flex-col items-center py-3 px-2 rounded-xl border transition-all duration-300 active:scale-95
                     ${activeMode === mode.id 
                       ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)]' 
                       : 'bg-card border-card-border hover:bg-card-hover'}`}

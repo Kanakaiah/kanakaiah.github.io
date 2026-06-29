@@ -92,6 +92,10 @@ html, body {
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
+}
+
+/* Select-none only on interactive/navigation elements, not globally */
+nav, button, [role="button"] {
   user-select: none;
   -webkit-user-select: none;
 }

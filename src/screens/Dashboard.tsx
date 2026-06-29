@@ -123,7 +123,7 @@ export const Dashboard: React.FC = () => {
                   <span className="text-sm font-medium text-accent">+{stats.dueForReview.length - 1} more</span>
                 </div>
                 
-                <p className="text-lg md:text-xl text-primary/80 italic mb-8 font-serif">
+                <p className="text-lg md:text-xl text-primary/80 italic mb-8 font-serif line-clamp-2">
                   "{stats.dueForReview[0].text}"
                 </p>
 
@@ -158,17 +158,17 @@ export const Dashboard: React.FC = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-3 md:gap-4">
-        <div className="bg-card border border-card-border rounded-2xl p-4 flex flex-col items-center justify-center">
+        <div className="bg-glass-bg backdrop-blur-sm border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
           <span className="text-2xl font-bold font-heading text-primary">{stats.memorized}</span>
           <span className="text-xs text-muted font-medium mt-1">Memorized</span>
         </div>
-        <div className="bg-card border border-card-border rounded-2xl p-4 flex flex-col items-center justify-center">
+        <div className="bg-glass-bg backdrop-blur-sm border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
           <span className="text-2xl font-bold font-heading text-primary">{stats.learning}</span>
           <span className="text-xs text-muted font-medium mt-1">Learning</span>
         </div>
-        <div className="bg-card border border-card-border rounded-2xl p-4 flex flex-col items-center justify-center">
+        <div className="bg-glass-bg backdrop-blur-sm border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
           <span className="text-2xl font-bold font-heading text-primary">{stats.accuracy}%</span>
-          <span className="text-xs text-muted font-medium mt-1">Accuracy</span>
+          <span className="text-xs text-muted font-medium mt-1">Progress</span>
         </div>
       </div>
 
@@ -195,7 +195,7 @@ export const Dashboard: React.FC = () => {
                     interval: 0,
                     repetition: 0,
                     efactor: 2.5,
-                    nextDueDate: new Date().toISOString()
+                    nextDueDate: new Date(Date.now() + (i % 7) * 86400000).toISOString()
                   },
                   streak: 0,
                   attempts: 0

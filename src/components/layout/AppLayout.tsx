@@ -178,10 +178,8 @@ export const AppLayout: React.FC = () => {
       {location.pathname === '/' && (
         <button
           onClick={() => setIsAddVerseOpen(true)}
-          className={`fixed right-5 lg:right-8 w-14 h-14 rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent-hover flex items-center justify-center z-40 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105 active:scale-95 lg:hidden
-            ${isNavHidden ? 'lg:bottom-8 translate-y-32 opacity-0' : 'lg:bottom-8 translate-y-0 opacity-100'}
-          `}
-          style={{ bottom: isNavHidden ? 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' : 'calc(env(safe-area-inset-bottom, 0px) + 6rem)' }}
+          className={`fixed right-5 lg:right-8 w-14 h-14 rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent-hover flex items-center justify-center z-40 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105 active:scale-95 lg:hidden`}
+          style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
           aria-label="Add Verse"
         >
           <Plus className="w-6 h-6" />

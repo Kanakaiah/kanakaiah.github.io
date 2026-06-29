@@ -74,7 +74,7 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
       id={`chapter-anchor-${anchor.ch}`}
       href={bibleUrl}
       onClick={handleRead}
-      className={`relative bg-card rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[240px] group cursor-pointer ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-card-border hover:bg-card-hover shadow-sm'}`}
+      className={`relative bg-card rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[240px] group cursor-pointer ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-card-border hover:bg-card-hover shadow-sm bg-gradient-to-br from-card to-card-elevated'}`}
     >
       
       {!imgErr && (
@@ -666,7 +666,7 @@ export const Guides: React.FC = () => {
         <div className={`
           fixed bottom-0 left-0 right-0 lg:left-64
           bg-background/60 backdrop-blur-xl
-          z-40 transition-transform duration-300 ease-in-out
+          z-40 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}
         `}>
           <div className="max-w-4xl mx-auto flex items-center justify-between px-4 py-3 pb-safe">

@@ -517,7 +517,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       // Only <b> tags exist in the API (no <S>, <h1-6>, or <div> headings).
       let heading = '';
       text = text.replace(/<b>(.*?)<\/b>/gi, (_, hText) => {
-        heading += `<div class="mt-10 first-of-type:mt-0 mb-3 text-[1.1em] font-bold tracking-tight text-primary font-heading italic leading-snug break-words w-full block">${hText}</div>`;
+        heading += `<div class="mt-10 first-of-type:mt-0 mb-4 text-[1.2em] font-bold tracking-tight text-accent-light font-heading italic leading-snug break-words w-full block">${hText}</div>`;
         return '';
       });
 
@@ -614,7 +614,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       // Since the API doesn't provide explicit paragraph tags for verses without headings
       // (like John 1:9), we use the presence of a section heading as our primary paragraph indicator.
       const isParagraphStart = !!heading;
-      const pilcrowHtml = isParagraphStart ? `<span class="text-muted/50 font-sans mr-0.5 select-none pointer-events-none">¶</span>` : '';
+      const pilcrowHtml = isParagraphStart ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶</span>` : '';
       const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
       
       html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}">${pilcrowHtml}<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
@@ -641,10 +641,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         onScroll={handleScroll}
       >
         
-        <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative flex items-start justify-between">
+        <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative">
           <button
             onClick={onClose}
-            className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+            className="absolute left-0 top-1 p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors z-10"
             title="Go back"
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
@@ -658,7 +658,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
             </span>
           </div>
           
-          <div className="relative">
+          <div className="absolute right-0 top-1">
             <button
               onClick={() => setShowOptions(!showOptions)}
               className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-glass-bg text-primary' : 'hover:bg-glass-bg text-secondary'}`}
@@ -761,7 +761,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               }`}
               style={{
                 fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
-                lineHeight: `${1.7 * (state.settings.fontSize || 1)}rem`
+                lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
               }}
               dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
             />
@@ -860,7 +860,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
 
       {/* Bottom Chapter Navigation Bar */}
       {!loading && !error && selectedVerses.length === 0 && (
-        <div className={`absolute bottom-0 left-0 w-full bg-background/60 backdrop-blur-xl z-10 transition-transform duration-300 ease-in-out ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
+        <div className={`fixed bottom-0 left-0 right-0 bg-background/60 backdrop-blur-xl z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
               onClick={handlePrevChapter}
