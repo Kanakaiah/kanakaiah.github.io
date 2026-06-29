@@ -524,6 +524,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       // === Fix #3: Strip leading AND trailing <br/> tags ===
       // Leading <br/> after heading extraction would strand the verse number on its own line.
       // Trailing <br/> would add unwanted whitespace.
+      const hasLeadingBr = /^\s*<br\s*\/?>/i.test(text);
+      
       text = text.replace(/^(?:\s*<br\s*\/?>\s*)+/gi, '');
       text = text.replace(/(?:\s*<br\s*\/?>\s*)+$/gi, '');
 
@@ -611,9 +613,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
         extraClass = 'bg-yellow-400/25 rounded px-1 -mx-1';
       }
       
-      // Since the API doesn't provide explicit paragraph tags for verses without headings
-      // (like John 1:9), we use the presence of a section heading as our primary paragraph indicator.
-      const isParagraphStart = !!heading;
+      // The API provides <br/> tags at the start of verses that begin a new paragraph.
+      // We also treat section headings as paragraph starts.
+      const isParagraphStart = !!heading || hasLeadingBr;
       const pilcrowHtml = isParagraphStart ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶</span>` : '';
       const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
       
