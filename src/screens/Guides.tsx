@@ -56,6 +56,10 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
   const [, setSearchParams] = useSearchParams();
   const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
 
+  useEffect(() => {
+    setImgErr(false);
+  }, [imgPath]);
+
   const bookAbbr = YOUVERSION_NT_ABBR[guideId] || 'JHN';
   const bibleUrl = `https://www.bible.com/bible/3345/${bookAbbr}.${anchor.ch}.LSB`;
 
