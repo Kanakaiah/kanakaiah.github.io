@@ -397,15 +397,15 @@ export const NT_STUDY_GUIDES = [
     chapters: 22,
     structureFormula: "1 → 2 → 2 → 2 → 4 → 3 → 2 → 3 → 3",
     blocks: [
-      { chapters: "1", label: "VISION OF CHRIST", description: "" },
-      { chapters: "2–3", label: "SEVEN CHURCHES", description: "" },
-      { chapters: "4–5", label: "THRONE ROOM", description: "" },
-      { chapters: "6–7", label: "SEVEN SEALS", description: "" },
-      { chapters: "8–11", label: "SEVEN TRUMPETS", description: "" },
-      { chapters: "12–14", label: "COSMIC CONFLICT", description: "" },
-      { chapters: "15–16", label: "SEVEN BOWLS", description: "" },
-      { chapters: "17–19", label: "FALL OF BABYLON", description: "" },
-      { chapters: "20–22", label: "NEW CREATION", description: "" }
+      { chapters: "1", label: "VISION OF CHRIST", description: "John's vision of the glorified Son of Man" },
+      { chapters: "2–3", label: "SEVEN CHURCHES", description: "Letters to the churches of Asia Minor" },
+      { chapters: "4–5", label: "THRONE ROOM", description: "The heavenly worship and the scroll with seven seals" },
+      { chapters: "6–7", label: "SEVEN SEALS", description: "The seals are opened — the four horsemen and the martyrs" },
+      { chapters: "8–11", label: "SEVEN TRUMPETS", description: "The trumpets of judgment and the two witnesses" },
+      { chapters: "12–14", label: "COSMIC CONFLICT", description: "The woman, the dragon, and the two beasts" },
+      { chapters: "15–16", label: "SEVEN BOWLS", description: "The bowls of God's wrath poured out on the earth" },
+      { chapters: "17–19", label: "FALL OF BABYLON", description: "The judgment of the great prostitute and the victory of the Rider" },
+      { chapters: "20–22", label: "NEW CREATION", description: "The millennium, final judgment, and the New Jerusalem" }
     ],
     anchors: [
       { ch: 1, word: "ROBE", scene: "Christ in a long robe — eyes like fire" },
