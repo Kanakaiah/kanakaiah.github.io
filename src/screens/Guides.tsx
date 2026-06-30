@@ -613,7 +613,7 @@ export const Guides: React.FC = () => {
                   <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {activeGuide.anchors.map((anchor: any, i: number) => (
-                      <ChapterAnchorCard key={i} anchor={anchor} guideId={activeGuide.id} />
+                      <ChapterAnchorCard key={`${activeGuide.id}-${anchor.ch}`} anchor={anchor} guideId={activeGuide.id} />
                     ))}
                   </div>
                 </div>
