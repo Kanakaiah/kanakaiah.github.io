@@ -21,7 +21,6 @@ export function TextSelectionTooltip({ onOriginalWordLookup }: TextSelectionTool
       }
 
       const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
       
       // Try to find if the selection is within a verse container
       // Use startContainer instead of commonAncestorContainer to handle cross-verse selections
