@@ -1,0 +1,1 @@
+const html = And God<S>430</S> created<S>1254</S> great<S>1419</S> whales<S>8577</S>, and every living<S>2416</S>; const regex = /([^<]+)(?:<S>(\d+)<\/S>)?/g; let match; while ((match = regex.exec(html)) !== null) { console.log(match[1].trim(), match[2]); }

@@ -81,7 +81,7 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-card-elevated border border-card-border shadow-2xl rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="bg-card-elevated border border-card-border shadow-2xl rounded-2xl w-full max-w-4xl max-h-[85dvh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-card-border bg-background/50">
