@@ -81,7 +81,7 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-surface border border-card-border shadow-2xl rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="bg-card-elevated border border-card-border shadow-2xl rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-card-border bg-background/50">
@@ -90,17 +90,17 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl font-serif text-text-primary">
+              <h2 className="text-xl font-serif text-primary">
                 Original Language Study
               </h2>
-              <p className="text-sm text-text-secondary font-medium">
+              <p className="text-sm text-secondary font-medium">
                 {bookName} {verseRef.chapter}:{verseRef.verse}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-text-secondary hover:text-text-primary hover:bg-card-border rounded-lg transition-colors"
+            className="p-2 text-secondary hover:text-primary hover:bg-card-border rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -111,7 +111,7 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <Loader2 className="w-8 h-8 text-accent animate-spin" />
-              <p className="text-text-secondary">Loading original text and dictionaries...</p>
+              <p className="text-secondary">Loading original text and dictionaries...</p>
             </div>
           ) : error ? (
             <div className="p-4 bg-red-900/20 border border-red-500/20 rounded-lg text-red-400">
@@ -133,13 +133,13 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
                       className={`flex flex-col items-center group ${w.strongs ? 'cursor-pointer' : ''}`}
                       onClick={() => w.strongs && setSelectedStrongs(w.strongs)}
                     >
-                      <span className={`text-xl font-serif mb-1 ${w.strongs === selectedStrongs ? 'text-accent-light' : 'text-text-secondary group-hover:text-text-primary transition-colors'}`}>
+                      <span className={`text-xl font-serif mb-1 ${w.strongs === selectedStrongs ? 'text-accent-light' : 'text-secondary group-hover:text-primary transition-colors'}`}>
                         {w.strongs ? (dictionary[w.strongs]?.lemma || '---') : '---'}
                       </span>
-                      <span className={`text-[11px] font-mono mb-2 px-1.5 py-0.5 rounded ${w.strongs ? 'bg-card-border/50 text-text-secondary' : 'opacity-0'}`}>
+                      <span className={`text-[11px] font-mono mb-2 px-1.5 py-0.5 rounded ${w.strongs ? 'bg-card-border/50 text-secondary' : 'opacity-0'}`}>
                         {w.strongs || '---'}
                       </span>
-                      <span className={`text-base font-medium ${w.strongs === selectedStrongs ? 'text-accent underline underline-offset-4 decoration-accent/50' : 'text-text-primary'}`}>
+                      <span className={`text-base font-medium ${w.strongs === selectedStrongs ? 'text-accent underline underline-offset-4 decoration-accent/50' : 'text-primary'}`}>
                         {w.english}
                       </span>
                     </div>
@@ -161,27 +161,27 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
                         <div className="flex items-end gap-4 border-b border-card-border/50 pb-4">
                           <h1 className="text-5xl font-serif text-accent-light">{activeDef.lemma}</h1>
                           <div className="mb-2">
-                            <span className="text-lg text-text-primary font-medium mr-3">{activeDef.xlit}</span>
-                            <span className="text-sm text-text-secondary">/{activeDef.pron}/</span>
+                            <span className="text-lg text-primary font-medium mr-3">{activeDef.xlit}</span>
+                            <span className="text-sm text-secondary">/{activeDef.pron}/</span>
                           </div>
                         </div>
 
                         <div>
                           <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">Definition</h4>
-                          <p className="text-lg text-text-primary leading-relaxed">{activeDef.strongs_def}</p>
+                          <p className="text-lg text-primary leading-relaxed">{activeDef.strongs_def}</p>
                         </div>
                         
                         {activeDef.derivation && (
                           <div>
                             <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">Derivation</h4>
-                            <p className="text-sm text-text-secondary leading-relaxed">{activeDef.derivation}</p>
+                            <p className="text-sm text-secondary leading-relaxed">{activeDef.derivation}</p>
                           </div>
                         )}
                         
                         {activeDef.kjv_def && (
                           <div>
                             <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">KJV Translation Count</h4>
-                            <p className="text-sm text-text-secondary italic">{activeDef.kjv_def}</p>
+                            <p className="text-sm text-secondary italic">{activeDef.kjv_def}</p>
                           </div>
                         )}
                       </div>
@@ -191,7 +191,7 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
               </div>
               
               {!activeDef && (
-                <div className="text-center text-text-secondary py-10 opacity-50 font-medium">
+                <div className="text-center text-secondary py-10 opacity-50 font-medium">
                   Click on any word above to view its original {isOldTestament ? 'Hebrew' : 'Greek'} definition.
                 </div>
               )}

@@ -80,6 +80,20 @@ export function TextSelectionTooltip({ onOriginalWordLookup }: TextSelectionTool
           window.getSelection()?.removeAllRanges();
           setPosition(null);
         }}
+        onTouchStart={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onOriginalWordLookup(selectedVerseRef);
+          window.getSelection()?.removeAllRanges();
+          setPosition(null);
+        }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onOriginalWordLookup(selectedVerseRef);
+          window.getSelection()?.removeAllRanges();
+          setPosition(null);
+        }}
         className="flex items-center gap-2 px-6 py-3 hover:bg-card-border transition-colors text-sm font-bold text-accent-light uppercase tracking-wider"
       >
         <BookOpen className="w-5 h-5" />
