@@ -184,7 +184,7 @@ export const Dashboard: React.FC = () => {
               try {
                 const res = await fetch('/verses_100.json');
                 const data = await res.json();
-                const newVerses = data.map((v: any) => ({
+                const newVerses = data.map((v: any, i: number) => ({
                   id: crypto.randomUUID(),
                   ref: v.ref,
                   text: v.text,
