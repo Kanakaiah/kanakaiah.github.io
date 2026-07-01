@@ -616,10 +616,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
       // The API provides <br/> tags at the start of verses that begin a new paragraph.
       // We also treat section headings as paragraph starts.
       const isParagraphStart = !!heading || hasLeadingBr;
-      const pilcrowHtml = isParagraphStart ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶</span>` : '';
+      const pilcrowHtml = isParagraphStart ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>` : '';
       const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
       
-      html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}">${pilcrowHtml}<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
+      const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
+      html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}">${pilcrowHtml}<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
     });
 
     return html;

@@ -6,9 +6,11 @@ import { OT_STUDY_GUIDES } from '../data/otGuides';
 import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
 import { OT_BOOKS, OT_SECTIONS } from '../data/otBooks';
 import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
+import { ChapterReader } from '../components/guides/ChapterReader';
+import { TextSelectionTooltip } from '../components/TextSelectionTooltip';
+import { OriginalWordModal } from '../components/OriginalWordModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
-import { ChapterReader } from '../components/guides/ChapterReader';
 
 // Special sentinel IDs
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
@@ -115,6 +117,7 @@ export const Guides: React.FC = () => {
   const [isOTExpanded, setIsOTExpanded] = useState(true);
   const [isNTExpanded, setIsNTExpanded] = useState(true);
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
+  const [studyOriginalWordRef, setStudyOriginalWordRef] = useState<{ book: number; chapter: number; verse: number } | null>(null);
 
   const toggleSection = (section: string) => {
     setCollapsedSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -286,19 +289,28 @@ export const Guides: React.FC = () => {
   // ── In-App Reader view ─────────────────────────────────────────────────────
   if (readerBook && readerChapter) {
     return (
-      <ChapterReader
-        bookId={readerBook}
-        chapter={parseInt(readerChapter, 10)}
-        bookTitle={ALL_BOOKS.find((b) => b.id === readerBook)?.name || activeGuide?.title || 'Book'}
-        onClose={() => {
-          setSearchParams((prev) => {
-            const next = new URLSearchParams(prev);
-            next.delete('readerBook');
-            next.delete('readerChapter');
-            return next;
-          });
-        }}
-      />
+      <>
+        <TextSelectionTooltip onOriginalWordLookup={setStudyOriginalWordRef} />
+        {studyOriginalWordRef && (
+          <OriginalWordModal 
+            verseRef={studyOriginalWordRef} 
+            onClose={() => setStudyOriginalWordRef(null)} 
+          />
+        )}
+        <ChapterReader
+          bookId={readerBook}
+          chapter={parseInt(readerChapter, 10)}
+          bookTitle={ALL_BOOKS.find((b) => b.id === readerBook)?.name || activeGuide?.title || 'Book'}
+          onClose={() => {
+            setSearchParams((prev) => {
+              const next = new URLSearchParams(prev);
+              next.delete('readerBook');
+              next.delete('readerChapter');
+              return next;
+            });
+          }}
+        />
+      </>
     );
   }
 
