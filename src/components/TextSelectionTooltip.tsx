@@ -51,9 +51,10 @@ export function TextSelectionTooltip({ onOriginalWordLookup }: TextSelectionTool
       }
     };
 
-    // Use a small timeout to let the browser complete selection
+    let timeoutId: number | undefined;
     const debouncedSelectionChange = () => {
-      setTimeout(handleSelectionChange, 50);
+      clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(handleSelectionChange, 300);
     };
 
     document.addEventListener('selectionchange', debouncedSelectionChange);
@@ -73,22 +74,7 @@ export function TextSelectionTooltip({ onOriginalWordLookup }: TextSelectionTool
       className="fixed z-[100] bottom-24 left-1/2 transform -translate-x-1/2 flex items-center bg-card-elevated border border-card-border shadow-[0_10px_40px_rgba(235,186,113,0.3)] rounded-full overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300"
     >
       <button
-        onPointerDown={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onOriginalWordLookup(selectedVerseRef);
-          window.getSelection()?.removeAllRanges();
-          setPosition(null);
-        }}
-        onTouchStart={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onOriginalWordLookup(selectedVerseRef);
-          window.getSelection()?.removeAllRanges();
-          setPosition(null);
-        }}
         onClick={(e) => {
-          e.preventDefault();
           e.stopPropagation();
           onOriginalWordLookup(selectedVerseRef);
           window.getSelection()?.removeAllRanges();
