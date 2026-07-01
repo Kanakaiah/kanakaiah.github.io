@@ -70,10 +70,10 @@ export function TextSelectionTooltip({ onOriginalWordLookup }: TextSelectionTool
   return (
     <div
       ref={tooltipRef}
-      className="fixed z-[100] bottom-24 left-1/2 transform -translate-x-1/2 flex items-center bg-surface border border-card-border shadow-[0_10px_40px_rgba(235,186,113,0.2)] rounded-full overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300"
+      className="fixed z-[100] bottom-24 left-1/2 transform -translate-x-1/2 flex items-center bg-card-elevated border border-card-border shadow-[0_10px_40px_rgba(235,186,113,0.3)] rounded-full overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300"
     >
       <button
-        onClick={(e) => {
+        onPointerDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
           onOriginalWordLookup(selectedVerseRef);
