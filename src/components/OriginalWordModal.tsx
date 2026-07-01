@@ -146,58 +146,60 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
                   ))}
                 </div>
               </div>
-
-              {/* Dictionary Definition */}
-              <div className={`transition-all duration-300 ease-out ${activeDef ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-                {activeDef && (
-                  <div className="bg-gradient-to-br from-card to-background border border-card-border rounded-xl p-6 shadow-lg relative overflow-hidden">
-                    {/* Decorative background element */}
-                    <div className="absolute -right-10 -top-10 text-9xl text-accent/5 font-serif select-none pointer-events-none">
-                      {activeDef.lemma}
-                    </div>
-
-                    <div className="flex flex-col md:flex-row gap-6 relative z-10">
-                      <div className="flex-1 space-y-4">
-                        <div className="flex items-end gap-4 border-b border-card-border/50 pb-4">
-                          <h1 className="text-5xl font-serif text-accent-light">{activeDef.lemma}</h1>
-                          <div className="mb-2">
-                            <span className="text-lg text-primary font-medium mr-3">{activeDef.xlit}</span>
-                            <span className="text-sm text-secondary">/{activeDef.pron}/</span>
-                          </div>
-                        </div>
-
-                        <div>
-                          <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">Definition</h4>
-                          <p className="text-lg text-primary leading-relaxed">{activeDef.strongs_def}</p>
-                        </div>
-                        
-                        {activeDef.derivation && (
-                          <div>
-                            <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">Derivation</h4>
-                            <p className="text-sm text-secondary leading-relaxed">{activeDef.derivation}</p>
-                          </div>
-                        )}
-                        
-                        {activeDef.kjv_def && (
-                          <div>
-                            <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">KJV Translation Count</h4>
-                            <p className="text-sm text-secondary italic">{activeDef.kjv_def}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {!activeDef && (
-                <div className="text-center text-secondary py-10 opacity-50 font-medium">
-                  Click on any word above to view its original {isOldTestament ? 'Hebrew' : 'Greek'} definition.
-                </div>
-              )}
             </>
           )}
         </div>
+
+        {/* Dictionary Definition - Sticky Bottom */}
+        {!loading && !error && (
+          <div className="border-t border-card-border bg-card-elevated shrink-0 transition-all duration-300 ease-out z-20">
+            {activeDef ? (
+              <div className="p-6 max-h-[40vh] overflow-y-auto">
+                <div className="bg-gradient-to-br from-card to-background border border-card-border rounded-xl p-6 shadow-lg relative overflow-hidden">
+                  {/* Decorative background element */}
+                  <div className="absolute -right-10 -top-10 text-9xl text-accent/5 font-serif select-none pointer-events-none">
+                    {activeDef.lemma}
+                  </div>
+
+                  <div className="flex flex-col md:flex-row gap-6 relative z-10">
+                    <div className="flex-1 space-y-4">
+                      <div className="flex items-end gap-4 border-b border-card-border/50 pb-4">
+                        <h1 className="text-5xl font-serif text-accent-light">{activeDef.lemma}</h1>
+                        <div className="mb-2">
+                          <span className="text-lg text-primary font-medium mr-3">{activeDef.xlit}</span>
+                          <span className="text-sm text-secondary">/{activeDef.pron}/</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">Definition</h4>
+                        <p className="text-lg text-primary leading-relaxed">{activeDef.strongs_def}</p>
+                      </div>
+                      
+                      {activeDef.derivation && (
+                        <div>
+                          <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">Derivation</h4>
+                          <p className="text-sm text-secondary leading-relaxed">{activeDef.derivation}</p>
+                        </div>
+                      )}
+                      
+                      {activeDef.kjv_def && (
+                        <div>
+                          <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">KJV Translation Count</h4>
+                          <p className="text-sm text-secondary italic">{activeDef.kjv_def}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center text-secondary py-6 opacity-60 font-medium text-sm">
+                Click on any word above to view its original {isOldTestament ? 'Hebrew' : 'Greek'} definition.
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
