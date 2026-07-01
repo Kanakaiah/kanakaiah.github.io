@@ -7,7 +7,6 @@ import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
 import { OT_BOOKS, OT_SECTIONS } from '../data/otBooks';
 import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
 import { ChapterReader } from '../components/guides/ChapterReader';
-import { TextSelectionTooltip } from '../components/TextSelectionTooltip';
 import { OriginalWordModal } from '../components/OriginalWordModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
@@ -290,7 +289,6 @@ export const Guides: React.FC = () => {
   if (readerBook && readerChapter) {
     return (
       <>
-        <TextSelectionTooltip onOriginalWordLookup={setStudyOriginalWordRef} />
         {studyOriginalWordRef && (
           <OriginalWordModal 
             verseRef={studyOriginalWordRef} 
@@ -301,6 +299,7 @@ export const Guides: React.FC = () => {
           bookId={readerBook}
           chapter={parseInt(readerChapter, 10)}
           bookTitle={ALL_BOOKS.find((b) => b.id === readerBook)?.name || activeGuide?.title || 'Book'}
+          onStudyOriginalWord={setStudyOriginalWordRef}
           onClose={() => {
             setSearchParams((prev) => {
               const next = new URLSearchParams(prev);

@@ -17,6 +17,7 @@ interface ChapterReaderProps {
   chapter: number;
   bookTitle: string;
   onClose: () => void;
+  onStudyOriginalWord?: (verseRef: { book: number; chapter: number; verse: number }) => void;
 }
 
 import { BOLLS_BIBLE_MAP } from '../../data/bibleMap';
@@ -795,6 +796,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterRe
               >
                 <Copy className="w-3.5 h-3.5" /> Copy
               </button>
+
+              {selectedVerses.length === 1 && onStudyOriginalWord && (
+                <button 
+                  onClick={() => {
+                    const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
+                    onStudyOriginalWord({ book: bookIndex, chapter, verse: selectedVerses[0] });
+                    setSelectedVerses([]);
+                  }}
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
+                >
+                  <BookOpen className="w-3.5 h-3.5" /> Study Words
+                </button>
+              )}
+              
               {hasRefs && (
                 <button 
                   onClick={() => {
