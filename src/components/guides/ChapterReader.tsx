@@ -44,7 +44,7 @@ interface Verse {
   text: string;
 }
 
-export function ChapterReader({ bookId, chapter, bookTitle, onClose }: ChapterReaderProps) {
+export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOriginalWord }: ChapterReaderProps) {
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
