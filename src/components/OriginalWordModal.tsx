@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2, BookOpen } from 'lucide-react';
+import { X, Loader2, BookOpen, ArrowRight } from 'lucide-react';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
 
@@ -8,6 +8,7 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 interface OriginalWordModalProps {
   verseRef: { book: number; chapter: number; verse: number };
   onClose: () => void;
+  onNavigateToVerse?: (bookId: string, chapter: number, verse: number) => void;
 }
 
 interface StrongsDefinition {
@@ -24,11 +25,14 @@ interface ParsedWord {
   strongs: string | null;
 }
 
-export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps) {
+import { StrongsOccurrencesModal } from './StrongsOccurrencesModal';
+
+export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: OriginalWordModalProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [words, setWords] = useState<ParsedWord[]>([]);
   const [dictionary, setDictionary] = useState<Record<string, StrongsDefinition>>({});
+  const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
 
   const isOldTestament = verseRef.book <= 39;
 
@@ -176,6 +180,14 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
                             <p className="text-sm text-secondary italic">{def.kjv_def}</p>
                           </div>
                         )}
+
+                        <button
+                          onClick={() => setViewingOccurrences(w.strongs)}
+                          className="mt-6 w-full py-3 bg-accent/10 hover:bg-accent/20 text-accent hover:text-accent-light rounded-xl font-bold tracking-wide transition-colors flex items-center justify-center gap-2"
+                        >
+                          View all occurrences
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                   );
@@ -185,6 +197,15 @@ export function OriginalWordModal({ verseRef, onClose }: OriginalWordModalProps)
           </>
         )}
       </div>
+
+      {viewingOccurrences && dictionary[viewingOccurrences] && (
+        <StrongsOccurrencesModal
+          strongsNumber={viewingOccurrences}
+          lemma={dictionary[viewingOccurrences].lemma}
+          onClose={() => setViewingOccurrences(null)}
+          onNavigateToVerse={onNavigateToVerse || (() => {})}
+        />
+      )}
     </div>
   );
 }

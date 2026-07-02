@@ -293,6 +293,19 @@ export const Guides: React.FC = () => {
           <OriginalWordModal 
             verseRef={studyOriginalWordRef} 
             onClose={() => setStudyOriginalWordRef(null)} 
+            onNavigateToVerse={(bookId, chapter, verse) => {
+              setStudyOriginalWordRef(null);
+              setSearchParams(prev => {
+                const next = new URLSearchParams(prev);
+                next.set('readerBook', bookId);
+                next.set('readerChapter', chapter.toString());
+                return next;
+              });
+              setTimeout(() => {
+                const el = document.getElementById('verse-' + verse);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }, 500);
+            }}
           />
         )}
         <ChapterReader
