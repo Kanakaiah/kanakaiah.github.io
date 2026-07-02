@@ -82,13 +82,19 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
 
   // Process HTML safely
   const createMarkup = (html: string) => {
-    // We can replace the <mark> tags to look like our accent color
-    let processed = html.replace(/<mark[^>]*>(.*?)<\/mark>/gi, '<span class="text-accent bg-accent/20 px-1 rounded font-medium">$1</span>');
-    // Strip bolls specific tags like <S> completely so they don't show up, but keep content
-    processed = processed.replace(/<S[^>]*>(.*?)<\/S>/gi, '$1');
-    // Also remove translator supplied italics tags (<i> or <sup>)
+    // 1. Find occurrences where the Strong's number is marked.
+    // The Bolls API wraps the matched Strong's number in <mark> tags inside the <S> tag.
+    // We match the preceding English word, any whitespace/punctuation, and the marked <S> tag.
+    let processed = html.replace(/([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF'-]+)([^a-zA-Z]*?)<S><mark>\d+<\/mark><\/S>/g, '<span class="text-accent bg-accent/20 px-1 rounded font-medium">$1</span>$2');
+    
+    // 2. Strip all Strong's numbers completely (e.g. <S>1234</S>) so they don't clutter the text.
+    // We do NOT use the 'i' flag here because we don't want to accidentally match <span...> tags.
+    processed = processed.replace(/<S>.*?<\/S>/g, '');
+    
+    // 3. Remove translator supplied formatting tags to keep the text clean
     processed = processed.replace(/<sup[^>]*>(.*?)<\/sup>/gi, '$1');
     processed = processed.replace(/<i[^>]*>(.*?)<\/i>/gi, '$1');
+    
     return { __html: processed };
   };
 
