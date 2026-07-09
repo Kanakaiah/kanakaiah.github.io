@@ -750,12 +750,21 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       let verseHtml = '';
 
       parsed.forEach((pw) => {
-        const wordLower = pw.english.toLowerCase().replace(/[^a-z'-]/g, '');
         const hasDefinition = pw.strongs && strongsDict[pw.strongs];
-        const shouldUnderline = hasDefinition && !SKIP_WORDS.has(wordLower) && wordLower.length > 0;
-
-        if (shouldUnderline) {
-          verseHtml += `<span class="underline decoration-accent/40 decoration-1 underline-offset-4 cursor-pointer hover:text-accent hover:decoration-accent transition-colors alpha-word" data-strongs="${pw.strongs}" data-word="${pw.english.replace(/"/g, '&quot;')}">${pw.english}</span> `;
+        
+        if (hasDefinition) {
+          const tokens = pw.english.split(/(\b[a-zA-Z]+(?:'[a-zA-Z]+)?\b)/);
+          
+          tokens.forEach(token => {
+             const wordLower = token.toLowerCase();
+             // Only underline if it's a word and not in the SKIP_WORDS list
+             if (/^[a-z]/.test(wordLower) && !SKIP_WORDS.has(wordLower)) {
+               verseHtml += `<span class="underline decoration-accent/40 decoration-1 underline-offset-4 cursor-pointer hover:text-accent hover:decoration-accent transition-colors alpha-word" data-strongs="${pw.strongs}" data-word="${token}">${token}</span>`;
+             } else {
+               verseHtml += token;
+             }
+          });
+          verseHtml += ' '; // Add space between parsed blocks
         } else {
           verseHtml += `${pw.english} `;
         }
