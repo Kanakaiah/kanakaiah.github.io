@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2, BookOpen } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 import { CrossReferenceModal } from './CrossReferenceModal';
+import { WordPopup } from '../WordPopup';
+import { StrongsOccurrencesModal } from '../StrongsOccurrencesModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
@@ -11,6 +13,35 @@ import { useToast } from '../../context/ToastContext';
 import otQuotesData from '../../data/otQuotes.json';
 
 const otQuotes = otQuotesData as Record<string, Record<string, number[]>>;
+
+// Common function words that should NOT be underlined in α mode
+const SKIP_WORDS = new Set([
+  'the','a','an','and','or','but','for','nor','so','yet','in','on','at','to','of',
+  'by','is','am','are','was','were','be','been','being','has','had','have','do',
+  'did','does','it','its','he','she','him','her','his','they','them','their','we',
+  'us','our','you','your','i','my','me','if','not','no','that','this','these',
+  'those','with','from','as','into','than','which','who','whom','whose','what',
+  'shall','will','may','can','would','could','should','might','must','up','out',
+  'then','there','here','when','where','how','why','all','also','even','own',
+  'about','after','before','between','both','each','every','more','most','much',
+  'other','over','same','some','such','through','under','upon','very','now',
+  'only','still','just','also','too','again','o','oh','lo','unto'
+]);
+
+interface StrongsDefinition {
+  lemma: string;
+  xlit?: string;
+  pron?: string;
+  strongs_def: string;
+  kjv_def: string;
+  derivation?: string;
+  pos?: string;
+}
+
+interface ParsedStrongsWord {
+  english: string;
+  strongs: string | null;
+}
 
 interface ChapterReaderProps {
   bookId: string;
@@ -64,6 +95,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [showNavigator, setShowNavigator] = useState(false);
   const [navigatorBook, setNavigatorBook] = useState(bookId);
   const chapterGridRef = useRef<HTMLDivElement>(null);
+
+  // Alpha mode state
+  const [alphaMode, setAlphaMode] = useState(false);
+  const [kjvVerses, setKjvVerses] = useState<Verse[]>([]);
+  const [strongsDict, setStrongsDict] = useState<Record<string, StrongsDefinition>>({});
+  const [alphaDictLoaded, setAlphaDictLoaded] = useState(false);
+  const [alphaLoading, setAlphaLoading] = useState(false);
+  const [wordPopup, setWordPopup] = useState<{ word: string; strongsNumber: string; definition: StrongsDefinition } | null>(null);
+  const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
 
   const lastScrollY = useRef(0);
   const [isNavHidden, setIsNavHidden] = useState(false);
@@ -627,6 +667,124 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     return html;
   };
 
+  // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
+  const isOldTestament = (ALL_BOOKS.findIndex(b => b.id === bookId) + 1) <= 39;
+
+  useEffect(() => {
+    if (!alphaMode) return;
+    let mounted = true;
+
+    const fetchAlphaData = async () => {
+      setAlphaLoading(true);
+      try {
+        const bollsId = BOLLS_BIBLE_MAP[bookId];
+        if (!bollsId) return;
+
+        // Fetch KJV chapter (has Strong's tags)
+        const kjvRes = await fetch(`https://bolls.life/get-text/KJV/${bollsId}/${chapter}/`);
+        if (kjvRes.ok) {
+          const kjvData: Verse[] = await kjvRes.json();
+          if (mounted) setKjvVerses(kjvData);
+        }
+
+        // Load dictionary if not already loaded
+        if (!alphaDictLoaded) {
+          const dictUrl = isOldTestament ? '/strongs-hebrew.json' : '/strongs-greek.json';
+          const dictRes = await fetch(dictUrl);
+          if (dictRes.ok) {
+            const dictData = await dictRes.json();
+            if (mounted) {
+              setStrongsDict(dictData);
+              setAlphaDictLoaded(true);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load alpha mode data:', err);
+      } finally {
+        if (mounted) setAlphaLoading(false);
+      }
+    };
+
+    fetchAlphaData();
+    return () => { mounted = false; };
+  }, [alphaMode, bookId, chapter, isOldTestament, alphaDictLoaded]);
+
+  // Reset dictionary loaded state when switching testaments
+  useEffect(() => {
+    setAlphaDictLoaded(false);
+  }, [isOldTestament]);
+
+  // Parse KJV text with Strong's numbers into word-strongs pairs
+  const parseKjvStrongs = useCallback((html: string): ParsedStrongsWord[] => {
+    const cleanHtml = html.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
+    const regex = /([^<]+)(?:<S>(\d+)<\/S>)?/g;
+    let match;
+    const words: ParsedStrongsWord[] = [];
+
+    while ((match = regex.exec(cleanHtml)) !== null) {
+      let englishText = match[1].trim();
+      const strongsNumber = match[2];
+
+      if (!englishText && !strongsNumber) continue;
+
+      if (englishText) {
+        const formattedStrongs = strongsNumber ? `${isOldTestament ? 'H' : 'G'}${strongsNumber}` : null;
+        words.push({
+          english: englishText,
+          strongs: formattedStrongs
+        });
+      }
+    }
+
+    return words;
+  }, [isOldTestament]);
+
+  // Build alpha mode HTML with clickable underlined words
+  const buildAlphaHtml = () => {
+    if (kjvVerses.length === 0) return '';
+    let html = '';
+
+    kjvVerses.forEach((v) => {
+      const parsed = parseKjvStrongs(v.text);
+      let verseHtml = '';
+
+      parsed.forEach((pw) => {
+        const wordLower = pw.english.toLowerCase().replace(/[^a-z'-]/g, '');
+        const hasDefinition = pw.strongs && strongsDict[pw.strongs];
+        const shouldUnderline = hasDefinition && !SKIP_WORDS.has(wordLower) && wordLower.length > 0;
+
+        if (shouldUnderline) {
+          verseHtml += `<span class="underline decoration-accent/40 decoration-1 underline-offset-4 cursor-pointer hover:text-accent hover:decoration-accent transition-colors alpha-word" data-strongs="${pw.strongs}" data-word="${pw.english.replace(/"/g, '&quot;')}">${pw.english}</span> `;
+        } else {
+          verseHtml += `${pw.english} `;
+        }
+      });
+
+      html += `<span class="inline"><sup class="text-[0.55em] font-normal text-muted ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline">${verseHtml.trim()}</span> </span>`;
+    });
+
+    return html;
+  };
+
+  // Handle clicks on alpha-mode words
+  const handleAlphaWordClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const wordSpan = target.closest('.alpha-word') as HTMLElement | null;
+    if (wordSpan) {
+      e.stopPropagation();
+      const strongsNumber = wordSpan.getAttribute('data-strongs');
+      const word = wordSpan.getAttribute('data-word');
+      if (strongsNumber && word && strongsDict[strongsNumber]) {
+        setWordPopup({
+          word,
+          strongsNumber,
+          definition: strongsDict[strongsNumber]
+        });
+      }
+    }
+  };
+
   const hasRefs = !crossRefMap || selectedVerses.some(v => {
     const refs = crossRefMap[`${bookTitle.toLowerCase()} ${chapter}:${v}`];
     return refs && refs.length > 0;
@@ -657,12 +815,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             <h2 className="text-4xl font-bold tracking-tight text-primary font-heading mb-2">
               {bookTitle} {chapter}
             </h2>
-            <span className="text-[0.6875rem] font-bold text-accent tracking-widest uppercase bg-accent/10 px-2.5 py-0.5 rounded-full">
-              LSB Translation
+            <span className={`text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full transition-colors ${
+              alphaMode 
+                ? 'text-yellow-300 bg-yellow-500/15' 
+                : 'text-accent bg-accent/10'
+            }`}>
+              {alphaMode ? 'KJV + Original Words' : 'LSB Translation'}
             </span>
           </div>
           
-          <div className="absolute right-0 top-1">
+          <div className="absolute right-0 top-1 flex items-center gap-1">
+            <button
+              onClick={() => setAlphaMode(!alphaMode)}
+              className={`p-2 rounded-full transition-all font-serif text-lg leading-none ${alphaMode ? 'bg-accent text-white shadow-lg shadow-accent/30' : 'hover:bg-glass-bg text-secondary'}`}
+              title={alphaMode ? 'Switch to LSB reading mode' : 'Show original Greek/Hebrew words'}
+            >
+              α
+            </button>
             <button
               onClick={() => setShowOptions(!showOptions)}
               className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-glass-bg text-primary' : 'hover:bg-glass-bg text-secondary'}`}
@@ -756,20 +925,51 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             </button>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleVerseClick}>
-            <div 
-              className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
-                state.settings.fontFamily === 'serif' ? 'font-serif' : 
-                state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
-                'font-sans'
-              }`}
-              style={{
-                fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
-                lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
-              }}
-              dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
-            />
-          </div>
+          alphaMode ? (
+            /* Alpha mode: KJV with clickable underlined words */
+            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleAlphaWordClick}>
+              {alphaLoading ? (
+                <div className="flex flex-col items-center justify-center h-[30vh] gap-3 text-secondary">
+                  <Loader2 className="w-6 h-6 animate-spin text-accent" />
+                  <p className="text-sm font-medium">Loading original language data...</p>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-4 px-3 py-2 bg-accent/5 border border-accent/10 rounded-xl">
+                    <p className="text-xs text-secondary text-center">Tap any <span className="underline decoration-accent/40 underline-offset-2">underlined word</span> to see its original {isOldTestament ? 'Hebrew' : 'Greek'} meaning</p>
+                  </div>
+                  <div 
+                    className={`tracking-[-0.01em] text-primary/95 ${
+                      state.settings.fontFamily === 'serif' ? 'font-serif' : 
+                      state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
+                      'font-sans'
+                    }`}
+                    style={{
+                      fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
+                      lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
+                    }}
+                    dangerouslySetInnerHTML={{ __html: buildAlphaHtml() }}
+                  />
+                </>
+              )}
+            </div>
+          ) : (
+            /* Normal LSB mode */
+            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleVerseClick}>
+              <div 
+                className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
+                  state.settings.fontFamily === 'serif' ? 'font-serif' : 
+                  state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
+                  'font-sans'
+                }`}
+                style={{
+                  fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
+                  lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
+                }}
+                dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
+              />
+            </div>
+          )
         )}
       </div>
 
@@ -1144,6 +1344,50 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             </button>
           </div>
         </div>
+      )}
+
+      {wordPopup && (
+        <WordPopup
+          word={wordPopup.word}
+          strongsNumber={wordPopup.strongsNumber}
+          definition={wordPopup.definition}
+          onClose={() => setWordPopup(null)}
+          onViewOccurrences={(strongsNumber) => {
+            setViewingOccurrences(strongsNumber);
+          }}
+        />
+      )}
+
+      {viewingOccurrences && strongsDict[viewingOccurrences] && (
+        <StrongsOccurrencesModal
+          strongsNumber={viewingOccurrences}
+          lemma={strongsDict[viewingOccurrences].lemma}
+          onClose={() => setViewingOccurrences(null)}
+          onNavigateToVerse={(navBookId, ch, v) => {
+            setViewingOccurrences(null);
+            setWordPopup(null);
+            
+            // Navigate to the verse in the reader
+            setSearchParams(prev => {
+              const next = new URLSearchParams(prev);
+              next.set('readerBook', navBookId);
+              next.set('readerChapter', ch.toString());
+              next.set('highlightVerse', v.toString());
+              return next;
+            }, { replace: true });
+
+            if (navBookId === bookId && ch === chapter) {
+              setTimeout(() => {
+                const el = document.querySelector(`[data-verse="${v}"]`);
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
+                  setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
+                }
+              }, 200);
+            }
+          }}
+        />
       )}
     </div>
   );

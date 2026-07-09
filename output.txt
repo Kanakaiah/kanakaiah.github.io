@@ -1,0 +1,1 @@
+Abraham begat Isaac; <span class="text-accent bg-accent/20 px-1 rounded font-medium">and</span>  Isaac begat Jacob; <span class="text-accent bg-accent/20 px-1 rounded font-medium">and</span>  Jacob begat Judas and his brethren

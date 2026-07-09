@@ -18,6 +18,7 @@ interface StrongsDefinition {
   strongs_def: string;
   kjv_def: string;
   derivation?: string;
+  pos?: string;
 }
 
 interface ParsedWord {
@@ -35,6 +36,37 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
   const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
 
   const isOldTestament = verseRef.book <= 39;
+
+  // Helper to format Strong's references in text
+  const formatStrongsRefs = (text: string) => {
+    if (!text) return null;
+    // Match G1234, H1234, or G1234 (word)
+    const regex = /([GH]\d+)(?:\s*\([^)]+\))?/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(<span key={`text-${lastIndex}`}>{text.slice(lastIndex, match.index)}</span>);
+      }
+      const strongsRef = match[1];
+      parts.push(
+        <span
+          key={`ref-${match.index}`}
+          className="text-accent font-medium cursor-pointer hover:underline"
+          onClick={() => setViewingOccurrences(strongsRef)}
+        >
+          {match[0]}
+        </span>
+      );
+      lastIndex = regex.lastIndex;
+    }
+    if (lastIndex < text.length) {
+      parts.push(<span key={`text-${lastIndex}`}>{text.slice(lastIndex)}</span>);
+    }
+    return parts;
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -164,13 +196,24 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
                       </div>
 
                       <div className="bg-card-elevated rounded-xl p-5 border border-card-border mt-4">
-                        <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">Definition</h4>
-                        <p className="text-base text-primary leading-relaxed">{def.strongs_def}</p>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="text-xs uppercase tracking-wider text-accent font-bold">Definition</h4>
+                          {def.pos && (
+                            <span className="bg-accent/15 text-accent text-[0.65rem] font-bold px-2 py-0.5 rounded-full uppercase">
+                              {def.pos}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-base text-primary leading-relaxed">
+                          {formatStrongsRefs(def.strongs_def)}
+                        </p>
                         
                         {def.derivation && (
                           <div className="mt-4">
                             <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-1">Derivation</h4>
-                            <p className="text-sm text-secondary leading-relaxed">{def.derivation}</p>
+                            <p className="text-sm text-secondary leading-relaxed">
+                              {formatStrongsRefs(def.derivation)}
+                            </p>
                           </div>
                         )}
                         
@@ -196,6 +239,11 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
             </div>
           </>
         )}
+        <div className="mt-8 text-center px-6 mb-4">
+          <p className="text-[0.625rem] text-muted italic">
+            Definitions from Strong's Exhaustive Concordance (1890)
+          </p>
+        </div>
       </div>
 
       {viewingOccurrences && dictionary[viewingOccurrences] && (
