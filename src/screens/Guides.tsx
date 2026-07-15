@@ -15,7 +15,7 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
-import { BOLLS_BIBLE_MAP, BOOK_SHORT } from '../data/bibleMap';
+import { BOOK_SHORT } from '../data/bibleMap';
 const DISTRIBUTION_COLORS = [
   { bg: 'bg-amber-500', text: 'text-amber-500', border: 'border-l-amber-500' },
   { bg: 'bg-blue-500', text: 'text-blue-500', border: 'border-l-blue-500' },

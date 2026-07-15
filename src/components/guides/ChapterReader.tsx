@@ -11,7 +11,6 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import otQuotesData from '../../data/otQuotes.json';
-import otQuotesData from '../../data/otQuotes.json';
 
 // --- Module-level caching for performance ---
 const otQuotes = otQuotesData as Record<string, Record<string, number[]>>;
