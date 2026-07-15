@@ -1,4 +1,4 @@
-import { useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
 import { ArrowRight, X } from 'lucide-react';
 
 interface StrongsDefinition {
@@ -17,13 +17,17 @@ interface WordPopupProps {
   definition: StrongsDefinition;
   onClose: () => void;
   onViewOccurrences: (strongsNumber: string) => void;
+  onNavigateToVerse?: (bookId: string, chapter: number, verse: number) => void;
 }
 
 /**
  * Parses Strong's references (e.g. G1234, H5678, G1234 (word)) in a text string
  * and returns an array of React elements with styled spans for each reference.
  */
-function formatStrongsRefs(text: string): ReactNode[] {
+function formatStrongsRefs(
+  text: string,
+  onRefClick?: (strongsNumber: string) => void
+): ReactNode[] {
   // Match patterns like G1234, H5678, or G1234 (some word)
   const regex = /([GH]\d+)(\s*\([^)]*\))?/g;
   const parts: ReactNode[] = [];
@@ -37,10 +41,12 @@ function formatStrongsRefs(text: string): ReactNode[] {
     }
 
     const fullMatch = match[0];
+    const strongsRef = match[1];
     parts.push(
       <span
         key={`ref-${match.index}`}
         className="text-accent font-medium cursor-pointer hover:underline"
+        onClick={onRefClick ? () => onRefClick(strongsRef) : undefined}
       >
         {fullMatch}
       </span>
@@ -57,12 +63,15 @@ function formatStrongsRefs(text: string): ReactNode[] {
   return parts;
 }
 
+import { StrongsOccurrencesModal } from './StrongsOccurrencesModal';
+
 export function WordPopup({
   word,
   strongsNumber,
   definition: def,
   onClose,
   onViewOccurrences,
+  onNavigateToVerse,
 }: WordPopupProps) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -76,6 +85,36 @@ export function WordPopup({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  // --- Drag-to-dismiss state ---
+  const [dragY, setDragY] = useState(0);
+  const dragStartY = useRef<number | null>(null);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    dragStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (dragStartY.current === null) return;
+    const delta = e.touches[0].clientY - dragStartY.current;
+    // Only allow dragging downward
+    setDragY(Math.max(0, delta));
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (dragY > 100) {
+      onClose();
+    }
+    setDragY(0);
+    dragStartY.current = null;
+  }, [dragY, onClose]);
+
+  // --- StrongsOccurrencesModal state for cross-reference clicks ---
+  const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
+
+  const handleRefClick = useCallback((refNumber: string) => {
+    setViewingOccurrences(refNumber);
+  }, []);
+
   return (
     <div className="fixed inset-0 z-[60] flex flex-col justify-end">
       {/* Dark overlay backdrop */}
@@ -87,7 +126,14 @@ export function WordPopup({
       {/* Bottom sheet */}
       <div
         className="relative z-10 bg-card rounded-t-3xl animate-in slide-in-from-bottom duration-300 flex flex-col"
-        style={{ maxHeight: '60vh' }}
+        style={{
+          maxHeight: '60vh',
+          transform: dragY > 0 ? `translateY(${dragY}px)` : undefined,
+          transition: dragY > 0 ? 'none' : 'transform 0.2s ease-out',
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-2 shrink-0">
@@ -141,7 +187,7 @@ export function WordPopup({
               Definition
             </h4>
             <p className="text-base text-primary leading-relaxed">
-              {formatStrongsRefs(def.strongs_def)}
+              {formatStrongsRefs(def.strongs_def, handleRefClick)}
             </p>
           </div>
 
@@ -152,7 +198,7 @@ export function WordPopup({
                 Derivation
               </h4>
               <p className="text-sm text-secondary leading-relaxed">
-                {formatStrongsRefs(def.derivation)}
+                {formatStrongsRefs(def.derivation, handleRefClick)}
               </p>
             </div>
           )}
@@ -182,6 +228,16 @@ export function WordPopup({
           </p>
         </div>
       </div>
+
+      {/* StrongsOccurrencesModal for cross-reference clicks */}
+      {viewingOccurrences && (
+        <StrongsOccurrencesModal
+          strongsNumber={viewingOccurrences}
+          lemma={viewingOccurrences === strongsNumber ? def.lemma : viewingOccurrences}
+          onClose={() => setViewingOccurrences(null)}
+          onNavigateToVerse={onNavigateToVerse || (() => {})}
+        />
+      )}
     </div>
   );
 }

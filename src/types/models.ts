@@ -27,7 +27,7 @@ export interface UserSettings {
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';
-export type Theme = 'black' | 'white';
+export type Theme = 'black' | 'dark' | 'sepia' | 'white';
 
 export interface AppState {
   verses: Verse[];

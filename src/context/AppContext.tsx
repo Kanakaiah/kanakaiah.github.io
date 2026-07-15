@@ -111,7 +111,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         // Basic schema validation
         if (parsed && Array.isArray(parsed.verses)) {
           // Migrate old themes
-          if (parsed.theme && !['black', 'white'].includes(parsed.theme)) {
+          if (parsed.theme && !['black', 'dark', 'sepia', 'white'].includes(parsed.theme)) {
             parsed.theme = 'black';
           }
           dispatch({ type: 'HYDRATE', payload: parsed as AppState });

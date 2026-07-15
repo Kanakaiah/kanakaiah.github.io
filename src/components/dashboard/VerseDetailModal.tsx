@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { X, AlignLeft, Trash2, BookOpen } from 'lucide-react';
@@ -20,6 +20,20 @@ interface VerseDetailModalProps {
 
 export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpen, onClose, onPractice, onDelete }) => {
   const navigate = useNavigate();
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setConfirmingDelete(false);
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -84,17 +98,31 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
             </div>
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <Button variant="secondary" onClick={handleGoTo} className="flex-1">
-              <AlignLeft className="w-4 h-4 mr-2" /> Context
-            </Button>
-            <Button onClick={() => { onClose(); onPractice(); }} className="flex-[2]">
-              <BookOpen className="w-4 h-4 mr-2" /> Practice
-            </Button>
-            <Button variant="danger" onClick={() => { if(window.confirm('Delete verse?')) onDelete(); }}>
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
+          {confirmingDelete ? (
+            <div className="flex flex-col gap-3 pt-2 p-4 rounded-xl bg-red-500/10 border border-red-500/30">
+              <p className="text-sm font-bold text-red-500 text-center">Are you sure you want to delete this verse?</p>
+              <div className="flex gap-3">
+                <Button variant="secondary" onClick={() => setConfirmingDelete(false)} className="flex-1">
+                  Cancel
+                </Button>
+                <Button variant="danger" onClick={() => { setConfirmingDelete(false); onDelete(); }} className="flex-1">
+                  <Trash2 className="w-4 h-4 mr-2" /> Confirm
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex gap-3 pt-2">
+              <Button variant="secondary" onClick={handleGoTo} className="flex-1">
+                <AlignLeft className="w-4 h-4 mr-2" /> Context
+              </Button>
+              <Button onClick={() => { onClose(); onPractice(); }} className="flex-[2]">
+                <BookOpen className="w-4 h-4 mr-2" /> Practice
+              </Button>
+              <Button variant="danger" onClick={() => setConfirmingDelete(true)}>
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </Card>
     </div>,

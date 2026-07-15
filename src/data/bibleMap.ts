@@ -16,3 +16,20 @@ export const BOLLS_BIBLE_MAP: Record<string, number> = {
   philemon: 57, hebrews: 58, james: 59, '1peter': 60, '2peter': 61,
   '1john': 62, '2john': 63, '3john': 64, jude: 65, revelation: 66,
 };
+
+export const BOOK_SHORT: Record<string, string> = {
+  genesis: 'Gen', exodus: 'Exod', leviticus: 'Lev', numbers: 'Num',
+  deuteronomy: 'Deut', joshua: 'Josh', judges: 'Judg', ruth: 'Ruth',
+  '1samuel': '1 Sam', '2samuel': '2 Sam', '1kings': '1 Kgs', '2kings': '2 Kgs',
+  '1chronicles': '1 Chr', '2chronicles': '2 Chr', nehemiah: 'Neh',
+  songofsolomon: 'Song', ecclesiastes: 'Eccl', jeremiah: 'Jer',
+  lamentations: 'Lam', ezekiel: 'Ezek', habakkuk: 'Hab', zephaniah: 'Zeph',
+  haggai: 'Hag', zechariah: 'Zech', malachi: 'Mal',
+  matthew: 'Matt', '1corinthians': '1 Cor', '2corinthians': '2 Cor',
+  galatians: 'Gal', ephesians: 'Eph', philippians: 'Phil', colossians: 'Col',
+  '1thessalonians': '1 Thess', '2thessalonians': '2 Thess',
+  '1timothy': '1 Tim', '2timothy': '2 Tim', philemon: 'Philem',
+  hebrews: 'Heb', '1peter': '1 Pet', '2peter': '2 Pet',
+  '1john': '1 John', '2john': '2 John', '3john': '3 John',
+  revelation: 'Rev',
+};

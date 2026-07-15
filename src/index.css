@@ -61,6 +61,64 @@
     --bionic-5: #6d28d9;
   }
 
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --bg-color: #1a1a2e;
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-light: #60a5fa;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --accent-glow-strong: rgba(59, 130, 246, 0.3);
+
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-bg-hover: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-hover: rgba(255, 255, 255, 0.15);
+    --card-bg: #16213e;
+    --card-bg-elevated: #1e2a4a;
+    --card-border: #2a3a5c;
+    --card-hover: #1e2a4a;
+
+    --bionic-1: #ef4444;
+    --bionic-2: #3b82f6;
+    --bionic-3: #10b981;
+    --bionic-4: #f59e0b;
+    --bionic-5: #8b5cf6;
+  }
+
+  [data-theme="sepia"] {
+    color-scheme: light;
+    --bg-color: #f5f0e8;
+    --text-primary: #3d2e1f;
+    --text-secondary: #6b5744;
+    --text-muted: #9a8672;
+    
+    --accent: #8b6914;
+    --accent-hover: #6b4f0f;
+    --accent-light: #b8860b;
+    --accent-glow: rgba(139, 105, 20, 0.12);
+    --accent-glow-strong: rgba(139, 105, 20, 0.25);
+
+    --glass-bg: rgba(139, 105, 20, 0.04);
+    --glass-bg-hover: rgba(139, 105, 20, 0.08);
+    --glass-border: rgba(139, 105, 20, 0.1);
+    --glass-border-hover: rgba(139, 105, 20, 0.18);
+    --card-bg: #ede6d8;
+    --card-bg-elevated: #f5f0e8;
+    --card-border: #d4c9b5;
+    --card-hover: #f0ead9;
+
+    --bionic-1: #8b3a3a;
+    --bionic-2: #4a6741;
+    --bionic-3: #6b5744;
+    --bionic-4: #8b6914;
+    --bionic-5: #5b4a8a;
+  }
+
   :root {
 
     --font-primary: 'Inter', system-ui, sans-serif;
@@ -103,4 +161,54 @@ nav, button, [role="button"] {
 select option {
   background-color: var(--bg-color) !important;
   color: var(--text-primary) !important;
+}
+
+/* Skeleton loading shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--glass-bg) 25%,
+    var(--glass-bg-hover) 50%,
+    var(--glass-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Toast exit animation */
+@keyframes toastExit {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(8px); }
+}
+
+.toast-exit {
+  animation: toastExit 0.25s ease-in forwards;
+}
+
+/* Drawer slide-out animation */
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Reading progress bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 100;
+  transition: width 0.15s ease-out;
 }

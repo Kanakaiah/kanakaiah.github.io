@@ -20,6 +20,7 @@ export const BookCard: React.FC<{ book: Book; onClick: () => void }> = ({ book, 
         <img
           src={book.image}
           alt={book.name}
+          loading="lazy"
           onError={() => setImgErr(true)}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
@@ -117,7 +118,8 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
           </div>
 
           {NT_SECTIONS.map(section => {
-            const books = NT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+            const q = searchQuery.toLowerCase();
+            const books = NT_BOOKS.filter(b => b.section === section && (b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q)));
             if (!books.length) return null;
             return (
               <div key={section} className="flex flex-col gap-3">
@@ -168,7 +170,8 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
           </div>
 
           {OT_SECTIONS.map(section => {
-            const books = OT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+            const q = searchQuery.toLowerCase();
+            const books = OT_BOOKS.filter(b => b.section === section && (b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q)));
             if (!books.length) return null;
             return (
               <div key={section} className="flex flex-col gap-3">

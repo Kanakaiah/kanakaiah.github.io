@@ -11,8 +11,12 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import otQuotesData from '../../data/otQuotes.json';
+import otQuotesData from '../../data/otQuotes.json';
 
+// --- Module-level caching for performance ---
 const otQuotes = otQuotesData as Record<string, Record<string, number[]>>;
+let cachedCrossRefs: Record<string, string[]> | null = null;
+const cachedStrongsDicts: Record<string, Record<string, StrongsDefinition>> = {};
 
 // Common function words that should NOT be underlined in α mode
 const SKIP_WORDS = new Set([
@@ -51,23 +55,7 @@ interface ChapterReaderProps {
   onStudyOriginalWord?: (verseRef: { book: number; chapter: number; verse: number }) => void;
 }
 
-import { BOLLS_BIBLE_MAP } from '../../data/bibleMap';
-const BOOK_SHORT: Record<string, string> = {
-  genesis: 'Gen', exodus: 'Exod', leviticus: 'Lev', numbers: 'Num',
-  deuteronomy: 'Deut', joshua: 'Josh', judges: 'Judg', ruth: 'Ruth',
-  '1samuel': '1 Sam', '2samuel': '2 Sam', '1kings': '1 Kgs', '2kings': '2 Kgs',
-  '1chronicles': '1 Chr', '2chronicles': '2 Chr', nehemiah: 'Neh',
-  songofsolomon: 'Song', ecclesiastes: 'Eccl', jeremiah: 'Jer',
-  lamentations: 'Lam', ezekiel: 'Ezek', habakkuk: 'Hab', zephaniah: 'Zeph',
-  haggai: 'Hag', zechariah: 'Zech', malachi: 'Mal',
-  matthew: 'Matt', '1corinthians': '1 Cor', '2corinthians': '2 Cor',
-  galatians: 'Gal', ephesians: 'Eph', philippians: 'Phil', colossians: 'Col',
-  '1thessalonians': '1 Thess', '2thessalonians': '2 Thess',
-  '1timothy': '1 Tim', '2timothy': '2 Tim', philemon: 'Philem',
-  hebrews: 'Heb', '1peter': '1 Pet', '2peter': '2 Pet',
-  '1john': '1 John', '2john': '2 John', '3john': '3 John',
-  revelation: 'Rev',
-};
+import { BOLLS_BIBLE_MAP, BOOK_SHORT } from '../../data/bibleMap';
 
 interface Verse {
   pk: number;
@@ -87,7 +75,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
-  const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(null);
+  const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(cachedCrossRefs);
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
@@ -107,9 +95,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
   const lastScrollY = useRef(0);
   const [isNavHidden, setIsNavHidden] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const currentScrollY = e.currentTarget.scrollTop;
+    const target = e.currentTarget;
+    const currentScrollY = target.scrollTop;
+    
+    // Calculate progress (0 to 100)
+    const totalHeight = target.scrollHeight - target.clientHeight;
+    if (totalHeight > 0) {
+      setScrollProgress((currentScrollY / totalHeight) * 100);
+    }
+    
     if (currentScrollY > lastScrollY.current + 10 && currentScrollY > 50) {
       setIsNavHidden(true);
     } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY < 50) {
@@ -238,11 +235,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   };
 
   useEffect(() => {
+    if (cachedCrossRefs) {
+      setCrossRefMap(cachedCrossRefs);
+      return;
+    }
     let mounted = true;
     fetch('/data/cross_references.json')
       .then(res => res.json())
       .then(data => {
-        if (mounted) setCrossRefMap(data);
+        if (mounted) {
+          cachedCrossRefs = data;
+          setCrossRefMap(data);
+        }
       })
       .catch(console.error);
     return () => { mounted = false; };
@@ -689,13 +693,22 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
         // Load dictionary if not already loaded
         if (!alphaDictLoaded) {
-          const dictUrl = isOldTestament ? '/strongs-hebrew.json' : '/strongs-greek.json';
-          const dictRes = await fetch(dictUrl);
-          if (dictRes.ok) {
-            const dictData = await dictRes.json();
-            if (mounted) {
-              setStrongsDict(dictData);
-              setAlphaDictLoaded(true);
+          const dictKey = isOldTestament ? 'hebrew' : 'greek';
+          if (cachedStrongsDicts[dictKey]) {
+             if (mounted) {
+               setStrongsDict(cachedStrongsDicts[dictKey]);
+               setAlphaDictLoaded(true);
+             }
+          } else {
+            const dictUrl = isOldTestament ? '/strongs-hebrew.json' : '/strongs-greek.json';
+            const dictRes = await fetch(dictUrl);
+            if (dictRes.ok) {
+              const dictData = await dictRes.json();
+              cachedStrongsDicts[dictKey] = dictData;
+              if (mounted) {
+                setStrongsDict(dictData);
+                setAlphaDictLoaded(true);
+              }
             }
           }
         }
@@ -806,6 +819,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Reading Progress Bar */}
+      <div 
+        className="reading-progress"
+        style={{ width: `${scrollProgress}%` }}
+      />
+      
       <div 
         className="flex-1 overflow-y-auto overscroll-y-contain px-5 pb-6"
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.5rem)' }}
@@ -919,9 +938,25 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-secondary">
-            <Loader2 className="w-6 h-6 animate-spin text-accent" />
-            <p className="text-sm font-medium">Loading scripture...</p>
+          <div className="max-w-2xl mx-auto flex flex-col gap-6">
+            <div className="h-4 w-32 skeleton mb-4 mt-8" />
+            <div className="flex flex-col gap-3">
+              <div className="h-6 w-full skeleton" />
+              <div className="h-6 w-11/12 skeleton" />
+              <div className="h-6 w-full skeleton" />
+              <div className="h-6 w-5/6 skeleton" />
+            </div>
+            <div className="h-4 w-24 skeleton mt-6 mb-2" />
+            <div className="flex flex-col gap-3">
+              <div className="h-6 w-full skeleton" />
+              <div className="h-6 w-4/5 skeleton" />
+              <div className="h-6 w-full skeleton" />
+            </div>
+            <div className="flex flex-col gap-3 mt-6">
+              <div className="h-6 w-11/12 skeleton" />
+              <div className="h-6 w-full skeleton" />
+              <div className="h-6 w-2/3 skeleton" />
+            </div>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-red-400">

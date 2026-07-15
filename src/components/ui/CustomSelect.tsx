@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 
 export interface CustomSelectOption {
@@ -15,9 +15,29 @@ export interface CustomSelectProps {
 
 export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, options, className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listboxRef = useRef<HTMLDivElement>(null);
 
   const selectedOption = options.find(o => o.value === value) || options[0];
+
+  // Reset highlighted index when dropdown opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      const currentIndex = options.findIndex(o => o.value === value);
+      setHighlightedIndex(currentIndex >= 0 ? currentIndex : 0);
+    } else {
+      setHighlightedIndex(-1);
+    }
+  }, [isOpen, value, options]);
+
+  // Scroll highlighted option into view
+  useEffect(() => {
+    if (isOpen && highlightedIndex >= 0 && listboxRef.current) {
+      const optionEl = listboxRef.current.children[highlightedIndex] as HTMLElement | undefined;
+      optionEl?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [isOpen, highlightedIndex]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent | TouchEvent) => {
@@ -33,28 +53,79 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
     };
   }, []);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+        } else {
+          setHighlightedIndex(prev => (prev + 1) % options.length);
+        }
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+        } else {
+          setHighlightedIndex(prev => (prev - 1 + options.length) % options.length);
+        }
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (isOpen && highlightedIndex >= 0) {
+          onChange(options[highlightedIndex].value);
+          setIsOpen(false);
+        } else if (!isOpen) {
+          setIsOpen(true);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setIsOpen(false);
+        break;
+    }
+  }, [isOpen, highlightedIndex, options, onChange]);
+
+  const listboxId = 'custom-select-listbox';
+
   return (
-    <div className={`relative ${className}`} ref={containerRef}>
+    <div className={`relative ${className}`} ref={containerRef} onKeyDown={handleKeyDown}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between gap-2 px-4 py-3 bg-card border border-card-border rounded-xl text-primary font-medium hover:bg-card-hover transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-activedescendant={isOpen && highlightedIndex >= 0 ? `custom-select-option-${highlightedIndex}` : undefined}
       >
         <span className="truncate">{selectedOption?.label}</span>
         <ChevronDown className={`w-4 h-4 text-secondary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 py-2 bg-card border border-card-border rounded-xl shadow-xl max-h-60 overflow-y-auto animate-[fadeIn_0.15s_ease-out]">
-          {options.map((option) => (
+        <div
+          ref={listboxRef}
+          role="listbox"
+          id={listboxId}
+          aria-label="Options"
+          className="absolute z-50 w-full mt-2 py-2 bg-card border border-card-border rounded-xl shadow-xl max-h-60 overflow-y-auto animate-[fadeIn_0.15s_ease-out]"
+        >
+          {options.map((option, index) => (
             <button
               key={option.value}
+              id={`custom-select-option-${index}`}
               type="button"
+              role="option"
+              aria-selected={option.value === value}
               onClick={() => {
                 onChange(option.value);
                 setIsOpen(false);
               }}
-              className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-card-hover transition-colors"
+              onMouseEnter={() => setHighlightedIndex(index)}
+              className={`w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-card-hover transition-colors ${
+                index === highlightedIndex ? 'bg-card-hover' : ''
+              }`}
             >
               <span className={`truncate ${option.value === value ? 'text-accent font-bold' : 'text-primary'}`}>
                 {option.label}

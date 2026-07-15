@@ -62,6 +62,8 @@ export const AppLayout: React.FC = () => {
         ${isNavHidden ? 'translate-y-[150px] lg:translate-y-0' : 'translate-y-0'}
         ${isFullscreenView ? 'hidden' : ''}
       `}
+      role="navigation"
+      aria-label="Main navigation"
       style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}
       >
         {/* Desktop Logo */}
@@ -78,6 +80,7 @@ export const AppLayout: React.FC = () => {
             <NavLink
               key={link.to}
               to={link.to}
+              end={link.to === '/'}
               className={({ isActive }) => `
                 relative flex flex-col lg:flex-row items-center lg:px-4 py-2 lg:py-3 rounded-xl lg:rounded-xl
                 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
@@ -86,6 +89,7 @@ export const AppLayout: React.FC = () => {
                   : 'text-muted hover:text-secondary lg:hover:bg-glass-bg-hover'}
                 w-14 sm:w-16 lg:w-full
               `}
+              aria-current={location.pathname === link.to ? 'page' : undefined}
             >
               <link.icon className={`w-5 h-5 lg:w-5 lg:h-5 lg:mr-3 ${location.pathname === link.to ? 'text-white lg:text-accent-light' : ''}`} />
               <span className={`text-[10px] lg:text-sm font-bold mt-1 lg:mt-0 ${location.pathname === link.to ? 'text-white lg:text-accent-light' : ''}`}>

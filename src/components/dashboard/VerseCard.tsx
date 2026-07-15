@@ -81,6 +81,12 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
     <div 
       className={`group relative flex flex-row cursor-pointer hover:bg-card-hover transition-all overflow-hidden rounded-xl bg-card border border-card-border border-l-[3px] ${indicatorColor} p-0`}
       onClick={() => onClick(verse.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(verse.id);
+        }
+      }}
       role="button"
       tabIndex={0}
       aria-label={`Verse ${verse.ref}`}

@@ -6,6 +6,9 @@ import { BOLLS_BIBLE_MAP } from '../../data/bibleMap';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
+// Module-level cache to prevent re-fetching the same verse text
+const verseTextCache: Record<string, string> = {};
+
 interface CrossReferenceModalProps {
   verseRefs: string[];
   onClose: () => void;
@@ -76,6 +79,18 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
         }
 
         const fetchVerse = async (r: CrossRefData) => {
+          const cacheKey = `${r.bookName.toLowerCase()}-${r.chapter}-${r.verse}`;
+          
+          if (verseTextCache[cacheKey]) {
+            if (mounted) {
+              setGroups(prev => prev.map(g => ({
+                ...g,
+                refs: g.refs.map(p => p.refStr === r.refStr ? { ...p, text: verseTextCache[cacheKey], loading: false } : p)
+              })));
+            }
+            return;
+          }
+
           let retries = 2;
           while (retries >= 0) {
             try {
@@ -98,6 +113,8 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                   .replace(/<[^>]*>/g, '')
                   .trim();
                 
+                verseTextCache[cacheKey] = cleanText;
+
                 if (mounted) {
                   setGroups(prev => prev.map(g => ({
                     ...g,
