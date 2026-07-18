@@ -41,15 +41,16 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   const [manualText, setManualText] = useState('');
   const [manualTranslation, setManualTranslation] = useState('NIV');
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
+  const handleSearch = async (overrideQuery?: string) => {
+    const queryToUse = (typeof overrideQuery === 'string' ? overrideQuery : searchQuery) || searchQuery;
+    if (!queryToUse.trim()) return;
     setIsLoading(true);
     setSearchError(null);
     setSearchResults([]);
 
     const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(searchTranslation);
     const parseTranslation = isBolls ? 'web' : searchTranslation;
-    const queries = searchQuery.split(';').map(q => q.trim()).filter(Boolean);
+    const queries = queryToUse.split(';').map(q => q.trim()).filter(Boolean);
     const results = [];
     let hasError = false;
 
@@ -134,8 +135,8 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
 
   const addVerseToLibrary = (ref: string, text: string, translation: string, skipNavigate = false) => {
     // Check if exists
-    if (state.verses.some(v => v.ref.toLowerCase() === ref.toLowerCase())) {
-      showToast(`'${ref}' is already in your library!`, 'error');
+    if (state.verses.some(v => v.ref.toLowerCase() === ref.toLowerCase() && v.translation.toLowerCase() === translation.toLowerCase())) {
+      showToast(`'${ref} (${translation})' is already in your library!`, 'error');
       return;
     }
 
@@ -218,7 +219,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             </div>
           </div>
           
-          <Button onClick={handleSearch} isLoading={isLoading} className="w-full">
+          <Button onClick={() => handleSearch()} isLoading={isLoading} className="w-full">
             Search
           </Button>
 
@@ -280,7 +281,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                   key={collection.topic}
                   onClick={() => {
                     setSearchQuery(collection.q);
-                    handleSearch();
+                    handleSearch(collection.q);
                   }}
                   className="bg-card border border-card-border rounded-xl p-4 text-left hover:bg-card-hover transition-colors flex flex-col gap-1"
                 >

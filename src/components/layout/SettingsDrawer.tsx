@@ -141,11 +141,13 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
         <div className="flex-1 overflow-y-auto p-5">
           <div className="flex flex-col gap-8 pb-8">
 
-            {/* Appearance Section */}
             <section className="flex flex-col gap-4 relative z-30">
-              <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2 flex items-center gap-2">
-                <Palette className="w-4 h-4" /> Appearance
-              </h2>
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-5 h-5 rounded-md bg-violet-500/15 flex items-center justify-center">
+                  <Palette className="w-3 h-3 text-violet-500" />
+                </div>
+                <h2 className="text-xs uppercase tracking-widest font-bold text-secondary">Appearance</h2>
+              </div>
               <Card className="p-1 overflow-visible">
                 <div className="flex flex-col divide-y divide-card-border">
                   <div className="p-4 flex flex-col gap-3">
@@ -182,9 +184,12 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
 
             {/* Practice & Reading Section */}
             <section className="flex flex-col gap-4 relative z-20">
-              <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2 flex items-center gap-2">
-                <Brain className="w-4 h-4" /> Practice & Reading
-              </h2>
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-5 h-5 rounded-md bg-blue-500/15 flex items-center justify-center">
+                  <Brain className="w-3 h-3 text-blue-500" />
+                </div>
+                <h2 className="text-xs uppercase tracking-widest font-bold text-secondary">Practice &amp; Reading</h2>
+              </div>
               <Card className="p-1 overflow-visible">
                 <div className="flex flex-col divide-y divide-card-border">
 
@@ -253,7 +258,12 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
 
             {/* Data Management Section */}
             <section className="flex flex-col gap-4 relative z-10">
-              <h2 className="text-xs uppercase tracking-widest font-bold text-muted ml-2">Data Management</h2>
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-5 h-5 rounded-md bg-emerald-500/15 flex items-center justify-center">
+                  <Download className="w-3 h-3 text-emerald-500" />
+                </div>
+                <h2 className="text-xs uppercase tracking-widest font-bold text-secondary">Data Management</h2>
+              </div>
               <Card className="p-1">
                 <div className="flex flex-col divide-y divide-card-border">
 

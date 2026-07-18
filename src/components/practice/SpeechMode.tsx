@@ -12,16 +12,16 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
   const [error, setError] = useState('');
 
   // Speech Recognition setup (Web Speech API)
-  let recognition: any = null;
+  const recognitionRef = React.useRef<any>(null);
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
       // @ts-ignore
-      recognition = new webkitSpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
+      recognitionRef.current = new webkitSpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
 
-      recognition.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: any) => {
         let currentTranscript = '';
         for (let i = 0; i < event.results.length; i++) {
           currentTranscript += event.results[i][0].transcript;
@@ -29,12 +29,12 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
         setTranscript(currentTranscript);
       };
 
-      recognition.onerror = (event: any) => {
+      recognitionRef.current.onerror = (event: any) => {
         setError('Error occurred in recognition: ' + event.error);
         setIsListening(false);
       };
 
-      recognition.onend = () => {
+      recognitionRef.current.onend = () => {
         setIsListening(false);
       };
     } else {
@@ -42,27 +42,27 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
     }
 
     return () => {
-      if (recognition) {
-        recognition.stop();
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
       }
     };
   }, []);
 
   const toggleListen = () => {
-    if (!recognition && 'webkitSpeechRecognition' in window) {
+    if (!recognitionRef.current && 'webkitSpeechRecognition' in window) {
        // @ts-ignore
-      recognition = new webkitSpeechRecognition();
+      recognitionRef.current = new webkitSpeechRecognition();
       // configure again if re-init is needed, simplified for brevity
     }
 
     if (isListening) {
-      recognition?.stop();
+      recognitionRef.current?.stop();
       setIsListening(false);
     } else {
       setError('');
       setTranscript('');
       try {
-        recognition?.start();
+        recognitionRef.current?.start();
         setIsListening(true);
       } catch (e) {
         console.error(e);

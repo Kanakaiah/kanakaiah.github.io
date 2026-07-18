@@ -18,13 +18,16 @@ export const EraserMode: React.FC<EraserModeProps> = ({ text }) => {
     return indices;
   }, [words]);
 
+  // Stable shuffled indices for this text
+  const shuffledIndices = useMemo(() => {
+    return [...wordIndices].sort(() => 0.5 - Math.random());
+  }, [wordIndices]);
+
   // Handle slider change to recalculate random hidden indices
   useEffect(() => {
     const hideCount = Math.round((sliderValue / 100) * wordIndices.length);
-    // Shuffle
-    const shuffled = [...wordIndices].sort(() => 0.5 - Math.random());
-    setHiddenIndices(new Set(shuffled.slice(0, hideCount)));
-  }, [sliderValue, wordIndices]);
+    setHiddenIndices(new Set(shuffledIndices.slice(0, hideCount)));
+  }, [sliderValue, wordIndices.length, shuffledIndices]);
 
   const toggleWord = (idx: number) => {
     setHiddenIndices(prev => {

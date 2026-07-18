@@ -101,6 +101,7 @@ const AppContext = createContext<AppContextProps | undefined>(undefined);
 // --- PROVIDER ---
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const isHydrated = React.useRef(false);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -119,12 +120,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     } catch (e) {
       console.error("Failed to parse local storage", e);
+    } finally {
+      isHydrated.current = true;
     }
   }, []);
 
   // Save to localStorage on state change
   useEffect(() => {
-    localStorage.setItem('remora_data', JSON.stringify(state));
+    if (isHydrated.current) {
+      localStorage.setItem('remora_data', JSON.stringify(state));
+    }
     // Apply theme to document
     document.documentElement.setAttribute('data-theme', state.theme);
     // Remove global font scaling on root HTML; font size will be applied directly to verse text instead.

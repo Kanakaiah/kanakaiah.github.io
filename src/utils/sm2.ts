@@ -1,7 +1,7 @@
 import type { SM2Data } from '../types/models';
 
 export function evaluateSM2(sm2: SM2Data, score: number): { newSM2: SM2Data, newStatus: 'learning' | 'review' } {
-  let { interval, repetition, efactor } = sm2;
+  let { interval, repetition, efactor = 2.5 } = sm2;
 
   // SM-2 Algorithm Implementation
   if (score < 3) {

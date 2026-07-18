@@ -12,6 +12,13 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
   const [assembledCount, setAssembledCount] = useState(0);
   const [errorId, setErrorId] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
+  const timeoutRefs = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timeoutRefs.current.forEach(clearTimeout);
+    };
+  }, []);
 
   useEffect(() => {
     // 1. Clean words (mirroring legacy regex to strip punctuation)
@@ -69,17 +76,19 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
       // If chunk is complete, advance after delay
       if (assembledCount + 1 === targetWords.length) {
         if (currentChunkIndex < chunks.length - 1) {
-          setTimeout(() => {
+          const t1 = setTimeout(() => {
             setCurrentChunkIndex(prev => prev + 1);
           }, 800);
+          timeoutRefs.current.push(t1);
         }
       }
     } else {
       // Mismatch!
       setErrorId(item.id);
       setShake(true);
-      setTimeout(() => setShake(false), 300);
-      setTimeout(() => setErrorId(null), 600);
+      const t2 = setTimeout(() => setShake(false), 300);
+      const t3 = setTimeout(() => setErrorId(null), 600);
+      timeoutRefs.current.push(t2, t3);
     }
   };
 

@@ -796,12 +796,26 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       e.stopPropagation();
       const strongsNumber = wordSpan.getAttribute('data-strongs');
       const word = wordSpan.getAttribute('data-word');
-      if (strongsNumber && word && strongsDict[strongsNumber]) {
-        setWordPopup({
-          word,
-          strongsNumber,
-          definition: strongsDict[strongsNumber]
-        });
+      if (strongsNumber && word) {
+        if (strongsDict[strongsNumber]) {
+          setWordPopup({
+            word,
+            strongsNumber,
+            definition: strongsDict[strongsNumber]
+          });
+        } else if (alphaLoading) {
+          // Dictionary still loading — show a transient loading popup
+          setWordPopup({
+            word,
+            strongsNumber,
+            definition: {
+              lemma: '…',
+              strongs_def: 'Loading definition…',
+              kjv_def: '',
+            }
+          });
+        }
+        // else: no entry in dict, silent (word has no Strongs number)
       }
     }
   };

@@ -39,20 +39,6 @@ export const Practice: React.FC = () => {
   const initialPinchDist = useRef<number | null>(null);
   const initialZoomRef = useRef<number>(1);
 
-  // If there are no verses, show empty state
-  if (state.verses.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
-        <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center mb-4">
-          <BookOpen className="w-8 h-8 text-muted" />
-        </div>
-        <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
-        <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
-        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
-      </div>
-    );
-  }
-
   // Filter for allDue if query param is present
   const isAllDue = searchParams.get('mode') === 'alldue';
   const targetId = searchParams.get('id');
@@ -76,6 +62,20 @@ export const Practice: React.FC = () => {
   React.useEffect(() => {
     setActiveVerseIndex(initialIndex);
   }, [initialIndex]);
+
+  // If there are no verses, show empty state
+  if (state.verses.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
+        <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center mb-4">
+          <BookOpen className="w-8 h-8 text-muted" />
+        </div>
+        <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
+        <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
+        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+      </div>
+    );
+  }
 
   // Reset hint when changing verses or modes
   React.useEffect(() => {
@@ -365,6 +365,16 @@ export const Practice: React.FC = () => {
         }}
       >
       
+      {/* Session progress bar (thin line at very top) */}
+      {!isImmersed && verses.length > 1 && (
+        <div className="absolute top-0 left-0 w-full h-0.5 bg-card-border z-30">
+          <div
+            className="h-full bg-accent transition-all duration-300"
+            style={{ width: `${((activeVerseIndex + 1) / verses.length) * 100}%` }}
+          />
+        </div>
+      )}
+
       {/* Exit Button - Hidden when immersed */}
       {!isImmersed && (
         <button 
@@ -374,6 +384,18 @@ export const Practice: React.FC = () => {
         >
           <X className="w-5 h-5" />
         </button>
+      )}
+
+      {/* Session progress counter - shows "3 of 12" when in a multi-verse session */}
+      {!isImmersed && verses.length > 1 && (
+        <div
+          className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-3 py-1.5 bg-card border border-card-border rounded-full shadow-sm"
+          style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        >
+          <span className="text-xs font-bold text-primary tabular-nums">{activeVerseIndex + 1}</span>
+          <span className="text-xs text-muted">of</span>
+          <span className="text-xs font-bold text-muted tabular-nums">{verses.length}</span>
+        </div>
       )}
 
       {/* Audio Play/Pause Button - Hidden when immersed */}

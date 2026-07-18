@@ -41,8 +41,15 @@ export const Dashboard: React.FC = () => {
     const accuracy = state.verses.length > 0 ? Math.round((highScores / state.verses.length) * 100) : 0;
     const dueForReview = state.verses.filter(v => v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date());
 
-    return { memorized, learning, accuracy, dueForReview };
+    return { memorized, learning, accuracy, dueForReview, reviewed: highScores };
   }, [state.verses]);
+
+  // Stable random sort keys to prevent re-shuffling on every render
+  const randomSortKeys = useMemo(() => {
+    const keys = new Map<string, number>();
+    state.verses.forEach(v => keys.set(v.id, Math.random()));
+    return keys;
+  }, [state.verses, state.sortOrder === 'random']);
 
   // Filtering and Sorting
   const filteredAndSortedVerses = useMemo(() => {
@@ -76,13 +83,15 @@ export const Dashboard: React.FC = () => {
         return state.sortOrder === 'bible-asc' ? diff : -diff;
       }
       if (state.sortOrder === 'random') {
-        return Math.random() - 0.5;
+        const valA = randomSortKeys.get(a.id) || 0;
+        const valB = randomSortKeys.get(b.id) || 0;
+        return valA - valB;
       }
       return 0;
     });
 
     return result;
-  }, [state.verses, searchQuery, activeFilter, state.sortOrder]);
+  }, [state.verses, searchQuery, activeFilter, state.sortOrder, randomSortKeys]);
 
   const handleSortChange = (sort: any) => {
     dispatch({ type: 'SET_SORT_ORDER', payload: sort });
@@ -123,7 +132,7 @@ export const Dashboard: React.FC = () => {
                   <span className="text-sm font-medium text-accent">+{stats.dueForReview.length - 1} more</span>
                 </div>
                 
-                <p className="text-lg md:text-xl text-primary/80 italic mb-8 font-serif line-clamp-2">
+                <p className="text-lg md:text-xl text-primary/80 italic mb-8 font-primary line-clamp-2">
                   "{stats.dueForReview[0].text}"
                 </p>
 
@@ -167,8 +176,8 @@ export const Dashboard: React.FC = () => {
           <span className="text-xs text-muted font-medium mt-1">Learning</span>
         </div>
         <div className="bg-glass-bg backdrop-blur-sm border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
-          <span className="text-2xl font-bold font-heading text-primary">{stats.accuracy}%</span>
-          <span className="text-xs text-muted font-medium mt-1">Progress</span>
+          <span className="text-2xl font-bold font-heading text-primary">{stats.reviewed}</span>
+          <span className="text-xs text-muted font-medium mt-1">Reviewed</span>
         </div>
       </div>
 
@@ -252,8 +261,8 @@ export const Dashboard: React.FC = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-transparent border border-card-border text-[0.8125rem] font-medium text-primary hover:border-card-hover whitespace-nowrap"
             >
               <ArrowUpDown className="w-3.5 h-3.5 text-muted" />
-              <span className="hidden sm:inline">
-                {state.sortOrder === 'smart' ? 'Smart' : state.sortOrder === 'bible-asc' ? 'Bible' : state.sortOrder === 'bible-desc' ? 'Bible (Rev)' : 'Shuffle'}
+              <span className="text-xs">
+                {state.sortOrder === 'smart' ? 'Smart' : state.sortOrder === 'bible-asc' ? 'A→Z' : state.sortOrder === 'bible-desc' ? 'Z→A' : 'Shuffle'}
               </span>
             </button>
             
