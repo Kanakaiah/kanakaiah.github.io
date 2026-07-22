@@ -127,6 +127,235 @@ export const NT_STUDY_GUIDES = [
     ]
   },
   {
+    id: "armor-of-god",
+    title: "The Armor of God Deep Dive",
+    subtitle: "Ephesians 6:10-18 spiritual warfare reference",
+    icon: "🛡️",
+    type: "reference",
+    category: "Thematic Guides",
+    sections: [
+      {
+        heading: "Context: Standing Firm in Spiritual Battle",
+        description: "Paul wrote Ephesians from Roman imprisonment. Bound to a Roman legionnaire, he drew a vivid spiritual analogy between physical armor and the believer's spiritual equipment."
+      },
+      {
+        heading: "The Six Pieces of Spiritual Armor",
+        table: {
+          headers: ["Piece of Armor", "Greek Term", "Spiritual Meaning", "Scripture Anchor"],
+          rows: [
+            ["Belt of Truth", "Alētheia", "Integrity, sincerity, and objective biblical truth that holds everything together", "Eph. 6:14a"],
+            ["Breastplate of Righteousness", "Dikaiosynē", "Imputed righteousness of Christ guarding the heart and vital organs against accusation", "Eph. 6:14b"],
+            ["Shoes of the Gospel of Peace", "Hetoimasia", "Firm footing and readiness to proclaim peace with God wherever sent", "Eph. 6:15"],
+            ["Shield of Faith", "Thyreos", "Large door-like shield extinguishing flaming darts of doubt, temptation, and fear", "Eph. 6:16"],
+            ["Helmet of Salvation", "Perikephalaia", "Protection of the mind with the assurance of final redemption and eternal security", "Eph. 6:17a"],
+            ["Sword of the Spirit", "Machaira", "The spoken word of God (Rhēma) — short offensive weapon used in direct combat", "Eph. 6:17b"]
+          ]
+        }
+      },
+      {
+        heading: "The Essential Atmosphere: Prayer",
+        description: "The armor is put on and sustained through persistent, Spirit-led prayer (Eph. 6:18): 'praying at all times in the Spirit, with all prayer and supplication.'"
+      }
+    ]
+  },
+  {
+    id: "soap-method",
+    title: "S.O.A.P. Devotional Method",
+    subtitle: "Scripture, Observation, Application, Prayer",
+    icon: "🧼",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "What is the S.O.A.P. Method?",
+        description: "S.O.A.P. is a simple, practical journaling method designed to help you slow down, meditate on scripture, and apply God's Word daily."
+      },
+      {
+        heading: "The Four Steps",
+        table: {
+          headers: ["Step", "Action", "Guidance"],
+          rows: [
+            ["S — Scripture", "Write it down", "Copy the verse or passage word-for-word in your journal. Writing reinforces memory."],
+            ["O — Observation", "Unpack details", "What stands out? Who is involved? What is the main message or theme?"],
+            ["A — Application", "Make it personal", "How does this apply to your life today? What specific action will you take?"],
+            ["P — Prayer", "Respond to God", "Write a short prayer responding to the text, asking the Holy Spirit for help."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "swedish-method",
+    title: "The Swedish Method",
+    subtitle: "Interactive 3-symbol Bible reading guide",
+    icon: "🇸🇪",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "Origin & Purpose",
+        description: "Developed in Sweden for student groups, this method requires minimal preparation and uses 3 simple symbols to spark engagement with any passage."
+      },
+      {
+        heading: "The Three Symbols",
+        table: {
+          headers: ["Symbol", "Meaning", "What to Record"],
+          rows: [
+            ["💡 Lightbulb", "New Insight", "Something that shines out, strikes you fresh, or teaches something new."],
+            ["❓ Question Mark", "Question or Hard Saying", "Something you don't understand, a difficult doctrine, or a puzzling word."],
+            ["🎯 Target", "Personal Application", "An arrow pointing straight at your heart — something to apply immediately."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "messianic-prophecies",
+    title: "Messianic Prophecies & Fulfillments",
+    subtitle: "Old Testament prediction to New Testament fulfillment",
+    icon: "👑",
+    type: "reference",
+    category: "Memory Chains",
+    sections: [
+      {
+        heading: "Overview",
+        description: "The Old Testament contains over 300 prophecies pointing to Jesus Christ. Memorizing these pairings builds unshakable confidence in the unity and divine inspiration of Scripture."
+      },
+      {
+        heading: "Key Prophetic Pairings",
+        table: {
+          headers: ["Topic", "OT Prophecy", "NT Fulfillment", "Details"],
+          rows: [
+            ["Born in Bethlehem", "Micah 5:2", "Matthew 2:1", "Prophesied 700 years prior to Christ's birth."],
+            ["Born of a Virgin", "Isaiah 7:14", "Matthew 1:22–23", "Immanuel — 'God with us.'"],
+            ["Triumphal Entry on Donkey", "Zechariah 9:9", "Matthew 21:4–5", "King arriving humble and seated on a colt."],
+            ["Betrayed for 30 Silver Pieces", "Zechariah 11:12–13", "Matthew 26:14–15", "Exact price paid to Judas."],
+            ["Hands and Feet Pierced", "Psalm 22:16", "John 20:25, 27", "Written centuries before Roman crucifixion existed."],
+            ["Garments Divided by Lots", "Psalm 22:18", "John 19:23–24", "Soldiers gambled for His seamless tunic."],
+            ["Suffering Servant / Bearing Sin", "Isaiah 53:5", "1 Peter 2:24", "Pierced for our transgressions, crushed for our iniquities."],
+            ["Resurrection from Death", "Psalm 16:10", "Acts 2:27, 31", "His soul not left in Hades, nor flesh seeing corruption."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "hebrew-word-study",
+    title: "10 Key OT Hebrew Words",
+    subtitle: "Original language definitions for deeper study",
+    icon: "📜",
+    type: "reference",
+    category: "Word Studies",
+    sections: [
+      {
+        heading: "Essential Hebrew Vocabulary",
+        description: "Understanding these 10 core Hebrew words unlocks profound theological depth in the Old Testament.",
+        table: {
+          headers: ["Hebrew Word", "Transliteration", "Meaning", "Key Verse"],
+          rows: [
+            ["חֶסֶד", "Hesed", "Covenant loyalty, steadfast love, unbreakable mercy", "Psalm 136:1"],
+            ["שָׁלוֹם", "Shalom", "Wholeness, completeness, harmony, peace", "Isaiah 9:6"],
+            ["אֱמֶת", "Emet", "Truth, firmness, reliability, faithfulness", "Psalm 117:2"],
+            ["רוּחַ", "Ruach", "Spirit, breath, wind, life force", "Genesis 1:2"],
+            ["יִרְאָה", "Yirah", "Reverent awe, holy fear of the Lord", "Proverbs 9:10"],
+            ["קָדוֹשׁ", "Kadosh", "Holy, set apart, sacred, pure", "Isaiah 6:3"],
+            ["כָּבוֹד", "Kavod", "Glory, weightiness, honor, presence", "Exodus 33:18"],
+            ["שָׁמַע", "Shema", "Hear, listen attentively, obey", "Deuteronomy 6:4"],
+            ["תְּשׁוּבָה", "Teshuvah", "Repentance, turning around, returning to God", "Ezekiel 33:11"],
+            ["יְשׁוּעָה", "Yeshuah", "Salvation, deliverance, victory (Root of 'Jesus')", "Isaiah 12:2"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "greek-word-study",
+    title: "10 Key NT Greek Words",
+    subtitle: "Original language definitions for deeper study",
+    icon: "🏛️",
+    type: "reference",
+    category: "Word Studies",
+    sections: [
+      {
+        heading: "Essential Greek Vocabulary",
+        description: "Key New Testament Greek terms that enrich our understanding of doctrine and disciple-making.",
+        table: {
+          headers: ["Greek Word", "Transliteration", "Meaning", "Key Verse"],
+          rows: [
+            ["ἀγάπη", "Agapē", "Unconditional, self-sacrificing, divine love", "1 Corinthians 13:4"],
+            ["χάρις", "Charis", "Grace, unmerited favor, divine strength", "Ephesians 2:8"],
+            ["δικαιοσύνη", "Dikaiosynē", "Righteousness, justice, being right with God", "Matthew 6:33"],
+            ["κοινωνία", "Koinōnia", "Fellowship, deep sharing, joint participation", "Acts 2:42"],
+            ["μετάνοια", "Metanoia", "Repentance, transformation of mind and heart", "Mark 1:15"],
+            ["πίστις", "Pistis", "Faith, trust, active reliance on Christ", "Hebrews 11:1"],
+            ["εὐαγγέλιον", "Euangelion", "Good news, Gospel of victory", "Romans 1:16"],
+            ["ἐκκλησία", "Ekklesia", "Assembly, called-out body, Church", "Matthew 16:18"],
+            ["ὑπομονή", "Hypomonē", "Patient endurance, steadfast perseverance under pressure", "James 1:3"],
+            ["τετέλεσται", "Tetelestai", "It is finished — paid in full!", "John 19:30"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "sermon-on-mount",
+    title: "Sermon on the Mount Architecture",
+    subtitle: "Structural map of Matthew 5-7",
+    icon: "🏔️",
+    type: "reference",
+    category: "Thematic Guides",
+    sections: [
+      {
+        heading: "Kingdom Manifesto",
+        description: "The Sermon on the Mount is Jesus' masterwork on Kingdom ethics, righteousness of the heart, and kingdom citizenship."
+      },
+      {
+        heading: "Structural Breakdown",
+        table: {
+          headers: ["Section", "Chapter/Verses", "Theme & Focus"],
+          rows: [
+            ["The Beatitudes", "Matthew 5:1–12", "Characteristics of blessed Kingdom citizens"],
+            ["Salt & Light", "Matthew 5:13–16", "The believer's influence in the world"],
+            ["Fulfillment of the Law", "Matthew 5:17–48", "Heart righteousness vs. external legalism (6 Antitheses)"],
+            ["Secret Devotion", "Matthew 6:1–18", "Giving, Praying (Lord's Prayer), and Fasting in secret"],
+            ["Treasures & Anxiety", "Matthew 6:19–34", "Singleness of heart, trusting the Father's provision"],
+            ["Judging & Discernment", "Matthew 7:1–12", "Right judgment, Ask-Seek-Knock, Golden Rule"],
+            ["Two Ways & Foundations", "Matthew 7:13–29", "Narrow gate, fruit test, wise builder on the Rock"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "hall-of-faith",
+    title: "The Hall of Faith (Hebrews 11)",
+    subtitle: "Chronological study of OT examples of faith",
+    icon: "🏆",
+    type: "reference",
+    category: "Thematic Guides",
+    sections: [
+      {
+        heading: "Definition of Faith (Hebrews 11:1)",
+        description: "'Now faith is the substance of things hoped for, the evidence of things not seen.'"
+      },
+      {
+        heading: "Heroes of Faith Matrix",
+        table: {
+          headers: ["Hero", "Reference", "Act of Faith", "Memory Lesson"],
+          rows: [
+            ["Abel", "Heb. 11:4", "Offered a more excellent sacrifice", "Faith gives God our best."],
+            ["Enoch", "Heb. 11:5", "Walked with God and pleased Him", "Faith seeks God's presence."],
+            ["Noah", "Heb. 11:7", "Built the ark in holy fear when warned of unseen things", "Faith obeys despite mockery."],
+            ["Abraham", "Heb. 11:8–10", "Obeyed when called to go out without knowing where", "Faith steps into the unknown."],
+            ["Sarah", "Heb. 11:11", "Judged Him faithful who had promised", "Faith trusts God's timing."],
+            ["Moses", "Heb. 11:24–26", "Chose affliction over the fleeting pleasures of sin", "Faith values Christ over treasure."],
+            ["Rahab", "Heb. 11:31", "Received the spies with peace", "Faith takes courageous action."]
+          ]
+        }
+      }
+    ]
+  },
+  {
     id: "evangelists",
     title: "The First Evangelists",
     subtitle: "Who proclaimed Christ first?",
