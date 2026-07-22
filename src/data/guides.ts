@@ -6,6 +6,331 @@ export const NT_STUDY_GUIDES = [
   // =============================
   PREACHERS_GUIDE,
   {
+    id: "hear-method",
+    title: "The H.E.A.R. Journaling Method",
+    subtitle: "Highlight, Explain, Apply, Respond (Robby Gallaty)",
+    icon: "✍️",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "Overview",
+        description: "The H.E.A.R. journaling method promotes intentional reading over speed. It shifts the focus from checking off a reading plan to actively digesting and responding to God's Word."
+      },
+      {
+        heading: "The 4-Step H.E.A.R. Framework",
+        table: {
+          headers: ["Step", "Focus", "Action Required", "Guiding Question"],
+          rows: [
+            ["H — Highlight", "Scripture Selection", "Write down the specific verse, title, and reference.", "Which verse resonated or stood out to you?"],
+            ["E — Explain", "Context & Meaning", "Explain what the passage meant to original readers.", "Why was this written and what is the core truth?"],
+            ["A — Apply", "Personal Relevance", "Connect the truth to your daily life, thoughts, or actions.", "How does this truth challenge or encourage me today?"],
+            ["R — Respond", "Action & Prayer", "Write a specific prayer or concrete action step.", "What will I do differently today because of this word?"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "jen-wilkin-5ps",
+    title: "Jen Wilkin’s 5 Ps of Bible Study",
+    subtitle: "Purpose, Perspective, Patience, Process, Prayer",
+    icon: "📚",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "A Mind for God",
+        description: "Jen Wilkin emphasizes studying the Bible with your mind to love God with all your heart. The 5 Ps form a disciplined framework for comprehensive study."
+      },
+      {
+        heading: "The 5 Ps Breakdown",
+        table: {
+          headers: ["P Principle", "Core Concept", "Practical Execution"],
+          rows: [
+            ["1. Purpose", "The Grand Narrative", "Keep the big story of redemption in view (Creation, Fall, Redemption, Restoration)."],
+            ["2. Perspective", "Historical Context", "Answer: Who wrote it? Who received it? When was it written? What cultural era?"],
+            ["3. Patience", "Long-term Commitment", "Commit to staying in a single book over weeks rather than skipping randomly."],
+            ["4. Process", "Inductive Method", "Follow Observation → Interpretation → Application sequentially."],
+            ["5. Prayer", "Spiritual Dependence", "Begin and end study asking the Holy Spirit for illumination and obedience."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "priscilla-listening",
+    title: "Priscilla Shirer's Listening Framework",
+    subtitle: "Discerning God's Voice through Scripture",
+    icon: "👂",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "Relational Scripture Engagement",
+        description: "Focuses on tuning your heart to hear the Holy Spirit's promptings through scripture with a posture of immediate surrender and obedience."
+      },
+      {
+        heading: "The 4 Listening Pillars",
+        table: {
+          headers: ["Pillar", "Description", "Heart Posture"],
+          rows: [
+            ["Position of Stillness", "Creating quiet space free from digital distraction.", "'Speak, Lord, for your servant is listening.' (1 Sam. 3:10)"],
+            ["Examination of Character", "Comparing impressions against God's unchanging nature.", "God's voice never contradicts His written Word or holy character."],
+            ["Surrender of Will", "Committing to obey before even hearing the instruction.", "Yieldedness precedes divine guidance."],
+            ["Proactive Obedience", "Taking immediate action on the light already received.", "Faithful in small promptings leads to greater clarity."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "manuscript-study",
+    title: "The Manuscript Bible Study Method",
+    subtitle: "InterVarsity raw text inductive discovery",
+    icon: "📄",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "Raw Text Unpack",
+        description: "The Manuscript method strips away chapter breaks, verse numbers, subheadings, and footnotes so the reader encounters the text raw — as original hearers did."
+      },
+      {
+        heading: "Observation Color-Coding System",
+        table: {
+          headers: ["Element", "Color / Mark", "Example Focus"],
+          rows: [
+            ["People & Pronouns", "Blue Highlight", "Tracking who is speaking and who is being addressed."],
+            ["Key Repeated Words", "Yellow Highlight", "Identifying central theological themes and emphasis."],
+            ["Contrasts & Comparisons", "Red Underline", "'Light vs. Darkness', 'Flesh vs. Spirit', 'Death vs. Life'."],
+            ["Logical Connectors", "Green Circle & Arrow", "'Therefore', 'Because', 'In order that', 'So then'."],
+            ["Commands & Action Verbs", "Orange Box", "Specific instructions given to the church or believer."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "exegesis-checklist",
+    title: "Historical-Grammatical Exegesis Checklist",
+    subtitle: "Objective rules for contextual interpretation",
+    icon: "🔍",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "What is Exegesis?",
+        description: "Exegesis means 'drawing out' the original meaning of the text. (The opposite is eisegesis — reading your own ideas into the text)."
+      },
+      {
+        heading: "The Exegesis Guardrail Checklist",
+        table: {
+          headers: ["Checklist Layer", "Key Test", "Common Pitfall to Avoid"],
+          rows: [
+            ["1. Genre Check", "Is this Narrative, Poetry, Prophetic, or Epistolary?", "Literalizing poetic metaphors or making narratives normative."],
+            ["2. Historical Setting", "What political/cultural factors were at play?", "Reading 21st-century Western concepts into 1st-century Eastern culture."],
+            ["3. Immediate Context", "What comes immediately before and after?", "Proof-texting a single verse isolated from its paragraph."],
+            ["4. Canonical Context", "How does this harmonize with all of Scripture?", "Formulating doctrine based on an obscure or isolated passage."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "root-word-mapping",
+    title: "Strong's Root-Word & Etymology Mapping",
+    subtitle: "Hebrew & Greek original language research",
+    icon: "🔤",
+    type: "reference",
+    category: "Word Studies",
+    sections: [
+      {
+        heading: "Unlocking Original Language Nuance",
+        description: "Translating ancient languages into English often compresses rich multi-layered terms into a single word. Strong's concordance bridges this gap."
+      },
+      {
+        heading: "Classic Original Language Comparisons",
+        table: {
+          headers: ["English Word", "Original Terms", "Key Distinction"],
+          rows: [
+            ["Love", "Agapē vs. Phileo", "Agapē = unconditional covenant love; Phileo = brotherly affection."],
+            ["Word", "Logos vs. Rhēma", "Logos = the total divine revelation/person; Rhēma = spoken utterance in action."],
+            ["Life", "Bios vs. Zoē", "Bios = physical biological life; Zoē = uncreated divine eternal life."],
+            ["Power", "Dunamis vs. Exousia", "Dunamis = inherent miracle-working power; Exousia = delegated authority."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "bibleproject-genres",
+    title: "The BibleProject Literary Genres",
+    subtitle: "Narrative (43%), Poetry (33%), Discourse (24%)",
+    icon: "🎨",
+    type: "reference",
+    category: "Thematic Guides",
+    sections: [
+      {
+        heading: "Reading Bible Genres According to Their Rules",
+        description: "The Bible is a unified library composed of 3 primary literary styles. Each style requires a specific reading lens."
+      },
+      {
+        heading: "The 3 Primary Genres",
+        table: {
+          headers: ["Genre", "% of Bible", "Key Characteristics", "How to Read"],
+          rows: [
+            ["Narrative", "43%", "Historical stories, character arcs, setting, plot conflict", "Show, don't tell. Look for pattern repetition and moral outcomes."],
+            ["Poetry", "33%", "Metaphor, imagery, Hebrew parallelism (Synonymous/Antithetic)", "Evokes emotion and imagination. Don't read like a technical manual."],
+            ["Discourse", "24%", "Logical arguments, speeches, letters (Epistles), essays", "Track linear logic: Cause & Effect, Premises, and Conclusions."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "redemptive-historical",
+    title: "The Redemptive-Historical Reading Guide",
+    subtitle: "Finding Christ in all 66 books (Luke 24:27)",
+    icon: "✝️",
+    type: "reference",
+    category: "Thematic Guides",
+    sections: [
+      {
+        heading: "Luke 24:27 Lens",
+        description: "'And beginning with Moses and all the Prophets, he interpreted to them in all the Scriptures the things concerning himself.'"
+      },
+      {
+        heading: "How Christ Appears Across Biblical Eras",
+        table: {
+          headers: ["Biblical Era", "OT Shadow / Type", "New Testament Christ Fulfillment"],
+          rows: [
+            ["Law (Torah)", "The Sacrificial Lamb & Tabernacle", "Jesus is the Lamb of God and the true Tabernacle among us."],
+            ["Historical Books", "King David & Joshua (Deliverer)", "Jesus is the true King of Kings and Captain of Salvation."],
+            ["Wisdom & Psalms", "Personified Wisdom & Suffering King", "Jesus is the Wisdom of God (1 Cor. 1:30) and the Risen Messiah."],
+            ["Prophets", "The Suffering Servant & Branch", "Jesus is the wounded healer who satisfies divine justice."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "seven-feasts",
+    title: "The 7 Feasts of Israel & Prophetic Map",
+    subtitle: "Leviticus 23 prophetic redemptive timeline",
+    icon: "🌾",
+    type: "reference",
+    category: "Thematic Guides",
+    sections: [
+      {
+        heading: "God's Prophetic Calendar",
+        description: "The 7 annual feasts given in Leviticus 23 are not only historical Israelite celebrations but an exact prophetic blueprint of Christ's redemption."
+      },
+      {
+        heading: "The 7 Feasts & Fulfillment Pairings",
+        table: {
+          headers: ["Feast", "Season", "OT Historical Context", "NT Prophetic Fulfillment"],
+          rows: [
+            ["1. Passover (Pesach)", "Spring", "Blood of lamb on doorposts in Egypt", "Fulfilled: Christ our Passover lamb slain (1 Cor. 5:7)"],
+            ["2. Unleavened Bread", "Spring", "Purging yeast/sin, hasty departure", "Fulfilled: Christ's sinless body in the tomb"],
+            ["3. Firstfruits", "Spring", "First sheaf of barley harvest offered", "Fulfilled: Christ's resurrection as firstfruits (1 Cor. 15:20)"],
+            ["4. Pentecost (Shavuot)", "Spring", "Giving of Law at Sinai (50 days later)", "Fulfilled: Outpouring of Holy Spirit at Pentecost (Acts 2)"],
+            ["5. Trumpets (Yom Teruah)", "Fall", "Blowing of Shofar, call to awakening", "Prophetic: The Last Trumpet & Return of Christ (1 Thess. 4:16)"],
+            ["6. Day of Atonement", "Fall", "High Priest enters Holy of Holies", "Prophetic: National salvation of Israel & Final Judgment"],
+            ["7. Tabernacle (Sukkot)", "Fall", "Dwelling in booths, God's presence", "Prophetic: Eternal Kingdom & God dwelling with men (Rev. 21:3)"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "five-solas",
+    title: "The 5 Solas of the Reformation",
+    subtitle: "Foundational theological memory pillars",
+    icon: "🏰",
+    type: "reference",
+    category: "Memory Chains",
+    sections: [
+      {
+        heading: "The Reformation Pillars",
+        description: "The 5 Solas summarize the essential truths of salvation and authority recovered during the Protestant Reformation."
+      },
+      {
+        heading: "The 5 Solas Matrix",
+        table: {
+          headers: ["Sola Phrase", "English Meaning", "Theological Anchor", "Scripture Anchor"],
+          rows: [
+            ["Sola Scriptura", "Scripture Alone", "The Bible is the sole infallible rule of faith & practice", "2 Timothy 3:16–17"],
+            ["Sola Fide", "Faith Alone", "Justification is received through faith without human merit", "Romans 3:28"],
+            ["Sola Gratia", "Grace Alone", "Salvation is entirely an unearned gift of divine grace", "Ephesians 2:8–9"],
+            ["Solus Christus", "Christ Alone", "Jesus is the only Mediator between God and humanity", "1 Timothy 2:5"],
+            ["Soli Deo Gloria", "To God's Glory Alone", "All of creation and salvation exists for God's glory alone", "1 Corinthians 10:31"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "navigators-wheel",
+    title: "The Navigators 2:7 Discipleship Wheel",
+    subtitle: "Balanced Christian growth model (Colossians 2:7)",
+    icon: "☸️",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "The Wheel Illustration",
+        description: "Visualizes the essential spiritual disciplines required for a strong, stable, and balanced Christian life."
+      },
+      {
+        heading: "Component Breakdown",
+        table: {
+          headers: ["Wheel Part", "Discipline", "Function", "Key Verse"],
+          rows: [
+            ["The Hub", "Christ the Center", "The source of life and power driving the entire wheel", "2 Corinthians 5:17"],
+            ["Spoke 1", "The Word (Input)", "Feeding on scripture through reading, study, & memory", "2 Timothy 3:16"],
+            ["Spoke 2", "Prayer (Output)", "Communicating with God in worship, request, & thanks", "Philippians 4:6–7"],
+            ["Spoke 3", "Fellowship (Corporate)", "Mutual encouragement in the body of Christ", "Hebrews 10:24–25"],
+            ["Spoke 4", "Witnessing (External)", "Sharing the Gospel with the world", "Romans 1:16"],
+            ["The Rim", "Obedience to Christ", "Translating faith into daily visible action", "John 14:21"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "names-of-god",
+    title: "The Names of God & Their Meanings",
+    subtitle: "Hebrew & Greek titles revealing God's nature",
+    icon: "👑",
+    type: "reference",
+    category: "Word Studies",
+    sections: [
+      {
+        heading: "Progressive Revelation of God's Names",
+        description: "Each name of God in Scripture was revealed in a moment of human need, revealing a unique attribute of His character."
+      },
+      {
+        heading: "10 Essential Names of God",
+        table: {
+          headers: ["Hebrew Name", "Meaning", "Context / Reveal Moment", "Key Scripture"],
+          rows: [
+            ["Elohim", "The Strong Creator God", "Creation of the heavens and earth", "Genesis 1:1"],
+            ["Yahweh (YHWH)", "I AM THAT I AM (Self-Existent)", "Moses at the Burning Bush", "Exodus 3:14"],
+            ["El Shaddai", "God Almighty / All-Sufficient", "Covenant with Abraham", "Genesis 17:1"],
+            ["Yahweh Jireh", "The LORD Will Provide", "Abraham and Isaac on Mt. Moriah", "Genesis 22:14"],
+            ["Yahweh Nissi", "The LORD Is My Banner", "Victory over Amalekites", "Exodus 17:15"],
+            ["Yahweh Shalom", "The LORD Is Peace", "Gideon's altar in fear of judgment", "Judges 6:24"],
+            ["Yahweh Rapha", "The LORD Who Heals", "Bitter waters of Marah sweetened", "Exodus 15:26"],
+            ["Yahweh Raah", "The LORD My Shepherd", "David's psalm of protection", "Psalm 23:1"],
+            ["El Roi", "The God Who Sees Me", "Hagar in the wilderness of despair", "Genesis 16:13"],
+            ["Immanuel", "God With Us", "Prophecy of the Incarnate Christ", "Isaiah 7:14 / Matt. 1:23"]
+          ]
+        }
+      }
+    ]
+  },
+  {
     id: "roman-road",
     title: "The Roman Road to Salvation",
     subtitle: "A step-by-step memory path through the Gospel in Romans",
