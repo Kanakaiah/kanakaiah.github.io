@@ -6,6 +6,383 @@ export const NT_STUDY_GUIDES = [
   // =============================
   PREACHERS_GUIDE,
   {
+    id: "guide-genesis",
+    title: "Genesis: Beginnings & Covenants",
+    subtitle: "Creation, Fall, Patriarchs, & Covenant Promises",
+    icon: "🌱",
+    type: "reference",
+    category: "Book Studies",
+    sections: [
+      {
+        heading: "Overview & Structure",
+        description: "Genesis ('Origins') lays the foundation for the entire Bible. It details Creation, the Fall, the Flood, Babel, and God's covenant selection of Abraham, Isaac, Jacob, and Joseph."
+      },
+      {
+        heading: "Key Theological Themes & Anchors",
+        table: {
+          headers: ["Section", "Key Verses", "Core Theme", "Christ Connection"],
+          rows: [
+            ["Creation (Ch. 1-2)", "Gen. 1:1, 1:27", "God creates order, beauty, and humanity in His image", "Christ as Creator (Col. 1:16)"],
+            ["The Fall (Ch. 3)", "Gen. 3:15", "Sin enters; Protoevangelium (first Gospel promise)", "Offspring of woman bruises serpent's head"],
+            ["Noahic Covenant (Ch. 6-9)", "Gen. 8:22, 9:13", "God judges global evil; preserves a remnant through grace", "Ark as type of salvation in Christ"],
+            ["Abrahamic Covenant (Ch. 12-25)", "Gen. 12:1-3, 15:6", "Unconditional covenant of Land, Seed, and Blessing to nations", "Counted righteous by faith"],
+            ["Joseph's Providence (Ch. 37-50)", "Gen. 50:20", "Sovereignty of God turning human evil into redemptive good", "Joseph preserved Israel to protect the Messiah's line"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-john-gospel",
+    title: "Gospel of John: 7 Signs & 7 I AMs",
+    subtitle: "High Christology & belief unto eternal life",
+    icon: "🦅",
+    type: "reference",
+    category: "Book Studies",
+    sections: [
+      {
+        heading: "Purpose Statement (John 20:30-31)",
+        description: "Written specifically so that 'you may believe that Jesus is the Christ, the Son of God, and that by believing you may have life in his name.'"
+      },
+      {
+        heading: "The 7 Miraculous Signs & 7 'I AM' Declarations",
+        table: {
+          headers: ["Sign / Event", "Reference", "I AM Statement", "Theological Reveal"],
+          rows: [
+            ["Water to Wine", "John 2:1-11", "I AM the True Vine (15:1)", "Jesus surpasses Jewish ritual; reveals new covenant glory"],
+            ["Healing Royal Son", "John 4:46-54", "I AM the Way, Truth, Life (14:6)", "Sovereign word spoken over distance; faith without sight"],
+            ["Bethesda Paralytic", "John 5:1-15", "I AM the Resurrection & Life (11:25)", "Jesus works on Sabbath; equal authority with the Father"],
+            ["Feeding 5,000", "John 6:1-14", "I AM the Bread of Life (6:35)", "True Manna from Heaven; satisfies eternal spiritual hunger"],
+            ["Walking on Water", "John 6:16-21", "I AM the Light of the World (8:12)", "Divine 'Egō Eimi' over chaotic waters; pillar of fire"],
+            ["Man Born Blind", "John 9:1-7", "I AM the Good Shepherd (10:11)", "Spiritual sight given to humble; judgment on Pharisees"],
+            ["Raising Lazarus", "John 11:1-44", "I AM the Door / Gate (10:7)", "Climactic sign proving power over death itself"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-romans",
+    title: "Romans: Gospel Foundations",
+    subtitle: "Systematic Paul's magnum opus on Salvation",
+    icon: "🏛️",
+    type: "reference",
+    category: "Book Studies",
+    sections: [
+      {
+        heading: "Thematic Outline of Romans",
+        description: "Paul presents the most thorough systematic exposition of the Gospel in Scripture, moving from universal condemnation to glorious application."
+      },
+      {
+        heading: "5-Part Outline of Romans",
+        table: {
+          headers: ["Part", "Chapters", "Core Theme", "Key Anchor Verses"],
+          rows: [
+            ["1. Condemnation", "Rom. 1:18 - 3:20", "Universal depravity; Jew and Gentile alike under sin", "Rom. 3:23"],
+            ["2. Justification", "Rom. 3:21 - 5:21", "Declared righteous by faith alone in Christ's propitiation", "Rom. 3:24, 5:1, 5:8"],
+            ["3. Sanctification", "Rom. 6:1 - 8:39", "Dead to sin, alive in the Spirit, no condemnation", "Rom. 6:23, 8:1, 8:28"],
+            ["4. Sovereign Choice", "Rom. 9:1 - 11:36", "God's covenant faithfulness to Israel & Gentiles", "Rom. 10:9, 11:33-36"],
+            ["5. Practical Duty", "Rom. 12:1 - 16:27", "Living sacrifices, unity, civic duty, personal love", "Rom. 12:1-2, 13:14"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-revelation",
+    title: "Revelation: Imagery & 7 Churches",
+    subtitle: "Eschatological hope & Christ's final victory",
+    icon: "🎺",
+    type: "reference",
+    category: "Book Studies",
+    sections: [
+      {
+        heading: "Reading Apocalyptic Prophecy",
+        description: "Revelation is not a book of fear, but an unveiling of Jesus Christ as the exalted, victorious King who makes all things new."
+      },
+      {
+        heading: "Key Structural Breakdown",
+        table: {
+          headers: ["Section", "Reference", "Vision & Symbolism", "Believer's Hope"],
+          rows: [
+            ["Letters to 7 Churches", "Rev. 2-3", "Exhortation to Ephesus, Smyrna, Pergamum, Thyatira, Sardis, Philadelphia, Laodicea", "Overcoming through endurance and loyalty"],
+            ["Heavenly Throne Room", "Rev. 4-5", "The Lion of Judah who is the Slain Lamb holding the 7-sealed scroll", "Christ alone is worthy to open destiny"],
+            ["Judgments Unsealed", "Rev. 6-16", "7 Seals, 7 Trumpets, 7 Bowls of divine wrath against systemic evil", "God's justice vindicates martyrs"],
+            ["Fall of Babylon & Beast", "Rev. 17-19", "Destruction of corrupt worldly powers & Marriage Supper of the Lamb", "The Rider on the White Horse reigns supreme"],
+            ["New Creation", "Rev. 20-22", "New Heavens, New Earth, New Jerusalem; God dwells with man forever", "No more tears, pain, or curse (Rev. 21:4)"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-james",
+    title: "James: Faith in Action",
+    subtitle: "Practical wisdom & authentic Christian living",
+    icon: "💎",
+    type: "reference",
+    category: "Book Studies",
+    sections: [
+      {
+        heading: "Proverbs of the New Testament",
+        description: "James writes to scattered believers, challenging them to demonstrate their saving faith through practical, visible obedience."
+      },
+      {
+        heading: "5 Tests of Authentic Faith",
+        table: {
+          headers: ["Test", "Reference", "Core Exhortation", "Practical Application"],
+          rows: [
+            ["1. Test of Trials", "James 1:2-12", "Count trials as joy; let patience finish its work", "Ask God for wisdom in difficulty"],
+            ["2. Test of the Word", "James 1:22-27", "Be doers of the Word, not hearers only deceiving yourselves", "Care for orphans/widows; bridle tongue"],
+            ["3. Test of Partiality", "James 2:1-13", "Do not show favoritism to the wealthy or despise the poor", "Fulfill the royal law of love"],
+            ["4. Test of Works", "James 2:14-26", "Faith without works is dead; demon-faith vs. Abrahamic faith", "Faith is demonstrated by action"],
+            ["5. Test of Speech", "James 3:1-12", "The tongue is a small fire that defiles the whole body", "Seek wisdom from above (pure, peaceable)"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-anxiety-peace",
+    title: "Overcoming Anxiety & Finding Peace",
+    subtitle: "Biblical emotional reframing in Philippians & Psalms",
+    icon: "🕊️",
+    type: "reference",
+    category: "Topical Studies",
+    sections: [
+      {
+        heading: "Divine Peace in a Chaotic World",
+        description: "Scripture does not dismiss emotional pain; it provides a roadmap from mental distress to supernatural peace through cognitive reframing and prayer."
+      },
+      {
+        heading: "4-Step Prescription for Peace (Philippians 4 & Psalms)",
+        table: {
+          headers: ["Step", "Scripture Anchor", "Mindset Shift", "Actionable Habit"],
+          rows: [
+            ["1. Rejoice & Release", "Phil. 4:4-5", "Shift focus from temporary circumstances to God's presence", "Practice daily gratitude and gentleness"],
+            ["2. Turn Worry to Prayer", "Phil. 4:6", "Be anxious for nothing; present requests with thanksgiving", "Trade anxious thoughts for specific prayer"],
+            ["3. Guard the Mind", "Phil. 4:7-8", "Meditate on what is true, honorable, pure, lovely, & commendable", "Filter out toxic thoughts; dwell on truth"],
+            ["4. Anchor in Refuge", "Ps. 46:1-3, 139:23", "God is our refuge and strength, a very present help in trouble", "'Be still, and know that I am God'"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-spiritual-warfare",
+    title: "Spiritual Warfare & Standing Firm",
+    subtitle: "Ephesians 6 & 1 Peter strategic spiritual defence",
+    icon: "🗡️",
+    type: "reference",
+    category: "Topical Studies",
+    sections: [
+      {
+        heading: "Unseen Realm Warfare",
+        description: "Believers do not wrestle against flesh and blood, but against spiritual forces of wickedness. Victory is claimed by standing firm in Christ's armor."
+      },
+      {
+        heading: "Armor of God & Counter-Enemy Strategies",
+        table: {
+          headers: ["Enemy Attack", "Armor Piece", "Scripture Anchor", "Defensive / Offensive Strategy"],
+          rows: [
+            ["Deception & Lies", "Belt of Truth", "Eph. 6:14a", "Stand in objective Biblical truth"],
+            ["Accusation & Guilt", "Breastplate of Righteousness", "Eph. 6:14b", "Rely on Christ's imputed righteousness"],
+            ["Instability & Fear", "Shoes of Gospel of Peace", "Eph. 6:15", "Walk in readiness and peace with God"],
+            ["Doubt & Fiery Darts", "Shield of Faith", "Eph. 6:16", "Extinguish temptations with active trust"],
+            ["Mental Oppression", "Helmet of Salvation", "Eph. 6:17a", "Guard mind with eternal security in Christ"],
+            ["Direct Assault", "Sword of the Spirit", "Eph. 6:17b", "Speak the written Word of God (Rhēma)"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-suffering-sovereignty",
+    title: "Suffering, Trial & God's Sovereignty",
+    subtitle: "Job, 2 Corinthians 1, & Romans 8 comfort",
+    icon: "🔥",
+    type: "reference",
+    category: "Topical Studies",
+    sections: [
+      {
+        heading: "A Theology of the Valley",
+        description: "Suffering is not a sign of God's absence or abandonment. In Christ, pain is refined into glory, producing eternal hope and empathy."
+      },
+      {
+        heading: "3 Lenses on Suffering in Scripture",
+        table: {
+          headers: ["Book Focus", "Key Insight", "Anchor Verse", "Comfort Principle"],
+          rows: [
+            ["Job", "God's sovereignty transcends human understanding", "Job 42:2", "Trust God's character when you cannot trace His hand."],
+            ["2 Corinthians 1", "Comfort received in trial equips us to comfort others", "2 Cor. 1:3-4", "Your dark valley becomes a ministry to others."],
+            ["Romans 8", "All things work together for good for those who love God", "Rom. 8:28, 38-39", "Present suffering cannot compare to future glory."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-wisdom-living",
+    title: "Wisdom for Daily Living & Relationships",
+    subtitle: "Proverbs & James practical life manual",
+    icon: "🦉",
+    type: "reference",
+    category: "Topical Studies",
+    sections: [
+      {
+        heading: "Skillful Living in a Broken World",
+        description: "Biblical wisdom is not abstract philosophy — it is 'skill for living' under the lordship of God in everyday decisions."
+      },
+      {
+        heading: "Key Practical Life Pillars in Proverbs",
+        table: {
+          headers: ["Life Domain", "Proverbs Reference", "Wisdom Instruction", "Foolish Alternative"],
+          rows: [
+            ["Speech", "Prov. 15:1, 18:21", "Soft answer turns away wrath; power of life & death in tongue", "Harsh words stir up anger; reckless speech wounds."],
+            ["Trust vs Self", "Prov. 3:5-6", "Trust in the LORD with all your heart; lean not on own understanding", "Relying on self-sufficiency leads to ruin."],
+            ["Finances", "Prov. 3:9-10, 22:7", "Honor the LORD with wealth; generous giving", "Debt enslaves; greed leads to poverty."],
+            ["Friendships", "Prov. 27:17, 13:20", "Iron sharpens iron; walk with wise and become wise", "Companion of fools suffers harm."]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-prayer-intercession",
+    title: "Prayer & Intercession",
+    subtitle: "The Lord's Prayer & Psalms of Ascent (120-134)",
+    icon: "🙏",
+    type: "reference",
+    category: "Topical Studies",
+    sections: [
+      {
+        heading: "The Pattern of True Prayer",
+        description: "Jesus gave the Lord's Prayer not as a mechanical repetition, but as a structural blueprint for dynamic communion with the Father."
+      },
+      {
+        heading: "Lord's Prayer Matrix (Matthew 6:9-13)",
+        table: {
+          headers: ["Petition", "Focus Area", "Spiritual Alignment"],
+          rows: [
+            ["Our Father in heaven, hallowed be Your name", "Adoration & Worship", "Recognizing God's holiness and intimate Fatherhood"],
+            ["Your kingdom come, Your will be done", "Submission & Alignment", "Surrendering personal agendas to divine sovereignty"],
+            ["Give us this day our daily bread", "Dependence & Petition", "Trusting God for physical and spiritual provision"],
+            ["Forgive us our debts as we forgive", "Confession & Mercy", "Receiving grace and extending forgiveness to others"],
+            ["Lead us not into temptation, deliver from evil", "Protection & Warfare", "Seeking divine defense against spiritual traps"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-gospel-harmony",
+    title: "Harmony of the Four Gospels Timeline",
+    subtitle: "Chronological Life of Christ (Matt, Mark, Luke, John)",
+    icon: "📜",
+    type: "reference",
+    category: "Historical Timelines",
+    sections: [
+      {
+        heading: "The Fourfold Gospel Narrative",
+        description: "Synchronizing Matthew (King), Mark (Servant), Luke (Son of Man), and John (Son of God) into one unified chronological timeline."
+      },
+      {
+        heading: "Chronological Phases of Christ's Ministry",
+        table: {
+          headers: ["Phase", "Approx Period", "Key Events", "Primary Location"],
+          rows: [
+            ["1. Early Life & Preparation", "4 BC - AD 26", "Birth in Bethlehem, Baptism by John, 40-Day Wilderness Temptation", "Bethlehem, Nazareth, Jordan River"],
+            ["2. Early Judean Ministry", "AD 26 - 27", "First cleansing of Temple, Nicodemus, Samaritan Woman at Well", "Jerusalem, Samaria"],
+            ["3. Great Galilean Ministry", "AD 27 - 29", "Sermon on Mount, calling 12 Disciples, parables, feeding 5,000", "Galilee, Capernaum"],
+            ["4. Withdrawal & Training", "AD 29", "Syrophoenician woman, Peter's confession, Transfiguration", "Tyre, Caesarea Philippi"],
+            ["5. Final Judean & Peraean", "AD 29 - 30", "Raising Lazarus, Good Samaritan parable, Zacchaeus", "Judea, Peraea, Bethany"],
+            ["6. Passion Week & Resurrection", "AD 30", "Triumphal Entry, Upper Room, Gethsemane, Trial, Cross, Resurrection", "Jerusalem, Golgotha, Garden Tomb"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-kings-prophets",
+    title: "Kings & Prophets Chronology Map",
+    subtitle: "Divided Kingdom (Israel & Judah) & Prophetic Alignment",
+    icon: "🗺️",
+    type: "reference",
+    category: "Historical Timelines",
+    sections: [
+      {
+        heading: "Understanding Old Testament History",
+        description: "After Solomon, Israel split into the Northern Kingdom (Israel - 10 tribes) and Southern Kingdom (Judah - 2 tribes). Prophets were sent to warn both."
+      },
+      {
+        heading: "Divided Kingdom & Prophetic Matrix",
+        table: {
+          headers: ["Kingdom", "Capital", "First & Key Kings", "Ministering Prophets", "Fate / Exile"],
+          rows: [
+            ["Northern Kingdom (Israel)", "Samaria", "Jeroboam I, Ahab, Jehu, Jeroboam II", "Elijah, Elisha, Amos, Hosea", "Conquered by Assyria (722 BC)"],
+            ["Southern Kingdom (Judah)", "Jerusalem", "Rehoboam, Asa, Jehoshaphat, Hezekiah, Josiah", "Isaiah, Jeremiah, Micah, Zephaniah, Habakkuk", "Exiled to Babylon (586 BC)"],
+            ["Exilic & Post-Exilic Era", "Babylon / Jerusalem", "Zerubbabel, Nehemiah (Governors)", "Daniel, Ezekiel (Exile); Haggai, Zechariah, Malachi (Return)", "Temple Rebuilt (516 BC)"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-pauls-journeys",
+    title: "Paul's Missionary Journeys & Epistles Map",
+    subtitle: "Acts 13-28 timeline matching Paul's letters to locations",
+    icon: "⛵",
+    type: "reference",
+    category: "Historical Timelines",
+    sections: [
+      {
+        heading: "The Expansion of the Early Church",
+        description: "Tracking Paul's three church-planting journeys and Roman imprisonment in Acts alongside the writing dates of his 13 Epistles."
+      },
+      {
+        heading: "Journeys & Letter Writing Timeline",
+        table: {
+          headers: ["Journey / Phase", "Acts Coverage", "Key Cities Visited", "Epistles Written During This Era"],
+          rows: [
+            ["1st Missionary Journey", "Acts 13-14", "Cyprus, Antioch of Pisidia, Iconium, Lystra, Derbe", "Galatians (c. AD 48)"],
+            ["2nd Missionary Journey", "Acts 15:36 - 18:22", "Philippi, Thessalonica, Berea, Athens, Corinth", "1 & 2 Thessalonians (from Corinth c. AD 51)"],
+            ["3rd Missionary Journey", "Acts 18:23 - 21:17", "Ephesus (3 yrs), Macedonia, Corinth", "1 & 2 Corinthians, Romans (from Corinth c. AD 57)"],
+            ["First Roman Imprisonment", "Acts 28:16-31", "Rome (house arrest)", "Prison Epistles: Ephesians, Philippians, Colossians, Philemon"],
+            ["Final Travel & 2nd Arrest", "Post-Acts", "Crete, Nicopolis, Rome (Dungeon)", "Pastoral Epistles: 1 & 2 Timothy, Titus (c. AD 64-67)"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "guide-tabernacle-symbolism",
+    title: "The Tabernacle & Temple Architecture Symbolism",
+    subtitle: "Exodus 25-40 & Hebrews fulfillment matrix",
+    icon: "⛺",
+    type: "reference",
+    category: "Historical Timelines",
+    sections: [
+      {
+        heading: "God's Dwelling Place",
+        description: "The Tabernacle blueprint given to Moses on Mount Sinai is an earthly shadow pointing directly to the person and work of Jesus Christ."
+      },
+      {
+        heading: "Tabernacle Furniture & Christ Fulfillment",
+        table: {
+          headers: ["Location", "Furniture / Item", "Old Testament Function", "New Testament Christ Fulfillment"],
+          rows: [
+            ["Outer Court", "Brazen Altar", "Animal blood sacrifices for sin atonement", "Christ's supreme sacrifice on the Cross (Heb. 9:12)"],
+            ["Outer Court", "Bronze Laver", "Priestly cleansing before entering God's presence", "Washing of regeneration & Word cleansing (Eph. 5:26)"],
+            ["Holy Place", "Golden Lampstand (Menorah)", "Continuous light in the holy tent", "Jesus: 'I am the Light of the World' (John 8:12)"],
+            ["Holy Place", "Table of Showbread", "12 loaves representing the 12 tribes before God", "Jesus: 'I am the Bread of Life' (John 6:35)"],
+            ["Holy Place", "Altar of Incense", "Fragrant incense symbolizing rising prayers", "Christ's perpetual intercession for us (Heb. 7:25)"],
+            ["Holy of Holies", "Ark of Covenant & Mercy Seat", "Throne of God where High Priest sprinkled blood once a year", "Jesus is our Propitiation/Mercy Seat (Rom. 3:25)"]
+          ]
+        }
+      }
+    ]
+  },
+  {
     id: "hear-method",
     title: "The H.E.A.R. Journaling Method",
     subtitle: "Highlight, Explain, Apply, Respond (Robby Gallaty)",
