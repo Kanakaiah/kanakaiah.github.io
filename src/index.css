@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-
 @layer base {
   :root {
     color-scheme: dark;
@@ -20,6 +19,7 @@
     --glass-bg-hover: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-border-hover: rgba(255, 255, 255, 0.15);
+    
     --card-bg: #09090b;
     --card-bg-elevated: #18181b;
     --card-border: #27272a;
@@ -35,7 +35,7 @@
   [data-theme="white"] {
     color-scheme: light;
     --bg-color: #ffffff;
-    --text-primary: #000000;
+    --text-primary: #09090b;
     --text-secondary: #52525b;
     --text-muted: #a1a1aa;
     
@@ -49,10 +49,11 @@
     --glass-bg-hover: rgba(0, 0, 0, 0.06);
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-border-hover: rgba(0, 0, 0, 0.15);
-    --card-bg: #f4f4f5;
+    
+    --card-bg: #fdfdfd;
     --card-bg-elevated: #ffffff;
     --card-border: #e4e4e7;
-    --card-hover: #fafafa;
+    --card-hover: #f4f4f5;
 
     --bionic-1: #b91c1c;
     --bionic-2: #1d4ed8;
@@ -63,10 +64,10 @@
 
   [data-theme="dark"] {
     color-scheme: dark;
-    --bg-color: #1a1a2e;
-    --text-primary: #e4e4e7;
-    --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
+    --bg-color: #0f172a;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
     
     --accent: #3b82f6;
     --accent-hover: #2563eb;
@@ -74,14 +75,15 @@
     --accent-glow: rgba(59, 130, 246, 0.15);
     --accent-glow-strong: rgba(59, 130, 246, 0.3);
 
-    --glass-bg: rgba(255, 255, 255, 0.06);
-    --glass-bg-hover: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg-hover: rgba(255, 255, 255, 0.08);
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-border-hover: rgba(255, 255, 255, 0.15);
-    --card-bg: #16213e;
-    --card-bg-elevated: #1e2a4a;
-    --card-border: #2a3a5c;
-    --card-hover: #1e2a4a;
+    
+    --card-bg: #1e293b;
+    --card-bg-elevated: #334155;
+    --card-border: #334155;
+    --card-hover: #334155;
 
     --bionic-1: #ef4444;
     --bionic-2: #3b82f6;
@@ -92,45 +94,38 @@
 
   [data-theme="sepia"] {
     color-scheme: light;
-    --bg-color: #f5f0e8;
-    --text-primary: #3d2e1f;
-    --text-secondary: #5c4535;
-    --text-muted: #7a6654;
+    --bg-color: #fbf0d9;
+    --text-primary: #5c4a3d;
+    --text-secondary: #8c7a6b;
+    --text-muted: #a69b8f;
     
-    --accent: #8b6914;
-    --accent-hover: #6b4f0f;
-    --accent-light: #b8860b;
-    --accent-glow: rgba(139, 105, 20, 0.12);
-    --accent-glow-strong: rgba(139, 105, 20, 0.25);
+    --accent: #b58900;
+    --accent-hover: #9c7600;
+    --accent-light: #d6a848;
+    --accent-glow: rgba(181, 137, 0, 0.12);
+    --accent-glow-strong: rgba(181, 137, 0, 0.25);
 
-    --glass-bg: rgba(139, 105, 20, 0.04);
-    --glass-bg-hover: rgba(139, 105, 20, 0.08);
-    --glass-border: rgba(139, 105, 20, 0.1);
-    --glass-border-hover: rgba(139, 105, 20, 0.18);
-    --card-bg: #ede6d8;
-    --card-bg-elevated: #f5f0e8;
-    --card-border: #d4c9b5;
-    --card-hover: #f0ead9;
+    --glass-bg: rgba(181, 137, 0, 0.05);
+    --glass-bg-hover: rgba(181, 137, 0, 0.08);
+    --glass-border: rgba(181, 137, 0, 0.15);
+    --glass-border-hover: rgba(181, 137, 0, 0.25);
+    
+    --card-bg: #f4e8d1;
+    --card-bg-elevated: #fdf6e3;
+    --card-border: #e8dcc3;
+    --card-hover: #eee1c5;
 
-    --bionic-1: #8b3a3a;
-    --bionic-2: #4a6741;
-    --bionic-3: #6b5744;
-    --bionic-4: #8b6914;
-    --bionic-5: #5b4a8a;
+    --bionic-1: #dc322f;
+    --bionic-2: #268bd2;
+    --bionic-3: #859900;
+    --bionic-4: #b58900;
+    --bionic-5: #6c71c4;
   }
 
   :root {
-
     --font-primary: 'Inter', system-ui, sans-serif;
     --font-heading: 'Outfit', system-ui, sans-serif;
-
     --font-scale: 1;
-    
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
   }
 }
 
@@ -138,6 +133,10 @@ html, body {
   overscroll-behavior: none;
   touch-action: pan-x pan-y;
   -webkit-overflow-scrolling: touch;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @supports (font: -apple-system-body) {
@@ -147,15 +146,11 @@ html, body {
   }
 }
 
-body {
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-}
-
 /* Select-none only on interactive/navigation elements, not globally */
-nav, button, [role="button"] {
+nav, button, [role="button"], a {
   user-select: none;
   -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 select option {
@@ -183,12 +178,12 @@ select option {
 
 /* Toast exit animation */
 @keyframes toastExit {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(8px); }
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(12px) scale(0.95); }
 }
 
 .toast-exit {
-  animation: toastExit 0.25s ease-in forwards;
+  animation: toastExit 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* Drawer slide-out animation */
@@ -207,8 +202,25 @@ select option {
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
+  height: 4px;
   background: var(--accent);
   z-index: 100;
   transition: width 0.15s ease-out;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Base scrollbar styling for a cleaner look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--glass-border-hover);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }

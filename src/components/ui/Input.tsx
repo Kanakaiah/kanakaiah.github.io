@@ -20,10 +20,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={`
-            w-full h-12 px-4 rounded-xl bg-background border
-            focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent
-            transition-all duration-200 text-primary placeholder:text-muted
-            ${error ? 'border-red-500 focus:ring-red-500' : 'border-card-border'}
+            w-full h-14 px-4 rounded-2xl bg-card border shadow-sm
+            focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent
+            transition-all duration-300 text-primary placeholder:text-muted/60
+            ${error ? 'border-red-500 focus:ring-red-500' : 'border-card-border hover:border-card-border-hover'}
             ${className}
           `}
           {...props}

@@ -170,31 +170,36 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full pt-1 pb-10">
+    <div className="flex flex-col gap-8 max-w-2xl mx-auto w-full pt-2 pb-10 px-2">
+      {/* Header */}
+      <div className="text-center mb-2">
+        <h2 className="text-3xl font-heading font-bold text-primary tracking-tight mb-2">Add New Verses</h2>
+        <p className="text-secondary text-sm">Grow your library by searching or adding verses manually.</p>
+      </div>
 
       {/* Mode Selection Buttons */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 bg-card-elevated p-2 rounded-[2rem] border border-card-border shadow-sm">
         <button
           onClick={() => setActiveTab('manual')}
-          className={`flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border-2 transition-all ${
+          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-[1.5rem] transition-all duration-300 ${
             activeTab === 'manual' 
-              ? 'border-accent bg-accent/5 text-accent-light' 
-              : 'border-card-border bg-card text-muted hover:border-accent/40 hover:text-primary'
+              ? 'bg-accent text-white shadow-lg shadow-accent/30 scale-[1.02]' 
+              : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
           <PenLine className="w-6 h-6 mb-1" />
-          <span className="font-heading font-bold text-lg leading-tight">Manual<br />Entry</span>
+          <span className="font-heading font-bold text-[0.9rem] leading-tight">Manual<br />Entry</span>
         </button>
         <button
           onClick={() => setActiveTab('search')}
-          className={`flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border-2 transition-all ${
+          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-[1.5rem] transition-all duration-300 ${
             activeTab === 'search' 
-              ? 'border-accent bg-accent/5 text-accent-light' 
-              : 'border-card-border bg-card text-muted hover:border-accent/40 hover:text-primary'
+              ? 'bg-accent text-white shadow-lg shadow-accent/30 scale-[1.02]' 
+              : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
           <Search className="w-6 h-6 mb-1" />
-          <span className="font-heading font-bold text-lg leading-tight">Pick from<br />Top Verses</span>
+          <span className="font-heading font-bold text-[0.9rem] leading-tight">Pick from<br />Top Verses</span>
         </button>
       </div>
 

@@ -112,81 +112,81 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Hero: Today's Practice */}
-      <div className="relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-br from-accent/20 to-transparent border border-accent/20 shadow-lg shadow-accent/5">
-        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-          <Target className="w-32 h-32 text-accent" />
+      <div className="relative overflow-hidden rounded-3xl p-8 bg-gradient-to-br from-accent/15 to-transparent border border-accent/10 shadow-2xl shadow-accent/5">
+        <div className="absolute -top-10 -right-10 p-8 opacity-5 pointer-events-none transition-transform duration-1000 hover:rotate-12">
+          <Target className="w-48 h-48 text-accent" />
         </div>
         
         <div className="relative z-10 flex flex-col h-full justify-between">
           <div>
-            <h2 className="text-xs font-bold text-accent tracking-widest uppercase mb-4 flex items-center gap-2">
+            <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase mb-5 flex items-center gap-2">
               <Flame className="w-4 h-4" /> Daily Practice
             </h2>
             
             {stats.dueForReview.length > 0 ? (
-              <>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <h3 className="text-2xl md:text-3xl font-bold font-heading text-primary leading-tight">
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="flex items-baseline gap-3 mb-3">
+                  <h3 className="text-3xl md:text-4xl font-bold font-heading text-primary leading-tight tracking-tight">
                     {stats.dueForReview[0].ref}
                   </h3>
-                  <span className="text-sm font-medium text-accent">+{stats.dueForReview.length - 1} more</span>
+                  <span className="text-sm font-semibold text-accent/80 bg-accent/10 px-2 py-0.5 rounded-full">+{stats.dueForReview.length - 1} more</span>
                 </div>
                 
-                <p className="text-lg md:text-xl text-primary/80 italic mb-8 font-primary line-clamp-2">
+                <p className="text-lg md:text-xl text-primary/70 italic mb-8 font-primary line-clamp-2 leading-relaxed">
                   "{stats.dueForReview[0].text}"
                 </p>
 
                 <button 
                   onClick={() => navigate('/practice?mode=alldue')}
-                  className="w-full sm:w-auto bg-accent hover:bg-accent-hover text-white font-bold py-3.5 px-8 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-accent/20 active:scale-95"
+                  className="w-full sm:w-auto bg-accent hover:bg-accent-hover text-white font-bold py-4 px-8 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 shadow-xl shadow-accent/20 hover:shadow-accent/40 hover:-translate-y-0.5 active:scale-95"
                 >
-                  Start Session <ArrowRight className="w-4 h-4" />
+                  Start Session <ArrowRight className="w-5 h-5" />
                 </button>
-              </>
+              </div>
             ) : (
-              <>
-                <div className="mb-2">
-                  <h3 className="text-2xl md:text-3xl font-bold font-heading text-primary leading-tight">
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="mb-3">
+                  <h3 className="text-3xl md:text-4xl font-bold font-heading text-primary leading-tight tracking-tight">
                     All caught up! 🎉
                   </h3>
                 </div>
-                <p className="text-base text-secondary mb-8 max-w-md">
+                <p className="text-base text-secondary mb-8 max-w-md leading-relaxed">
                   You have no verses due for review right now. Add some new verses or review your memorized ones.
                 </p>
                 <button 
                   onClick={() => navigate('/guides')}
-                  className="w-full sm:w-auto bg-accent hover:bg-accent-hover text-white font-bold py-3.5 px-8 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-accent/20 active:scale-95"
+                  className="w-full sm:w-auto bg-card border border-card-border hover:bg-card-hover text-primary font-bold py-4 px-8 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95"
                 >
-                  Explore Bible <ArrowRight className="w-4 h-4" />
+                  Explore Bible <ArrowRight className="w-5 h-5" />
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-3 md:gap-4">
-        <div className="bg-glass-bg backdrop-blur-sm border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
-          <span className="text-2xl font-bold font-heading text-primary">{stats.memorized}</span>
-          <span className="text-xs text-muted font-medium mt-1">Memorized</span>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-card backdrop-blur-sm border border-card-border rounded-2xl p-5 flex flex-col items-center justify-center hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group cursor-default">
+          <span className="text-3xl font-bold font-heading text-primary group-hover:scale-110 transition-transform">{stats.memorized}</span>
+          <span className="text-xs text-muted font-medium mt-1 uppercase tracking-wider">Memorized</span>
         </div>
-        <div className="bg-glass-bg backdrop-blur-sm border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
-          <span className="text-2xl font-bold font-heading text-primary">{stats.learning}</span>
-          <span className="text-xs text-muted font-medium mt-1">Learning</span>
+        <div className="bg-card backdrop-blur-sm border border-card-border rounded-2xl p-5 flex flex-col items-center justify-center hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group cursor-default">
+          <span className="text-3xl font-bold font-heading text-primary group-hover:scale-110 transition-transform">{stats.learning}</span>
+          <span className="text-xs text-muted font-medium mt-1 uppercase tracking-wider">Learning</span>
         </div>
-        <div className="bg-glass-bg backdrop-blur-sm border border-glass-border rounded-2xl p-4 flex flex-col items-center justify-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
-          <span className="text-2xl font-bold font-heading text-primary">{stats.reviewed}</span>
-          <span className="text-xs text-muted font-medium mt-1">Reviewed</span>
+        <div className="bg-card backdrop-blur-sm border border-card-border rounded-2xl p-5 flex flex-col items-center justify-center hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group cursor-default">
+          <span className="text-3xl font-bold font-heading text-primary group-hover:scale-110 transition-transform">{stats.reviewed}</span>
+          <span className="text-xs text-muted font-medium mt-1 uppercase tracking-wider">Reviewed</span>
         </div>
       </div>
 
       {/* Seeder Banner for Empty Library */}
       {state.verses.length <= 2 && !state.hasSeeded100 && (
-        <div className="bg-gradient-to-br from-purple-500/15 to-purple-500/5 border border-purple-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="text-lg font-bold font-heading text-primary">Get Started Quickly!</h3>
-            <p className="text-sm text-secondary">Load 110 highly popular Bible verses into your library to start practicing immediately.</p>
+        <div className="bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl shadow-purple-500/5 transition-all hover:border-purple-500/30">
+          <div className="flex-1">
+            <h3 className="text-xl font-bold font-heading text-primary mb-2">Get Started Quickly!</h3>
+            <p className="text-sm text-secondary leading-relaxed">Load 110 highly popular Bible verses into your library to start practicing immediately without adding them manually.</p>
           </div>
           <Button 
             onClick={async () => {
@@ -216,7 +216,7 @@ export const Dashboard: React.FC = () => {
                 showToast('Failed to load verses.', 'error');
               }
             }} 
-            className="whitespace-nowrap w-full sm:w-auto shadow-lg shadow-purple-500/20"
+            className="whitespace-nowrap w-full md:w-auto shadow-lg shadow-purple-500/20 bg-purple-600 hover:bg-purple-700 text-white border-none h-12 px-6 rounded-2xl"
           >
             Load 110 Verses ✨
           </Button>
@@ -224,45 +224,45 @@ export const Dashboard: React.FC = () => {
       )}
 
       {/* Library Section */}
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex flex-col gap-6 mt-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold font-heading text-primary">Your Verses</h2>
+          <h2 className="text-2xl font-bold font-heading text-primary tracking-tight">Your Library</h2>
         </div>
 
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+        <div className="relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted transition-colors group-focus-within:text-accent" />
           <Input 
-            className="pl-11 bg-transparent border-card-border placeholder:text-muted rounded-xl text-primary h-12" 
-            placeholder="Search verses by reference..." 
+            className="pl-12 bg-card/50 backdrop-blur-sm border-card-border focus:border-accent/50 focus:bg-card placeholder:text-muted rounded-2xl text-primary h-14 text-base transition-all shadow-sm" 
+            placeholder="Search verses by reference or keyword..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center justify-between gap-2 relative">
-          <div className="flex overflow-x-auto pb-2 -mb-2 scrollbar-hide gap-2 flex-1">
+        <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 relative">
+          <div className="flex overflow-x-auto pb-2 -mb-2 scrollbar-hide gap-2 flex-1 snap-x">
             {(['all', 'review', 'learning', 'memorized'] as FilterType[]).map(filter => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[0.8125rem] font-medium transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-sm font-semibold transition-all snap-center whitespace-nowrap ${
                 activeFilter === filter 
-                  ? 'border-primary text-primary bg-primary/5' 
-                  : 'border-card-border text-muted hover:border-card-hover'
+                  ? 'border-accent text-accent bg-accent/10 shadow-sm shadow-accent/5' 
+                  : 'border-card-border text-muted hover:border-card-hover hover:bg-card-hover hover:text-primary'
               }`}>
                 {filter === 'all' ? 'All verses' : filter === 'review' ? 'Review due' : filter === 'learning' ? 'Learning' : 'Memorized'}
               </button>
             ))}
           </div>
           
-          <div className="relative">
+          <div className="relative shrink-0">
             <button 
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-transparent border border-card-border text-[0.8125rem] font-medium text-primary hover:border-card-hover whitespace-nowrap"
+              className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-card border border-card-border text-sm font-semibold text-primary hover:bg-card-hover hover:border-card-hover transition-all shadow-sm whitespace-nowrap"
             >
-              <ArrowUpDown className="w-3.5 h-3.5 text-muted" />
-              <span className="text-xs">
-                {state.sortOrder === 'smart' ? 'Smart' : state.sortOrder === 'bible-asc' ? 'A→Z' : state.sortOrder === 'bible-desc' ? 'Z→A' : 'Shuffle'}
+              <ArrowUpDown className="w-4 h-4 text-muted" />
+              <span>
+                {state.sortOrder === 'smart' ? 'Smart Sort' : state.sortOrder === 'bible-asc' ? 'A → Z' : state.sortOrder === 'bible-desc' ? 'Z → A' : 'Shuffle'}
               </span>
             </button>
             

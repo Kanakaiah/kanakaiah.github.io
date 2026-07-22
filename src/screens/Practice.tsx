@@ -448,33 +448,33 @@ export const Practice: React.FC = () => {
         
         {/* Navigation & Header */}
         {!isImmersed && (
-          <div className="flex flex-col items-center gap-2 mb-6 mt-2 lg:mt-0">
-            <span className="font-heading font-bold text-primary text-xl tracking-wide">
+          <div className="flex flex-col items-center gap-3 mb-8 mt-4 lg:mt-0">
+            <span className="font-heading font-bold text-primary text-2xl tracking-tight">
               {currentVerse.ref}
             </span>
-            <div className="flex items-center justify-between w-full max-w-xs">
+            <div className="flex items-center justify-between w-full max-w-xs bg-card/50 backdrop-blur-md p-1.5 rounded-full border border-card-border shadow-sm">
               <button 
                 onClick={handlePrev} disabled={activeVerseIndex === 0}
-                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
+                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
               >
-                <ArrowLeft className="w-6 h-6" />
+                <ArrowLeft className="w-5 h-5" />
               </button>
-              <div className="flex-1 h-[1px] bg-card-border mx-2"></div>
+              <div className="flex-1 h-[2px] bg-card-border/50 mx-2 rounded-full"></div>
               <button 
                 onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
-                className="p-2 rounded-full hover:bg-card-elevated disabled:opacity-30 transition-colors text-muted hover:text-primary"
+                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
               >
-                <ArrowRight className="w-6 h-6" />
+                <ArrowRight className="w-5 h-5" />
               </button>
             </div>
-            <span className="font-heading font-bold text-muted text-sm">
-              {activeVerseIndex + 1} / {verses.length}
+            <span className="font-heading font-semibold text-muted text-xs uppercase tracking-widest mt-1">
+              {activeVerseIndex + 1} of {verses.length}
             </span>
           </div>
         )}
 
         {/* Display Board (Workspace) */}
-        <div className={`bg-card border border-card-border rounded-3xl p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-none mb-6'}`}>
+        <div className={`bg-card border border-card-border rounded-[2rem] p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-xl shadow-black/5 mb-8'}`}>
           <div className="flex-1 flex flex-col">
             {isImmersed && (
               <div className="flex items-center justify-center mb-4 min-h-[2rem]">
@@ -490,7 +490,7 @@ export const Practice: React.FC = () => {
             {!isImmersed && activeMode === 'read' && (
               <button 
                 onClick={() => setActiveMode('immersed')} 
-                className="absolute top-4 right-4 lg:top-6 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-accent/10 text-accent hover:bg-accent hover:text-white transition-colors"
+                className="absolute top-4 right-4 lg:top-6 lg:right-6 w-11 h-11 rounded-full flex items-center justify-center bg-accent/10 text-accent hover:bg-accent hover:text-white transition-all shadow-sm active:scale-95"
                 title="Immerse Reading"
               >
                 <Maximize className="w-5 h-5" />
@@ -500,8 +500,8 @@ export const Practice: React.FC = () => {
             {!isImmersed && activeMode !== 'read' && (
               <button 
                 onClick={handleHintClick} 
-                className={`absolute top-4 right-4 lg:top-6 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm
-                  ${hintLevel > 0 ? 'bg-accent text-white' : 'bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover'}`}
+                className={`absolute top-4 right-4 lg:top-6 lg:right-6 w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-sm active:scale-95
+                  ${hintLevel > 0 ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover'}`}
                 title={hintLevel === 0 ? 'Show Hint' : hintLevel < 4 ? 'More Hint' : 'Hide Hint'}
               >
                 <HelpCircle className="w-5 h-5" />
@@ -520,36 +520,36 @@ export const Practice: React.FC = () => {
 
         {/* Inline Scoring Block (Hidden in Read/Immersed) */}
         {!isImmersed && activeMode !== 'read' && (
-          <div className="w-full flex justify-center mb-6">
+          <div className="w-full flex justify-center mb-8">
             {!isEvaluationOpen ? (
               <button 
                 onClick={() => setIsEvaluationOpen(true)} 
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-accent text-white font-bold hover:bg-accent-hover transition-colors shadow-md shadow-accent/20"
+                className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent text-white font-bold text-lg hover:bg-accent-hover transition-all shadow-lg shadow-accent/30 hover:-translate-y-1 active:scale-95"
               >
-                <Check className="w-4 h-4" /> Score My Recall
+                <Check className="w-5 h-5" /> Score My Recall
               </button>
             ) : (
-              <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-2xl p-4 flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200">
-                <p className="text-center font-medium text-secondary text-sm">How well did you remember it?</p>
-                <div className="grid grid-cols-4 gap-2">
-                  <button onClick={() => handleScore(1)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20">
+              <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-[1.5rem] p-5 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200 shadow-xl">
+                <p className="text-center font-semibold text-primary">How well did you remember it?</p>
+                <div className="grid grid-cols-4 gap-3">
+                  <button onClick={() => handleScore(1)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all border border-red-500/20 hover:scale-105 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Blank</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 1).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(2)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20">
+                  <button onClick={() => handleScore(2)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-all border border-orange-500/20 hover:scale-105 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Hard</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 2).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(4)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
+                  <button onClick={() => handleScore(4)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-all border border-blue-500/20 hover:scale-105 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Good</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 4).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(5)} className="py-2.5 flex flex-col items-center justify-center rounded-xl bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20">
+                  <button onClick={() => handleScore(5)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-all border border-green-500/20 hover:scale-105 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Easy</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 5).newSM2.interval)}</span>
                   </button>
                 </div>
-                <button onClick={() => setIsEvaluationOpen(false)} className="text-muted text-xs hover:text-primary mt-1">Cancel</button>
+                <button onClick={() => setIsEvaluationOpen(false)} className="text-muted text-sm font-medium hover:text-primary transition-colors py-1">Cancel</button>
               </div>
             )}
           </div>
@@ -557,9 +557,9 @@ export const Practice: React.FC = () => {
 
         {/* Mode Selector (Moved to Bottom) */}
         {!isImmersed && (
-          <div className="flex flex-col gap-4 pb-4 lg:pb-8">
+          <div className="flex flex-col gap-5 pb-4 lg:pb-8">
             {/* Primary Modes — Always visible as tabs */}
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-3">
               {[
                 { id: 'read', icon: Eye, label: 'Read' },
                 { id: 'eraser', icon: Eraser, label: 'Erase' },
@@ -569,34 +569,33 @@ export const Practice: React.FC = () => {
                 <button
                   key={mode.id}
                   onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  className={`flex flex-col items-center py-3 px-2 rounded-xl border transition-all duration-300 active:scale-95
+                  className={`flex flex-col items-center py-4 px-2 rounded-[1.25rem] border transition-all duration-300 active:scale-95
                     ${activeMode === mode.id 
-                      ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_15px_var(--accent-glow)]' 
-                      : 'bg-card border-card-border hover:bg-card-hover'}`}
+                      ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_20px_var(--accent-glow)] scale-105' 
+                      : 'bg-card border-card-border hover:bg-card-hover hover:border-card-hover'}`}
                 >
-                  <mode.icon className={`w-5 h-5 mb-1.5 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
+                  <mode.icon className={`w-6 h-6 mb-2 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
                   <span className={`text-xs font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
                 </button>
               ))}
             </div>
 
             {/* Secondary Modes — Compact chips */}
-            <div className="flex items-center justify-center gap-3 mt-2 text-sm font-medium text-muted">
-              <span>More:</span>
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-3 mt-2 text-sm font-semibold text-muted bg-card-elevated border border-card-border py-2 px-4 rounded-full w-fit mx-auto shadow-sm">
+              <span className="text-xs uppercase tracking-widest opacity-80">More</span>
+              <div className="w-[1px] h-4 bg-card-border"></div>
+              <div className="flex items-center gap-4">
                 {[
                   { id: 'scramble', label: 'Scramble' },
                   { id: 'speech', label: 'Recite' }
-                ].map((mode, idx) => (
-                  <React.Fragment key={mode.id}>
-                    {idx > 0 && <span>·</span>}
-                    <button
-                      onClick={() => setActiveMode(mode.id as PracticeMode)}
-                      className={`transition-colors ${activeMode === mode.id ? 'text-accent font-bold' : 'hover:text-primary'}`}
-                    >
-                      {mode.label}
-                    </button>
-                  </React.Fragment>
+                ].map((mode) => (
+                  <button
+                    key={mode.id}
+                    onClick={() => setActiveMode(mode.id as PracticeMode)}
+                    className={`transition-all ${activeMode === mode.id ? 'text-accent font-bold scale-105' : 'hover:text-primary'}`}
+                  >
+                    {mode.label}
+                  </button>
                 ))}
               </div>
             </div>

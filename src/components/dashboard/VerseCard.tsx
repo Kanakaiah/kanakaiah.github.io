@@ -79,7 +79,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
 
   return (
     <div 
-      className={`group relative flex flex-row cursor-pointer hover:bg-card-hover transition-all overflow-hidden rounded-xl bg-card border border-card-border border-l-[3px] ${indicatorColor} p-0`}
+      className={`group relative flex flex-col cursor-pointer overflow-hidden rounded-2xl bg-card border border-card-border p-0 shadow-sm transition-all duration-300 hover:shadow-md hover:border-card-border-hover hover:-translate-y-0.5`}
       onClick={() => onClick(verse.id)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -91,15 +91,18 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
       tabIndex={0}
       aria-label={`Verse ${verse.ref}`}
     >
-      <div className="flex-1 p-4 flex flex-col justify-between">
+      <div className={`absolute top-0 bottom-0 left-0 w-1.5 ${indicatorColor} opacity-80`} />
+      
+      <div className="flex-1 p-5 pl-6 flex flex-col justify-between">
         <div>
-          <div className="flex justify-between items-start mb-2">
+          <div className="flex justify-between items-start mb-3">
             <div className="flex items-center gap-2">
-              <h3 className="font-heading font-bold text-base text-primary truncate">{verse.ref}</h3>
-              <span className="px-1.5 py-0.5 rounded text-[0.625rem] font-bold bg-card-elevated text-muted tracking-wider uppercase">{verse.translation}</span>
+              <h3 className="font-heading font-bold text-lg text-primary truncate group-hover:text-accent transition-colors">{verse.ref}</h3>
+              <span className="px-2 py-0.5 rounded-md text-[0.625rem] font-bold bg-card-elevated text-muted tracking-wider uppercase border border-card-border">{verse.translation}</span>
             </div>
             
-            <div className={`px-2.5 py-0.5 rounded-full border text-[0.6875rem] font-medium ${badgeBorder}`}>
+            <div className={`px-2.5 py-1 rounded-full border text-[0.6875rem] font-semibold flex items-center gap-1.5 ${badgeBorder} bg-opacity-10 backdrop-blur-sm`}>
+              <div className="w-1.5 h-1.5 rounded-full bg-current" />
               {statusText}
             </div>
           </div>
@@ -119,9 +122,18 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
           </p>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 text-xs text-muted">
-          {renderDots()}
-          <span className="ml-1">{Math.min(5, verse.sm2?.repetition || 0)} of 5</span>
+        <div className="mt-5 flex items-center justify-between border-t border-card-border/50 pt-4">
+          <div className="flex items-center gap-2 text-xs font-medium text-muted">
+            <div className="flex items-center gap-1 opacity-70">
+              {renderDots()}
+            </div>
+            <span>Mastery: {Math.min(5, verse.sm2?.repetition || 0)}/5</span>
+          </div>
+          {masteryPct >= 100 && (
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#dfab55] bg-[#dfab55]/10 px-2 py-1 rounded-md">
+              Perfect
+            </span>
+          )}
         </div>
       </div>
     </div>

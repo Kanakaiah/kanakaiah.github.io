@@ -10,7 +10,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
-        className={`bg-card border border-card-border rounded-2xl ${isOverflowVisible ? '' : 'overflow-hidden'} ${className}`}
+        className={`bg-card border border-card-border rounded-[1.5rem] shadow-sm transition-all duration-300 ${isOverflowVisible ? '' : 'overflow-hidden'} ${className}`}
         {...props}
       >
         {children}
