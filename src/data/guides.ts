@@ -6,6 +6,127 @@ export const NT_STUDY_GUIDES = [
   // =============================
   PREACHERS_GUIDE,
   {
+    id: "roman-road",
+    title: "The Roman Road to Salvation",
+    subtitle: "A step-by-step memory path through the Gospel in Romans",
+    icon: "✝️",
+    type: "reference",
+    category: "Memory Chains",
+    sections: [
+      {
+        heading: "Overview of the Roman Road",
+        description: "The 'Roman Road' is a classic collection of verses from the Book of Romans that clearly explains the plan of salvation — from human need to God's gift, faith, peace, and eternal assurance."
+      },
+      {
+        heading: "Step 1: The Problem of Sin",
+        description: "Every human being has sinned and fallen short of God's holy standard.",
+        table: {
+          headers: ["Reference", "Verse Text", "Memory Anchor"],
+          rows: [
+            ["Romans 3:23", "For all have sinned and fall short of the glory of God.", "ALL HAVE SINNED"],
+            ["Romans 3:10", "As it is written: 'There is none righteous, no, not one.'", "NONE RIGHTEOUS"]
+          ]
+        }
+      },
+      {
+        heading: "Step 2: The Consequence of Sin & The Gift of God",
+        description: "Sin leads to spiritual death, but God offers eternal life as a free gift.",
+        table: {
+          headers: ["Reference", "Verse Text", "Memory Anchor"],
+          rows: [
+            ["Romans 6:23", "For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.", "WAGES vs. GIFT"]
+          ]
+        }
+      },
+      {
+        heading: "Step 3: God's Love Demonstrated",
+        description: "God didn't wait for us to clean up our act; Christ died while we were still sinners.",
+        table: {
+          headers: ["Reference", "Verse Text", "Memory Anchor"],
+          rows: [
+            ["Romans 5:8", "But God demonstrates His own love toward us, in that while we were still sinners, Christ died for us.", "WHILE WE WERE SINNERS"]
+          ]
+        }
+      },
+      {
+        heading: "Step 4: The Response of Faith",
+        description: "Salvation is received by confessing Jesus as Lord and believing in His resurrection.",
+        table: {
+          headers: ["Reference", "Verse Text", "Memory Anchor"],
+          rows: [
+            ["Romans 10:9", "If you confess with your mouth the Lord Jesus and believe in your heart that God has raised Him from the dead, you will be saved.", "CONFESS & BELIEVE"],
+            ["Romans 10:13", "For 'whoever calls on the name of the LORD shall be saved.'", "WHOEVER CALLS"]
+          ]
+        }
+      },
+      {
+        heading: "Step 5: The Results of Salvation",
+        description: "Peace with God and freedom from condemnation.",
+        table: {
+          headers: ["Reference", "Verse Text", "Memory Anchor"],
+          rows: [
+            ["Romans 5:1", "Therefore, having been justified by faith, we have peace with God through our Lord Jesus Christ.", "PEACE WITH GOD"],
+            ["Romans 8:1", "There is therefore now no condemnation to those who are in Christ Jesus.", "NO CONDEMNATION"]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: "inductive-study",
+    title: "Inductive Bible Study Method",
+    subtitle: "Observation, Interpretation, Application (OIA Framework)",
+    icon: "🔬",
+    type: "reference",
+    category: "Methodology",
+    sections: [
+      {
+        heading: "What is Inductive Bible Study?",
+        description: "Instead of coming to scripture with preconceived ideas (deductive), inductive study lets the text speak for itself through three disciplined steps: Observation (What does it say?), Interpretation (What does it mean?), and Application (How do I live it?)."
+      },
+      {
+        heading: "Phase 1: Observation — What Does the Text Say?",
+        description: "Read carefully like a detective. Look for patterns, keywords, and structural clues before jumping to conclusions.",
+        table: {
+          headers: ["Observation Tool", "What to Look For", "Key Questions"],
+          rows: [
+            ["The 5 W's & H", "Who, What, Where, When, Why, How", "Who is speaking? Who is the audience? Where is this happening?"],
+            ["Repeated Words", "Keywords, themes, and root words", "Which words appear multiple times in this passage?"],
+            ["Contrasts & Comparisons", "'But', 'However', 'Like', 'As'", "What two ideas or outcomes are being contrasted?"],
+            ["Connecting Words", "'Therefore', 'So that', 'Because', 'For'", "What is the cause-and-effect relationship?"]
+          ]
+        }
+      },
+      {
+        heading: "Phase 2: Interpretation — What Does the Text Mean?",
+        description: "Discover the original author's intent for the original audience in their historical and literary context.",
+        table: {
+          headers: ["Context Layer", "Description", "Golden Rule"],
+          rows: [
+            ["Literary Context", "Read surrounding verses and chapters", "Never detach a verse from its paragraph."],
+            ["Historical Context", "Author, audience, culture, era", "What did this mean to the original hearers?"],
+            ["Scriptural Harmony", "Cross-reference with other passages", "Scripture interprets Scripture (Analogy of Faith)."]
+          ]
+        }
+      },
+      {
+        heading: "Phase 3: Application — How Do I Live It?",
+        description: "Transform truth into personal action using the S.P.A.C.E.S. acronym.",
+        table: {
+          headers: ["Letter", "Application Check", "Personal Reflection"],
+          rows: [
+            ["S", "Sin to confess", "Is there a sin highlighted that I need to repent of?"],
+            ["P", "Promise to claim", "Is there a divine promise I should anchor my faith in?"],
+            ["A", "Attitude to change", "Does my mindset need alignment with Christ's mind?"],
+            ["C", "Command to obey", "What explicit action or command is required of me?"],
+            ["E", "Example to follow", "Whose faith, humility, or courage should I emulate?"],
+            ["S", "Prayer of Praise", "What aspect of God's character prompts worship?"]
+          ]
+        }
+      }
+    ]
+  },
+  {
     id: "evangelists",
     title: "The First Evangelists",
     subtitle: "Who proclaimed Christ first?",
