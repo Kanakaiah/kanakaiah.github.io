@@ -1,4 +1,4 @@
-import { BIBLICAL_REFERENCE_LIBRARY } from './referenceLibrary';
+import { PENTATEUCH_COMMENTARIES } from './pentateuchCommentaries';
 import { PREACHERS_GUIDE } from './preachers';
 
 export const NT_STUDY_GUIDES = [
@@ -927,6 +927,7 @@ export const NT_STUDY_GUIDES = [
       }
     ]
   }
+
 ,
-  BIBLICAL_REFERENCE_LIBRARY
+  PENTATEUCH_COMMENTARIES
 ];
