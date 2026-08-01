@@ -63,11 +63,13 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zo
         'font-sans'
       }`}
       style={{
-        fontSize: isImmersed 
-          ? `${1.125 * zoomLevel * (state.settings.fontSize || 1)}rem`
+        // Immersive reading gets a much larger, fluid measure that scales with the
+        // viewport; a unitless line-height then tracks the type size automatically.
+        fontSize: isImmersed
+          ? `calc(clamp(1.5rem, 3.2vw, 2.25rem) * ${zoomLevel * (state.settings.fontSize || 1)})`
           : `${1.125 * (state.settings.fontSize || 1)}rem`,
         lineHeight: isImmersed
-          ? `${1.75 * zoomLevel * (state.settings.fontSize || 1)}rem`
+          ? 1.5
           : `${1.625 * (state.settings.fontSize || 1)}rem`
       }}
     >

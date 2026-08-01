@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, X, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -13,6 +13,7 @@ import { FirstLetterMode } from '../components/practice/FirstLetterMode';
 import { ScrambleMode } from '../components/practice/ScrambleMode';
 import { TypingMode } from '../components/practice/TypingMode';
 import { SpeechMode } from '../components/practice/SpeechMode';
+import { ImmersedReader } from '../components/practice/ImmersedReader';
 import { Button } from '../components/ui/Button';
 
 type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'immersed';
@@ -34,10 +35,6 @@ export const Practice: React.FC = () => {
   }, [state.settings.ttsEnabled]);
 
   const [hintLevel, setHintLevel] = useState(0);
-
-  const [zoomLevel, setZoomLevel] = useState(1);
-  const initialPinchDist = useRef<number | null>(null);
-  const initialZoomRef = useRef<number>(1);
 
   // Filter for allDue if query param is present
   const isAllDue = searchParams.get('mode') === 'alldue';
@@ -63,36 +60,12 @@ export const Practice: React.FC = () => {
     setActiveVerseIndex(initialIndex);
   }, [initialIndex]);
 
-  // If there are no verses, show empty state
-  if (state.verses.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
-        <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center mb-4">
-          <BookOpen className="w-8 h-8 text-muted" />
-        </div>
-        <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
-        <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
-        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
-      </div>
-    );
-  }
-
   // Reset hint when changing verses or modes
   React.useEffect(() => {
     setHintLevel(0);
   }, [activeVerseIndex, activeMode]);
 
   const currentVerse = verses[activeVerseIndex];
-
-  if (!currentVerse) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
-        <h2 className="text-xl font-bold text-primary mb-2">You're All Caught Up!</h2>
-        <p className="text-secondary mb-6">No verses are currently due for review.</p>
-        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
-      </div>
-    );
-  }
 
   const handleToggleTTS = () => {
     if (isAutoPlaying) {
@@ -103,9 +76,9 @@ export const Practice: React.FC = () => {
     }
   };
 
-  // Handle Auto Play Logic
+  // Handle Auto Play Logic — available while reading, including immersive reading
   React.useEffect(() => {
-    if (activeMode !== 'read') {
+    if (activeMode !== 'read' && activeMode !== 'immersed') {
       if (isAutoPlaying) {
         setIsAutoPlaying(false);
         window.speechSynthesis.cancel();
@@ -206,12 +179,11 @@ export const Practice: React.FC = () => {
 
   const isImmersed = activeMode === 'immersed';
 
-  // Render the current mode's workspace
+  // Render the current mode's workspace (immersive reading renders separately)
   const renderWorkspace = () => {
     switch (activeMode) {
       case 'read':
-      case 'immersed':
-        return <ReadMode key={currentVerse.id} text={currentVerse.text} isImmersed={isImmersed} zoomLevel={zoomLevel} />;
+        return <ReadMode key={currentVerse.id} text={currentVerse.text} />;
       case 'eraser':
         return <EraserMode key={currentVerse.id} text={currentVerse.text} />;
       case 'first-letter':
@@ -267,106 +239,64 @@ export const Practice: React.FC = () => {
       }
     };
 
-    // Immersed click navigation
-    const handleImmersedClick = (e: MouseEvent) => {
-      if (!isImmersed) return;
-      const target = e.target as HTMLElement;
-      const isInteractive = target.closest('button') || target.closest('a') || target.closest('.masked-sentence');
-      
-      if (!isInteractive) {
-        const x = e.clientX;
-        const width = window.innerWidth;
-        if (x < width * 0.25) handlePrevVerse();
-        else if (x > width * 0.75) handleNextVerse();
-      }
-    };
-
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchend', handleTouchEnd);
-    window.addEventListener('click', handleImmersedClick);
-
-    // Fullscreen logic
-    if (isImmersed && document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
-      window.removeEventListener('click', handleImmersedClick);
-      
-      if (isImmersed && document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
-      }
     };
-  }, [isImmersed, verses.length]);
+  }, [verses.length]);
 
-  // Reset zoom when leaving immersed mode
-  useEffect(() => {
-    if (!isImmersed) {
-      setZoomLevel(1);
-    }
-  }, [isImmersed]);
+  // If there are no verses, show empty state
+  if (state.verses.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
+        <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center mb-4">
+          <BookOpen className="w-8 h-8 text-muted" />
+        </div>
+        <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
+        <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
+        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+      </div>
+    );
+  }
 
-  // Pinch-to-zoom logic for Immersed mode
-  useEffect(() => {
-    if (!isImmersed) return;
+  if (!currentVerse) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
+        <h2 className="text-xl font-bold text-primary mb-2">You're All Caught Up!</h2>
+        <p className="text-secondary mb-6">No verses are currently due for review.</p>
+        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+      </div>
+    );
+  }
 
-    const getDistance = (touches: TouchList) => {
-      if (touches.length < 2) return 0;
-      const dx = touches[0].clientX - touches[1].clientX;
-      const dy = touches[0].clientY - touches[1].clientY;
-      return Math.sqrt(dx * dx + dy * dy);
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 2) {
-        initialPinchDist.current = getDistance(e.touches);
-        initialZoomRef.current = zoomLevel;
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 2 && initialPinchDist.current !== null) {
-        e.preventDefault(); // Prevent native browser page zoom
-        const currentDist = getDistance(e.touches);
-        const ratio = currentDist / initialPinchDist.current;
-        let newZoom = initialZoomRef.current * ratio;
-        newZoom = Math.max(0.5, Math.min(newZoom, 4.0));
-        setZoomLevel(newZoom);
-      }
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (e.touches.length < 2) {
-        initialPinchDist.current = null;
-      }
-    };
-
-    document.addEventListener('touchstart', handleTouchStart, { passive: false });
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isImmersed, zoomLevel]);
+  if (isImmersed) {
+    return (
+      <ImmersedReader
+        verse={currentVerse}
+        index={activeVerseIndex}
+        total={verses.length}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        onExit={() => setActiveMode('read')}
+        isAutoPlaying={isAutoPlaying}
+        onToggleAutoPlay={handleToggleTTS}
+      />
+    );
+  }
 
   return (
-      <div 
-        className={`relative flex flex-col h-full w-full ${isImmersed ? 'fixed inset-0 z-[100]' : 'pb-6 lg:pb-8'}`}
-        style={{ 
-          backgroundColor: isImmersed ? 'var(--bg-color)' : undefined, 
-          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' 
-        }}
+      <div
+        className="relative flex flex-col h-full w-full pb-6 lg:pb-8"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
       >
-      
+
       {/* Session progress bar (thin line at very top) */}
-      {!isImmersed && verses.length > 1 && (
+      {verses.length > 1 && (
         <div className="absolute top-0 left-0 w-full h-0.5 bg-card-border z-30">
           <div
             className="h-full bg-accent transition-all duration-300"
@@ -375,119 +305,60 @@ export const Practice: React.FC = () => {
         </div>
       )}
 
-      {/* Exit Button - Hidden when immersed */}
-      {!isImmersed && (
-        <button 
-          onClick={() => navigate('/')}
-          className="absolute left-4 lg:left-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors z-20 shadow-sm"
-          style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-        >
-          <X className="w-5 h-5" />
-        </button>
-      )}
+      {/* Exit Button */}
+      <button
+        onClick={() => navigate('/')}
+        className="absolute left-4 lg:left-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors z-20 shadow-sm"
+        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+      >
+        <X className="w-5 h-5" />
+      </button>
 
-      {/* Session progress counter - shows "3 of 12" when in a multi-verse session */}
-      {!isImmersed && verses.length > 1 && (
-        <div
-          className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-3 py-1.5 bg-card border border-card-border rounded-full shadow-sm"
-          style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-        >
-          <span className="text-xs font-bold text-primary tabular-nums">{activeVerseIndex + 1}</span>
-          <span className="text-xs text-muted">of</span>
-          <span className="text-xs font-bold text-muted tabular-nums">{verses.length}</span>
-        </div>
-      )}
-
-      {/* Audio Play/Pause Button - Hidden when immersed */}
-      {!isImmersed && (
-        <button 
-          onClick={handleToggleTTS}
-          className="absolute right-4 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:text-accent hover:bg-card-hover transition-colors z-20 shadow-sm"
-          title="Play Audio"
-          style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-        >
-          {isAutoPlaying ? (
-            <Square className="w-4 h-4 text-accent fill-accent" />
-          ) : (
-            <Play className="w-5 h-5 ml-1" />
-          )}
-        </button>
-      )}
-
-      {/* Practice Navigation (Top Bar) - Hidden when immersed */}
-      {!isImmersed && (
-        <div 
-          className="flex items-center justify-between px-4 py-2 absolute top-0 left-0 w-full z-10"
-          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-        >
-          <button 
-            onClick={() => setActiveMode('read')}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:bg-card-hover transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-        </div>
-      )}
-
-      {/* Header - Only visible when immersed */}
-      {isImmersed && (
-        <div 
-          className="flex items-center justify-between px-4 py-2 absolute top-0 left-0 w-full z-10"
-          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-        >
-          <button 
-            onClick={() => setActiveMode('read')}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:bg-card-hover transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-        </div>
-      )}
-
-      <div className={`flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 ${isImmersed ? 'justify-center items-center h-full' : ''}`}>
-        
-        {/* Navigation & Header */}
-        {!isImmersed && (
-          <div className="flex flex-col items-center gap-3 mb-8 mt-4 lg:mt-0">
-            <span className="font-heading font-bold text-primary text-2xl tracking-tight">
-              {currentVerse.ref}
-            </span>
-            <div className="flex items-center justify-between w-full max-w-xs bg-card/50 backdrop-blur-md p-1.5 rounded-full border border-card-border shadow-sm">
-              <button 
-                onClick={handlePrev} disabled={activeVerseIndex === 0}
-                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <div className="flex-1 h-[2px] bg-card-border/50 mx-2 rounded-full"></div>
-              <button 
-                onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
-                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
-              >
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-            <span className="font-heading font-semibold text-muted text-xs uppercase tracking-widest mt-1">
-              {activeVerseIndex + 1} of {verses.length}
-            </span>
-          </div>
+      {/* Audio Play/Pause Button */}
+      <button
+        onClick={handleToggleTTS}
+        className="absolute right-4 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:text-accent hover:bg-card-hover transition-colors z-20 shadow-sm"
+        title="Play Audio"
+        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+      >
+        {isAutoPlaying ? (
+          <Square className="w-4 h-4 text-accent fill-accent" />
+        ) : (
+          <Play className="w-5 h-5 ml-1" />
         )}
+      </button>
+
+      <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
+
+        {/* Navigation & Header */}
+        <div className="flex flex-col items-center gap-3 mb-8 mt-4 lg:mt-0">
+          <span className="font-heading font-bold text-primary text-2xl tracking-tight">
+            {currentVerse.ref}
+          </span>
+          <div className="flex items-center justify-between w-full max-w-xs bg-card p-1.5 rounded-full border border-card-border">
+            <button
+              onClick={handlePrev} disabled={activeVerseIndex === 0}
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div className="flex-1 h-[2px] bg-card-border/50 mx-2 rounded-full"></div>
+            <button
+              onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
+            >
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+          <span className="font-heading font-semibold text-muted text-xs uppercase tracking-widest mt-1">
+            {activeVerseIndex + 1} of {verses.length}
+          </span>
+        </div>
 
         {/* Display Board (Workspace) */}
-        <div className={`bg-card border border-card-border rounded-[2rem] p-6 lg:p-10 relative flex-1 flex flex-col ${isImmersed ? 'border-none bg-transparent w-full max-w-3xl' : 'shadow-xl shadow-black/5 mb-8'}`}>
+        <div className="bg-card border border-card-border rounded-lg p-6 lg:p-10 relative flex-1 flex flex-col shadow-sm mb-8">
           <div className="flex-1 flex flex-col">
-            {isImmersed && (
-              <div className="flex items-center justify-center mb-4 min-h-[2rem]">
-                <span 
-                  className="font-heading font-bold transition-all duration-75 text-secondary"
-                  style={{ fontSize: `${1.5 * zoomLevel}rem`, lineHeight: `${2 * zoomLevel}rem` }}
-                >
-                  {currentVerse.ref}
-                </span>
-              </div>
-            )}
-            
-            {!isImmersed && activeMode === 'read' && (
+            {activeMode === 'read' && (
               <button 
                 onClick={() => setActiveMode('immersed')} 
                 className="absolute top-4 right-4 lg:top-6 lg:right-6 w-11 h-11 rounded-full flex items-center justify-center bg-accent/10 text-accent hover:bg-accent hover:text-white transition-all shadow-sm active:scale-95"
@@ -497,9 +368,9 @@ export const Practice: React.FC = () => {
               </button>
             )}
 
-            {!isImmersed && activeMode !== 'read' && (
-              <button 
-                onClick={handleHintClick} 
+            {activeMode !== 'read' && (
+              <button
+                onClick={handleHintClick}
                 className={`absolute top-4 right-4 lg:top-6 lg:right-6 w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-sm active:scale-95
                   ${hintLevel > 0 ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover'}`}
                 title={hintLevel === 0 ? 'Show Hint' : hintLevel < 4 ? 'More Hint' : 'Hide Hint'}
@@ -509,42 +380,42 @@ export const Practice: React.FC = () => {
             )}
 
             <div className="mt-4">
-              {!isImmersed && activeMode !== 'read' && renderProgressiveHint()}
+              {activeMode !== 'read' && renderProgressiveHint()}
             </div>
-            
-            <div key={activeMode} className={`flex-1 animate-in fade-in zoom-in-95 duration-300 flex flex-col justify-start ${!isImmersed ? 'mt-8 lg:mt-6' : ''}`}>
+
+            <div key={activeMode} className="flex-1 animate-[fadeScaleIn_0.2s_ease-out] flex flex-col justify-start mt-8 lg:mt-6">
               {renderWorkspace()}
             </div>
           </div>
         </div>
 
-        {/* Inline Scoring Block (Hidden in Read/Immersed) */}
-        {!isImmersed && activeMode !== 'read' && (
+        {/* Inline Scoring Block (hidden in Read mode) */}
+        {activeMode !== 'read' && (
           <div className="w-full flex justify-center mb-8">
             {!isEvaluationOpen ? (
-              <button 
-                onClick={() => setIsEvaluationOpen(true)} 
-                className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent text-white font-bold text-lg hover:bg-accent-hover transition-all shadow-lg shadow-accent/30 hover:-translate-y-1 active:scale-95"
+              <button
+                onClick={() => setIsEvaluationOpen(true)}
+                className="flex items-center gap-2 px-8 py-3.5 rounded-md bg-accent text-white font-bold text-lg hover:bg-accent-hover transition-colors active:scale-95"
               >
                 <Check className="w-5 h-5" /> Score My Recall
               </button>
             ) : (
-              <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-[1.5rem] p-5 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200 shadow-xl">
+              <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-lg p-5 flex flex-col gap-4 animate-[fadeScaleIn_0.2s_ease-out] shadow-sm">
                 <p className="text-center font-semibold text-primary">How well did you remember it?</p>
                 <div className="grid grid-cols-4 gap-3">
-                  <button onClick={() => handleScore(1)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all border border-red-500/20 hover:scale-105 active:scale-95">
+                  <button onClick={() => handleScore(1)} className="py-3 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Blank</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 1).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(2)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-all border border-orange-500/20 hover:scale-105 active:scale-95">
+                  <button onClick={() => handleScore(2)} className="py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Hard</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 2).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(4)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-all border border-blue-500/20 hover:scale-105 active:scale-95">
+                  <button onClick={() => handleScore(4)} className="py-3 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Good</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 4).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(5)} className="py-3 flex flex-col items-center justify-center rounded-2xl bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-all border border-green-500/20 hover:scale-105 active:scale-95">
+                  <button onClick={() => handleScore(5)} className="py-3 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Easy</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 5).newSM2.interval)}</span>
                   </button>
@@ -556,10 +427,9 @@ export const Practice: React.FC = () => {
         )}
 
         {/* Mode Selector (Moved to Bottom) */}
-        {!isImmersed && (
-          <div className="flex flex-col gap-5 pb-4 lg:pb-8">
-            {/* Primary Modes — Always visible as tabs */}
-            <div className="grid grid-cols-4 gap-3">
+        <div className="flex flex-col gap-5 pb-4 lg:pb-8">
+            {/* Primary Modes — plain text tabs with an underline indicator */}
+            <div className="grid grid-cols-4 border-b border-card-border">
               {[
                 { id: 'read', icon: Eye, label: 'Read' },
                 { id: 'eraser', icon: Eraser, label: 'Erase' },
@@ -569,21 +439,21 @@ export const Practice: React.FC = () => {
                 <button
                   key={mode.id}
                   onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  className={`flex flex-col items-center py-4 px-2 rounded-[1.25rem] border transition-all duration-300 active:scale-95
-                    ${activeMode === mode.id 
-                      ? 'border-accent bg-[var(--accent-glow-strong)] shadow-[0_0_20px_var(--accent-glow)] scale-105' 
-                      : 'bg-card border-card-border hover:bg-card-hover hover:border-card-hover'}`}
+                  className={`flex flex-col items-center gap-2 py-3 px-2 border-b-2 -mb-px transition-colors duration-150
+                    ${activeMode === mode.id
+                      ? 'border-accent text-accent'
+                      : 'border-transparent text-secondary hover:text-primary'}`}
                 >
-                  <mode.icon className={`w-6 h-6 mb-2 ${activeMode === mode.id ? 'text-accent' : 'text-secondary'}`} />
-                  <span className={`text-xs font-bold ${activeMode === mode.id ? 'text-primary' : 'text-secondary'}`}>{mode.label}</span>
+                  <mode.icon className="w-5 h-5" />
+                  <span className="text-xs font-bold">{mode.label}</span>
                 </button>
               ))}
             </div>
 
-            {/* Secondary Modes — Compact chips */}
-            <div className="flex items-center justify-center gap-3 mt-2 text-sm font-semibold text-muted bg-card-elevated border border-card-border py-2 px-4 rounded-full w-fit mx-auto shadow-sm">
+            {/* Secondary Modes — compact text row */}
+            <div className="flex items-center justify-center gap-4 mt-1 text-sm font-semibold text-muted">
               <span className="text-xs uppercase tracking-widest opacity-80">More</span>
-              <div className="w-[1px] h-4 bg-card-border"></div>
+              <div className="w-px h-4 bg-card-border" />
               <div className="flex items-center gap-4">
                 {[
                   { id: 'scramble', label: 'Scramble' },
@@ -592,15 +462,14 @@ export const Practice: React.FC = () => {
                   <button
                     key={mode.id}
                     onClick={() => setActiveMode(mode.id as PracticeMode)}
-                    className={`transition-all ${activeMode === mode.id ? 'text-accent font-bold scale-105' : 'hover:text-primary'}`}
+                    className={`transition-colors ${activeMode === mode.id ? 'text-accent font-bold' : 'hover:text-primary'}`}
                   >
                     {mode.label}
                   </button>
                 ))}
               </div>
             </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
