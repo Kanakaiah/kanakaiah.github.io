@@ -62,11 +62,17 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
     else revealChrome();
   }, [hideChrome, revealChrome]);
 
-  // Controls start visible (so the exit and nav affordances are discoverable),
-  // and reappear whenever the verse changes so progress stays legible.
+  // Reveal once on entry so the exit/nav affordances are discoverable, then leave
+  // the user's choice alone. Re-revealing on every verse change (the previous
+  // behavior) meant the chrome could never fully settle while flipping through
+  // several verses in a row — each tap reset the idle timer right back to 4s.
+  // The ambient position counter and progress bar (below) stay visible on their
+  // own, so losing the chrome on a verse change doesn't cost the reader their place.
   useEffect(() => {
     revealChrome();
-  }, [index, revealChrome]);
+    // Intentionally mount-only — see comment above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -74,9 +80,20 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
     };
   }, []);
 
-  // Pointer movement brings the controls back on desktop.
+  // Pointer movement brings the controls back on desktop — but only on a real,
+  // deliberate move. Without a distance threshold, trackpad jitter or a shaky
+  // hand (a couple of pixels) is enough to keep re-triggering revealChrome
+  // forever, which defeats the point of auto-hiding at all.
+  const lastMousePos = useRef<{ x: number; y: number } | null>(null);
   useEffect(() => {
-    const handleMove = () => revealChrome();
+    const MOVE_THRESHOLD_PX = 20;
+    const handleMove = (e: MouseEvent) => {
+      const last = lastMousePos.current;
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+      if (last && Math.hypot(e.clientX - last.x, e.clientY - last.y) > MOVE_THRESHOLD_PX) {
+        revealChrome();
+      }
+    };
     window.addEventListener('mousemove', handleMove);
     return () => window.removeEventListener('mousemove', handleMove);
   }, [revealChrome]);
@@ -168,6 +185,22 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
         </div>
       )}
 
+      {/* Ambient position counter — deliberately NOT tied to chromeClass. Position
+          is passive information worth keeping around (unlike buttons, which only
+          matter when you're about to act on them), so it stays put through the
+          same fade cycle that hides everything else. Sits in the header's center
+          column, which is otherwise empty, so there's no visual collision. */}
+      {total > 1 && (
+        <div
+          className="absolute top-0 left-0 right-0 z-10 flex justify-center pointer-events-none"
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.1rem)' }}
+        >
+          <span className="text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-muted/60 tabular-nums">
+            {index + 1} / {total}
+          </span>
+        </div>
+      )}
+
       {/* Top controls */}
       <header
         className={`absolute top-0 left-0 right-0 z-20 flex items-center justify-between gap-4 px-3 sm:px-5 transition-[opacity,visibility] duration-300 ${chromeClass}`}
@@ -177,12 +210,6 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
         <button onClick={onExit} className={iconButton} aria-label="Exit immersive reading" title="Exit (Esc)">
           <X className="w-5 h-5" />
         </button>
-
-        {total > 1 && (
-          <span className="text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-muted tabular-nums">
-            {index + 1} / {total}
-          </span>
-        )}
 
         <div className="flex items-center gap-0.5">
           <button
@@ -230,20 +257,22 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
       {/* The page */}
       <main className="flex-1 overflow-y-auto">
         <div className="min-h-full flex items-center px-6 sm:px-10 py-24">
-          <div className="w-full max-w-3xl mx-auto">
-            <div className="mb-6 pb-3 border-b border-card-border">
-              <span className="text-[0.6875rem] font-bold uppercase tracking-[0.25em] text-accent">
+          {/* Keyed by verse so the whole block — reference, text, translation —
+              remounts and replays its entrance animation together on navigation,
+              instead of the text just snapping to the new verse. */}
+          <div key={verse.id} className="w-full max-w-3xl mx-auto animate-[verseIn_0.35s_ease-out]">
+            <div className="mb-8 pb-4 border-b border-card-border flex items-baseline justify-between gap-4">
+              <span className="text-base sm:text-lg font-bold uppercase tracking-[0.15em] text-accent">
                 {verse.ref}
               </span>
+              {verse.translation && (
+                <span className="text-xs font-bold uppercase tracking-[0.15em] text-muted shrink-0">
+                  {verse.translation}
+                </span>
+              )}
             </div>
 
-            <ReadMode key={verse.id} text={verse.text} isImmersed zoomLevel={zoom} />
-
-            {verse.translation && (
-              <p className="mt-10 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-muted">
-                {verse.translation}
-              </p>
-            )}
+            <ReadMode text={verse.text} isImmersed zoomLevel={zoom} />
           </div>
         </div>
       </main>
@@ -258,15 +287,16 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
           onClick={onPrev}
           disabled={index === 0}
           className={`${iconButton} flex items-center gap-1.5 text-sm font-medium`}
-          aria-label="Previous verse"
+          aria-label={index === 0 ? 'First verse' : 'Previous verse'}
+          title={index === 0 ? 'First verse' : 'Previous verse'}
         >
           <ChevronLeft className="w-5 h-5" />
           <span className="hidden sm:inline">Previous</span>
         </button>
 
-        {!hasInteracted && (
+        {!isAutoPlaying && !hasInteracted && (
           <span className="text-[0.6875rem] text-muted/70 text-center hidden sm:block">
-            Tap anywhere to hide controls · ← → to move between verses
+            Tap anywhere to hide controls · ← → verses · Esc to exit
           </span>
         )}
 
@@ -274,12 +304,36 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
           onClick={onNext}
           disabled={index >= total - 1}
           className={`${iconButton} flex items-center gap-1.5 text-sm font-medium`}
-          aria-label="Next verse"
+          aria-label={index >= total - 1 ? 'Last verse' : 'Next verse'}
+          title={index >= total - 1 ? 'Last verse' : 'Next verse'}
         >
           <span className="hidden sm:inline">Next</span>
           <ChevronRight className="w-5 h-5" />
         </button>
       </footer>
+
+      {/* Persistent "stop reading aloud" control — deliberately NOT tied to
+          chromeClass. Once TTS starts, the rest of the chrome fades on schedule
+          like normal, but the one control that matters most while it's running
+          (how do I make it stop) stays reachable without having to wake the
+          whole interface first. */}
+      {isAutoPlaying && (
+        <div
+          className="absolute left-0 right-0 z-20 flex justify-center pointer-events-none"
+          style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}
+        >
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              onToggleAutoPlay();
+            }}
+            className="pointer-events-auto flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-card-border text-sm font-medium text-primary hover:border-accent transition-colors shadow-sm"
+          >
+            <Square className="w-3.5 h-3.5 fill-accent text-accent" />
+            Stop reading aloud
+          </button>
+        </div>
+      )}
     </div>
   );
 };

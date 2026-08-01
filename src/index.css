@@ -201,6 +201,12 @@ select option {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* Immersive reader: verse arrives softly on navigation instead of snapping in */
+@keyframes verseIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Reading progress bar */
 .reading-progress {
   position: fixed;
