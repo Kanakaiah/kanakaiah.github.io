@@ -124,10 +124,10 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
           return (
             <div 
               key={idx}
-              className={`min-w-[50px] h-10 px-3 flex items-center justify-center font-medium text-sm transition-all duration-300
-                ${isFilled 
-                  ? 'text-primary border-b-2 border-transparent scale-105' 
-                  : 'text-accent-light border-b-2 border-glass-border'
+              className={`min-w-[50px] h-10 px-3 flex items-center justify-center font-medium text-sm transition-colors duration-200
+                ${isFilled
+                  ? 'text-primary border-b-2 border-transparent'
+                  : 'text-accent-light border-b-2 border-card-border'
                 }`}
             >
               {isFilled ? targetWords[idx] : ''}
@@ -147,10 +147,10 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
             <button
               key={item.id}
               onClick={() => handleChipClick(item)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium shadow-sm transition-all duration-200
-                ${isError 
-                  ? 'bg-red-500/10 text-red-500 border-red-500 border shadow-[0_0_8px_rgba(239,68,68,0.4)]' 
-                  : 'bg-glass-bg border border-glass-border text-primary hover:scale-105 hover:border-accent hover:text-accent'
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200
+                ${isError
+                  ? 'bg-red-500/10 text-red-500 border-red-500 border'
+                  : 'bg-card border border-card-border text-primary hover:border-accent hover:text-accent'
                 }`}
             >
               {item.word}

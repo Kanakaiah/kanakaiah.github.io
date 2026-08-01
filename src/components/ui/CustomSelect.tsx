@@ -94,7 +94,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full h-14 flex items-center justify-between gap-2 px-4 bg-card border border-card-border rounded-2xl text-primary font-medium hover:border-card-border-hover transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent"
+        className="w-full h-14 flex items-center justify-between gap-2 px-4 bg-card border border-card-border rounded-md text-primary font-medium hover:border-card-border-hover transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-activedescendant={isOpen && highlightedIndex >= 0 ? `custom-select-option-${highlightedIndex}` : undefined}
@@ -109,7 +109,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
           role="listbox"
           id={listboxId}
           aria-label="Options"
-          className="absolute z-50 w-full mt-2 py-2 bg-card border border-card-border rounded-2xl shadow-xl max-h-60 overflow-y-auto animate-in fade-in zoom-in-95 duration-200"
+          className="absolute z-50 w-full mt-2 py-2 bg-card border border-card-border rounded-md shadow-md max-h-60 overflow-y-auto animate-[fadeScaleIn_0.15s_ease-out]"
         >
           {options.map((option, index) => (
             <button

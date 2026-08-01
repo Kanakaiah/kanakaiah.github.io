@@ -43,7 +43,7 @@ export const TypingMode: React.FC<TypingModeProps> = ({ text }) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Start typing the verse here..."
-        className="w-full min-h-[150px] p-5 rounded-2xl bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 text-primary placeholder:text-muted/60 resize-none text-lg shadow-sm"
+        className="w-full min-h-[150px] p-5 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors duration-200 text-primary placeholder:text-muted/60 resize-none text-lg shadow-sm"
       />
     </div>
   );

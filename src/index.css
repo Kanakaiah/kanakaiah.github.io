@@ -4,127 +4,115 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --bg-color: #000000;
-    --text-primary: #ffffff;
-    --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
-    
-    --accent: #3b82f6;
-    --accent-hover: #2563eb;
-    --accent-light: #60a5fa;
-    --accent-glow: rgba(59, 130, 246, 0.15);
-    --accent-glow-strong: rgba(59, 130, 246, 0.3);
+    --bg-color: #0c0a08;
+    --text-primary: #f3ede2;
+    --text-secondary: #b3a891;
+    --text-muted: #7d7462;
 
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-bg-hover: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-border-hover: rgba(255, 255, 255, 0.15);
-    
-    --card-bg: #09090b;
-    --card-bg-elevated: #18181b;
-    --card-border: #27272a;
-    --card-hover: #18181b;
+    --accent: #cc6f47;
+    --accent-hover: #b25a37;
+    --accent-light: #e2a07e;
+    --accent-glow: rgba(204, 111, 71, 0.15);
+    --accent-glow-strong: rgba(204, 111, 71, 0.3);
 
-    --bionic-1: #ef4444;
-    --bionic-2: #3b82f6;
-    --bionic-3: #10b981;
-    --bionic-4: #f59e0b;
-    --bionic-5: #8b5cf6;
+    --gold: #d9a24a;
+
+    --glass-bg: rgba(255, 250, 240, 0.04);
+    --glass-bg-hover: rgba(255, 250, 240, 0.08);
+    --glass-border: rgba(255, 250, 240, 0.09);
+    --glass-border-hover: rgba(255, 250, 240, 0.14);
+
+    --card-bg: #131110;
+    --card-bg-elevated: #1c1917;
+    --card-border: #2a2521;
+    --card-border-hover: #3a332c;
+    --card-hover: #1c1917;
   }
 
   [data-theme="white"] {
     color-scheme: light;
-    --bg-color: #ffffff;
-    --text-primary: #09090b;
-    --text-secondary: #52525b;
-    --text-muted: #a1a1aa;
-    
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --accent-light: #3b82f6;
-    --accent-glow: rgba(37, 99, 235, 0.1);
-    --accent-glow-strong: rgba(37, 99, 235, 0.2);
+    --bg-color: #faf6ee;
+    --text-primary: #211c14;
+    --text-secondary: #5c5346;
+    --text-muted: #948a78;
 
-    --glass-bg: rgba(0, 0, 0, 0.03);
-    --glass-bg-hover: rgba(0, 0, 0, 0.06);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-border-hover: rgba(0, 0, 0, 0.15);
-    
-    --card-bg: #fdfdfd;
-    --card-bg-elevated: #ffffff;
-    --card-border: #e4e4e7;
-    --card-hover: #f4f4f5;
+    --accent: #b8552f;
+    --accent-hover: #96431f;
+    --accent-light: #c96a44;
+    --accent-glow: rgba(184, 85, 47, 0.1);
+    --accent-glow-strong: rgba(184, 85, 47, 0.2);
 
-    --bionic-1: #b91c1c;
-    --bionic-2: #1d4ed8;
-    --bionic-3: #047857;
-    --bionic-4: #b45309;
-    --bionic-5: #6d28d9;
+    --gold: #a97a1f;
+
+    --glass-bg: rgba(33, 28, 20, 0.03);
+    --glass-bg-hover: rgba(33, 28, 20, 0.06);
+    --glass-border: rgba(33, 28, 20, 0.09);
+    --glass-border-hover: rgba(33, 28, 20, 0.16);
+
+    --card-bg: #ffffff;
+    --card-bg-elevated: #fdfbf6;
+    --card-border: #e8e0d0;
+    --card-border-hover: #d9cdb4;
+    --card-hover: #f5f0e4;
   }
 
   [data-theme="dark"] {
     color-scheme: dark;
-    --bg-color: #0f172a;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    
-    --accent: #3b82f6;
-    --accent-hover: #2563eb;
-    --accent-light: #60a5fa;
-    --accent-glow: rgba(59, 130, 246, 0.15);
-    --accent-glow-strong: rgba(59, 130, 246, 0.3);
+    --bg-color: #1a1613;
+    --text-primary: #f5efe3;
+    --text-secondary: #b8ad99;
+    --text-muted: #8a8069;
 
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-bg-hover: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-border-hover: rgba(255, 255, 255, 0.15);
-    
-    --card-bg: #1e293b;
-    --card-bg-elevated: #334155;
-    --card-border: #334155;
-    --card-hover: #334155;
+    --accent: #cf7350;
+    --accent-hover: #b25a37;
+    --accent-light: #e2a07e;
+    --accent-glow: rgba(207, 115, 80, 0.15);
+    --accent-glow-strong: rgba(207, 115, 80, 0.3);
 
-    --bionic-1: #ef4444;
-    --bionic-2: #3b82f6;
-    --bionic-3: #10b981;
-    --bionic-4: #f59e0b;
-    --bionic-5: #8b5cf6;
+    --gold: #d9a24a;
+
+    --glass-bg: rgba(255, 250, 240, 0.05);
+    --glass-bg-hover: rgba(255, 250, 240, 0.09);
+    --glass-border: rgba(255, 250, 240, 0.1);
+    --glass-border-hover: rgba(255, 250, 240, 0.16);
+
+    --card-bg: #221d18;
+    --card-bg-elevated: #2c2620;
+    --card-border: #3a332b;
+    --card-border-hover: #4a4237;
+    --card-hover: #2c2620;
   }
 
   [data-theme="sepia"] {
     color-scheme: light;
-    --bg-color: #fbf0d9;
-    --text-primary: #5c4a3d;
-    --text-secondary: #8c7a6b;
-    --text-muted: #a69b8f;
-    
-    --accent: #b58900;
-    --accent-hover: #9c7600;
-    --accent-light: #d6a848;
-    --accent-glow: rgba(181, 137, 0, 0.12);
-    --accent-glow-strong: rgba(181, 137, 0, 0.25);
+    --bg-color: #f6ecd6;
+    --text-primary: #4a3a2c;
+    --text-secondary: #7d6a56;
+    --text-muted: #a08d76;
 
-    --glass-bg: rgba(181, 137, 0, 0.05);
-    --glass-bg-hover: rgba(181, 137, 0, 0.08);
-    --glass-border: rgba(181, 137, 0, 0.15);
-    --glass-border-hover: rgba(181, 137, 0, 0.25);
-    
-    --card-bg: #f4e8d1;
-    --card-bg-elevated: #fdf6e3;
-    --card-border: #e8dcc3;
-    --card-hover: #eee1c5;
+    --accent: #a8562e;
+    --accent-hover: #8a4423;
+    --accent-light: #c17a4f;
+    --accent-glow: rgba(168, 86, 46, 0.12);
+    --accent-glow-strong: rgba(168, 86, 46, 0.25);
 
-    --bionic-1: #dc322f;
-    --bionic-2: #268bd2;
-    --bionic-3: #859900;
-    --bionic-4: #b58900;
-    --bionic-5: #6c71c4;
+    --gold: #a1731c;
+
+    --glass-bg: rgba(120, 80, 20, 0.05);
+    --glass-bg-hover: rgba(120, 80, 20, 0.08);
+    --glass-border: rgba(120, 80, 20, 0.14);
+    --glass-border-hover: rgba(120, 80, 20, 0.22);
+
+    --card-bg: #f0e3c8;
+    --card-bg-elevated: #f9f0dc;
+    --card-border: #e3d3ae;
+    --card-border-hover: #d3bd8c;
+    --card-hover: #eadfc0;
   }
 
   :root {
     --font-primary: 'Inter', system-ui, sans-serif;
-    --font-heading: 'Outfit', system-ui, sans-serif;
+    --font-heading: 'Fraunces', Georgia, serif;
     --font-scale: 1;
   }
 }
@@ -195,6 +183,22 @@ select option {
 @keyframes fadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
+}
+
+/* Shared overlay/entrance animations (referenced via animate-[name_duration_ease]) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes fadeScaleIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* Reading progress bar */

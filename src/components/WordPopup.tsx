@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useRef, useCallback, type ReactNode } from 'react';
 import { ArrowRight, X } from 'lucide-react';
+import { Modal } from './ui/Modal';
 
 interface StrongsDefinition {
   lemma: string;
@@ -73,18 +74,6 @@ export function WordPopup({
   onViewOccurrences,
   onNavigateToVerse,
 }: WordPopupProps) {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    },
-    [onClose]
-  );
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
-
   // --- Drag-to-dismiss state ---
   const [dragY, setDragY] = useState(0);
   const dragStartY = useRef<number | null>(null);
@@ -116,34 +105,32 @@ export function WordPopup({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col justify-end">
-      {/* Dark overlay backdrop */}
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
-        onClick={onClose}
-      />
-
-      {/* Bottom sheet */}
-      <div
-        className="relative z-10 bg-card rounded-t-3xl animate-in slide-in-from-bottom duration-300 flex flex-col"
-        style={{
-          maxHeight: '60vh',
-          transform: dragY > 0 ? `translateY(${dragY}px)` : undefined,
-          transition: dragY > 0 ? 'none' : 'transform 0.2s ease-out',
-        }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+    <Modal
+      isOpen
+      onClose={onClose}
+      variant="sheet"
+      size="sm"
+      panelStyle={{
+        maxHeight: '60vh',
+        transform: dragY > 0 ? `translateY(${dragY}px)` : undefined,
+        transition: dragY > 0 ? 'none' : 'transform 0.2s ease-out',
+      }}
+      panelProps={{
+        onTouchStart: handleTouchStart,
+        onTouchMove: handleTouchMove,
+        onTouchEnd: handleTouchEnd,
+      }}
+    >
+      <>
         {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-2 shrink-0">
-          <div className="w-10 h-1 rounded-full bg-glass-border" />
+          <div className="w-10 h-1 rounded-full bg-card-border" />
         </div>
 
         {/* Close button (top-right corner) */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 p-1.5 rounded-full hover:bg-glass-bg transition-colors"
+          className="absolute top-3 right-4 p-1.5 rounded-full hover:bg-card-hover transition-colors"
         >
           <X className="w-4 h-4 text-secondary" />
         </button>
@@ -182,7 +169,7 @@ export function WordPopup({
           </div>
 
           {/* 4. Definition section */}
-          <div className="bg-card-elevated rounded-xl p-4 border border-card-border mb-4">
+          <div className="bg-card-elevated rounded-md p-4 border border-card-border mb-4">
             <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-2">
               Definition
             </h4>
@@ -216,7 +203,7 @@ export function WordPopup({
           {/* 7. View all occurrences button */}
           <button
             onClick={() => onViewOccurrences(strongsNumber)}
-            className="w-full py-3 bg-accent/10 hover:bg-accent/20 text-accent rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 bg-accent/10 hover:bg-accent/20 text-accent rounded-md font-bold transition-colors flex items-center justify-center gap-2"
           >
             View all occurrences
             <ArrowRight className="w-4 h-4" />
@@ -227,17 +214,17 @@ export function WordPopup({
             Strong&rsquo;s Exhaustive Concordance (1890)
           </p>
         </div>
-      </div>
 
-      {/* StrongsOccurrencesModal for cross-reference clicks */}
-      {viewingOccurrences && (
-        <StrongsOccurrencesModal
-          strongsNumber={viewingOccurrences}
-          lemma={viewingOccurrences === strongsNumber ? def.lemma : viewingOccurrences}
-          onClose={() => setViewingOccurrences(null)}
-          onNavigateToVerse={onNavigateToVerse || (() => {})}
-        />
-      )}
-    </div>
+        {/* StrongsOccurrencesModal for cross-reference clicks */}
+        {viewingOccurrences && (
+          <StrongsOccurrencesModal
+            strongsNumber={viewingOccurrences}
+            lemma={viewingOccurrences === strongsNumber ? def.lemma : viewingOccurrences}
+            onClose={() => setViewingOccurrences(null)}
+            onNavigateToVerse={onNavigateToVerse || (() => {})}
+          />
+        )}
+      </>
+    </Modal>
   );
 }

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, Loader2, BookOpen } from 'lucide-react';
+import { ArrowRight, Loader2, BookOpen } from 'lucide-react';
 import { NT_BOOKS } from '../data/ntBooks';
 import { OT_BOOKS } from '../data/otBooks';
+import { Modal } from './ui/Modal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -71,15 +72,6 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
     };
   }, [strongsNumber, numberPart, isOldTestament]);
 
-  // Handle escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
   // Process HTML safely
   const createMarkup = (html: string) => {
     // 1. Find occurrences where the Strong's number is marked.
@@ -99,30 +91,15 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-[70] flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
-      {/* Header */}
-      <div 
-        className="flex items-center justify-between px-5 py-4 relative bg-card/80 shrink-0"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-      >
-        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-glass-border to-transparent" />
-        <div className="flex items-center gap-3">
-          <BookOpen className="w-5 h-5 text-accent" />
-          <div>
-            <h2 className="text-lg font-bold text-primary">Word Occurrences</h2>
-            <p className="text-sm text-secondary font-serif">
-              {lemma} ({strongsNumber}) - {loading ? '...' : occurrences.length} Verses
-            </p>
-          </div>
-        </div>
-        <button 
-          onClick={onClose}
-          className="p-2 -mr-2 rounded-full hover:bg-glass-bg transition-colors"
-        >
-          <X className="w-5 h-5 text-secondary" />
-        </button>
-      </div>
-
+    <Modal
+      isOpen
+      onClose={onClose}
+      variant="fullscreen"
+      zIndexClass="z-[70]"
+      icon={<BookOpen className="w-5 h-5 text-accent" />}
+      title="Word Occurrences"
+      subtitle={`${lemma} (${strongsNumber}) — ${loading ? '...' : occurrences.length} verses`}
+    >
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-5 py-6">
         {loading ? (
@@ -148,7 +125,7 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
               return (
                 <div 
                   key={occ.pk || idx}
-                  className="bg-card-elevated border border-card-border rounded-xl p-5 hover:border-accent/30 transition-colors"
+                  className="bg-card-elevated border border-card-border rounded-md p-5 hover:border-accent/30 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-3 border-b border-card-border pb-3">
                     <h4 className="font-bold text-primary">
@@ -172,6 +149,6 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
           </div>
         )}
       </div>
-    </div>
+    </Modal>
   );
 };

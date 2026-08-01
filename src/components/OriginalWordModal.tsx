@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2, BookOpen, ArrowRight } from 'lucide-react';
+import { Loader2, BookOpen, ArrowRight } from 'lucide-react';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
+import { Modal } from './ui/Modal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -102,15 +103,6 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
     fetchData();
   }, [verseRef.book, verseRef.chapter, verseRef.verse, isOldTestament]);
 
-  // Handle escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
   const bookName = ALL_BOOKS.find(b => b.id === (ALL_BOOKS[verseRef.book - 1]?.id))?.name || `Book ${verseRef.book}`;
   const fullVerse = words.map(w => w.english).join(' ');
   
@@ -118,30 +110,14 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
   const studyWords = words.filter(w => w.strongs && dictionary[w.strongs]);
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
-      {/* Header */}
-      <div 
-        className="flex items-center justify-between px-5 py-4 relative bg-card/80"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-      >
-        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-glass-border to-transparent" />
-        <div className="flex items-center gap-3">
-          <BookOpen className="w-5 h-5 text-accent" />
-          <div>
-            <h2 className="text-lg font-bold text-primary">Original Words</h2>
-            <p className="text-sm text-secondary">
-              {bookName} {verseRef.chapter}:{verseRef.verse}
-            </p>
-          </div>
-        </div>
-        <button 
-          onClick={onClose}
-          className="p-2 -mr-2 rounded-full hover:bg-glass-bg transition-colors"
-        >
-          <X className="w-5 h-5 text-secondary" />
-        </button>
-      </div>
-
+    <Modal
+      isOpen
+      onClose={onClose}
+      variant="fullscreen"
+      icon={<BookOpen className="w-5 h-5 text-accent" />}
+      title="Original Words"
+      subtitle={`${bookName} ${verseRef.chapter}:${verseRef.verse}`}
+    >
       {/* Content */}
       <div className="flex-1 overflow-y-auto pb-12">
         {error && (
@@ -174,7 +150,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
                 studyWords.map((w, i) => {
                   const def = dictionary[w.strongs!];
                   return (
-                    <div key={`${w.strongs}-${i}`} className="px-5 py-6 border-b border-glass-border last:border-b-0">
+                    <div key={`${w.strongs}-${i}`} className="px-5 py-6 border-b border-card-border last:border-b-0">
                       <div className="flex items-end justify-between mb-4">
                         <div className="flex-1 pr-4">
                           <span className="text-xs font-bold text-accent uppercase tracking-wider block mb-1">
@@ -195,7 +171,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
                         </div>
                       </div>
 
-                      <div className="bg-card-elevated rounded-xl p-5 border border-card-border mt-4">
+                      <div className="bg-card-elevated rounded-md p-5 border border-card-border mt-4">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="text-xs uppercase tracking-wider text-accent font-bold">Definition</h4>
                           {def.pos && (
@@ -226,7 +202,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
 
                         <button
                           onClick={() => setViewingOccurrences(w.strongs)}
-                          className="mt-6 w-full py-3 bg-accent/10 hover:bg-accent/20 text-accent hover:text-accent-light rounded-xl font-bold tracking-wide transition-colors flex items-center justify-center gap-2"
+                          className="mt-6 w-full py-3 bg-accent/10 hover:bg-accent/20 text-accent hover:text-accent-light rounded-md font-bold tracking-wide transition-colors flex items-center justify-center gap-2"
                         >
                           View all occurrences
                           <ArrowRight className="w-4 h-4" />
@@ -254,7 +230,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
           onNavigateToVerse={onNavigateToVerse || (() => {})}
         />
       )}
-    </div>
+    </Modal>
   );
 }
 

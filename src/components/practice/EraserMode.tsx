@@ -53,7 +53,7 @@ export const EraserMode: React.FC<EraserModeProps> = ({ text }) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4 bg-background p-4 rounded-xl border border-glass-border">
+      <div className="flex items-center gap-4 bg-card-elevated p-4 rounded-md border border-card-border">
         <span className="text-sm font-medium text-secondary whitespace-nowrap">Hide Words:</span>
         <input
           type="range"

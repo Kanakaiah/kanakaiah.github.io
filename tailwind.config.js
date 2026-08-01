@@ -15,14 +15,16 @@ export default {
         accent: 'var(--accent)',
         'accent-hover': 'var(--accent-hover)',
         'accent-light': 'var(--accent-light)',
+        gold: 'var(--gold)',
         card: 'var(--card-bg)',
         'card-elevated': 'var(--card-bg-elevated)',
         'card-border': 'var(--card-border)',
+        'card-border-hover': 'var(--card-border-hover)',
         'card-hover': 'var(--card-hover)',
       },
       fontFamily: {
         sans: ['var(--font-primary)', 'system-ui', 'sans-serif'],
-        heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'Georgia', 'serif'],
         serif: ['Merriweather', 'Georgia', 'serif'],
         hyper: ['"Atkinson Hyperlegible"', 'sans-serif'],
       }

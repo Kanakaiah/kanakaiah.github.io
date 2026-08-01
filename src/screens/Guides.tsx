@@ -59,36 +59,35 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
   };
 
   return (
-    <a 
+    <a
       id={`chapter-anchor-${anchor.ch}`}
       href={bibleUrl}
       onClick={handleRead}
-      className={`relative bg-card rounded-2xl flex flex-col gap-3 hover:-translate-y-1 transition-all overflow-hidden min-h-[240px] group cursor-pointer ${!imgErr ? 'border-0 shadow-xl shadow-black/20' : 'border border-card-border hover:bg-card-hover shadow-sm bg-gradient-to-br from-card to-card-elevated'}`}
+      className="group flex flex-col bg-card border border-card-border rounded-lg overflow-hidden hover:border-card-border-hover transition-colors"
     >
-      
-      {!imgErr && (
-        <img 
-          src={imgPath} 
-          alt={anchor.word} 
-          onError={() => setImgErr(true)}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-      )}
-      <div className={`absolute inset-0 ${!imgErr ? 'bg-gradient-to-t from-black/70 via-black/30 to-transparent' : ''}`} />
+      {/* Plate */}
+      <div className="relative aspect-[4/3] bg-card-elevated overflow-hidden">
+        {!imgErr ? (
+          <img
+            src={imgPath}
+            alt={anchor.word}
+            onError={() => setImgErr(true)}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-5xl font-heading font-bold text-muted/25">{anchor.ch}</span>
+          </div>
+        )}
+        <span className="absolute top-3 left-3 w-8 h-8 rounded-full bg-background/90 border border-card-border flex items-center justify-center font-bold text-sm text-primary">
+          {anchor.ch}
+        </span>
+      </div>
 
-      {/* Content over image */}
-      <div className="relative z-10 p-6 flex flex-col h-full">
-        <div className="flex items-center justify-between">
-          <span className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-base shadow-inner ${!imgErr ? 'bg-black/50 backdrop-blur-md border border-white/20 text-white' : 'bg-accent/20 text-accent'}`}>
-            {anchor.ch}
-          </span>
-          <span className={`font-heading font-black tracking-widest uppercase text-sm px-4 py-2 rounded-full border transition-colors shadow-sm ${!imgErr ? 'text-white bg-black/60 backdrop-blur-md border-white/20 group-hover:border-accent/50' : 'text-primary bg-black/40 border-card-border group-hover:border-accent/50'}`}>
-            {anchor.word}
-          </span>
-        </div>
-        <p className={`text-base leading-relaxed mt-auto pt-4 font-medium ${!imgErr ? 'text-white/90 drop-shadow-md' : 'text-secondary'}`}>
-          {anchor.scene}
-        </p>
+      {/* Caption */}
+      <div className="p-5 flex flex-col gap-1.5">
+        <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{anchor.word}</span>
+        <p className="text-sm text-secondary italic font-serif leading-relaxed">{anchor.scene}</p>
       </div>
     </a>
   );
@@ -407,19 +406,19 @@ export const Guides: React.FC = () => {
 
                    {sec.table && (
                      <div className="overflow-x-auto mt-2">
-                       <table className="w-full text-left text-sm border-collapse">
+                       <table className="w-full text-left text-sm border-collapse font-serif">
                          <thead>
                            <tr>
                              {sec.table.headers.map((h: string, hi: number) => (
-                               <th key={hi} className="p-3 border-b border-card-border font-bold text-primary bg-card-elevated">{h}</th>
+                               <th key={hi} className="p-3 border-b-2 border-card-border font-sans font-bold text-xs uppercase tracking-wide text-muted">{h}</th>
                              ))}
                            </tr>
                          </thead>
                          <tbody>
                            {sec.table.rows.map((row: string[], ri: number) => (
-                             <tr key={ri} className="border-b border-card-border/50 hover:bg-card transition-colors">
+                             <tr key={ri} className="border-b border-card-border">
                                {row.map((cell: string, ci: number) => (
-                                 <td key={ci} className="p-3 text-secondary">{cell}</td>
+                                 <td key={ci} className="p-3 text-secondary leading-relaxed">{cell}</td>
                                ))}
                              </tr>
                            ))}
@@ -431,13 +430,13 @@ export const Guides: React.FC = () => {
                    {sec.entries && (
                      <div className="flex flex-col gap-4 mt-2">
                        {sec.entries.map((entry: any, ei: number) => (
-                         <div key={ei} className="bg-card border border-card-border rounded-xl p-5 flex flex-col gap-3 shadow-sm">
-                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-card-border/50 pb-3">
-                             <span className="font-bold text-accent px-3 py-1 bg-accent/10 rounded-full text-xs uppercase tracking-wider">{entry.rank}</span>
+                         <div key={ei} className="bg-card border border-card-border rounded-lg p-5 flex flex-col gap-3">
+                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-card-border pb-3">
+                             <span className="font-bold text-accent text-xs uppercase tracking-wider">{entry.rank}</span>
                              <span className="font-heading font-bold text-lg text-primary">{entry.person}</span>
                              <span className="text-sm font-bold text-muted sm:ml-auto">{entry.reference}</span>
                            </div>
-                           <p className="text-lg text-primary italic leading-relaxed border-l-2 border-accent/40 pl-4 my-1">"{entry.quote}"</p>
+                           <p className="text-lg text-primary italic font-serif leading-relaxed border-l-2 border-accent/40 pl-4 my-1">"{entry.quote}"</p>
                            {entry.note && <p className="text-secondary text-sm">{entry.note}</p>}
                            {entry.resources && entry.resources.length > 0 && (
                              <div className="flex flex-wrap gap-2 mt-1 pt-2 border-t border-card-border/30">
@@ -462,7 +461,7 @@ export const Guides: React.FC = () => {
                                      href={res.url}
                                      target="_blank"
                                      rel="noopener noreferrer"
-                                     className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${colorClass}`}
+                                     className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition-colors ${colorClass}`}
                                    >
                                      <Icon className="w-3.5 h-3.5 flex-shrink-0" />
                                      <span className="truncate max-w-[200px]">{res.title}</span>
@@ -477,20 +476,35 @@ export const Guides: React.FC = () => {
                    )}
 
                    {sec.note && (
-                     <div className="bg-accent/5 border border-accent/20 rounded-xl p-4 mt-2">
+                     <div className="border-l-2 border-accent/40 pl-4 py-1 mt-2">
                        <p className="text-sm text-secondary leading-relaxed"><strong className="text-accent-light">Note:</strong> {sec.note}</p>
                      </div>
                    )}
 
                    {sec.keyVerse && (
-                     <div className="bg-card border-l-4 border-l-accent rounded-r-xl p-5 mt-4">
+                     <div className="bg-card border-l-2 border-l-accent rounded-r-md p-5 mt-4">
                        <p className="font-bold text-primary mb-1">{sec.keyVerse.ref}</p>
-                       <p className="text-lg text-secondary italic">"{sec.keyVerse.text}"</p>
+                       <p className="text-lg text-secondary italic font-serif">"{sec.keyVerse.text}"</p>
                      </div>
                    )}
                  </div>
                ))}
              </div>
+          )}
+
+          {/* ── Book guide placeholder (no chapter architecture authored yet) ── */}
+          {activeGuide.type === 'book-guide' && !activeGuide.blocks && (
+            <div className="flex flex-col items-center text-center gap-3 py-16">
+              <span className="text-4xl">{activeGuide.icon}</span>
+              <h1 className="text-3xl font-heading font-bold text-primary">{activeGuide.title}</h1>
+              {activeGuide.subtitle && <p className="text-secondary">{activeGuide.subtitle}</p>}
+              {activeGuide.sections?.map((sec: any, i: number) => (
+                <div key={i} className="max-w-md mt-4">
+                  {sec.heading && <h2 className="text-lg font-heading font-semibold text-primary mb-2">{sec.heading}</h2>}
+                  {sec.description && <p className="text-secondary leading-relaxed">{sec.description}</p>}
+                </div>
+              ))}
+            </div>
           )}
 
           {/* ── Book guide ── */}
@@ -588,9 +602,9 @@ export const Guides: React.FC = () => {
                     <button 
                       key={i}
                       onClick={() => handleScrollToChapter(start)}
-                      className="w-full text-left flex rounded-xl overflow-hidden bg-card border border-card-border/40 hover:bg-card-hover transition-colors min-h-[80px]"
+                      className="w-full text-left flex rounded-lg overflow-hidden bg-card border border-card-border hover:bg-card-hover transition-colors min-h-[80px]"
                     >
-                      <div className={`w-[72px] flex-shrink-0 flex flex-col items-center justify-center border-l-4 ${color.border} border-r border-r-glass-border/30`}>
+                      <div className={`w-[72px] flex-shrink-0 flex flex-col items-center justify-center border-l-4 ${color.border} border-r border-r-card-border`}>
                          <span className="text-[0.625rem] uppercase font-bold text-muted tracking-widest mb-0.5">CH</span>
                          <span className={`text-xl font-bold ${color.text} font-heading leading-none`}>{block.chapters.replace('–', '-')}</span>
                       </div>
@@ -634,7 +648,7 @@ export const Guides: React.FC = () => {
                     <span className="text-[0.625rem] text-muted tracking-normal px-2 py-1 rounded hidden sm:block bg-card-elevated border border-card-border">Read 3-4 times to lock flow</span>
                   </div>
                   <div 
-                    className="rounded-2xl p-5 bg-card-elevated border border-card-border/50"
+                    className="rounded-lg p-5 bg-card-elevated border border-card-border font-serif"
                     style={{ 
                       borderLeft: '3px solid var(--accent-light)',
                     }}
@@ -654,15 +668,15 @@ export const Guides: React.FC = () => {
                   <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
                   <div className="flex flex-col gap-3">
                     {activeGuide.keyVerses.map((kv: any, i: number) => (
-                      <div 
-                        key={i} 
-                        className="rounded-2xl p-4 transition-all duration-300 bg-card-elevated border border-card-border/50"
-                        style={{ 
-                          borderLeft: '3px solid var(--accent-light)',
+                      <div
+                        key={i}
+                        className="rounded-lg p-4 bg-card-elevated border border-card-border"
+                        style={{
+                          borderLeft: '2px solid var(--accent-light)',
                         }}
                       >
                         <p className="font-bold text-primary mb-1.5 text-sm">{kv.ref}</p>
-                        {kv.text && <p className="text-lg text-secondary italic mb-1.5 leading-relaxed">"{kv.text}"</p>}
+                        {kv.text && <p className="text-lg text-secondary italic font-serif mb-1.5 leading-relaxed">"{kv.text}"</p>}
                         {kv.theme && <p className="text-[0.6875rem] font-bold uppercase tracking-wider" style={{ color: 'var(--accent-light)' }}>{kv.theme}</p>}
                       </div>
                     ))}
@@ -677,14 +691,14 @@ export const Guides: React.FC = () => {
 
         <div className={`
           fixed bottom-0 left-0 right-0 lg:left-64
-          bg-background/60 backdrop-blur-xl
+          bg-card border-t border-card-border
           z-40 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}
         `}>
           <div className="max-w-4xl mx-auto flex items-center justify-between px-4 py-3 pb-safe">
-            <button 
-              onClick={handlePrevBook} 
-              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all hover:bg-glass-bg text-secondary hover:text-primary"
+            <button
+              onClick={handlePrevBook}
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary"
               title={prevBook?.name || ''}
             >
               <ChevronLeft className="w-4 h-4 flex-shrink-0" />
@@ -693,17 +707,17 @@ export const Guides: React.FC = () => {
                 {prevBook ? (prevBook.name.length <= 4 ? prevBook.name : (prevBook.name.startsWith('1 ') || prevBook.name.startsWith('2 ') || prevBook.name.startsWith('3 ') ? prevBook.name.substring(0, 5).replace(' ', '') : prevBook.name.substring(0, 3))) : ''}
               </span>
             </button>
-            
-            <button 
+
+            <button
               onClick={() => setIsIndexModalOpen(true)}
-              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-glass-border rounded-lg px-3 py-1.5"
+              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
             >
               INDEX
             </button>
 
-            <button 
-              onClick={handleNextBook} 
-              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all hover:bg-glass-bg text-secondary hover:text-primary"
+            <button
+              onClick={handleNextBook}
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary"
               title={nextBook?.name || ''}
             >
               <span className="hidden sm:block truncate max-w-[120px]">{nextBook?.name}</span>
@@ -717,12 +731,12 @@ export const Guides: React.FC = () => {
 
         {/* ── Index Modal ── */}
         {isIndexModalOpen && (
-          <div className="fixed inset-0 z-[70] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
+          <div className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
               <button
                 onClick={() => setIsIndexModalOpen(false)}
-                className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+                className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
               >
                 <X className="w-5 h-5 text-secondary" />
               </button>
@@ -816,7 +830,7 @@ export const Guides: React.FC = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search books..."
-          className="w-full bg-card border border-card-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent transition-all text-primary placeholder:text-muted shadow-sm"
+          className="w-full bg-card border border-card-border rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 transition-colors text-primary placeholder:text-muted shadow-sm"
         />
       </div>
 
@@ -845,7 +859,7 @@ export const Guides: React.FC = () => {
                   <div key={section} className="flex flex-col gap-3">
                     <button 
                       onClick={() => toggleSection(section)}
-                      className="flex items-center justify-between border-b border-glass-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
+                      className="flex items-center justify-between border-b border-card-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
                     >
                       <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
                       {collapsedSections[section] ? (
@@ -892,7 +906,7 @@ export const Guides: React.FC = () => {
                   <div key={section} className="flex flex-col gap-3">
                     <button 
                       onClick={() => toggleSection(section)}
-                      className="flex items-center justify-between border-b border-glass-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
+                      className="flex items-center justify-between border-b border-card-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
                     >
                       <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
                       {collapsedSections[section] ? (
@@ -926,7 +940,7 @@ export const Guides: React.FC = () => {
                 <button
                   key={guide.id}
                   onClick={() => setActiveGuideId(guide.id)}
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-card border border-card-border hover:bg-card-hover hover:border-accent/40 transition-all text-left group shadow-sm"
+                  className="flex items-center gap-4 p-4 rounded-lg bg-card border border-card-border hover:border-accent/40 transition-colors text-left group"
                 >
                   <div className="text-2xl">{guide.icon}</div>
                   <div className="flex-1 flex flex-col min-w-0">

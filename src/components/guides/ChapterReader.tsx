@@ -826,8 +826,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   });
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-xl animate-in fade-in duration-300"
+    <div
+      className="fixed inset-0 z-50 flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -847,7 +847,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative">
           <button
             onClick={onClose}
-            className="absolute left-0 top-1 p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors z-10"
+            className="absolute left-0 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
             title="Go back"
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
@@ -868,68 +868,68 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           <div className="absolute right-0 top-1 flex items-center gap-1">
             <button
               onClick={() => setAlphaMode(!alphaMode)}
-              className={`p-2 rounded-full transition-all font-serif text-lg leading-none ${alphaMode ? 'bg-accent text-white shadow-lg shadow-accent/30' : 'hover:bg-glass-bg text-secondary'}`}
+              className={`p-2 rounded-full transition-colors font-serif text-lg leading-none ${alphaMode ? 'bg-accent text-white' : 'hover:bg-card-hover text-secondary'}`}
               title={alphaMode ? 'Switch to LSB reading mode' : 'Show original Greek/Hebrew words'}
             >
               α
             </button>
             <button
               onClick={() => setShowOptions(!showOptions)}
-              className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-glass-bg text-primary' : 'hover:bg-glass-bg text-secondary'}`}
+              className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-card-hover text-primary' : 'hover:bg-card-hover text-secondary'}`}
               title="Reading Options"
             >
               <Type className="w-5 h-5" />
             </button>
-            
+
             {showOptions && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setShowOptions(false)} />
-                <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-glass-border rounded-2xl shadow-2xl z-50 overflow-hidden p-4 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-card-border rounded-lg shadow-md z-50 overflow-hidden p-4 flex flex-col gap-4 animate-[fadeScaleIn_0.15s_ease-out]">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-primary">Text Size</span>
-                    <div className="flex items-center gap-2 bg-card border border-card-border rounded-xl p-1">
-                      <button 
+                    <div className="flex items-center gap-2 bg-card border border-card-border rounded-md p-1">
+                      <button
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.max(0.85, state.settings.fontSize - 0.15).toFixed(2)) }})}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-glass-bg text-secondary hover:text-primary transition-colors"
+                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
                       <span className="text-xs font-bold w-8 text-center">{state.settings.fontSize.toFixed(2)}</span>
-                      <button 
+                      <button
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.min(1.45, state.settings.fontSize + 0.15).toFixed(2)) }})}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-glass-bg text-secondary hover:text-primary transition-colors"
+                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="h-[1px] bg-card-border w-full" />
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-primary">Font</span>
-                    <div className="flex items-center bg-card border border-card-border rounded-xl p-1 gap-1">
-                      <button 
+                    <div className="flex items-center bg-card border border-card-border rounded-md p-1 gap-1">
+                      <button
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'sans' }})}
-                        className={`px-2 py-1 text-xs font-sans rounded-lg transition-colors ${(!state.settings.fontFamily || state.settings.fontFamily === 'sans') ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
+                        className={`px-2 py-1 text-xs font-sans rounded-md transition-colors ${(!state.settings.fontFamily || state.settings.fontFamily === 'sans') ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-card-hover'}`}
                       >
                         Inter
                       </button>
-                      <button 
+                      <button
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'serif' }})}
-                        className={`px-2 py-1 text-xs font-serif rounded-lg transition-colors ${state.settings.fontFamily === 'serif' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
+                        className={`px-2 py-1 text-xs font-serif rounded-md transition-colors ${state.settings.fontFamily === 'serif' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-card-hover'}`}
                       >
                         Merriweather
                       </button>
-                      <button 
+                      <button
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'hyper' }})}
-                        className={`px-2 py-1 text-xs font-hyper rounded-lg transition-colors ${state.settings.fontFamily === 'hyper' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-glass-bg'}`}
+                        className={`px-2 py-1 text-xs font-hyper rounded-md transition-colors ${state.settings.fontFamily === 'hyper' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-card-hover'}`}
                       >
                         Atkinson
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="h-[1px] bg-card-border w-full" />
                   
                   <label className="flex items-center justify-between cursor-pointer group">
@@ -974,9 +974,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-red-400">
             <p>{error}</p>
-            <button 
+            <button
               onClick={onClose}
-              className="px-4 py-2 mt-2 text-sm font-medium rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+              className="px-4 py-2 mt-2 text-sm font-medium rounded-md border border-card-border hover:bg-card-hover transition-colors"
             >
               Go Back
             </button>
@@ -992,7 +992,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                 </div>
               ) : (
                 <>
-                  <div className="mb-4 px-3 py-2 bg-accent/5 border border-accent/10 rounded-xl">
+                  <div className="mb-4 px-3 py-2 bg-accent/5 border border-accent/10 rounded-md">
                     <p className="text-xs text-secondary text-center">Tap any <span className="underline decoration-accent/40 underline-offset-2">underlined word</span> to see its original {isOldTestament ? 'Hebrew' : 'Greek'} meaning</p>
                   </div>
                   <div 
@@ -1032,63 +1032,63 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
       {/* Floating Action Bar for Selected Verses */}
       {selectedVerses.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom-4 fade-in duration-300 px-3 pb-3 sm:pb-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
-          <div className="bg-accent text-white rounded-2xl shadow-2xl max-w-md mx-auto overflow-hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-50 animate-[fadeScaleIn_0.2s_ease-out] px-3 pb-3 sm:pb-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
+          <div className="bg-accent text-white rounded-lg shadow-md max-w-md mx-auto overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2.5">
               <span className="font-bold text-sm">
                 {selectedVerses.length} {selectedVerses.length === 1 ? 'verse' : 'verses'} selected
               </span>
-              <button 
+              <button
                 onClick={() => setSelectedVerses([])}
-                className="p-1 rounded-lg hover:bg-white/20 transition-colors"
+                className="p-1 rounded-md hover:bg-white/20 transition-colors"
                 title="Cancel Selection"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="flex items-center gap-2 px-4 pb-3 flex-wrap">
-              <button 
+              <button
                 onClick={handleCopySelected}
-                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
+                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
               >
                 <Copy className="w-3.5 h-3.5" /> Copy
               </button>
 
               {selectedVerses.length === 1 && onStudyOriginalWord && (
-                <button 
+                <button
                   onClick={() => {
                     const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
                     onStudyOriginalWord({ book: bookIndex, chapter, verse: selectedVerses[0] });
                     setSelectedVerses([]);
                   }}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
                   <BookOpen className="w-3.5 h-3.5" /> Study Words
                 </button>
               )}
-              
+
               {hasRefs && (
-                <button 
+                <button
                   onClick={() => {
                     const sorted = [...selectedVerses].sort((a, b) => a - b);
                     setShowCrossReferences(sorted.map(v => `${bookTitle.toLowerCase()} ${chapter}:${v}`));
                   }}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
                   <BookOpen className="w-3.5 h-3.5" /> Refs
                 </button>
               )}
               {selectedVerses.every(v => memorizedVerses.has(v)) ? (
-                <button 
+                <button
                   onClick={handleDeleteSelected}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
+                  className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
                   <Trash2 className="w-3.5 h-3.5" /> Remove
                 </button>
               ) : (
-                <button 
+                <button
                   onClick={handleAddClick}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-1.5"
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" /> Add
                 </button>
@@ -1100,23 +1100,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
       {/* Add Options Modal */}
       {showAddOptions && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-card-elevated border border-glass-border rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
+          <div className="bg-card-elevated border border-card-border rounded-lg shadow-md p-6 w-full max-w-sm">
             <h3 className="text-xl font-bold text-primary mb-2">How to add?</h3>
             <p className="text-sm text-secondary mb-6">You have selected {selectedVerses.length} verses. Would you like to add them as individual verses or combine consecutive verses into single entries?</p>
-            
+
             <div className="flex flex-col gap-3">
-              <button 
+              <button
                 onClick={() => executeAdd('combined')}
-                className="w-full py-3 px-4 bg-accent text-white font-bold rounded-xl hover:bg-accent-hover transition-colors flex flex-col items-start"
+                className="w-full py-3 px-4 bg-accent text-white font-bold rounded-md hover:bg-accent-hover transition-colors flex flex-col items-start"
               >
                 <span>Combine Consecutive</span>
                 <span className="text-xs font-normal text-white/70 mt-0.5">e.g. 1:3-5 and 1:7</span>
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => executeAdd('individual')}
-                className="w-full py-3 px-4 bg-glass-bg border border-glass-border text-primary font-bold rounded-xl hover:bg-glass-bg-hover transition-colors flex flex-col items-start"
+                className="w-full py-3 px-4 bg-card border border-card-border text-primary font-bold rounded-md hover:bg-card-hover transition-colors flex flex-col items-start"
               >
                 <span>Individual Verses</span>
                 <span className="text-xs font-normal text-secondary mt-0.5">Add {selectedVerses.length} separate entries</span>
@@ -1135,21 +1135,21 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
       {/* Bottom Chapter Navigation Bar */}
       {!loading && !error && selectedVerses.length === 0 && (
-        <div className={`fixed bottom-0 left-0 right-0 bg-background/60 backdrop-blur-xl z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
+        <div className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
               onClick={handlePrevChapter}
               disabled={!prevLabel}
-              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-glass-bg text-secondary hover:text-primary"
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
             >
               <ChevronLeft className="w-4 h-4 flex-shrink-0" />
               <span className="hidden sm:block truncate max-w-[120px]">{prevLabel || 'Start'}</span>
               <span className="sm:hidden truncate max-w-[80px]">{prevAbbrLabel || 'Start'}</span>
             </button>
 
-            <button 
+            <button
               onClick={() => { setNavigatorBook(bookId); setShowNavigator(true); }}
-              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-glass-border rounded-lg px-3 py-1.5"
+              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
             >
               Ch {chapter}
               <ChevronDown className="w-3 h-3" />
@@ -1158,7 +1158,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             <button
               onClick={handleNextChapter}
               disabled={!nextLabel}
-              className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-glass-bg text-secondary hover:text-primary"
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
             >
               <span className="hidden sm:block truncate max-w-[120px]">{nextLabel || 'End'}</span>
               <span className="sm:hidden truncate max-w-[80px]">{nextAbbrLabel || 'End'}</span>
@@ -1170,12 +1170,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
       {/* Book/Chapter Navigator */}
       {showNavigator && (
-        <div className="fixed inset-0 z-[70] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
+        <div className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
             <button
               onClick={() => setShowNavigator(false)}
-              className="p-2 -ml-2 rounded-full hover:bg-glass-bg transition-colors"
+              className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
             >
               <X className="w-5 h-5 text-secondary" />
             </button>
@@ -1237,7 +1237,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                       <div
                         key="chapter-grid"
                         ref={chapterGridRef}
-                        className="py-3 px-2 border-y border-glass-border/50 my-1"
+                        className="py-3 px-2 border-y border-card-border my-1"
                         style={{ gridColumn: '1 / -1' }}
                       >
                         <div className="grid grid-cols-7 gap-1.5 max-w-xs mx-auto">
@@ -1247,10 +1247,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                               <button
                                 key={ch}
                                 onClick={() => handleNavigate(navigatorBook, ch)}
-                                className={`aspect-square rounded-lg text-base font-bold transition-all flex items-center justify-center ${
+                                className={`aspect-square rounded-md text-base font-bold transition-colors flex items-center justify-center ${
                                   isCurrent
-                                    ? 'bg-accent text-white shadow-lg shadow-accent/30'
-                                    : 'text-secondary hover:bg-glass-bg hover:text-primary'
+                                    ? 'bg-accent text-white'
+                                    : 'text-secondary hover:bg-card-hover hover:text-primary'
                                 }`}
                               >
                                 {ch}
@@ -1328,10 +1328,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       )}
 
       {returnBook && returnChapter && selectedVerses.length === 0 && (
-        <div 
-          className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none transition-all duration-300 animate-in slide-in-from-bottom fade-in bg-gradient-to-t from-background via-background/80 to-transparent"
+        <div
+          className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
         >
-          <div className="bg-[#414141] text-white shadow-xl rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">
+          <div className="bg-card-elevated border border-card-border text-primary shadow-md rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">
             <button 
               onClick={() => {
                 setSearchParams(prev => {
@@ -1368,7 +1368,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
             {returnVerse && (
               <>
-                <div className="w-[1px] h-4 bg-white/20" />
+                <div className="w-[1px] h-4 bg-card-border" />
                 <button
                   onClick={() => {
                     const bookName = ALL_BOOKS.find(b => b.id === returnBook)?.name.toLowerCase() || returnBook;
@@ -1394,7 +1394,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                   return next;
                 }, { replace: true });
               }}
-              className="p-1 -mr-2 -my-2 rounded-full hover:bg-white/10 transition-colors"
+              className="p-1 -mr-2 -my-2 rounded-full hover:bg-card-hover transition-colors"
               aria-label="Dismiss"
             >
               <X className="w-[18px] h-[18px] opacity-80" />

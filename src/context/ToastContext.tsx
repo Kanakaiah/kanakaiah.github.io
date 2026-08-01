@@ -41,21 +41,21 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           <div
             key={toast.id}
             className={`
-              pointer-events-auto px-4 py-3 rounded-xl shadow-lg border text-sm font-medium
-              animate-[fadeIn_0.3s_ease-out_forwards] backdrop-blur-md flex items-center justify-between
-              ${toast.type === 'success' ? 'bg-green-500/20 border-green-500/30 text-green-100' : ''}
-              ${toast.type === 'error' ? 'bg-red-500/20 border-red-500/30 text-red-100' : ''}
-              ${toast.type === 'info' ? 'bg-blue-500/20 border-blue-500/30 text-blue-100' : ''}
+              pointer-events-auto px-4 py-3 rounded-md border-l-2 bg-card-elevated border border-card-border text-sm font-medium text-primary
+              animate-[fadeIn_0.3s_ease-out_forwards] shadow-sm flex items-center justify-between
+              ${toast.type === 'success' ? 'border-l-green-500' : ''}
+              ${toast.type === 'error' ? 'border-l-red-500' : ''}
+              ${toast.type === 'info' ? 'border-l-accent' : ''}
             `}
           >
             <span>{toast.message}</span>
             {toast.action && (
-              <button 
+              <button
                 onClick={() => {
                   setToasts(prev => prev.filter(t => t.id !== toast.id));
                   toast.action!.onClick();
                 }}
-                className="ml-4 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors whitespace-nowrap active:scale-95"
+                className="ml-4 px-3 py-1.5 rounded-md bg-card-hover hover:bg-card-border transition-colors whitespace-nowrap active:scale-95 text-primary"
               >
                 {toast.action.label}
               </button>

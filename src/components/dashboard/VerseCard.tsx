@@ -10,18 +10,18 @@ interface VerseCardProps {
 export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
   const { state } = useApp();
   const masteryPct = Math.min(100, Math.round(((verse.sm2?.repetition || 0) / 6) * 100));
-  
-  let indicatorColor = 'border-l-[#4e7cc2]'; // learning (blue)
-  let badgeBorder = 'border-[#4e7cc2] text-[#4e7cc2]';
+
+  let indicatorColor = 'border-l-accent';
+  let statusColor = 'text-accent';
   let statusText = 'Learning';
 
   if (masteryPct >= 100) {
-    indicatorColor = 'border-l-[#dfab55]'; // memorized (gold)
-    badgeBorder = 'border-[#dfab55] text-[#dfab55]';
+    indicatorColor = 'border-l-gold';
+    statusColor = 'text-gold';
     statusText = 'Memorized';
   } else if (verse.status === 'review' || new Date(verse.sm2?.nextDueDate || 0) <= new Date()) {
-    indicatorColor = 'border-l-[#dfab55]'; // review due (gold)
-    badgeBorder = 'border-[#dfab55] text-[#dfab55]';
+    indicatorColor = 'border-l-gold';
+    statusColor = 'text-gold';
     statusText = 'Due now';
   }
 
@@ -78,8 +78,8 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
   };
 
   return (
-    <div 
-      className={`group relative flex flex-col cursor-pointer overflow-hidden rounded-2xl bg-card border border-card-border p-0 shadow-sm transition-all duration-300 hover:shadow-md hover:border-card-border-hover hover:-translate-y-0.5`}
+    <div
+      className={`group relative flex flex-col cursor-pointer overflow-hidden rounded-lg bg-card border border-card-border p-0 transition-colors duration-150 hover:border-card-border-hover`}
       onClick={() => onClick(verse.id)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -101,10 +101,9 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
               <span className="px-2 py-0.5 rounded-md text-[0.625rem] font-bold bg-card-elevated text-muted tracking-wider uppercase border border-card-border">{verse.translation}</span>
             </div>
             
-            <div className={`px-2.5 py-1 rounded-full border text-[0.6875rem] font-semibold flex items-center gap-1.5 ${badgeBorder} bg-opacity-10 backdrop-blur-sm`}>
-              <div className="w-1.5 h-1.5 rounded-full bg-current" />
+            <span className={`text-[0.6875rem] font-bold uppercase tracking-wider ${statusColor}`}>
               {statusText}
-            </div>
+            </span>
           </div>
           
           <p 
@@ -130,7 +129,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
             <span>Mastery: {Math.min(5, verse.sm2?.repetition || 0)}/5</span>
           </div>
           {masteryPct >= 100 && (
-            <span className="text-[10px] uppercase tracking-widest font-bold text-[#dfab55] bg-[#dfab55]/10 px-2 py-1 rounded-md">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-gold">
               Perfect
             </span>
           )}

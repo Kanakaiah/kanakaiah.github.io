@@ -178,12 +178,12 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       </div>
 
       {/* Mode Selection Buttons */}
-      <div className="grid grid-cols-2 gap-4 bg-card-elevated p-2 rounded-[2rem] border border-card-border shadow-sm">
+      <div className="grid grid-cols-2 gap-3 bg-card-elevated p-2 rounded-lg border border-card-border">
         <button
           onClick={() => setActiveTab('manual')}
-          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-[1.5rem] transition-all duration-300 ${
-            activeTab === 'manual' 
-              ? 'bg-accent text-white shadow-lg shadow-accent/30 scale-[1.02]' 
+          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-md transition-colors duration-150 ${
+            activeTab === 'manual'
+              ? 'bg-accent text-white'
               : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
@@ -192,9 +192,9 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
         </button>
         <button
           onClick={() => setActiveTab('search')}
-          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-[1.5rem] transition-all duration-300 ${
-            activeTab === 'search' 
-              ? 'bg-accent text-white shadow-lg shadow-accent/30 scale-[1.02]' 
+          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-md transition-colors duration-150 ${
+            activeTab === 'search'
+              ? 'bg-accent text-white'
               : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
@@ -229,7 +229,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           </Button>
 
           {searchError && (
-            <div className="p-4 border border-red-500/30 bg-red-500/10 rounded-xl text-center text-red-500 flex flex-col items-center gap-2">
+            <div className="p-4 border border-red-500/30 bg-red-500/10 rounded-md text-center text-red-500 flex flex-col items-center gap-2">
               <AlertCircle className="w-6 h-6" />
               <p className="text-sm font-medium">{searchError}</p>
             </div>
@@ -253,14 +253,14 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
               )}
 
               {searchResults.map((res, i) => (
-                <div key={i} className="p-5 border border-accent/30 bg-accent/5 rounded-xl flex flex-col gap-3">
+                <div key={i} className="p-5 border border-accent/30 bg-accent/5 rounded-md flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <span className="font-heading font-bold text-lg text-accent-light">{res.reference}</span>
                     <span className="px-2 py-1 rounded text-xs font-bold bg-accent/20 text-accent-light">
                       {res.translation_name || searchTranslation.toUpperCase()}
                     </span>
                   </div>
-                  <p className="text-primary text-sm leading-relaxed">{res.text}</p>
+                  <p className="text-primary text-sm font-serif leading-relaxed">{res.text}</p>
                   <Button 
                     onClick={() => addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase())}
                     className="mt-2 self-end"
@@ -288,7 +288,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                     setSearchQuery(collection.q);
                     handleSearch(collection.q);
                   }}
-                  className="bg-card border border-card-border rounded-xl p-4 text-left hover:bg-card-hover transition-colors flex flex-col gap-1"
+                  className="bg-card border border-card-border rounded-md p-4 text-left hover:bg-card-hover transition-colors flex flex-col gap-1"
                 >
                   <span className="font-bold text-primary">{collection.topic}</span>
                   <span className="text-xs text-muted">{collection.desc}</span>
@@ -316,8 +316,8 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           />
           <div className="flex flex-col gap-1.5 w-full">
             <label className="text-sm font-medium text-secondary ml-1">Verse Text</label>
-            <textarea 
-              className="w-full min-h-[120px] p-4 rounded-xl bg-background border border-glass-border focus:outline-none focus:ring-2 focus:ring-accent transition-all text-primary placeholder:text-muted resize-none"
+            <textarea
+              className="w-full min-h-[120px] p-4 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted resize-none"
               placeholder="Type or paste the verse text here..."
               value={manualText}
               onChange={(e) => setManualText(e.target.value)}

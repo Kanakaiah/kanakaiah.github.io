@@ -1,16 +1,17 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { X, Download, Upload, Trash2, Palette, Type, Brain, EyeOff, Volume2, AlertTriangle } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Download, Upload, Trash2, Palette, Type, Brain, EyeOff, Volume2, AlertTriangle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { CustomSelect } from '../ui/CustomSelect';
+import { Modal } from '../ui/Modal';
 
 const THEME_OPTIONS = [
-  { value: 'black', label: 'AMOLED Black', swatch: '#000000' },
-  { value: 'dark', label: 'Dark Gray', swatch: '#1a1a2e' },
-  { value: 'sepia', label: 'Sepia', swatch: '#f5f0e8' },
-  { value: 'white', label: 'White', swatch: '#ffffff' },
+  { value: 'black', label: 'Midnight', swatch: '#0c0a08' },
+  { value: 'dark', label: 'Walnut', swatch: '#1a1613' },
+  { value: 'sepia', label: 'Sepia', swatch: '#f6ecd6' },
+  { value: 'white', label: 'Paper', swatch: '#faf6ee' },
 ];
 
 const FONT_SIZE_OPTIONS = [
@@ -29,39 +30,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isClosing, setIsClosing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  // Close with animation
-  const handleClose = useCallback(() => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      onClose();
-    }, 250);
-  }, [onClose]);
-
-  // Lock body scroll when drawer is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  // Escape key to close
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
-    };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen, handleClose]);
 
   const handleToggle = (key: keyof typeof state.settings) => {
     dispatch({
@@ -111,35 +80,10 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
     window.location.reload();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[60]">
-      {/* Backdrop */}
-      <div
-        className={`absolute inset-0 bg-black/50 backdrop-blur-sm ${isClosing ? 'animate-[fadeOut_0.25s_ease-in_forwards]' : 'animate-[fadeIn_0.2s_ease-out]'}`}
-        onClick={handleClose}
-      />
-
-      {/* Panel */}
-      <div
-        className={`absolute top-0 right-0 h-full w-full sm:w-[400px] sm:max-w-[400px] bg-background sm:border-l border-glass-border flex flex-col ${isClosing ? 'animate-[slideOutRight_0.25s_ease-in_forwards]' : 'animate-[slideInRight_0.3s_ease-out]'}`}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-glass-border shrink-0">
-          <h2 className="text-xl font-heading font-bold text-primary">Settings</h2>
-          <button
-            onClick={handleClose}
-            aria-label="Close settings"
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-secondary hover:text-primary hover:bg-glass-bg-hover transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-5">
-          <div className="flex flex-col gap-8 pb-8">
+    <Modal isOpen={isOpen} onClose={onClose} variant="drawer" title="Settings">
+      <div className="flex-1 overflow-y-auto p-5">
+        <div className="flex flex-col gap-8 pb-8">
 
             <section className="flex flex-col gap-4 relative z-30">
               <div className="flex items-center gap-2 px-1">
@@ -160,10 +104,10 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <button
                           key={t.value}
                           onClick={() => dispatch({ type: 'SET_THEME', payload: t.value })}
-                          className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all ${
+                          className={`flex flex-col items-center gap-1.5 p-2 rounded-md transition-colors ${
                             state.theme === t.value
                               ? 'bg-accent/15 ring-2 ring-accent'
-                              : 'hover:bg-glass-bg-hover'
+                              : 'hover:bg-card-hover'
                           }`}
                           aria-label={`Switch to ${t.label} theme`}
                         >
@@ -193,7 +137,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
               <Card className="p-1 overflow-visible">
                 <div className="flex flex-col divide-y divide-card-border">
 
-                  <div onClick={() => handleToggle('ttsEnabled')} role="switch" aria-checked={state.settings.ttsEnabled} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-t-xl">
+                  <div onClick={() => handleToggle('ttsEnabled')} role="switch" aria-checked={state.settings.ttsEnabled} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-t-lg">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
                         <Volume2 className="w-4 h-4" />
@@ -341,7 +285,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                       <p className="text-xs text-red-500/70">Permanently delete all your data</p>
                     </div>
                     {showDeleteConfirm ? (
-                      <div className="flex flex-col gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 animate-[fadeIn_0.2s_ease-out]">
+                      <div className="flex flex-col gap-2 p-3 rounded-md bg-red-500/10 border border-red-500/20 animate-[fadeIn_0.2s_ease-out]">
                         <div className="flex items-center gap-2 text-red-500">
                           <AlertTriangle className="w-4 h-4 shrink-0" />
                           <span className="text-sm font-bold">Are you sure? This cannot be undone.</span>
@@ -368,7 +312,6 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
 
           </div>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 };

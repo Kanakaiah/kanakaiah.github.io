@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/Button';
 import { Mic, MicOff } from 'lucide-react';
 
 interface SpeechModeProps {
@@ -99,15 +98,15 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
         })}
       </div>
 
-      <Button
-        variant={isListening ? 'danger' : 'primary'}
-        size="lg"
-        className="rounded-full w-20 h-20 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]"
+      <button
         onClick={toggleListen}
         disabled={!!error && !isListening}
+        className={`rounded-full w-20 h-20 flex items-center justify-center text-white transition-colors disabled:opacity-50 disabled:pointer-events-none active:scale-95 ${
+          isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-accent hover:bg-accent-hover'
+        }`}
       >
         {isListening ? <MicOff className="w-8 h-8" /> : <Mic className="w-8 h-8" />}
-      </Button>
+      </button>
 
       {isListening && (
         <span className="text-accent animate-pulse font-medium">Listening...</span>
@@ -115,7 +114,7 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
       
       {error && <span className="text-red-500 text-sm mt-2">{error}</span>}
 
-      <div className="w-full mt-4 p-4 rounded-xl bg-glass-bg border border-glass-border min-h-[100px]">
+      <div className="w-full mt-4 p-4 rounded-md bg-card-elevated border border-card-border min-h-[100px]">
         <p className="text-secondary text-sm font-medium mb-2">Live Transcript:</p>
         <p className="text-primary italic">{transcript || "Waiting for speech..."}</p>
       </div>

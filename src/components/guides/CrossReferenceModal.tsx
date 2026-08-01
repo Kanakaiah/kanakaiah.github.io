@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, Loader2, BookOpen } from 'lucide-react';
+import { ArrowRight, Loader2, BookOpen } from 'lucide-react';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 import { BOLLS_BIBLE_MAP } from '../../data/bibleMap';
+import { Modal } from '../ui/Modal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -173,34 +174,14 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
   const isMultiVerse = verseRefs.length > 1;
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-background/60 backdrop-blur-xl animate-in fade-in slide-in-from-bottom duration-300">
-      {/* Header */}
-      <div 
-        className="flex items-center justify-between px-5 py-4 relative"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-      >
-        {/* Modern gradient border under header */}
-        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-glass-border to-transparent" />
-        <div className="flex items-center gap-3">
-          <BookOpen className="w-5 h-5 text-accent" />
-          <div>
-            <h2 className="text-lg font-bold text-primary">Cross References</h2>
-            <p className="text-sm text-secondary">
-              {isMultiVerse 
-                ? `${verseRefs.length} verses · ${totalRefs} references`
-                : capitalize(verseRefs[0])
-              }
-            </p>
-          </div>
-        </div>
-        <button 
-          onClick={onClose}
-          className="p-2 -mr-2 rounded-full hover:bg-glass-bg transition-colors"
-        >
-          <X className="w-5 h-5 text-secondary" />
-        </button>
-      </div>
-
+    <Modal
+      isOpen
+      onClose={onClose}
+      variant="fullscreen"
+      icon={<BookOpen className="w-5 h-5 text-accent" />}
+      title="Cross References"
+      subtitle={isMultiVerse ? `${verseRefs.length} verses · ${totalRefs} references` : capitalize(verseRefs[0])}
+    >
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {error && (
@@ -246,7 +227,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                 return (
                   <div 
                     key={`${gi}-${i}`} 
-                    className="px-5 py-2.5 relative active:bg-glass-bg transition-colors"
+                    className="px-5 py-2.5 relative active:bg-card-hover transition-colors"
                     onClick={() => {
                       if (bookInfo) {
                         onNavigateToVerse(bookInfo.id, r.chapter, r.verse);
@@ -276,6 +257,6 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
           );
         })}
       </div>
-    </div>
+    </Modal>
   );
 };
