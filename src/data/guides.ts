@@ -24,7 +24,7 @@ export const NT_STUDY_GUIDES = [
       {
         heading: "1. Historical & Theological Overview",
         description: "The 'Roman Road' is a classic evangelistic memory chain compiled from the Apostle Paul's Epistle to the Romans (AD 57). It traces humanity's journey from helpless condemnation under sin to glorious justification, peace, and eternal life through Jesus Christ.",
-        note: "Memorizing these 7 core verses enables you to clearly explain the Gospel to anyone at a moment's notice."
+        note: "Memorizing this 5-step chain (8 verses total) enables you to clearly explain the Gospel to anyone at a moment's notice, using nothing but the book of Romans."
       },
       {
         heading: "2. The 5-Step Gospel Pathway Matrix",
@@ -84,6 +84,19 @@ export const NT_STUDY_GUIDES = [
         }
       },
       {
+        heading: "2. Phase 2: Interpretation — What Does the Text Mean?",
+        description: "Interpretation asks what the observed facts meant to the original author and audience, before any thought of personal application. Sound interpretation is governed by context, not intuition.",
+        table: {
+          headers: ["Interpretation Tool", "Guiding Question", "Guardrail"],
+          rows: [
+            ["Context Rule", "What does the paragraph, chapter, and book say around this passage?", "A verse taken out of context becomes a pretext."],
+            ["Historical-Cultural Background", "What did this word, custom, or law mean to the original audience?", "Don't assume 21st-century categories match the ancient world."],
+            ["Cross-Reference (Scripture Interprets Scripture)", "Where else does the Bible speak clearly on this same topic?", "Let clear passages interpret unclear ones, not the reverse."],
+            ["Authorial Intent", "What single meaning did the human author intend to communicate?", "A text cannot mean what it never meant — meaning is discovered, not invented."]
+          ]
+        }
+      },
+      {
         heading: "3. Phase 3: Application — The S.P.A.C.E.S. Checklist",
         table: {
           headers: ["Letter", "Checklist Category", "Reflection Prompt"],
@@ -129,6 +142,25 @@ export const NT_STUDY_GUIDES = [
             ["Protoevangelium", "Genesis 3:15", "First Gospel promise: Seed of woman crushes serpent.", "Skins of sacrifice"],
             ["Noahic Covenant", "Genesis 8:21-9:17", "Unconditional promise never again to destroy earth by flood.", "Rainbow"],
             ["Abrahamic Covenant", "Genesis 12:1-3, 15:6", "Unconditional promise of Land, Seed, and Blessing to nations.", "Circumcision"]
+          ]
+        }
+      },
+      {
+        heading: "3. The Toledot Formula — Genesis' Hidden Backbone",
+        description: "Genesis is structured by ten repetitions of the Hebrew phrase 'elleh toledot' ('these are the generations/account of...'), each one launching a new narrative section. Spotting this formula reveals the book's actual literary architecture beneath the modern chapter divisions.",
+        table: {
+          headers: ["Toledot Marker", "Scripture", "Section Introduced"],
+          rows: [
+            ["Heavens & Earth", "Genesis 2:4", "Creation of man in the garden"],
+            ["Adam", "Genesis 5:1", "Line from Adam to Noah"],
+            ["Noah", "Genesis 6:9", "The Flood narrative"],
+            ["Sons of Noah", "Genesis 10:1", "Table of Nations"],
+            ["Shem", "Genesis 11:10", "Line from Shem to Terah"],
+            ["Terah", "Genesis 11:27", "Abram's call and covenant"],
+            ["Ishmael", "Genesis 25:12", "Ishmael's descendants"],
+            ["Isaac", "Genesis 25:19", "Jacob and Esau"],
+            ["Esau", "Genesis 36:1", "Edomite genealogy"],
+            ["Jacob", "Genesis 37:2", "Joseph narrative"]
           ]
         }
       }
@@ -243,10 +275,12 @@ export const NT_STUDY_GUIDES = [
         table: {
           headers: ["Section", "Reference", "Vision & Symbolism", "Believer's Hope"],
           rows: [
+            ["Vision of the Glorified Christ", "Rev 1", "Christ walks among the lampstands, eyes like fire, voice like rushing waters", "The risen Christ reigns over His church right now"],
             ["7 Letters to Churches", "Rev 2-3", "Exhortation to Ephesus, Smyrna, Pergamum, etc.", "Overcoming through endurance"],
             ["Heavenly Throne Room", "Rev 4-5", "Lion of Judah who is Slain Lamb holding scroll", "Christ alone is worthy"],
             ["Judgments Unsealed", "Rev 6-16", "7 Seals, 7 Trumpets, 7 Bowls of wrath", "God's justice vindicates martyrs"],
-            ["New Creation", "Rev 20-22", "New Heavens, New Earth, New Jerusalem", "No more tears, pain, or curse"]
+            ["Fall of Babylon & Christ's Return", "Rev 17-19", "The great harlot judged; Rider on a white horse conquers; marriage supper of the Lamb", "Every false, seductive empire collapses before the true King"],
+            ["New Creation", "Rev 20-22", "Satan bound and judged; New Heavens, New Earth, New Jerusalem", "No more tears, pain, or curse"]
           ]
         }
       }
@@ -279,6 +313,18 @@ export const NT_STUDY_GUIDES = [
             ["Test of Speech", "James 3:1-12", "Tongue is small fire defiling whole body", "Seek wisdom from above"]
           ]
         }
+      },
+      {
+        heading: "2. Chapters 4-5: Humility, Patience & Prayer",
+        table: {
+          headers: ["Test", "Reference", "Core Exhortation", "Practical Application"],
+          rows: [
+            ["Test of Worldliness", "James 4:1-10", "Friendship with the world is enmity with God; humble yourself and He will exalt you", "Submit to God, resist the devil, draw near in repentance"],
+            ["Test of Presumption", "James 4:13-17", "Boasting about tomorrow ignores that life is a mist", "Hold plans loosely: 'If the Lord wills'"],
+            ["Test of Patience", "James 5:7-11", "Be patient like a farmer waiting for the harvest; Job's endurance shows the Lord's compassion", "Establish your heart; the Judge is at the door"],
+            ["Test of Prayer", "James 5:13-16", "The prayer of a righteous person, prayed fervently, accomplishes much", "Confess sin to one another; pray for the sick and suffering"]
+          ]
+        }
       }
     ]
   },
@@ -306,6 +352,18 @@ export const NT_STUDY_GUIDES = [
             ["Worry to Prayer", "Phil 4:6", "Trade anxious thoughts for specific prayer", "Write down worries & pray"],
             ["Guard Your Mind", "Phil 4:8", "Dwell on true, honorable, pure things", "Filter media; memorize scripture"],
             ["Practice Obedience", "Phil 4:9", "Put into practice what you learned", "Take concrete step of faith"]
+          ]
+        }
+      },
+      {
+        heading: "2. Psalms of Refuge for Anxious Seasons",
+        table: {
+          headers: ["Psalm", "Reference", "Promise"],
+          rows: [
+            ["Be Still", "Psalm 46:1, 10", "God is our refuge and strength, a very present help in trouble — cease striving and know He is God."],
+            ["Cast Your Burden", "Psalm 55:22", "Cast your burden on the LORD, and He shall sustain you; He shall never permit the righteous to be moved."],
+            ["The Lord Is My Shepherd", "Psalm 23:1-4", "Even walking through the valley of the shadow of death, His rod and staff comfort — fear is displaced by presence."],
+            ["Fretting Leads Only to Evil", "Psalm 37:7-8", "Rest in the LORD and wait patiently; fretting only leads toward wrongdoing."]
           ]
         }
       }
@@ -336,6 +394,18 @@ export const NT_STUDY_GUIDES = [
             ["Shield of Faith", "Thyreos", "Active trust extinguishing fiery darts of doubt."],
             ["Helmet of Salvation", "Perikephalaia", "Assurance of salvation guarding mind from despair."],
             ["Sword of the Spirit", "Machaira", "Spoken Word of God (Rhēma) used offensively."]
+          ]
+        }
+      },
+      {
+        heading: "2. Peter's Field Manual for the Enemy's Attacks (1 Peter 5:8-9)",
+        description: "Where Ephesians 6 arms the believer for a defensive stand, 1 Peter 5:8-9 describes the enemy's actual hunting method and the believer's threefold response.",
+        table: {
+          headers: ["Element", "Reference", "Reality / Response"],
+          rows: [
+            ["Be Sober-Minded", "1 Peter 5:8", "Clear-headed spiritual alertness — not paranoia, but refusing to be intoxicated by distraction or fear."],
+            ["Be Watchful", "1 Peter 5:8", "'Your adversary the devil prowls around like a roaring lion, seeking someone to devour' — he targets the isolated and unguarded."],
+            ["Resist, Firm in Faith", "1 Peter 5:9", "Standing firm is possible because 'the same kinds of suffering are being experienced by your brotherhood' — you are not alone."]
           ]
         }
       }
@@ -393,6 +463,17 @@ export const NT_STUDY_GUIDES = [
             ["Friendships", "Prov 27:17", "Iron sharpens iron; walk with wise", "Companion of fools suffers harm."]
           ]
         }
+      },
+      {
+        heading: "2. James: Wisdom Refined Under Pressure",
+        description: "James extends Proverbs' wisdom tradition into the pressure of real community life, distinguishing wisdom's true source from its counterfeit.",
+        table: {
+          headers: ["Principle", "James Ref", "Wisdom Instruction", "Foolish Alternative"],
+          rows: [
+            ["Ask in Faith", "James 1:5-6", "Ask God for wisdom generously given without reproach; ask without doubting.", "Double-minded instability, unstable in all ways."],
+            ["Two Wisdoms Compared", "James 3:13-17", "Wisdom from above is pure, peaceable, gentle, full of mercy and good fruits.", "Earthly wisdom is marked by bitter envy and selfish ambition."]
+          ]
+        }
       }
     ]
   },
@@ -420,6 +501,19 @@ export const NT_STUDY_GUIDES = [
             ["Give us daily bread", "Dependence", "Trusting God for physical/spiritual provision"],
             ["Forgive us our debts", "Confession", "Receiving grace & forgiving others"],
             ["Deliver us from evil", "Protection", "Seeking divine defense against spiritual traps"]
+          ]
+        }
+      },
+      {
+        heading: "2. The Psalms of Ascent (120-134) — Pilgrim Prayers to Jerusalem",
+        description: "These 15 psalms were sung by Israelite pilgrims as they climbed the road to Jerusalem for the three annual feasts (Passover, Pentecost, Tabernacles) — a prayer journey from distress to worship.",
+        table: {
+          headers: ["Stage", "Psalms", "Prayer Movement"],
+          rows: [
+            ["Cry from Exile/Distance", "Ps 120-122", "Longing for peace amid conflict; joy at the invitation, 'Let us go to the house of the LORD.'"],
+            ["Trust Amid the Climb", "Ps 123-126", "Eyes lifted to the LORD like a servant to a master; those who sow in tears reap in joy."],
+            ["Household & Community", "Ps 127-130", "Unless the LORD builds the house; blessing on the family; 'Out of the depths I cry to You.'"],
+            ["Arrival & Worship", "Ps 131-134", "A weaned child stilled before God; unity of brothers; blessing pronounced from Zion's gates."]
           ]
         }
       }
@@ -479,6 +573,23 @@ export const NT_STUDY_GUIDES = [
             ["Exilic & Post-Exilic", "Babylon/Jerusalem", "Zerubbabel, Nehemiah", "Daniel, Ezekiel, Haggai, Malachi", "Temple Rebuilt (516 BC)"]
           ]
         }
+      },
+      {
+        heading: "2. Major Prophet Ministry Windows",
+        description: "Pinning each prophet to the specific king(s) reigning during his ministry (per each book's opening superscription) turns a list of names into an actual timeline.",
+        table: {
+          headers: ["Prophet", "Kingdom", "Reigning King(s)", "Approx. Dates (BC)"],
+          rows: [
+            ["Isaiah", "Judah", "Uzziah, Jotham, Ahaz, Hezekiah", "c. 740-681"],
+            ["Hosea", "Israel", "Jeroboam II through the fall of Samaria", "c. 755-725"],
+            ["Amos", "Israel (from Judah)", "Uzziah (Judah) & Jeroboam II (Israel)", "c. 760-750"],
+            ["Micah", "Judah", "Jotham, Ahaz, Hezekiah", "c. 735-700"],
+            ["Jeremiah", "Judah", "Josiah through the fall of Jerusalem", "c. 627-586"],
+            ["Zephaniah", "Judah", "Josiah", "c. 640-609"],
+            ["Habakkuk", "Judah", "Late Josiah / early Jehoiakim", "c. 609-598"],
+            ["Ezekiel & Daniel", "Exile (Babylon)", "Nebuchadnezzar (Babylonian court)", "c. 605-570"]
+          ]
+        }
       }
     ]
   },
@@ -492,7 +603,8 @@ export const NT_STUDY_GUIDES = [
     type: "reference",
     category: "Historical Timelines",
     keyVerses: [
-      { ref: "Acts 1:8", text: "you shall be witnesses to Me in Jerusalem, and in all Judea and Samaria, and to the end of the earth.", theme: "Acts Mandate" }
+      { ref: "Acts 1:8", text: "you shall be witnesses to Me in Jerusalem, and in all Judea and Samaria, and to the end of the earth.", theme: "Acts Mandate" },
+      { ref: "Romans 15:20", text: "I aspired to preach the gospel, not where Christ was already named, so that I would not build on another man's foundation.", theme: "Paul's Ambition" }
     ],
     memorySentence: "Paul completed **3 MISSIONARY JOURNEYS** across Galatia, Greece, and Asia, writing **13 EPISTLES** ending in Roman imprisonment.",
     sections: [
@@ -535,6 +647,7 @@ export const NT_STUDY_GUIDES = [
             ["Holy Place", "Golden Lampstand", "Continuous light in tent", "Jesus: 'I am Light of World' (John 8:12)"],
             ["Holy Place", "Showbread Table", "12 loaves before God", "Jesus: 'I am Bread of Life' (John 6:35)"],
             ["Holy Place", "Incense Altar", "Fragrant rising prayers", "Christ's perpetual intercession (Heb 7:25)"],
+            ["Between Holy Place & Holy of Holies", "The Veil (Curtain)", "Barrier only the High Priest could pass, once a year", "Torn top-to-bottom at the cross; 'a new and living way... through the veil, that is, His flesh' (Matt 27:51; Heb 10:19-20)"],
             ["Holy of Holies", "Ark & Mercy Seat", "Throne where blood sprinkled", "Jesus is our Mercy Seat/Propitiation (Rom 3:25)"]
           ]
         }
@@ -705,7 +818,8 @@ export const NT_STUDY_GUIDES = [
             ["Love", "Agapē vs Phileo", "Agapē = unconditional covenant love; Phileo = brotherly affection."],
             ["Word", "Logos vs Rhēma", "Logos = total divine revelation/person; Rhēma = spoken utterance in action."],
             ["Life", "Bios vs Zoē", "Bios = physical biological life; Zoē = uncreated divine eternal life."],
-            ["Power", "Dunamis vs Exousia", "Dunamis = inherent miracle power; Exousia = delegated authority."]
+            ["Power", "Dunamis vs Exousia", "Dunamis = inherent miracle power; Exousia = delegated authority."],
+            ["Time", "Chronos vs Kairos", "Chronos = sequential clock-time; Kairos = the appointed, decisive moment (e.g. Mark 1:15, 'the kairos is fulfilled')."]
           ]
         }
       }
@@ -733,6 +847,18 @@ export const NT_STUDY_GUIDES = [
             ["Narrative", "43%", "Historical stories, character arcs, setting, plot conflict", "Show, don't tell. Look for pattern repetition."],
             ["Poetry", "33%", "Metaphor, imagery, Hebrew parallelism", "Evokes emotion & imagination. Don't read like manual."],
             ["Discourse", "24%", "Logical arguments, speeches, letters, essays", "Track linear logic: Cause & Effect, Premises, Conclusions."]
+          ]
+        }
+      },
+      {
+        heading: "2. Hebrew Poetic Parallelism — Reading Poetry Well",
+        description: "Hebrew poetry doesn't rhyme sound — it rhymes ideas. The second line of a couplet almost always relates to the first in one of three ways.",
+        table: {
+          headers: ["Parallelism Type", "Pattern", "Example"],
+          rows: [
+            ["Synonymous", "Line 2 restates Line 1 in different words", "'The heavens declare the glory of God; the skies proclaim the work of His hands' (Ps 19:1)"],
+            ["Antithetic", "Line 2 contrasts Line 1", "'The LORD knows the way of the righteous, but the way of the wicked will perish' (Ps 1:6)"],
+            ["Synthetic", "Line 2 builds on or completes the thought of Line 1", "'The LORD is my shepherd; I shall not want' (Ps 23:1)"]
           ]
         }
       }
@@ -887,6 +1013,18 @@ export const NT_STUDY_GUIDES = [
             ["Immanuel", "עִמָּנוּאֵל", "God With Us", "Isa 7:14 / Matt 1:23 — Incarnation"]
           ]
         }
+      },
+      {
+        heading: "2. Additional Names Worth Knowing",
+        table: {
+          headers: ["Name of God", "Hebrew Text", "English Meaning", "First Reveal Moment"],
+          rows: [
+            ["Adonai", "אֲדֹנָי", "Lord / Master (personal sovereignty over the speaker)", "Gen 15:2 — Abram addresses God"],
+            ["El Elyon", "אֵל עֶלְיוֹן", "God Most High / Possessor of Heaven and Earth", "Gen 14:18-20 — Melchizedek blesses Abram"],
+            ["Yahweh Sabaoth", "יְהוָה צְבָאוֹת", "The LORD of Hosts / Armies (heavenly and earthly)", "1 Sam 1:3 — Hannah's prayer at Shiloh"],
+            ["Yahweh Tsidkenu", "יְהוָה צִדְקֵנוּ", "The LORD Our Righteousness", "Jer 23:6 — Messianic Branch prophecy"]
+          ]
+        }
       }
     ]
   },
@@ -902,7 +1040,7 @@ export const NT_STUDY_GUIDES = [
     keyVerses: [
       { ref: "Acts 21:8", text: "Philip the evangelist, who was one of the seven...", theme: "Evangelist Title" }
     ],
-    memorySentence: "**ANDREW** first brought Peter, **PHILIP** brought Nathanael, the **SAMARITAN WOMAN** brought her town, and **MARY MAGDALENE** heralded the Risen Christ.",
+    memorySentence: "**JOHN THE BAPTIST** first pointed to the Lamb, **ANDREW** then brought Peter, **PHILIP** brought Nathanael, the **SAMARITAN WOMAN** brought her town, and **MARY MAGDALENE** heralded the Risen Christ.",
     sections: [
       {
         heading: "1. Explicit NT Title: 'Evangelist' (εὐαγγελιστής)",
@@ -919,9 +1057,10 @@ export const NT_STUDY_GUIDES = [
       {
         heading: "2. First Proclaimers in Narrative Order",
         entries: [
-          { rank: "First", person: "Andrew", reference: "John 1:40–42", quote: "We have found the Messiah. He brought him to Jesus.", note: "First act of personal evangelism recorded in the Gospels." },
-          { rank: "Second", person: "Philip of Bethsaida", reference: "John 1:43–45", quote: "We have found him of whom Moses in the Law wrote... Come and see.", note: "Classic 'come and see' invitation to Nathanael." },
-          { rank: "Third", person: "Samaritan Woman", reference: "John 4:28–30, 39", quote: "Come, see a man who told me all that I ever did. Can this be the Christ?", note: "First cross-cultural evangelist bringing an entire city." },
+          { rank: "First", person: "John the Baptist", reference: "John 1:29, 35-36", quote: "Behold, the Lamb of God who takes away the sin of the world!", note: "The forerunner's testimony is what sends his own disciples — including Andrew — to follow Jesus in the very next verses." },
+          { rank: "Second", person: "Andrew", reference: "John 1:40–42", quote: "We have found the Messiah. He brought him to Jesus.", note: "First act of personal, one-to-one evangelism recorded in the Gospels — done by a disciple of John the Baptist." },
+          { rank: "Third", person: "Philip of Bethsaida", reference: "John 1:43–45", quote: "We have found him of whom Moses in the Law wrote... Come and see.", note: "Classic 'come and see' invitation to Nathanael." },
+          { rank: "Fourth", person: "Samaritan Woman", reference: "John 4:28–30, 39", quote: "Come, see a man who told me all that I ever did. Can this be the Christ?", note: "First cross-cultural evangelist bringing an entire city." },
           { rank: "Special", person: "Mary Magdalene", reference: "John 20:18", quote: "I have seen the Lord!", note: "First herald of the Risen Christ — called 'apostle to the apostles' by church fathers." }
         ]
       }

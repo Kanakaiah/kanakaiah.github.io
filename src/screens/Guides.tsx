@@ -8,6 +8,7 @@ import { OT_BOOKS, OT_SECTIONS } from '../data/otBooks';
 import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
 import { ChapterReader } from '../components/guides/ChapterReader';
 import { MemorySentence } from '../components/guides/MemorySentence';
+import { RecordCards } from '../components/guides/RecordCards';
 import { OriginalWordModal } from '../components/OriginalWordModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
@@ -406,26 +407,7 @@ export const Guides: React.FC = () => {
                    )}
 
                    {sec.table && (
-                     <div className="overflow-x-auto mt-2">
-                       <table className="w-full text-left text-sm border-collapse font-serif">
-                         <thead>
-                           <tr>
-                             {sec.table.headers.map((h: string, hi: number) => (
-                               <th key={hi} className="p-3 border-b-2 border-card-border font-sans font-bold text-xs uppercase tracking-wide text-muted">{h}</th>
-                             ))}
-                           </tr>
-                         </thead>
-                         <tbody>
-                           {sec.table.rows.map((row: string[], ri: number) => (
-                             <tr key={ri} className="border-b border-card-border">
-                               {row.map((cell: string, ci: number) => (
-                                 <td key={ci} className="p-3 text-secondary leading-relaxed">{cell}</td>
-                               ))}
-                             </tr>
-                           ))}
-                         </tbody>
-                       </table>
-                     </div>
+                     <RecordCards headers={sec.table.headers} rows={sec.table.rows} />
                    )}
 
                    {sec.entries && (
