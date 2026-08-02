@@ -7,6 +7,7 @@ import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
 import { OT_BOOKS, OT_SECTIONS } from '../data/otBooks';
 import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
 import { ChapterReader } from '../components/guides/ChapterReader';
+import { MemorySentence } from '../components/guides/MemorySentence';
 import { OriginalWordModal } from '../components/OriginalWordModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
@@ -641,28 +642,6 @@ export const Guides: React.FC = () => {
                 </div>
               )}
 
-              {activeGuide.memorySentence && (
-                <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Memory Sentence</h3>
-                    <span className="text-[0.625rem] text-muted tracking-normal px-2 py-1 rounded hidden sm:block bg-card-elevated border border-card-border">Read 3-4 times to lock flow</span>
-                  </div>
-                  <div 
-                    className="rounded-lg p-5 bg-card-elevated border border-card-border font-serif"
-                    style={{ 
-                      borderLeft: '3px solid var(--accent-light)',
-                    }}
-                  >
-                    <p
-                      className="text-base leading-relaxed text-secondary"
-                      dangerouslySetInnerHTML={{
-                        __html: activeGuide.memorySentence.replace(/\*\*/g, '').replace(/\b([A-Z]{2,}(?:'S)?)\b/g, '<strong class="text-orange-400 font-bold">$1</strong>')
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-
               {activeGuide.keyVerses && (
                 <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
                   <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
@@ -684,6 +663,17 @@ export const Guides: React.FC = () => {
                 </div>
               )}
 
+            </div>
+          )}
+
+          {/* Memory Sentence — not gated to book-guide type. Reference/topical
+              guides (Roman Road, Names of God, etc.) carry the same hand-written
+              memorySentence field but have no chapter architecture, so this has
+              to live outside the type-specific blocks above to reach them. */}
+          {activeGuide.memorySentence && (
+            <div className="pt-6 border-t border-card-border flex flex-col gap-4">
+              <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Memory Sentence</h3>
+              <MemorySentence sentence={activeGuide.memorySentence} anchors={activeGuide.anchors} />
             </div>
           )}
 
