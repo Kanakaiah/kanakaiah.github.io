@@ -35,6 +35,18 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Only manage same-origin requests (the app shell). Third-party API calls
+  // (Bible text, cross-references, etc.) are left to the browser's normal
+  // network handling — routing them through the cache dance below added a
+  // failure point where the very first request after this worker activates
+  // could stall indefinitely instead of reaching the network, even though
+  // the API itself was healthy. Retrying always worked because by then the
+  // worker had finished activating.
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.origin !== self.location.origin) {
+    return;
+  }
+
   // We use a Stale-While-Revalidate strategy for faster loading and offline support
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
