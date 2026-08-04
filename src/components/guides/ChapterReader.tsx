@@ -15,6 +15,12 @@ import otQuotesData from '../../data/otQuotes.json';
 // --- Module-level caching for performance ---
 const otQuotes = otQuotesData as Record<string, Record<string, number[]>>;
 let cachedCrossRefs: Record<string, string[]> | null = null;
+// bookId -> chapter number (as string) -> verse numbers that start a new paragraph.
+// Sourced from NASB95 (via API.Bible), which shares the LSB's paragraph structure closely
+// enough to use directly — verified against Blue Letter Bible's LSB markers for John 3
+// (exact match). Poetic books have no entries here (poetry has no real "paragraph" unit at
+// the USX level) and fall back to the heading/<br/> heuristic below.
+let cachedParagraphBreaks: Record<string, Record<string, number[]>> | null = null;
 const cachedStrongsDicts: Record<string, Record<string, StrongsDefinition>> = {};
 
 // Common function words that should NOT be underlined in α mode
@@ -40,6 +46,21 @@ const FONT_SIZE_LABELS = (size: number): string => {
   if (size <= 1.35) return 'L';
   return 'XL';
 };
+
+// bolls.life's translation code doubles as the display label for LSB/NLT, but NASB
+// specifically means the 1995 edition here — spell that out so it isn't mistaken for
+// a different NASB printing.
+const BIBLE_VERSION_LABELS: Record<string, string> = {
+  LSB: 'LSB',
+  NASB: 'NASB95',
+  NLT: 'NLT',
+};
+
+const BIBLE_VERSION_OPTIONS: { value: 'LSB' | 'NASB' | 'NLT'; label: string }[] = [
+  { value: 'LSB', label: 'Legacy Standard Bible (LSB)' },
+  { value: 'NASB', label: 'New American Standard Bible 1995 (NASB95)' },
+  { value: 'NLT', label: 'New Living Translation (NLT)' },
+];
 
 interface StrongsDefinition {
   lemma: string;
@@ -85,11 +106,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [showOptions, setShowOptions] = useState(false);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
   const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(cachedCrossRefs);
+  const [paragraphBreaks, setParagraphBreaks] = useState<Record<string, Record<string, number[]>> | null>(cachedParagraphBreaks);
   const { state, dispatch } = useApp();
+  const bibleVersion = state.settings.bibleVersion || 'LSB';
   const { showToast } = useToast();
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
   const [showAddOptions, setShowAddOptions] = useState(false);
   const [showNavigator, setShowNavigator] = useState(false);
+  const [showVersionPicker, setShowVersionPicker] = useState(false);
   const [navigatorBook, setNavigatorBook] = useState(bookId);
   const chapterGridRef = useRef<HTMLDivElement>(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -252,6 +276,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       return next;
     }, { replace: true });
     setShowNavigator(false);
+    setShowVersionPicker(false);
   };
 
   useEffect(() => {
@@ -273,6 +298,24 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   }, []);
 
   useEffect(() => {
+    if (cachedParagraphBreaks) {
+      setParagraphBreaks(cachedParagraphBreaks);
+      return;
+    }
+    let mounted = true;
+    fetch('/data/paragraph_breaks.json')
+      .then(res => res.json())
+      .then(data => {
+        if (mounted) {
+          cachedParagraphBreaks = data;
+          setParagraphBreaks(data);
+        }
+      })
+      .catch(console.error);
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
     if (showNavigator && chapterGridRef.current) {
       setTimeout(() => {
         chapterGridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -281,6 +324,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   }, [navigatorBook, showNavigator]);
 
   useEffect(() => {
+    // Guards against React StrictMode's dev-only double-invoke of effects (mount ->
+    // cleanup -> mount again): the first invocation's fetch gets aborted by the
+    // cleanup below almost immediately, which would otherwise be indistinguishable
+    // from a real 15s timeout and incorrectly flash an error before the second,
+    // real invocation's fetch even has a chance to resolve.
+    let cancelled = false;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
@@ -293,15 +342,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           throw new Error('Book not found in Bible API map.');
         }
 
-        const res = await fetch(`https://bolls.life/get-text/LSB/${bollsId}/${chapter}/`, { signal: controller.signal });
+        const res = await fetch(`https://bolls.life/get-text/${bibleVersion}/${bollsId}/${chapter}/`, { signal: controller.signal });
         if (!res.ok) {
           throw new Error('Failed to fetch chapter text.');
         }
 
         const data: Verse[] = await res.json();
+        if (cancelled) return;
         setVerses(data);
         setSelectedVerses([]); // Clear any previous selection when loading a new chapter
       } catch (err: any) {
+        if (cancelled) return;
         if (err.name === 'AbortError') {
           setError('This is taking longer than expected. Check your connection and try again.');
         } else {
@@ -309,16 +360,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         }
       } finally {
         clearTimeout(timeoutId);
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchChapter();
     return () => {
+      cancelled = true;
       clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [bookId, chapter, retryCount]);
+  }, [bookId, chapter, retryCount, bibleVersion]);
 
   useEffect(() => {
     if (verses.length > 0 && highlightVerse && !loading) {
@@ -420,7 +472,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
               id: crypto.randomUUID(),
               ref: ref,
               text: cleanText,
-              translation: 'LSB',
+              translation: bibleVersion,
               addedDate: new Date().toISOString(),
               status: 'learning',
               sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
@@ -481,7 +533,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             id: crypto.randomUUID(),
             ref: ref,
             text: combinedText,
-            translation: 'LSB',
+            translation: bibleVersion,
             addedDate: new Date().toISOString(),
             status: 'learning',
             sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
@@ -580,7 +632,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       refStr = sorted.join(',');
     }
 
-    const finalString = `'${combinedText}'\n\n${bookTitle} ${chapter}:${refStr} (LSB)`;
+    const finalString = `'${combinedText}'\n\n${bookTitle} ${chapter}:${refStr} (${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion})`;
 
     navigator.clipboard.writeText(finalString).then(() => {
       showToast('Copied to clipboard!', 'success');
@@ -702,9 +754,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         extraClass = 'bg-gold/25 rounded px-1 -mx-1';
       }
 
-      // The API provides <br/> tags at the start of verses that begin a new paragraph.
-      // We also treat section headings as paragraph starts.
-      const isParagraphStart = !!heading || hasLeadingBr;
+      // Prefer the real paragraph-break dataset (sourced from NASB95) when we have it for
+      // this chapter; fall back to the heading/<br/> heuristic otherwise (mainly poetry,
+      // where paragraph breaks aren't meaningful at the verse level). Either way, never mark
+      // the chapter's very first verse — it's trivially a "new paragraph" already, and
+      // marking it is redundant with the section heading (matches Blue Letter Bible's own
+      // convention, which never shows a paragraph mark on a chapter's opening verse).
+      const chapterBreaks = paragraphBreaks?.[bookId]?.[String(chapter)];
+      const isFirstVerseOfChapter = verses.length > 0 && v.verse === verses[0].verse;
+      const isParagraphStart = !isFirstVerseOfChapter && (
+        chapterBreaks ? chapterBreaks.includes(v.verse) : (!!heading || hasLeadingBr)
+      );
       const pilcrowHtml = isParagraphStart ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>` : '';
       const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
 
@@ -714,7 +774,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     });
 
     return html;
-  }, [verses, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter]);
+  }, [verses, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter, paragraphBreaks]);
 
   // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
   const isOldTestament = (ALL_BOOKS.findIndex(b => b.id === bookId) + 1) <= 39;
@@ -776,17 +836,33 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   // Parse KJV text with Strong's numbers into word-strongs pairs
   const parseKjvStrongs = useCallback((html: string): ParsedStrongsWord[] => {
     const cleanHtml = html.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
-    const regex = /([^<]+)(?:<S>(\d+)<\/S>)?/g;
+    // `[^<]*` (zero-or-more, not one-or-more) — a verse can open with a <S> tag that has
+    // no preceding English word at all (untranslated connectors like Greek δέ), or carry
+    // back-to-back tags separated only by whitespace. With `+`, the regex couldn't match
+    // zero characters before such a tag and instead slipped into matching the tag's own
+    // "S>1234" / "/S>" delimiters as if they were English text, leaking that literal
+    // garbage into the rendered verse.
+    const regex = /([^<]*)(?:<S>(\d+)<\/S>)?/g;
     let match;
     const words: ParsedStrongsWord[] = [];
 
     while ((match = regex.exec(cleanHtml)) !== null) {
+      // `*` can produce a zero-length match (e.g. at the end of the string), which never
+      // advances lastIndex on its own — exec() would return the same empty match forever.
+      if (match[0].length === 0) {
+        regex.lastIndex++;
+        continue;
+      }
+
       let englishText = match[1].trim();
       const strongsNumber = match[2];
 
       if (!englishText && !strongsNumber) continue;
 
-      if (englishText) {
+      // Keep entries with a Strong's number even when there's no attached English word
+      // (e.g. a mild Greek connective like δέ that the KJV translators left implicit) —
+      // otherwise that original-language word simply vanishes with no trace at all.
+      if (englishText || strongsNumber) {
         const formattedStrongs = strongsNumber ? `${isOldTestament ? 'H' : 'G'}${strongsNumber}` : null;
         words.push({
           english: englishText,
@@ -800,8 +876,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
   // Build alpha mode HTML with clickable underlined words. Verse-level selection
   // (for Add/Copy/Refs) stays wired to the same verse numbers as normal mode —
-  // those actions read from the already-loaded LSB `verses` array regardless of
-  // which translation is on screen, so selection works identically in both modes.
+  // those actions read from the already-loaded `verses` array (in whichever Bible
+  // version is selected) regardless of alpha mode being KJV-based, so selection
+  // works identically in both modes.
   const alphaHtml = useMemo(() => {
     if (kjvVerses.length === 0) return '';
     let html = '';
@@ -812,8 +889,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
       parsed.forEach((pw) => {
         const hasDefinition = pw.strongs && strongsDict[pw.strongs];
+        const isUntranslated = hasDefinition && !pw.english.trim();
 
-        if (hasDefinition) {
+        if (isUntranslated) {
+          // Present in the original language but not rendered as its own word in the
+          // KJV (e.g. a mild Greek connective like δέ, left implicit by the
+          // translators). Show a small discoverable marker instead of silently
+          // dropping the word — it's still a real word in the original text.
+          verseHtml += `<span class="alpha-word inline-block w-[0.3em] h-[0.3em] rounded-full bg-accent/50 hover:bg-accent align-middle mx-[3px] cursor-pointer transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" data-strongs="${pw.strongs}" data-word="" tabindex="0" role="button" aria-label="Untranslated word in the original language — tap to view"></span> `;
+        } else if (hasDefinition) {
           const tokens = pw.english.split(/(\b[a-zA-Z]+(?:'[a-zA-Z]+)?\b)/);
 
           tokens.forEach(token => {
@@ -857,18 +941,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     if (wordSpan) {
       e.stopPropagation();
       const strongsNumber = wordSpan.getAttribute('data-strongs');
-      const word = wordSpan.getAttribute('data-word');
-      if (strongsNumber && word) {
-        if (strongsDict[strongsNumber]) {
-          setWordPopup({
-            word,
-            strongsNumber,
-            definition: strongsDict[strongsNumber]
-          });
+      // Untranslated-word markers carry an empty data-word (no KJV text to show) —
+      // fall back to the lemma so the popup still has a meaningful title.
+      const rawWord = wordSpan.getAttribute('data-word') || '';
+      if (strongsNumber) {
+        const definition = strongsDict[strongsNumber];
+        const displayWord = rawWord || definition?.lemma || strongsNumber;
+        if (definition) {
+          setWordPopup({ word: displayWord, strongsNumber, definition });
         } else if (alphaLoading) {
           // Dictionary still loading — show a transient loading popup
           setWordPopup({
-            word,
+            word: displayWord,
             strongsNumber,
             definition: {
               lemma: '…',
@@ -896,12 +980,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       e.preventDefault();
       e.stopPropagation();
       const strongsNumber = wordSpan.getAttribute('data-strongs');
-      const word = wordSpan.getAttribute('data-word');
-      if (strongsNumber && word) {
-        if (strongsDict[strongsNumber]) {
-          setWordPopup({ word, strongsNumber, definition: strongsDict[strongsNumber] });
+      const rawWord = wordSpan.getAttribute('data-word') || '';
+      if (strongsNumber) {
+        const definition = strongsDict[strongsNumber];
+        const displayWord = rawWord || definition?.lemma || strongsNumber;
+        if (definition) {
+          setWordPopup({ word: displayWord, strongsNumber, definition });
         } else if (alphaLoading) {
-          setWordPopup({ word, strongsNumber, definition: { lemma: '…', strongs_def: 'Loading definition…', kjv_def: '' } });
+          setWordPopup({ word: displayWord, strongsNumber, definition: { lemma: '…', strongs_def: 'Loading definition…', kjv_def: '' } });
         }
       }
       return;
@@ -956,7 +1042,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                 ? 'text-yellow-300 bg-yellow-500/15' 
                 : 'text-accent bg-accent/10'
             }`}>
-              {alphaMode ? 'KJV + Original Words' : 'LSB Translation'}
+              {alphaMode ? 'KJV + Original Words' : `${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} Translation`}
             </span>
           </div>
           
@@ -970,8 +1056,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                 }
               }}
               className={`relative p-2 rounded-full transition-colors font-serif text-lg leading-none ${alphaMode ? 'bg-accent text-white' : 'hover:bg-card-hover text-secondary'}`}
-              title={alphaMode ? 'Switch to LSB reading mode' : 'Show original Greek/Hebrew words'}
-              aria-label={alphaMode ? 'Switch to LSB reading mode' : 'Show original Greek and Hebrew words'}
+              title={alphaMode ? `Switch to ${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} reading mode` : 'Show original Greek/Hebrew words'}
+              aria-label={alphaMode ? `Switch to ${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} reading mode` : 'Show original Greek and Hebrew words'}
             >
               α
               {!alphaDiscovered && !alphaMode && (
@@ -1129,7 +1215,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
               )}
             </div>
           ) : (
-            /* Normal LSB mode */
+            /* Normal reading mode (selected Bible version) */
             <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleVerseClick} onKeyDown={handleVerseKeyDown}>
               <div
                 className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
@@ -1297,14 +1383,45 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
             <button
-              onClick={() => setShowNavigator(false)}
+              onClick={() => { setShowNavigator(false); setShowVersionPicker(false); }}
               className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
               aria-label="Close navigator"
             >
               <X className="w-5 h-5 text-secondary" />
             </button>
             <span className="text-sm font-bold text-primary tracking-wide">Go to...</span>
-            <div className="w-9" />
+            <div className="relative">
+              <button
+                onClick={() => setShowVersionPicker(v => !v)}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-bold text-secondary hover:text-primary hover:bg-card-hover transition-colors border border-card-border"
+                aria-label="Change Bible version"
+                title="Change Bible version"
+              >
+                {BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              {showVersionPicker && (
+                <>
+                  <div className="fixed inset-0 z-[74]" onClick={() => setShowVersionPicker(false)} />
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-card-border rounded-lg shadow-md z-[75] overflow-hidden animate-[fadeScaleIn_0.15s_ease-out]">
+                    {BIBLE_VERSION_OPTIONS.map(opt => (
+                      <button
+                        key={opt.value}
+                        onClick={() => {
+                          dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: opt.value } });
+                          setShowVersionPicker(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-card-hover ${
+                          bibleVersion === opt.value ? 'text-accent font-bold bg-accent/10' : 'text-primary'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Book list */}

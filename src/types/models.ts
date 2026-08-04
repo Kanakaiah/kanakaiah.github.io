@@ -17,6 +17,8 @@ export interface Verse {
   attempts: number;
 }
 
+export type BibleVersion = 'LSB' | 'NASB' | 'NLT';
+
 export interface UserSettings {
   ttsEnabled: boolean;
   notificationsEnabled: boolean;
@@ -24,6 +26,7 @@ export interface UserSettings {
   bionicReading: boolean;
   fontSize: number;
   fontFamily?: 'sans' | 'serif' | 'hyper';
+  bibleVersion?: BibleVersion;
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';

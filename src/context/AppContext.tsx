@@ -16,7 +16,8 @@ const initialState: AppState = {
     recallMasking: false,
     bionicReading: false,
     fontSize: 1,
-    fontFamily: 'serif'
+    fontFamily: 'serif',
+    bibleVersion: 'LSB'
   }
 };
 

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Download, Upload, Trash2, Palette, Type, Brain, EyeOff, Volume2, AlertTriangle } from 'lucide-react';
+import { Download, Upload, Trash2, Palette, Type, Brain, EyeOff, Volume2, AlertTriangle, BookOpen } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { Card } from '../ui/Card';
@@ -19,6 +19,12 @@ const FONT_SIZE_OPTIONS = [
   { value: '1', label: 'Normal / System Match' },
   { value: '1.15', label: 'Large' },
   { value: '1.3', label: 'Extra Large' },
+];
+
+const BIBLE_VERSION_OPTIONS = [
+  { value: 'LSB', label: 'Legacy Standard Bible (LSB)' },
+  { value: 'NASB', label: 'New American Standard Bible 1995 (NASB95)' },
+  { value: 'NLT', label: 'New Living Translation (NLT)' },
 ];
 
 interface SettingsDrawerProps {
@@ -192,6 +198,25 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         value={(state.settings.fontSize || 1).toString()}
                         onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(v) } })}
                         options={FONT_SIZE_OPTIONS}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-4 flex flex-col gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
+                        <BookOpen className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-primary text-sm">Bible Version</h3>
+                        <p className="text-xs text-secondary">Translation used in the chapter reader</p>
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      <CustomSelect
+                        value={state.settings.bibleVersion || 'LSB'}
+                        onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: v as 'LSB' | 'NASB' | 'NLT' } })}
+                        options={BIBLE_VERSION_OPTIONS}
                       />
                     </div>
                   </div>
