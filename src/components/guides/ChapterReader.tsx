@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2, BookOpen } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2, BookOpen, RotateCw } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
@@ -30,6 +30,16 @@ const SKIP_WORDS = new Set([
   'other','over','same','some','such','through','under','upon','very','now',
   'only','still','just','also','too','again','o','oh','lo','unto'
 ]);
+
+// fontSize is a raw multiplier (0.85–1.45); surface it as a size label instead
+// of the internal number so "1.15" doesn't leak into the reading-options UI.
+const FONT_SIZE_LABELS = (size: number): string => {
+  if (size <= 0.90) return 'XS';
+  if (size <= 1.05) return 'S';
+  if (size <= 1.20) return 'M';
+  if (size <= 1.35) return 'L';
+  return 'XL';
+};
 
 interface StrongsDefinition {
   lemma: string;
@@ -82,6 +92,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [showNavigator, setShowNavigator] = useState(false);
   const [navigatorBook, setNavigatorBook] = useState(bookId);
   const chapterGridRef = useRef<HTMLDivElement>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [alphaDiscovered, setAlphaDiscovered] = useState(() => {
+    try { return localStorage.getItem('remora_alpha_discovered') === '1'; } catch { return true; }
+  });
 
   // Alpha mode state
   const [alphaMode, setAlphaMode] = useState(false);
@@ -195,17 +209,24 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [touchStartPos, setTouchStartPos] = useState<{x: number, y: number} | null>(null);
   const [touchEndPos, setTouchEndPos] = useState<{x: number, y: number} | null>(null);
 
+  // Any of these overlays sit on top of the reader as React children, so their
+  // touch events bubble up to the swipe handlers below unless explicitly guarded —
+  // otherwise swiping inside e.g. the chapter navigator silently changes the chapter underneath it.
+  const isOverlayOpen = showOptions || showNavigator || !!showCrossReferences || showAddOptions || !!wordPopup || !!viewingOccurrences;
+
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (isOverlayOpen) return;
     setTouchEndPos(null);
     setTouchStartPos({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (isOverlayOpen) return;
     setTouchEndPos({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
   };
 
   const handleTouchEnd = () => {
-    if (!touchStartPos || !touchEndPos) return;
+    if (isOverlayOpen || !touchStartPos || !touchEndPos) return;
     const distanceX = touchStartPos.x - touchEndPos.x;
     const distanceY = touchStartPos.y - touchEndPos.y;
     const minSwipeDistance = 50;
@@ -260,6 +281,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   }, [navigatorBook, showNavigator]);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     const fetchChapter = async () => {
       setLoading(true);
       setError(null);
@@ -269,23 +293,32 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           throw new Error('Book not found in Bible API map.');
         }
 
-        const res = await fetch(`https://bolls.life/get-text/LSB/${bollsId}/${chapter}/`);
+        const res = await fetch(`https://bolls.life/get-text/LSB/${bollsId}/${chapter}/`, { signal: controller.signal });
         if (!res.ok) {
           throw new Error('Failed to fetch chapter text.');
         }
-        
+
         const data: Verse[] = await res.json();
         setVerses(data);
         setSelectedVerses([]); // Clear any previous selection when loading a new chapter
       } catch (err: any) {
-        setError(err.message || 'An error occurred while loading the chapter.');
+        if (err.name === 'AbortError') {
+          setError('This is taking longer than expected. Check your connection and try again.');
+        } else {
+          setError(err.message || 'An error occurred while loading the chapter.');
+        }
       } finally {
+        clearTimeout(timeoutId);
         setLoading(false);
       }
     };
 
     fetchChapter();
-  }, [bookId, chapter]);
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [bookId, chapter, retryCount]);
 
   useEffect(() => {
     if (verses.length > 0 && highlightVerse && !loading) {
@@ -323,19 +356,31 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     return memSet;
   }, [state.verses, bookTitle, chapter]);
 
+  const toggleVerseSelection = useCallback((verseNum: number) => {
+    setSelectedVerses(prev =>
+      prev.includes(verseNum)
+        ? prev.filter(v => v !== verseNum)
+        : [...prev, verseNum].sort((a, b) => a - b)
+    );
+  }, []);
+
   const handleVerseClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const verseSpan = target.closest('.verse-span');
     if (verseSpan) {
       const verseNumStr = verseSpan.getAttribute('data-verse');
-      if (verseNumStr) {
-        const verseNum = parseInt(verseNumStr, 10);
-        setSelectedVerses(prev => 
-          prev.includes(verseNum) 
-            ? prev.filter(v => v !== verseNum)
-            : [...prev, verseNum].sort((a, b) => a - b)
-        );
-      }
+      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
+    }
+  };
+
+  const handleVerseKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const target = e.target as HTMLElement;
+    const verseSpan = target.closest('.verse-span');
+    if (verseSpan) {
+      e.preventDefault();
+      const verseNumStr = verseSpan.getAttribute('data-verse');
+      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
     }
   };
 
@@ -545,7 +590,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     });
   };
 
-  const buildChapterHtml = () => {
+  const chapterHtml = useMemo(() => {
     let html = '';
     
     // The chapter title is already shown in the sticky header, no need to duplicate it here.
@@ -654,21 +699,22 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       if (isSelected) {
         extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
       } else if (inLibrary) {
-        extraClass = 'bg-yellow-400/25 rounded px-1 -mx-1';
+        extraClass = 'bg-gold/25 rounded px-1 -mx-1';
       }
-      
+
       // The API provides <br/> tags at the start of verses that begin a new paragraph.
       // We also treat section headings as paragraph starts.
       const isParagraphStart = !!heading || hasLeadingBr;
       const pilcrowHtml = isParagraphStart ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>` : '';
       const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
-      
+
       const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
-      html += `<span class="inline verse-span cursor-pointer transition-colors ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}">${pilcrowHtml}<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
+      const ariaLabel = `Verse ${v.verse}${isSelected ? ', selected' : ''}${inLibrary ? ', in your library' : ''}`;
+      html += `<span class="inline verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}" tabindex="0" role="button" aria-pressed="${isSelected}" aria-label="${ariaLabel}">${pilcrowHtml}<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
     });
 
     return html;
-  };
+  }, [verses, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter]);
 
   // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
   const isOldTestament = (ALL_BOOKS.findIndex(b => b.id === bookId) + 1) <= 39;
@@ -752,8 +798,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     return words;
   }, [isOldTestament]);
 
-  // Build alpha mode HTML with clickable underlined words
-  const buildAlphaHtml = () => {
+  // Build alpha mode HTML with clickable underlined words. Verse-level selection
+  // (for Add/Copy/Refs) stays wired to the same verse numbers as normal mode —
+  // those actions read from the already-loaded LSB `verses` array regardless of
+  // which translation is on screen, so selection works identically in both modes.
+  const alphaHtml = useMemo(() => {
     if (kjvVerses.length === 0) return '';
     let html = '';
 
@@ -763,15 +812,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
       parsed.forEach((pw) => {
         const hasDefinition = pw.strongs && strongsDict[pw.strongs];
-        
+
         if (hasDefinition) {
           const tokens = pw.english.split(/(\b[a-zA-Z]+(?:'[a-zA-Z]+)?\b)/);
-          
+
           tokens.forEach(token => {
              const wordLower = token.toLowerCase();
              // Only underline if it's a word and not in the SKIP_WORDS list
              if (/^[a-z]/.test(wordLower) && !SKIP_WORDS.has(wordLower)) {
-               verseHtml += `<span class="underline decoration-accent/40 decoration-1 underline-offset-4 cursor-pointer hover:text-accent hover:decoration-accent transition-colors alpha-word" data-strongs="${pw.strongs}" data-word="${token}">${token}</span>`;
+               verseHtml += `<span class="underline decoration-accent/40 decoration-1 underline-offset-4 cursor-pointer hover:text-accent hover:decoration-accent transition-colors alpha-word focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded" data-strongs="${pw.strongs}" data-word="${token}" tabindex="0" role="button" aria-label="Look up ${token}">${token}</span>`;
              } else {
                verseHtml += token;
              }
@@ -782,14 +831,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         }
       });
 
-      html += `<span class="inline"><sup class="text-[0.55em] font-normal text-muted ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline">${verseHtml.trim()}</span> </span>`;
+      const inLibrary = memorizedVerses.has(v.verse);
+      const isSelected = selectedVerses.includes(v.verse);
+      let extraClass = '';
+      if (isSelected) {
+        extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
+      } else if (inLibrary) {
+        extraClass = 'bg-gold/25 rounded px-1 -mx-1';
+      }
+      const ariaLabel = `Verse ${v.verse}${isSelected ? ', selected' : ''}${inLibrary ? ', in your library' : ''}`;
+
+      // No role="button" here — this wrapper contains nested interactive word
+      // spans, and a button can't nest other interactive controls. It's still
+      // focusable and Enter/Space-toggleable via handleAlphaKeyDown.
+      html += `<span class="inline alpha-verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" tabindex="0" aria-label="${ariaLabel}"><sup class="text-[0.55em] font-normal text-muted ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline">${verseHtml.trim()}</span> </span>`;
     });
 
     return html;
-  };
+  }, [kjvVerses, strongsDict, parseKjvStrongs, selectedVerses, memorizedVerses]);
 
-  // Handle clicks on alpha-mode words
-  const handleAlphaWordClick = (e: React.MouseEvent) => {
+  // Handle clicks on alpha-mode words and verse wrappers
+  const handleAlphaClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const wordSpan = target.closest('.alpha-word') as HTMLElement | null;
     if (wordSpan) {
@@ -817,6 +879,38 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         }
         // else: no entry in dict, silent (word has no Strongs number)
       }
+      return;
+    }
+    const verseSpan = target.closest('.alpha-verse-span');
+    if (verseSpan) {
+      const verseNumStr = verseSpan.getAttribute('data-verse');
+      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
+    }
+  };
+
+  const handleAlphaKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const target = e.target as HTMLElement;
+    const wordSpan = target.closest('.alpha-word') as HTMLElement | null;
+    if (wordSpan) {
+      e.preventDefault();
+      e.stopPropagation();
+      const strongsNumber = wordSpan.getAttribute('data-strongs');
+      const word = wordSpan.getAttribute('data-word');
+      if (strongsNumber && word) {
+        if (strongsDict[strongsNumber]) {
+          setWordPopup({ word, strongsNumber, definition: strongsDict[strongsNumber] });
+        } else if (alphaLoading) {
+          setWordPopup({ word, strongsNumber, definition: { lemma: '…', strongs_def: 'Loading definition…', kjv_def: '' } });
+        }
+      }
+      return;
+    }
+    const verseSpan = target.closest('.alpha-verse-span');
+    if (verseSpan) {
+      e.preventDefault();
+      const verseNumStr = verseSpan.getAttribute('data-verse');
+      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
     }
   };
 
@@ -849,6 +943,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             onClick={onClose}
             className="absolute left-0 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
             title="Go back"
+            aria-label="Go back"
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
           </button>
@@ -867,16 +962,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           
           <div className="absolute right-0 top-1 flex items-center gap-1">
             <button
-              onClick={() => setAlphaMode(!alphaMode)}
-              className={`p-2 rounded-full transition-colors font-serif text-lg leading-none ${alphaMode ? 'bg-accent text-white' : 'hover:bg-card-hover text-secondary'}`}
+              onClick={() => {
+                setAlphaMode(!alphaMode);
+                if (!alphaDiscovered) {
+                  setAlphaDiscovered(true);
+                  try { localStorage.setItem('remora_alpha_discovered', '1'); } catch { /* private browsing */ }
+                }
+              }}
+              className={`relative p-2 rounded-full transition-colors font-serif text-lg leading-none ${alphaMode ? 'bg-accent text-white' : 'hover:bg-card-hover text-secondary'}`}
               title={alphaMode ? 'Switch to LSB reading mode' : 'Show original Greek/Hebrew words'}
+              aria-label={alphaMode ? 'Switch to LSB reading mode' : 'Show original Greek and Hebrew words'}
             >
               α
+              {!alphaDiscovered && !alphaMode && (
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent animate-pulse pointer-events-none" />
+              )}
             </button>
             <button
               onClick={() => setShowOptions(!showOptions)}
               className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-card-hover text-primary' : 'hover:bg-card-hover text-secondary'}`}
               title="Reading Options"
+              aria-label="Reading options"
             >
               <Type className="w-5 h-5" />
             </button>
@@ -890,14 +996,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                     <div className="flex items-center gap-2 bg-card border border-card-border rounded-md p-1">
                       <button
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.max(0.85, state.settings.fontSize - 0.15).toFixed(2)) }})}
-                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors"
+                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        disabled={state.settings.fontSize <= 0.85}
+                        aria-label="Decrease text size"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
-                      <span className="text-xs font-bold w-8 text-center">{state.settings.fontSize.toFixed(2)}</span>
+                      <span className="text-xs font-bold min-w-8 px-1 text-center">{FONT_SIZE_LABELS(state.settings.fontSize)}</span>
                       <button
                         onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.min(1.45, state.settings.fontSize + 0.15).toFixed(2)) }})}
-                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors"
+                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        disabled={state.settings.fontSize >= 1.45}
+                        aria-label="Increase text size"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
@@ -972,19 +1082,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             </div>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-red-400">
+          <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-red-400 px-6 text-center">
             <p>{error}</p>
-            <button
-              onClick={onClose}
-              className="px-4 py-2 mt-2 text-sm font-medium rounded-md border border-card-border hover:bg-card-hover transition-colors"
-            >
-              Go Back
-            </button>
+            <div className="flex items-center gap-2 mt-2">
+              <button
+                onClick={() => setRetryCount(c => c + 1)}
+                className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-md bg-accent text-white hover:bg-accent-hover transition-colors"
+              >
+                <RotateCw className="w-3.5 h-3.5" /> Try Again
+              </button>
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-sm font-medium rounded-md border border-card-border hover:bg-card-hover transition-colors text-secondary"
+              >
+                Go Back
+              </button>
+            </div>
           </div>
         ) : (
           alphaMode ? (
             /* Alpha mode: KJV with clickable underlined words */
-            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleAlphaWordClick}>
+            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleAlphaClick} onKeyDown={handleAlphaKeyDown}>
               {alphaLoading ? (
                 <div className="flex flex-col items-center justify-center h-[30vh] gap-3 text-secondary">
                   <Loader2 className="w-6 h-6 animate-spin text-accent" />
@@ -995,35 +1113,35 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                   <div className="mb-4 px-3 py-2 bg-accent/5 border border-accent/10 rounded-md">
                     <p className="text-xs text-secondary text-center">Tap any <span className="underline decoration-accent/40 underline-offset-2">underlined word</span> to see its original {isOldTestament ? 'Hebrew' : 'Greek'} meaning</p>
                   </div>
-                  <div 
+                  <div
                     className={`tracking-[-0.01em] text-primary/95 ${
-                      state.settings.fontFamily === 'serif' ? 'font-serif' : 
-                      state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
+                      state.settings.fontFamily === 'serif' ? 'font-serif' :
+                      state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' :
                       'font-sans'
                     }`}
                     style={{
                       fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
                       lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
                     }}
-                    dangerouslySetInnerHTML={{ __html: buildAlphaHtml() }}
+                    dangerouslySetInnerHTML={{ __html: alphaHtml }}
                   />
                 </>
               )}
             </div>
           ) : (
             /* Normal LSB mode */
-            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleVerseClick}>
-              <div 
+            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleVerseClick} onKeyDown={handleVerseKeyDown}>
+              <div
                 className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
-                  state.settings.fontFamily === 'serif' ? 'font-serif' : 
-                  state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' : 
+                  state.settings.fontFamily === 'serif' ? 'font-serif' :
+                  state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' :
                   'font-sans'
                 }`}
                 style={{
                   fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
                   lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
                 }}
-                dangerouslySetInnerHTML={{ __html: buildChapterHtml() }}
+                dangerouslySetInnerHTML={{ __html: chapterHtml }}
               />
             </div>
           )
@@ -1133,14 +1251,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         </div>
       )}
 
-      {/* Bottom Chapter Navigation Bar */}
-      {!loading && !error && selectedVerses.length === 0 && (
+      {/* Bottom Chapter Navigation Bar — hidden while the "Go back to..." return
+          pill is showing (below), since both are fixed to the bottom edge and
+          would otherwise stack on top of each other. */}
+      {!loading && !error && selectedVerses.length === 0 && !(returnBook && returnChapter) && (
         <div className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
               onClick={handlePrevChapter}
               disabled={!prevLabel}
               className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+              aria-label={prevLabel ? `Previous: ${prevLabel}` : 'No previous chapter'}
             >
               <ChevronLeft className="w-4 h-4 flex-shrink-0" />
               <span className="hidden sm:block truncate max-w-[120px]">{prevLabel || 'Start'}</span>
@@ -1150,6 +1271,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             <button
               onClick={() => { setNavigatorBook(bookId); setShowNavigator(true); }}
               className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
+              aria-label="Jump to a different book or chapter"
             >
               Ch {chapter}
               <ChevronDown className="w-3 h-3" />
@@ -1159,6 +1281,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
               onClick={handleNextChapter}
               disabled={!nextLabel}
               className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+              aria-label={nextLabel ? `Next: ${nextLabel}` : 'No next chapter'}
             >
               <span className="hidden sm:block truncate max-w-[120px]">{nextLabel || 'End'}</span>
               <span className="sm:hidden truncate max-w-[80px]">{nextAbbrLabel || 'End'}</span>
@@ -1176,6 +1299,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             <button
               onClick={() => setShowNavigator(false)}
               className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
+              aria-label="Close navigator"
             >
               <X className="w-5 h-5 text-secondary" />
             </button>
@@ -1382,7 +1506,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
               </>
             )}
 
-            <div className="w-[1px] h-4 bg-white/20" />
+            <div className="w-[1px] h-4 bg-card-border" />
 
             <button
               onClick={() => {
