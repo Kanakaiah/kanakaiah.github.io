@@ -166,10 +166,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
-    const observer = new ResizeObserver((entries) => {
-      setHeaderHeight(entries[0].contentRect.height);
-    });
+    // getBoundingClientRect (not ResizeObserver's contentRect) — contentRect
+    // excludes the element's own padding, which here includes
+    // env(safe-area-inset-top): on an iPhone with a notch/Dynamic Island that's
+    // 47-59px alone, so contentRect undercounted the header's true height by
+    // that much and left the first line or two of verse 1 hidden underneath it.
+    const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
+    const observer = new ResizeObserver(measure);
     observer.observe(el);
+    measure();
     return () => observer.disconnect();
   }, []);
 
