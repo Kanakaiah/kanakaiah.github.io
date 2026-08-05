@@ -130,26 +130,55 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [wordPopup, setWordPopup] = useState<{ word: string; strongsNumber: string; definition: StrongsDefinition } | null>(null);
   const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
 
-  const lastScrollY = useRef(0);
-  const [isNavHidden, setIsNavHidden] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Chrome (top header + bottom nav) visibility — tap-to-toggle, replacing the
+  // old scroll-direction heuristic. Visible on entry/navigation for orientation;
+  // a tap on empty space toggles it, a tap on a verse/word always reveals it
+  // (never hides it) so selecting/looking up a word never feels like it also
+  // yanked the chrome away.
+  const [chromeVisible, setChromeVisible] = useState(true);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  const revealChrome = useCallback(() => setChromeVisible(true), []);
+  const toggleChrome = useCallback(() => setChromeVisible(v => !v), []);
+
+  const handleContentClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isMeaningfulTap = !!target.closest('.verse-span, .alpha-word, .alpha-verse-span, button, a');
+    if (isMeaningfulTap) {
+      revealChrome();
+    } else {
+      toggleChrome();
+    }
+  };
+
+  // Reorient the reader after any navigation (button, swipe, or jump-to),
+  // regardless of whether chrome happened to be hidden beforehand.
+  useEffect(() => {
+    setChromeVisible(true);
+  }, [bookId, chapter]);
+
+  // Keep the scroll container's top padding in sync with the fixed header's
+  // actual rendered height (varies slightly with the translation badge text),
+  // so verse 1 never starts out hidden underneath it.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      setHeaderHeight(entries[0].contentRect.height);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
-    const currentScrollY = target.scrollTop;
-    
-    // Calculate progress (0 to 100)
     const totalHeight = target.scrollHeight - target.clientHeight;
     if (totalHeight > 0) {
-      setScrollProgress((currentScrollY / totalHeight) * 100);
+      setScrollProgress((target.scrollTop / totalHeight) * 100);
     }
-    
-    if (currentScrollY > lastScrollY.current + 10 && currentScrollY > 50) {
-      setIsNavHidden(true);
-    } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY < 50) {
-      setIsNavHidden(false);
-    }
-    lastScrollY.current = currentScrollY;
   };
 
   // Compute prev/next labels for the navigation bar
@@ -1013,18 +1042,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       onTouchEnd={handleTouchEnd}
     >
       {/* Reading Progress Bar */}
-      <div 
+      <div
         className="reading-progress"
         style={{ width: `${scrollProgress}%` }}
       />
-      
-      <div 
-        className="flex-1 overflow-y-auto overscroll-y-contain px-5 pb-6"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.5rem)' }}
-        onScroll={handleScroll}
+
+      {/* Fixed header — tap-to-toggle chrome, same trigger as the bottom nav below */}
+      <div
+        ref={headerRef}
+        className={`fixed top-0 left-0 right-0 z-30 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
       >
-        
-        <div className="max-w-2xl mx-auto w-full mb-10 mt-2 relative">
+        <div className="max-w-2xl mx-auto w-full px-5 pb-3 relative">
           <button
             onClick={onClose}
             className="absolute left-0 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
@@ -1145,6 +1174,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             )}
           </div>
         </div>
+      </div>
+
+      <div
+        className="flex-1 overflow-y-auto overscroll-y-contain px-5 pb-6"
+        style={{ paddingTop: headerHeight ? `${headerHeight + 16}px` : 'calc(env(safe-area-inset-top, 0px) + 6rem)' }}
+        onScroll={handleScroll}
+        onClick={handleContentClick}
+      >
 
         {loading ? (
           <div className="max-w-2xl mx-auto flex flex-col gap-6">
@@ -1341,7 +1378,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           pill is showing (below), since both are fixed to the bottom edge and
           would otherwise stack on top of each other. */}
       {!loading && !error && selectedVerses.length === 0 && !(returnBook && returnChapter) && (
-        <div className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}`}>
+        <div className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
               onClick={handlePrevChapter}
