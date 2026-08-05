@@ -165,10 +165,17 @@ export const AppLayout: React.FC = () => {
           id="main-scroll-container"
           className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : (location.pathname === '/guides' ? 'px-5 lg:px-8 pb-24 lg:pb-8' : 'px-5 lg:px-8 pb-24 lg:pb-8')}`}
           style={{
-            paddingTop: (location.pathname === '/practice' || isReadingPage)
+            // isFullscreenView (not just practice/reading) — guide pages also hide
+            // this layout's header and bottom nav (see isFullscreenView above), but
+            // this padding — reserved specifically to clear that header/nav — was
+            // still being applied on top of Guides.tsx's own internal padding,
+            // stacking into a large empty gap at the top of every guide page
+            // (worse on a notched/Dynamic-Island iPhone, where the safe-area inset
+            // was effectively being counted twice).
+            paddingTop: isFullscreenView
               ? '0px'
               : 'calc(env(safe-area-inset-top, 0px) + 5rem)',
-            paddingBottom: (location.pathname === '/practice' || isReadingPage)
+            paddingBottom: isFullscreenView
               ? '0px'
               : 'calc(env(safe-area-inset-bottom, 0px) + 7rem)'
           }}
