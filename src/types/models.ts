@@ -38,7 +38,6 @@ export interface AppState {
   lastActiveDate: string | null;
   theme: Theme | string;
   sortOrder: SortOrder;
-  hasSeeded100: boolean;
   settings: UserSettings;
 }
 

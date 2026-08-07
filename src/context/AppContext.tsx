@@ -9,7 +9,6 @@ const initialState: AppState = {
   lastActiveDate: null,
   theme: "black",
   sortOrder: "smart",
-  hasSeeded100: false,
   settings: {
     ttsEnabled: false,
     notificationsEnabled: false,

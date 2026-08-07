@@ -268,44 +268,6 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
 
                   <div className="p-4 flex flex-col gap-3">
                     <div>
-                      <h3 className="font-bold text-primary text-sm">Load 100 Popular Verses</h3>
-                      <p className="text-xs text-secondary">Seed your library with well-known verses</p>
-                    </div>
-                    <Button
-                      onClick={async () => {
-                        try {
-                          const res = await fetch('/verses_100.json');
-                          const data = await res.json();
-                          const newVerses = data.map((v: any) => ({
-                            id: crypto.randomUUID(),
-                            ref: v.ref,
-                            text: v.text,
-                            translation: v.translation || 'LSB',
-                            addedDate: new Date().toISOString(),
-                            status: 'learning',
-                            sm2: {
-                              interval: 0,
-                              repetition: 0,
-                              efactor: 2.5,
-                              nextDueDate: new Date().toISOString()
-                            },
-                            streak: 0,
-                            attempts: 0
-                          }));
-                          dispatch({ type: 'HYDRATE_VERSES', payload: newVerses });
-                          showToast('110 verses loaded successfully!', 'success');
-                        } catch (err) {
-                          showToast('Failed to load verses.', 'error');
-                        }
-                      }}
-                      className="whitespace-nowrap w-full"
-                    >
-                      Load 110 Verses
-                    </Button>
-                  </div>
-
-                  <div className="p-4 flex flex-col gap-3">
-                    <div>
                       <h3 className="font-bold text-red-500 text-sm">Danger Zone</h3>
                       <p className="text-xs text-red-500/70">Permanently delete all your data</p>
                     </div>

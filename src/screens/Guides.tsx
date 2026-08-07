@@ -505,74 +505,106 @@ export const Guides: React.FC = () => {
               </div>
 
               {/* CHAPTER DISTRIBUTION */}
-              <div className="flex flex-col mb-4 px-2">
-                <h3 className="text-center text-[0.625rem] uppercase tracking-[0.2em] font-bold text-secondary mb-4">
-                  Chapter Distribution
-                </h3>
-                
-                {/* Bar chart */}
-                <div className="flex w-full h-14 rounded-md overflow-hidden shadow-sm">
-                  {activeGuide.blocks.map((block: any, i: number) => {
-                     const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
-                     const totalChapters = activeGuide.chapters || 28;
-                     const count = (end || start) - start + 1;
-                     const widthPercent = (count / totalChapters) * 100;
-                     const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
-                     return (
-                       <button 
-                         key={i} 
-                         onClick={() => handleScrollToChapter(start)}
-                         className={`${color.bg} flex flex-col items-center justify-center border-r border-background/20 last:border-0 hover:opacity-80 transition-opacity focus:outline-none`}
-                         style={{ width: `${widthPercent}%` }}
-                         title={`Scroll to chapter ${start}`}
-                       >
-                         <span className="font-bold text-white/90 text-sm">{block.chapters.replace('–', '-')}</span>
-                         <span className="text-white/70 text-[0.625rem]">{count}ch</span>
-                       </button>
-                     );
-                  })}
-                </div>
-                
-                {/* Ticks below the bar chart */}
-                <div className="flex w-full mt-2 relative h-4">
-                  {(() => {
-                     let chaptersBefore = 0;
-                     const totalChapters = activeGuide.chapters || 28;
-                     return activeGuide.blocks.map((block: any, i: number) => {
-                       const leftPercent = (chaptersBefore / totalChapters) * 100;
-                       const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
-                       const count = (end || start) - start + 1;
-                       chaptersBefore += count;
-                       return (
-                         <div 
-                           key={i} 
-                           className="absolute text-[0.6875rem] text-muted font-medium"
-                           style={{ left: `${leftPercent}%` }}
-                         >
-                           {start}
-                         </div>
-                       );
-                     });
-                  })()}
-                </div>
-              </div>
+              {(() => {
+                // Single-chapter books (Obadiah, Philemon, Jude, 2-3 John) have nothing
+                // to subdivide by chapter, so their blocks' "chapters" field is actually
+                // a verse range within that one chapter (e.g. "8-16"). Dividing those by
+                // activeGuide.chapters (always 1 here) blew percentages up past 700% and
+                // pushed the bar chart, its tick labels, and the section cards' percent
+                // readouts far off the right edge of the screen. The true total is the
+                // sum of the blocks' own verse counts, not the book's chapter count.
+                const isVerseBased = activeGuide.chapters === 1 && activeGuide.blocks.length > 1;
+                const totalUnits = isVerseBased
+                  ? activeGuide.blocks.reduce((sum: number, b: any) => {
+                      const [s, e] = String(b.chapters).split(/[-–]/).map(Number);
+                      return sum + ((e || s) - s + 1);
+                    }, 0)
+                  : (activeGuide.chapters || 28);
+                const unitLabel = isVerseBased ? 'v' : 'ch';
+                const unitWord = isVerseBased ? 'verse' : 'chapter';
+                // For a single-chapter book there's only one chapter-anchor element on
+                // the page (id="chapter-anchor-1") — jump there instead of treating a
+                // verse number as if it were a chapter number to scroll to.
+                const scrollTarget = (start: number) => isVerseBased ? 1 : start;
+
+                return (
+                  <div className="flex flex-col mb-4 px-2">
+                    <h3 className="text-center text-[0.625rem] uppercase tracking-[0.2em] font-bold text-secondary mb-4">
+                      {isVerseBased ? 'Verse Distribution' : 'Chapter Distribution'}
+                    </h3>
+
+                    {/* Bar chart */}
+                    <div className="flex w-full h-14 rounded-md overflow-hidden shadow-sm">
+                      {activeGuide.blocks.map((block: any, i: number) => {
+                         const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
+                         const count = (end || start) - start + 1;
+                         const widthPercent = (count / totalUnits) * 100;
+                         const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
+                         return (
+                           <button
+                             key={i}
+                             onClick={() => handleScrollToChapter(scrollTarget(start))}
+                             className={`${color.bg} flex flex-col items-center justify-center border-r border-background/20 last:border-0 hover:opacity-80 transition-opacity focus:outline-none`}
+                             style={{ width: `${widthPercent}%` }}
+                             title={`Scroll to ${unitWord} ${start}`}
+                           >
+                             <span className="font-bold text-white/90 text-sm">{block.chapters.replace('–', '-')}</span>
+                             <span className="text-white/70 text-[0.625rem]">{count}{unitLabel}</span>
+                           </button>
+                         );
+                      })}
+                    </div>
+
+                    {/* Ticks below the bar chart */}
+                    <div className="flex w-full mt-2 relative h-4">
+                      {(() => {
+                         let unitsBefore = 0;
+                         return activeGuide.blocks.map((block: any, i: number) => {
+                           const leftPercent = (unitsBefore / totalUnits) * 100;
+                           const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
+                           const count = (end || start) - start + 1;
+                           unitsBefore += count;
+                           return (
+                             <div
+                               key={i}
+                               className="absolute text-[0.6875rem] text-muted font-medium"
+                               style={{ left: `${leftPercent}%` }}
+                             >
+                               {start}
+                             </div>
+                           );
+                         });
+                      })()}
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* SECTION LIST */}
+              {(() => {
+                const isVerseBased = activeGuide.chapters === 1 && activeGuide.blocks.length > 1;
+                const totalUnits = isVerseBased
+                  ? activeGuide.blocks.reduce((sum: number, b: any) => {
+                      const [s, e] = String(b.chapters).split(/[-–]/).map(Number);
+                      return sum + ((e || s) - s + 1);
+                    }, 0)
+                  : (activeGuide.chapters || 28);
+
+                return (
               <div className="flex flex-col gap-3">
                 {activeGuide.blocks.map((block: any, i: number) => {
                   const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
-                  
+
                   const isDiscourse = block.description.toLowerCase().includes('sermon');
                   const toTitleCase = (str: string) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
                   const labelTitleCase = toTitleCase(block.label)
                     .replace('1', 'I').replace('2', 'II').replace('3', 'III')
                     .replace('4', 'IV').replace('5', 'V');
-                  
+
                   const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
                   const count = (end || start) - start + 1;
-                  const totalChapters = activeGuide.chapters || 28;
-                  const percent = ((count / totalChapters) * 100).toFixed(1) + '%';
-                  
+                  const percent = ((count / totalUnits) * 100).toFixed(1) + '%';
+
                   let cleanDesc = block.description;
                   if (isDiscourse) {
                     cleanDesc = cleanDesc.replace(/Sermon \d+:\s*/i, '');
@@ -580,15 +612,15 @@ export const Guides: React.FC = () => {
                          cleanDesc += ' discourse';
                     }
                   }
-                  
+
                   return (
-                    <button 
+                    <button
                       key={i}
-                      onClick={() => handleScrollToChapter(start)}
+                      onClick={() => handleScrollToChapter(isVerseBased ? 1 : start)}
                       className="w-full text-left flex rounded-lg overflow-hidden bg-card border border-card-border hover:bg-card-hover transition-colors min-h-[80px]"
                     >
                       <div className={`w-[72px] flex-shrink-0 flex flex-col items-center justify-center border-l-4 ${color.border} border-r border-r-card-border`}>
-                         <span className="text-[0.625rem] uppercase font-bold text-muted tracking-widest mb-0.5">CH</span>
+                         <span className="text-[0.625rem] uppercase font-bold text-muted tracking-widest mb-0.5">{isVerseBased ? 'V' : 'CH'}</span>
                          <span className={`text-xl font-bold ${color.text} font-heading leading-none`}>{block.chapters.replace('–', '-')}</span>
                       </div>
                       
@@ -612,6 +644,8 @@ export const Guides: React.FC = () => {
                   );
                 })}
               </div>
+                );
+              })()}
 
               {activeGuide.anchors && (
                 <div className="mt-4 pt-6 border-t border-card-border flex flex-col gap-5">

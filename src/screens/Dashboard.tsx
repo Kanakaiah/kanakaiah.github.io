@@ -174,49 +174,6 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Seeder Banner for Empty Library */}
-      {state.verses.length <= 2 && !state.hasSeeded100 && (
-        <div className="border border-card-border rounded-lg p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex-1">
-            <h3 className="text-xl font-heading font-semibold text-primary mb-2">Get started quickly</h3>
-            <p className="text-sm text-secondary leading-relaxed">Load 110 highly popular Bible verses into your library to start practicing immediately without adding them manually.</p>
-          </div>
-          <Button
-            onClick={async () => {
-              try {
-                const res = await fetch('/verses_100.json');
-                const data = await res.json();
-                const newVerses = data.map((v: any, i: number) => ({
-                  id: crypto.randomUUID(),
-                  ref: v.ref,
-                  text: v.text,
-                  translation: v.translation || 'LSB',
-                  addedDate: new Date().toISOString(),
-                  status: 'learning',
-                  sm2: {
-                    interval: 0,
-                    repetition: 0,
-                    efactor: 2.5,
-                    nextDueDate: new Date(Date.now() + (i % 7) * 86400000).toISOString()
-                  },
-                  streak: 0,
-                  attempts: 0
-                }));
-                dispatch({ type: 'HYDRATE_VERSES', payload: newVerses });
-                dispatch({ type: 'UPDATE_SETTINGS', payload: {} }); // Just to trigger a save, though HYDRATE_VERSES does it
-                showToast('110 verses loaded successfully!', 'success');
-              } catch (err) {
-                showToast('Failed to load verses.', 'error');
-              }
-            }}
-            variant="secondary"
-            className="whitespace-nowrap w-full md:w-auto"
-          >
-            Load 110 Verses
-          </Button>
-        </div>
-      )}
-
       {/* Library Section */}
       <div className="flex flex-col gap-6 mt-2">
         <div className="flex items-center justify-between">
