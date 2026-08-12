@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, X, Maximize } from 'lucide-react';
+import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
@@ -59,6 +59,35 @@ export const Practice: React.FC = () => {
   React.useEffect(() => {
     setActiveVerseIndex(initialIndex);
   }, [initialIndex]);
+
+  // Chrome (fixed header + bottom verse-nav) visibility — tap-to-toggle, the same
+  // rule the chapter reader and the guide pages use: a tap on empty space toggles,
+  // a tap on anything interactive only ever reveals, so answering a prompt or
+  // switching mode never feels like it also yanked the navigation away.
+  const [chromeVisible, setChromeVisible] = useState(true);
+  const headerRef = React.useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  const handlePracticeContentClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button, a, input, select, textarea, [role="button"]')) {
+      setChromeVisible(true);
+    } else {
+      setChromeVisible(v => !v);
+    }
+  };
+
+  // Keep the content clear of the fixed header — its height shifts with the verse
+  // reference wrapping, so it's measured rather than hardcoded.
+  React.useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    measure();
+    return () => observer.disconnect();
+  }, [activeVerseIndex]);
 
   // Reset hint when changing verses or modes
   React.useEffect(() => {
@@ -292,68 +321,60 @@ export const Practice: React.FC = () => {
   return (
       <div
         className="relative flex flex-col h-full w-full pb-6 lg:pb-8"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        style={{ paddingTop: headerHeight ? `${headerHeight + 16}px` : 'calc(env(safe-area-inset-top, 0px) + 5rem)' }}
+        onClick={handlePracticeContentClick}
       >
 
-      {/* Session progress bar (thin line at very top) */}
+      {/* Session progress — the same fixed top rule the reader uses for reading
+          progress, rather than a separate absolutely-positioned track. */}
       {verses.length > 1 && (
-        <div className="absolute top-0 left-0 w-full h-0.5 bg-card-border z-30">
-          <div
-            className="h-full bg-accent transition-all duration-300"
-            style={{ width: `${((activeVerseIndex + 1) / verses.length) * 100}%` }}
-          />
-        </div>
+        <div
+          className="reading-progress"
+          style={{ width: `${((activeVerseIndex + 1) / verses.length) * 100}%` }}
+        />
       )}
 
-      {/* Exit Button */}
-      <button
-        onClick={() => navigate('/')}
-        className="absolute left-4 lg:left-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors z-20 shadow-sm"
-        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+      {/* Fixed header — back arrow, centred verse reference, audio toggle on the
+          right, matching the chapter reader and the guide pages. Replaces the two
+          free-floating round buttons and the verse reference that used to scroll
+          away with the content. */}
+      <div
+        ref={headerRef}
+        className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
       >
-        <X className="w-5 h-5" />
-      </button>
+        <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
+          <button
+            onClick={() => navigate('/')}
+            className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
+            title="Exit practice"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="w-6 h-6 text-secondary" />
+          </button>
 
-      {/* Audio Play/Pause Button */}
-      <button
-        onClick={handleToggleTTS}
-        className="absolute right-4 lg:right-6 w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-primary hover:text-accent hover:bg-card-hover transition-colors z-20 shadow-sm"
-        title="Play Audio"
-        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-      >
-        {isAutoPlaying ? (
-          <Square className="w-4 h-4 text-accent fill-accent" />
-        ) : (
-          <Play className="w-5 h-5 ml-1" />
-        )}
-      </button>
+          <button
+            onClick={handleToggleTTS}
+            className="absolute right-5 sm:right-8 top-1 p-2 -mr-2 rounded-full hover:bg-card-hover transition-colors z-10"
+            title="Play Audio"
+            aria-label={isAutoPlaying ? 'Stop audio' : 'Play audio'}
+          >
+            {isAutoPlaying ? (
+              <Square className="w-5 h-5 text-accent fill-accent" />
+            ) : (
+              <Play className="w-5 h-5 text-secondary ml-0.5" />
+            )}
+          </button>
+
+          <div className="flex flex-col items-center justify-center pt-1">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2">
+              {currentVerse.ref}
+            </h2>
+          </div>
+        </div>
+      </div>
 
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
-
-        {/* Navigation & Header */}
-        <div className="flex flex-col items-center gap-3 mb-8 mt-4 lg:mt-0">
-          <span className="font-heading font-bold text-primary text-2xl tracking-tight">
-            {currentVerse.ref}
-          </span>
-          <div className="flex items-center justify-between w-full max-w-xs bg-card p-1.5 rounded-full border border-card-border">
-            <button
-              onClick={handlePrev} disabled={activeVerseIndex === 0}
-              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div className="flex-1 h-[2px] bg-card-border/50 mx-2 rounded-full"></div>
-            <button
-              onClick={handleNext} disabled={activeVerseIndex === verses.length - 1}
-              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-card-hover disabled:opacity-30 transition-colors text-muted hover:text-primary"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-          <span className="font-heading font-semibold text-muted text-xs uppercase tracking-widest mt-1">
-            {activeVerseIndex + 1} of {verses.length}
-          </span>
-        </div>
 
         {/* Display Board (Workspace) */}
         <div className="bg-card border border-card-border rounded-lg p-6 lg:p-10 relative flex-1 flex flex-col shadow-sm mb-8">
@@ -426,8 +447,9 @@ export const Practice: React.FC = () => {
           </div>
         )}
 
-        {/* Mode Selector (Moved to Bottom) */}
-        <div className="flex flex-col gap-5 pb-4 lg:pb-8">
+        {/* Mode Selector (Moved to Bottom) — extra bottom padding clears the fixed
+            verse-navigation bar below. */}
+        <div className="flex flex-col gap-5 pb-24 lg:pb-24">
             {/* Primary Modes — plain text tabs with an underline indicator */}
             <div className="grid grid-cols-4 border-b border-card-border">
               {[
@@ -469,6 +491,44 @@ export const Practice: React.FC = () => {
                 ))}
               </div>
             </div>
+        </div>
+      </div>
+
+      {/* Bottom verse navigation — this level's equivalent of the reader's prev/next
+          chapter and the book page's prev/next book, disabling each end the same way.
+          The position readout sits in the centre slot where those bars put "CH 1" and
+          "INDEX". Previously this lived inline above the workspace and scrolled away. */}
+      <div className={`
+        fixed bottom-0 left-0 right-0
+        bg-card border-t border-card-border
+        z-40 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
+        ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}
+      `}>
+        <div className="max-w-4xl mx-auto flex items-center justify-between px-5 sm:px-8 py-3 pb-safe">
+          <button
+            onClick={handlePrev}
+            disabled={activeVerseIndex === 0}
+            className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+            aria-label="Previous verse"
+          >
+            <ArrowLeft className="w-4 h-4 flex-shrink-0" />
+            <span className="hidden sm:block">Previous</span>
+            <span className="sm:hidden">Prev</span>
+          </button>
+
+          <span className="text-xs font-bold text-muted uppercase tracking-wider border border-card-border rounded-md px-3 py-1.5">
+            {activeVerseIndex + 1} of {verses.length}
+          </span>
+
+          <button
+            onClick={handleNext}
+            disabled={activeVerseIndex === verses.length - 1}
+            className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+            aria-label="Next verse"
+          >
+            <span>Next</span>
+            <ArrowRight className="w-4 h-4 flex-shrink-0" />
+          </button>
         </div>
       </div>
     </div>
