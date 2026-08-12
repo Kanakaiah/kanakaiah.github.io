@@ -220,12 +220,28 @@ export const AppLayout: React.FC = () => {
       </main>
 
       {/* FLOATING ACTION BUTTON (Mobile: above nav, Desktop: bottom-right) */}
+      {/* Rides with the chrome: it sits directly above the tab bar, so leaving it
+          behind when the bar slides away left it stranded mid-air over the content.
+          Fades as well as slides because its offset from the bottom edge is larger
+          than its own height, so a translate alone wouldn't clear the viewport.
+          aria-hidden + inert while hidden so it isn't tabbable or read out.
+          (active:scale-95 was dropped — it sets a transform, which would collide
+          with the translate below and resolve by stylesheet order, not intent.) */}
       {location.pathname === '/' && (
         <button
           onClick={() => setIsAddVerseOpen(true)}
-          className="fixed right-5 w-14 h-14 rounded-full bg-accent text-white hover:bg-accent-hover flex items-center justify-center z-40 transition-colors duration-150 active:scale-95 lg:hidden"
+          // Transition lists `translate`, not `transform`: Tailwind v4's translate-*
+          // utilities set the standalone CSS `translate` property, so a transform-only
+          // transition left the slide un-animated (it snapped down while the opacity
+          // faded). This is what transition-transform expands to in v4, which is why
+          // the header and tab bar animate correctly.
+          className={`fixed right-5 w-14 h-14 rounded-full bg-accent text-white hover:bg-accent-hover flex items-center justify-center z-40 lg:hidden
+            transition-[translate,opacity,background-color] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
+            ${chromeVisible ? 'translate-y-0 opacity-100' : 'translate-y-32 opacity-0 pointer-events-none'}`}
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 4.5rem)' }}
           aria-label="Add Verse"
+          aria-hidden={!chromeVisible}
+          tabIndex={chromeVisible ? 0 : -1}
         >
           <Plus className="w-6 h-6" />
         </button>
