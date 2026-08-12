@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, X } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
@@ -129,29 +129,45 @@ export const Guides: React.FC = () => {
   const [touchStartPos, setTouchStartPos] = useState<{x: number, y: number} | null>(null);
   const [touchEndPos, setTouchEndPos] = useState<{x: number, y: number} | null>(null);
   
-  const lastScrollY = useRef(0);
-  const [isNavHidden, setIsNavHidden] = useState(false);
   const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
 
+  // Chrome (fixed header + bottom book-nav) visibility. Tap-to-toggle, matching
+  // ChapterReader exactly: a tap on empty space toggles it, a tap on anything
+  // interactive always reveals (never hides) so expanding a section doesn't feel
+  // like it also yanked the navigation away. This replaces a scroll-direction
+  // auto-hide, which made the identical gesture behave differently here than in
+  // the reader the page links straight into.
+  const [chromeVisible, setChromeVisible] = useState(true);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  const handleGuideContentClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button, a, input, select, textarea, [role="button"]')) {
+      setChromeVisible(true);
+    } else {
+      setChromeVisible(v => !v);
+    }
+  };
+
+  // Reorient after navigating to a different guide, regardless of whether the
+  // chrome happened to be hidden beforehand.
   useEffect(() => {
-    const scrollContainer = document.getElementById('main-scroll-container');
-    if (!scrollContainer) return;
+    setChromeVisible(true);
+  }, [activeGuideId]);
 
-    const handleScroll = (e: Event) => {
-      const target = e.target as HTMLDivElement;
-      const currentScrollY = target.scrollTop;
-      
-      if (currentScrollY > lastScrollY.current + 10 && currentScrollY > 50) {
-        setIsNavHidden(true);
-      } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY < 50) {
-        setIsNavHidden(false);
-      }
-      lastScrollY.current = currentScrollY;
-    };
-
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-    return () => scrollContainer.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Keep the content's top padding in sync with the fixed header's real rendered
+  // height — it varies with the book title wrapping and with the safe-area inset,
+  // so a hardcoded value would either clip the title or leave a gap.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    measure();
+    return () => observer.disconnect();
+  }, [activeGuideId]);
 
   // Scroll to top when switching books
   useEffect(() => {
@@ -330,13 +346,55 @@ export const Guides: React.FC = () => {
   // ── Individual guide detail view ───────────────────────────────────────────
   if (activeGuide) {
     return (
-      <div 
+      <div
         className="flex flex-col gap-6 max-w-4xl mx-auto w-full pb-24 animate-[fadeIn_0.3s_ease-out]"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        // Clears the fixed header below, measured rather than hardcoded. The fallback
+        // matches what the header renders to before the ResizeObserver first fires.
+        style={{ paddingTop: headerHeight ? `${headerHeight + 16}px` : 'calc(env(safe-area-inset-top, 0px) + 5rem)' }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onClick={handleGuideContentClick}
       >
+        {/* Fixed header — mirrors ChapterReader's: back arrow at the left, centred
+            title, same slide-away transition driven by the same tap-to-toggle state.
+            Safe as a fixed child of the animated wrapper because fadeIn animates
+            opacity only; a transform would make this element position against the
+            wrapper instead of the viewport. */}
+        <div
+          ref={headerRef}
+          className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        >
+          <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
+            <button
+              onClick={() => setActiveGuideId(
+                activeGuide.type === 'book-guide'
+                  ? (OT_BOOKS.some(b => b.id === activeGuide.id) ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)
+                  : null
+              )}
+              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
+              title="Go back"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-6 h-6 text-secondary" />
+            </button>
+            <div className="flex flex-col items-center justify-center pt-1">
+              {/* Wraps rather than truncating, and steps down a size for long titles.
+                  Every book name is ≤15 characters so they keep the reader's large
+                  display size; only topical guide titles ("The Roman Road to
+                  Salvation", 27 chars) shrink, which is what stops them being cut off
+                  by an ellipsis on a phone. The header's height is measured, so the
+                  content padding follows whichever size/line count results. */}
+              <h2 className={`font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2 ${
+                activeGuide.title.length > 18 ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl'
+              }`}>
+                {activeGuide.title}
+              </h2>
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-4 mb-2">
           <div className="flex items-center justify-between gap-4">
             {/* Breadcrumb Navigation */}
@@ -371,21 +429,15 @@ export const Guides: React.FC = () => {
               )}
             </div>
 
-            {/* Close Button */}
-            <button 
-              onClick={() => setActiveGuideId(null)}
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover transition-colors shadow-sm flex-shrink-0"
-              aria-label="Close Guide"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {/* The old X lived here; the fixed header's back arrow replaces it, and
+                the breadcrumb above still offers the jump straight back to "Bible". */}
           </div>
-          {activeGuide.type !== 'book-guide' && (
-            <div>
-              <h1 className="text-3xl font-bold font-heading text-primary flex items-center gap-2">
-                <span className="text-3xl">{activeGuide.icon}</span> {activeGuide.title}
-              </h1>
-              <p className="text-secondary text-sm font-medium mt-1">{activeGuide.subtitle}</p>
+          {/* Title now lives in the fixed header — only the icon and subtitle remain,
+              so it isn't printed twice on screen. */}
+          {activeGuide.type !== 'book-guide' && activeGuide.subtitle && (
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{activeGuide.icon}</span>
+              <p className="text-secondary text-sm font-medium">{activeGuide.subtitle}</p>
             </div>
           )}
         </div>
@@ -494,11 +546,9 @@ export const Guides: React.FC = () => {
           {activeGuide.type === 'book-guide' && activeGuide.blocks && (
             <div className="flex flex-col gap-6">
 
-              {/* Header section replacing the old one */}
+              {/* Book title moved to the fixed header above; this keeps only the
+                  architecture caption so the name isn't rendered twice. */}
               <div className="flex flex-col items-center mb-2 mt-2">
-                <h1 className="text-4xl sm:text-5xl font-bold font-heading text-primary mb-3 text-center">
-                  {activeGuide.title}
-                </h1>
                 <div className="text-[0.625rem] uppercase tracking-[0.2em] font-bold text-muted text-center">
                   NARRATIVE ARCHITECTURE · {activeGuide.chapters || 28} CHAPTERS
                 </div>
@@ -695,13 +745,17 @@ export const Guides: React.FC = () => {
 
         </div>
 
+        {/* Bottom book navigation — same fixed bar, transition and toggle state as
+            the reader's chapter bar. left-64 was dropped: the desktop sidebar is
+            hidden on guide pages (isFullscreenView in AppLayout), so offsetting for
+            it left a dead 256px strip the bar refused to span. */}
         <div className={`
-          fixed bottom-0 left-0 right-0 lg:left-64
+          fixed bottom-0 left-0 right-0
           bg-card border-t border-card-border
           z-40 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
-          ${isNavHidden ? 'translate-y-full' : 'translate-y-0'}
+          ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}
         `}>
-          <div className="max-w-4xl mx-auto flex items-center justify-between px-4 py-3 pb-safe">
+          <div className="max-w-4xl mx-auto flex items-center justify-between px-5 sm:px-8 py-3 pb-safe">
             <button
               onClick={handlePrevBook}
               className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary"
