@@ -73,8 +73,12 @@ export const AppLayout: React.FC = () => {
           <span className="text-2xl font-heading font-semibold text-primary tracking-tight">Remora</span>
         </div>
 
-        {/* Nav Links */}
-        <div className="flex lg:flex-col w-full justify-between lg:justify-start lg:gap-1">
+        {/* Nav Links — capped and centred so the tabs stay a comfortable thumb-cluster
+            on wide-but-still-mobile viewports (an unfolded foldable is ~670-840px and
+            sits below the `lg` desktop breakpoint, so it gets this bar, not the
+            sidebar). Without the cap, justify-between flings the three tabs to the
+            far edges of the screen. Reset at lg where this becomes a vertical rail. */}
+        <div className="flex lg:flex-col w-full max-w-xs sm:max-w-sm mx-auto lg:max-w-none lg:mx-0 justify-between lg:justify-start lg:gap-1">
           {navLinks.map(link => (
             <NavLink
               key={link.to}
@@ -134,36 +138,41 @@ export const AppLayout: React.FC = () => {
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* GLOBAL HEADER (All Screens, Mobile Only) */}
         <header className={`
-          absolute top-0 left-0 w-full px-5 pb-3 flex justify-between items-center z-40 lg:hidden
+          absolute top-0 left-0 w-full px-5 sm:px-8 pb-3 z-40 lg:hidden
           transition-transform duration-300 ease-in-out bg-background/95
           ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
           ${isFullscreenView ? 'hidden' : ''}
         `}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.25rem)' }}
         >
-          <div className="flex items-center gap-2.5">
-            <BookOpen className="w-4 h-4 text-accent" />
-            <h1 className="text-xl font-heading font-semibold tracking-tight text-primary">Remora</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-card-border">
-              <Flame className="w-4 h-4 text-gold" />
-              <span className="text-sm font-bold font-heading text-primary">{state.streak}</span>
+          {/* Inner wrapper carries the max-width so the title and streak/settings stay
+              aligned with the page content below instead of being pushed to opposite
+              edges of a wide (unfolded foldable / tablet) viewport. */}
+          <div className="max-w-4xl mx-auto w-full flex justify-between items-center">
+            <div className="flex items-center gap-2.5">
+              <BookOpen className="w-4 h-4 text-accent" />
+              <h1 className="text-xl font-heading font-semibold tracking-tight text-primary">Remora</h1>
             </div>
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="w-9 h-9 rounded-md border border-card-border flex items-center justify-center text-muted hover:text-primary transition-colors duration-150"
-              aria-label="Settings"
-            >
-              <Settings2 className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-card-border">
+                <Flame className="w-4 h-4 text-gold" />
+                <span className="text-sm font-bold font-heading text-primary">{state.streak}</span>
+              </div>
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className="w-9 h-9 rounded-md border border-card-border flex items-center justify-center text-muted hover:text-primary transition-colors duration-150"
+                aria-label="Settings"
+              >
+                <Settings2 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </header>
 
         {/* SCROLLABLE PAGE CONTENT */}
         <div
           id="main-scroll-container"
-          className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : (location.pathname === '/guides' ? 'px-5 lg:px-8 pb-24 lg:pb-8' : 'px-5 lg:px-8 pb-24 lg:pb-8')}`}
+          className={`flex-1 overflow-y-auto w-full ${(location.pathname === '/practice' || isReadingPage) ? '' : (location.pathname === '/guides' ? 'px-5 sm:px-8 lg:px-8 pb-24 lg:pb-8' : 'px-5 sm:px-8 lg:px-8 pb-24 lg:pb-8')}`}
           style={{
             // isFullscreenView (not just practice/reading) — guide pages also hide
             // this layout's header and bottom nav (see isFullscreenView above), but

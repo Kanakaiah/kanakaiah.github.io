@@ -875,7 +875,7 @@ export const Guides: React.FC = () => {
                       )}
                     </button>
                     {!collapsedSections[section] && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {books.map(book => (
                           <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
                         ))}
@@ -922,7 +922,7 @@ export const Guides: React.FC = () => {
                       )}
                     </button>
                     {!collapsedSections[section] && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {books.map(book => (
                           <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
                         ))}
@@ -941,7 +941,7 @@ export const Guides: React.FC = () => {
             <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">
               Study Resources
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {guides.map((guide: any) => (
                 <button
                   key={guide.id}

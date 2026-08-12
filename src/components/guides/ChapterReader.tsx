@@ -76,6 +76,17 @@ function parseVerseRefString(refStr: string): { bookId: string; chapter: number;
   return { bookId: foundBook.id, chapter: parseInt(match[2], 10), verse: parseInt(match[3], 10) };
 }
 
+// Comfortable reading measure for the Bible text column. Expressed in `ch` rather
+// than a fixed px/rem cap so it tracks the reader's own font-size setting: 52
+// zero-widths measures out to ~60 rendered characters per line (comfortably inside
+// the classic 45-75 range) at *every* size step. A fixed cap can't do that — the
+// previous max-w-2xl (672px) ran ~75 characters at the smallest text size and only
+// ~36 at the largest. At the default size this resolves to ≈671px, i.e. visually
+// identical to the old cap, so phones and desktop are unchanged; it's the extreme
+// font-size settings that get materially better. min() keeps it from exceeding the
+// width actually available on a narrow screen.
+const READING_MEASURE = 'min(100%, 52ch)';
+
 // Cross-reference "back" navigation used to be tracked via these URL params. They've
 // since been replaced by in-memory state (pendingHighlight/returnStack) so a stale
 // trail can never resurface after a reload — but a URL carrying them from before that
@@ -1314,14 +1325,22 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       </div>
 
       <div
-        className="flex-1 overflow-y-auto overscroll-y-contain px-5 pb-6"
+        // Side padding steps up through the foldable range: an unfolded foldable sits
+        // around 670-840px, where the reading measure alone doesn't bind, so without
+        // this the text would run edge-to-edge with only a phone's 20px gutter.
+        className="flex-1 overflow-y-auto overscroll-y-contain px-5 sm:px-8 md:px-12 pb-6"
         style={{ paddingTop: headerHeight ? `${headerHeight + 16}px` : 'calc(env(safe-area-inset-top, 0px) + 6rem)' }}
         onScroll={handleScroll}
         onClick={handleContentClick}
       >
 
         {loading ? (
-          <div className="max-w-2xl mx-auto flex flex-col gap-6">
+          <div
+            className="mx-auto flex flex-col gap-6"
+            // Same font-size context as the real column so the skeleton occupies the
+            // identical width and the text doesn't jump sideways when it loads in.
+            style={{ fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`, maxWidth: READING_MEASURE }}
+          >
             <div className="h-4 w-32 skeleton mb-4 mt-8" />
             <div className="flex flex-col gap-3">
               <div className="h-6 w-full skeleton" />
@@ -1362,7 +1381,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         ) : (
           alphaMode ? (
             /* Alpha mode: KJV with clickable underlined words */
-            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleAlphaClick} onKeyDown={handleAlphaKeyDown}>
+            <div
+              className="mx-auto pb-32 select-text"
+              style={{ fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`, maxWidth: READING_MEASURE }}
+              onClick={handleAlphaClick}
+              onKeyDown={handleAlphaKeyDown}
+            >
               {alphaLoading ? (
                 <div className="flex flex-col items-center justify-center h-[30vh] gap-3 text-secondary">
                   <Loader2 className="w-6 h-6 animate-spin text-accent" />
@@ -1390,17 +1414,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             </div>
           ) : (
             /* Normal reading mode (selected Bible version) */
-            <div className="max-w-2xl mx-auto pb-32 select-text" onClick={handleVerseClick} onKeyDown={handleVerseKeyDown}>
+            <div
+              className={`mx-auto pb-32 select-text ${
+                state.settings.fontFamily === 'serif' ? 'font-serif' :
+                state.settings.fontFamily === 'hyper' ? 'font-hyper' :
+                'font-sans'
+              }`}
+              // fontSize lives on this wrapper (not the inner div) so the `ch` unit in
+              // READING_MEASURE resolves against the reader's actual text size.
+              style={{ fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`, maxWidth: READING_MEASURE }}
+              onClick={handleVerseClick}
+              onKeyDown={handleVerseKeyDown}
+            >
               <div
                 className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
-                  state.settings.fontFamily === 'serif' ? 'font-serif' :
-                  state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' :
-                  'font-sans'
+                  state.settings.fontFamily === 'hyper' ? 'tracking-normal' : ''
                 }`}
-                style={{
-                  fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
-                  lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
-                }}
+                style={{ lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem` }}
                 dangerouslySetInnerHTML={{ __html: chapterHtml }}
               />
             </div>
