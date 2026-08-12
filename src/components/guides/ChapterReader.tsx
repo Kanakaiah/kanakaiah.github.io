@@ -129,6 +129,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   // instant it fires, so it can never resurface during later, unrelated navigation the
   // way a lingering URL param could.
   const [pendingHighlight, setPendingHighlight] = useState<{ book: string; chapter: number; verse: number } | null>(null);
+  // The verse currently flashing green, if any. Baked directly into the html-building
+  // memo below (alongside the selected/memorized/paragraph classes) instead of being
+  // applied via an out-of-band `el.classList.add(...)` DOM mutation — that used to be
+  // silently wiped whenever the memo recomputed for an unrelated reason (e.g. the
+  // one-time paragraphBreaks fetch resolving) mid-flash, since dangerouslySetInnerHTML
+  // replaces the whole subtree wholesale. Being real state, it now survives any such
+  // recompute automatically.
+  const [flashVerse, setFlashVerse] = useState<number | null>(null);
   // Cross-reference "back" trail — a real stack (push on every cross-reference jump,
   // pop on "Go back"), not a single slot, so jumping through several cross-references
   // in a row doesn't silently discard earlier stops. Cleared on any navigation that
@@ -482,13 +490,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   // chapter's still-mounted DOM in the render before the new chapter's fetch resolves,
   // consuming the request before the correct chapter ever got its highlight.
   //
-  // Checks versesChapterRef rather than the `loading`/`verses` state values: on the
-  // very render where bookId/chapter change, the fetch effect above (which runs first
-  // in the same commit) calls setLoading(true), but that update isn't visible in this
-  // effect's closure until the *next* render — so `loading` here would still read as
-  // false and `verses` would still hold the outgoing chapter's data, defeating the
-  // guard entirely. versesChapterRef is a ref, so the fetch effect's synchronous reset
-  // of it is visible immediately to this effect within the same commit.
+  // Checks versesChapterRef, self-contained against pendingHighlight's own book/chapter
+  // (not bookId/chapter props): on the very render where bookId/chapter change, the
+  // fetch effect above (which runs first in the same commit) resets versesChapterRef
+  // synchronously, so it's visible immediately to this effect within the same commit —
+  // but bookId/chapter props themselves may lag pendingHighlight by a render (this
+  // router wraps navigation in React.startTransition), so gating on versesChapterRef
+  // alone avoids depending on that timing relationship ever holding.
   //
   // "One-shot" consumption is tracked via consumedHighlightRef, not by nulling
   // pendingHighlight state: pendingHighlight is in this effect's own dependency array,
@@ -499,32 +507,43 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   useEffect(() => {
     if (!pendingHighlight) return;
     if (pendingHighlight === consumedHighlightRef.current) return; // already scheduled
-    if (pendingHighlight.book !== bookId || pendingHighlight.chapter !== chapter) return;
-    if (versesChapterRef.current !== `${bookId}-${chapter}`) return;
+    if (versesChapterRef.current !== `${pendingHighlight.book}-${pendingHighlight.chapter}`) return;
 
     consumedHighlightRef.current = pendingHighlight;
     const targetVerse = pendingHighlight.verse;
 
     const timeoutId = setTimeout(() => {
-      const el = document.querySelector(`[data-verse="${targetVerse}"]`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // "!bg-green-500/30" (Tailwind's important modifier), not the plain utility: a
-        // verse that's already in the library or selected already carries its own
-        // bg-gold/25 or bg-accent/20 class baked into the initial HTML string. Tailwind
-        // resolves two classes touching the same CSS property by their position in the
-        // *generated* stylesheet, not by DOM/classList order, so plain "bg-green-500/30"
-        // would win or lose unpredictably depending on build output — exactly why the
-        // flash looked inconsistent (present for some verses, invisible for others).
-        // The important flag forces it to always win, regardless of that ordering.
-        el.classList.add('!bg-green-500/30', 'transition-colors', 'duration-1000');
-        setTimeout(() => {
-          el.classList.remove('!bg-green-500/30');
-        }, 4000);
-      }
+      // Driven by state (flashVerse), not an imperative el.classList mutation: the
+      // verse spans are rendered via dangerouslySetInnerHTML, and a direct DOM mutation
+      // there gets silently wiped the instant that html memo recomputes for *any*
+      // unrelated reason (e.g. the one-time paragraphBreaks fetch resolving) — which
+      // was the actual cause of the flash intermittently not appearing at all. Baking
+      // flashVerse into the same memo that already decides selected/memorized styling
+      // means it's regenerated correctly on every recompute instead of being an
+      // out-of-band mutation those recomputes can clobber.
+      setFlashVerse(targetVerse);
+      setTimeout(() => setFlashVerse(prev => (prev === targetVerse ? null : prev)), 4000);
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [pendingHighlight, bookId, chapter, verses, loading]);
+  }, [pendingHighlight, verses, loading]);
+
+  // Scrolls the flashing verse into view once it actually exists in the DOM — separate
+  // from the effect above because the html memo (and therefore the real data-verse
+  // element) only regenerates *after* setFlashVerse's render commits, so scrollIntoView
+  // has to run in its own effect keyed on flashVerse, not inline in the same tick.
+  //
+  // verse 0 is the "peeked from the return pill" sentinel (see crossRefPeekSource) —
+  // it means "somewhere in this chapter, exact position not tracked," not a real verse
+  // number, so `[data-verse="0"]` never matches anything. That used to make "Go back"
+  // to one of these stops a complete no-op — no scroll, no visible feedback at all,
+  // especially confusing when the target chapter is also the one already on screen.
+  // Falling back to the first verse in the chapter gives it a sensible, visible target.
+  useEffect(() => {
+    if (flashVerse === null) return;
+    const selector = flashVerse === 0 ? '.verse-span, .alpha-verse-span' : `[data-verse="${flashVerse}"]`;
+    const el = document.querySelector(selector);
+    el?.scrollIntoView({ behavior: 'smooth', block: flashVerse === 0 ? 'start' : 'center' });
+  }, [flashVerse]);
 
   const memorizedVerses = useMemo(() => {
     const memSet = new Set<number>();
@@ -884,8 +903,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       const inLibrary = memorizedVerses.has(v.verse);
       const isSelected = selectedVerses.includes(v.verse);
       
+      // Flash takes priority over — and replaces, rather than layers on top of — the
+      // selected/library background: two classes touching the same CSS property
+      // (background-color) get resolved by their position in Tailwind's *generated*
+      // stylesheet, not by string/DOM order, so layering risked losing the flash
+      // unpredictably against an already-memorized verse's gold background. Only one
+      // background class is ever emitted per verse now, so there's nothing to conflict.
       let extraClass = '';
-      if (isSelected) {
+      if (v.verse === flashVerse) {
+        extraClass = 'bg-green-500/30 rounded px-1 -mx-1 transition-colors duration-1000';
+      } else if (isSelected) {
         extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
       } else if (inLibrary) {
         extraClass = 'bg-gold/25 rounded px-1 -mx-1';
@@ -911,7 +938,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     });
 
     return html;
-  }, [verses, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter, paragraphBreaks]);
+  }, [verses, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter, paragraphBreaks, flashVerse]);
 
   // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
   const isOldTestament = (ALL_BOOKS.findIndex(b => b.id === bookId) + 1) <= 39;
@@ -1055,7 +1082,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       const inLibrary = memorizedVerses.has(v.verse);
       const isSelected = selectedVerses.includes(v.verse);
       let extraClass = '';
-      if (isSelected) {
+      if (v.verse === flashVerse) {
+        extraClass = 'bg-green-500/30 rounded px-1 -mx-1 transition-colors duration-1000';
+      } else if (isSelected) {
         extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
       } else if (inLibrary) {
         extraClass = 'bg-gold/25 rounded px-1 -mx-1';
@@ -1069,7 +1098,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     });
 
     return html;
-  }, [kjvVerses, strongsDict, parseKjvStrongs, selectedVerses, memorizedVerses]);
+  }, [kjvVerses, strongsDict, parseKjvStrongs, selectedVerses, memorizedVerses, flashVerse]);
 
   // Handle clicks on alpha-mode words and verse wrappers
   const handleAlphaClick = (e: React.MouseEvent) => {
@@ -1669,24 +1698,34 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
             setShowCrossReferences(null);
             setSelectedVerses([]); // Ensure we drop the previous selection so the toast disappears!
 
-            let sourceEntry: { book: string; chapter: number; verse: number };
-            if (crossRefPeekSource) {
-              // Came from the return pill's peek — record the user's actual physical
-              // position (verse unknown, hence 0), not the peeked verse itself.
-              sourceEntry = { book: crossRefPeekSource.book, chapter: crossRefPeekSource.chapter, verse: 0 };
-            } else {
+            // A peek (opened via the return pill's own "Refs") is re-browsing the list
+            // belonging to the verse that's already the top of the trail — picking a
+            // different entry from it is lateral movement within that same exploration,
+            // not a new hop away from somewhere. So the trail is left untouched and
+            // "back" keeps meaning the original source verse. Pushing here instead
+            // (as this used to) both inflated the trail depth and recorded the user's
+            // current chapter as a "stop", producing a pill offering to send them back
+            // to the very chapter they were already reading.
+            const isPeek = !!crossRefPeekSource;
+            setCrossRefPeekSource(null);
+
+            if (!isPeek) {
               // fromRef is the exact verse-group this reference was listed under — always
               // correct even when several verses were selected together (previously this
               // fell back to "the first selected verse" regardless of which group's
               // reference was actually clicked).
               const parsed = parseVerseRefString(fromRef);
-              sourceEntry = parsed
+              const sourceEntry = parsed
                 ? { book: parsed.bookId, chapter: parsed.chapter, verse: parsed.verse }
                 : { book: bookId, chapter, verse: 0 }; // best-effort fallback; shouldn't normally happen
-            }
-            setCrossRefPeekSource(null);
 
-            setReturnStack(prev => [...prev, sourceEntry]);
+              // Never record a "stop" for a jump that doesn't actually go anywhere —
+              // landing on the verse you're already reading would otherwise leave a
+              // trail entry pointing at the current position.
+              const isSelfJump = sourceEntry.book === navBookId && sourceEntry.chapter === ch && sourceEntry.verse === v;
+              if (!isSelfJump) setReturnStack(prev => [...prev, sourceEntry]);
+            }
+
             setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
 
             setSearchParams(prev => {
@@ -1724,9 +1763,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                 title="Go back"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Go back to <span className="font-bold">{topReturnBookName} {topReturn.chapter}{topReturn.verse > 0 ? `:${topReturn.verse}` : ''}</span>
+                {/* verse 0 means "somewhere in this chapter, exact position not tracked"
+                    — worded as "top of" rather than silently dropping the verse suffix,
+                    so it doesn't read as a no-op return to the chapter the user may
+                    already be standing in. Only reachable now via the rare
+                    parseVerseRefString fallback, since peeks no longer push a stop. */}
+                {topReturn.verse > 0 ? (
+                  <>Go back to <span className="font-bold">{topReturnBookName} {topReturn.chapter}:{topReturn.verse}</span></>
+                ) : (
+                  <>Go back to top of <span className="font-bold">{topReturnBookName} {topReturn.chapter}</span></>
+                )}
+                {/* Counts the stops *beyond* the one already named above, so the number
+                    never double-counts what the user can already read in the label —
+                    "· 1 more" means one further step back after this one. The old
+                    "· N stops" showed the whole trail depth including the named target,
+                    which read as if there were more history than there actually was. */}
                 {returnStack.length > 1 && (
-                  <span className="text-xs text-muted font-normal">· {returnStack.length} stops</span>
+                  <span className="text-xs text-muted font-normal">· {returnStack.length - 1} more</span>
                 )}
               </button>
 
