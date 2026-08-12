@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Home, BookOpen, Target, Settings2, Flame, Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
@@ -9,11 +9,10 @@ export const AppLayout: React.FC = () => {
   const { state } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isNavHidden, setIsNavHidden] = useState(false);
+  const [chromeVisible, setChromeVisible] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAddVerseOpen, setIsAddVerseOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
@@ -38,15 +37,24 @@ export const AppLayout: React.FC = () => {
   // desktop-only). Other tabs keep the wordmark.
   const isBibleRoot = location.pathname === '/guides' && !isFullscreenView;
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const currentScrollY = e.currentTarget.scrollTop;
-    if (currentScrollY > lastScrollY.current + 10 && currentScrollY > 50) {
-      setIsNavHidden(true);
-    } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY < 50) {
-      setIsNavHidden(false);
+  // Tap-to-toggle, the same rule every screen below the tab roots uses: a tap on
+  // empty space toggles the header and tab bar, a tap on anything interactive only
+  // ever reveals them. Replaces a scroll-direction auto-hide, which meant the same
+  // gesture behaved one way on a tab root and another way one level down.
+  const handleShellContentClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button, a, input, select, textarea, label, [role="button"]')) {
+      setChromeVisible(true);
+    } else {
+      setChromeVisible(v => !v);
     }
-    lastScrollY.current = currentScrollY;
   };
+
+  // Always reorient on navigation, so a tab can never be entered with its own
+  // navigation still toggled away from a previous screen.
+  useEffect(() => {
+    setChromeVisible(true);
+  }, [location.pathname, location.search]);
 
   const navLinks = [
     { to: "/", icon: Home, label: "Today" },
@@ -67,7 +75,7 @@ export const AppLayout: React.FC = () => {
         px-2 py-2 lg:p-6
         pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] lg:pb-6
         transition-transform duration-300 ease-in-out
-        ${isNavHidden ? 'translate-y-full lg:translate-y-0' : 'translate-y-0'}
+        ${chromeVisible ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'}
         ${isFullscreenView ? 'hidden' : ''}
       `}
       role="navigation"
@@ -146,7 +154,7 @@ export const AppLayout: React.FC = () => {
         <header className={`
           absolute top-0 left-0 w-full px-5 sm:px-8 pb-3 z-40 lg:hidden
           transition-transform duration-300 ease-in-out bg-background/95
-          ${isNavHidden ? '-translate-y-full' : 'translate-y-0'}
+          ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}
           ${isFullscreenView ? 'hidden' : ''}
         `}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.25rem)' }}
@@ -205,7 +213,7 @@ export const AppLayout: React.FC = () => {
               ? '0px'
               : 'calc(env(safe-area-inset-bottom, 0px) + 7rem)'
           }}
-          onScroll={handleScroll}
+          onClick={handleShellContentClick}
         >
           <Outlet />
         </div>
