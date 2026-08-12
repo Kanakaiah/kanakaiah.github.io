@@ -31,6 +31,12 @@ export const AppLayout: React.FC = () => {
   const isGuidePage = new URLSearchParams(location.search).has('guide');
   const isPracticePage = location.pathname === '/practice';
   const isFullscreenView = isReadingPage || isPracticePage || isGuidePage;
+  // The Bible tab root is the one tab whose page has a real name of its own, and
+  // every screen you can reach from it now shows that name in a pinned header. It
+  // shows "Bible" here for the same reason, instead of repeating the app wordmark
+  // and leaving the page itself untitled on mobile (its "Bible" heading is
+  // desktop-only). Other tabs keep the wordmark.
+  const isBibleRoot = location.pathname === '/guides' && !isFullscreenView;
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const currentScrollY = e.currentTarget.scrollTop;
@@ -148,11 +154,22 @@ export const AppLayout: React.FC = () => {
           {/* Inner wrapper carries the max-width so the title and streak/settings stay
               aligned with the page content below instead of being pushed to opposite
               edges of a wide (unfolded foldable / tablet) viewport. */}
-          <div className="max-w-4xl mx-auto w-full flex justify-between items-center">
-            <div className="flex items-center gap-2.5">
-              <BookOpen className="w-4 h-4 text-accent" />
-              <h1 className="text-xl font-heading font-semibold tracking-tight text-primary">Remora</h1>
-            </div>
+          <div className="max-w-4xl mx-auto w-full flex justify-between items-center relative">
+            {isBibleRoot ? (
+              <>
+                {/* Spacer balances the controls on the right so the absolutely
+                    centred title sits in the true middle of the bar. */}
+                <div className="w-9" aria-hidden="true" />
+                <h1 className="absolute left-1/2 -translate-x-1/2 max-w-[55%] truncate text-2xl sm:text-3xl font-heading font-semibold tracking-tight text-primary">
+                  Bible
+                </h1>
+              </>
+            ) : (
+              <div className="flex items-center gap-2.5">
+                <BookOpen className="w-4 h-4 text-accent" />
+                <h1 className="text-xl font-heading font-semibold tracking-tight text-primary">Remora</h1>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-card-border">
                 <Flame className="w-4 h-4 text-gold" />
