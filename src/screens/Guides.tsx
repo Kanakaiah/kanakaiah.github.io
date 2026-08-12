@@ -95,6 +95,82 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
   );
 };
 
+// Full two-column Bible book index. Extracted from the book-guide view so the Bible
+// landing page's bottom bar can open the same one, rather than the two levels
+// offering different ways to jump between books.
+const BibleIndexModal: React.FC<{
+  isOpen: boolean;
+  selectedId: string | null;
+  onSelect: (bookId: string) => void;
+  onClose: () => void;
+}> = ({ isOpen, selectedId, onSelect, onClose }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
+        <button
+          onClick={onClose}
+          className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
+          aria-label="Close index"
+        >
+          <X className="w-5 h-5 text-secondary" />
+        </button>
+        <span className="text-sm font-bold text-primary tracking-wide">Bible Books</span>
+        <div className="w-9" />
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-4 py-3 pb-32">
+        <div className="grid grid-cols-2 mb-2">
+          <span className="text-right pr-4 text-[10px] font-bold text-muted uppercase tracking-widest">Old Testament</span>
+          <span className="text-left pl-4 text-[10px] font-bold text-muted uppercase tracking-widest">New Testament</span>
+        </div>
+
+        <div className="grid grid-cols-2">
+          {(() => {
+            const rows: React.ReactNode[] = [];
+            const maxLen = Math.max(OT_BOOKS.length, NT_BOOKS.length);
+
+            for (let i = 0; i < maxLen; i++) {
+              const ot = i < OT_BOOKS.length ? OT_BOOKS[i] : null;
+              const nt = i < NT_BOOKS.length ? NT_BOOKS[i] : null;
+              const isOtSelected = ot?.id === selectedId;
+              const isNtSelected = nt?.id === selectedId;
+
+              rows.push(
+                <React.Fragment key={`row-${i}`}>
+                  <button
+                    onClick={() => { if (ot) onSelect(ot.id); }}
+                    className={`text-right pr-4 py-2 text-[15px] transition-colors ${
+                      isOtSelected
+                        ? 'text-accent font-bold bg-accent/10 rounded-r-lg'
+                        : ot ? 'text-secondary hover:text-primary' : 'pointer-events-none'
+                    }`}
+                    disabled={!ot}
+                  >
+                    {ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}
+                  </button>
+                  <button
+                    onClick={() => { if (nt) onSelect(nt.id); }}
+                    className={`text-left pl-4 py-2 text-[15px] font-medium transition-colors ${
+                      isNtSelected
+                        ? 'text-accent font-bold bg-accent/10 rounded-l-lg'
+                        : nt ? 'text-secondary hover:text-primary' : 'pointer-events-none'
+                    }`}
+                    disabled={!nt}
+                  >
+                    {nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}
+                  </button>
+                </React.Fragment>
+              );
+            }
+            return rows;
+          })()}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const Guides: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
@@ -329,15 +405,89 @@ export const Guides: React.FC = () => {
 
   // ── BibleBrowser view ──────────────────────────────────────────────────────
   if (activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) {
+    const isNT = activeGuideId === BIBLE_BROWSER_NT;
     return (
-      <div 
-        className="flex flex-col gap-6 max-w-4xl mx-auto w-full animate-[fadeIn_0.3s_ease-out]"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+      <div
+        className="flex flex-col gap-6 max-w-4xl mx-auto w-full pb-24 animate-[fadeIn_0.3s_ease-out]"
+        style={{ paddingTop: headerHeight ? `${headerHeight + 16}px` : 'calc(env(safe-area-inset-top, 0px) + 5rem)' }}
+        onClick={handleGuideContentClick}
       >
+        {/* Fixed header — same shape, transition and tap-to-toggle state as the book
+            page and the chapter reader. */}
+        <div
+          ref={headerRef}
+          className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        >
+          <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
+            <button
+              onClick={() => setActiveGuideId(null)}
+              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
+              title="Go back"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-6 h-6 text-secondary" />
+            </button>
+            <div className="flex flex-col items-center justify-center pt-1">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2">
+                {isNT ? 'New Testament' : 'Old Testament'}
+              </h2>
+            </div>
+          </div>
+        </div>
+
         <BibleBrowser
-          initialTestament={activeGuideId === BIBLE_BROWSER_NT ? 'NT' : 'OT'}
+          initialTestament={isNT ? 'NT' : 'OT'}
           onOpenGuide={(guideId) => setActiveGuideId(guideId)}
-          onBack={() => setActiveGuideId(null)}
+        />
+
+        {/* Bottom bar — the testament switcher is this level's equivalent of the
+            book page's prev/next book and the reader's prev/next chapter, with the
+            current one disabled the same way the reader disables "Start" on
+            Genesis 1. Centre opens the same index modal the book page uses. */}
+        <div className={`
+          fixed bottom-0 left-0 right-0
+          bg-card border-t border-card-border
+          z-40 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}
+        `}>
+          <div className="max-w-4xl mx-auto flex items-center justify-between px-5 sm:px-8 py-3 pb-safe">
+            <button
+              onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
+              disabled={!isNT}
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+              aria-label="Old Testament"
+            >
+              <ChevronLeft className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:block">Old Testament</span>
+              <span className="sm:hidden">OT</span>
+            </button>
+
+            <button
+              onClick={() => setIsIndexModalOpen(true)}
+              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
+            >
+              INDEX
+            </button>
+
+            <button
+              onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
+              disabled={isNT}
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+              aria-label="New Testament"
+            >
+              <span className="hidden sm:block">New Testament</span>
+              <span className="sm:hidden">NT</span>
+              <ChevronRight className="w-4 h-4 flex-shrink-0" />
+            </button>
+          </div>
+        </div>
+
+        <BibleIndexModal
+          isOpen={isIndexModalOpen}
+          selectedId={activeGuideId}
+          onSelect={(id) => { setActiveGuideId(id); setIsIndexModalOpen(false); }}
+          onClose={() => setIsIndexModalOpen(false)}
         />
       </div>
     );
@@ -789,84 +939,13 @@ export const Guides: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Index Modal ── */}
-        {isIndexModalOpen && (
-          <div className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
-              <button
-                onClick={() => setIsIndexModalOpen(false)}
-                className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
-              >
-                <X className="w-5 h-5 text-secondary" />
-              </button>
-              <span className="text-sm font-bold text-primary tracking-wide">Bible Books</span>
-              <div className="w-9" />
-            </div>
-
-            {/* Book list */}
-            <div className="flex-1 overflow-y-auto px-4 py-3 pb-32">
-              {/* Column headers */}
-              <div className="grid grid-cols-2 mb-2">
-                <span className="text-right pr-4 text-[10px] font-bold text-muted uppercase tracking-widest">Old Testament</span>
-                <span className="text-left pl-4 text-[10px] font-bold text-muted uppercase tracking-widest">New Testament</span>
-              </div>
-
-              {/* Book rows */}
-              <div className="grid grid-cols-2">
-                {(() => {
-                  const rows: React.ReactNode[] = [];
-                  const maxLen = Math.max(OT_BOOKS.length, NT_BOOKS.length);
-
-                  for (let i = 0; i < maxLen; i++) {
-                    const ot = i < OT_BOOKS.length ? OT_BOOKS[i] : null;
-                    const nt = i < NT_BOOKS.length ? NT_BOOKS[i] : null;
-                    const isOtSelected = ot?.id === activeGuideId;
-                    const isNtSelected = nt?.id === activeGuideId;
-
-                    rows.push(
-                      <React.Fragment key={`row-${i}`}>
-                        <button
-                          onClick={() => {
-                            if (ot) {
-                              setActiveGuideId(ot.id);
-                              setIsIndexModalOpen(false);
-                            }
-                          }}
-                          className={`text-right pr-4 py-2 text-[15px] transition-colors ${
-                            isOtSelected
-                              ? 'text-accent font-bold bg-accent/10 rounded-r-lg'
-                              : ot ? 'text-secondary hover:text-primary' : 'pointer-events-none'
-                          }`}
-                          disabled={!ot}
-                        >
-                          {ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (nt) {
-                              setActiveGuideId(nt.id);
-                              setIsIndexModalOpen(false);
-                            }
-                          }}
-                          className={`text-left pl-4 py-2 text-[15px] font-medium transition-colors ${
-                            isNtSelected
-                              ? 'text-accent font-bold bg-accent/10 rounded-l-lg'
-                              : nt ? 'text-secondary hover:text-primary' : 'pointer-events-none'
-                          }`}
-                          disabled={!nt}
-                        >
-                          {nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}
-                        </button>
-                      </React.Fragment>
-                    );
-                  }
-                  return rows;
-                })()}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Shared with the Bible landing page — defined as BibleIndexModal above. */}
+        <BibleIndexModal
+          isOpen={isIndexModalOpen}
+          selectedId={activeGuideId}
+          onSelect={(id) => { setActiveGuideId(id); setIsIndexModalOpen(false); }}
+          onClose={() => setIsIndexModalOpen(false)}
+        />
       </div>
     );
   }

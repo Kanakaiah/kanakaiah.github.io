@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Search, Check } from 'lucide-react';
+import { Search, Check } from 'lucide-react';
 import { NT_BOOKS, NT_SECTIONS, type NTBook } from '../../data/ntBooks';
 import { OT_BOOKS, OT_SECTIONS, type OTBook } from '../../data/otBooks';
 
@@ -62,23 +62,23 @@ export const BookCard: React.FC<{ book: Book; onClick: () => void }> = ({ book, 
 
 interface BibleBrowserProps {
   onOpenGuide: (guideId: string) => void;
-  onBack: () => void;
   initialTestament?: 'OT' | 'NT';
 }
 
 type View = 'book-grid';
 
-export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack, initialTestament }) => {
-  const [testament] = useState<'OT' | 'NT' | null>(initialTestament ?? 'NT');
+export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initialTestament }) => {
+  // Derived from the prop, not seeded into state: useState only reads its initial
+  // value on mount, so once the host gained a testament switcher this component kept
+  // rendering the testament it first mounted with — the header would say "New
+  // Testament" while the page still listed all 39 Old Testament books. Nothing here
+  // ever set it, so there was no reason for it to be state in the first place.
+  const testament: 'OT' | 'NT' = initialTestament ?? 'NT';
   const [view] = useState<View>('book-grid');
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSelectBook = (book: Book) => {
     onOpenGuide(book.id);
-  };
-
-  const handleBackFromGrid = () => {
-    onBack();
   };
 
   const ALL_BOOKS: Book[] = [...OT_BOOKS, ...NT_BOOKS];
@@ -96,22 +96,13 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, onBack,
     <div className="flex flex-col gap-5 w-full animate-[fadeIn_0.25s_ease-out]">
 
       {/* ── Shared Search Bar (always visible at top) ─────────────────── */}
+      {/* The back link and the "New/Old Testament" title used to live here; both are
+          now in the host's fixed header, so they stay put instead of scrolling away
+          and aren't rendered twice. Only the count caption remains for context. */}
       <div className="flex flex-col gap-4 mb-2">
-        <button
-          onClick={handleBackFromGrid}
-          className="flex items-center gap-1 -ml-2 text-accent hover:text-accent-hover transition-colors font-medium text-[0.9375rem] self-start"
-        >
-          <ChevronLeft className="w-5 h-5" />
-          <span>Guides</span>
-        </button>
-        <div>
-          <h2 className="text-3xl font-bold font-heading text-primary">
-            {testament === 'NT' ? 'New Testament' : 'Old Testament'}
-          </h2>
-          <p className="text-secondary text-sm mt-1">
-            {testament === 'NT' ? '27 books' : '39 books'} — tap any to explore
-          </p>
-        </div>
+        <p className="text-secondary text-sm">
+          {testament === 'NT' ? '27 books' : '39 books'} — tap any to explore
+        </p>
 
         {/* Search Bar */}
         <div className="relative mt-2">
