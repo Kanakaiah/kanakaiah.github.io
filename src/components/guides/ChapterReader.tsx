@@ -62,6 +62,31 @@ const BIBLE_VERSION_OPTIONS: { value: 'LSB' | 'NASB' | 'NLT'; label: string }[] 
   { value: 'NLT', label: 'New Living Translation (NLT)' },
 ];
 
+// Parses a "book chapter:verse" reference string (e.g. "genesis 1:1", or a multi-word
+// book like "song of solomon 3:1") into a resolved book id. Anchored on the trailing
+// "chapter:verse" so everything before it is treated as the book name regardless of
+// how many words it has — the previous single-word-only regex silently failed to
+// match multi-word books.
+function parseVerseRefString(refStr: string): { bookId: string; chapter: number; verse: number } | null {
+  const match = refStr.match(/^(.+?)\s+(\d+):(\d+)$/);
+  if (!match) return null;
+  const bookName = match[1].trim().toLowerCase();
+  const foundBook = ALL_BOOKS.find(b => b.name.toLowerCase() === bookName || b.id === bookName);
+  if (!foundBook) return null;
+  return { bookId: foundBook.id, chapter: parseInt(match[2], 10), verse: parseInt(match[3], 10) };
+}
+
+// Cross-reference "back" navigation used to be tracked via these URL params. They've
+// since been replaced by in-memory state (pendingHighlight/returnStack) so a stale
+// trail can never resurface after a reload — but a URL carrying them from before that
+// change (or a stale bookmark/share link) would otherwise linger forever, since nothing
+// reads them anymore and every setSearchParams call here preserves unrelated keys as-is.
+const LEGACY_READER_PARAMS = ['returnBook', 'returnChapter', 'returnVerse', 'highlightVerse'];
+function pruneLegacyReaderParams(params: URLSearchParams): URLSearchParams {
+  LEGACY_READER_PARAMS.forEach(key => params.delete(key));
+  return params;
+}
+
 interface StrongsDefinition {
   lemma: string;
   xlit?: string;
@@ -97,11 +122,28 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const highlightVerse = searchParams.get('highlightVerse');
-  const returnBook = searchParams.get('returnBook');
-  const returnChapter = searchParams.get('returnChapter');
-  const returnVerse = searchParams.get('returnVerse');
+  const [, setSearchParams] = useSearchParams();
+  // A single verse to scroll-to and briefly flash once its chapter is loaded and on
+  // screen. Component state (not a URL param) so it's fully under our control — every
+  // consumer below is required to set it explicitly, and it's consumed (cleared) the
+  // instant it fires, so it can never resurface during later, unrelated navigation the
+  // way a lingering URL param could.
+  const [pendingHighlight, setPendingHighlight] = useState<{ book: string; chapter: number; verse: number } | null>(null);
+  // Cross-reference "back" trail — a real stack (push on every cross-reference jump,
+  // pop on "Go back"), not a single slot, so jumping through several cross-references
+  // in a row doesn't silently discard earlier stops. Cleared on any navigation that
+  // isn't itself a cross-reference jump or a "Go back" (Next/Prev/Navigator), so a
+  // stale trail can't reappear pointing somewhere that no longer makes sense.
+  const [returnStack, setReturnStack] = useState<{ book: string; chapter: number; verse: number }[]>([]);
+  // Set only when the current cross-reference session was opened via the return pill's
+  // own "Refs" peek (viewing references *for the return target*, without actually
+  // navigating there). In that case the verse-group a clicked reference came from is
+  // the peeked verse, not the user's actual physical position — pushing that as the
+  // "source" would duplicate the stack's current top instead of recording where the
+  // user really was, e.g. "Go back" from the new verse would land back on the same
+  // peeked verse a second time instead of returning to the chapter they'd actually
+  // been reading.
+  const [crossRefPeekSource, setCrossRefPeekSource] = useState<{ book: string; chapter: number } | null>(null);
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
@@ -117,6 +159,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [navigatorBook, setNavigatorBook] = useState(bookId);
   const chapterGridRef = useRef<HTMLDivElement>(null);
   const [retryCount, setRetryCount] = useState(0);
+  // Which "book-chapter" the current `verses` state actually holds data for. A ref, not
+  // state: it must be visible to the pendingHighlight effect below within the *same*
+  // commit that a chapter change starts a new fetch, and sibling effects in one commit
+  // still see each other's pre-update state snapshot — only a ref mutates in place in
+  // time for that. See the fetch effect and the pendingHighlight effect for how this
+  // prevents a cross-chapter jump from flashing against the outgoing chapter's verses.
+  const versesChapterRef = useRef<string>('');
+  // Marks which pendingHighlight object has already been scheduled to fire, so the
+  // highlight effect can recognize "already handled" without nulling pendingHighlight
+  // state (see that effect for why nulling it causes a self-cancellation bug).
+  const consumedHighlightRef = useRef<{ book: string; chapter: number; verse: number } | null>(null);
   const [alphaDiscovered, setAlphaDiscovered] = useState(() => {
     try { return localStorage.getItem('remora_alpha_discovered') === '1'; } catch { return true; }
   });
@@ -226,16 +279,22 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
     if (bookIndex === -1) return;
     const currentBook = ALL_BOOKS[bookIndex];
-    
+    // Normal navigation invalidates any cross-reference "back" trail and pending
+    // highlight — otherwise either could resurface later pointing somewhere that no
+    // longer relates to how the reader actually got to the new chapter.
+    setReturnStack([]);
+    setPendingHighlight(null);
+    setCrossRefPeekSource(null);
+
     if (chapter < currentBook.chapters) {
       setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
+        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
         next.set('readerChapter', (chapter + 1).toString());
         return next;
       });
     } else if (bookIndex < ALL_BOOKS.length - 1) {
       setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
+        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
         next.set('readerBook', ALL_BOOKS[bookIndex + 1].id);
         next.set('readerChapter', '1');
         return next;
@@ -246,17 +305,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const handlePrevChapter = () => {
     const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
     if (bookIndex === -1) return;
-    
+    setReturnStack([]);
+    setPendingHighlight(null);
+    setCrossRefPeekSource(null);
+
     if (chapter > 1) {
       setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
+        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
         next.set('readerChapter', (chapter - 1).toString());
         return next;
       });
     } else if (bookIndex > 0) {
       const prevBook = ALL_BOOKS[bookIndex - 1];
       setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
+        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
         next.set('readerBook', prevBook.id);
         next.set('readerChapter', prevBook.chapters.toString());
         return next;
@@ -299,8 +361,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   };
 
   const handleNavigate = (targetBookId: string, targetChapter: number) => {
+    setReturnStack([]);
+    setPendingHighlight(null);
+    setCrossRefPeekSource(null);
     setSearchParams(prev => {
-      const next = new URLSearchParams(prev);
+      const next = pruneLegacyReaderParams(new URLSearchParams(prev));
       next.set('readerBook', targetBookId);
       next.set('readerChapter', targetChapter.toString());
       // Also update the guide param so closing the reader lands on the correct book's page
@@ -366,6 +431,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     let cancelled = false;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
+    // Cleared synchronously (before any await) so it's already invalidated by the time
+    // the pendingHighlight effect below runs later in this same commit.
+    versesChapterRef.current = '';
 
     const fetchChapter = async () => {
       setLoading(true);
@@ -384,6 +452,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
         const data: Verse[] = await res.json();
         if (cancelled) return;
         setVerses(data);
+        versesChapterRef.current = `${bookId}-${chapter}`;
         setSelectedVerses([]); // Clear any previous selection when loading a new chapter
       } catch (err: any) {
         if (cancelled) return;
@@ -406,26 +475,60 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     };
   }, [bookId, chapter, retryCount, bibleVersion]);
 
+  // Single home for every "jump to a verse and flash it" request in this component
+  // (cross-references, Strong's occurrences, "Go back"). Waits until the *target*
+  // chapter is actually the one loaded and on screen before doing anything — without
+  // that guard, a cross-chapter jump could transiently fire against the previous
+  // chapter's still-mounted DOM in the render before the new chapter's fetch resolves,
+  // consuming the request before the correct chapter ever got its highlight.
+  //
+  // Checks versesChapterRef rather than the `loading`/`verses` state values: on the
+  // very render where bookId/chapter change, the fetch effect above (which runs first
+  // in the same commit) calls setLoading(true), but that update isn't visible in this
+  // effect's closure until the *next* render — so `loading` here would still read as
+  // false and `verses` would still hold the outgoing chapter's data, defeating the
+  // guard entirely. versesChapterRef is a ref, so the fetch effect's synchronous reset
+  // of it is visible immediately to this effect within the same commit.
+  //
+  // "One-shot" consumption is tracked via consumedHighlightRef, not by nulling
+  // pendingHighlight state: pendingHighlight is in this effect's own dependency array,
+  // so calling setPendingHighlight(null) from inside it triggers this same effect's
+  // cleanup on the very next render — which clearTimeout'd the 300ms flash before it
+  // ever fired, silently swallowing every cross-reference-jump highlight. Comparing
+  // against a ref instead avoids that self-cancellation entirely.
   useEffect(() => {
-    if (verses.length > 0 && highlightVerse && !loading) {
-      setTimeout(() => {
-        const el = document.querySelector(`[data-verse="${highlightVerse}"]`);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          // Add a temporary highlight effect (light green)
-          el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
-          setTimeout(() => {
-            el.classList.remove('bg-green-500/30');
-          }, 2500);
-        }
-      }, 300);
-    }
-  }, [verses, highlightVerse, loading]);
+    if (!pendingHighlight) return;
+    if (pendingHighlight === consumedHighlightRef.current) return; // already scheduled
+    if (pendingHighlight.book !== bookId || pendingHighlight.chapter !== chapter) return;
+    if (versesChapterRef.current !== `${bookId}-${chapter}`) return;
+
+    consumedHighlightRef.current = pendingHighlight;
+    const targetVerse = pendingHighlight.verse;
+
+    const timeoutId = setTimeout(() => {
+      const el = document.querySelector(`[data-verse="${targetVerse}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // "!bg-green-500/30" (Tailwind's important modifier), not the plain utility: a
+        // verse that's already in the library or selected already carries its own
+        // bg-gold/25 or bg-accent/20 class baked into the initial HTML string. Tailwind
+        // resolves two classes touching the same CSS property by their position in the
+        // *generated* stylesheet, not by DOM/classList order, so plain "bg-green-500/30"
+        // would win or lose unpredictably depending on build output — exactly why the
+        // flash looked inconsistent (present for some verses, invisible for others).
+        // The important flag forces it to always win, regardless of that ordering.
+        el.classList.add('!bg-green-500/30', 'transition-colors', 'duration-1000');
+        setTimeout(() => {
+          el.classList.remove('!bg-green-500/30');
+        }, 4000);
+      }
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [pendingHighlight, bookId, chapter, verses, loading]);
 
   const memorizedVerses = useMemo(() => {
     const memSet = new Set<number>();
     const prefix = `${bookTitle} ${chapter}:`;
-    
     state.verses.forEach(v => {
       if (v.ref.startsWith(prefix)) {
         const versePart = v.ref.substring(prefix.length);
@@ -1317,6 +1420,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                 <button
                   onClick={() => {
                     const sorted = [...selectedVerses].sort((a, b) => a - b);
+                    setCrossRefPeekSource(null); // this is the reader's real position, not a peek
                     setShowCrossReferences(sorted.map(v => `${bookTitle.toLowerCase()} ${chapter}:${v}`));
                   }}
                   className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
@@ -1382,7 +1486,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       {/* Bottom Chapter Navigation Bar — hidden while the "Go back to..." return
           pill is showing (below), since both are fixed to the bottom edge and
           would otherwise stack on top of each other. */}
-      {!loading && !error && selectedVerses.length === 0 && !(returnBook && returnChapter) && (
+      {!loading && !error && selectedVerses.length === 0 && returnStack.length === 0 && (
         <div className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}>
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
             <button
@@ -1554,137 +1658,107 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       )}
 
       {showCrossReferences && (
-        <CrossReferenceModal 
+        <CrossReferenceModal
           verseRefs={showCrossReferences}
-          onClose={() => setShowCrossReferences(null)}
-          onNavigateToVerse={(navBookId, ch, v) => {
+          crossRefMap={crossRefMap}
+          onClose={() => {
+            setShowCrossReferences(null);
+            setCrossRefPeekSource(null);
+          }}
+          onNavigateToVerse={(navBookId, ch, v, fromRef) => {
             setShowCrossReferences(null);
             setSelectedVerses([]); // Ensure we drop the previous selection so the toast disappears!
-            
-            let originalBook = bookId;
-            let originalChapter = chapter.toString();
-            let originalVerse = '';
 
-            if (showCrossReferences && showCrossReferences.length > 0) {
-               const match = showCrossReferences[0].match(/^(\d?\s*[a-zA-Z]+)\s+(\d+):(\d+)$/);
-               if (match) {
-                 const bName = match[1].toLowerCase().trim();
-                 const foundBook = ALL_BOOKS.find(b => b.name.toLowerCase() === bName || b.id === bName);
-                 if (foundBook) {
-                   originalBook = foundBook.id;
-                 }
-                 originalChapter = match[2];
-                 originalVerse = match[3];
-               } else {
-                 const refParts = showCrossReferences[0].split(':');
-                 if (refParts.length > 1) {
-                   originalVerse = refParts[1];
-                 }
-               }
+            let sourceEntry: { book: string; chapter: number; verse: number };
+            if (crossRefPeekSource) {
+              // Came from the return pill's peek — record the user's actual physical
+              // position (verse unknown, hence 0), not the peeked verse itself.
+              sourceEntry = { book: crossRefPeekSource.book, chapter: crossRefPeekSource.chapter, verse: 0 };
+            } else {
+              // fromRef is the exact verse-group this reference was listed under — always
+              // correct even when several verses were selected together (previously this
+              // fell back to "the first selected verse" regardless of which group's
+              // reference was actually clicked).
+              const parsed = parseVerseRefString(fromRef);
+              sourceEntry = parsed
+                ? { book: parsed.bookId, chapter: parsed.chapter, verse: parsed.verse }
+                : { book: bookId, chapter, verse: 0 }; // best-effort fallback; shouldn't normally happen
             }
+            setCrossRefPeekSource(null);
+
+            setReturnStack(prev => [...prev, sourceEntry]);
+            setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
 
             setSearchParams(prev => {
-              const next = new URLSearchParams(prev);
+              const next = pruneLegacyReaderParams(new URLSearchParams(prev));
               next.set('readerBook', navBookId);
               next.set('readerChapter', ch.toString());
-              next.set('highlightVerse', v.toString());
-              next.set('returnBook', originalBook);
-              next.set('returnChapter', originalChapter);
-              if (originalVerse) {
-                next.set('returnVerse', originalVerse);
-              }
               return next;
             }, { replace: true });
-
-            if (navBookId === bookId && ch === chapter) {
-              setTimeout(() => {
-                const el = document.querySelector(`[data-verse="${v}"]`);
-                if (el) {
-                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
-                  setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
-                }
-              }, 200);
-            }
           }}
         />
       )}
 
-      {returnBook && returnChapter && selectedVerses.length === 0 && (
-        <div
-          className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
-        >
-          <div className="bg-card-elevated border border-card-border text-primary shadow-md rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">
-            <button 
-              onClick={() => {
-                setSearchParams(prev => {
-                  const next = new URLSearchParams(prev);
-                  next.set('readerBook', returnBook);
-                  next.set('readerChapter', returnChapter);
-                  next.delete('returnBook');
-                  next.delete('returnChapter');
-                  next.delete('returnVerse');
-                  next.delete('highlightVerse');
-                  if (returnVerse) {
-                    next.set('highlightVerse', returnVerse);
-                  }
-                  return next;
-                }, { replace: true });
-                
-                // If returning to same chapter, manually scroll
-                if (returnBook === bookId && returnChapter === chapter.toString()) {
-                  setTimeout(() => {
-                    const el = document.querySelector(`[data-verse="${returnVerse}"]`);
-                    if (el) {
-                      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
-                      setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
-                    }
-                  }, 200);
-                }
-              }}
-              className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
-              title="Go back"
-            >
-              <ArrowLeft className="w-4 h-4" /> Go back to <span className="font-bold">{ALL_BOOKS.find(b => b.id === returnBook)?.name || returnBook} {returnChapter}:{returnVerse || ''}</span>
-            </button>
+      {returnStack.length > 0 && selectedVerses.length === 0 && (() => {
+        const topReturn = returnStack[returnStack.length - 1];
+        const topReturnBookName = ALL_BOOKS.find(b => b.id === topReturn.book)?.name || topReturn.book;
+        return (
+          <div
+            className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
+          >
+            <div className="bg-card-elevated border border-card-border text-primary shadow-md rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">
+              <button
+                onClick={() => {
+                  // Pop, not clear — a deeper trail (e.g. two cross-reference jumps in a
+                  // row) still has an older stop to offer after this one.
+                  setReturnStack(prev => prev.slice(0, -1));
+                  setPendingHighlight({ book: topReturn.book, chapter: topReturn.chapter, verse: topReturn.verse });
+                  setSearchParams(prev => {
+                    const next = pruneLegacyReaderParams(new URLSearchParams(prev));
+                    next.set('readerBook', topReturn.book);
+                    next.set('readerChapter', topReturn.chapter.toString());
+                    return next;
+                  }, { replace: true });
+                }}
+                className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
+                title="Go back"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Go back to <span className="font-bold">{topReturnBookName} {topReturn.chapter}{topReturn.verse > 0 ? `:${topReturn.verse}` : ''}</span>
+                {returnStack.length > 1 && (
+                  <span className="text-xs text-muted font-normal">· {returnStack.length} stops</span>
+                )}
+              </button>
 
-            {returnVerse && (
-              <>
-                <div className="w-[1px] h-4 bg-card-border" />
-                <button
-                  onClick={() => {
-                    const bookName = ALL_BOOKS.find(b => b.id === returnBook)?.name.toLowerCase() || returnBook;
-                    setShowCrossReferences([`${bookName} ${returnChapter}:${returnVerse}`]);
-                  }}
-                  className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
-                  title="View references for original verse"
-                >
-                  <BookOpen className="w-4 h-4" /> Refs
-                </button>
-              </>
-            )}
+              {topReturn.verse > 0 && (
+                <>
+                  <div className="w-[1px] h-4 bg-card-border" />
+                  <button
+                    onClick={() => {
+                      setCrossRefPeekSource({ book: bookId, chapter });
+                      setShowCrossReferences([`${topReturnBookName.toLowerCase()} ${topReturn.chapter}:${topReturn.verse}`]);
+                    }}
+                    className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
+                    title="View references for original verse"
+                  >
+                    <BookOpen className="w-4 h-4" /> Refs
+                  </button>
+                </>
+              )}
 
-            <div className="w-[1px] h-4 bg-card-border" />
+              <div className="w-[1px] h-4 bg-card-border" />
 
-            <button
-              onClick={() => {
-                setSearchParams(prev => {
-                  const next = new URLSearchParams(prev);
-                  next.delete('returnBook');
-                  next.delete('returnChapter');
-                  next.delete('returnVerse');
-                  return next;
-                }, { replace: true });
-              }}
-              className="p-1 -mr-2 -my-2 rounded-full hover:bg-card-hover transition-colors"
-              aria-label="Dismiss"
-            >
-              <X className="w-[18px] h-[18px] opacity-80" />
-            </button>
+              <button
+                onClick={() => setReturnStack([])}
+                className="p-1 -mr-2 -my-2 rounded-full hover:bg-card-hover transition-colors"
+                aria-label="Dismiss"
+              >
+                <X className="w-[18px] h-[18px] opacity-80" />
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {wordPopup && (
         <WordPopup
@@ -1706,26 +1780,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           onNavigateToVerse={(navBookId, ch, v) => {
             setViewingOccurrences(null);
             setWordPopup(null);
-            
-            // Navigate to the verse in the reader
+
+            setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
             setSearchParams(prev => {
-              const next = new URLSearchParams(prev);
+              const next = pruneLegacyReaderParams(new URLSearchParams(prev));
               next.set('readerBook', navBookId);
               next.set('readerChapter', ch.toString());
-              next.set('highlightVerse', v.toString());
               return next;
             }, { replace: true });
-
-            if (navBookId === bookId && ch === chapter) {
-              setTimeout(() => {
-                const el = document.querySelector(`[data-verse="${v}"]`);
-                if (el) {
-                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  el.classList.add('bg-green-500/30', 'transition-colors', 'duration-1000');
-                  setTimeout(() => el.classList.remove('bg-green-500/30'), 2500);
-                }
-              }, 200);
-            }
           }}
         />
       )}

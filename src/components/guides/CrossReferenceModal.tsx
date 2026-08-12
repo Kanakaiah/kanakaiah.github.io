@@ -13,7 +13,13 @@ const verseTextCache: Record<string, string> = {};
 interface CrossReferenceModalProps {
   verseRefs: string[];
   onClose: () => void;
-  onNavigateToVerse: (bookId: string, chapter: number, verse: number) => void;
+  // fromRef is the exact "book chapter:verse" string (matching one of verseRefs) that
+  // the clicked reference was listed under — callers need this to know which verse to
+  // treat as "where the user came from" when multiple verses are shown at once.
+  onNavigateToVerse: (bookId: string, chapter: number, verse: number, fromRef: string) => void;
+  // Reuse the host's already-fetched cross-reference database instead of re-fetching
+  // the (multi-MB) file every time this modal opens.
+  crossRefMap?: Record<string, string[]> | null;
 }
 
 interface CrossRefData {
@@ -31,7 +37,7 @@ interface VerseGroup {
   refs: CrossRefData[];
 }
 
-export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseRefs, onClose, onNavigateToVerse }) => {
+export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseRefs, onClose, onNavigateToVerse, crossRefMap }) => {
   const [groups, setGroups] = useState<VerseGroup[]>([]);
   const [loadingRefs, setLoadingRefs] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,11 +50,11 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
     const loadRefs = async () => {
       setLoadingRefs(true);
       try {
-        const res = await fetch('/data/cross_references.json');
-        if (!res.ok) throw new Error('Failed to load cross references database');
-        
-        const data = await res.json();
-        
+        const data = crossRefMap ?? await fetch('/data/cross_references.json').then(res => {
+          if (!res.ok) throw new Error('Failed to load cross references database');
+          return res.json();
+        });
+
         const verseGroups: VerseGroup[] = [];
         const allParsedRefs: CrossRefData[] = [];
 
@@ -168,7 +174,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
     loadRefs();
 
     return () => { mounted = false; };
-  }, [verseRefs]);
+  }, [verseRefs, crossRefMap]);
 
   const totalRefs = groups.reduce((sum, g) => sum + g.refs.length, 0);
   const isMultiVerse = verseRefs.length > 1;
@@ -230,7 +236,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                     className="px-5 py-2.5 relative active:bg-card-hover transition-colors"
                     onClick={() => {
                       if (bookInfo) {
-                        onNavigateToVerse(bookInfo.id, r.chapter, r.verse);
+                        onNavigateToVerse(bookInfo.id, r.chapter, r.verse, group.parentRef);
                       }
                     }}
                   >
