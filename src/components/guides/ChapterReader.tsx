@@ -120,8 +120,41 @@ interface Verse {
   text: string;
 }
 
+// bolls.life ships section headings (as <b> tags inside the verse text) only in its LSB
+// edition — its NASB95 and NLT chapters carry no headings at all. Pulls the LSB's out of
+// a chapter so they can be shown above the matching verse in those versions; headings
+// always sit at a verse boundary, so they land on the same verse in any translation.
+function extractHeadings(verses: Verse[]): Record<number, string[]> {
+  const byVerse: Record<number, string[]> = {};
+
+  for (const v of verses) {
+    const headings = Array.from(v.text.matchAll(/<b>(.*?)<\/b>/gi))
+      .map(m => m[1].trim())
+      .filter(Boolean);
+    if (headings.length) byVerse[v.verse] = headings;
+  }
+
+  return byVerse;
+}
+
+const HEADING_CLASSES = 'mt-10 first-of-type:mt-0 mb-4 text-[1.2em] font-bold tracking-tight text-accent-light font-heading italic leading-snug break-words w-full block';
+
+// Borrowed headings get a small LSB tag: the wording is the LSB's editorial choice, and
+// the NLT in particular words and places its own headings quite differently, so they
+// shouldn't read as the publisher's.
+function renderHeading(text: string, borrowed = false): string {
+  const tag = borrowed
+    ? '<span class="ml-2 align-middle text-[0.55em] font-bold tracking-widest text-muted uppercase not-italic">LSB</span>'
+    : '';
+  return `<div class="${HEADING_CLASSES}">${text}${tag}</div>`;
+}
+
 export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOriginalWord }: ChapterReaderProps) {
   const [verses, setVerses] = useState<Verse[]>([]);
+  // LSB headings for the loaded chapter, kept separate from `verses` so they never leak
+  // into copied or memorized text. Null when reading the LSB itself (its own headings
+  // are already inline) or when the extra request failed.
+  const [borrowedHeadings, setBorrowedHeadings] = useState<Record<number, string[]> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [, setSearchParams] = useSearchParams();
@@ -454,14 +487,25 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           throw new Error('Book not found in Bible API map.');
         }
 
-        const res = await fetch(`https://bolls.life/get-text/${bibleVersion}/${bollsId}/${chapter}/`, { signal: controller.signal });
-        if (!res.ok) {
-          throw new Error('Failed to fetch chapter text.');
-        }
+        const fetchVersion = async (version: string): Promise<Verse[]> => {
+          const res = await fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`, { signal: controller.signal });
+          if (!res.ok) {
+            throw new Error('Failed to fetch chapter text.');
+          }
+          return res.json();
+        };
 
-        const data: Verse[] = await res.json();
+        // Requested in parallel, so a version without its own headings costs the slower
+        // of the two round trips rather than their sum. A failed LSB request only costs
+        // the headings — the chapter itself still renders.
+        const [data, lsbData] = await Promise.all([
+          fetchVersion(bibleVersion),
+          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchVersion('LSB').catch(() => null),
+        ]);
+
         if (cancelled) return;
         setVerses(data);
+        setBorrowedHeadings(lsbData ? extractHeadings(lsbData) : null);
         versesChapterRef.current = `${bookId}-${chapter}`;
         setSelectedVerses([]); // Clear any previous selection when loading a new chapter
       } catch (err: any) {
@@ -816,9 +860,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       // Only <b> tags exist in the API (no <S>, <h1-6>, or <div> headings).
       let heading = '';
       text = text.replace(/<b>(.*?)<\/b>/gi, (_, hText) => {
-        heading += `<div class="mt-10 first-of-type:mt-0 mb-4 text-[1.2em] font-bold tracking-tight text-accent-light font-heading italic leading-snug break-words w-full block">${hText}</div>`;
+        heading += renderHeading(hText);
         return '';
       });
+
+      // NASB95 and NLT carry no headings of their own, so the LSB's stand in here.
+      // Guarded on the version having produced none itself, so a version that does
+      // ship headings can never end up showing two at the same verse.
+      if (!heading && borrowedHeadings) {
+        for (const borrowed of borrowedHeadings[v.verse] || []) {
+          heading += renderHeading(borrowed, true);
+        }
+      }
 
       // === Fix #3: Strip leading AND trailing <br/> tags ===
       // Leading <br/> after heading extraction would strand the verse number on its own line.
@@ -940,7 +993,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     });
 
     return html;
-  }, [verses, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter, paragraphBreaks, flashVerse]);
+  }, [verses, borrowedHeadings, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter, paragraphBreaks, flashVerse]);
 
   // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
   const isOldTestament = (ALL_BOOKS.findIndex(b => b.id === bookId) + 1) <= 39;
