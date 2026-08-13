@@ -1,8 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Check, Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 import { BIBLE_VERSION_LABELS } from '../../data/bibleMap';
-import { fetchKeyVerseText, parseKeyVerseRef, stripWrappingQuotes } from '../../utils/keyVerseText';
+import { NT_BOOKS } from '../../data/ntBooks';
+import { OT_BOOKS } from '../../data/otBooks';
+import { fetchKeyVerseText, formatVerseNumbers, parseKeyVerseRef, stripWrappingQuotes } from '../../utils/keyVerseText';
 import type { GuideVerse } from '../../data/types';
+
+const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
 interface KeyVerseCardProps {
   verse: GuideVerse;
@@ -17,7 +24,9 @@ interface KeyVerseCardProps {
 const hasOpeningQuote = (text: string) => /^["“„«]/.test(text);
 
 export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId }) => {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
   const bibleVersion = state.settings.bibleVersion || 'LSB';
 
   const parsedRef = useMemo(() => parseKeyVerseRef(verse.ref, bookId), [verse.ref, bookId]);
@@ -49,6 +58,47 @@ export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId }) => 
   const displayText = live?.text || storedText;
   const versionLabel = live ? (BIBLE_VERSION_LABELS[live.version] || live.version) : null;
 
+  // Written in the chapter reader's ref format ("Habakkuk 2:4") so the library treats
+  // both entry points as the same passage.
+  const libraryRef = useMemo(() => {
+    if (!parsedRef) return null;
+    const book = ALL_BOOKS.find(b => b.id === parsedRef.bookId);
+    if (!book) return null;
+    return `${book.name} ${parsedRef.chapter}:${formatVerseNumbers(parsedRef.verses)}`;
+  }, [parsedRef]);
+
+  const alreadySaved = Boolean(libraryRef && state.verses.some(v => v.ref === libraryRef));
+
+  const goToLibrary = (ref: string) => ({
+    label: 'Go to Library',
+    onClick: () => navigate(`/?search=${encodeURIComponent(ref)}`),
+  });
+
+  const handleAdd = () => {
+    if (!libraryRef || !live || alreadySaved) return;
+
+    dispatch({
+      type: 'ADD_VERSE',
+      payload: {
+        id: crypto.randomUUID(),
+        ref: libraryRef,
+        text: live.text,
+        translation: live.version,
+        addedDate: new Date().toISOString(),
+        status: 'learning',
+        sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+        streak: 0,
+        attempts: 0,
+      },
+    });
+
+    showToast(`Added ${libraryRef} to your library!`, 'success', goToLibrary(libraryRef));
+  };
+
+  // Adding is gated on live text: the stored snippet is an abridged quote with no
+  // recorded translation, so saving it would put an unlabeled wording in the library.
+  const canAdd = Boolean(libraryRef && live);
+
   if (!displayText) return null;
 
   return (
@@ -58,11 +108,28 @@ export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId }) => 
     >
       <div className="flex items-baseline justify-between gap-3 mb-1.5">
         <p className="font-bold text-primary text-sm">{verse.ref}</p>
-        {versionLabel && (
-          <span className="text-[0.625rem] font-bold uppercase tracking-wider text-muted flex-shrink-0">
-            {versionLabel}
-          </span>
-        )}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {versionLabel && (
+            <span className="text-[0.625rem] font-bold uppercase tracking-wider text-muted">
+              {versionLabel}
+            </span>
+          )}
+          {canAdd && (
+            <button
+              onClick={handleAdd}
+              disabled={alreadySaved}
+              className={`p-1.5 rounded-full transition-colors self-center ${
+                alreadySaved
+                  ? 'text-accent-light cursor-default'
+                  : 'text-secondary hover:text-accent-light hover:bg-card-hover'
+              }`}
+              title={alreadySaved ? `${libraryRef} is in your library` : `Add ${libraryRef} to memorization list`}
+              aria-label={alreadySaved ? `${libraryRef} is in your library` : `Add ${libraryRef} to memorization list`}
+            >
+              {alreadySaved ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
       </div>
       <p className="text-lg text-secondary italic font-serif mb-1.5 leading-relaxed">
         {hasOpeningQuote(displayText) ? displayText : `"${displayText}"`}

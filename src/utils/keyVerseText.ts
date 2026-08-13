@@ -8,6 +8,8 @@ import { BOLLS_BIBLE_MAP } from '../data/bibleMap';
 // API-failure fallback.
 
 export interface ParsedKeyVerseRef {
+  /** Normalized book key, e.g. "habakkuk" or "1corinthians". */
+  bookId: string;
   bollsId: number;
   chapter: number;
   verses: number[];
@@ -72,7 +74,20 @@ export function parseKeyVerseRef(ref: string, fallbackBookId?: string): ParsedKe
     }
   }
 
-  return verses.length ? { bollsId, chapter, verses } : null;
+  return verses.length ? { bookId: bookKey, bollsId, chapter, verses } : null;
+}
+
+/**
+ * Formats the verse numbers the way the chapter reader writes them into library
+ * refs — "4", "17-18" for a contiguous run, "1,14" otherwise — so a key verse added
+ * here collides with the same passage added from the reader instead of duplicating it.
+ */
+export function formatVerseNumbers(verses: number[]): string {
+  const sorted = [...verses].sort((a, b) => a - b);
+  const isContiguous = sorted.every((v, i) => i === 0 || v === sorted[i - 1] + 1);
+
+  if (sorted.length > 1 && isContiguous) return `${sorted[0]}-${sorted[sorted.length - 1]}`;
+  return sorted.join(',');
 }
 
 // Chapters are cached per version so the three cards on a guide page (and a return
