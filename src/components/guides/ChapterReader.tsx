@@ -47,15 +47,6 @@ const FONT_SIZE_LABELS = (size: number): string => {
   return 'XL';
 };
 
-// bolls.life's translation code doubles as the display label for LSB/NLT, but NASB
-// specifically means the 1995 edition here — spell that out so it isn't mistaken for
-// a different NASB printing.
-const BIBLE_VERSION_LABELS: Record<string, string> = {
-  LSB: 'LSB',
-  NASB: 'NASB95',
-  NLT: 'NLT',
-};
-
 const BIBLE_VERSION_OPTIONS: { value: 'LSB' | 'NASB' | 'NLT'; label: string }[] = [
   { value: 'LSB', label: 'Legacy Standard Bible (LSB)' },
   { value: 'NASB', label: 'New American Standard Bible 1995 (NASB95)' },
@@ -121,7 +112,7 @@ interface ChapterReaderProps {
   onStudyOriginalWord?: (verseRef: { book: number; chapter: number; verse: number }) => void;
 }
 
-import { BOLLS_BIBLE_MAP, BOOK_SHORT } from '../../data/bibleMap';
+import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS } from '../../data/bibleMap';
 
 interface Verse {
   pk: number;

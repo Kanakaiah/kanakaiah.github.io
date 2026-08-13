@@ -209,7 +209,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                       </div>
                       <div>
                         <h3 className="font-bold text-primary text-sm">Bible Version</h3>
-                        <p className="text-xs text-secondary">Translation used in the chapter reader</p>
+                        <p className="text-xs text-secondary">Translation used in the chapter reader and guide key verses</p>
                       </div>
                     </div>
                     <div className="w-full">

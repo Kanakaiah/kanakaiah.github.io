@@ -17,6 +17,15 @@ export const BOLLS_BIBLE_MAP: Record<string, number> = {
   '1john': 62, '2john': 63, '3john': 64, jude: 65, revelation: 66,
 };
 
+// bolls.life's translation code doubles as the display label for LSB/NLT, but NASB
+// specifically means the 1995 edition here — spell that out so it isn't mistaken for
+// a different NASB printing.
+export const BIBLE_VERSION_LABELS: Record<string, string> = {
+  LSB: 'LSB',
+  NASB: 'NASB95',
+  NLT: 'NLT',
+};
+
 export const BOOK_SHORT: Record<string, string> = {
   genesis: 'Gen', exodus: 'Exod', leviticus: 'Lev', numbers: 'Num',
   deuteronomy: 'Deut', joshua: 'Josh', judges: 'Judg', ruth: 'Ruth',

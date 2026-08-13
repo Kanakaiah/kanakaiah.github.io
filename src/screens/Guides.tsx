@@ -8,6 +8,7 @@ import { OT_BOOKS, OT_SECTIONS } from '../data/otBooks';
 import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
 import { ChapterReader } from '../components/guides/ChapterReader';
 import { MemorySentence } from '../components/guides/MemorySentence';
+import { KeyVerseCard } from '../components/guides/KeyVerseCard';
 import { RecordCards } from '../components/guides/RecordCards';
 import { OriginalWordModal } from '../components/OriginalWordModal';
 
@@ -863,17 +864,7 @@ export const Guides: React.FC = () => {
                   <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
                   <div className="flex flex-col gap-3">
                     {activeGuide.keyVerses.map((kv: any, i: number) => (
-                      <div
-                        key={i}
-                        className="rounded-lg p-4 bg-card-elevated border border-card-border"
-                        style={{
-                          borderLeft: '2px solid var(--accent-light)',
-                        }}
-                      >
-                        <p className="font-bold text-primary mb-1.5 text-sm">{kv.ref}</p>
-                        {kv.text && <p className="text-lg text-secondary italic font-serif mb-1.5 leading-relaxed">"{kv.text}"</p>}
-                        {kv.theme && <p className="text-[0.6875rem] font-bold uppercase tracking-wider" style={{ color: 'var(--accent-light)' }}>{kv.theme}</p>}
-                      </div>
+                      <KeyVerseCard key={`${activeGuide.id}-${kv.ref}-${i}`} verse={kv} bookId={activeGuide.id} />
                     ))}
                   </div>
                 </div>
