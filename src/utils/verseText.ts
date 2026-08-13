@@ -1,13 +1,11 @@
 import { BOLLS_BIBLE_MAP } from '../data/bibleMap';
 
-// Key verses in the study guides carry a hand-written snippet plus a reference. The
-// snippet was written against one translation, so it goes stale the moment the reader
-// picks a different Bible version in Settings. These helpers turn the reference into a
-// live lookup against the same bolls.life API the chapter reader uses, so the quoted
-// text always matches the version on screen. The stored snippet stays as the offline /
-// API-failure fallback.
+// Shared "quote a verse in the reader's version" helpers, used anywhere the app shows
+// verse text outside the chapter reader itself (guide key verses, Strong's occurrences).
+// Everything resolves against the same bolls.life API the reader uses, through one
+// chapter cache, so the wording on screen always matches the selected version.
 
-export interface ParsedKeyVerseRef {
+export interface ParsedVerseRef {
   /** Normalized book key, e.g. "habakkuk" or "1corinthians". */
   bookId: string;
   bollsId: number;
@@ -39,14 +37,14 @@ const normalizeBookName = (name: string) => {
 const MAX_RANGE_LENGTH = 12;
 
 /**
- * Parses a key-verse reference into something the API can be asked for.
+ * Parses a verse reference into something the API can be asked for.
  *
  * Handles both shapes present in the guide data: book-relative ("2:4", "3:17–18" on a
  * book guide) and fully qualified ("Romans 8:28", "John 1:1, 14" on topical guides).
  * Ranges may use a hyphen or an en/em dash, and comma-separated verses are supported.
  * Returns null for anything it cannot resolve — callers fall back to the stored text.
  */
-export function parseKeyVerseRef(ref: string, fallbackBookId?: string): ParsedKeyVerseRef | null {
+export function parseVerseRef(ref: string, fallbackBookId?: string): ParsedVerseRef | null {
   if (!ref) return null;
 
   const match = ref.trim().match(/^(?:(.+?)\s+)?(\d+):([\d\s,–—-]+)$/);
@@ -90,9 +88,9 @@ export function formatVerseNumbers(verses: number[]): string {
   return sorted.join(',');
 }
 
-// Chapters are cached per version so the three cards on a guide page (and a return
-// visit to that guide) share a single request. Keyed on the promise rather than the
-// result so simultaneous cards don't each fire their own fetch.
+// Chapters are cached per version so several cards on one screen (and a return visit)
+// share a single request. Keyed on the promise rather than the result so simultaneous
+// callers don't each fire their own fetch.
 const chapterCache = new Map<string, Promise<BollsVerse[]>>();
 
 function fetchChapter(version: string, bollsId: number, chapter: number): Promise<BollsVerse[]> {
@@ -114,8 +112,8 @@ function fetchChapter(version: string, bollsId: number, chapter: number): Promis
 }
 
 // bolls returns display HTML: section headings in <b>, poetry line breaks as <br/>,
-// and translator-supplied words in <i>. A key-verse card is a plain-text quote, so
-// headings are dropped and everything else is flattened to a single line.
+// and translator-supplied words in <i>. These quotes are plain text, so headings are
+// dropped and everything else is flattened to a single line.
 function toPlainText(html: string): string {
   const stripped = html
     .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
@@ -134,7 +132,7 @@ function toPlainText(html: string): string {
 }
 
 /** Fetches the referenced verses in `version` and joins them into one quotable line. */
-export async function fetchKeyVerseText(version: string, ref: ParsedKeyVerseRef): Promise<string> {
+export async function fetchVerseText(version: string, ref: ParsedVerseRef): Promise<string> {
   const chapterData = await fetchChapter(version, ref.bollsId, ref.chapter);
 
   const text = ref.verses
@@ -149,9 +147,9 @@ export async function fetchKeyVerseText(version: string, ref: ParsedKeyVerseRef)
 }
 
 /**
- * Strips the quotation marks baked into the stored snippets. The card draws its own
- * quotes around the text, and most guide entries are already wrapped in them — which
- * is what produced the doubled ""like this"" quotes on the OT guide pages.
+ * Strips the quotation marks baked into the stored guide snippets. The card draws its
+ * own quotes around the text, and most guide entries are already wrapped in them —
+ * which is what produced the doubled ""like this"" quotes on the OT guide pages.
  */
 export function stripWrappingQuotes(text: string): string {
   return text ? text.trim().replace(/^["“”]+|["“”]+$/g, '').trim() : '';

@@ -6,7 +6,7 @@ import { useToast } from '../../context/ToastContext';
 import { BIBLE_VERSION_LABELS } from '../../data/bibleMap';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
-import { fetchKeyVerseText, formatVerseNumbers, parseKeyVerseRef, stripWrappingQuotes } from '../../utils/keyVerseText';
+import { fetchVerseText, formatVerseNumbers, parseVerseRef, stripWrappingQuotes } from '../../utils/verseText';
 import type { GuideVerse } from '../../data/types';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
@@ -29,7 +29,7 @@ export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId }) => 
   const navigate = useNavigate();
   const bibleVersion = state.settings.bibleVersion || 'LSB';
 
-  const parsedRef = useMemo(() => parseKeyVerseRef(verse.ref, bookId), [verse.ref, bookId]);
+  const parsedRef = useMemo(() => parseVerseRef(verse.ref, bookId), [verse.ref, bookId]);
   const storedText = useMemo(() => stripWrappingQuotes(verse.text), [verse.text]);
 
   // Holds the version the live text was loaded in, so the badge can never label a
@@ -40,7 +40,7 @@ export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId }) => 
     if (!parsedRef) return;
 
     let cancelled = false;
-    fetchKeyVerseText(bibleVersion, parsedRef)
+    fetchVerseText(bibleVersion, parsedRef)
       .then(text => {
         if (!cancelled) setLive({ version: bibleVersion, text });
       })

@@ -2,9 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader2, BookOpen } from 'lucide-react';
 import { NT_BOOKS } from '../data/ntBooks';
 import { OT_BOOKS } from '../data/otBooks';
+import { BIBLE_VERSION_LABELS } from '../data/bibleMap';
+import { useApp } from '../context/AppContext';
+import { fetchVerseText } from '../utils/verseText';
 import { Modal } from './ui/Modal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
+
+// What each occurrence looks like in the reader's own version, once asked for.
+interface TranslatedVerse {
+  version: string;
+  loading: boolean;
+  text?: string;
+  error?: boolean;
+}
 
 interface StrongsOccurrencesModalProps {
   strongsNumber: string; // e.g. "G5547" or "H7225"
@@ -31,6 +42,37 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
   const [occurrences, setOccurrences] = useState<Occurrence[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { state } = useApp();
+  const bibleVersion = state.settings.bibleVersion || 'LSB';
+  const versionLabel = BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion;
+
+  // Keyed by "book-chapter-verse". The search itself has to stay on the KJV — it is the
+  // only edition bolls tags with Strong's numbers, and those tags are what both locate
+  // the occurrences and mark which English word renders the lemma. So the reader's
+  // version is offered per verse instead, on request: a common word like H430 runs to
+  // thousands of occurrences, and eagerly fetching a chapter for each would be a flood.
+  const [translated, setTranslated] = useState<Record<string, TranslatedVerse>>({});
+
+  // A version switch invalidates anything already shown in the previous one.
+  useEffect(() => { setTranslated({}); }, [bibleVersion]);
+
+  const showInSelectedVersion = async (occ: Occurrence) => {
+    const key = `${occ.book}-${occ.chapter}-${occ.verse}`;
+    if (translated[key]?.loading || translated[key]?.text) return;
+
+    setTranslated(prev => ({ ...prev, [key]: { version: bibleVersion, loading: true } }));
+    try {
+      const text = await fetchVerseText(bibleVersion, {
+        bookId: '',
+        bollsId: occ.book,
+        chapter: occ.chapter,
+        verses: [occ.verse],
+      });
+      setTranslated(prev => ({ ...prev, [key]: { version: bibleVersion, loading: false, text } }));
+    } catch {
+      setTranslated(prev => ({ ...prev, [key]: { version: bibleVersion, loading: false, error: true } }));
+    }
+  };
 
   // G5547 -> 'G' is NT, 'H' is OT
   const isOldTestament = strongsNumber.startsWith('H');
@@ -43,8 +85,12 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
       setLoading(true);
       setError(null);
       try {
-        // Fetch all search results for this number
-        const res = await fetch(`https://bolls.life/search/KJV/?search=${numberPart}&match_case=false&match_whole=false`);
+        // Searches for the Strong's tag itself (<S>746</S>), exact and whole-word.
+        // A bare-number, fuzzy search — which this used to do — now matches nothing
+        // useful on bolls: it scores against the English text and comes back either
+        // empty or full of verses that don't contain the number at all.
+        const query = encodeURIComponent(`<S>${numberPart}</S>`);
+        const res = await fetch(`https://bolls.life/search/KJV/?search=${query}&match_case=true&match_whole=true`);
         if (!res.ok) throw new Error('Failed to fetch occurrences');
         
         let data: Occurrence[] = await res.json();
@@ -74,10 +120,14 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
 
   // Process HTML safely
   const createMarkup = (html: string) => {
+    // 0. Normalize the highlight wrapper. bolls marks the hit as <mark><S>746</S></mark>
+    // now, but used to nest it the other way round; accept either so a future flip back
+    // doesn't silently drop the highlight.
+    let processed = html.replace(/<mark>\s*<S>(\d+)<\/S>\s*<\/mark>/g, '<S><mark>$1</mark></S>');
+
     // 1. Find occurrences where the Strong's number is marked.
-    // The Bolls API wraps the matched Strong's number in <mark> tags inside the <S> tag.
     // We match the preceding English word, any whitespace/punctuation, and the marked <S> tag.
-    let processed = html.replace(/([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF'-]+)([^a-zA-Z]*?)<S><mark>\d+<\/mark><\/S>/g, '<span class="text-accent bg-accent/20 px-1 rounded font-medium">$1</span>$2');
+    processed = processed.replace(/([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF'-]+)([^a-zA-Z]*?)<S><mark>\d+<\/mark><\/S>/g, '<span class="text-accent bg-accent/20 px-1 rounded font-medium">$1</span>$2');
     
     // 2. Strip all Strong's numbers completely (e.g. <S>1234</S>) so they don't clutter the text.
     // We do NOT use the 'i' flag here because we don't want to accidentally match <span...> tags.
@@ -121,6 +171,7 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
               const book = ALL_BOOKS.find(b => b.id === (ALL_BOOKS[occ.book - 1]?.id));
               const bookName = book?.name || `Book ${occ.book}`;
               const bookIdForNav = book?.id || '';
+              const translation = translated[`${occ.book}-${occ.chapter}-${occ.verse}`];
 
               return (
                 <div 
@@ -139,10 +190,40 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                  <p 
+                  <p
                     className="text-lg text-secondary leading-relaxed font-serif"
                     dangerouslySetInnerHTML={createMarkup(occ.text)}
                   />
+                  <div className="mt-2 flex items-center gap-3 flex-wrap">
+                    <span className="text-[0.625rem] font-bold uppercase tracking-wider text-muted">KJV</span>
+                    {!translation && (
+                      <button
+                        onClick={() => showInSelectedVersion(occ)}
+                        className="text-[0.625rem] font-bold uppercase tracking-wider text-accent hover:text-accent-light transition-colors"
+                      >
+                        Show in {versionLabel}
+                      </button>
+                    )}
+                    {translation?.loading && (
+                      <span className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-muted">
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        {versionLabel}
+                      </span>
+                    )}
+                    {translation?.error && (
+                      <span className="text-[0.625rem] font-bold uppercase tracking-wider text-muted">
+                        {versionLabel} unavailable
+                      </span>
+                    )}
+                  </div>
+                  {translation?.text && (
+                    <div className="mt-3 pt-3 border-t border-card-border">
+                      <p className="text-lg text-secondary leading-relaxed font-serif">{translation.text}</p>
+                      <span className="text-[0.625rem] font-bold uppercase tracking-wider text-muted">
+                        {BIBLE_VERSION_LABELS[translation.version] || translation.version}
+                      </span>
+                    </div>
+                  )}
                 </div>
               );
             })}
