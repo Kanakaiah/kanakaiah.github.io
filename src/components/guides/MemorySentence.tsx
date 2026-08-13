@@ -15,33 +15,76 @@ type Segment =
   | { type: 'text'; content: string }
   | { type: 'anchor'; content: string; index: number; ch: number | string | null };
 
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /**
- * Splits "...**WORD**..." into ordered text/anchor segments. Anchor segments
+ * Splits a memory sentence into ordered text/anchor segments. Anchor segments
  * get a stable `index` (their position among anchors only) so revealed-state
- * can be tracked independent of the surrounding prose, and a `ch` (chapter
- * number) when the source guide's `anchors` array lines up 1:1 with the bold
- * markers — which is true for book guides, but not for topical/reference
- * guides (e.g. "Roman Road"), which have a memorySentence but no per-chapter
- * anchors at all.
+ * can be tracked independent of the surrounding prose, plus a `ch` (chapter
+ * number) whenever it can be determined.
+ *
+ * Two source conventions exist in the guide data:
+ *
+ *  1. "...**WORD**..." — explicit bold markers. Only ~a third of the guides
+ *     use this.
+ *  2. "...WORD..." — the anchor word simply written in caps inline, with the
+ *     real anchor list living in the guide's `anchors` array. This is what
+ *     most guides (all of the Old Testament ones, and the NT book guides) do.
+ *
+ * Only form 1 used to be recognised, so every form-2 guide rendered as flat
+ * prose: no accent colouring, no chapter numbers, and a Test Yourself button
+ * with nothing to hide. Form 2 is now resolved by locating each `anchors[]`
+ * word in the sentence, in order, which also yields the correct chapter for
+ * each one rather than relying on the counts happening to line up.
+ *
+ * Guides with neither (topical ones like "Roman Road", which have a
+ * memorySentence but no anchors) still render as plain prose, which is right.
  */
 function parseSentence(sentence: string, anchors?: Anchor[]): Segment[] {
   const parts = sentence.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
   const boldCount = parts.filter(p => /^\*\*[^*]+\*\*$/.test(p)).length;
-  const chaptersLineUp = !!anchors && anchors.length === boldCount;
 
+  if (boldCount > 0) {
+    const chaptersLineUp = !!anchors && anchors.length === boldCount;
+    let anchorIndex = 0;
+    return parts.map(part => {
+      const match = part.match(/^\*\*([^*]+)\*\*$/);
+      if (!match) return { type: 'text', content: part };
+      const segment: Segment = {
+        type: 'anchor',
+        content: match[1],
+        index: anchorIndex,
+        ch: chaptersLineUp ? anchors![anchorIndex].ch : null,
+      };
+      anchorIndex++;
+      return segment;
+    });
+  }
+
+  if (!anchors?.length) return [{ type: 'text', content: sentence }];
+
+  // Matching is case-sensitive: both the anchors array and the sentence write
+  // these words in caps, and a case-insensitive search would happily latch onto
+  // an ordinary lowercase occurrence of the same word earlier in the prose.
+  // Searching forward from a cursor also means a word used as the anchor for
+  // two different chapters resolves to a different occurrence each time.
+  const segments: Segment[] = [];
+  let cursor = 0;
   let anchorIndex = 0;
-  return parts.map(part => {
-    const match = part.match(/^\*\*([^*]+)\*\*$/);
-    if (!match) return { type: 'text', content: part };
-    const segment: Segment = {
-      type: 'anchor',
-      content: match[1],
-      index: anchorIndex,
-      ch: chaptersLineUp ? anchors![anchorIndex].ch : null,
-    };
-    anchorIndex++;
-    return segment;
-  });
+
+  for (const anchor of anchors) {
+    const word = String(anchor.word ?? '').trim();
+    if (!word) continue;
+    const match = sentence.slice(cursor).match(new RegExp(`\\b${escapeRegExp(word)}\\b`));
+    if (!match || match.index === undefined) continue; // not present — skip it
+    const start = cursor + match.index;
+    if (start > cursor) segments.push({ type: 'text', content: sentence.slice(cursor, start) });
+    segments.push({ type: 'anchor', content: match[0], index: anchorIndex++, ch: anchor.ch });
+    cursor = start + match[0].length;
+  }
+
+  if (cursor < sentence.length) segments.push({ type: 'text', content: sentence.slice(cursor) });
+  return segments.length ? segments : [{ type: 'text', content: sentence }];
 }
 
 export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchors }) => {
