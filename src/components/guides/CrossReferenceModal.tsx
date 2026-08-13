@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader2, BookOpen } from 'lucide-react';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
-import { BOLLS_BIBLE_MAP } from '../../data/bibleMap';
+import { BOLLS_BIBLE_MAP, BIBLE_VERSION_LABELS } from '../../data/bibleMap';
+import { useApp } from '../../context/AppContext';
 import { Modal } from '../ui/Modal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
-// Module-level cache to prevent re-fetching the same verse text
+// Module-level cache to prevent re-fetching the same verse text. Keyed by version as
+// well as reference — without that, switching translations would keep serving whichever
+// wording happened to be fetched first.
 const verseTextCache: Record<string, string> = {};
 
 interface CrossReferenceModalProps {
@@ -41,6 +44,8 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
   const [groups, setGroups] = useState<VerseGroup[]>([]);
   const [loadingRefs, setLoadingRefs] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { state } = useApp();
+  const bibleVersion = state.settings.bibleVersion || 'LSB';
 
   const capitalize = (s: string) => s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
@@ -86,7 +91,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
         }
 
         const fetchVerse = async (r: CrossRefData) => {
-          const cacheKey = `${r.bookName.toLowerCase()}-${r.chapter}-${r.verse}`;
+          const cacheKey = `${bibleVersion}-${r.bookName.toLowerCase()}-${r.chapter}-${r.verse}`;
           
           if (verseTextCache[cacheKey]) {
             if (mounted) {
@@ -105,7 +110,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
               if (!book) throw new Error('Book not found');
               const bollsId = BOLLS_BIBLE_MAP[book.id];
               
-              const apiRes = await fetch(`https://bolls.life/get-text/LSB/${bollsId}/${r.chapter}/`);
+              const apiRes = await fetch(`https://bolls.life/get-text/${bibleVersion}/${bollsId}/${r.chapter}/`);
               if (!apiRes.ok) throw new Error('Failed to fetch text');
               const chapterData = await apiRes.json();
               
@@ -174,10 +179,17 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
     loadRefs();
 
     return () => { mounted = false; };
-  }, [verseRefs, crossRefMap]);
+  }, [verseRefs, crossRefMap, bibleVersion]);
 
   const totalRefs = groups.reduce((sum, g) => sum + g.refs.length, 0);
   const isMultiVerse = verseRefs.length > 1;
+
+  // The reader's own version label sits behind this fullscreen modal, so the translation
+  // is named here rather than leaving the quoted verses unattributed.
+  const versionLabel = BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion;
+  const subtitle = isMultiVerse
+    ? `${verseRefs.length} verses · ${totalRefs} references · ${versionLabel}`
+    : `${capitalize(verseRefs[0])} · ${versionLabel}`;
 
   return (
     <Modal
@@ -186,7 +198,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
       variant="fullscreen"
       icon={<BookOpen className="w-5 h-5 text-accent" />}
       title="Cross References"
-      subtitle={isMultiVerse ? `${verseRefs.length} verses · ${totalRefs} references` : capitalize(verseRefs[0])}
+      subtitle={subtitle}
     >
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
