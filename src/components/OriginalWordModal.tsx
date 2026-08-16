@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Loader2, BookOpen, ArrowRight } from 'lucide-react';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
@@ -28,15 +28,45 @@ interface ParsedWord {
 }
 
 import { StrongsOccurrencesModal } from './StrongsOccurrencesModal';
+import { loadStrongsDictionary, normalizeStrongsRef, type StrongsDictionary as Dictionary } from '../utils/strongs';
 
 export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: OriginalWordModalProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [words, setWords] = useState<ParsedWord[]>([]);
-  const [dictionary, setDictionary] = useState<Record<string, StrongsDefinition>>({});
+  // Keyed by reference prefix ('H' / 'G'). A verse only needs its own testament's
+  // dictionary to render, but Greek entries cite Hebrew origins for proper nouns
+  // (Anna, G451 -> H2584), and following one of those needs the other dictionary too.
+  const [dictionaries, setDictionaries] = useState<Record<string, Dictionary>>({});
   const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
+  const [loadingRef, setLoadingRef] = useState<string | null>(null);
 
   const isOldTestament = verseRef.book <= 39;
+
+  const lookupDefinition = (ref: string | null): StrongsDefinition | undefined =>
+    ref ? dictionaries[ref.charAt(0)]?.[ref] : undefined;
+
+  // Every G####/H#### in a definition is clickable. Following one used to do nothing
+  // whenever it pointed at the other testament — the dictionary holding it wasn't
+  // loaded, so the guard below never opened the modal.
+  const openOccurrences = async (rawRef: string) => {
+    const ref = normalizeStrongsRef(rawRef);
+    const prefix = ref.charAt(0);
+
+    if (!dictionaries[prefix]) {
+      setLoadingRef(ref);
+      try {
+        const data = await loadStrongsDictionary(prefix);
+        setDictionaries(prev => ({ ...prev, [prefix]: data }));
+      } catch {
+        setLoadingRef(null);
+        return;
+      }
+      setLoadingRef(null);
+    }
+
+    setViewingOccurrences(ref);
+  };
 
   // Helper to format Strong's references in text
   const formatStrongsRefs = (text: string) => {
@@ -52,11 +82,12 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
         parts.push(<span key={`text-${lastIndex}`}>{text.slice(lastIndex, match.index)}</span>);
       }
       const strongsRef = match[1];
+      const isLoading = loadingRef === normalizeStrongsRef(strongsRef);
       parts.push(
         <span
           key={`ref-${match.index}`}
-          className="text-accent font-medium cursor-pointer hover:underline"
-          onClick={() => setViewingOccurrences(strongsRef)}
+          className={`text-accent font-medium cursor-pointer hover:underline ${isLoading ? 'opacity-50' : ''}`}
+          onClick={() => openOccurrences(strongsRef)}
         >
           {match[0]}
         </span>
@@ -86,12 +117,10 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
         const parsedWords = parseKjvStrongs(verseData.text, isOldTestament);
         setWords(parsedWords);
 
-        // 2. Fetch the corresponding dictionary
-        const dictUrl = isOldTestament ? '/strongs-hebrew.json' : '/strongs-greek.json';
-        const dictRes = await fetch(dictUrl);
-        if (!dictRes.ok) throw new Error('Failed to load Strongs dictionary. (Are the JSON files in the public directory?)');
-        const dictData = await dictRes.json();
-        setDictionary(dictData);
+        // 2. Fetch this testament's dictionary
+        const prefix = isOldTestament ? 'H' : 'G';
+        const dictData = await loadStrongsDictionary(prefix);
+        setDictionaries(prev => ({ ...prev, [prefix]: dictData }));
 
       } catch (err: any) {
         setError(err.message);
@@ -103,11 +132,12 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
     fetchData();
   }, [verseRef.book, verseRef.chapter, verseRef.verse, isOldTestament]);
 
-  const bookName = ALL_BOOKS.find(b => b.id === (ALL_BOOKS[verseRef.book - 1]?.id))?.name || `Book ${verseRef.book}`;
+  // bolls numbers books 1-66 in canonical order, matching OT_BOOKS then NT_BOOKS.
+  const bookName = ALL_BOOKS[verseRef.book - 1]?.name || `Book ${verseRef.book}`;
   const fullVerse = words.map(w => w.english).join(' ');
-  
+
   // Create an array with unique suffix keys for duplicate words so they render properly
-  const studyWords = words.filter(w => w.strongs && dictionary[w.strongs]);
+  const studyWords = words.filter(w => lookupDefinition(w.strongs));
 
   return (
     <Modal
@@ -148,7 +178,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
                 </div>
               ) : (
                 studyWords.map((w, i) => {
-                  const def = dictionary[w.strongs!];
+                  const def = lookupDefinition(w.strongs)!;
                   return (
                     <div key={`${w.strongs}-${i}`} className="px-5 py-6 border-b border-card-border last:border-b-0">
                       <div className="flex items-end justify-between mb-4">
@@ -201,7 +231,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
                         )}
 
                         <button
-                          onClick={() => setViewingOccurrences(w.strongs)}
+                          onClick={() => openOccurrences(w.strongs!)}
                           className="mt-6 w-full py-3 bg-accent/10 hover:bg-accent/20 text-accent hover:text-accent-light rounded-md font-bold tracking-wide transition-colors flex items-center justify-center gap-2"
                         >
                           View all occurrences
@@ -222,10 +252,10 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
         </div>
       </div>
 
-      {viewingOccurrences && dictionary[viewingOccurrences] && (
+      {viewingOccurrences && lookupDefinition(viewingOccurrences) && (
         <StrongsOccurrencesModal
           strongsNumber={viewingOccurrences}
-          lemma={dictionary[viewingOccurrences].lemma}
+          lemma={lookupDefinition(viewingOccurrences)!.lemma}
           onClose={() => setViewingOccurrences(null)}
           onNavigateToVerse={onNavigateToVerse || (() => {})}
         />

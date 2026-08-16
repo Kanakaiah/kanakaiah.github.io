@@ -65,6 +65,7 @@ function formatStrongsRefs(
 }
 
 import { StrongsOccurrencesModal } from './StrongsOccurrencesModal';
+import { lookupStrongsDefinition, normalizeStrongsRef } from '../utils/strongs';
 
 export function WordPopup({
   word,
@@ -98,11 +99,21 @@ export function WordPopup({
   }, [dragY, onClose]);
 
   // --- StrongsOccurrencesModal state for cross-reference clicks ---
-  const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
+  // Carries the lemma alongside the reference: a cross-reference points at a word this
+  // popup has no definition for — often in the other testament's dictionary — and
+  // labelling the occurrences modal with the raw number ("H02584 (H02584)") instead of
+  // the word itself (חַנָּה) is no use to a reader.
+  const [viewingOccurrences, setViewingOccurrences] = useState<{ ref: string; lemma: string } | null>(null);
 
-  const handleRefClick = useCallback((refNumber: string) => {
-    setViewingOccurrences(refNumber);
-  }, []);
+  const handleRefClick = useCallback(async (refNumber: string) => {
+    const ref = normalizeStrongsRef(refNumber);
+    if (ref === normalizeStrongsRef(strongsNumber)) {
+      setViewingOccurrences({ ref, lemma: def.lemma });
+      return;
+    }
+    const definition = await lookupStrongsDefinition(ref);
+    setViewingOccurrences({ ref, lemma: definition?.lemma || ref });
+  }, [strongsNumber, def.lemma]);
 
   return (
     <Modal
@@ -218,8 +229,8 @@ export function WordPopup({
         {/* StrongsOccurrencesModal for cross-reference clicks */}
         {viewingOccurrences && (
           <StrongsOccurrencesModal
-            strongsNumber={viewingOccurrences}
-            lemma={viewingOccurrences === strongsNumber ? def.lemma : viewingOccurrences}
+            strongsNumber={viewingOccurrences.ref}
+            lemma={viewingOccurrences.lemma}
             onClose={() => setViewingOccurrences(null)}
             onNavigateToVerse={onNavigateToVerse || (() => {})}
           />

@@ -5,6 +5,7 @@ import { OT_BOOKS } from '../data/otBooks';
 import { BIBLE_VERSION_LABELS } from '../data/bibleMap';
 import { useApp } from '../context/AppContext';
 import { fetchVerseText } from '../utils/verseText';
+import { isHebrewStrongs, strongsNumberPart } from '../utils/strongs';
 import { Modal } from './ui/Modal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
@@ -74,9 +75,11 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
     }
   };
 
-  // G5547 -> 'G' is NT, 'H' is OT
-  const isOldTestament = strongsNumber.startsWith('H');
-  const numberPart = strongsNumber.replace(/[^0-9]/g, '');
+  // G5547 -> 'G' is NT, 'H' is OT. Normalized because a reference arriving from a
+  // dictionary cross-link is zero-padded (H02584), and the KJV tags it gets searched
+  // against are not.
+  const isOldTestament = isHebrewStrongs(strongsNumber);
+  const numberPart = strongsNumberPart(strongsNumber);
 
   useEffect(() => {
     let mounted = true;
