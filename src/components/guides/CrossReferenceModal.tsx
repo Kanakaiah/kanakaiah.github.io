@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader2, BookOpen } from 'lucide-react';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
-import { BOLLS_BIBLE_MAP, BIBLE_VERSION_LABELS } from '../../data/bibleMap';
+import { BOLLS_BIBLE_MAP, BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
 import { useApp } from '../../context/AppContext';
 import { Modal } from '../ui/Modal';
 
@@ -64,7 +64,9 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
         const allParsedRefs: CrossRefData[] = [];
 
         for (const vRef of verseRefs) {
-          const related = data[vRef.toLowerCase()] || [];
+          // Normalized only for the lookup — vRef stays in its display form so the
+          // modal's subtitle still reads "1 Samuel 3:10" rather than "1samuel 3:10".
+          const related = data[normalizeCrossRefKey(vRef)] || [];
           const parsedRefs = related.map((ref: string) => {
             const match = ref.match(/^(.+?)\s+(\d+):(\d+)$/);
             if (match) {

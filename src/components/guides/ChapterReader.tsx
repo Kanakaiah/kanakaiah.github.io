@@ -112,7 +112,7 @@ interface ChapterReaderProps {
   onStudyOriginalWord?: (verseRef: { book: number; chapter: number; verse: number }) => void;
 }
 
-import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS } from '../../data/bibleMap';
+import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
 
 interface Verse {
   pk: number;
@@ -1222,7 +1222,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   };
 
   const hasRefs = !crossRefMap || selectedVerses.some(v => {
-    const refs = crossRefMap[`${bookTitle.toLowerCase()} ${chapter}:${v}`];
+    const refs = crossRefMap[normalizeCrossRefKey(`${bookTitle} ${chapter}:${v}`)];
     return refs && refs.length > 0;
   });
 

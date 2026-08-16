@@ -26,6 +26,18 @@ export const BIBLE_VERSION_LABELS: Record<string, string> = {
   NLT: 'NLT',
 };
 
+/**
+ * Normalizes a "book chapter:verse" string to the key format used by
+ * public/data/cross_references.json. That file stores numbered books without the space
+ * after the numeral ("1samuel 3:10", "1corinthians 13:13") while every other book keeps
+ * its plain lowercase name ("song of solomon 2:1"), so the space is dropped only when it
+ * follows a leading digit. Looking up the un-normalized form misses all 17 numbered
+ * books — 5,528 verses whose cross-references would silently read as "none".
+ */
+export function normalizeCrossRefKey(ref: string): string {
+  return ref.toLowerCase().replace(/^([123])\s+/, '$1');
+}
+
 export const BOOK_SHORT: Record<string, string> = {
   genesis: 'Gen', exodus: 'Exod', leviticus: 'Lev', numbers: 'Num',
   deuteronomy: 'Deut', joshua: 'Josh', judges: 'Judg', ruth: 'Ruth',
