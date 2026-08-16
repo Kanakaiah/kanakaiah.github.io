@@ -1221,6 +1221,22 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     }
   };
 
+  // Jumping to an occurrence: close whatever is open, load that chapter, and flash the
+  // verse. Shared by both places a Strong's occurrence list can be opened from — the
+  // word popup's cross-references and the reader's own "View all occurrences".
+  const navigateToOccurrence = (navBookId: string, ch: number, v: number) => {
+    setViewingOccurrences(null);
+    setWordPopup(null);
+
+    setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
+    setSearchParams(prev => {
+      const next = pruneLegacyReaderParams(new URLSearchParams(prev));
+      next.set('readerBook', navBookId);
+      next.set('readerChapter', ch.toString());
+      return next;
+    }, { replace: true });
+  };
+
   const hasRefs = !crossRefMap || selectedVerses.some(v => {
     const refs = crossRefMap[normalizeCrossRefKey(`${bookTitle} ${chapter}:${v}`)];
     return refs && refs.length > 0;
@@ -1896,6 +1912,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           onViewOccurrences={(strongsNumber) => {
             setViewingOccurrences(strongsNumber);
           }}
+          // The popup opens its own occurrences modal for cross-reference clicks, which
+          // needs the same handler as the one below — without it, "Read Chapter" there
+          // silently does nothing.
+          onNavigateToVerse={navigateToOccurrence}
         />
       )}
 
@@ -1904,18 +1924,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
           strongsNumber={viewingOccurrences}
           lemma={strongsDict[viewingOccurrences].lemma}
           onClose={() => setViewingOccurrences(null)}
-          onNavigateToVerse={(navBookId, ch, v) => {
-            setViewingOccurrences(null);
-            setWordPopup(null);
-
-            setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
-            setSearchParams(prev => {
-              const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-              next.set('readerBook', navBookId);
-              next.set('readerChapter', ch.toString());
-              return next;
-            }, { replace: true });
-          }}
+          onNavigateToVerse={navigateToOccurrence}
         />
       )}
     </div>
