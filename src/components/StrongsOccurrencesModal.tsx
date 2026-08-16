@@ -168,7 +168,9 @@ export const StrongsOccurrencesModal: React.FC<StrongsOccurrencesModalProps> = (
         ) : (
           <div className="flex flex-col gap-4 pb-20">
             {occurrences.map((occ, idx) => {
-              const book = ALL_BOOKS.find(b => b.id === (ALL_BOOKS[occ.book - 1]?.id));
+              // bolls numbers books 1-66 in canonical order, which is exactly the order
+              // of OT_BOOKS followed by NT_BOOKS — so the number indexes straight in.
+              const book = ALL_BOOKS[occ.book - 1];
               const bookName = book?.name || `Book ${occ.book}`;
               const bookIdForNav = book?.id || '';
               const translation = translated[`${occ.book}-${occ.chapter}-${occ.verse}`];
