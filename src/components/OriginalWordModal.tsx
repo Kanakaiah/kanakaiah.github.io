@@ -1,8 +1,12 @@
-﻿import { useState, useEffect } from 'react';
-import { Loader2, BookOpen, ArrowRight } from 'lucide-react';
+import { useCallback, useState, useEffect } from 'react';
+import { Loader2, BookOpen } from 'lucide-react';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
 import { Modal } from './ui/Modal';
+import { StrongsEntry } from './strongs/StrongsEntry';
+import { StrongsOccurrencesModal } from './StrongsOccurrencesModal';
+import { useStrongsOccurrences } from './strongs/useStrongsOccurrences';
+import { loadStrongsDictionary, type StrongsDefinition, type StrongsDictionary } from '../utils/strongs';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -12,93 +16,28 @@ interface OriginalWordModalProps {
   onNavigateToVerse?: (bookId: string, chapter: number, verse: number) => void;
 }
 
-interface StrongsDefinition {
-  lemma: string;
-  xlit?: string;
-  pron?: string;
-  strongs_def: string;
-  kjv_def: string;
-  derivation?: string;
-  pos?: string;
-}
-
 interface ParsedWord {
   english: string;
   strongs: string | null;
 }
 
-import { StrongsOccurrencesModal } from './StrongsOccurrencesModal';
-import { loadStrongsDictionary, normalizeStrongsRef, type StrongsDictionary as Dictionary } from '../utils/strongs';
-
+/**
+ * Every original-language word in one verse, listed with its definition. Shares its
+ * definition rendering and cross-reference handling with the reader's WordPopup; what's
+ * local here is fetching the verse and the fullscreen list presentation.
+ */
 export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: OriginalWordModalProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [words, setWords] = useState<ParsedWord[]>([]);
-  // Keyed by reference prefix ('H' / 'G'). A verse only needs its own testament's
-  // dictionary to render, but Greek entries cite Hebrew origins for proper nouns
-  // (Anna, G451 -> H2584), and following one of those needs the other dictionary too.
-  const [dictionaries, setDictionaries] = useState<Record<string, Dictionary>>({});
-  const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
-  const [loadingRef, setLoadingRef] = useState<string | null>(null);
+  const [dictionary, setDictionary] = useState<StrongsDictionary>({});
 
   const isOldTestament = verseRef.book <= 39;
 
-  const lookupDefinition = (ref: string | null): StrongsDefinition | undefined =>
-    ref ? dictionaries[ref.charAt(0)]?.[ref] : undefined;
-
-  // Every G####/H#### in a definition is clickable. Following one used to do nothing
-  // whenever it pointed at the other testament — the dictionary holding it wasn't
-  // loaded, so the guard below never opened the modal.
-  const openOccurrences = async (rawRef: string) => {
-    const ref = normalizeStrongsRef(rawRef);
-    const prefix = ref.charAt(0);
-
-    if (!dictionaries[prefix]) {
-      setLoadingRef(ref);
-      try {
-        const data = await loadStrongsDictionary(prefix);
-        setDictionaries(prev => ({ ...prev, [prefix]: data }));
-      } catch {
-        setLoadingRef(null);
-        return;
-      }
-      setLoadingRef(null);
-    }
-
-    setViewingOccurrences(ref);
-  };
-
-  // Helper to format Strong's references in text
-  const formatStrongsRefs = (text: string) => {
-    if (!text) return null;
-    // Match G1234, H1234, or G1234 (word)
-    const regex = /([GH]\d+)(?:\s*\([^)]+\))?/g;
-    const parts = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = regex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        parts.push(<span key={`text-${lastIndex}`}>{text.slice(lastIndex, match.index)}</span>);
-      }
-      const strongsRef = match[1];
-      const isLoading = loadingRef === normalizeStrongsRef(strongsRef);
-      parts.push(
-        <span
-          key={`ref-${match.index}`}
-          className={`text-accent font-medium cursor-pointer hover:underline ${isLoading ? 'opacity-50' : ''}`}
-          onClick={() => openOccurrences(strongsRef)}
-        >
-          {match[0]}
-        </span>
-      );
-      lastIndex = regex.lastIndex;
-    }
-    if (lastIndex < text.length) {
-      parts.push(<span key={`text-${lastIndex}`}>{text.slice(lastIndex)}</span>);
-    }
-    return parts;
-  };
+  // This verse's own words resolve locally; a cross-reference into the other testament
+  // falls through to the shared dictionary inside the hook.
+  const resolveLemma = useCallback((ref: string) => dictionary[ref]?.lemma, [dictionary]);
+  const { occurrence, loadingRef, openOccurrences, closeOccurrences } = useStrongsOccurrences(resolveLemma);
 
   useEffect(() => {
     async function fetchData() {
@@ -108,7 +47,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
         const chapterRes = await fetch(`https://bolls.life/get-text/KJV/${verseRef.book}/${verseRef.chapter}/`);
         if (!chapterRes.ok) throw new Error('Failed to fetch KJV text for Strongs mapping');
         const chapterData = await chapterRes.json();
-        
+
         // Find our specific verse
         const verseData = chapterData.find((v: any) => v.verse === verseRef.verse);
         if (!verseData) throw new Error('Verse not found in KJV text');
@@ -118,10 +57,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
         setWords(parsedWords);
 
         // 2. Fetch this testament's dictionary
-        const prefix = isOldTestament ? 'H' : 'G';
-        const dictData = await loadStrongsDictionary(prefix);
-        setDictionaries(prev => ({ ...prev, [prefix]: dictData }));
-
+        setDictionary(await loadStrongsDictionary(isOldTestament ? 'H' : 'G'));
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -136,8 +72,7 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
   const bookName = ALL_BOOKS[verseRef.book - 1]?.name || `Book ${verseRef.book}`;
   const fullVerse = words.map(w => w.english).join(' ');
 
-  // Create an array with unique suffix keys for duplicate words so they render properly
-  const studyWords = words.filter(w => lookupDefinition(w.strongs));
+  const studyWords = words.filter(w => w.strongs && dictionary[w.strongs]);
 
   return (
     <Modal
@@ -177,70 +112,17 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
                   <p className="text-sm">No original word definitions found for this verse.</p>
                 </div>
               ) : (
-                studyWords.map((w, i) => {
-                  const def = lookupDefinition(w.strongs)!;
-                  return (
-                    <div key={`${w.strongs}-${i}`} className="px-5 py-6 border-b border-card-border last:border-b-0">
-                      <div className="flex items-end justify-between mb-4">
-                        <div className="flex-1 pr-4">
-                          <span className="text-xs font-bold text-accent uppercase tracking-wider block mb-1">
-                            Translated as
-                          </span>
-                          <h3 className="text-2xl font-bold text-primary">
-                            "{w.english}"
-                          </h3>
-                        </div>
-                        <div className="text-right flex-shrink-0">
-                          <h2 className="text-4xl font-serif text-accent-light mb-1">
-                            {def.lemma}
-                          </h2>
-                          <div className="text-sm text-secondary">
-                            <span className="font-medium text-primary mr-1">{def.xlit}</span>
-                            {def.pron && <span>/{def.pron}/</span>}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="bg-card-elevated rounded-md p-5 border border-card-border mt-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="text-xs uppercase tracking-wider text-accent font-bold">Definition</h4>
-                          {def.pos && (
-                            <span className="bg-accent/15 text-accent text-[0.65rem] font-bold px-2 py-0.5 rounded-full uppercase">
-                              {def.pos}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-base text-primary leading-relaxed">
-                          {formatStrongsRefs(def.strongs_def)}
-                        </p>
-                        
-                        {def.derivation && (
-                          <div className="mt-4">
-                            <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-1">Derivation</h4>
-                            <p className="text-sm text-secondary leading-relaxed">
-                              {formatStrongsRefs(def.derivation)}
-                            </p>
-                          </div>
-                        )}
-                        
-                        {def.kjv_def && (
-                          <div className="mt-4">
-                            <h4 className="text-xs uppercase tracking-wider text-accent font-bold mb-1">KJV Translations</h4>
-                            <p className="text-sm text-secondary italic">{def.kjv_def}</p>
-                          </div>
-                        )}
-
-                        <button
-                          onClick={() => openOccurrences(w.strongs!)}
-                          className="mt-6 w-full py-3 bg-accent/10 hover:bg-accent/20 text-accent hover:text-accent-light rounded-md font-bold tracking-wide transition-colors flex items-center justify-center gap-2"
-                        >
-                          View all occurrences
-                          <ArrowRight className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })
+                studyWords.map((w, i) => (
+                  <StrongsEntry
+                    key={`${w.strongs}-${i}`}
+                    word={w.english}
+                    definition={dictionary[w.strongs!] as StrongsDefinition}
+                    layout="card"
+                    onRefClick={openOccurrences}
+                    loadingRef={loadingRef}
+                    onViewOccurrences={() => openOccurrences(w.strongs!)}
+                  />
+                ))
               )}
             </div>
           </>
@@ -252,11 +134,11 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
         </div>
       </div>
 
-      {viewingOccurrences && lookupDefinition(viewingOccurrences) && (
+      {occurrence && (
         <StrongsOccurrencesModal
-          strongsNumber={viewingOccurrences}
-          lemma={lookupDefinition(viewingOccurrences)!.lemma}
-          onClose={() => setViewingOccurrences(null)}
+          strongsNumber={occurrence.ref}
+          lemma={occurrence.lemma}
+          onClose={closeOccurrences}
           onNavigateToVerse={onNavigateToVerse || (() => {})}
         />
       )}
@@ -267,35 +149,35 @@ export function OriginalWordModal({ verseRef, onClose, onNavigateToVerse }: Orig
 /**
  * Parses the KJV HTML response which contains Strong's tags like:
  * "In the beginning<S>7225</S> God<S>430</S> created<S>1254</S>"
- * 
+ *
  * Returns an array of objects linking the English text to its Strong's number.
  */
 function parseKjvStrongs(html: string, isOT: boolean): ParsedWord[] {
-  // Bolls API sometimes includes superscript notes like <sup>...</sup>. 
+  // Bolls API sometimes includes superscript notes like <sup>...</sup>.
   // Let's strip them out for clean parsing.
   const cleanHtml = html.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
-  
+
   // We can use a regex to match English text optionally followed by a <S> tag.
   // Pattern: (Any characters that aren't '<') followed by an optional <S> tag.
   const regex = /([^<]+)(?:<S>(\d+)<\/S>)?/g;
   let match;
   const words: ParsedWord[] = [];
-  
+
   while ((match = regex.exec(cleanHtml)) !== null) {
     let englishText = match[1].trim();
     const strongsNumber = match[2];
-    
+
     if (!englishText && !strongsNumber) continue;
-    
+
     if (englishText) {
        const formattedStrongs = strongsNumber ? `${isOT ? 'H' : 'G'}${strongsNumber}` : null;
-       
+
        words.push({
          english: englishText,
          strongs: formattedStrongs
        });
     }
   }
-  
+
   return words;
 }
