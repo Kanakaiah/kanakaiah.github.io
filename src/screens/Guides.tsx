@@ -18,7 +18,8 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
-import { BOOK_SHORT } from '../data/bibleMap';
+import { BOOK_SHORT, youVersionChapterUrl } from '../data/bibleMap';
+import { useApp } from '../context/AppContext';
 const DISTRIBUTION_COLORS = [
   { bg: 'bg-amber-500', text: 'text-amber-500', border: 'border-l-amber-500' },
   { bg: 'bg-blue-500', text: 'text-blue-500', border: 'border-l-blue-500' },
@@ -30,26 +31,20 @@ const DISTRIBUTION_COLORS = [
 ];
 
 
-const YOUVERSION_NT_ABBR: Record<string, string> = {
-  "matthew": "MAT", "mark": "MRK", "luke": "LUK", "john": "JHN", "acts": "ACT",
-  "romans": "ROM", "1corinthians": "1CO", "2corinthians": "2CO", "galatians": "GAL",
-  "ephesians": "EPH", "philippians": "PHP", "colossians": "COL", "1thessalonians": "1TH",
-  "2thessalonians": "2TH", "1timothy": "1TI", "2timothy": "2TI", "titus": "TIT",
-  "philemon": "PHM", "hebrews": "HEB", "james": "JAS", "1peter": "1PE", "2peter": "2PE",
-  "1john": "1JN", "2john": "2JN", "3john": "3JN", "jude": "JUD", "revelation": "REV"
-};
-
 const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }) => {
   const [imgErr, setImgErr] = useState(false);
   const [, setSearchParams] = useSearchParams();
+  const { state } = useApp();
   const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
 
   useEffect(() => {
     setImgErr(false);
   }, [imgPath]);
 
-  const bookAbbr = YOUVERSION_NT_ABBR[guideId] || 'JHN';
-  const bibleUrl = `https://www.bible.com/bible/3345/${bookAbbr}.${anchor.ch}.LSB`;
+  // Only a real fallback destination for a card that opens in a new tab or gets its
+  // link copied — an ordinary click is handled below and never leaves the app. Null
+  // for topical guides, which are not a book of the Bible and so have nowhere to point.
+  const bibleUrl = youVersionChapterUrl(guideId, anchor.ch, state.settings.bibleVersion || 'LSB');
 
   const handleRead = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -64,8 +59,12 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
   return (
     <a
       id={`chapter-anchor-${anchor.ch}`}
-      href={bibleUrl}
+      href={bibleUrl || undefined}
       onClick={handleRead}
+      // Without an href the anchor drops out of the tab order, so put it back — the
+      // click handler is what actually opens the chapter either way.
+      role={bibleUrl ? undefined : 'button'}
+      tabIndex={bibleUrl ? undefined : 0}
       className="group flex flex-col bg-card border border-card-border rounded-lg overflow-hidden hover:border-card-border-hover transition-colors"
     >
       {/* Plate */}
