@@ -6,6 +6,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { CustomSelect } from '../ui/CustomSelect';
 import { Modal } from '../ui/Modal';
+import { activePreset, READING_PRESET_LABELS, READING_PRESETS } from '../../data/readingPresets';
 
 const THEME_OPTIONS = [
   { value: 'black', label: 'Midnight', swatch: '#0c0a08' },
@@ -32,8 +33,15 @@ interface SettingsDrawerProps {
   onClose: () => void;
 }
 
+const READING_TOGGLES: { key: 'showSectionHeadings' | 'showVerseNumbers' | 'showParagraphMarks'; label: string }[] = [
+  { key: 'showSectionHeadings', label: 'Section headings' },
+  { key: 'showVerseNumbers', label: 'Verse numbers' },
+  { key: 'showParagraphMarks', label: 'Paragraph marks' },
+];
+
 export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
   const { state, dispatch } = useApp();
+  const currentPreset = activePreset(state.settings);
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -185,6 +193,56 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                     </div>
                     <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${state.settings.bionicReading ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
                       <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${state.settings.bionicReading ? 'translate-x-5' : 'translate-x-0'}`} />
+                    </div>
+                  </div>
+
+                  {/* Reader apparatus. Presets are the common cases in one tap; the
+                      toggles below are the same three settings individually, so changing
+                      one simply reads as "Custom". */}
+                  <div className="p-4 flex flex-col gap-3 border-t border-card-border">
+                    <div>
+                      <h3 className="font-bold text-primary text-sm">Chapter Display</h3>
+                      <p className="text-xs text-secondary">How much the reader shows alongside the text</p>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1 p-1 rounded-lg bg-card-elevated border border-card-border">
+                      {(['study', 'reading', 'clean', 'custom'] as const).map(preset => {
+                        const isActive = currentPreset === preset;
+                        const isCustom = preset === 'custom';
+                        return (
+                          <button
+                            key={preset}
+                            // "Custom" is a readout, not a choice — it lights up on its own
+                            // when the toggles stop matching a preset.
+                            disabled={isCustom}
+                            onClick={() => !isCustom && dispatch({ type: 'UPDATE_SETTINGS', payload: READING_PRESETS[preset] })}
+                            className={`py-1.5 rounded-md text-xs font-bold transition-colors ${
+                              isActive ? 'bg-accent text-white' : isCustom ? 'text-muted' : 'text-secondary hover:bg-card-hover'
+                            }`}
+                          >
+                            {READING_PRESET_LABELS[preset]}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="flex flex-col">
+                      {READING_TOGGLES.map(({ key, label }) => {
+                        const isOn = state.settings[key] !== false;
+                        return (
+                          <div
+                            key={key}
+                            onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { [key]: !isOn } })}
+                            role="switch"
+                            aria-checked={isOn}
+                            aria-label={label}
+                            className="py-2.5 flex items-center justify-between cursor-pointer"
+                          >
+                            <span className="text-sm text-primary">{label}</span>
+                            <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${isOn ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
+                              <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${isOn ? 'translate-x-5' : 'translate-x-0'}`} />
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 

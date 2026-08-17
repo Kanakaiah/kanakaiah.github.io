@@ -111,6 +111,7 @@ interface ChapterReaderProps {
 
 import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
 import { readerPath } from '../../utils/readerRoute';
+import { readingDisplay } from '../../data/readingPresets';
 
 interface Verse {
   pk: number;
@@ -833,6 +834,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   const chapterHtml = useMemo(() => {
     let html = '';
+    const display = readingDisplay(state.settings);
     
     // The chapter title is already shown in the sticky header, no need to duplicate it here.
 
@@ -845,18 +847,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       // === Fix #5 & #2: Extract section headings (<b>) BEFORE OT quote processing ===
       // This prevents heading text from confusing the quote-level tracker.
       // Only <b> tags exist in the API (no <S>, <h1-6>, or <div> headings).
+      // Extracted even when hidden: the <b> has to come out of the verse text either
+      // way, and whether a heading exists still marks a paragraph start below.
       let heading = '';
+      let hasHeading = false;
       text = text.replace(/<b>(.*?)<\/b>/gi, (_, hText) => {
-        heading += renderHeading(hText);
+        hasHeading = true;
+        if (display.showSectionHeadings) heading += renderHeading(hText);
         return '';
       });
 
       // NASB95 and NLT carry no headings of their own, so the LSB's stand in here.
       // Guarded on the version having produced none itself, so a version that does
       // ship headings can never end up showing two at the same verse.
-      if (!heading && borrowedHeadings) {
+      if (!hasHeading && borrowedHeadings) {
         for (const borrowed of borrowedHeadings[v.verse] || []) {
-          heading += renderHeading(borrowed, true);
+          hasHeading = true;
+          if (display.showSectionHeadings) heading += renderHeading(borrowed, true);
         }
       }
 
@@ -969,18 +976,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       const chapterBreaks = paragraphBreaks?.[bookId]?.[String(chapter)];
       const isFirstVerseOfChapter = verses.length > 0 && v.verse === verses[0].verse;
       const isParagraphStart = !isFirstVerseOfChapter && (
-        chapterBreaks ? chapterBreaks.includes(v.verse) : (!!heading || hasLeadingBr)
+        chapterBreaks ? chapterBreaks.includes(v.verse) : (hasHeading || hasLeadingBr)
       );
-      const pilcrowHtml = isParagraphStart ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>` : '';
+      const pilcrowHtml = isParagraphStart && display.showParagraphMarks
+        ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>`
+        : '';
       const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
+      // Hidden verse numbers leave the verse span itself intact, so tapping to select,
+      // copy or memorize still works exactly the same on prose-only reading.
+      const verseNumHtml = display.showVerseNumbers
+        ? `<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup>`
+        : '';
 
       const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
       const ariaLabel = `Verse ${v.verse}${isSelected ? ', selected' : ''}${inLibrary ? ', in your library' : ''}`;
-      html += `<span class="inline verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}" tabindex="0" role="button" aria-pressed="${isSelected}" aria-label="${ariaLabel}">${pilcrowHtml}<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline pointer-events-none">${text}</span> </span>`;
+      html += `<span class="inline verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}" tabindex="0" role="button" aria-pressed="${isSelected}" aria-label="${ariaLabel}">${pilcrowHtml}${verseNumHtml}<span class="inline pointer-events-none">${text}</span> </span>`;
     });
 
     return html;
-  }, [verses, borrowedHeadings, selectedVerses, memorizedVerses, state.settings.bionicReading, bookId, chapter, paragraphBreaks, flashVerse]);
+  }, [verses, borrowedHeadings, selectedVerses, memorizedVerses, state.settings.bionicReading,
+      state.settings.showSectionHeadings, state.settings.showVerseNumbers, state.settings.showParagraphMarks,
+      bookId, chapter, paragraphBreaks, flashVerse]);
 
   // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
   const isOldTestament = (ALL_BOOKS.findIndex(b => b.id === bookId) + 1) <= 39;

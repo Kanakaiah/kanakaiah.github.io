@@ -27,6 +27,11 @@ export interface UserSettings {
   fontSize: number;
   fontFamily?: 'sans' | 'serif' | 'hyper';
   bibleVersion?: BibleVersion;
+  // Chapter reader apparatus. Undefined means on, so a profile saved before these
+  // existed reads exactly as it did before.
+  showSectionHeadings?: boolean;
+  showVerseNumbers?: boolean;
+  showParagraphMarks?: boolean;
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';
