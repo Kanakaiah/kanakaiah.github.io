@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2, BookOpen, RotateCw } from 'lucide-react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 import { CrossReferenceModal } from './CrossReferenceModal';
@@ -78,16 +78,11 @@ function parseVerseRefString(refStr: string): { bookId: string; chapter: number;
 // width actually available on a narrow screen.
 const READING_MEASURE = 'min(100%, 52ch)';
 
-// Cross-reference "back" navigation used to be tracked via these URL params. They've
-// since been replaced by in-memory state (pendingHighlight/returnStack) so a stale
-// trail can never resurface after a reload — but a URL carrying them from before that
-// change (or a stale bookmark/share link) would otherwise linger forever, since nothing
-// reads them anymore and every setSearchParams call here preserves unrelated keys as-is.
-const LEGACY_READER_PARAMS = ['returnBook', 'returnChapter', 'returnVerse', 'highlightVerse'];
-function pruneLegacyReaderParams(params: URLSearchParams): URLSearchParams {
-  LEGACY_READER_PARAMS.forEach(key => params.delete(key));
-  return params;
-}
+// Cross-reference "back" navigation, and the reader's position, used to live in URL
+// query params. Both have moved: the trail is in-memory state (pendingHighlight /
+// returnStack) so a stale trail can't resurface after a reload, and the position is the
+// path itself (/bible/HAB.1). Nothing here has to carry unrelated query keys forward
+// any more, so the pruning that guarded against that is gone with them.
 
 interface StrongsDefinition {
   lemma: string;
@@ -108,11 +103,14 @@ interface ChapterReaderProps {
   bookId: string;
   chapter: number;
   bookTitle: string;
+  /** Verse from a /bible/HAB.1.4 style link — scrolled to and flashed on arrival. */
+  initialVerse?: number;
   onClose: () => void;
   onStudyOriginalWord?: (verseRef: { book: number; chapter: number; verse: number }) => void;
 }
 
 import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
+import { readerPath } from '../../utils/readerRoute';
 
 interface Verse {
   pk: number;
@@ -149,7 +147,7 @@ function renderHeading(text: string, borrowed = false): string {
   return `<div class="${HEADING_CLASSES}">${text}${tag}</div>`;
 }
 
-export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOriginalWord }: ChapterReaderProps) {
+export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClose, onStudyOriginalWord }: ChapterReaderProps) {
   const [verses, setVerses] = useState<Verse[]>([]);
   // LSB headings for the loaded chapter, kept separate from `verses` so they never leak
   // into copied or memorized text. Null when reading the LSB itself (its own headings
@@ -157,7 +155,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   const [borrowedHeadings, setBorrowedHeadings] = useState<Record<number, string[]> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [, setSearchParams] = useSearchParams();
   // A single verse to scroll-to and briefly flash once its chapter is loaded and on
   // screen. Component state (not a URL param) so it's fully under our control — every
   // consumer below is required to set it explicitly, and it's consumed (cleared) the
@@ -188,6 +185,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
   // been reading.
   const [crossRefPeekSource, setCrossRefPeekSource] = useState<{ book: string; chapter: number } | null>(null);
   const navigate = useNavigate();
+
+  // Every move between chapters goes through here. `replace` for jumps that shouldn't
+  // become their own history entry (cross-references, the book navigator, "go back"),
+  // push for the ordinary next/previous walk so the browser's back button retraces it.
+  const goToChapter = (targetBookId: string, targetChapter: number, replace = false) => {
+    const path = readerPath(targetBookId, targetChapter);
+    if (path) navigate(path, { replace });
+  };
   const [showOptions, setShowOptions] = useState(false);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
   const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(cachedCrossRefs);
@@ -330,18 +335,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     setCrossRefPeekSource(null);
 
     if (chapter < currentBook.chapters) {
-      setSearchParams(prev => {
-        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-        next.set('readerChapter', (chapter + 1).toString());
-        return next;
-      });
+      goToChapter(bookId, chapter + 1);
     } else if (bookIndex < ALL_BOOKS.length - 1) {
-      setSearchParams(prev => {
-        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-        next.set('readerBook', ALL_BOOKS[bookIndex + 1].id);
-        next.set('readerChapter', '1');
-        return next;
-      });
+      goToChapter(ALL_BOOKS[bookIndex + 1].id, 1);
     }
   };
 
@@ -353,19 +349,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     setCrossRefPeekSource(null);
 
     if (chapter > 1) {
-      setSearchParams(prev => {
-        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-        next.set('readerChapter', (chapter - 1).toString());
-        return next;
-      });
+      goToChapter(bookId, chapter - 1);
     } else if (bookIndex > 0) {
       const prevBook = ALL_BOOKS[bookIndex - 1];
-      setSearchParams(prev => {
-        const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-        next.set('readerBook', prevBook.id);
-        next.set('readerChapter', prevBook.chapters.toString());
-        return next;
-      });
+      goToChapter(prevBook.id, prevBook.chapters);
     }
   };
 
@@ -407,16 +394,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     setReturnStack([]);
     setPendingHighlight(null);
     setCrossRefPeekSource(null);
-    setSearchParams(prev => {
-      const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-      next.set('readerBook', targetBookId);
-      next.set('readerChapter', targetChapter.toString());
-      // Also update the guide param so closing the reader lands on the correct book's page
-      if (next.has('guide')) {
-        next.set('guide', targetBookId);
-      }
-      return next;
-    }, { replace: true });
+    goToChapter(targetBookId, targetChapter, true);
     setShowNavigator(false);
     setShowVersionPicker(false);
   };
@@ -528,6 +506,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
       controller.abort();
     };
   }, [bookId, chapter, retryCount, bibleVersion]);
+
+  // A link that names a verse (/bible/HAB.1.4) hands it to the same highlight machinery
+  // cross-references use, which already knows to wait until that chapter is really on
+  // screen. This is what the old ?highlightVerse= param was meant to do; nothing read it.
+  useEffect(() => {
+    if (initialVerse) {
+      setPendingHighlight({ book: bookId, chapter, verse: initialVerse });
+    }
+  }, [bookId, chapter, initialVerse]);
 
   // Single home for every "jump to a verse and flash it" request in this component
   // (cross-references, Strong's occurrences, "Go back"). Waits until the *target*
@@ -1229,12 +1216,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
     setWordPopup(null);
 
     setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
-    setSearchParams(prev => {
-      const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-      next.set('readerBook', navBookId);
-      next.set('readerChapter', ch.toString());
-      return next;
-    }, { replace: true });
+    goToChapter(navBookId, ch, true);
   };
 
   const hasRefs = !crossRefMap || selectedVerses.some(v => {
@@ -1818,12 +1800,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
 
             setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
 
-            setSearchParams(prev => {
-              const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-              next.set('readerBook', navBookId);
-              next.set('readerChapter', ch.toString());
-              return next;
-            }, { replace: true });
+            goToChapter(navBookId, ch, true);
           }}
         />
       )}
@@ -1842,12 +1819,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, onClose, onStudyOrig
                   // row) still has an older stop to offer after this one.
                   setReturnStack(prev => prev.slice(0, -1));
                   setPendingHighlight({ book: topReturn.book, chapter: topReturn.chapter, verse: topReturn.verse });
-                  setSearchParams(prev => {
-                    const next = pruneLegacyReaderParams(new URLSearchParams(prev));
-                    next.set('readerBook', topReturn.book);
-                    next.set('readerChapter', topReturn.chapter.toString());
-                    return next;
-                  }, { replace: true });
+                  goToChapter(topReturn.book, topReturn.chapter, true);
                 }}
                 className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
                 title="Go back"

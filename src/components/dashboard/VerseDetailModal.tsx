@@ -6,6 +6,7 @@ import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { OT_BOOKS } from '../../data/otBooks';
 import { NT_BOOKS } from '../../data/ntBooks';
+import { readerPath } from '../../utils/readerRoute';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -34,9 +35,12 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
       const chapter = match[2];
       const verseNum = match[3];
       const book = ALL_BOOKS.find(b => b.name.toLowerCase() === bookName.toLowerCase());
-      if (book) {
+      // The verse now rides in the path, and the reader scrolls to and flashes it. The
+      // old ?highlightVerse= form landed on the chapter and then did nothing with it.
+      const path = book && readerPath(book.id, parseInt(chapter, 10), parseInt(verseNum, 10));
+      if (path) {
         onClose();
-        navigate(`/guides?readerBook=${book.id}&readerChapter=${chapter}&highlightVerse=${verseNum}`);
+        navigate(path);
       } else {
         alert("Could not locate this book in the reader.");
       }

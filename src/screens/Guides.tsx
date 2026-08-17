@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate, useParams } from 'react-router-dom';
+import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
 import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
@@ -18,6 +19,17 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
 const BIBLE_BROWSER_OT = '__bible-browser-ot__';
 
+// The two testament browsers are views, not guides, so they get readable slugs rather
+// than the internal sentinels showing up in the address bar.
+const BROWSER_ID_TO_SLUG: Record<string, string> = {
+  [BIBLE_BROWSER_NT]: 'new-testament',
+  [BIBLE_BROWSER_OT]: 'old-testament',
+};
+const BROWSER_SLUG_TO_ID: Record<string, string> = {
+  'new-testament': BIBLE_BROWSER_NT,
+  'old-testament': BIBLE_BROWSER_OT,
+};
+
 import { BOOK_SHORT, youVersionChapterUrl } from '../data/bibleMap';
 import { useApp } from '../context/AppContext';
 const DISTRIBUTION_COLORS = [
@@ -33,7 +45,7 @@ const DISTRIBUTION_COLORS = [
 
 const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }) => {
   const [imgErr, setImgErr] = useState(false);
-  const [, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { state } = useApp();
   const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
 
@@ -48,12 +60,8 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 
   const handleRead = (e: React.MouseEvent) => {
     e.preventDefault();
-    setSearchParams(prev => {
-      const next = new URLSearchParams(prev);
-      next.set('readerBook', guideId);
-      next.set('readerChapter', anchor.ch.toString());
-      return next;
-    });
+    const path = readerPath(guideId, anchor.ch);
+    if (path) navigate(path);
   };
 
   return (
@@ -172,7 +180,9 @@ const BibleIndexModal: React.FC<{
 };
 
 export const Guides: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  // Read-only now — the screen's own state lives in the path; query params are only
+  // inspected to redirect links written before that was true.
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [isOTExpanded, setIsOTExpanded] = useState(true);
   const [isNTExpanded, setIsNTExpanded] = useState(true);
@@ -183,16 +193,33 @@ export const Guides: React.FC = () => {
     setCollapsedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
   
-  const activeGuideId = searchParams.get('guide');
-  const readerBook = searchParams.get('readerBook');
-  const readerChapter = searchParams.get('readerChapter');
+  const { guideId, ref: readerRefParam } = useParams();
+  const navigate = useNavigate();
+
+  const readerRef = useMemo(() => parseReaderRef(readerRefParam), [readerRefParam]);
+  const activeGuideId = guideId ? (BROWSER_SLUG_TO_ID[guideId] || guideId) : null;
+
   const setActiveGuideId = (id: string | null) => {
-    if (id) {
-      setSearchParams({ guide: id });
-    } else {
-      setSearchParams({});
+    if (!id) {
+      navigate('/guides');
+      return;
     }
+    navigate(guidePath(BROWSER_ID_TO_SLUG[id] || id));
   };
+
+  // Links made before the reader had its own route — bookmarks, shares, anything still
+  // in someone's history — carry ?guide=/?readerBook=. Translate rather than 404 them.
+  useEffect(() => {
+    const legacyReader = readerPathFromLegacyParams(searchParams);
+    if (legacyReader) {
+      navigate(legacyReader, { replace: true });
+      return;
+    }
+    const legacyGuide = searchParams.get('guide');
+    if (legacyGuide) {
+      navigate(guidePath(BROWSER_ID_TO_SLUG[legacyGuide] || legacyGuide), { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   const handleScrollToChapter = (ch: number) => {
     const el = document.getElementById(`chapter-anchor-${ch}`);
@@ -363,41 +390,30 @@ export const Guides: React.FC = () => {
   }, []);
 
   // ── In-App Reader view ─────────────────────────────────────────────────────
-  if (readerBook && readerChapter) {
+  if (readerRef) {
     return (
       <>
         {studyOriginalWordRef && (
-          <OriginalWordModal 
-            verseRef={studyOriginalWordRef} 
-            onClose={() => setStudyOriginalWordRef(null)} 
+          <OriginalWordModal
+            verseRef={studyOriginalWordRef}
+            onClose={() => setStudyOriginalWordRef(null)}
             onNavigateToVerse={(bookId, chapter, verse) => {
               setStudyOriginalWordRef(null);
-              setSearchParams(prev => {
-                const next = new URLSearchParams(prev);
-                next.set('readerBook', bookId);
-                next.set('readerChapter', chapter.toString());
-                return next;
-              });
-              setTimeout(() => {
-                const el = document.getElementById('verse-' + verse);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }, 500);
+              const path = readerPath(bookId, chapter, verse);
+              if (path) navigate(path);
             }}
           />
         )}
         <ChapterReader
-          bookId={readerBook}
-          chapter={parseInt(readerChapter, 10)}
-          bookTitle={ALL_BOOKS.find((b) => b.id === readerBook)?.name || activeGuide?.title || 'Book'}
+          bookId={readerRef.bookId}
+          chapter={readerRef.chapter}
+          initialVerse={readerRef.verse}
+          bookTitle={ALL_BOOKS.find((b) => b.id === readerRef.bookId)?.name || activeGuide?.title || 'Book'}
           onStudyOriginalWord={setStudyOriginalWordRef}
-          onClose={() => {
-            setSearchParams((prev) => {
-              const next = new URLSearchParams(prev);
-              next.delete('readerBook');
-              next.delete('readerChapter');
-              return next;
-            });
-          }}
+          // Closing lands on the book's own guide page. Previously this dropped the
+          // reader params and kept whatever ?guide= happened to be set, which was
+          // already updated to follow the book being read.
+          onClose={() => navigate(guidePath(readerRef.bookId))}
         />
       </>
     );

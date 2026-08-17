@@ -25,9 +25,13 @@ export const AppLayout: React.FC = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  // Hide bottom/side navigation when in the reading view or practice view
-  const isReadingPage = new URLSearchParams(location.search).has('readerBook');
-  const isGuidePage = new URLSearchParams(location.search).has('guide');
+  // Hide bottom/side navigation when in the reading view or practice view. Both views
+  // are addressed by path now (/bible/HAB.1, /guides/habakkuk); the legacy query forms
+  // are still recognized for the moment it takes Guides to redirect them.
+  const isReadingPage = location.pathname.startsWith('/bible/')
+    || new URLSearchParams(location.search).has('readerBook');
+  const isGuidePage = /^\/guides\/.+/.test(location.pathname)
+    || new URLSearchParams(location.search).has('guide');
   const isPracticePage = location.pathname === '/practice';
   const isFullscreenView = isReadingPage || isPracticePage || isGuidePage;
   // The Bible tab root is the one tab whose page has a real name of its own, and
