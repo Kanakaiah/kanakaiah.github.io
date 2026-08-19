@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader2, BookOpen } from 'lucide-react';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
-import { BOLLS_BIBLE_MAP, BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
+import { BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
+import { fetchVerseText, parseVerseRef } from '../../utils/verseText';
 import { useApp } from '../../context/AppContext';
 import { Modal } from '../ui/Modal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
-
-// Module-level cache to prevent re-fetching the same verse text. Keyed by version as
-// well as reference — without that, switching translations would keep serving whichever
-// wording happened to be fetched first.
-const verseTextCache: Record<string, string> = {};
 
 interface CrossReferenceModalProps {
   verseRefs: string[];
@@ -93,64 +89,29 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
         }
 
         const fetchVerse = async (r: CrossRefData) => {
-          const cacheKey = `${bibleVersion}-${r.bookName.toLowerCase()}-${r.chapter}-${r.verse}`;
-          
-          if (verseTextCache[cacheKey]) {
-            if (mounted) {
-              setGroups(prev => prev.map(g => ({
-                ...g,
-                refs: g.refs.map(p => p.refStr === r.refStr ? { ...p, text: verseTextCache[cacheKey], loading: false } : p)
-              })));
-            }
+          const book = ALL_BOOKS.find(b => b.name.toLowerCase() === r.bookName.toLowerCase() || b.id === r.bookName.toLowerCase());
+          const parsed = book ? parseVerseRef(`${r.chapter}:${r.verse}`, book.id) : null;
+
+          const apply = (patch: Partial<CrossRefData>) => {
+            if (!mounted) return;
+            setGroups(prev => prev.map(g => ({
+              ...g,
+              refs: g.refs.map(p => p.refStr === r.refStr ? { ...p, ...patch, loading: false } : p)
+            })));
+          };
+
+          if (!parsed) {
+            apply({ error: 'Book not found' });
             return;
           }
 
-          let retries = 2;
-          while (retries >= 0) {
+          for (let attempt = 0; attempt < 2; attempt++) {
             try {
-              const book = ALL_BOOKS.find(b => b.name.toLowerCase() === r.bookName.toLowerCase() || b.id === r.bookName.toLowerCase());
-              if (!book) throw new Error('Book not found');
-              const bollsId = BOLLS_BIBLE_MAP[book.id];
-              
-              const apiRes = await fetch(`https://bolls.life/get-text/${bibleVersion}/${bollsId}/${r.chapter}/`);
-              if (!apiRes.ok) throw new Error('Failed to fetch text');
-              const chapterData = await apiRes.json();
-              
-              const verseData = chapterData.find((v: any) => v.verse === r.verse);
-              if (verseData) {
-                const cleanText = verseData.text
-                  .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
-                  .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
-                  .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
-                  .replace(/<br\s*\/?>/gi, ' ')
-                  .replace(/<\/p>/gi, ' ')
-                  .replace(/<[^>]*>/g, '')
-                  .trim();
-                
-                verseTextCache[cacheKey] = cleanText;
-
-                if (mounted) {
-                  setGroups(prev => prev.map(g => ({
-                    ...g,
-                    refs: g.refs.map(p => p.refStr === r.refStr ? { ...p, text: cleanText, loading: false } : p)
-                  })));
-                }
-                return;
-              } else {
-                throw new Error('Verse not found');
-              }
+              apply({ text: await fetchVerseText(bibleVersion, parsed) });
+              return;
             } catch (err: any) {
-              if (retries === 0) {
-                if (mounted) {
-                  setGroups(prev => prev.map(g => ({
-                    ...g,
-                    refs: g.refs.map(p => p.refStr === r.refStr ? { ...p, error: err.message, loading: false } : p)
-                  })));
-                }
-              } else {
-                retries--;
-                await new Promise(res => setTimeout(res, 1000));
-              }
+              if (attempt === 1) apply({ error: err.message || 'Failed to fetch text' });
+              else await new Promise(res => setTimeout(res, 600));
             }
           }
         };
@@ -164,12 +125,12 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
           }
         }
 
-        const batchSize = 4;
-        for (let i = 0; i < uniqueRefs.length; i += batchSize) {
-          const batch = uniqueRefs.slice(i, i + batchSize);
-          await Promise.all(batch.map(fetchVerse));
-          await new Promise(res => setTimeout(res, 250));
-        }
+        // Every reference goes out together. fetchVerseText caches by chapter, so the
+        // several references that land in one chapter collapse into a single request —
+        // as does anything the guide's key verses already pulled. The previous code ran
+        // four at a time with a 250ms pause between batches, which left a verse with a
+        // dozen cross-references filling in for seconds.
+        await Promise.all(uniqueRefs.map(fetchVerse));
         
       } catch (err: any) {
         if (mounted) setError(err.message);

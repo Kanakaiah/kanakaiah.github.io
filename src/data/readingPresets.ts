@@ -10,17 +10,18 @@ export interface ReadingDisplay {
   showSectionHeadings: boolean;
   showVerseNumbers: boolean;
   showParagraphMarks: boolean;
+  showCrossRefMarkers: boolean;
 }
 
 export type ReadingPreset = 'study' | 'reading' | 'clean' | 'custom';
 
 export const READING_PRESETS: Record<Exclude<ReadingPreset, 'custom'>, ReadingDisplay> = {
   // Everything the text carries — the reader's long-standing behavior, and the default.
-  study: { showSectionHeadings: true, showVerseNumbers: true, showParagraphMarks: true },
+  study: { showSectionHeadings: true, showVerseNumbers: true, showParagraphMarks: true, showCrossRefMarkers: true },
   // Keeps your place, drops the paragraph pilcrows.
-  reading: { showSectionHeadings: true, showVerseNumbers: true, showParagraphMarks: false },
+  reading: { showSectionHeadings: true, showVerseNumbers: true, showParagraphMarks: false, showCrossRefMarkers: false },
   // Headings only, so the text reads as prose.
-  clean: { showSectionHeadings: true, showVerseNumbers: false, showParagraphMarks: false },
+  clean: { showSectionHeadings: true, showVerseNumbers: false, showParagraphMarks: false, showCrossRefMarkers: false },
 };
 
 export const READING_PRESET_LABELS: Record<ReadingPreset, string> = {
@@ -36,6 +37,7 @@ export function readingDisplay(settings: UserSettings): ReadingDisplay {
     showSectionHeadings: settings.showSectionHeadings !== false,
     showVerseNumbers: settings.showVerseNumbers !== false,
     showParagraphMarks: settings.showParagraphMarks !== false,
+    showCrossRefMarkers: settings.showCrossRefMarkers !== false,
   };
 }
 

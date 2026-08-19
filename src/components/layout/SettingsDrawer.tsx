@@ -33,10 +33,11 @@ interface SettingsDrawerProps {
   onClose: () => void;
 }
 
-const READING_TOGGLES: { key: 'showSectionHeadings' | 'showVerseNumbers' | 'showParagraphMarks'; label: string }[] = [
+const READING_TOGGLES: { key: 'showSectionHeadings' | 'showVerseNumbers' | 'showParagraphMarks' | 'showCrossRefMarkers'; label: string }[] = [
   { key: 'showSectionHeadings', label: 'Section headings' },
   { key: 'showVerseNumbers', label: 'Verse numbers' },
   { key: 'showParagraphMarks', label: 'Paragraph marks' },
+  { key: 'showCrossRefMarkers', label: 'Cross-reference marks' },
 ];
 
 export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {

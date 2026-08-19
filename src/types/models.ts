@@ -32,6 +32,7 @@ export interface UserSettings {
   showSectionHeadings?: boolean;
   showVerseNumbers?: boolean;
   showParagraphMarks?: boolean;
+  showCrossRefMarkers?: boolean;
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';

@@ -608,6 +608,19 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   const handleVerseClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
+
+    // The marker sits inside the verse span, so it has to be claimed first or the tap
+    // would just toggle selection like any other part of the verse.
+    const marker = target.closest('.xref-marker');
+    if (marker) {
+      const markerVerse = marker.getAttribute('data-xref-verse');
+      if (markerVerse) {
+        setCrossRefPeekSource(null);
+        setShowCrossReferences([`${bookTitle.toLowerCase()} ${chapter}:${markerVerse}`]);
+        return;
+      }
+    }
+
     const verseSpan = target.closest('.verse-span');
     if (verseSpan) {
       const verseNumStr = verseSpan.getAttribute('data-verse');
@@ -984,18 +997,26 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
       // Hidden verse numbers leave the verse span itself intact, so tapping to select,
       // copy or memorize still works exactly the same on prose-only reading.
+      // A verse's cross-references were invisible until you selected it and noticed the
+      // "Refs" action, so the only way to find them was to already suspect they existed.
+      // This marks the verses that have any, the way a print Bible does.
+      const hasCrossRefs = !!crossRefMap?.[normalizeCrossRefKey(`${bookTitle} ${chapter}:${v.verse}`)]?.length;
+      const crossRefMarker = hasCrossRefs && display.showCrossRefMarkers
+        ? `<sup class="xref-marker text-[0.5em] text-accent/70 hover:text-accent ml-0.5 cursor-pointer align-super transition-colors" data-xref-verse="${v.verse}" role="button" tabindex="0" aria-label="Cross references for verse ${v.verse}">✻</sup>`
+        : '';
       const verseNumHtml = display.showVerseNumbers
         ? `<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup>`
         : '';
 
       const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
       const ariaLabel = `Verse ${v.verse}${isSelected ? ', selected' : ''}${inLibrary ? ', in your library' : ''}`;
-      html += `<span class="inline verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}" tabindex="0" role="button" aria-pressed="${isSelected}" aria-label="${ariaLabel}">${pilcrowHtml}${verseNumHtml}<span class="inline pointer-events-none">${text}</span> </span>`;
+      html += `<span class="inline verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}" tabindex="0" role="button" aria-pressed="${isSelected}" aria-label="${ariaLabel}">${pilcrowHtml}${verseNumHtml}<span class="inline pointer-events-none">${text}</span>${crossRefMarker} </span>`;
     });
 
     return html;
   }, [verses, borrowedHeadings, selectedVerses, memorizedVerses, state.settings.bionicReading,
       state.settings.showSectionHeadings, state.settings.showVerseNumbers, state.settings.showParagraphMarks,
+      state.settings.showCrossRefMarkers, crossRefMap, bookTitle,
       bookId, chapter, paragraphBreaks, flashVerse]);
 
   // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
