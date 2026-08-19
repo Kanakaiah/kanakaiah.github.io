@@ -1,4 +1,13 @@
 import { PENTATEUCH_COMMENTARIES } from './pentateuchCommentaries';
+import { HISTORICAL_COMMENTARIES } from './historicalCommentaries';
+import { WISDOM_COMMENTARIES } from './wisdomCommentaries';
+import { MAJOR_PROPHETS_COMMENTARIES } from './majorProphetsCommentaries';
+import { MINOR_PROPHETS_COMMENTARIES } from './minorProphetsCommentaries';
+import { GOSPELS_COMMENTARIES } from './gospelsCommentaries';
+import { ACTS_COMMENTARIES } from './actsCommentaries';
+import { PAULINE_COMMENTARIES } from './paulineCommentaries';
+import { GENERAL_EPISTLES_COMMENTARIES } from './generalEpistlesCommentaries';
+import { REVELATION_COMMENTARIES } from './revelationCommentaries';
 import { PREACHERS_GUIDE } from './preachers';
 
 export const NT_STUDY_GUIDES = [
@@ -2011,5 +2020,14 @@ export const NT_STUDY_GUIDES = [
     ]
   },
 
-  PENTATEUCH_COMMENTARIES
+  PENTATEUCH_COMMENTARIES,
+  HISTORICAL_COMMENTARIES,
+  WISDOM_COMMENTARIES,
+  MAJOR_PROPHETS_COMMENTARIES,
+  MINOR_PROPHETS_COMMENTARIES,
+  GOSPELS_COMMENTARIES,
+  ACTS_COMMENTARIES,
+  PAULINE_COMMENTARIES,
+  GENERAL_EPISTLES_COMMENTARIES,
+  REVELATION_COMMENTARIES
 ];
