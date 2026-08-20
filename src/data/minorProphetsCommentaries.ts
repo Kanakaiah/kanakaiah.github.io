@@ -27,7 +27,8 @@ export const MINOR_PROPHETS_COMMENTARIES = {
         { rank: "WBC", person: "Douglas Stuart, Hosea–Jonah", quote: "The best single volume for Hosea, Joel, Amos, Obadiah, and Jonah." },
         { rank: "BAKER", person: "Thomas McComiskey, ed., The Minor Prophets", reference: "3 vols", quote: "Comprehensive evangelical treatment of all twelve books. Essential reference set." },
         { rank: "BST", person: "David Prior, The Message of Joel, Micah and Habakkuk", quote: "Excellent for preaching synthesis." },
-        { rank: "HERMENEIA", person: "Hans Walter Wolff, Joel and Amos; Micah", reference: "2 vols", quote: "Major critical treatments. Form-critical method; indispensable for scholarly work." }
+        { rank: "HERMENEIA", person: "Hans Walter Wolff, Joel and Amos", quote: "Major critical treatment. Form-critical method; indispensable for scholarly work." },
+        { rank: "CONT", person: "Hans Walter Wolff, Micah", quote: "Major critical treatment. Form-critical method; indispensable for scholarly work." }
       ]
     },
     {
