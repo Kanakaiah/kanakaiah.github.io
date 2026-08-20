@@ -18,8 +18,8 @@ export const GENERAL_EPISTLES_COMMENTARIES = {
     {
       heading: "James: Core Commentaries",
       entries: [
-        { rank: "NICNT", person: "Douglas Moo, The Letter of James", quote: "The best evangelical-critical treatment of James. Essential.", note: "Moo's handling of the faith-and-works question (2:14–26) in relation to Paul is careful, balanced, and exegetically rigorous." },
-        { rank: "BECNT", person: "Scot McKnight, The Letter of James", quote: "Rich socio-rhetorical and theological treatment; excellent on the Sermon on the Mount connections." },
+        { rank: "PNTC", person: "Douglas Moo, The Letter of James", quote: "The best evangelical-critical treatment of James. Essential.", note: "Moo's handling of the faith-and-works question (2:14–26) in relation to Paul is careful, balanced, and exegetically rigorous." },
+        { rank: "NICNT", person: "Scot McKnight, The Letter of James", quote: "Rich socio-rhetorical and theological treatment; excellent on the Sermon on the Mount connections." },
         { rank: "NIGTC", person: "Peter Davids, The Epistle of James", quote: "Best technical treatment; strong on Jewish background." }
       ]
     },
@@ -27,9 +27,9 @@ export const GENERAL_EPISTLES_COMMENTARIES = {
       heading: "1–2 Peter & Jude: Core Commentaries",
       entries: [
         { rank: "BECNT", person: "Karen Jobes, 1 Peter", quote: "The single best treatment of 1 Peter. Essential.", note: "Jobes's exegesis of the Diaspora theology, the suffering passages, and the 'living hope' of chapter 1 is outstanding. Her handling of the harrowing of hell texts (3:18–22) is balanced and rigorous." },
-        { rank: "NICNT", person: "J. Ramsey Michaels, 1 Peter (WBC)", quote: "The most thorough treatment of 1 Peter; Michaels is excellent on the Greek." },
+        { rank: "WBC", person: "J. Ramsey Michaels, 1 Peter", quote: "The most thorough treatment of 1 Peter; Michaels is excellent on the Greek." },
         { rank: "WBC", person: "Richard Bauckham, Jude, 2 Peter", quote: "The definitive treatment of both letters; Bauckham's work on pseudepigraphy and Jewish apocalyptic is essential." },
-        { rank: "NIGTC", person: "Gene Green, Jude & 2 Peter", quote: "Strong evangelical treatment of both letters." }
+        { rank: "BECNT", person: "Gene Green, Jude & 2 Peter", quote: "Strong evangelical treatment of both letters." }
       ]
     },
     {
