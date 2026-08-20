@@ -35,23 +35,23 @@ export const PAULINE_COMMENTARIES = {
       entries: [
         { rank: "NIGTC", person: "F. F. Bruce, The Epistle to the Galatians", quote: "Classic evangelical critical treatment." },
         { rank: "WBC", person: "Richard Longenecker, Galatians", quote: "The most thorough critical-evangelical treatment; excellent on Jewish background." },
-        { rank: "BECNT", person: "Thomas Schreiner, Galatians", quote: "Strong evangelical synthesis; Old Perspective reading of justification." }
+        { rank: "ZECNT", person: "Thomas Schreiner, Galatians", quote: "Strong evangelical synthesis; Old Perspective reading of justification." }
       ]
     },
     {
       heading: "Ephesians, Philippians, Colossians: Core Commentaries",
       entries: [
-        { rank: "NIGTC", person: "Peter O'Brien, The Letter to the Ephesians", quote: "The best treatment of Ephesians at any level. Essential.", note: "O'Brien's exegesis of the armor of God (6:10–20), the body of Christ ecclesiology, and the cosmic Christology is outstanding." },
+        { rank: "PNTC", person: "Peter O'Brien, The Letter to the Ephesians", quote: "The best treatment of Ephesians at any level. Essential.", note: "O'Brien's exegesis of the armor of God (6:10–20), the body of Christ ecclesiology, and the cosmic Christology is outstanding." },
         { rank: "SPECIAL", person: "Harold Hoehner, Ephesians: An Exegetical Commentary", quote: "The most exhaustive Greek treatment of Ephesians ever written. Indispensable reference." },
         { rank: "NICNT", person: "Gordon Fee, Paul's Letter to the Philippians", quote: "The best treatment of Philippians; Fee's work on the Christ-hymn (2:5–11) is essential." },
-        { rank: "NIGTC", person: "Peter O'Brien, Colossians, Philemon", quote: "Best treatment of Colossians; strong on the Colossian hymn (1:15–20)." }
+        { rank: "WBC", person: "Peter O'Brien, Colossians, Philemon", quote: "Best treatment of Colossians; strong on the Colossian hymn (1:15–20)." }
       ]
     },
     {
       heading: "1–2 Thessalonians: Core Commentaries",
       entries: [
-        { rank: "NICNT", person: "F. F. Bruce, 1 & 2 Thessalonians", quote: "Classic and reliable." },
-        { rank: "WBC", person: "Charles Wanamaker, The Epistles to the Thessalonians", quote: "Most technically rigorous treatment; argues 2 Thess. was written first." },
+        { rank: "WBC", person: "F. F. Bruce, 1 & 2 Thessalonians", quote: "Classic and reliable." },
+        { rank: "NIGTC", person: "Charles Wanamaker, The Epistles to the Thessalonians", quote: "Most technically rigorous treatment; argues 2 Thess. was written first." },
         { rank: "BECNT", person: "Jeffrey Weima, 1–2 Thessalonians", quote: "Best current evangelical treatment; excellent eschatological analysis." }
       ]
     },
