@@ -389,6 +389,23 @@ export const Guides: React.FC = () => {
     return map;
   }, []);
 
+  // Searching only ever filtered book names, so typing "prayer" or "Romans" turned up
+  // nothing among the forty study resources. Matches title, subtitle and category, and
+  // a group that matches nothing drops out rather than showing an empty heading.
+  const filteredCategories = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return categories;
+
+    const matched: Record<string, any[]> = {};
+    for (const [category, guides] of Object.entries(categories)) {
+      const hits = guides.filter((g: any) =>
+        [g.title, g.subtitle, category].some(field => (field || '').toLowerCase().includes(query))
+      );
+      if (hits.length) matched[category] = hits;
+    }
+    return matched;
+  }, [categories, searchQuery]);
+
   // ── In-App Reader view ─────────────────────────────────────────────────────
   if (readerRef) {
     return (
@@ -974,7 +991,7 @@ export const Guides: React.FC = () => {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search books..."
+          placeholder="Search books and study resources..."
           className="w-full bg-card border border-card-border rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 transition-colors text-primary placeholder:text-muted shadow-sm"
         />
       </div>
@@ -1074,11 +1091,15 @@ export const Guides: React.FC = () => {
           )}
         </div>
 
-        {/* ── Reference guides & others ── */}
-        {Object.entries(categories).map(([category, guides]) => (
+        {/* ── Study resources, grouped by their own category ── */}
+        {Object.entries(filteredCategories).map(([category, guides]) => (
           <div key={category} className="flex flex-col gap-3">
+            {/* Every one of these groups used to render the words "Study Resources",
+                so the page repeated one heading eight times over eight different sets
+                of cards, with nothing to say why they were separate. */}
             <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">
-              Study Resources
+              {category}
+              <span className="ml-2 text-muted/60 font-normal">{guides.length}</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {guides.map((guide: any) => (
@@ -1092,11 +1113,6 @@ export const Guides: React.FC = () => {
                     <span className="font-heading font-bold text-primary text-lg truncate">{guide.title}</span>
                     <span className="text-xs text-secondary">{guide.subtitle}</span>
                   </div>
-                  {guide.tier && (
-                    <span className="hidden sm:inline-block px-2 py-1 rounded text-[0.625rem] font-bold bg-accent/10 text-accent uppercase tracking-wider">
-                      Tier {guide.tier}
-                    </span>
-                  )}
                   <ChevronRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
                 </button>
               ))}
