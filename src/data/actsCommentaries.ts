@@ -9,8 +9,7 @@ export const ACTS_COMMENTARIES = {
     {
       heading: "Acts / Introduction",
       entries: [
-        { rank: "Intro", person: "I. Howard Marshall, Luke: Historian and Theologian", quote: "Essential for understanding Lukan theology before diving into Acts." },
-        { rank: "Intro", person: "Ben Witherington III, The Acts of the Apostles: A Socio-Rhetorical Commentary", quote: "The most comprehensive single-volume treatment; combines social-scientific and rhetorical criticism." }
+        { rank: "Intro", person: "I. Howard Marshall, Luke: Historian and Theologian", quote: "Essential for understanding Lukan theology before diving into Acts." }
       ]
     },
     {

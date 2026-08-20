@@ -16,7 +16,7 @@ export const HISTORICAL_COMMENTARIES = {
     {
       heading: "Joshua: Core Commentaries",
       entries: [
-        { rank: "NICOT", person: "David Howard, Joshua", quote: "The essential evangelical-critical reference.", note: "Strong on Hebrew philology and the theology of holy war. Excellent treatment of the Deuteronomistic connections." },
+        { rank: "NAC", person: "David M. Howard Jr., Joshua", quote: "The essential evangelical-critical reference.", note: "Strong on Hebrew philology and the theology of holy war. Excellent treatment of the Deuteronomistic connections." },
         { rank: "WBC", person: "Trent Butler, Joshua", reference: "2 vols", quote: "Heavier critical apparatus, good on form-critical and redaction issues." },
         { rank: "TYNDALE", person: "Richard Hess, Joshua", quote: "Compact and reliable; excellent on ANE parallels to conquest accounts." },
         { rank: "JSOT", person: "L. Daniel Hawk, Joshua", quote: "Literary-narrative approach; strong on the ambiguities of the text." }
@@ -53,14 +53,17 @@ export const HISTORICAL_COMMENTARIES = {
         { rank: "NAC", person: "Paul House, 1 & 2 Kings", quote: "Strong theological synthesis; good canonical connections." },
         { rank: "OTL", person: "Gwilym Jones, 1 and 2 Kings", reference: "2 vols", quote: "Major critical treatment; strong on redaction and historical questions." },
         { rank: "WBC", person: "Simon DeVries, 1 Kings", quote: "Useful for form-critical and source-critical questions." },
-        { rank: "ANCHOR", person: "Jerome Walsh, 1 Kings & Mordechai Cogan, II Kings", reference: "2 vols", quote: "Rigorous critical scholarship on both volumes." }
+        { rank: "BERIT OLAM", person: "Jerome T. Walsh, 1 Kings", quote: "Close literary reading of the narrative." },
+        { rank: "ANCHOR", person: "Mordechai Cogan & Hayim Tadmor, II Kings", quote: "Rigorous critical scholarship." }
       ]
     },
     {
       heading: "1–2 Chronicles: Core Commentaries",
       entries: [
-        { rank: "NICOT", person: "Raymond Dillard, 2 Chronicles & Martin Selman, 1–2 Chronicles", quote: "Dillard on 2 Chronicles is exceptional; Selman solid across both.", note: "Chronicles as theological interpretation of Samuel-Kings is Dillard's great contribution." },
-        { rank: "WBC", person: "Ralph Braun, 1 Chronicles & Steven Tuell, 1–2 Chronicles", quote: "More technical; good on the Chronicler's special sources." },
+        { rank: "WBC", person: "Raymond Dillard, 2 Chronicles", reference: "vol. 15", quote: "Exceptional on 2 Chronicles.", note: "Chronicles as theological interpretation of Samuel-Kings is Dillard's great contribution." },
+        { rank: "TOTC", person: "Martin Selman, 1–2 Chronicles", reference: "2 vols", quote: "Solid across both volumes." },
+        { rank: "WBC", person: "Roddy L. Braun, 1 Chronicles", reference: "vol. 14", quote: "More technical; good on the Chronicler's special sources." },
+        { rank: "INTERP", person: "Steven Tuell, 1–2 Chronicles", quote: "Theological reading for teaching and preaching." },
         { rank: "ANCHOR", person: "Jacob Myers, I Chronicles & II Chronicles", reference: "2 vols", quote: "Classic critical treatment." }
       ]
     },
@@ -68,7 +71,7 @@ export const HISTORICAL_COMMENTARIES = {
       heading: "Ezra-Nehemiah: Core Commentaries",
       entries: [
         { rank: "OTL", person: "Joseph Blenkinsopp, Ezra-Nehemiah", quote: "The premier critical-scholarly treatment." },
-        { rank: "NICOT", person: "Mervin Breneman, Ezra, Nehemiah, Esther", quote: "Solid evangelical synthesis, preachable." },
+        { rank: "NAC", person: "Mervin Breneman, Ezra, Nehemiah, Esther", quote: "Solid evangelical synthesis, preachable." },
         { rank: "TYNDALE", person: "Derek Kidner, Ezra & Nehemiah", quote: "Compact, theologically rich, and excellent for sermon prep." }
       ]
     },
@@ -76,7 +79,7 @@ export const HISTORICAL_COMMENTARIES = {
       heading: "Esther: Core Commentaries",
       entries: [
         { rank: "WBC", person: "Frederic Bush, Ruth/Esther", quote: "Best technical Hebrew treatment; essential." },
-        { rank: "NICOT", person: "Karen Jobes, Esther", quote: "Outstanding evangelical exegesis of Esther; highly recommended.", note: "Jobes engages the historical and literary questions with great skill and connects the theology to the canon beautifully." }
+        { rank: "NIVAC", person: "Karen Jobes, Esther", quote: "Outstanding evangelical exegesis of Esther; highly recommended.", note: "Jobes engages the historical and literary questions with great skill and connects the theology to the canon beautifully." }
       ]
     },
     {
