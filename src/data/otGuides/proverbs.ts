@@ -6,7 +6,7 @@ export const PROVERBS_GUIDE: StudyGuide = {
   architecture: [
     { name: 'INVITATION (Wisdom\'s call — young man choose your way)', chapters: [1, 9] },
     { name: 'PROVERBS (Solomon\'s proverbs — individual sayings)', chapters: [10, 22] },
-    { name: 'SAYINGS (Thirty sayings of the wise)', chapters: [22, 24] },
+    { name: 'SAYINGS (Thirty sayings of the wise — from 22:17)', chapters: [23, 24] },
     { name: 'MORE SOLOMON (Hezekiah\'s collection of Solomon\'s proverbs)', chapters: [25, 29] },
     { name: 'AGUR (Numerical sayings — mystery and creation)', chapters: [30, 30] },
     { name: 'LEMUEL (His mother\'s counsel — the noble wife)', chapters: [31, 31] }

@@ -9,9 +9,9 @@ export const OBADIAH_GUIDE: StudyGuide = {
   // "chapter 1", which made every section identical and broke the
   // distribution chart's math (each read as 100% of a 1-chapter book).
   architecture: [
-    { name: 'EDOM\'S JUDGMENT (Pride and coming fall)', chapters: [1, 9] },
-    { name: 'EDOM\'S CRIME (Standing by while Jerusalem burned)', chapters: [10, 14] },
-    { name: 'THE DAY (All nations judged — Israel restored)', chapters: [15, 21] }
+    { name: 'EDOM\'S JUDGMENT (Pride and coming fall)', chapters: [1, 9], unit: 'verse' },
+    { name: 'EDOM\'S CRIME (Standing by while Jerusalem burned)', chapters: [10, 14], unit: 'verse' },
+    { name: 'THE DAY (All nations judged — Israel restored)', chapters: [15, 21], unit: 'verse' }
   ],
   anchors: [
     { ch: 1, word: 'CLIFF', scene: '"You who live in the clefts of the rocks and make your home on the heights — you say to yourself, who can bring me down? Though you soar like the eagle — I will bring you down"' }

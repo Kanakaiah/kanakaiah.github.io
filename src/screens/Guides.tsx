@@ -343,6 +343,7 @@ export const Guides: React.FC = () => {
         merged.blocks = merged.architecture.map((arch: any) => {
           const start = arch.chapters[0];
           const end = arch.chapters[1];
+          const unit = arch.unit;
           
           let label = arch.name;
           let description = '';
@@ -355,7 +356,8 @@ export const Guides: React.FC = () => {
           return {
             chapters: start === end ? `${start}` : `${start}–${end}`,
             label: label,
-            description: description
+            description: description,
+            unit
           };
         });
       }
@@ -776,7 +778,8 @@ export const Guides: React.FC = () => {
                 // pushed the bar chart, its tick labels, and the section cards' percent
                 // readouts far off the right edge of the screen. The true total is the
                 // sum of the blocks' own verse counts, not the book's chapter count.
-                const isVerseBased = activeGuide.chapters === 1 && activeGuide.blocks.length > 1;
+                const isVerseBased = activeGuide.blocks.some((b: any) => b.unit === 'verse')
+                  || (activeGuide.chapters === 1 && activeGuide.blocks.length > 1);
                 const totalUnits = isVerseBased
                   ? activeGuide.blocks.reduce((sum: number, b: any) => {
                       const [s, e] = String(b.chapters).split(/[-–]/).map(Number);
@@ -845,7 +848,8 @@ export const Guides: React.FC = () => {
 
               {/* SECTION LIST */}
               {(() => {
-                const isVerseBased = activeGuide.chapters === 1 && activeGuide.blocks.length > 1;
+                const isVerseBased = activeGuide.blocks.some((b: any) => b.unit === 'verse')
+                  || (activeGuide.chapters === 1 && activeGuide.blocks.length > 1);
                 const totalUnits = isVerseBased
                   ? activeGuide.blocks.reduce((sum: number, b: any) => {
                       const [s, e] = String(b.chapters).split(/[-–]/).map(Number);
