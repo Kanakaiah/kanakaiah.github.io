@@ -12,7 +12,7 @@ export const GENERAL_EPISTLES_COMMENTARIES = {
         { rank: "WBC", person: "William Lane, Hebrews 1–8 & 9–13", reference: "2 vols", quote: "The definitive evangelical-critical treatment of Hebrews. Essential.", note: "Lane's exegetical depth, his handling of the Levitical typology, the 'word of God' in 4:12–13, and the Hall of Faith (ch. 11) are outstanding. Standard reference." },
         { rank: "NIGTC", person: "Paul Ellingworth, The Epistle to the Hebrews", quote: "The most technically rigorous Greek treatment; indispensable for philological work." },
         { rank: "NICNT", person: "F. F. Bruce, The Epistle to the Hebrews", quote: "Classic treatment; historically reliable and theologically rich." },
-        { rank: "ANCHOR", person: "Harold Attridge, The Epistle to the Hebrews", quote: "The major critical treatment; strong on Hellenistic philosophical background." }
+        { rank: "HERMENEIA", person: "Harold Attridge, The Epistle to the Hebrews", quote: "The major critical treatment; strong on Hellenistic philosophical background." }
       ]
     },
     {

@@ -10,7 +10,7 @@ export const WISDOM_COMMENTARIES = {
       heading: "Whole Wisdom Literature / Introduction",
       entries: [
         { rank: "Intro", person: "Tremper Longman III, Introducing the Old Testament: A Short Guide to Its History and Message", quote: "Excellent framing of Wisdom as a canonical category." },
-        { rank: "Theology", person: "Craig Bartholomew & Ryan O'Dowd, Old Testament Wisdom", quote: "Best theological synthesis of the Wisdom tradition for a canonical reader." }
+        { rank: "THEOL", person: "Craig Bartholomew & Ryan O'Dowd, Old Testament Wisdom", quote: "Best theological synthesis of the Wisdom tradition for a canonical reader." }
       ]
     },
     {

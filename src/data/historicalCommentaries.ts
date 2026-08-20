@@ -10,7 +10,7 @@ export const HISTORICAL_COMMENTARIES = {
       heading: "Whole Historical Books / Introduction",
       entries: [
         { rank: "Intro", person: "David Howard, An Introduction to the Old Testament Historical Books", quote: "The best single-volume introduction to the genre and each book." },
-        { rank: "Theology", person: "Iain Provan, V. Philips Long & Tremper Longman III, A Biblical History of Israel", quote: "Defends historical reliability while engaging critical scholarship rigorously." }
+        { rank: "THEOL", person: "Iain Provan, V. Philips Long & Tremper Longman III, A Biblical History of Israel", quote: "Defends historical reliability while engaging critical scholarship rigorously." }
       ]
     },
     {

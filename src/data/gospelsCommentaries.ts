@@ -19,13 +19,13 @@ export const GOSPELS_COMMENTARIES = {
         { rank: "WBC", person: "Donald Hagner, Matthew 1–13 & 14–28", reference: "2 vols", quote: "The definitive evangelical-critical treatment of Matthew. Essential.", note: "Hagner's exegesis of the Sermon on the Mount, the Olivet Discourse, and the Passion Narrative is meticulous and theologically rich." },
         { rank: "NICNT", person: "R. T. France, The Gospel of Matthew", quote: "Excellent single-volume treatment; strong canonical and Christological reading." },
         { rank: "HERMENEIA", person: "Ulrich Luz, Matthew 1–7, 8–20, 21–28", reference: "3 vols", quote: "The major critical treatment. History of effects (Wirkungsgeschichte) is distinctive and valuable." },
-        { rank: "ANCHOR", person: "W. D. Davies & Dale Allison, Matthew", reference: "3 vols", quote: "The most comprehensive critical commentary. Encyclopedic; essential reference." }
+        { rank: "ICC", person: "W. D. Davies & Dale Allison, Matthew", reference: "3 vols", quote: "The most comprehensive critical commentary. Encyclopedic; essential reference." }
       ]
     },
     {
       heading: "Mark: Core Commentaries",
       entries: [
-        { rank: "NICGT", person: "R. T. France, The Gospel of Mark", quote: "The single best evangelical treatment of Mark. Exceptional.", note: "France's handling of Mark's Christology, the Messianic Secret, and the structure of Mark 13 is outstanding." },
+        { rank: "NIGTC", person: "R. T. France, The Gospel of Mark", quote: "The single best evangelical treatment of Mark. Exceptional.", note: "France's handling of Mark's Christology, the Messianic Secret, and the structure of Mark 13 is outstanding." },
         { rank: "WBC", person: "Robert Guelich, Mark 1–8:26 (vol. 1, completed by Craig Evans, 8:27–16:20)", reference: "2 vols", quote: "Strong critical-evangelical treatment; excellent on form criticism." },
         { rank: "HERMENEIA", person: "Adela Yarbro Collins, Mark", quote: "The major critical treatment; strong on Hellenistic parallels and genre." }
       ]

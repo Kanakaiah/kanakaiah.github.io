@@ -10,7 +10,7 @@ export const MINOR_PROPHETS_COMMENTARIES = {
       heading: "The Twelve as a Canonical Unit / Introduction",
       entries: [
         { rank: "Intro", person: "James Nogalski, The Book of the Twelve: Hosea–Jonah & Micah–Malachi", reference: "2 vols", quote: "The leading treatment of the Twelve as a redactional and canonical unit." },
-        { rank: "Theology", person: "Marvin Sweeney, The Twelve Prophets (Berit Olam)", reference: "2 vols", quote: "Excellent literary-canonical reading of each book within the Twelve's macro-structure." }
+        { rank: "THEOL", person: "Marvin Sweeney, The Twelve Prophets (Berit Olam)", reference: "2 vols", quote: "Excellent literary-canonical reading of each book within the Twelve's macro-structure." }
       ]
     },
     {

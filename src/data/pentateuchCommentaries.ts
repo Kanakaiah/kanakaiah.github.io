@@ -10,7 +10,7 @@ export const PENTATEUCH_COMMENTARIES = {
       heading: "Whole-Pentateuch / Introduction",
       entries: [
         { rank: "Intro", person: "Gordon Wenham, Exploring the Old Testament: The Pentateuch", quote: "Good bridge from lay to scholarly." },
-        { rank: "Theology", person: "John Sailhamer, The Pentateuch as Narrative", quote: "Canonical-theological reading, complements your synthesis-oriented approach." }
+        { rank: "THEOL", person: "John Sailhamer, The Pentateuch as Narrative", quote: "Canonical-theological reading, complements your synthesis-oriented approach." }
       ]
     },
     {

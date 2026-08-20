@@ -20,7 +20,7 @@ export const ACTS_COMMENTARIES = {
         { rank: "BECNT", person: "Darrell Bock, Acts", quote: "The best single-volume evangelical-critical treatment. Start here.", note: "Bock's exegetical precision, his handling of the major speeches (Peter at Pentecost, Paul at Athens, Paul at Miletus), and his Lukan theology are outstanding." },
         { rank: "NICNT", person: "I. Howard Marshall, The Acts of the Apostles", quote: "Older but still essential; excellent historical and theological synthesis." },
         { rank: "WBC", person: "Ben Witherington III, The Acts of the Apostles", quote: "Socio-rhetorical approach; excellent on Hellenistic parallels to the speeches." },
-        { rank: "F. F. Bruce", person: "F. F. Bruce, The Book of Acts (NICNT, revised)", quote: "A classic evangelical treatment; historically strong and warmly written." }
+        { rank: "NICNT", person: "F. F. Bruce, The Book of Acts (revised)", quote: "A classic evangelical treatment; historically strong and warmly written." }
       ]
     },
     {

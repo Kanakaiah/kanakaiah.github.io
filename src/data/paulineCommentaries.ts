@@ -60,7 +60,7 @@ export const PAULINE_COMMENTARIES = {
       entries: [
         { rank: "NIGTC", person: "George Knight III, The Pastoral Epistles", quote: "The best evangelical-critical treatment; defends Pauline authorship rigorously." },
         { rank: "WBC", person: "William Mounce, Pastoral Epistles", quote: "Most thorough contemporary evangelical treatment; excellent on the Greek." },
-        { rank: "ANCHOR", person: "Martin Dibelius & Hans Conzelmann, The Pastoral Epistles", quote: "The classic critical treatment; essential for engaging pseudepigraphy debates." }
+        { rank: "HERMENEIA", person: "Martin Dibelius & Hans Conzelmann, The Pastoral Epistles", quote: "The classic critical treatment; essential for engaging pseudepigraphy debates." }
       ]
     },
     {
