@@ -23,6 +23,10 @@ let cachedCrossRefs: Record<string, string[]> | null = null;
 // the USX level) and fall back to the heading/<br/> heuristic below.
 let cachedParagraphBreaks: Record<string, Record<string, number[]>> | null = null;
 const cachedStrongsDicts: Record<string, Record<string, StrongsDefinition>> = {};
+// "version:bollsId:chapter" -> the in-flight or settled chapter request. See fetchChapterText.
+const chapterTextCache = new Map<string, Promise<Verse[]>>();
+// The same chapters once they've resolved, so a revisit can render without awaiting.
+const chapterTextSettled = new Map<string, Verse[]>();
 
 // Common function words that should NOT be underlined in α mode
 const SKIP_WORDS = new Set([
@@ -118,6 +122,47 @@ interface Verse {
   pk: number;
   verse: number;
   text: string;
+}
+
+function chapterCacheKey(version: string, bollsId: number, chapter: number): string {
+  return `${version}:${bollsId}:${chapter}`;
+}
+
+/**
+ * Fetches a chapter, sharing one request per version/book/chapter for the session.
+ *
+ * Scripture text doesn't change under us, so the previous code's fetch-per-view meant
+ * paging back and forth cost a fresh round trip every time — the chapter you read a
+ * moment ago still sat behind a loading skeleton on the way back. Keyed on the promise
+ * rather than the result so a chapter opened twice in quick succession (or React's
+ * dev-only double-invoked effect) makes a single request.
+ */
+function fetchChapterText(version: string, bollsId: number, chapter: number): Promise<Verse[]> {
+  const cacheKey = chapterCacheKey(version, bollsId, chapter);
+  const cached = chapterTextCache.get(cacheKey);
+  if (cached) return cached;
+
+  // The timeout belongs to the request rather than to whichever reader started it —
+  // aborting on unmount would reject a promise other views may already be awaiting.
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+  const pending = fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`, { signal: controller.signal })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch chapter text.');
+      return res.json() as Promise<Verse[]>;
+    })
+    .then(data => {
+      chapterTextSettled.set(cacheKey, data);
+      return data;
+    })
+    .finally(() => clearTimeout(timeoutId));
+
+  // A rejected promise must not stay cached, or one dropped connection would pin the
+  // error on that chapter for the rest of the session.
+  pending.catch(() => chapterTextCache.delete(cacheKey));
+  chapterTextCache.set(cacheKey, pending);
+  return pending;
 }
 
 // bolls.life ships section headings (as <b> tags inside the verse text) only in its LSB
@@ -446,48 +491,59 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   }, [navigatorBook, showNavigator]);
 
   useEffect(() => {
-    // Guards against React StrictMode's dev-only double-invoke of effects (mount ->
-    // cleanup -> mount again): the first invocation's fetch gets aborted by the
-    // cleanup below almost immediately, which would otherwise be indistinguishable
-    // from a real 15s timeout and incorrectly flash an error before the second,
-    // real invocation's fetch even has a chance to resolve.
+    // `cancelled` guards every setState below so a chapter left before its request
+    // settles can't write over the one that replaced it. The request itself is owned by
+    // the module-level cache rather than this effect, so React StrictMode's dev-only
+    // double-invoke (mount -> cleanup -> mount) now shares one in-flight promise instead
+    // of aborting the first fetch and flashing a spurious timeout error.
     let cancelled = false;
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
     // Cleared synchronously (before any await) so it's already invalidated by the time
     // the pendingHighlight effect below runs later in this same commit.
     versesChapterRef.current = '';
+
+    const bollsId = BOLLS_BIBLE_MAP[bookId];
+
+    const applyChapter = (data: Verse[], lsbData: Verse[] | null) => {
+      setVerses(data);
+      setBorrowedHeadings(lsbData ? extractHeadings(lsbData) : null);
+      versesChapterRef.current = `${bookId}-${chapter}`;
+      setSelectedVerses([]); // Clear any previous selection when loading a new chapter
+    };
+
+    // Already read this session: render straight from the cache, so paging back to a
+    // chapter doesn't put a loading skeleton over text that's already in hand.
+    if (bollsId) {
+      const cachedData = chapterTextSettled.get(chapterCacheKey(bibleVersion, bollsId, chapter));
+      const cachedLsb = bibleVersion === 'LSB'
+        ? null
+        : chapterTextSettled.get(chapterCacheKey('LSB', bollsId, chapter)) ?? null;
+
+      if (cachedData && (bibleVersion === 'LSB' || cachedLsb)) {
+        setError(null);
+        setLoading(false);
+        applyChapter(cachedData, cachedLsb);
+        return () => { cancelled = true; };
+      }
+    }
 
     const fetchChapter = async () => {
       setLoading(true);
       setError(null);
       try {
-        const bollsId = BOLLS_BIBLE_MAP[bookId];
         if (!bollsId) {
           throw new Error('Book not found in Bible API map.');
         }
-
-        const fetchVersion = async (version: string): Promise<Verse[]> => {
-          const res = await fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`, { signal: controller.signal });
-          if (!res.ok) {
-            throw new Error('Failed to fetch chapter text.');
-          }
-          return res.json();
-        };
 
         // Requested in parallel, so a version without its own headings costs the slower
         // of the two round trips rather than their sum. A failed LSB request only costs
         // the headings — the chapter itself still renders.
         const [data, lsbData] = await Promise.all([
-          fetchVersion(bibleVersion),
-          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchVersion('LSB').catch(() => null),
+          fetchChapterText(bibleVersion, bollsId, chapter),
+          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter).catch(() => null),
         ]);
 
         if (cancelled) return;
-        setVerses(data);
-        setBorrowedHeadings(lsbData ? extractHeadings(lsbData) : null);
-        versesChapterRef.current = `${bookId}-${chapter}`;
-        setSelectedVerses([]); // Clear any previous selection when loading a new chapter
+        applyChapter(data, lsbData);
       } catch (err: any) {
         if (cancelled) return;
         if (err.name === 'AbortError') {
@@ -496,17 +552,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           setError(err.message || 'An error occurred while loading the chapter.');
         }
       } finally {
-        clearTimeout(timeoutId);
         if (!cancelled) setLoading(false);
       }
     };
 
     fetchChapter();
-    return () => {
-      cancelled = true;
-      clearTimeout(timeoutId);
-      controller.abort();
-    };
+    return () => { cancelled = true; };
   }, [bookId, chapter, retryCount, bibleVersion]);
 
   // A link that names a verse (/bible/HAB.1.4) hands it to the same highlight machinery
