@@ -51,7 +51,7 @@ export const HISTORICAL_COMMENTARIES = {
       heading: "1–2 Kings: Core Commentaries",
       entries: [
         { rank: "NAC", person: "Paul House, 1 & 2 Kings", quote: "Strong theological synthesis; good canonical connections." },
-        { rank: "OTL", person: "Gwilym Jones, 1 and 2 Kings", reference: "2 vols", quote: "Major critical treatment; strong on redaction and historical questions." },
+        { rank: "NCBC", person: "Gwilym Jones, 1 and 2 Kings", reference: "2 vols", quote: "Major critical treatment; strong on redaction and historical questions." },
         { rank: "WBC", person: "Simon DeVries, 1 Kings", quote: "Useful for form-critical and source-critical questions." },
         { rank: "BERIT OLAM", person: "Jerome T. Walsh, 1 Kings", quote: "Close literary reading of the narrative." },
         { rank: "ANCHOR", person: "Mordechai Cogan & Hayim Tadmor, II Kings", quote: "Rigorous critical scholarship." }
