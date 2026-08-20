@@ -3,6 +3,7 @@ import { ArrowRight, Loader2, BookOpen } from 'lucide-react';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 import { BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
+import { CROSS_REFS_URL } from '../../data/crossRefsUrl';
 import { fetchVerseText, parseVerseRef } from '../../utils/verseText';
 import { useApp } from '../../context/AppContext';
 import { Modal } from '../ui/Modal';
@@ -26,6 +27,8 @@ interface CrossRefData {
   bookName: string;
   chapter: number;
   verse: number;
+  /** End of a ranged reference ("Luke 2:4-7"); absent for a single verse. */
+  endVerse?: number;
   text?: string;
   loading: boolean;
   error?: string;
@@ -51,7 +54,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
     const loadRefs = async () => {
       setLoadingRefs(true);
       try {
-        const data = crossRefMap ?? await fetch('/data/cross_references.json').then(res => {
+        const data = crossRefMap ?? await fetch(CROSS_REFS_URL).then(res => {
           if (!res.ok) throw new Error('Failed to load cross references database');
           return res.json();
         });
@@ -64,13 +67,17 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
           // modal's subtitle still reads "1 Samuel 3:10" rather than "1samuel 3:10".
           const related = data[normalizeCrossRefKey(vRef)] || [];
           const parsedRefs = related.map((ref: string) => {
-            const match = ref.match(/^(.+?)\s+(\d+):(\d+)$/);
+            // The trailing range is optional: OpenBible contributes single verses, while
+            // TSKe cites passages ("Luke 2:4-7"). Without the optional group every ranged
+            // reference parsed as null and was dropped from the modal entirely.
+            const match = ref.match(/^(.+?)\s+(\d+):(\d+)(?:-(\d+))?$/);
             if (match) {
               return {
                 refStr: ref,
                 bookName: match[1],
                 chapter: parseInt(match[2], 10),
                 verse: parseInt(match[3], 10),
+                endVerse: match[4] ? parseInt(match[4], 10) : undefined,
                 loading: true
               };
             }
@@ -90,7 +97,13 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
 
         const fetchVerse = async (r: CrossRefData) => {
           const book = ALL_BOOKS.find(b => b.name.toLowerCase() === r.bookName.toLowerCase() || b.id === r.bookName.toLowerCase());
-          const parsed = book ? parseVerseRef(`${r.chapter}:${r.verse}`, book.id) : null;
+          // parseVerseRef caps how many verses one reference may pull in, so a long TSKe
+          // range ("Isaiah 60:1-22") falls back to quoting its opening verse rather than
+          // reporting the book as missing.
+          const versePart = r.endVerse ? `${r.verse}-${r.endVerse}` : `${r.verse}`;
+          const parsed = book
+            ? parseVerseRef(`${r.chapter}:${versePart}`, book.id) ?? parseVerseRef(`${r.chapter}:${r.verse}`, book.id)
+            : null;
 
           const apply = (patch: Partial<CrossRefData>) => {
             if (!mounted) return;
@@ -217,7 +230,7 @@ export const CrossReferenceModal: React.FC<CrossReferenceModalProps> = ({ verseR
                   >
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-bold text-accent text-base">
-                        {bookInfo?.name || capitalize(r.bookName)} {r.chapter}:{r.verse}
+                        {bookInfo?.name || capitalize(r.bookName)} {r.chapter}:{r.verse}{r.endVerse ? `-${r.endVerse}` : ''}
                       </h3>
                       <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
                     </div>

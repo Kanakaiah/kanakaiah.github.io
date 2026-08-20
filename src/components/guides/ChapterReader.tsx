@@ -3,6 +3,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus,
 import { useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
+import { CROSS_REFS_URL } from '../../data/crossRefsUrl';
 import { CrossReferenceModal } from './CrossReferenceModal';
 import { WordPopup } from '../WordPopup';
 import { StrongsOccurrencesModal } from '../StrongsOccurrencesModal';
@@ -406,7 +407,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       return;
     }
     let mounted = true;
-    fetch('/data/cross_references.json')
+    fetch(CROSS_REFS_URL)
       .then(res => res.json())
       .then(data => {
         if (mounted) {
