@@ -31,6 +31,7 @@ const BROWSER_SLUG_TO_ID: Record<string, string> = {
 };
 
 import { BOOK_SHORT, youVersionChapterUrl } from '../data/bibleMap';
+import { GUIDE_SECTIONS, SECTIONED_CATEGORIES } from '../data/guideSections';
 import { useApp } from '../context/AppContext';
 const DISTRIBUTION_COLORS = [
   { bg: 'bg-amber-500', text: 'text-amber-500', border: 'border-l-amber-500' },
@@ -184,6 +185,9 @@ export const Guides: React.FC = () => {
   // inspected to redirect links written before that was true.
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+  const [collapsedSections2, setCollapsedSections2] = useState<Record<string, boolean>>(
+    () => Object.fromEntries(GUIDE_SECTIONS.filter(s => !s.defaultOpen).map(s => [s.id, true]))
+  );
   const [isOTExpanded, setIsOTExpanded] = useState(true);
   const [isNTExpanded, setIsNTExpanded] = useState(true);
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
@@ -405,6 +409,32 @@ export const Guides: React.FC = () => {
     }
     return matched;
   }, [categories, searchQuery]);
+
+  // Categories arranged into the three sections, dropping anything the current search
+  // emptied out. A category no section claims lands under "More" rather than vanishing.
+  const resourceSections = useMemo(() => {
+    const claimed = GUIDE_SECTIONS.map(section => ({
+      ...section,
+      groups: section.groups
+        .map(group => ({
+          label: group.label,
+          guides: group.categories.flatMap(c => filteredCategories[c] || []),
+        }))
+        .filter(group => group.guides.length),
+    }));
+
+    const unclaimed = Object.entries(filteredCategories)
+      .filter(([category]) => !SECTIONED_CATEGORIES.has(category))
+      .map(([label, guides]) => ({ label, guides }));
+
+    if (unclaimed.length) {
+      claimed.push({
+        id: 'more', title: 'More', blurb: 'Everything else', defaultOpen: true, groups: unclaimed,
+      });
+    }
+
+    return claimed.filter(section => section.groups.length);
+  }, [filteredCategories]);
 
   // ── In-App Reader view ─────────────────────────────────────────────────────
   if (readerRef) {
@@ -1091,34 +1121,59 @@ export const Guides: React.FC = () => {
           )}
         </div>
 
-        {/* ── Study resources, grouped by their own category ── */}
-        {Object.entries(filteredCategories).map(([category, guides]) => (
-          <div key={category} className="flex flex-col gap-3">
-            {/* Every one of these groups used to render the words "Study Resources",
-                so the page repeated one heading eight times over eight different sets
-                of cards, with nothing to say why they were separate. */}
-            <h2 className="text-xs uppercase tracking-[0.15em] font-bold text-muted ml-1">
-              {category}
-              <span className="ml-2 text-muted/60 font-normal">{guides.length}</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {guides.map((guide: any) => (
-                <button
-                  key={guide.id}
-                  onClick={() => setActiveGuideId(guide.id)}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-card border border-card-border hover:border-accent/40 transition-colors text-left group"
-                >
-                  <div className="text-2xl">{guide.icon}</div>
-                  <div className="flex-1 flex flex-col min-w-0">
-                    <span className="font-heading font-bold text-primary text-lg truncate">{guide.title}</span>
-                    <span className="text-xs text-secondary">{guide.subtitle}</span>
+        {/* ── Study resources ── */}
+        {resourceSections.map(section => {
+          // A search that matched something should show it, not leave the reader to
+          // expand a collapsed section to find out.
+          const isCollapsed = !searchQuery.trim() && collapsedSections2[section.id];
+          const total = section.groups.reduce((sum, g) => sum + g.guides.length, 0);
+
+          return (
+            <div key={section.id} className="flex flex-col gap-3">
+              <button
+                onClick={() => setCollapsedSections2(prev => ({ ...prev, [section.id]: !prev[section.id] }))}
+                className="flex items-center justify-between group px-1"
+              >
+                <div className="flex flex-col items-start">
+                  <h2 className="text-sm uppercase tracking-[0.15em] font-bold text-muted group-hover:text-primary transition-colors flex items-center gap-2">
+                    {section.title}
+                    <span className="text-muted/60 font-normal normal-case tracking-normal">{total}</span>
+                  </h2>
+                  <span className="text-xs text-secondary normal-case tracking-normal">{section.blurb}</span>
+                </div>
+                {isCollapsed ? <ChevronRight className="w-4 h-4 text-muted" /> : <ChevronDown className="w-4 h-4 text-muted" />}
+              </button>
+
+              {!isCollapsed && section.groups.map((group, gi) => (
+                <div key={group.label || gi} className="flex flex-col gap-2">
+                  {/* Skipped when a section holds one group — the section heading has
+                      already said what these are. */}
+                  {group.label && section.groups.length > 1 && (
+                    <h3 className="text-[0.6875rem] uppercase tracking-[0.15em] font-bold text-muted/70 ml-1">
+                      {group.label}
+                    </h3>
+                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {group.guides.map((guide: any) => (
+                      <button
+                        key={guide.id}
+                        onClick={() => setActiveGuideId(guide.id)}
+                        className="flex items-center gap-4 p-4 rounded-lg bg-card border border-card-border hover:border-accent/40 transition-colors text-left group"
+                      >
+                        <div className="text-2xl">{guide.icon}</div>
+                        <div className="flex-1 flex flex-col min-w-0">
+                          <span className="font-heading font-bold text-primary text-lg truncate">{guide.title}</span>
+                          <span className="text-xs text-secondary">{guide.subtitle}</span>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
+                      </button>
+                    ))}
                   </div>
-                  <ChevronRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
-                </button>
+                </div>
               ))}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
