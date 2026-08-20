@@ -34,7 +34,7 @@ export const GOSPELS_COMMENTARIES = {
       heading: "Luke: Core Commentaries",
       entries: [
         { rank: "BECNT", person: "Darrell Bock, Luke 1:1–9:50 & 9:51–24:53", reference: "2 vols", quote: "The gold standard evangelical treatment of Luke. Essential.", note: "Bock's interaction with Jewish background, his exegesis of the parables, and his handling of Luke's theology of salvation history are exceptional." },
-        { rank: "NICNT", person: "I. Howard Marshall, The Gospel of Luke", quote: "Older but still essential; outstanding historical and theological synthesis." },
+        { rank: "NIGTC", person: "I. Howard Marshall, The Gospel of Luke", quote: "Older but still essential; outstanding historical and theological synthesis." },
         { rank: "WBC", person: "John Nolland, Luke 1–9:20, 9:21–18:34, 18:35–24:53", reference: "3 vols", quote: "The most thorough critical-evangelical treatment; indispensable for detailed exegesis." }
       ]
     },
