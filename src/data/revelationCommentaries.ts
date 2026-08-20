@@ -30,14 +30,14 @@ export const REVELATION_COMMENTARIES = {
     {
       heading: "Revelation: Core Commentaries — Dispensational / Futurist",
       entries: [
-        { rank: "NTC", person: "Robert Thomas, Revelation 1–7 & 8–22", reference: "2 vols", quote: "The most thorough dispensational treatment; rigorous on the Greek." },
+        { rank: "WEC", person: "Robert Thomas, Revelation 1–7 & 8–22", reference: "2 vols", quote: "The most thorough dispensational treatment; rigorous on the Greek." },
         { rank: "SPECIAL", person: "John Walvoord, The Revelation of Jesus Christ", quote: "Classic dispensational reference." }
       ]
     },
     {
       heading: "Revelation: Core Commentaries — Critical-Scholarly",
       entries: [
-        { rank: "HERMENEIA", person: "David Aune, Revelation 1–5, 6–16, 17–22", reference: "3 vols", quote: "The major critical treatment. Most thorough on Greco-Roman background.", note: "Aune's three-volume Hermeneia work is simply the most exhaustive treatment of Revelation ever produced. Indispensable for historical background, form-critical questions, and textual issues, regardless of theological position." },
+        { rank: "WBC", person: "David Aune, Revelation 1–5, 6–16, 17–22", reference: "3 vols", quote: "The major critical treatment. Most thorough on Greco-Roman background.", note: "Aune's three-volume Hermeneia work is simply the most exhaustive treatment of Revelation ever produced. Indispensable for historical background, form-critical questions, and textual issues, regardless of theological position." },
         { rank: "ANCHOR", person: "J. Massyngberde Ford, Revelation", quote: "Controversial critical treatment; argues for a pre-Christian source. Useful for tracking Jewish background." }
       ]
     },
