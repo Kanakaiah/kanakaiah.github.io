@@ -139,7 +139,7 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
       <div className="flex items-center justify-between gap-3">
         <button
           onClick={toggleTestMode}
-          className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3.5 after:inset-x-0 after:content-['']"
         >
           {testMode ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
           {testMode ? 'Show All' : 'Test Yourself'}

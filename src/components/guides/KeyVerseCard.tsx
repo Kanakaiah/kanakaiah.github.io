@@ -118,7 +118,7 @@ export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId }) => 
             <button
               onClick={handleAdd}
               disabled={alreadySaved}
-              className={`p-1.5 rounded-full transition-colors self-center ${
+              className={`p-1.5 rounded-full transition-colors self-center relative after:absolute after:-inset-2 after:content-[''] ${
                 alreadySaved
                   ? 'text-accent-light cursor-default'
                   : 'text-secondary hover:text-accent-light hover:bg-card-hover'

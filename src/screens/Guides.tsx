@@ -487,7 +487,7 @@ export const Guides: React.FC = () => {
           <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
             <button
               onClick={() => setActiveGuideId(null)}
-              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
+              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
               aria-label="Go back"
             >
@@ -530,7 +530,7 @@ export const Guides: React.FC = () => {
 
             <button
               onClick={() => setIsIndexModalOpen(true)}
-              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
+              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5 relative after:absolute after:-inset-y-2 after:inset-x-0 after:content-['']"
             >
               INDEX
             </button>
@@ -588,7 +588,7 @@ export const Guides: React.FC = () => {
                   ? (OT_BOOKS.some(b => b.id === activeGuide.id) ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)
                   : null
               )}
-              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
+              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
               aria-label="Go back"
             >
@@ -616,7 +616,7 @@ export const Guides: React.FC = () => {
             <div className="flex items-center gap-1 text-[0.8125rem] font-medium flex-wrap">
               <button
                 onClick={() => setActiveGuideId(null)}
-                className="text-accent hover:text-accent-hover transition-colors"
+                className="text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
               >
                 Bible
               </button>
@@ -627,7 +627,7 @@ export const Guides: React.FC = () => {
                     <ChevronRight className="w-3.5 h-3.5 text-muted" />
                     <button
                       onClick={() => setActiveGuideId(isOT ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)}
-                      className="text-accent hover:text-accent-hover transition-colors"
+                      className="text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
                     >
                       {isOT ? 'Old Testament' : 'New Testament'}
                     </button>
@@ -965,7 +965,7 @@ export const Guides: React.FC = () => {
           <div className="max-w-4xl mx-auto flex items-center justify-between px-5 sm:px-8 py-3 pb-safe">
             <button
               onClick={handlePrevBook}
-              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary"
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary relative after:absolute after:-inset-y-1 after:inset-x-0 after:content-['']"
               title={prevBook?.name || ''}
             >
               <ChevronLeft className="w-4 h-4 flex-shrink-0" />
@@ -977,14 +977,14 @@ export const Guides: React.FC = () => {
 
             <button
               onClick={() => setIsIndexModalOpen(true)}
-              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
+              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5 relative after:absolute after:-inset-y-2 after:inset-x-0 after:content-['']"
             >
               INDEX
             </button>
 
             <button
               onClick={handleNextBook}
-              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary"
+              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary relative after:absolute after:-inset-y-1 after:inset-x-0 after:content-['']"
               title={nextBook?.name || ''}
             >
               <span className="hidden sm:block truncate max-w-[120px]">{nextBook?.name}</span>
