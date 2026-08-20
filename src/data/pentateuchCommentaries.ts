@@ -99,7 +99,7 @@ export const PENTATEUCH_COMMENTARIES = {
       entries: [
         { rank: "NICOT", person: "Peter Craigie, The Book of Deuteronomy", quote: "Strong evangelical critical baseline." },
         { rank: "NIVAC", person: "Daniel Block, Deuteronomy", quote: "Strong theological bridge to preaching." },
-        { rank: "COMMENT", person: "Jack Lundbom, Deuteronomy: A Commentary", quote: "Rhetorical/structural analysis, useful complement to your existing work." }
+        { rank: "SPECIAL", person: "Jack Lundbom, Deuteronomy: A Commentary", quote: "Rhetorical/structural analysis, useful complement to your existing work." }
       ]
     },
     {
