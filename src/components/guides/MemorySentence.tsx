@@ -40,6 +40,27 @@ const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
  * Guides with neither (topical ones like "Roman Road", which have a
  * memorySentence but no anchors) still render as plain prose, which is right.
  */
+// The sentence is prose, so it inflects an anchor to fit: DANCING is written "DANCES",
+// FASTING as "a FAST", READING as "READ", GENTLE as "GENTLY". Matching the anchor
+// literally left those unmarked in eleven guides — the word was right there on screen,
+// just conjugated. Tries the whole word first, then progressively shorter stems, so
+// STONES still prefers STONES over STONE where both appear.
+const MIN_STEM = 4;
+
+function matchAnchor(sentence: string, cursor: number, word: string): { index: number; text: string } | null {
+  const haystack = sentence.slice(cursor);
+
+  for (let len = word.length; len >= Math.min(MIN_STEM, word.length); len--) {
+    const stem = word.slice(0, len);
+    // Still anchored at a word start, and still case-sensitive: these words are written
+    // in caps in both places, and matching loosely would latch onto ordinary prose.
+    const found = haystack.match(new RegExp(`\\b${escapeRegExp(stem)}[A-Z]*\\b`));
+    if (found && found.index !== undefined) return { index: cursor + found.index, text: found[0] };
+  }
+
+  return null;
+}
+
 function parseSentence(sentence: string, anchors?: Anchor[]): Segment[] {
   const parts = sentence.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
   const boldCount = parts.filter(p => /^\*\*[^*]+\*\*$/.test(p)).length;
@@ -75,12 +96,12 @@ function parseSentence(sentence: string, anchors?: Anchor[]): Segment[] {
   for (const anchor of anchors) {
     const word = String(anchor.word ?? '').trim();
     if (!word) continue;
-    const match = sentence.slice(cursor).match(new RegExp(`\\b${escapeRegExp(word)}\\b`));
-    if (!match || match.index === undefined) continue; // not present — skip it
-    const start = cursor + match.index;
+    const match = matchAnchor(sentence, cursor, word);
+    if (!match) continue; // genuinely not in the sentence — leave it unmarked
+    const start = match.index;
     if (start > cursor) segments.push({ type: 'text', content: sentence.slice(cursor, start) });
-    segments.push({ type: 'anchor', content: match[0], index: anchorIndex++, ch: anchor.ch });
-    cursor = start + match[0].length;
+    segments.push({ type: 'anchor', content: match.text, index: anchorIndex++, ch: anchor.ch });
+    cursor = start + match.text.length;
   }
 
   if (cursor < sentence.length) segments.push({ type: 'text', content: sentence.slice(cursor) });
