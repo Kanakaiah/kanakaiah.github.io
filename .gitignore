@@ -17,6 +17,10 @@ dist-ssr
 # redistributed here.
 samples
 
+# Working output of scripts/generate_chapter_prompts.js — regenerate it rather than
+# committing it; the anchors it derives from are already in source.
+prompts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
