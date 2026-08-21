@@ -15,11 +15,14 @@
  *   }
  *
  * Verses with no references may be listed as [] or left out entirely. Abbreviations,
- * ranges ("Luke 2:4-7") and the "and following" suffix ("Ps 89:3f") are all understood;
- * a range compares on its opening verse, since that's the unit the dataset stores.
+ * ranges ("Luke 2:4-7") and the "and following" suffix ("Ps 89:3f") are all understood.
+ * A cited passage counts as covered when the dataset holds any verse inside it, since an
+ * apparatus cites ranges where the dataset stores individual verses.
  *
- * Published apparatuses are usually copyrighted, so keep the sample file you point this
- * at outside the repo unless you know its licence permits redistribution.
+ * Published apparatuses are usually copyrighted. samples/ is gitignored for exactly that
+ * reason and is the conventional place to keep these locally:
+ *
+ *   node scripts/check_cross_references.js samples/lsb-matthew-1-2.json
  */
 
 import fs from 'fs';

@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Reference apparatus samples for scripts/check_cross_references.js. Published
+# apparatuses are generally copyrighted, so the samples stay local rather than being
+# redistributed here.
+samples
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
