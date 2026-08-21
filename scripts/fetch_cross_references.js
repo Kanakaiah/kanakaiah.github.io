@@ -53,6 +53,26 @@ const TSKE_ABBR = {
   '1Jo': '1john', '2Jo': '2john', '3Jo': '3john', Jud: 'jude', Rev: 'revelation'
 };
 
+// Chapter counts for every book, keyed the same way as bookMap/TSKE_ABBR's values. Used
+// only as a sanity bound on parsed citations — see the deuterocanonical note in
+// fetchTskeRefs. Matches the `chapters` field in src/data/{ot,nt}Books.ts.
+const CHAPTER_COUNTS = {
+  genesis: 50, exodus: 40, leviticus: 27, numbers: 36, deuteronomy: 34,
+  joshua: 24, judges: 21, ruth: 4, '1samuel': 31, '2samuel': 24,
+  '1kings': 22, '2kings': 25, '1chronicles': 29, '2chronicles': 36,
+  ezra: 10, nehemiah: 13, esther: 10, job: 42, psalms: 150, proverbs: 31,
+  ecclesiastes: 12, 'song of solomon': 8, isaiah: 66, jeremiah: 52,
+  lamentations: 5, ezekiel: 48, daniel: 12, hosea: 14, joel: 3,
+  amos: 9, obadiah: 1, jonah: 4, micah: 7, nahum: 3,
+  habakkuk: 3, zephaniah: 3, haggai: 2, zechariah: 14, malachi: 4,
+  matthew: 28, mark: 16, luke: 24, john: 21, acts: 28,
+  romans: 16, '1corinthians': 16, '2corinthians': 13, galatians: 6,
+  ephesians: 6, philippians: 4, colossians: 4, '1thessalonians': 5,
+  '2thessalonians': 3, '1timothy': 6, '2timothy': 4, titus: 3,
+  philemon: 1, hebrews: 13, james: 5, '1peter': 5, '2peter': 3,
+  '1john': 5, '2john': 1, '3john': 1, jude: 1, revelation: 22,
+};
+
 // Capitalizes a lowercase bookMap-style key for display, e.g. "1chronicles" -> "1 Chronicles",
 // "song of solomon" -> "Song of Solomon". Shared by the OpenBible and TSKe parsers so both
 // produce identical-looking target refs.
@@ -160,10 +180,25 @@ async function fetchTskeRefs() {
       const [, toCode, toChap, toVerseStart, toVerseEnd] = refMatch;
       const toBook = TSKE_ABBR[toCode];
       if (!toBook) continue;
-      const display = `${displayBook(toBook)} ${toChap}:${toVerseStart}${toVerseEnd ? `-${toVerseEnd}` : ''}`;
+
+      // TSKe's prose occasionally cites a deuterocanonical book with a code that collides
+      // with a canonical one — "Ecc_39:26", under Ezra 4:14, is Ecclesiasticus (Sirach),
+      // not Ecclesiastes. Nothing in the citation distinguishes them except the chapter
+      // being impossible, so bound every reference by its book's real length.
+      if (Number(toChap) > CHAPTER_COUNTS[toBook]) continue;
+
+      const start = Number(toVerseStart);
+      const end = toVerseEnd ? Number(toVerseEnd) : start;
+
+      // A passage that contains the verse being annotated only points back at itself. The
+      // exact-match test this replaces missed the ranged form, which is how all 23 of the
+      // self-references that reached the dataset got in (e.g. Leviticus 3:12 -> 3:7-17).
+      if (toBook === fromBook && Number(toChap) === Number(chapter)
+          && Number(verse) >= start && Number(verse) <= end) continue;
+
+      const display = `${displayBook(toBook)} ${toChap}:${start}${end > start ? `-${end}` : ''}`;
       // Normalize on start verse so "Isaiah 11:1" and "Isaiah 11:1-3" collapse together.
-      const normalized = `${toBook}|${toChap}|${toVerseStart}`;
-      if (normalized === `${fromBook}|${chapter}|${verse}`) continue; // skip self-refs
+      const normalized = `${toBook}|${toChap}|${start}`;
       if (seen.has(normalized)) continue;
       seen.add(normalized);
       refs.push(display);
