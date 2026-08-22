@@ -33,10 +33,15 @@ const CHAPTERS_DIR = path.join(__dirname, '../public/chapters');
 const GUIDES_DIR = path.join(__dirname, '../src/data/otGuides');
 const OUT_DIR = path.join(__dirname, '../prompts');
 
-/** The house style. Every existing chapter image was generated from this wording. */
+// The house style. Every existing chapter image was generated from the first sentence.
+// The second was added after Jeremiah's first batch came back with the scene description
+// rendered as signage, captions, or carved inscriptions on 17 of 46 images (37%) — the
+// generator kept treating the anchor word as something to letter into the scene. The
+// redo batch, prompted with this clause added, came back 0/17. Keep it on by default.
 const promptFor = (scene, word) =>
   `A dramatic, cinematic biblical illustration of ${scene}. Symbolizes '${word}'. ` +
-  'Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones.';
+  'Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. ' +
+  'No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.';
 
 // Scenes are stored already wrapped in quotes where they quote the text; the prompt reads
 // better as a description than as a quotation.
