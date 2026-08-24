@@ -14,45 +14,45 @@ export const BookCard: React.FC<{ book: Book; onClick: () => void }> = ({ book, 
   return (
     <button
       onClick={onClick}
-      className="group relative w-full overflow-hidden rounded-lg h-56 text-left focus:outline-none focus:ring-2 focus:ring-accent transition-colors duration-150 border border-card-border"
+      className="group flex flex-col w-full overflow-hidden rounded-lg text-left bg-card focus:outline-none focus:ring-2 focus:ring-accent transition-colors duration-150 border border-card-border hover:border-card-border-hover"
     >
-      {/* Skeleton shimmer shown while image is loading */}
-      {!imgLoaded && !imgErr && (
-        <div className="absolute inset-0 skeleton" />
-      )}
+      {/* Plate — mirrors ChapterAnchorCard's image treatment (Guides.tsx) so a book's
+          illustration reads the same way its own chapters' do: art on top, caption below
+          on the card's normal background, rather than text overlaid on the image. */}
+      <div className="relative h-56 bg-card-elevated overflow-hidden">
+        {!imgLoaded && !imgErr && (
+          <div className="absolute inset-0 skeleton" />
+        )}
 
-      {/* Full-bleed background image with fade-in on load */}
-      {!imgErr ? (
-        <img
-          src={book.image}
-          alt={book.name}
-          loading="lazy"
-          onLoad={() => setImgLoaded(true)}
-          onError={() => { setImgErr(true); setImgLoaded(true); }}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
-        />
-      ) : (
-        <div className="absolute inset-0 bg-card-elevated flex items-center justify-center">
-          <span className="text-6xl font-heading font-black opacity-10 select-none tracking-widest text-muted">{book.themeWord.charAt(0)}</span>
-        </div>
-      )}
+        {!imgErr ? (
+          <img
+            src={book.image}
+            alt={book.name}
+            loading="lazy"
+            onLoad={() => setImgLoaded(true)}
+            onError={() => { setImgErr(true); setImgLoaded(true); }}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-6xl font-heading font-black opacity-10 select-none tracking-widest text-muted">{book.themeWord.charAt(0)}</span>
+          </div>
+        )}
 
-      {/* Bottom fade for caption legibility over the illustration */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+        {/* Single badge — guide indicator, the only thing that still sits on the image */}
+        {book.hasGuide && (
+          <div className="absolute top-3 right-3 bg-black/60 px-2.5 py-1 rounded-md flex items-center gap-1">
+            <Check className="w-2.5 h-2.5 text-white" />
+            <span className="text-[0.625rem] font-bold text-white uppercase tracking-wide">Guide</span>
+          </div>
+        )}
+      </div>
 
-      {/* Single badge — guide indicator */}
-      {book.hasGuide && (
-        <div className="absolute top-3 right-3 bg-black/60 px-2.5 py-1 rounded-md flex items-center gap-1">
-          <Check className="w-2.5 h-2.5 text-white" />
-          <span className="text-[0.625rem] font-bold text-white uppercase tracking-wide">Guide</span>
-        </div>
-      )}
-
-      {/* Caption — title, subtitle, and a single meta line replacing the old badge stack */}
-      <div className="absolute inset-0 flex flex-col justify-end p-5 gap-1">
-        <span className="text-[0.6875rem] font-bold tracking-[0.15em] text-white/60 uppercase">{book.keyWord} · {book.themeWord} · {book.chapters} chapters</span>
-        <h3 className="text-white font-heading font-semibold text-2xl leading-tight">{book.name}</h3>
-        <p className="text-white/70 text-sm italic font-serif leading-snug">{book.subtitle}</p>
+      {/* Caption — title, subtitle, and the meta line, all off the image now */}
+      <div className="p-5 flex flex-col gap-1.5">
+        <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{book.keyWord} · {book.themeWord} · {book.chapters} chapters</span>
+        <h3 className="text-primary font-heading font-semibold text-2xl leading-tight">{book.name}</h3>
+        <p className="text-secondary text-sm italic font-serif leading-snug">{book.subtitle}</p>
       </div>
     </button>
   );
