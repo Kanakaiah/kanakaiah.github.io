@@ -1,5 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Check } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
+import { evaluateSM2 } from '../../utils/sm2';
+import type { MemorySentenceProgress } from '../../types/models';
 
 interface Anchor {
   ch: number | string;
@@ -9,6 +13,20 @@ interface Anchor {
 interface MemorySentenceProps {
   sentence: string;
   anchors?: Anchor[];
+  /** Guide id (e.g. "genesis") this sentence belongs to — omit for guides with
+   * no stable id of their own. Required for the recall test to be scheduled;
+   * without it "Test Yourself" still works, it just isn't graded or scheduled. */
+  guideId?: string;
+}
+
+const DEFAULT_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
+
+function formatInterval(days: number): string {
+  if (days <= 0) return 'today';
+  if (days === 1) return '1 day';
+  if (days < 30) return `${days} days`;
+  if (days < 365) return `${Math.round(days / 30)} mo`;
+  return `${Math.round(days / 365)} yr`;
 }
 
 type Segment =
@@ -108,12 +126,20 @@ function parseSentence(sentence: string, anchors?: Anchor[]): Segment[] {
   return segments.length ? segments : [{ type: 'text', content: sentence }];
 }
 
-export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchors }) => {
+export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchors, guideId }) => {
   const [testMode, setTestMode] = useState(false);
   const [revealed, setRevealed] = useState<Set<number>>(new Set());
+  const [isGrading, setIsGrading] = useState(false);
+  const { state, dispatch } = useApp();
+  const { showToast } = useToast();
 
   const segments = useMemo(() => parseSentence(sentence, anchors), [sentence, anchors]);
   const anchorCount = useMemo(() => segments.filter(s => s.type === 'anchor').length, [segments]);
+
+  const progress = guideId ? state.memorySentenceProgress[guideId] : undefined;
+  const daysUntilDue = progress
+    ? Math.ceil((new Date(progress.sm2.nextDueDate).getTime() - Date.now()) / 86400000)
+    : null;
 
   const revealOne = (index: number) => {
     setRevealed(prev => {
@@ -129,14 +155,33 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
       // next attempt starts fresh rather than picking up where this left off.
       setTestMode(false);
       setRevealed(new Set());
+      setIsGrading(false);
     } else {
       setTestMode(true);
     }
   };
 
+  const handleScore = (score: number) => {
+    if (!guideId) return;
+    const { newSM2, newStatus } = evaluateSM2(progress?.sm2 || DEFAULT_SM2, score);
+    const updated: MemorySentenceProgress = {
+      guideId,
+      sm2: newSM2,
+      status: newStatus,
+      attempts: (progress?.attempts || 0) + 1,
+      lastScore: score,
+      lastAttemptDate: new Date().toISOString(),
+    };
+    dispatch({ type: 'UPDATE_MEMORY_SENTENCE_PROGRESS', payload: updated });
+    setIsGrading(false);
+    setTestMode(false);
+    setRevealed(new Set());
+    showToast(`Score logged. Next review in ${formatInterval(newSM2.interval)}.`, 'success');
+  };
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <button
           onClick={toggleTestMode}
           className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3.5 after:inset-x-0 after:content-['']"
@@ -144,11 +189,24 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
           {testMode ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
           {testMode ? 'Show All' : 'Test Yourself'}
         </button>
-        {testMode && (
-          <span className="text-[0.6875rem] text-muted font-medium tabular-nums">
-            {revealed.size} / {anchorCount} revealed
-          </span>
-        )}
+        <div className="flex items-center gap-3">
+          {testMode && (
+            <span className="text-[0.6875rem] text-muted font-medium tabular-nums">
+              {revealed.size} / {anchorCount} revealed
+            </span>
+          )}
+          {!testMode && guideId && progress && (
+            <span className={`text-[0.6875rem] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${
+              daysUntilDue !== null && daysUntilDue <= 0
+                ? 'text-accent bg-accent/10'
+                : 'text-muted bg-card-elevated'
+            }`}>
+              {daysUntilDue !== null && daysUntilDue <= 0
+                ? 'Due for review'
+                : `Reviewed · next in ${formatInterval(daysUntilDue || 0)}`}
+            </span>
+          )}
+        </div>
       </div>
 
       <div
@@ -185,6 +243,40 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
           })}
         </p>
       </div>
+
+      {testMode && guideId && anchorCount > 0 && (
+        !isGrading ? (
+          <button
+            onClick={() => setIsGrading(true)}
+            className="self-center flex items-center gap-2 px-6 py-2.5 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          >
+            <Check className="w-4 h-4" /> Score My Recall
+          </button>
+        ) : (
+          <div className="max-w-md w-full self-center bg-card-elevated border border-card-border rounded-lg p-4 flex flex-col gap-3 animate-[fadeScaleIn_0.2s_ease-out]">
+            <p className="text-center text-sm font-semibold text-primary">How well did you know the sentence?</p>
+            <div className="grid grid-cols-4 gap-2">
+              <button onClick={() => handleScore(1)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95">
+                <span className="text-xs font-bold leading-tight">Blank</span>
+                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 1).newSM2.interval)}</span>
+              </button>
+              <button onClick={() => handleScore(2)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
+                <span className="text-xs font-bold leading-tight">Hard</span>
+                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 2).newSM2.interval)}</span>
+              </button>
+              <button onClick={() => handleScore(4)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
+                <span className="text-xs font-bold leading-tight">Good</span>
+                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 4).newSM2.interval)}</span>
+              </button>
+              <button onClick={() => handleScore(5)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95">
+                <span className="text-xs font-bold leading-tight">Easy</span>
+                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 5).newSM2.interval)}</span>
+              </button>
+            </div>
+            <button onClick={() => setIsGrading(false)} className="text-muted text-xs font-medium hover:text-primary transition-colors py-0.5">Cancel</button>
+          </div>
+        )
+      )}
     </div>
   );
 };

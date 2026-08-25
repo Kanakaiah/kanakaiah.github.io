@@ -38,6 +38,17 @@ export interface UserSettings {
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';
 export type Theme = 'black' | 'dark' | 'sepia' | 'white';
 
+// A book guide's "Test Yourself" recall of its Memory Sentence, scheduled the
+// same way a verse is — keyed by guide id (e.g. "genesis") rather than verse id.
+export interface MemorySentenceProgress {
+  guideId: string;
+  sm2: SM2Data;
+  status: 'learning' | 'review';
+  attempts: number;
+  lastScore: number;
+  lastAttemptDate: string; // ISO date string
+}
+
 export interface AppState {
   verses: Verse[];
   streak: number;
@@ -45,6 +56,7 @@ export interface AppState {
   theme: Theme | string;
   sortOrder: SortOrder;
   settings: UserSettings;
+  memorySentenceProgress: Record<string, MemorySentenceProgress>;
 }
 
 // Guides Data types based on guides_data.js

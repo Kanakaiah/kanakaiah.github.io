@@ -9,6 +9,11 @@ import { parseReference } from '../utils/bible';
 import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
 import { useToast } from '../context/ToastContext';
 import type { Verse } from '../types/models';
+import { OT_BOOKS } from '../data/otBooks';
+import { NT_BOOKS } from '../data/ntBooks';
+import { guidePath } from '../utils/readerRoute';
+
+const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
 
 export const Dashboard: React.FC = () => {
@@ -43,6 +48,16 @@ export const Dashboard: React.FC = () => {
 
     return { memorized, learning, accuracy, dueForReview, reviewed: highScores };
   }, [state.verses]);
+
+  // Book guides whose Memory Sentence recall is due — the structural-memory
+  // counterpart to dueForReview above, scheduled through the same SM2 engine.
+  const dueMemorySentences = useMemo(() => {
+    const now = new Date();
+    return Object.values(state.memorySentenceProgress)
+      .filter(p => new Date(p.sm2.nextDueDate) <= now)
+      .map(p => ({ progress: p, book: ALL_BOOKS.find(b => b.id === p.guideId) }))
+      .filter((entry): entry is { progress: typeof entry.progress; book: NonNullable<typeof entry.book> } => !!entry.book);
+  }, [state.memorySentenceProgress]);
 
   // Stable random sort keys to prevent re-shuffling on every render
   const randomSortKeys = useMemo(() => {
@@ -155,6 +170,32 @@ export const Dashboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Book Recall — structural memory (chapter anchors / memory sentence) due
+          for review, alongside the verse review above rather than buried on
+          each book's guide page. */}
+      {dueMemorySentences.length > 0 && (
+        <div className="flex flex-col gap-3 border-b border-card-border pb-6">
+          <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase flex items-center gap-2">
+            <BookOpen className="w-3.5 h-3.5" /> Book Recall
+          </h2>
+          <div className="flex flex-col gap-2">
+            {dueMemorySentences.map(({ progress, book }) => (
+              <button
+                key={progress.guideId}
+                onClick={() => navigate(guidePath(progress.guideId), { state: { scrollToMemorySentence: true } })}
+                className="flex items-center justify-between gap-4 p-4 rounded-md border border-card-border hover:border-accent/40 transition-colors text-left"
+              >
+                <div className="flex flex-col min-w-0">
+                  <span className="font-heading font-bold text-primary text-base truncate">{book.name}</span>
+                  <span className="text-xs text-secondary">Memory Sentence &middot; due for review</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Stats Row */}
       <div className="flex items-stretch border-b border-card-border pb-6">

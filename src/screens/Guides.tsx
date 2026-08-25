@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X } from 'lucide-react';
-import { useSearchParams, useNavigate, useParams } from 'react-router-dom';
+import { useSearchParams, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
@@ -199,6 +199,7 @@ export const Guides: React.FC = () => {
   
   const { guideId, ref: readerRefParam } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const readerRef = useMemo(() => parseReaderRef(readerRefParam), [readerRefParam]);
   const activeGuideId = guideId ? (BROWSER_SLUG_TO_ID[guideId] || guideId) : null;
@@ -283,6 +284,18 @@ export const Guides: React.FC = () => {
       scrollContainer.scrollTop = 0;
     }
   }, [activeGuideId]);
+
+  // Arriving here from the Dashboard's "due for review" list — jump straight to
+  // the Memory Sentence instead of leaving the reader to scroll past the whole
+  // chapter-anchor grid to find it.
+  useEffect(() => {
+    if (!(location.state as any)?.scrollToMemorySentence) return;
+    const el = document.getElementById('memory-sentence-section');
+    if (el) {
+      requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+    navigate(location.pathname, { replace: true, state: {} });
+  }, [activeGuideId, location.state, location.pathname, navigate]);
 
   const { prevBook, nextBook } = useMemo(() => {
     if (!activeGuideId || activeGuideId === BIBLE_BROWSER_NT || activeGuideId === BIBLE_BROWSER_OT) {
@@ -944,9 +957,9 @@ export const Guides: React.FC = () => {
               memorySentence field but have no chapter architecture, so this has
               to live outside the type-specific blocks above to reach them. */}
           {activeGuide.memorySentence && (
-            <div className="pt-6 border-t border-card-border flex flex-col gap-4">
+            <div id="memory-sentence-section" className="pt-6 border-t border-card-border flex flex-col gap-4">
               <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Memory Sentence</h3>
-              <MemorySentence sentence={activeGuide.memorySentence} anchors={activeGuide.anchors} />
+              <MemorySentence sentence={activeGuide.memorySentence} anchors={activeGuide.anchors} guideId={activeGuide.id} />
             </div>
           )}
 

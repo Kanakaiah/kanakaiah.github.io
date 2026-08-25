@@ -12,6 +12,10 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import otQuotesData from '../../data/otQuotes.json';
+import { NT_STUDY_GUIDES } from '../../data/guides';
+import { OT_STUDY_GUIDES } from '../../data/otGuides';
+
+const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES];
 
 // --- Module-level caching for performance ---
 const otQuotes = otQuotesData as Record<string, Record<string, number[]>>;
@@ -241,6 +245,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     if (path) navigate(path, { replace });
   };
   const [showOptions, setShowOptions] = useState(false);
+  const [showAnchorScene, setShowAnchorScene] = useState(false);
+  useEffect(() => { setShowAnchorScene(false); }, [bookId, chapter]);
+  // The one-word chapter anchor from the book guide (e.g. "HANDS" for Genesis 27) —
+  // the same mnemonic the guide page teaches, resurfaced here so it isn't lost the
+  // moment a reader leaves that page. Guides key anchors by chapter number only, so
+  // this doesn't apply to single-chapter books where the guide's "chapters" are
+  // really verse ranges.
+  const chapterAnchor = useMemo(() => {
+    const guide: any = ALL_GUIDES.find((g: any) => g.id === bookId);
+    return guide?.anchors?.find((a: any) => Number(a.ch) === chapter) || null;
+  }, [bookId, chapter]);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
   const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(cachedCrossRefs);
   const [paragraphBreaks, setParagraphBreaks] = useState<Record<string, Record<string, number[]>> | null>(cachedParagraphBreaks);
@@ -1345,15 +1360,32 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             <h2 className="text-4xl font-bold tracking-tight text-primary font-heading mb-2">
               {bookTitle} {chapter}
             </h2>
-            <span className={`text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full transition-colors ${
-              alphaMode 
-                ? 'text-yellow-300 bg-yellow-500/15' 
-                : 'text-accent bg-accent/10'
-            }`}>
-              {alphaMode ? 'KJV + Original Words' : `${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} Translation`}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className={`text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full transition-colors ${
+                alphaMode
+                  ? 'text-yellow-300 bg-yellow-500/15'
+                  : 'text-accent bg-accent/10'
+              }`}>
+                {alphaMode ? 'KJV + Original Words' : `${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} Translation`}
+              </span>
+              {chapterAnchor && (
+                <button
+                  onClick={() => setShowAnchorScene(v => !v)}
+                  className="text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-card-elevated border border-card-border text-secondary hover:text-primary hover:border-card-border-hover transition-colors"
+                  title="This chapter's memory anchor"
+                  aria-expanded={showAnchorScene}
+                >
+                  {chapterAnchor.word}
+                </button>
+              )}
+            </div>
+            {chapterAnchor && showAnchorScene && (
+              <p className="text-xs text-muted italic text-center px-10 mt-1.5 max-w-sm mx-auto leading-snug">
+                {chapterAnchor.scene}
+              </p>
+            )}
           </div>
-          
+
           <div className="absolute right-0 top-1 flex items-center gap-1">
             <button
               onClick={() => {
@@ -1693,9 +1725,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             <button
               onClick={() => { setNavigatorBook(bookId); setShowNavigator(true); }}
               className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
-              aria-label="Jump to a different book or chapter"
+              aria-label={chapterAnchor ? `Jump to a different book or chapter — this chapter's anchor is ${chapterAnchor.word}` : 'Jump to a different book or chapter'}
             >
-              Ch {chapter}
+              {chapterAnchor ? `${chapterAnchor.word} · Ch ${chapter}` : `Ch ${chapter}`}
               <ChevronDown className="w-3 h-3" />
             </button>
 
