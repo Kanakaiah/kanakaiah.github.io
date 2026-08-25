@@ -6,6 +6,7 @@ import { buildSession, type SessionItem, type SessionPlan } from '../../utils/se
 import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress, SM2Data, ThemeProgress, Verse } from '../../types/models';
 import { FirstLetterMode } from './FirstLetterMode';
+import { ChainDrill } from './ChainDrill';
 
 const DEFAULT_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
 
@@ -26,6 +27,7 @@ const KIND_COLOR: Record<SessionItem['kind'], string> = {
   anchor: 'bg-gold',
   introduce: 'bg-gold/40',
   theme: 'bg-emerald-500',
+  chain: 'bg-sky-500',
 };
 
 interface Outcome { id: string; kind: SessionItem['kind']; label: string; score: number; interval: number }
@@ -233,7 +235,17 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
         </span>
       </div>
 
-      {item.kind === 'introduce' ? (
+      {item.kind === 'chain' ? (
+        // Reuses the drill the book guide opens, rather than a second implementation of
+        // the same walk. It grades itself and reports back, and the session moves on.
+        <ChainDrill
+          bookId={item.bookId}
+          blockIndex={item.blockIndex}
+          label={`${item.bookName} · ${item.label}`}
+          anchors={item.anchors}
+          onClose={advance}
+        />
+      ) : item.kind === 'introduce' ? (
         <IntroduceCard item={item} onDone={advance} />
       ) : item.kind === 'verse' ? (
         <VerseCardPrompt

@@ -58,9 +58,9 @@ import { GUIDE_SECTIONS, SECTIONED_CATEGORIES } from '../data/guideSections';
 import { DISTRIBUTION_COLORS, divisionForSection } from '../data/palette';
 import { useApp } from '../context/AppContext';
 import { useMastery, masteryOf, type BookMasteryCounts } from '../utils/mastery';
-import { chapterProgressKey } from '../types/models';
+import { chapterProgressKey, blockProgressKey } from '../types/models';
 import type { ChapterProgress } from '../types/models';
-import { evaluateSM2, formatInterval } from '../utils/sm2';
+import { evaluateSM2, formatInterval, isDue } from '../utils/sm2';
 
 
 // Defaults to the plate and the chapter number only — the word and scene (and the
@@ -934,11 +934,19 @@ export const Guides: React.FC = () => {
         >
           <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
             <button
-              onClick={() => setActiveGuideId(
-                activeGuide.type === 'book-guide'
-                  ? (OT_BOOKS.some(b => b.id === activeGuide.id) ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)
-                  : null
-              )}
+              // Back goes back. This sent every book guide to the testament browser —
+              // a screen most readers arrive at a book without ever having seen, since
+              // the index and search both jump straight to the book — so "back" landed
+              // somewhere they had never been. History is the honest answer when there
+              // is one; the testament browser stays the fallback for a cold deep link.
+              onClick={() => {
+                if (window.history.length > 1) navigate(-1);
+                else setActiveGuideId(
+                  activeGuide.type === 'book-guide'
+                    ? (OT_BOOKS.some(b => b.id === activeGuide.id) ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)
+                    : null
+                );
+              }}
               className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
               aria-label="Go back"
@@ -1372,15 +1380,31 @@ export const Guides: React.FC = () => {
                                 {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                               </span>
                             </button>
-                            {anchors.length > 1 && (
+                            {anchors.length > 1 && (() => {
+                              // Chain state, shown where the chain is. blockProgress was
+                              // written by the drill and read by nothing, so a block you
+                              // had run five times looked identical to one you had never
+                              // opened — and there was no way to see a chain was due.
+                              const chain = state.blockProgress[blockProgressKey(activeGuide.id, colorIndex)];
+                              const chainDue = chain && isDue(chain.sm2);
+                              return (
                               <button
                                 onClick={() => setDrillBlock({ label: block.label, blockIndex: colorIndex, anchors })}
-                                title={`Drill the ${block.label} chain`}
-                                className="flex-shrink-0 text-[0.625rem] font-bold uppercase tracking-wider text-muted hover:text-accent border border-card-border hover:border-accent/40 rounded-md px-2 py-1 transition-colors"
+                                title={chain
+                                  ? `Chain last run at ${Math.round(chain.lastAccuracy * 100)}%${chainDue ? ' — due now' : ''}`
+                                  : `Drill the ${block.label} chain`}
+                                className={`flex-shrink-0 text-[0.625rem] font-bold uppercase tracking-wider rounded-md px-2 py-1 transition-colors border ${
+                                  chainDue
+                                    ? 'text-accent border-accent/50 bg-accent/10'
+                                    : 'text-muted hover:text-accent border-card-border hover:border-accent/40'
+                                }`}
                               >
-                                Drill
+                                {chain
+                                  ? chainDue ? 'Chain due' : `Chain ${Math.round(chain.lastAccuracy * 100)}%`
+                                  : 'Drill'}
                               </button>
-                            )}
+                              );
+                            })()}
                           </div>
                         )}
 

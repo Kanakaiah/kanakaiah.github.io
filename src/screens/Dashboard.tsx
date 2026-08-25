@@ -252,7 +252,9 @@ export const Dashboard: React.FC = () => {
           </h2>
           <div className="flex flex-col gap-2">
             {bookRecallRows.map(row => {
-              const isDue = row.dueChapterCount > 0 || row.sentenceDue;
+              // Named to not shadow the imported isDue() — this is "does this row have
+              // anything owed", not "is this SM-2 record due".
+              const rowHasWork = row.dueChapterCount > 0 || row.sentenceDue;
               const secure = row.mastery?.secure ?? 0;
               const total = row.mastery?.total ?? row.book.chapters;
               return (
@@ -265,7 +267,7 @@ export const Dashboard: React.FC = () => {
                     <span className="font-heading font-bold text-primary text-base truncate">{row.book.name}</span>
                     <span className="text-xs text-secondary tabular-nums">
                       {secure} of {total} anchors secure
-                      {isDue ? (
+                      {rowHasWork ? (
                         <> &middot; <span className="text-accent font-semibold">
                           {row.dueChapterCount > 0 ? `${row.dueChapterCount} due today` : 'Memory Sentence due'}
                         </span></>
@@ -279,6 +281,32 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Theme — the third layer, and the one with no route to it from here. It existed
+          only behind the Practice screen's segmented control, so a reader who never
+          opened Practice and pressed "Theme" would not learn the deck was there at all.
+          Shows progress when there is some and an invitation when there isn't. */}
+      {(() => {
+        const themes = Object.values(state.themeProgress || {});
+        const secure = themes.filter(p => p.sm2.repetition >= 6).length;
+        const due = themes.filter(p => p.attempts > 0 && isDue(p.sm2, now)).length;
+        return (
+          <button
+            onClick={() => navigate('/practice', { state: { subject: 'theme' } })}
+            className="flex items-center justify-between gap-4 p-4 rounded-md border border-card-border hover:border-accent/40 transition-colors text-left"
+          >
+            <div className="flex flex-col min-w-0">
+              <span className="font-heading font-bold text-primary text-base">Book Themes</span>
+              <span className="text-xs text-secondary tabular-nums">
+                {themes.length === 0
+                  ? 'One word per book — start the 66-card deck'
+                  : <>{secure} of 66 secure{due > 0 ? <> &middot; <span className="text-accent font-semibold">{due} due</span></> : ''}</>}
+              </span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
+          </button>
+        );
+      })()}
 
       {/* Your Shape — the Bible-wide mastery meter, one cell per book. */}
       <div className="flex flex-col gap-3 border-b border-card-border pb-6">

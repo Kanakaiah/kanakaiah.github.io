@@ -14,6 +14,7 @@ const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
  * everything to `any` the way the older drill screens do. */
 interface GuideLike {
   id: string;
+  blocks?: { label: string; chapters: string }[];
   anchors?: { ch: number | string; word: string; scene: string }[];
   architecture?: { unit?: string }[];
 }
@@ -45,7 +46,12 @@ export interface IntroduceItem { kind: 'introduce'; id: string; bookId: string; 
  * themes are met in the Theme deck, the way new verses are met by adding them. */
 export interface ThemeItem { kind: 'theme'; id: string; bookId: string; bookName: string; themeWord: string; keyWord: string; subtitle: string }
 
-export type SessionItem = VerseItem | AnchorItem | IntroduceItem | ThemeItem;
+/** One narrative block's anchor chain, due for another pass. Sequence has its own
+ * schedule because it is its own skill — knowing every word of PRIMEVAL individually
+ * is not the same as being able to run the chain. */
+export interface ChainItem { kind: 'chain'; id: string; bookId: string; bookName: string; blockIndex: number; label: string; anchors: { ch: number; word: string }[] }
+
+export type SessionItem = VerseItem | AnchorItem | IntroduceItem | ThemeItem | ChainItem;
 
 export interface SessionPlan {
   items: SessionItem[];
@@ -131,15 +137,53 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
     .filter(v => isDue(v.sm2, now))
     .map(v => ({ kind: 'verse', id: `verse:${v.id}`, verse: v }));
 
-  const anchorItems: AnchorItem[] = dueChapters(state.chapterProgress, now)
-    .map(d => {
-      const anchor = anchorsOf(d.bookId).find(a => a.ch === d.chapter);
-      const book = bookFor(d.bookId);
+  // Chapters a chain pass exposed as shaky, promoted to the front of the anchor queue.
+  //
+  // chainHits/chainMisses were introduced when the Memory Sentence stopped bulk-grading
+  // chapters, precisely so a word that had to be revealed mid-chain could *nominate*
+  // that chapter for real isolated recall rather than pretend to have tested it. Until
+  // now nothing read them, so the signal was collected and dropped.
+  //
+  // A miss inside the chain is strong evidence: the chain is the *easy* version of the
+  // task, with neighbours adjacent and the sequence carrying you. Failing there means
+  // the cold question will almost certainly fail too. Only recent misses count — an old
+  // one has usually been answered by the ordinary schedule since.
+  const NOMINATION_WINDOW_MS = 14 * 86400000;
+  const nominated = new Set(
+    Object.values(state.chapterProgress)
+      .filter(p =>
+        (p.chainMisses || 0) > 0 &&
+        p.lastChainDate &&
+        now.getTime() - new Date(p.lastChainDate).getTime() < NOMINATION_WINDOW_MS)
+      .map(p => chapterProgressKey(p.bookId, p.chapter))
+  );
+
+  // Due chapters, plus nominated ones that aren't due yet. A chapter nominated by a
+  // chain miss is pulled forward rather than left sitting on a schedule that was set
+  // before the evidence arrived.
+  const anchorCandidates: { bookId: string; chapter: number }[] = [];
+  const seenAnchors = new Set<string>();
+  const addAnchor = (bookId: string, chapter: number) => {
+    const key = chapterProgressKey(bookId, chapter);
+    if (seenAnchors.has(key)) return;
+    seenAnchors.add(key);
+    anchorCandidates.push({ bookId, chapter });
+  };
+
+  for (const p of Object.values(state.chapterProgress)) {
+    if (nominated.has(chapterProgressKey(p.bookId, p.chapter))) addAnchor(p.bookId, p.chapter);
+  }
+  for (const d of dueChapters(state.chapterProgress, now)) addAnchor(d.bookId, d.chapter);
+
+  const anchorItems: AnchorItem[] = anchorCandidates
+    .map(({ bookId: bId, chapter }) => {
+      const anchor = anchorsOf(bId).find(a => a.ch === chapter);
+      const book = bookFor(bId);
       if (!anchor || !book) return null;
       return {
         kind: 'anchor' as const,
-        id: `anchor:${d.bookId}:${d.chapter}`,
-        bookId: d.bookId, bookName: book.name, chapter: d.chapter,
+        id: `anchor:${bId}:${chapter}`,
+        bookId: bId, bookName: book.name, chapter,
         word: anchor.word, scene: anchor.scene,
       };
     })
@@ -159,6 +203,27 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
       };
     })
     .filter((x): x is ThemeItem => !!x);
+
+  const chainItems: ChainItem[] = Object.values(state.blockProgress || {})
+    .filter(b => b.attempts > 0 && isDue(b.sm2, now))
+    .sort((a, b) => new Date(a.sm2.nextDueDate).getTime() - new Date(b.sm2.nextDueDate).getTime())
+    .map(b => {
+      const book = bookFor(b.bookId);
+      const block = guideFor(b.bookId)?.blocks?.[b.blockIndex];
+      if (!book || !block) return null;
+      const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
+      const anchors = anchorsOf(b.bookId)
+        .filter(a => a.ch >= start && a.ch <= (end || start))
+        .map(a => ({ ch: a.ch, word: a.word }));
+      if (anchors.length < 2) return null;
+      return {
+        kind: 'chain' as const,
+        id: `chain:${b.bookId}:${b.blockIndex}`,
+        bookId: b.bookId, bookName: book.name,
+        blockIndex: b.blockIndex, label: b.label, anchors,
+      };
+    })
+    .filter((x): x is ChainItem => !!x);
 
   // New material: the next few untouched chapters of the book underway, each taught
   // and then immediately tested. Built as [introduce, anchor] pairs so the encoding
@@ -196,7 +261,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   // again tomorrow. New pairs are then admitted whole or not at all — a cap that cut
   // between an Introduce and its retrieval would leave a chapter taught but never
   // tested, which is the one shape this session is built to avoid.
-  const review = interleave([...verseItems, ...anchorItems, ...themeItems], shuffle);
+  const review = interleave([...verseItems, ...anchorItems, ...themeItems, ...chainItems], shuffle);
   const items: SessionItem[] = review.slice(0, options.cap);
 
   for (const pair of newPairs) {

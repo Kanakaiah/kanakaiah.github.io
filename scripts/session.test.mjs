@@ -55,5 +55,28 @@ p = buildSession(mk({chapterProgress:{'habakkuk:2': chap('habakkuk',2)}}),
   {newChapters:0, cap:20, shuffle:noShuffle});
 t('due anchor carries its word', p.items.length===1 && typeof p.items[0].word==='string' && p.items[0].word.length>0);
 
+// 8. A chain miss nominates its chapter even when SM-2 says it isn't due yet.
+p = buildSession(mk({chapterProgress:{
+  'habakkuk:2': chap('habakkuk',2,{sm2:sm2(+9), chainMisses:1, chainHits:0,
+                                   lastChainDate:new Date().toISOString()}),
+}}), {newChapters:0, cap:20, shuffle:noShuffle});
+t('a recent chain miss pulls its chapter forward',
+  p.items.length===1 && p.items[0].kind==='anchor' && p.items[0].chapter===2);
+
+// 9. A stale chain miss does not — the ordinary schedule has had time to cover it.
+p = buildSession(mk({chapterProgress:{
+  'habakkuk:2': chap('habakkuk',2,{sm2:sm2(+9), chainMisses:1,
+                                   lastChainDate:new Date(Date.now()-40*86400000).toISOString()}),
+}}), {newChapters:0, cap:20, shuffle:noShuffle});
+t('an old chain miss is left alone', p.items.length===0);
+
+// 10. A due chain becomes its own item, carrying its whole block.
+p = buildSession(mk({blockProgress:{'genesis:0':{
+  bookId:'genesis', blockIndex:0, label:'PRIMEVAL', sm2:sm2(-1), status:'review',
+  attempts:1, lastScore:3, lastAccuracy:0.8, lastAttemptDate:new Date().toISOString(),
+}}}), {newChapters:0, cap:20, shuffle:noShuffle});
+t('a due chain is queued with its whole block',
+  p.items.length===1 && p.items[0].kind==='chain' && p.items[0].anchors.length===11);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail?1:0);
