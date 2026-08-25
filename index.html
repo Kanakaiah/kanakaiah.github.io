@@ -19,11 +19,15 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Registers the offline cache. This block previously did the exact opposite —
+      // it unregistered every service worker on boot — which left a manifest, an
+      // installable PWA, and no ability to open a chapter without a connection.
+      // Registered after load so the first paint never competes with it.
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.unregister();
-          }
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js').catch(function (err) {
+            console.warn('Offline cache unavailable:', err);
+          });
         });
       }
     </script>

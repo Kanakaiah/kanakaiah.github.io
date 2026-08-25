@@ -36,7 +36,16 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed bottom-20 lg:bottom-10 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-2 pointer-events-none w-full max-w-sm px-4">
+      {/* Every grading confirmation in the app — "Next review in 6 days" — arrives here,
+          and arrived silently for anyone using a screen reader: there was no aria-live
+          region anywhere in src/. `polite` so it waits for a pause rather than cutting
+          across whatever is being read. */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="fixed bottom-20 lg:bottom-10 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-2 pointer-events-none w-full max-w-sm px-4"
+      >
         {toasts.map(toast => (
           <div
             key={toast.id}

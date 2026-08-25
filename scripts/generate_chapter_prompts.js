@@ -47,8 +47,14 @@ const promptFor = (scene, word) =>
 // better as a description than as a quotation.
 const cleanScene = (scene) => String(scene).replace(/^"|"$/g, '').trim();
 
+// One guide file is named differently from its book id: the book is `songofsolomon`
+// everywhere in the app, but its guide lives in song-of-solomon.ts. Without this the
+// lookup below misses, and the caller reports "NT books are not supported" — which is
+// both wrong and confusing for a book sitting in the middle of the Old Testament.
+const GUIDE_FILENAMES = { songofsolomon: 'song-of-solomon' };
+
 async function loadGuide(bookId) {
-  const file = path.join(GUIDES_DIR, `${bookId}.ts`);
+  const file = path.join(GUIDES_DIR, `${GUIDE_FILENAMES[bookId] || bookId}.ts`);
   if (!fs.existsSync(file)) return null;
 
   // Export names vary (JEREMIAH_GUIDE, FIRST_SAMUEL_GUIDE, …), so match on the id rather

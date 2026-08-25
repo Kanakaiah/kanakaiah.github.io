@@ -12,8 +12,7 @@ import { MemorySentence } from '../components/guides/MemorySentence';
 import { KeyVerseCard } from '../components/guides/KeyVerseCard';
 import { RecordCards } from '../components/guides/RecordCards';
 import { OriginalWordModal } from '../components/OriginalWordModal';
-import { ScrambleMode } from '../components/practice/ScrambleMode';
-import { SpeechMode } from '../components/practice/SpeechMode';
+import { ChainDrill, type ChainAnchor } from '../components/practice/ChainDrill';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -240,54 +239,6 @@ const ChapterAnchorCard = ({
 // Full two-column Bible book index. Extracted from the book-guide view so the Bible
 // landing page's bottom bar can open the same one, rather than the two levels
 // offering different ways to jump between books.
-// Drills a block's own anchor chain — "PRIMEVAL LIGHT GARDEN SERPENT BLOOD…" —
-// through two of Practice's existing verse modes, repointed at the chain instead
-// of a verse. Both already take a bare `text` prop, so this is reuse rather than
-// a new practice mode: Scramble trains the sequence itself (the one thing nothing
-// else in the app drills directly), Recite trains saying the chain aloud.
-const BlockDrillModal: React.FC<{
-  label: string;
-  anchors: any[];
-  onClose: () => void;
-}> = ({ label, anchors, onClose }) => {
-  const [mode, setMode] = useState<'scramble' | 'recite'>('scramble');
-  const chainText = useMemo(() => anchors.map((a: any) => a.word).join(' '), [anchors]);
-
-  return (
-    <div className="fixed inset-0 z-[75] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
-        <button
-          onClick={onClose}
-          className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
-          aria-label="Close drill"
-        >
-          <X className="w-5 h-5 text-secondary" />
-        </button>
-        <span className="text-sm font-bold text-primary tracking-wide truncate max-w-[60%]">{label}</span>
-        <div className="w-9" />
-      </div>
-
-      <div className="flex justify-center gap-2 px-5 py-3 border-b border-card-border">
-        {(['scramble', 'recite'] as const).map(m => (
-          <button
-            key={m}
-            onClick={() => setMode(m)}
-            className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-colors ${
-              mode === m ? 'bg-accent text-white' : 'text-muted hover:text-primary border border-card-border'
-            }`}
-          >
-            {m === 'scramble' ? 'Scramble' : 'Recite'}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-5 py-8">
-        {mode === 'scramble' ? <ScrambleMode text={chainText} /> : <SpeechMode text={chainText} />}
-      </div>
-    </div>
-  );
-};
-
 const BibleIndexModal: React.FC<{
   isOpen: boolean;
   selectedId: string | null;
@@ -295,9 +246,28 @@ const BibleIndexModal: React.FC<{
   onClose: () => void;
   mastery: Record<string, BookMasteryCounts>;
 }> = ({ isOpen, selectedId, onSelect, onClose, mastery }) => {
+  // Above the early return, because hooks cannot be conditional. This overlay was a
+  // bare fixed div: Escape did nothing, the page behind it still scrolled, and nothing
+  // announced a dialog. It is the most-opened list in the app — three screens reach it.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Bible books index"
+      className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+    >
       <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
         <button
           onClick={onClose}
@@ -416,10 +386,9 @@ export const Guides: React.FC = () => {
   // chapterProgress: returning to a book you worked through last week should present a
   // full grid of prompts again, not fifty rows of answers.
   const [gradedAnchors, setGradedAnchors] = useState<Map<number, { score: number; interval: number }>>(new Map());
-  // Which block's "Drill this block" panel is open, if any — carries just enough
-  // to feed ScrambleMode/SpeechMode (both already take a bare `text` prop) the
-  // block's own anchor chain as a space-joined string.
-  const [drillBlock, setDrillBlock] = useState<{ label: string; anchors: any[] } | null>(null);
+  // Which block's chain drill is open, if any. blockIndex is the block's position in
+  // the book, which is what its BlockProgress record is keyed by.
+  const [drillBlock, setDrillBlock] = useState<{ label: string; blockIndex: number; anchors: ChainAnchor[] } | null>(null);
 
   // "Covers only" — drops every book card's name/subtitle/key word on the index,
   // leaving art and theme word, so browsing becomes a recognition pass instead of
@@ -1405,7 +1374,7 @@ export const Guides: React.FC = () => {
                             </button>
                             {anchors.length > 1 && (
                               <button
-                                onClick={() => setDrillBlock({ label: block.label, anchors })}
+                                onClick={() => setDrillBlock({ label: block.label, blockIndex: colorIndex, anchors })}
                                 title={`Drill the ${block.label} chain`}
                                 className="flex-shrink-0 text-[0.625rem] font-bold uppercase tracking-wider text-muted hover:text-accent border border-card-border hover:border-accent/40 rounded-md px-2 py-1 transition-colors"
                               >
@@ -1523,7 +1492,9 @@ export const Guides: React.FC = () => {
         />
 
         {drillBlock && (
-          <BlockDrillModal
+          <ChainDrill
+            bookId={activeGuide.id}
+            blockIndex={drillBlock.blockIndex}
             label={drillBlock.label}
             anchors={drillBlock.anchors}
             onClose={() => setDrillBlock(null)}

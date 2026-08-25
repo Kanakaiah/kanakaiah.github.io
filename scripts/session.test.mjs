@@ -4,7 +4,7 @@
 
 import { buildSession, currentBookId } from '../src/utils/session.ts';
 
-const mk = (over={}) => ({ verses: [], chapterProgress: {}, memorySentenceProgress: {}, themeProgress: {},
+const mk = (over={}) => ({ verses: [], chapterProgress: {}, memorySentenceProgress: {}, themeProgress: {}, blockProgress: {},
   streak: 0, lastActiveDate: null, theme: 'black', sortOrder: 'smart', settings: {}, ...over });
 const sm2 = (days) => ({ interval: 1, repetition: 1, efactor: 2.5,
   nextDueDate: new Date(Date.now() + days*86400000).toISOString() });

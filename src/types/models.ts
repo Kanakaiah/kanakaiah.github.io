@@ -27,7 +27,6 @@ export type AnchorReveal = 'always' | 'tap' | 'never';
 
 export interface UserSettings {
   ttsEnabled: boolean;
-  notificationsEnabled: boolean;
   recallMasking: boolean;
   bionicReading: boolean;
   fontSize: number;
@@ -122,6 +121,38 @@ export interface ThemeProgress {
   lastAttemptDate: string; // ISO date string
 }
 
+/**
+ * One narrative block's anchor chain — "PRIMEVAL: LIGHT GARDEN SERPENT BLOOD…" —
+ * keyed "<bookId>:<blockIndex>" (e.g. "genesis:0").
+ *
+ * Sequence is the mechanism the whole anchor system runs on: a chapter *number* is
+ * recovered by counting from a block boundary, which is why the cards carry an
+ * "after X · before Y" line at all. Nothing trained or measured it. The one thing
+ * that came close pointed Scramble at the joined chain, which displays every
+ * candidate word — ordered recognition, not recall — and recorded nothing.
+ *
+ * Graded here as its own item, on its own schedule. Per-chapter evidence from a
+ * chain pass still goes to chainHits/chainMisses on ChapterProgress, never to a
+ * chapter's sm2: recalling a word with its neighbours adjacent is a different task
+ * from being asked about that chapter cold.
+ */
+export interface BlockProgress {
+  bookId: string;
+  blockIndex: number;
+  label: string;
+  sm2: SM2Data;
+  status: 'learning' | 'review';
+  attempts: number;
+  lastScore: number;
+  /** Fraction of the chain recalled on the last pass, 0–1. */
+  lastAccuracy: number;
+  lastAttemptDate: string; // ISO date string
+}
+
+export function blockProgressKey(bookId: string, blockIndex: number): string {
+  return `${bookId}:${blockIndex}`;
+}
+
 export interface AppState {
   verses: Verse[];
   streak: number;
@@ -133,6 +164,8 @@ export interface AppState {
   chapterProgress: Record<string, ChapterProgress>;
   /** Book-level theme recall, keyed by book id. See ThemeProgress above. */
   themeProgress: Record<string, ThemeProgress>;
+  /** Anchor-chain recall per narrative block. See BlockProgress above. */
+  blockProgress: Record<string, BlockProgress>;
 }
 
 // Guides Data types based on guides_data.js

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
-import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress } from '../types/models';
-import { chapterProgressKey } from '../types/models';
+import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress } from '../types/models';
+import { chapterProgressKey, blockProgressKey } from '../types/models';
 import { SEED_VERSES } from '../data/seed';
 
 // --- INITIAL STATE ---
@@ -13,9 +13,9 @@ const initialState: AppState = {
   memorySentenceProgress: {},
   chapterProgress: {},
   themeProgress: {},
+  blockProgress: {},
   settings: {
     ttsEnabled: false,
-    notificationsEnabled: false,
     recallMasking: false,
     bionicReading: false,
     fontSize: 1,
@@ -42,6 +42,7 @@ export type AppAction =
   | { type: 'GRADE_CHAPTER_PROGRESS'; payload: ChapterProgress }
   | { type: 'MARK_CHAPTER_READ'; payload: { bookId: string; chapter: number } }
   | { type: 'GRADE_THEME_PROGRESS'; payload: ThemeProgress }
+  | { type: 'GRADE_BLOCK_PROGRESS'; payload: BlockProgress }
   | { type: 'RECORD_CHAIN_PASS'; payload: { bookId: string; results: { chapter: number; revealed: boolean }[] } }
   | { type: 'RECORD_ACTIVITY' };
 
@@ -146,6 +147,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         themeProgress: { ...state.themeProgress, [action.payload.bookId]: action.payload },
       };
+    case 'GRADE_BLOCK_PROGRESS': {
+      const key = blockProgressKey(action.payload.bookId, action.payload.blockIndex);
+      return { ...state, blockProgress: { ...state.blockProgress, [key]: action.payload } };
+    }
     case 'RECORD_CHAIN_PASS': {
       // One pass through a book's Memory Sentence. Records *evidence*, never a grade —
       // see the chainHits note on ChapterProgress. Deliberately does not touch `sm2`,
@@ -257,6 +262,7 @@ function loadInitialState(): AppState {
           // Profiles saved before theme recall existed have no key for it. The spread
           // above already backfills {}; this guards a stored null from a bad write.
           themeProgress: parsed.themeProgress || {},
+          blockProgress: parsed.blockProgress || {},
         };
       }
     }

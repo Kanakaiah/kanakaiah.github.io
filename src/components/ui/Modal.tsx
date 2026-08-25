@@ -67,7 +67,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (variant === 'fullscreen') {
     return createPortal(
-      <div className={`fixed inset-0 ${zIndexClass} flex flex-col bg-background animate-[fadeIn_0.2s_ease-out] ${panelClassName}`} {...panelProps} style={panelStyle}>
+      <div role="dialog" aria-modal="true" className={`fixed inset-0 ${zIndexClass} flex flex-col bg-background animate-[fadeIn_0.2s_ease-out] ${panelClassName}`} {...panelProps} style={panelStyle}>
         <div
           className="flex items-center justify-between px-5 py-4 relative border-b border-card-border shrink-0"
           style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
