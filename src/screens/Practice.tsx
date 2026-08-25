@@ -44,6 +44,22 @@ const suggestedScore = (accuracy: number): number =>
 
 const SUGGESTED_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 5: 'Easy' };
 
+/**
+ * The best grade a hinted attempt can honestly earn.
+ *
+ * `handleScore` never consulted `hintLevel`, so a reader could press the hint button
+ * four times — revealing the entire verse, which the badge itself labels "(Full)" —
+ * then press Easy and have it recorded as a clean recall worth a long interval. That
+ * is the same defect as every other one this app has been fixing: the schedule acting
+ * on something that did not happen.
+ *
+ * A quarter of the verse is a nudge, so Good stays available. Half or more is enough
+ * support that the honest ceiling is Hard. The whole verse on screen is not recall at
+ * all, whatever it felt like, and grades as a lapse.
+ */
+const HINT_GRADE_CEILING: Record<number, number> = { 0: 5, 1: 4, 2: 3, 3: 3, 4: 1 };
+const ceilingFor = (hintLevel: number) => HINT_GRADE_CEILING[hintLevel] ?? 5;
+
 export const Practice: React.FC = () => {
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
@@ -205,7 +221,11 @@ export const Practice: React.FC = () => {
     if (activeVerseIndex > 0) setActiveVerseIndex(i => i - 1);
   };
 
-  const handleScore = (score: number) => {
+  const handleScore = (rawScore: number) => {
+    // Capped, not just discouraged. The buttons above the ceiling are disabled too, so
+    // this should never actually bite — but the grade that reaches the scheduler is the
+    // one that matters, and it must not depend on the UI having behaved.
+    const score = Math.min(rawScore, ceilingFor(hintLevel));
     const { newSM2, newStatus } = evaluateSM2(currentVerse.sm2, score);
     
     const updatedVerse: Verse = {
@@ -283,7 +303,15 @@ export const Practice: React.FC = () => {
   };
 
   // Global Navigation: Keyboard, Swipe, and Immersed Taps
+  //
+  // Bound only while the verse workspace is the thing on screen. The early returns for
+  // Session, ThemeDrill and AnchorDrill sit below every hook, so without this guard
+  // these window listeners stayed live underneath them — an arrow key or a swipe during
+  // a chain drill silently moved activeVerseIndex in a screen the reader could not see,
+  // and they would come back to a different verse than they left.
+  const verseNavActive = subject === 'verse' && !isAllDue && !!currentVerse;
   React.useEffect(() => {
+    if (!verseNavActive) return;
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -303,18 +331,31 @@ export const Practice: React.FC = () => {
     };
 
     // Swipe navigation
+    // A drag that starts on a control belongs to that control, not to verse navigation.
+    //
+    // The keydown handler above has always ignored events from inputs; this one never
+    // did, so any horizontal drag anywhere flipped the verse — including dragging
+    // EraserMode's "Hide Words" range slider, which is operated by exactly this gesture
+    // and therefore could not be used without changing the verse underneath it.
+    const IGNORED = 'input, textarea, select, button, a, [role="slider"], [role="button"]';
+    let ignoring = false;
+
     const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      ignoring = !!target?.closest?.(IGNORED);
+      if (ignoring) return;
       touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
+      if (ignoring) { ignoring = false; return; }
       const touchEndX = e.changedTouches[0].screenX;
       const touchEndY = e.changedTouches[0].screenY;
-      
+
       const swipeX = touchEndX - touchStartX;
       const swipeY = touchEndY - touchStartY;
-      
+
       // Ensure it's a deliberate horizontal swipe (not just scrolling)
       if (Math.abs(swipeX) > 50 && Math.abs(swipeX) > Math.abs(swipeY) * 1.5) {
         if (swipeX > 0) handlePrevVerse();
@@ -331,7 +372,7 @@ export const Practice: React.FC = () => {
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [verses.length]);
+  }, [verses.length, verseNavActive]);
 
   // Switches the whole screen to the chapter-anchor drill — see the Subject type
   // note above. Placed ahead of the verse empty-states below so choosing it from
@@ -526,20 +567,27 @@ export const Practice: React.FC = () => {
                 ) : (
                   <p className="text-center font-semibold text-primary">How well did you remember it?</p>
                 )}
+                {hintLevel > 0 && (
+                  <p className="text-center text-[0.6875rem] text-muted -mt-1">
+                    {hintLevel >= 4
+                      ? 'You revealed the whole verse — this counts as a blank.'
+                      : `Hint used — best available grade is ${SUGGESTED_LABEL[ceilingFor(hintLevel)]}.`}
+                  </p>
+                )}
                 <div className="grid grid-cols-4 gap-3">
-                  <button onClick={() => handleScore(1)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 1 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(1)} disabled={1 > ceilingFor(hintLevel)} title={1 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 1 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Blank</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 1).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(3)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 3 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(3)} disabled={3 > ceilingFor(hintLevel)} title={3 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 3 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Hard</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 3).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(4)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 4 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(4)} disabled={4 > ceilingFor(hintLevel)} title={4 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 4 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Good</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 4).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(5)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 5 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(5)} disabled={5 > ceilingFor(hintLevel)} title={5 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 5 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Easy</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 5).newSM2.interval)}</span>
                   </button>

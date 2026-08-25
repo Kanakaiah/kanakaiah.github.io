@@ -7,6 +7,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { parseReference } from '../utils/bible';
 import { isDue } from '../utils/sm2';
+import { useNow } from '../utils/useNow';
 import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
 import { useToast } from '../context/ToastContext';
 import type { Verse } from '../types/models';
@@ -30,6 +31,9 @@ export const Dashboard: React.FC = () => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const { showToast } = useToast();
+  // The clock as state, so every due-check below is a pure function of its inputs and
+  // recomputes when time actually moves — including overnight. See useNow.
+  const now = useNow();
 
   // Stats calculation
   const stats = useMemo(() => {
@@ -47,10 +51,10 @@ export const Dashboard: React.FC = () => {
       }
     });
 
-    const dueForReview = state.verses.filter(v => isDue(v.sm2));
+    const dueForReview = state.verses.filter(v => isDue(v.sm2, now));
 
     return { memorized, learning, dueForReview, reviewed: highScores };
-  }, [state.verses]);
+  }, [state.verses, now]);
 
   // Book Recall — structural memory (chapter anchors and the Memory Sentence) for
   // the reader's library of books, the counterpart to dueForReview above for
@@ -61,7 +65,6 @@ export const Dashboard: React.FC = () => {
   // the moment a reader is caught up.
   const mastery = useMastery(ALL_BOOKS);
   const bookRecallRows = useMemo(() => {
-    const now = new Date();
     const dueChapterCounts = new Map<string, number>();
     Object.values(state.chapterProgress).forEach(p => {
       if (p.attempts > 0 && new Date(p.sm2.nextDueDate) <= now) {
@@ -105,7 +108,7 @@ export const Dashboard: React.FC = () => {
       .slice(0, 3)
       .map(b => buildRow(b.id))
       .filter((r): r is NonNullable<typeof r> => !!r);
-  }, [state.chapterProgress, state.memorySentenceProgress, mastery]);
+  }, [state.chapterProgress, state.memorySentenceProgress, mastery, now]);
 
   // Stable random sort keys to prevent re-shuffling on every render
   const randomSortKeys = useMemo(() => {
@@ -122,7 +125,7 @@ export const Dashboard: React.FC = () => {
 
       // Filter
       const masteryPct = Math.min(100, Math.round((v.sm2.repetition / 6) * 100));
-      if (activeFilter === 'review') return isDue(v.sm2);
+      if (activeFilter === 'review') return isDue(v.sm2, now);
       if (activeFilter === 'learning') return v.status === 'learning' && masteryPct < 100;
       if (activeFilter === 'memorized') return masteryPct >= 100;
       return true;
@@ -131,8 +134,8 @@ export const Dashboard: React.FC = () => {
     // Sort
     result.sort((a, b) => {
       if (state.sortOrder === 'smart') {
-        const isADue = isDue(a.sm2);
-        const isBDue = isDue(b.sm2);
+        const isADue = isDue(a.sm2, now);
+        const isBDue = isDue(b.sm2, now);
         if (isADue && !isBDue) return -1;
         if (!isADue && isBDue) return 1;
         return (a.sm2.repetition || 0) - (b.sm2.repetition || 0);
@@ -154,7 +157,7 @@ export const Dashboard: React.FC = () => {
     });
 
     return result;
-  }, [state.verses, searchQuery, activeFilter, state.sortOrder, randomSortKeys]);
+  }, [state.verses, searchQuery, activeFilter, state.sortOrder, randomSortKeys, now]);
 
   const handleSortChange = (sort: any) => {
     dispatch({ type: 'SET_SORT_ORDER', payload: sort });
