@@ -102,6 +102,26 @@ export function chapterProgressKey(bookId: string, chapter: number): string {
   return `${bookId}:${chapter}`;
 }
 
+/**
+ * One book's theme word, scheduled like everything else — keyed by book id ("habakkuk").
+ *
+ * Theme is one of the three things this app exists to teach, and it was the only one
+ * never tested anywhere: `themeWord`, `keyWord` and `subtitle` are authored on all 66
+ * books and appeared exclusively in labels and search filters. The nearest thing was
+ * the index's "Covers only" toggle, which hid the book *name* and displayed the theme
+ * word — withholding what the reader already knows and showing the thing to be learned.
+ *
+ * Note this is unrelated to `AppState.theme`, which is the colour scheme.
+ */
+export interface ThemeProgress {
+  bookId: string;
+  sm2: SM2Data;
+  status: 'learning' | 'review';
+  attempts: number;
+  lastScore: number;
+  lastAttemptDate: string; // ISO date string
+}
+
 export interface AppState {
   verses: Verse[];
   streak: number;
@@ -111,6 +131,8 @@ export interface AppState {
   settings: UserSettings;
   memorySentenceProgress: Record<string, MemorySentenceProgress>;
   chapterProgress: Record<string, ChapterProgress>;
+  /** Book-level theme recall, keyed by book id. See ThemeProgress above. */
+  themeProgress: Record<string, ThemeProgress>;
 }
 
 // Guides Data types based on guides_data.js

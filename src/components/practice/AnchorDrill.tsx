@@ -101,7 +101,17 @@ export const AnchorDrill: React.FC<{
     }));
   }, [pickedBookId, pickedGuide]);
 
-  const resolvedQueue = sweepQueue.length > 0 ? sweepQueue : dueQueue.length > 0 ? dueQueue : pickedBookQueue;
+  // An explicitly picked book outranks the due queue.
+  //
+  // The order used to be sweep → due → picked, and the picker only rendered when the
+  // resolved queue was empty — so as long as a single chapter anywhere was due, the
+  // picker was unreachable and "I want to work on Exodus today" was not expressible.
+  // Choosing a book is a deliberate request for that book, exactly as a sweep is.
+  const resolvedQueue = sweepQueue.length > 0
+    ? sweepQueue
+    : pickedBookQueue.length > 0
+      ? pickedBookQueue
+      : dueQueue;
 
   // The work list is frozen once grading starts, rather than read live on every render.
   //
@@ -217,10 +227,20 @@ export const AnchorDrill: React.FC<{
         <div className="flex flex-col items-center">
           <span className="font-heading font-bold text-lg text-primary">{current.bookName} {current.chapter}</span>
           <span className="text-[0.6875rem] text-muted uppercase tracking-widest">
-            {sweepQueue.length > 0 ? 'Sweep' : dueQueue.length > 0 ? 'Due for review' : 'Continuing'} &middot; {index + 1} of {queue.length}
+            {sweepQueue.length > 0 ? 'Sweep' : pickedBookQueue.length > 0 ? 'Chosen book' : 'Due for review'} &middot; {index + 1} of {queue.length}
           </span>
         </div>
         <div className="w-9" />
+      </div>
+
+      {/* Book picker, always present — not only in the empty state it used to hide in.
+          Clearing it hands the session back to whatever is due. */}
+      <div className="px-5 pb-3 flex items-center gap-2 max-w-md mx-auto w-full">
+        <CustomSelect
+          value={pickedBookId || ''}
+          onChange={(v) => { setPickedBookId(v); setSessionQueue(null); setIndex(0); }}
+          options={[{ value: '', label: 'Whatever is due' }, ...bookOptions]}
+        />
       </div>
 
       {/* Direction switcher */}

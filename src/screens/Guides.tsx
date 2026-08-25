@@ -907,7 +907,7 @@ export const Guides: React.FC = () => {
                   order — via AnchorDrill's sweepBookIds, the same slot every other
                   screen's bottom bar puts its most useful action in. */}
               <button
-                onClick={() => navigate('/practice', { state: { subject: 'chapters', sweepBookIds: (isNT ? NT_BOOKS : OT_BOOKS).map(b => b.id) } })}
+                onClick={() => navigate('/practice', { state: { subject: 'anchor', sweepBookIds: (isNT ? NT_BOOKS : OT_BOOKS).map(b => b.id) } })}
                 title={`Test me on these ${isNT ? NT_BOOKS.length : OT_BOOKS.length}`}
                 className="flex items-center gap-1 text-xs font-bold text-accent uppercase tracking-wider hover:text-accent-hover transition-colors border border-card-border hover:border-accent/40 rounded-md px-3 py-1.5"
               >

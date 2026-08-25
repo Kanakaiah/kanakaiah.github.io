@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
-import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress } from '../types/models';
+import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress } from '../types/models';
 import { chapterProgressKey } from '../types/models';
 import { SEED_VERSES } from '../data/seed';
 
@@ -12,6 +12,7 @@ const initialState: AppState = {
   sortOrder: "smart",
   memorySentenceProgress: {},
   chapterProgress: {},
+  themeProgress: {},
   settings: {
     ttsEnabled: false,
     notificationsEnabled: false,
@@ -40,6 +41,7 @@ export type AppAction =
   | { type: 'UPDATE_MEMORY_SENTENCE_PROGRESS'; payload: MemorySentenceProgress }
   | { type: 'GRADE_CHAPTER_PROGRESS'; payload: ChapterProgress }
   | { type: 'MARK_CHAPTER_READ'; payload: { bookId: string; chapter: number } }
+  | { type: 'GRADE_THEME_PROGRESS'; payload: ThemeProgress }
   | { type: 'RECORD_CHAIN_PASS'; payload: { bookId: string; results: { chapter: number; revealed: boolean }[] } }
   | { type: 'RECORD_ACTIVITY' };
 
@@ -139,6 +141,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
         },
       };
     }
+    case 'GRADE_THEME_PROGRESS':
+      return {
+        ...state,
+        themeProgress: { ...state.themeProgress, [action.payload.bookId]: action.payload },
+      };
     case 'RECORD_CHAIN_PASS': {
       // One pass through a book's Memory Sentence. Records *evidence*, never a grade —
       // see the chainHits note on ChapterProgress. Deliberately does not touch `sm2`,
@@ -247,6 +254,9 @@ function loadInitialState(): AppState {
           // spreading `parsed` over `initialState` above already backfills {},
           // this just guards against a stored `null` from a corrupted write.
           chapterProgress: parsed.chapterProgress || {},
+          // Profiles saved before theme recall existed have no key for it. The spread
+          // above already backfills {}; this guards a stored null from a bad write.
+          themeProgress: parsed.themeProgress || {},
         };
       }
     }

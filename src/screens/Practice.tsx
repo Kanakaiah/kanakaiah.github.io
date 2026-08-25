@@ -16,11 +16,24 @@ import { TypingMode } from '../components/practice/TypingMode';
 import { SpeechMode } from '../components/practice/SpeechMode';
 import { ImmersedReader } from '../components/practice/ImmersedReader';
 import { AnchorDrill } from '../components/practice/AnchorDrill';
+import { ThemeDrill } from '../components/practice/ThemeDrill';
+import { Session } from '../components/practice/Session';
 import { Button } from '../components/ui/Button';
 
 type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'immersed';
 
-type Subject = 'verses' | 'chapters';
+/** The app's three stated goals, and now its top-level control. This used to be a
+ * two-way 'verses' | 'chapters' switch rendered as 10px text below the workspace,
+ * below the scoring block — on a screen whose entire header is about verses. Theme
+ * had no home at all. Naming the navigation after the goal is what makes the anchor
+ * and theme layers discoverable rather than buried. */
+type Subject = 'theme' | 'anchor' | 'verse';
+
+const SUBJECTS: { id: Subject; label: string }[] = [
+  { id: 'theme', label: 'Theme' },
+  { id: 'anchor', label: 'Anchor' },
+  { id: 'verse', label: 'Verse' },
+];
 
 /** Maps measured word-accuracy onto the four grades. The boundaries are deliberately
  * strict at the top: word-for-word memorization is the goal, so 90% is "Good" rather
@@ -52,7 +65,7 @@ export const Practice: React.FC = () => {
   // via location.state, the same channel Guides.tsx already uses for
   // scrollToMemorySentence.
   const navState = location.state as { subject?: Subject; sweepBookIds?: string[] } | null;
-  const [subject, setSubject] = useState<Subject>(navState?.subject || 'verses');
+  const [subject, setSubject] = useState<Subject>(navState?.subject || 'verse');
   const sweepBookIds = navState?.sweepBookIds;
 
   const [activeMode, setActiveMode] = useState<PracticeMode>('read');
@@ -324,8 +337,22 @@ export const Practice: React.FC = () => {
   // note above. Placed ahead of the verse empty-states below so choosing it from
   // either of their "drill chapters instead" buttons actually leaves verse-land
   // rather than merely offering to.
-  if (subject === 'chapters') {
-    return <AnchorDrill onExit={() => setSubject('verses')} sweepBookIds={sweepBookIds} />;
+  if (subject === 'theme') {
+    return <ThemeDrill onExit={() => setSubject('verse')} />;
+  }
+
+  if (subject === 'anchor') {
+    return <AnchorDrill onExit={() => setSubject('verse')} sweepBookIds={sweepBookIds} />;
+  }
+
+  // "Start Session" from Today lands here. That entry point used to open this screen's
+  // free-practice machinery filtered to due verses — six modes, manual Next, and a queue
+  // with no end — which is a workshop, not a day's work. It now gets the bounded, mixed,
+  // self-terminating session instead. Everything below stays exactly as it was and
+  // remains reachable for deliberate single-verse drilling (/practice, /practice?id=…),
+  // which is a genuinely different activity and worth keeping.
+  if (isAllDue) {
+    return <Session onExit={() => navigate('/')} />;
   }
 
   const dueChapter = dueChapters(state.chapterProgress)[0];
@@ -340,7 +367,7 @@ export const Practice: React.FC = () => {
         <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
         <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
         {dueChapter ? (
-          <Button onClick={() => setSubject('chapters')}>Drill Chapter Anchors Instead</Button>
+          <Button onClick={() => setSubject('anchor')}>Drill Chapter Anchors Instead</Button>
         ) : (
           <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
         )}
@@ -356,7 +383,7 @@ export const Practice: React.FC = () => {
           {dueChapter ? 'No verses due — but a chapter anchor is.' : 'No verses are currently due for review.'}
         </p>
         {dueChapter ? (
-          <Button onClick={() => setSubject('chapters')}>Drill Chapter Anchors</Button>
+          <Button onClick={() => setSubject('anchor')}>Drill Chapter Anchors</Button>
         ) : (
           <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
         )}
@@ -526,22 +553,24 @@ export const Practice: React.FC = () => {
         {/* Mode Selector (Moved to Bottom) — extra bottom padding clears the fixed
             verse-navigation bar below. */}
         <div className="flex flex-col gap-5 pb-24 lg:pb-24">
-            {/* Subject switch — reachable here too, not only from the two empty
-                states above, so a reader mid-verse-session can still jump over to
-                chapter anchors without leaving Practice. */}
-            <div className="flex items-center justify-center gap-1 -mt-1">
-              <span className="text-[0.625rem] font-bold uppercase tracking-widest text-muted mr-1">Practicing</span>
-              {(['verses', 'chapters'] as Subject[]).map(s => (
-                <button
-                  key={s}
-                  onClick={() => setSubject(s)}
-                  className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide transition-colors ${
-                    subject === s ? 'bg-accent text-white' : 'text-muted hover:text-primary'
-                  }`}
-                >
-                  {s === 'verses' ? 'Verses' : 'Chapters'}
-                </button>
-              ))}
+            {/* Theme · Anchor · Verse — the product's three goals as one segmented
+                control. A real control at full size, not 10px of text: this is the
+                only route to two of the three layers. */}
+            <div className="flex items-center justify-center">
+              <div className="inline-flex rounded-md border border-card-border overflow-hidden">
+                {SUBJECTS.map(s => (
+                  <button
+                    key={s.id}
+                    onClick={() => setSubject(s.id)}
+                    aria-pressed={subject === s.id}
+                    className={`px-5 py-2 text-xs font-bold uppercase tracking-widest transition-colors border-r border-card-border last:border-r-0 ${
+                      subject === s.id ? 'bg-accent text-white' : 'text-muted hover:text-primary hover:bg-card-hover'
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Primary Modes — plain text tabs with an underline indicator */}
