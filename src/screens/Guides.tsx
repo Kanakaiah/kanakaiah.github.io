@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks, Check } from 'lucide-react';
 import { useSearchParams, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
@@ -16,6 +16,18 @@ import { ScrambleMode } from '../components/practice/ScrambleMode';
 import { SpeechMode } from '../components/practice/SpeechMode';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
+
+const DEFAULT_CHAPTER_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
+
+// The same four grades, in the same order, with the same words every other recall
+// surface in the app uses. Scores are 1/3/4/5: anything below 3 is a lapse in
+// evaluateSM2, so "Hard" has to be 3 to mean what the word means.
+const ANCHOR_GRADES: { score: number; label: string; className: string }[] = [
+  { score: 1, label: 'Blank', className: 'bg-red-500/10 text-red-500 hover:bg-red-500/20 border-red-500/20' },
+  { score: 3, label: 'Hard', className: 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 border-orange-500/20' },
+  { score: 4, label: 'Good', className: 'bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20' },
+  { score: 5, label: 'Easy', className: 'bg-green-500/10 text-green-500 hover:bg-green-500/20 border-green-500/20' },
+];
 
 // The index used to filter on book.name alone, so typing "burning bush" or
 // "beginning" — the exact mnemonic vocabulary this app teaches — turned up
@@ -48,6 +60,8 @@ import { DISTRIBUTION_COLORS, divisionForSection } from '../data/palette';
 import { useApp } from '../context/AppContext';
 import { useMastery, masteryOf, type BookMasteryCounts } from '../utils/mastery';
 import { chapterProgressKey } from '../types/models';
+import type { ChapterProgress } from '../types/models';
+import { evaluateSM2, formatInterval } from '../utils/sm2';
 
 
 // Defaults to the plate and the chapter number only — the word and scene (and the
@@ -58,7 +72,7 @@ import { chapterProgressKey } from '../types/models';
 // back to the same large-numeral placeholder either way, which still works as a
 // prompt — there's simply no image to blur/reveal for those.
 const ChapterAnchorCard = ({
-  anchor, guideId, revealed, onReveal, prevWord, nextWord,
+  anchor, guideId, revealed, onReveal, prevWord, nextWord, graded, onGrade,
 }: {
   anchor: any;
   guideId: string;
@@ -66,6 +80,12 @@ const ChapterAnchorCard = ({
   onReveal: () => void;
   prevWord?: string | null;
   nextWord?: string | null;
+  /** Set once this chapter has been graded *on this pass* — carries the resulting
+   * interval so the collapsed row can say when it comes back. Deliberately not read
+   * from chapterProgress: a book worked through last week should open as a full grid
+   * of prompts again, not as fifty pre-collapsed rows. */
+  graded?: { score: number; interval: number };
+  onGrade: (score: number) => void;
 }) => {
   const [imgErr, setImgErr] = useState(false);
   const navigate = useNavigate();
@@ -94,9 +114,48 @@ const ChapterAnchorCard = ({
     if (path) navigate(path);
   };
 
+  const existingSM2 = state.chapterProgress[chapterProgressKey(guideId, Number(anchor.ch))]?.sm2
+    || DEFAULT_CHAPTER_SM2;
+
+  // Graded on this pass — the card gives up its plate and becomes a one-line receipt.
+  // A fifty-card Genesis page (or a hundred-and-fifty-card Psalms one) is otherwise an
+  // undifferentiated wall that looks identical after an hour's work as it did at the
+  // start; collapsing finished cards is what turns the grid into a work surface that
+  // visibly empties.
+  if (graded) {
+    return (
+      <a
+        id={`chapter-anchor-${anchor.ch}`}
+        href={bibleUrl || undefined}
+        onClick={handleRead}
+        role={bibleUrl ? undefined : 'button'}
+        tabIndex={bibleUrl ? undefined : 0}
+        className="flex items-center justify-between gap-3 bg-card border border-card-border rounded-lg px-3 py-2.5 hover:border-card-border-hover transition-colors"
+      >
+        <span className="flex items-center gap-2.5 min-w-0">
+          <span className="w-6 h-6 rounded-full bg-card-elevated flex items-center justify-center text-[0.625rem] font-bold text-muted tabular-nums flex-shrink-0">
+            {anchor.ch}
+          </span>
+          <span className="font-heading font-semibold uppercase tracking-wide text-[0.6875rem] text-secondary truncate">
+            {anchor.word}
+          </span>
+        </span>
+        <span className="flex items-center gap-2 flex-shrink-0">
+          <span className="text-[0.625rem] text-muted tabular-nums">
+            next in {formatInterval(graded.interval)}
+          </span>
+          <Check className={`w-3.5 h-3.5 ${graded.score < 3 ? 'text-red-400' : 'text-green-500'}`} />
+        </span>
+      </a>
+    );
+  }
+
   return (
-    <a
+    <div
       id={`chapter-anchor-${anchor.ch}`}
+      className="group flex flex-col bg-card border border-card-border rounded-lg overflow-hidden hover:border-card-border-hover transition-colors"
+    >
+    <a
       href={revealed ? (bibleUrl || undefined) : undefined}
       onClick={handleRead}
       // Without an href the anchor drops out of the tab order, so put it back — the
@@ -104,7 +163,7 @@ const ChapterAnchorCard = ({
       role={bibleUrl ? undefined : 'button'}
       tabIndex={bibleUrl ? undefined : 0}
       aria-label={revealed ? undefined : `Chapter ${anchor.ch} — tap to reveal its anchor`}
-      className="group flex flex-col bg-card border border-card-border rounded-lg overflow-hidden hover:border-card-border-hover transition-colors"
+      className="flex flex-col"
     >
       {/* Plate */}
       <div className="relative aspect-[4/3] bg-card-elevated overflow-hidden">
@@ -150,6 +209,31 @@ const ChapterAnchorCard = ({
         )}
       </div>
     </a>
+
+    {/* Grading. This grid was already the right retrieval task — a cold, correctly
+        prompted, properly withheld cued recall, fifty of them per book — and it
+        recorded none of it: revealedAnchors was plain component state, discarded on
+        unmount. The interaction, the art, the prompt copy and the layout all already
+        existed; only the dispatch was missing. Sits outside the <a> above rather than
+        inside it so these are not interactive elements nested in a link. */}
+    {revealed && !graded && (
+      <div className="px-3 pb-3 pt-1 grid grid-cols-4 gap-1.5 border-t border-card-border/60">
+        {ANCHOR_GRADES.map(g => (
+          <button
+            key={g.score}
+            onClick={() => onGrade(g.score)}
+            className={`py-2 flex flex-col items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
+            aria-label={`${g.label} — chapter ${anchor.ch}`}
+          >
+            <span className="text-[0.6875rem] font-bold leading-tight">{g.label}</span>
+            <span className="text-[0.5625rem] opacity-80 font-medium tabular-nums">
+              {formatInterval(evaluateSM2(existingSM2, g.score).newSM2.interval)}
+            </span>
+          </button>
+        ))}
+      </div>
+    )}
+    </div>
   );
 };
 
@@ -302,7 +386,7 @@ const BibleIndexModal: React.FC<{
 };
 
 export const Guides: React.FC = () => {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
   // Read-only now — the screen's own state lives in the path; query params are only
   // inspected to redirect links written before that was true.
   const [searchParams] = useSearchParams();
@@ -327,6 +411,11 @@ export const Guides: React.FC = () => {
   const [revealedAnchors, setRevealedAnchors] = useState<Set<number>>(new Set());
   const [showAllAnchors, setShowAllAnchors] = useState(false);
   const [collapsedBlocks, setCollapsedBlocks] = useState<Set<number>>(new Set());
+  // Chapters graded during this visit, mapped to the interval the grade earned, so a
+  // finished card can collapse to a receipt. Visit-scoped rather than read back out of
+  // chapterProgress: returning to a book you worked through last week should present a
+  // full grid of prompts again, not fifty rows of answers.
+  const [gradedAnchors, setGradedAnchors] = useState<Map<number, { score: number; interval: number }>>(new Map());
   // Which block's "Drill this block" panel is open, if any — carries just enough
   // to feed ScrambleMode/SpeechMode (both already take a bare `text` prop) the
   // block's own anchor chain as a space-joined string.
@@ -413,7 +502,35 @@ export const Guides: React.FC = () => {
     setRevealedAnchors(new Set());
     setShowAllAnchors(false);
     setCollapsedBlocks(new Set());
+    setGradedAnchors(new Map());
   }, [activeGuideId]);
+
+  // Writes the grid's retrieval to the same ChapterProgress record the anchor drill,
+  // the reader's end-of-chapter card and the shape meter all read from — so working
+  // down a book's grid now moves the same numbers a drill session does, instead of
+  // being the app's largest source of discarded evidence.
+  const handleGradeAnchor = (bookId: string, chapter: number, score: number) => {
+    const key = chapterProgressKey(bookId, chapter);
+    const existing = state.chapterProgress[key];
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_CHAPTER_SM2, score);
+    const updated: ChapterProgress = {
+      ...(existing || { readCount: 0, lastReadDate: null }),
+      bookId,
+      chapter,
+      sm2: newSM2,
+      status: newStatus,
+      attempts: (existing?.attempts || 0) + 1,
+      lastScore: score,
+      lastAttemptDate: new Date().toISOString(),
+      readCount: existing?.readCount || 0,
+      lastReadDate: existing?.lastReadDate || null,
+    };
+    dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
+    if (state.settings.streakIncludesChapters !== false) {
+      dispatch({ type: 'RECORD_ACTIVITY' });
+    }
+    setGradedAnchors(prev => new Map(prev).set(chapter, { score, interval: newSM2.interval }));
+  };
 
   // Sticky block ribbon — a thin bar under the fixed header naming whichever block
   // (Primeval, Abraham, Jacob, Joseph…) the reader has scrolled into, so position
@@ -1312,6 +1429,8 @@ export const Guides: React.FC = () => {
                                   onReveal={() => setRevealedAnchors(prev => new Set(prev).add(ch))}
                                   prevWord={neighbors?.prev}
                                   nextWord={neighbors?.next}
+                                  graded={gradedAnchors.get(ch)}
+                                  onGrade={(score) => handleGradeAnchor(activeGuide.id, ch, score)}
                                 />
                               );
                             })}

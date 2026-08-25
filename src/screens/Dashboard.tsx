@@ -15,6 +15,7 @@ import { NT_BOOKS } from '../data/ntBooks';
 import { guidePath } from '../utils/readerRoute';
 import { useMastery } from '../utils/mastery';
 import { ShapeMeter } from '../components/dashboard/ShapeMeter';
+import { FirstLetterMode } from '../components/practice/FirstLetterMode';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
@@ -181,16 +182,28 @@ export const Dashboard: React.FC = () => {
 
         {stats.dueForReview.length > 0 ? (
           <div>
-            <p className="text-2xl md:text-3xl font-serif italic text-primary leading-snug mb-4">
-              &ldquo;{stats.dueForReview[0].text}&rdquo;
-            </p>
+            {/* The reference leads; the text does not appear.
+                This block used to print the whole verse in 3xl serif directly above a
+                button that opens a session on that exact verse — so the app's first act
+                each day was to show you the answer to its own first question. Re-reading
+                immediately before a retrieval attempt produces a large but illusory
+                fluency gain and measurably *lowers* long-term retention, and the inflated
+                performance then gets self-graded into a longer interval.
+                First-letters keep a real cue on screen — enough to place the verse and
+                start recall — without handing over the words. FirstLetterMode already
+                takes a bare string, which is how the memory sentence reuses it too. */}
+            <h3 className="text-3xl md:text-4xl font-heading font-semibold text-primary leading-tight mb-4">
+              {stats.dueForReview[0].ref}
+            </h3>
+            <div className="mb-5 text-primary/90 max-w-2xl">
+              <FirstLetterMode text={stats.dueForReview[0].text} />
+            </div>
             <div className="flex items-baseline gap-3 mb-8">
-              <h3 className="text-lg font-heading font-semibold text-secondary">
-                {stats.dueForReview[0].ref}
-              </h3>
-              {stats.dueForReview.length > 1 && (
-                <span className="text-sm text-muted">+{stats.dueForReview.length - 1} more due</span>
-              )}
+              <span className="text-sm text-muted">
+                {stats.dueForReview.length === 1
+                  ? '1 verse due'
+                  : `${stats.dueForReview.length} verses due`}
+              </span>
             </div>
 
             <button

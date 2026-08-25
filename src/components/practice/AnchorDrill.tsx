@@ -168,6 +168,19 @@ export const AnchorDrill: React.FC<{
   const directionMeta = DIRECTIONS.find(d => d.id === direction)!;
   const imgPath = current ? `/chapters/${current.bookId}/ch${current.chapter}.png` : '';
 
+  // One plate, used as the prompt in plate-to-word and as part of the answer in the
+  // other two. The 18 books with no art yet fall back to the large numeral, which
+  // still reads as a plate-shaped thing rather than a broken image.
+  const plateEl = (
+    <div className="w-40 h-40 rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center flex-shrink-0">
+      {!imgErr ? (
+        <img src={imgPath} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover" />
+      ) : (
+        <span className="text-5xl font-heading font-bold text-muted/25">{current?.chapter}</span>
+      )}
+    </div>
+  );
+
   // Book picker — shown whenever there's nothing due and nothing picked yet.
   if (!current) {
     return (
@@ -229,15 +242,7 @@ export const AnchorDrill: React.FC<{
       <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
         <p className="text-xs font-sans text-muted italic">{directionMeta.prompt}</p>
 
-        {direction === 'plate-to-word' && (
-          <div className="w-40 h-40 rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center">
-            {!imgErr ? (
-              <img src={imgPath} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-5xl font-heading font-bold text-muted/25">{current.chapter}</span>
-            )}
-          </div>
-        )}
+        {direction === 'plate-to-word' && plateEl}
 
         {direction === 'number-to-word' && (
           <span className="text-6xl font-heading font-bold text-accent">{current.chapter}</span>
@@ -255,7 +260,13 @@ export const AnchorDrill: React.FC<{
             Tap to reveal
           </button>
         ) : (
-          <div className="flex flex-col items-center gap-2 text-center max-w-sm">
+          <div className="flex flex-col items-center gap-3 text-center max-w-sm">
+            {/* The answer arrives with its picture, in every direction — not only in
+                plate-to-word, where the image was the prompt. Pairing the word with an
+                image is the strongest lever available for learning an arbitrary
+                number↔word association, and 48 books of purpose-drawn chapter art were
+                being withheld from the two directions people actually drill. */}
+            {direction !== 'plate-to-word' && plateEl}
             {direction === 'word-to-number' ? (
               <span className="text-4xl font-heading font-bold text-primary">Chapter {current.chapter}</span>
             ) : (

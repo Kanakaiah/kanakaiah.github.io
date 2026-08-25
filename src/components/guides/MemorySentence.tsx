@@ -272,16 +272,29 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
                 {seg.ch !== null && (
                   <sup className="text-[0.625rem] font-sans font-bold text-muted mr-px">{seg.ch}</sup>
                 )}
-                <span
-                  onClick={isHidden ? () => revealOne(seg.index) : undefined}
-                  className={`font-bold text-accent transition-all duration-200 ${
-                    isHidden
-                      ? 'cursor-pointer select-none blur-[5px]'
-                      : ''
-                  }`}
-                >
-                  {seg.content}
-                </span>
+                {/* A hidden anchor is *replaced*, not blurred.
+                    Blur is not a mask: word length, ascender profile and initial-letter
+                    shape all survive it, and these anchors are highly distinctive
+                    (CIRCUMCISION vs STEW vs RAINBOW), so recognition was quietly doing
+                    the work recall was supposed to. Blurred text also remains real text
+                    — selectable, copyable, and read out verbatim by a screen reader,
+                    which meant assistive-tech users got no test at all.
+                    The bar is a fixed six characters wide regardless of the word behind
+                    it, so length leaks nothing either. EraserMode already masks this way. */}
+                {isHidden ? (
+                  <button
+                    type="button"
+                    onClick={() => revealOne(seg.index)}
+                    aria-label={`Reveal the anchor for chapter ${seg.ch ?? '?'}`}
+                    className="align-baseline cursor-pointer select-none rounded-sm bg-card-border hover:bg-card-border-hover transition-colors px-[0.15em] tracking-[-0.05em] text-transparent"
+                  >
+                    <span aria-hidden="true">▮▮▮▮▮▮</span>
+                  </button>
+                ) : (
+                  <span className="font-bold text-accent transition-all duration-200">
+                    {seg.content}
+                  </span>
+                )}
               </span>
             );
           })}

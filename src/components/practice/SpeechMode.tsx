@@ -3,15 +3,30 @@ import { Mic, MicOff } from 'lucide-react';
 
 interface SpeechModeProps {
   text: string;
+  /** Percentage of the verse's words recited correctly. Same reasoning as TypingMode:
+   * the transcript is already diffed against the target on screen, so the grade below
+   * need not be a guess. */
+  onAccuracy?: (percent: number) => void;
 }
 
-export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
+const normalize = (word: string) => word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAccuracy }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState('');
 
   // Speech Recognition setup (Web Speech API)
   const recognitionRef = React.useRef<any>(null);
+  // The recognizer's onresult closure is built once, on mount, so it would otherwise
+  // capture whichever callback the parent happened to pass on that first render.
+  // Same for the target text: Practice remounts this component per verse via `key`,
+  // but BlockDrillModal reuses one instance across different anchor chains, so the
+  // closure must not hold whichever string happened to be current at mount.
+  const onAccuracyRef = React.useRef(onAccuracy);
+  const textRef = React.useRef(text);
+  useEffect(() => { onAccuracyRef.current = onAccuracy; }, [onAccuracy]);
+  useEffect(() => { textRef.current = text; }, [text]);
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
@@ -26,6 +41,12 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text }) => {
           currentTranscript += event.results[i][0].transcript;
         }
         setTranscript(currentTranscript);
+
+        const spoken = currentTranscript.split(/\s+/).filter((w: string) => w.trim().length > 0);
+        const target = textRef.current.split(/\s+/).filter(w => w.trim().length > 0);
+        const correct = target.reduce(
+          (n, word, i) => n + (spoken[i] && normalize(spoken[i]) === normalize(word) ? 1 : 0), 0);
+        onAccuracyRef.current?.(target.length ? Math.round((correct / target.length) * 100) : 0);
       };
 
       recognitionRef.current.onerror = (event: any) => {

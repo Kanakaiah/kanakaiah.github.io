@@ -22,6 +22,15 @@ type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' |
 
 type Subject = 'verses' | 'chapters';
 
+/** Maps measured word-accuracy onto the four grades. The boundaries are deliberately
+ * strict at the top: word-for-word memorization is the goal, so 90% is "Good" rather
+ * than "Easy" — a verse recalled with one word in ten wrong is not one to push out to
+ * a long interval. Below 70% the attempt failed, whatever it felt like. */
+const suggestedScore = (accuracy: number): number =>
+  accuracy >= 98 ? 5 : accuracy >= 90 ? 4 : accuracy >= 70 ? 3 : 1;
+
+const SUGGESTED_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 5: 'Easy' };
+
 export const Practice: React.FC = () => {
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
@@ -119,9 +128,15 @@ export const Practice: React.FC = () => {
     return () => observer.disconnect();
   }, [activeVerseIndex]);
 
-  // Reset hint when changing verses or modes
+  // Objective accuracy from whichever mode can measure it (Typing, Recite). Null in
+  // the modes that genuinely can't know — Read and Erase have no ground truth to
+  // compare against, so those stay purely self-graded.
+  const [modeAccuracy, setModeAccuracy] = useState<number | null>(null);
+
+  // Reset hint and any measured accuracy when changing verses or modes
   React.useEffect(() => {
     setHintLevel(0);
+    setModeAccuracy(null);
   }, [activeVerseIndex, activeMode]);
 
   const currentVerse = verses[activeVerseIndex];
@@ -246,9 +261,9 @@ export const Practice: React.FC = () => {
       case 'scramble':
         return <ScrambleMode key={currentVerse.id} text={currentVerse.text} />;
       case 'typing':
-        return <TypingMode key={currentVerse.id} text={currentVerse.text} />;
+        return <TypingMode key={currentVerse.id} text={currentVerse.text} onAccuracy={setModeAccuracy} />;
       case 'speech':
-        return <SpeechMode key={currentVerse.id} text={currentVerse.text} />;
+        return <SpeechMode key={currentVerse.id} text={currentVerse.text} onAccuracy={setModeAccuracy} />;
       default:
         return null;
     }
@@ -468,21 +483,36 @@ export const Practice: React.FC = () => {
               </button>
             ) : (
               <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-lg p-5 flex flex-col gap-4 animate-[fadeScaleIn_0.2s_ease-out] shadow-sm">
-                <p className="text-center font-semibold text-primary">How well did you remember it?</p>
+                {/* When the mode measured the attempt, say so and point at the grade that
+                    matches — but never grade for the user. The suggestion is a ring around
+                    one button, not a pre-submitted answer: they may know they were guessing,
+                    or that a "wrong" word was a synonym the diff can't forgive. */}
+                {modeAccuracy !== null ? (
+                  <div className="text-center flex flex-col gap-1">
+                    <p className="font-semibold text-primary">
+                      <span className="tabular-nums">{modeAccuracy}%</span> of the words matched
+                    </p>
+                    <p className="text-xs text-muted">
+                      Suggested: <span className="font-bold text-accent">{SUGGESTED_LABEL[suggestedScore(modeAccuracy)]}</span> — change it if that's not right
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-center font-semibold text-primary">How well did you remember it?</p>
+                )}
                 <div className="grid grid-cols-4 gap-3">
-                  <button onClick={() => handleScore(1)} className="py-3 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95">
+                  <button onClick={() => handleScore(1)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 1 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Blank</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 1).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(3)} className="py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
+                  <button onClick={() => handleScore(3)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 3 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Hard</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 3).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(4)} className="py-3 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
+                  <button onClick={() => handleScore(4)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 4 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Good</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 4).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(5)} className="py-3 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95">
+                  <button onClick={() => handleScore(5)} className={`py-3 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 5 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Easy</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 5).newSM2.interval)}</span>
                   </button>
