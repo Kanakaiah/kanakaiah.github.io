@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import type { Verse } from '../../types/models';
+import { isDue } from '../../utils/sm2';
 
 interface VerseCardProps {
   verse: Verse;
@@ -19,7 +20,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
     indicatorColor = 'border-l-gold';
     statusColor = 'text-gold';
     statusText = 'Memorized';
-  } else if (verse.status === 'review' || new Date(verse.sm2?.nextDueDate || 0) <= new Date()) {
+  } else if (isDue(verse.sm2)) {
     indicatorColor = 'border-l-gold';
     statusColor = 'text-gold';
     statusText = 'Due now';

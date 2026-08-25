@@ -78,6 +78,24 @@ export interface ChapterProgress {
   lastAttemptDate: string; // ISO date string
   readCount: number;
   lastReadDate: string | null; // ISO date string
+  // Chain evidence, kept deliberately apart from `sm2` above.
+  //
+  // Reciting the book's Memory Sentence used to write a full SM2 grade to every
+  // chapter it mentions — fifty records for Genesis, a hundred and fifty for Psalms,
+  // from one button press. That was wrong three ways: recalling GARDEN *inside* the
+  // chain (neighbours adjacent, prose constraining, chapter number printed right
+  // there as a superscript) is a far easier task than "what anchors Genesis 2?" asked
+  // cold, so it earned intervals it hadn't tested; every chapter got byte-identical
+  // SM2 data and so came due on the same day forever after; and six passes through
+  // one sentence marked a whole book "secure" without a single isolated recall.
+  //
+  // The signal is still worth keeping — it just isn't a grade. A chapter whose word
+  // had to be revealed mid-chain is a chapter worth drilling properly, so these
+  // counts exist to *nominate* chapters for real cued recall, never to schedule them.
+  // Optional because records written before this existed simply won't have them.
+  chainHits?: number;    // recalled inside the chain without revealing
+  chainMisses?: number;  // had to be revealed mid-chain
+  lastChainDate?: string | null; // ISO date string
 }
 
 export function chapterProgressKey(bookId: string, chapter: number): string {

@@ -6,6 +6,7 @@ import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { parseReference } from '../utils/bible';
+import { isDue } from '../utils/sm2';
 import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
 import { useToast } from '../context/ToastContext';
 import type { Verse } from '../types/models';
@@ -45,10 +46,9 @@ export const Dashboard: React.FC = () => {
       }
     });
 
-    const accuracy = state.verses.length > 0 ? Math.round((highScores / state.verses.length) * 100) : 0;
-    const dueForReview = state.verses.filter(v => v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date());
+    const dueForReview = state.verses.filter(v => isDue(v.sm2));
 
-    return { memorized, learning, accuracy, dueForReview, reviewed: highScores };
+    return { memorized, learning, dueForReview, reviewed: highScores };
   }, [state.verses]);
 
   // Book Recall — structural memory (chapter anchors and the Memory Sentence) for
@@ -121,7 +121,7 @@ export const Dashboard: React.FC = () => {
 
       // Filter
       const masteryPct = Math.min(100, Math.round((v.sm2.repetition / 6) * 100));
-      if (activeFilter === 'review') return v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date();
+      if (activeFilter === 'review') return isDue(v.sm2);
       if (activeFilter === 'learning') return v.status === 'learning' && masteryPct < 100;
       if (activeFilter === 'memorized') return masteryPct >= 100;
       return true;
@@ -130,8 +130,8 @@ export const Dashboard: React.FC = () => {
     // Sort
     result.sort((a, b) => {
       if (state.sortOrder === 'smart') {
-        const isADue = a.status === 'review' || new Date(a.sm2.nextDueDate) <= new Date();
-        const isBDue = b.status === 'review' || new Date(b.sm2.nextDueDate) <= new Date();
+        const isADue = isDue(a.sm2);
+        const isBDue = isDue(b.sm2);
         if (isADue && !isBDue) return -1;
         if (!isADue && isBDue) return 1;
         return (a.sm2.repetition || 0) - (b.sm2.repetition || 0);

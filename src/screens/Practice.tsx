@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
-import { evaluateSM2 } from '../utils/sm2';
+import { evaluateSM2, isDue, formatInterval } from '../utils/sm2';
 import { dueChapters } from '../utils/mastery';
 import type { Verse } from '../types/models';
 
@@ -72,7 +72,7 @@ export const Practice: React.FC = () => {
 
   const verses = React.useMemo(() => {
     return isAllDue 
-      ? state.verses.filter(v => v.status === 'review' || new Date(v.sm2.nextDueDate) <= new Date())
+      ? state.verses.filter(v => isDue(v.sm2))
       : state.verses;
   }, [state.verses, isAllDue]);
 
@@ -194,14 +194,6 @@ export const Practice: React.FC = () => {
     dispatch({ type: 'RECORD_ACTIVITY' });
     setIsEvaluationOpen(false);
     showToast(`Score logged. Next review in ${newSM2.interval} days.`, 'success');
-  };
-
-  const formatInterval = (days: number) => {
-    if (days === 0) return '<10m';
-    if (days === 1) return '1d';
-    if (days < 30) return `${days}d`;
-    if (days < 365) return `${Math.round(days / 30)}mo`;
-    return `${Math.round(days / 365)}y`;
   };
 
   const handleHintClick = () => {
@@ -482,9 +474,9 @@ export const Practice: React.FC = () => {
                     <span className="text-sm font-bold leading-tight">Blank</span>
                     <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 1).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(2)} className="py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
+                  <button onClick={() => handleScore(3)} className="py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Hard</span>
-                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 2).newSM2.interval)}</span>
+                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 3).newSM2.interval)}</span>
                   </button>
                   <button onClick={() => handleScore(4)} className="py-3 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
                     <span className="text-sm font-bold leading-tight">Good</span>

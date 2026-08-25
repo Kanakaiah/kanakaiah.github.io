@@ -40,6 +40,7 @@ export type AppAction =
   | { type: 'UPDATE_MEMORY_SENTENCE_PROGRESS'; payload: MemorySentenceProgress }
   | { type: 'GRADE_CHAPTER_PROGRESS'; payload: ChapterProgress }
   | { type: 'MARK_CHAPTER_READ'; payload: { bookId: string; chapter: number } }
+  | { type: 'RECORD_CHAIN_PASS'; payload: { bookId: string; results: { chapter: number; revealed: boolean }[] } }
   | { type: 'RECORD_ACTIVITY' };
 
 // --- REDUCER ---
@@ -137,6 +138,39 @@ function appReducer(state: AppState, action: AppAction): AppState {
           [key]: updated,
         },
       };
+    }
+    case 'RECORD_CHAIN_PASS': {
+      // One pass through a book's Memory Sentence. Records *evidence*, never a grade —
+      // see the chainHits note on ChapterProgress. Deliberately does not touch `sm2`,
+      // `status`, `attempts` or `lastScore`, so a chapter's real schedule and its
+      // mastery level stay derived entirely from isolated cued recall.
+      const { bookId, results } = action.payload;
+      const now = new Date().toISOString();
+      const chapterProgress = { ...state.chapterProgress };
+
+      for (const { chapter, revealed } of results) {
+        const key = chapterProgressKey(bookId, chapter);
+        const existing = chapterProgress[key];
+        const base: ChapterProgress = existing || {
+          bookId,
+          chapter,
+          sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+          status: 'learning',
+          attempts: 0,
+          lastScore: 0,
+          lastAttemptDate: '',
+          readCount: 0,
+          lastReadDate: null,
+        };
+        chapterProgress[key] = {
+          ...base,
+          chainHits: (base.chainHits || 0) + (revealed ? 0 : 1),
+          chainMisses: (base.chainMisses || 0) + (revealed ? 1 : 0),
+          lastChainDate: now,
+        };
+      }
+
+      return { ...state, chapterProgress };
     }
     case 'RECORD_ACTIVITY': {
       // Any graded review — a verse, a memory sentence, or a chapter — counts as a

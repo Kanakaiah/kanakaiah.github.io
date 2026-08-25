@@ -17,7 +17,12 @@ import { useApp } from '../context/AppContext';
 export type MasteryLevel = 'untouched' | 'seen' | 'learning' | 'secure';
 
 export function masteryOf(progress: ChapterProgress | undefined): MasteryLevel {
-  if (!progress) return 'untouched';
+  // `attempts <= 0`, not merely "no record": MARK_CHAPTER_READ creates a record with
+  // repetition 0 the moment a chapter is scrolled to its end, which used to fall
+  // through to 'seen' below and tint the shape meter. Reading a chapter is not
+  // evidence of recalling it, and this is the line that decides which of the two the
+  // rest of the app believes.
+  if (!progress || progress.attempts <= 0) return 'untouched';
   if (progress.sm2.repetition <= 0) return 'seen';
   if (progress.sm2.repetition >= 6) return 'secure';
   return 'learning';

@@ -3,8 +3,8 @@ import { Eye, EyeOff, Check, CaseSensitive } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
-import { chapterProgressKey } from '../../types/models';
-import type { MemorySentenceProgress, ChapterProgress } from '../../types/models';
+
+import type { MemorySentenceProgress } from '../../types/models';
 import { FirstLetterMode } from '../practice/FirstLetterMode';
 
 interface Anchor {
@@ -176,31 +176,24 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
     dispatch({ type: 'UPDATE_MEMORY_SENTENCE_PROGRESS', payload: updated });
 
     // Tapping a blurred word to reveal it is the reader admitting they didn't have
-    // it — a per-chapter signal this component used to collect and throw away,
-    // leaving the book's whole 50 (or 150) chapters graded as a single all-or-
-    // nothing item. Every anchor segment now feeds its own chapter's SM2 record:
-    // one that had to be revealed grades as a struggle regardless of which button
-    // gets pressed below; one the reader never tapped inherits that button's own
-    // self-assessment, since staying hidden means they judged themselves to know it.
-    const now = new Date().toISOString();
-    for (const seg of segments) {
-      if (seg.type !== 'anchor' || typeof seg.ch !== 'number') continue;
-      const segScore = revealed.has(seg.index) ? 2 : score;
-      const key = chapterProgressKey(guideId, seg.ch);
-      const existing = state.chapterProgress[key];
-      const { newSM2: chSM2, newStatus: chStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, segScore);
-      const chUpdate: ChapterProgress = {
-        bookId: guideId,
-        chapter: seg.ch,
-        sm2: chSM2,
-        status: chStatus,
-        attempts: (existing?.attempts || 0) + 1,
-        lastScore: segScore,
-        lastAttemptDate: now,
-        readCount: existing?.readCount || 0,
-        lastReadDate: existing?.lastReadDate || null,
-      };
-      dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: chUpdate });
+    // it — a genuinely useful per-chapter signal. It used to be written as a full
+    // SM2 grade against every chapter the sentence mentions, which meant one button
+    // press scheduled fifty chapters (a hundred and fifty for Psalms) on the strength
+    // of a task none of them had actually been tested by: inside the chain the
+    // neighbours are adjacent, the prose constrains the answer, and the chapter number
+    // is printed right there as a superscript. Six passes marked a whole book secure.
+    //
+    // The signal is kept; its authority is not. It now records chain evidence only —
+    // see RECORD_CHAIN_PASS — so a chapter's schedule and its mastery level stay
+    // derived entirely from isolated cued recall, and a word that had to be revealed
+    // becomes a candidate for real drilling rather than a graded failure.
+    const results = segments
+      .filter((seg): seg is Extract<Segment, { type: 'anchor' }> =>
+        seg.type === 'anchor' && typeof seg.ch === 'number')
+      .map(seg => ({ chapter: seg.ch as number, revealed: revealed.has(seg.index) }));
+
+    if (results.length > 0) {
+      dispatch({ type: 'RECORD_CHAIN_PASS', payload: { bookId: guideId, results } });
     }
     if (state.settings.streakIncludesChapters !== false) {
       dispatch({ type: 'RECORD_ACTIVITY' });
@@ -283,7 +276,7 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
                   onClick={isHidden ? () => revealOne(seg.index) : undefined}
                   className={`font-bold text-accent transition-all duration-200 ${
                     isHidden
-                      ? 'cursor-pointer select-none blur-[5px] hover:blur-[3px]'
+                      ? 'cursor-pointer select-none blur-[5px]'
                       : ''
                   }`}
                 >
@@ -313,9 +306,9 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
                 <span className="text-xs font-bold leading-tight">Blank</span>
                 <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 1).newSM2.interval)}</span>
               </button>
-              <button onClick={() => handleScore(2)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
+              <button onClick={() => handleScore(3)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
                 <span className="text-xs font-bold leading-tight">Hard</span>
-                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 2).newSM2.interval)}</span>
+                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 3).newSM2.interval)}</span>
               </button>
               <button onClick={() => handleScore(4)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
                 <span className="text-xs font-bold leading-tight">Good</span>

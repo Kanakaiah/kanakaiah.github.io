@@ -101,7 +101,21 @@ export const AnchorDrill: React.FC<{
     }));
   }, [pickedBookId, pickedGuide]);
 
-  const queue = sweepQueue.length > 0 ? sweepQueue : dueQueue.length > 0 ? dueQueue : pickedBookQueue;
+  const resolvedQueue = sweepQueue.length > 0 ? sweepQueue : dueQueue.length > 0 ? dueQueue : pickedBookQueue;
+
+  // The work list is frozen once grading starts, rather than read live on every render.
+  //
+  // dueQueue is memoized on chapterProgress, and grading pushes nextDueDate into the
+  // future — a minimum of +1 day even for a score of 1 — so the graded item dropped
+  // straight out of the queue and every later item shifted left one place. handleGrade
+  // then *also* advanced the index, and the two moves compounded: a ten-item queue
+  // graded five and declared itself finished.
+  //
+  // The snapshot is taken inside handleGrade (below) at the moment it first matters,
+  // not in an effect — before the first grade there is nothing to protect and a live
+  // queue is the more truthful thing to show.
+  const [sessionQueue, setSessionQueue] = useState<QueueItem[] | null>(null);
+  const queue = sessionQueue ?? resolvedQueue;
   const current = queue[index];
 
   useEffect(() => { setRevealed(false); setIsGrading(false); }, [index, direction]);
@@ -120,6 +134,9 @@ export const AnchorDrill: React.FC<{
 
   const handleGrade = (score: number) => {
     if (!current) return;
+    // Freeze the work list on the first grade of this session — see sessionQueue above.
+    const workList = sessionQueue ?? queue;
+    if (!sessionQueue) setSessionQueue(workList);
     const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score);
     const updated: ChapterProgress = {
       bookId: current.bookId,
@@ -137,8 +154,15 @@ export const AnchorDrill: React.FC<{
       dispatch({ type: 'RECORD_ACTIVITY' });
     }
     showToast(`Score logged. Next review in ${formatInterval(newSM2.interval)}.`, 'success');
-    if (index < queue.length - 1) setIndex(i => i + 1);
-    else { setIndex(0); if (dueQueue.length === 0) setPickedBookId(null); }
+    if (index < workList.length - 1) {
+      setIndex(i => i + 1);
+    } else {
+      // End of the list. Drop the snapshot so the next pass is rebuilt from whatever
+      // is genuinely due now, rather than replaying the list this session started with.
+      setIndex(0);
+      setSessionQueue(null);
+      if (dueQueue.length === 0) setPickedBookId(null);
+    }
   };
 
   const directionMeta = DIRECTIONS.find(d => d.id === direction)!;
@@ -155,7 +179,7 @@ export const AnchorDrill: React.FC<{
         <div className="w-full max-w-xs">
           <CustomSelect
             value={pickedBookId || ''}
-            onChange={setPickedBookId}
+            onChange={(v) => { setPickedBookId(v); setSessionQueue(null); }}
             options={[{ value: '', label: 'Choose a book…' }, ...bookOptions]}
           />
         </div>
@@ -258,7 +282,7 @@ export const AnchorDrill: React.FC<{
               <button onClick={() => handleGrade(1)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95">
                 <span className="text-xs font-bold">Blank</span>
               </button>
-              <button onClick={() => handleGrade(2)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
+              <button onClick={() => handleGrade(3)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
                 <span className="text-xs font-bold">Hard</span>
               </button>
               <button onClick={() => handleGrade(4)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">

@@ -260,7 +260,7 @@ const RecallCard: React.FC<{
         {revealed && (
           <div className="grid grid-cols-4 gap-2 mt-1">
             <button onClick={() => onGrade(1)} className="py-2 flex items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 text-xs font-bold">Blank</button>
-            <button onClick={() => onGrade(2)} className="py-2 flex items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 text-xs font-bold">Hard</button>
+            <button onClick={() => onGrade(3)} className="py-2 flex items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 text-xs font-bold">Hard</button>
             <button onClick={() => onGrade(4)} className="py-2 flex items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 text-xs font-bold">Good</button>
             <button onClick={() => onGrade(5)} className="py-2 flex items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 text-xs font-bold">Easy</button>
           </div>
@@ -394,12 +394,21 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     setRecallRevealed(false);
   }, [bookId, chapter]);
 
+  // Reading is counted, never graded, and no longer feeds the streak.
+  //
+  // Crossing 98% scroll used to dispatch RECORD_ACTIVITY, which meant the flame on
+  // Today — the app's primary motivator — was fully maintainable by scrolling, with
+  // zero retrieval. The recall card that would have made the read count is dismissable
+  // and stops appearing after two dismissals per session, so this was not a rare path.
+  // ChapterProgress already states the invariant this restores: conflating "read" with
+  // "recalled" lets scrolling inflate apparent mastery.
+  //
+  // Reading is still worth surfacing — as its own number beside the streak, not inside
+  // it. That display lands with the session-summary work; for now readCount keeps
+  // accruing here and simply doesn't claim to be recall.
   const markChapterRead = useCallback(() => {
     dispatch({ type: 'MARK_CHAPTER_READ', payload: { bookId, chapter } });
-    if (state.settings.streakIncludesChapters !== false) {
-      dispatch({ type: 'RECORD_ACTIVITY' });
-    }
-  }, [dispatch, bookId, chapter, state.settings.streakIncludesChapters]);
+  }, [dispatch, bookId, chapter]);
 
   const gradeChapterRecall = (score: number) => {
     const base = chapterRecord?.sm2 || { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
