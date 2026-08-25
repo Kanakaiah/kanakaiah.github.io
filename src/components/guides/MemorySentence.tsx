@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Eye, EyeOff, Check } from 'lucide-react';
+import { Eye, EyeOff, Check, CaseSensitive } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
-import { evaluateSM2 } from '../../utils/sm2';
-import type { MemorySentenceProgress } from '../../types/models';
+import { evaluateSM2, formatInterval } from '../../utils/sm2';
+import { chapterProgressKey } from '../../types/models';
+import type { MemorySentenceProgress, ChapterProgress } from '../../types/models';
+import { FirstLetterMode } from '../practice/FirstLetterMode';
 
 interface Anchor {
   ch: number | string;
@@ -20,14 +22,6 @@ interface MemorySentenceProps {
 }
 
 const DEFAULT_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
-
-function formatInterval(days: number): string {
-  if (days <= 0) return 'today';
-  if (days === 1) return '1 day';
-  if (days < 30) return `${days} days`;
-  if (days < 365) return `${Math.round(days / 30)} mo`;
-  return `${Math.round(days / 365)} yr`;
-}
 
 type Segment =
   | { type: 'text'; content: string }
@@ -130,11 +124,18 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
   const [testMode, setTestMode] = useState(false);
   const [revealed, setRevealed] = useState<Set<number>>(new Set());
   const [isGrading, setIsGrading] = useState(false);
+  // First-Letter drill — the same component Practice uses for a verse, pointed at
+  // this sentence's plain text instead. Nearly free: FirstLetterMode already takes
+  // a bare string, and parseSentence's own bold-marker stripping gives that string
+  // for free too. A separate memorization aid from Test Yourself above (no SM2
+  // grading of its own), toggled independently so the two don't fight over state.
+  const [showFirstLetter, setShowFirstLetter] = useState(false);
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
 
   const segments = useMemo(() => parseSentence(sentence, anchors), [sentence, anchors]);
   const anchorCount = useMemo(() => segments.filter(s => s.type === 'anchor').length, [segments]);
+  const plainSentence = useMemo(() => sentence.replace(/\*\*/g, ''), [sentence]);
 
   const progress = guideId ? state.memorySentenceProgress[guideId] : undefined;
   const daysUntilDue = progress
@@ -173,6 +174,38 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
       lastAttemptDate: new Date().toISOString(),
     };
     dispatch({ type: 'UPDATE_MEMORY_SENTENCE_PROGRESS', payload: updated });
+
+    // Tapping a blurred word to reveal it is the reader admitting they didn't have
+    // it — a per-chapter signal this component used to collect and throw away,
+    // leaving the book's whole 50 (or 150) chapters graded as a single all-or-
+    // nothing item. Every anchor segment now feeds its own chapter's SM2 record:
+    // one that had to be revealed grades as a struggle regardless of which button
+    // gets pressed below; one the reader never tapped inherits that button's own
+    // self-assessment, since staying hidden means they judged themselves to know it.
+    const now = new Date().toISOString();
+    for (const seg of segments) {
+      if (seg.type !== 'anchor' || typeof seg.ch !== 'number') continue;
+      const segScore = revealed.has(seg.index) ? 2 : score;
+      const key = chapterProgressKey(guideId, seg.ch);
+      const existing = state.chapterProgress[key];
+      const { newSM2: chSM2, newStatus: chStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, segScore);
+      const chUpdate: ChapterProgress = {
+        bookId: guideId,
+        chapter: seg.ch,
+        sm2: chSM2,
+        status: chStatus,
+        attempts: (existing?.attempts || 0) + 1,
+        lastScore: segScore,
+        lastAttemptDate: now,
+        readCount: existing?.readCount || 0,
+        lastReadDate: existing?.lastReadDate || null,
+      };
+      dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: chUpdate });
+    }
+    if (state.settings.streakIncludesChapters !== false) {
+      dispatch({ type: 'RECORD_ACTIVITY' });
+    }
+
     setIsGrading(false);
     setTestMode(false);
     setRevealed(new Set());
@@ -182,13 +215,27 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <button
-          onClick={toggleTestMode}
-          className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3.5 after:inset-x-0 after:content-['']"
-        >
-          {testMode ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-          {testMode ? 'Show All' : 'Test Yourself'}
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={toggleTestMode}
+            className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3.5 after:inset-x-0 after:content-['']"
+          >
+            {testMode ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+            {testMode ? 'Show All' : 'Test Yourself'}
+          </button>
+          {!testMode && (
+            <button
+              onClick={() => setShowFirstLetter(v => !v)}
+              aria-pressed={showFirstLetter}
+              className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors relative after:absolute after:-inset-y-3.5 after:inset-x-0 after:content-[''] ${
+                showFirstLetter ? 'text-accent' : 'text-muted hover:text-primary'
+              }`}
+            >
+              <CaseSensitive className="w-3.5 h-3.5" />
+              First Letters
+            </button>
+          )}
+        </div>
         <div className="flex items-center gap-3">
           {testMode && (
             <span className="text-[0.6875rem] text-muted font-medium tabular-nums">
@@ -213,6 +260,10 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
         className="rounded-lg p-5 bg-card-elevated border border-card-border font-serif"
         style={{ borderLeft: '3px solid var(--accent-light)' }}
       >
+        {showFirstLetter && !testMode ? (
+          <FirstLetterMode text={plainSentence} />
+        ) : (
+          <>
         {testMode && revealed.size === 0 && (
           <p className="mb-3 text-xs font-sans text-muted italic">
             Tap each hidden word to test your recall — or "Show All" to bail out.
@@ -242,6 +293,8 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
             );
           })}
         </p>
+          </>
+        )}
       </div>
 
       {testMode && guideId && anchorCount > 0 && (

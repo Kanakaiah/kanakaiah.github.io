@@ -1,5 +1,16 @@
 import type { SM2Data } from '../types/models';
 
+/** "3 days", "2 mo", "today" — the human-readable form of an SM2 interval, shared by
+ * every grading UI (memory sentence, chapter recall) so the same number always reads
+ * the same way. */
+export function formatInterval(days: number): string {
+  if (days <= 0) return 'today';
+  if (days === 1) return '1 day';
+  if (days < 30) return `${days} days`;
+  if (days < 365) return `${Math.round(days / 30)} mo`;
+  return `${Math.round(days / 365)} yr`;
+}
+
 export function evaluateSM2(sm2: SM2Data, score: number): { newSM2: SM2Data, newStatus: 'learning' | 'review' } {
   let { interval, repetition, efactor = 2.5 } = sm2;
 

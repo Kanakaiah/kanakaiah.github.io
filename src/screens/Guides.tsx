@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks } from 'lucide-react';
 import { useSearchParams, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
@@ -12,8 +12,20 @@ import { MemorySentence } from '../components/guides/MemorySentence';
 import { KeyVerseCard } from '../components/guides/KeyVerseCard';
 import { RecordCards } from '../components/guides/RecordCards';
 import { OriginalWordModal } from '../components/OriginalWordModal';
+import { ScrambleMode } from '../components/practice/ScrambleMode';
+import { SpeechMode } from '../components/practice/SpeechMode';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
+
+// The index used to filter on book.name alone, so typing "burning bush" or
+// "beginning" — the exact mnemonic vocabulary this app teaches — turned up
+// nothing here even though the testament browser one level down already matched
+// it. Same fields, same order, as BibleBrowser.tsx's own search, plus subtitle.
+function matchesBookSearch(book: { name: string; themeWord: string; keyWord: string; subtitle: string }, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  return [book.name, book.themeWord, book.keyWord, book.subtitle].some(field => field.toLowerCase().includes(q));
+}
 
 // Special sentinel IDs
 const BIBLE_BROWSER_NT = '__bible-browser-nt__';
@@ -32,19 +44,29 @@ const BROWSER_SLUG_TO_ID: Record<string, string> = {
 
 import { BOOK_SHORT, youVersionChapterUrl } from '../data/bibleMap';
 import { GUIDE_SECTIONS, SECTIONED_CATEGORIES } from '../data/guideSections';
+import { DISTRIBUTION_COLORS, divisionForSection } from '../data/palette';
 import { useApp } from '../context/AppContext';
-const DISTRIBUTION_COLORS = [
-  { bg: 'bg-amber-500', text: 'text-amber-500', border: 'border-l-amber-500' },
-  { bg: 'bg-blue-500', text: 'text-blue-500', border: 'border-l-blue-500' },
-  { bg: 'bg-emerald-500', text: 'text-emerald-500', border: 'border-l-emerald-500' },
-  { bg: 'bg-orange-500', text: 'text-orange-500', border: 'border-l-orange-500' },
-  { bg: 'bg-indigo-500', text: 'text-indigo-500', border: 'border-l-indigo-500' },
-  { bg: 'bg-slate-500', text: 'text-slate-500', border: 'border-l-slate-500' },
-  { bg: 'bg-pink-500', text: 'text-pink-500', border: 'border-l-pink-500' },
-];
+import { useMastery, masteryOf, type BookMasteryCounts } from '../utils/mastery';
+import { chapterProgressKey } from '../types/models';
 
 
-const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }) => {
+// Defaults to the plate and the chapter number only — the word and scene (and the
+// "after X · before Y" chain position) wait for a tap, or for the grid's "Reveal
+// all" toggle. The plate used to carry the answer underneath it permanently, which
+// meant fifty (Genesis) or a hundred and fifty (Psalms) free answers on a page that
+// was supposed to be testing recall. A book with no chapter art yet (18 of 66) falls
+// back to the same large-numeral placeholder either way, which still works as a
+// prompt — there's simply no image to blur/reveal for those.
+const ChapterAnchorCard = ({
+  anchor, guideId, revealed, onReveal, prevWord, nextWord,
+}: {
+  anchor: any;
+  guideId: string;
+  revealed: boolean;
+  onReveal: () => void;
+  prevWord?: string | null;
+  nextWord?: string | null;
+}) => {
   const [imgErr, setImgErr] = useState(false);
   const navigate = useNavigate();
   const { state } = useApp();
@@ -61,6 +83,13 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 
   const handleRead = (e: React.MouseEvent) => {
     e.preventDefault();
+    // An unrevealed card's primary tap reveals it, the same "ask first" rule the
+    // reader's own header chip follows — reading the chapter is one tap further,
+    // via the now-visible caption below, rather than the card's whole surface.
+    if (!revealed) {
+      onReveal();
+      return;
+    }
     const path = readerPath(guideId, anchor.ch);
     if (path) navigate(path);
   };
@@ -68,12 +97,13 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
   return (
     <a
       id={`chapter-anchor-${anchor.ch}`}
-      href={bibleUrl || undefined}
+      href={revealed ? (bibleUrl || undefined) : undefined}
       onClick={handleRead}
       // Without an href the anchor drops out of the tab order, so put it back — the
       // click handler is what actually opens the chapter either way.
       role={bibleUrl ? undefined : 'button'}
       tabIndex={bibleUrl ? undefined : 0}
+      aria-label={revealed ? undefined : `Chapter ${anchor.ch} — tap to reveal its anchor`}
       className="group flex flex-col bg-card border border-card-border rounded-lg overflow-hidden hover:border-card-border-hover transition-colors"
     >
       {/* Plate */}
@@ -81,9 +111,10 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
         {!imgErr ? (
           <img
             src={imgPath}
-            alt={anchor.word}
+            alt={revealed ? anchor.word : `Chapter ${anchor.ch}`}
+            loading="lazy"
             onError={() => setImgErr(true)}
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-200 ${revealed ? '' : 'blur-[10px] scale-105'}`}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -93,12 +124,30 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
         <span className="absolute top-3 left-3 w-8 h-8 rounded-full bg-background/90 border border-card-border flex items-center justify-center font-bold text-sm text-primary">
           {anchor.ch}
         </span>
+        {!revealed && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/10">
+            <span className="text-[0.625rem] font-bold uppercase tracking-widest text-white bg-black/50 px-2.5 py-1 rounded-full">Tap to reveal</span>
+          </div>
+        )}
       </div>
 
       {/* Caption */}
-      <div className="p-5 flex flex-col gap-1.5">
-        <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{anchor.word}</span>
-        <p className="text-sm text-secondary italic font-serif leading-relaxed">{anchor.scene}</p>
+      <div className="p-5 flex flex-col gap-1.5 min-h-[92px] justify-center">
+        {revealed ? (
+          <>
+            <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{anchor.word}</span>
+            <p className="text-sm text-secondary italic font-serif leading-relaxed">{anchor.scene}</p>
+            {(prevWord || nextWord) && (
+              <p className="text-[0.6875rem] text-muted mt-1 truncate">
+                {prevWord ? <>after <span className="font-semibold">{prevWord}</span></> : null}
+                {prevWord && nextWord ? ' · ' : null}
+                {nextWord ? <>before <span className="font-semibold">{nextWord}</span></> : null}
+              </p>
+            )}
+          </>
+        ) : (
+          <span className="text-sm text-muted italic">What anchors chapter {anchor.ch}?</span>
+        )}
       </div>
     </a>
   );
@@ -107,12 +156,61 @@ const ChapterAnchorCard = ({ anchor, guideId }: { anchor: any, guideId: string }
 // Full two-column Bible book index. Extracted from the book-guide view so the Bible
 // landing page's bottom bar can open the same one, rather than the two levels
 // offering different ways to jump between books.
+// Drills a block's own anchor chain — "PRIMEVAL LIGHT GARDEN SERPENT BLOOD…" —
+// through two of Practice's existing verse modes, repointed at the chain instead
+// of a verse. Both already take a bare `text` prop, so this is reuse rather than
+// a new practice mode: Scramble trains the sequence itself (the one thing nothing
+// else in the app drills directly), Recite trains saying the chain aloud.
+const BlockDrillModal: React.FC<{
+  label: string;
+  anchors: any[];
+  onClose: () => void;
+}> = ({ label, anchors, onClose }) => {
+  const [mode, setMode] = useState<'scramble' | 'recite'>('scramble');
+  const chainText = useMemo(() => anchors.map((a: any) => a.word).join(' '), [anchors]);
+
+  return (
+    <div className="fixed inset-0 z-[75] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
+        <button
+          onClick={onClose}
+          className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
+          aria-label="Close drill"
+        >
+          <X className="w-5 h-5 text-secondary" />
+        </button>
+        <span className="text-sm font-bold text-primary tracking-wide truncate max-w-[60%]">{label}</span>
+        <div className="w-9" />
+      </div>
+
+      <div className="flex justify-center gap-2 px-5 py-3 border-b border-card-border">
+        {(['scramble', 'recite'] as const).map(m => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-colors ${
+              mode === m ? 'bg-accent text-white' : 'text-muted hover:text-primary border border-card-border'
+            }`}
+          >
+            {m === 'scramble' ? 'Scramble' : 'Recite'}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-5 py-8">
+        {mode === 'scramble' ? <ScrambleMode text={chainText} /> : <SpeechMode text={chainText} />}
+      </div>
+    </div>
+  );
+};
+
 const BibleIndexModal: React.FC<{
   isOpen: boolean;
   selectedId: string | null;
   onSelect: (bookId: string) => void;
   onClose: () => void;
-}> = ({ isOpen, selectedId, onSelect, onClose }) => {
+  mastery: Record<string, BookMasteryCounts>;
+}> = ({ isOpen, selectedId, onSelect, onClose, mastery }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
@@ -145,29 +243,52 @@ const BibleIndexModal: React.FC<{
               const isOtSelected = ot?.id === selectedId;
               const isNtSelected = nt?.id === selectedId;
 
+              // Theme word alongside the name, tinted by division, plus a mastery
+              // dot — this modal opens from three screens (the book page, the
+              // testament browser, and the reader's own navigator), so it's the
+              // most-seen list of book names in the app. It used to be pure
+              // lookup: 66 names and nothing else, the one place in the product
+              // least likely to teach anything despite being seen the most.
+              const otDivision = ot ? divisionForSection(ot.section) : null;
+              const ntDivision = nt ? divisionForSection(nt.section) : null;
+              const otMastery = ot ? mastery[ot.id] : undefined;
+              const ntMastery = nt ? mastery[nt.id] : undefined;
+
               rows.push(
                 <React.Fragment key={`row-${i}`}>
                   <button
                     onClick={() => { if (ot) onSelect(ot.id); }}
-                    className={`text-right pr-4 py-2 text-[15px] transition-colors ${
+                    className={`flex items-center justify-end gap-1.5 pr-4 py-2 transition-colors ${
                       isOtSelected
-                        ? 'text-accent font-bold bg-accent/10 rounded-r-lg'
+                        ? 'text-accent bg-accent/10 rounded-r-lg'
                         : ot ? 'text-secondary hover:text-primary' : 'pointer-events-none'
                     }`}
                     disabled={!ot}
                   >
-                    {ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}
+                    {ot && (
+                      <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${otMastery && otMastery.secure > 0 ? otDivision!.color.bg : 'bg-card-border'}`} aria-hidden="true" />
+                    )}
+                    <span className="flex flex-col items-end min-w-0">
+                      <span className={`text-[15px] leading-tight ${isOtSelected ? 'font-bold' : 'font-medium'}`}>{ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}</span>
+                      {ot && <span className={`text-[0.625rem] leading-tight truncate max-w-[110px] ${otDivision!.color.text} opacity-80`}>{ot.themeWord}</span>}
+                    </span>
                   </button>
                   <button
                     onClick={() => { if (nt) onSelect(nt.id); }}
-                    className={`text-left pl-4 py-2 text-[15px] font-medium transition-colors ${
+                    className={`flex items-center justify-start gap-1.5 pl-4 py-2 transition-colors ${
                       isNtSelected
-                        ? 'text-accent font-bold bg-accent/10 rounded-l-lg'
+                        ? 'text-accent bg-accent/10 rounded-l-lg'
                         : nt ? 'text-secondary hover:text-primary' : 'pointer-events-none'
                     }`}
                     disabled={!nt}
                   >
-                    {nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}
+                    <span className="flex flex-col items-start min-w-0">
+                      <span className={`text-[15px] leading-tight ${isNtSelected ? 'font-bold' : 'font-medium'}`}>{nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}</span>
+                      {nt && <span className={`text-[0.625rem] leading-tight truncate max-w-[110px] ${ntDivision!.color.text} opacity-80`}>{nt.themeWord}</span>}
+                    </span>
+                    {nt && (
+                      <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ntMastery && ntMastery.secure > 0 ? ntDivision!.color.bg : 'bg-card-border'}`} aria-hidden="true" />
+                    )}
                   </button>
                 </React.Fragment>
               );
@@ -181,6 +302,7 @@ const BibleIndexModal: React.FC<{
 };
 
 export const Guides: React.FC = () => {
+  const { state } = useApp();
   // Read-only now — the screen's own state lives in the path; query params are only
   // inspected to redirect links written before that was true.
   const [searchParams] = useSearchParams();
@@ -196,6 +318,26 @@ export const Guides: React.FC = () => {
   const toggleSection = (section: string) => {
     setCollapsedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
+
+  // Chapter-anchor grid state: which chapters have been tapped open this visit, a
+  // page-level "reveal all" that bypasses the per-card gate without discarding it
+  // (toggling it back off returns to whatever was individually revealed), and which
+  // of the book's blocks are collapsed. All three reset when the active guide
+  // changes, in the same effect below.
+  const [revealedAnchors, setRevealedAnchors] = useState<Set<number>>(new Set());
+  const [showAllAnchors, setShowAllAnchors] = useState(false);
+  const [collapsedBlocks, setCollapsedBlocks] = useState<Set<number>>(new Set());
+  // Which block's "Drill this block" panel is open, if any — carries just enough
+  // to feed ScrambleMode/SpeechMode (both already take a bare `text` prop) the
+  // block's own anchor chain as a space-joined string.
+  const [drillBlock, setDrillBlock] = useState<{ label: string; anchors: any[] } | null>(null);
+
+  // "Covers only" — drops every book card's name/subtitle/key word on the index,
+  // leaving art and theme word, so browsing becomes a recognition pass instead of
+  // a lookup list. One piece of UI state; BookCard already knows how to render
+  // either way (see coversOnly there).
+  const [coversOnlyMode, setCoversOnlyMode] = useState(false);
+  const mastery = useMastery(ALL_BOOKS);
   
   const { guideId, ref: readerRefParam } = useParams();
   const navigate = useNavigate();
@@ -263,6 +405,27 @@ export const Guides: React.FC = () => {
   useEffect(() => {
     setChromeVisible(true);
   }, [activeGuideId]);
+
+  // A new book starts with every anchor hidden again — leaving them revealed would
+  // mean the very first visit to a book you'd already worked through looked exactly
+  // like the "answers already showing" behavior this was built to replace.
+  useEffect(() => {
+    setRevealedAnchors(new Set());
+    setShowAllAnchors(false);
+    setCollapsedBlocks(new Set());
+  }, [activeGuideId]);
+
+  // Sticky block ribbon — a thin bar under the fixed header naming whichever block
+  // (Primeval, Abraham, Jacob, Joseph…) the reader has scrolled into, so position
+  // inside a long anchor grid survives the scroll the same way the section heading
+  // does one level up in the testament browser. Tracked by comparing each block
+  // header's position against the scroll container as it scrolls, rather than an
+  // IntersectionObserver: the "current" block is whichever header has most
+  // recently passed the fixed-header's bottom edge, which a simple "last header
+  // above the line" scan expresses more directly than an observer's enter/exit
+  // events would.
+  const [activeBlockIndex, setActiveBlockIndex] = useState<number | null>(null);
+  const blockHeaderRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
   // Keep the content's top padding in sync with the fixed header's real rendered
   // height — it varies with the book title wrapping and with the safe-area inset,
@@ -395,6 +558,81 @@ export const Guides: React.FC = () => {
     
     return null;
   }, [activeGuideId]);
+
+  // The anchor grid, partitioned under the book's own blocks (Primeval, Abraham,
+  // Jacob, Joseph — the same four the distribution bar above already draws) instead
+  // of one flat run. Fifty cards become four sets of about twelve; a hundred and
+  // fifty (Psalms) become five sets of thirty. Chunking is the mnemonic device the
+  // block data was already carrying and the grid wasn't using.
+  //
+  // Single-chapter books (Obadiah, Philemon, Jude, 2–3 John) reuse the same
+  // isVerseBased test the distribution bar and section list below use — their
+  // blocks are verse ranges inside one chapter, not chapter ranges, so grouping the
+  // (single) anchor by them would either produce one empty group or misattribute
+  // it. Those books, and any guide with no blocks at all, get one ungrouped run.
+  const anchorGroups: { block: any; colorIndex: number; anchors: any[] }[] = useMemo(() => {
+    if (!activeGuide?.anchors?.length) return [];
+    const isVerseBased = activeGuide.blocks?.some((b: any) => b.unit === 'verse')
+      || (activeGuide.chapters === 1 && activeGuide.blocks?.length > 1);
+    if (!activeGuide.blocks?.length || isVerseBased) {
+      return [{ block: null, colorIndex: 0, anchors: activeGuide.anchors }];
+    }
+    return activeGuide.blocks
+      .map((block: any, i: number) => {
+        const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
+        const rangeEnd = end || start;
+        const anchors = activeGuide.anchors.filter((a: any) => Number(a.ch) >= start && Number(a.ch) <= rangeEnd);
+        return { block, colorIndex: i, anchors };
+      })
+      .filter((g: any) => g.anchors.length > 0);
+  }, [activeGuide]);
+
+  // Sticky block ribbon tracking — the "current" block is whichever header has most
+  // recently passed the fixed header's bottom edge, found by comparing each block
+  // header's position against the scroll container as it scrolls (a simple "last
+  // header above the line" scan, rather than an IntersectionObserver's enter/exit
+  // events, which would need more bookkeeping to express the same "most recent"
+  // rule). See the activeBlockIndex/blockHeaderRefs declarations above.
+  useEffect(() => {
+    const scrollEl = document.getElementById('main-scroll-container');
+    if (!scrollEl || anchorGroups.length < 2) {
+      setActiveBlockIndex(null);
+      return;
+    }
+
+    const RIBBON_LINE = 12; // px of slack below the fixed header before a block "counts"
+    const updateActiveBlock = () => {
+      const containerTop = scrollEl.getBoundingClientRect().top;
+      const line = containerTop + headerHeight + RIBBON_LINE;
+      let current: number | null = null;
+      for (const [index, el] of blockHeaderRefs.current) {
+        if (el.getBoundingClientRect().top <= line) {
+          if (current === null || index > current) current = index;
+        }
+      }
+      setActiveBlockIndex(current);
+    };
+
+    updateActiveBlock();
+    scrollEl.addEventListener('scroll', updateActiveBlock, { passive: true });
+    return () => scrollEl.removeEventListener('scroll', updateActiveBlock);
+  }, [anchorGroups, headerHeight, activeGuideId]);
+
+  // "after LADDER · before STICKS" on each revealed card — the book's own chain,
+  // looked up against the whole (ungrouped) anchor order so it stays correct across
+  // a block boundary, not just within the group a card happens to render in.
+  const anchorNeighbors = useMemo(() => {
+    const map = new Map<number, { prev: string | null; next: string | null }>();
+    const arr = activeGuide?.anchors;
+    if (!arr) return map;
+    arr.forEach((a: any, i: number) => {
+      map.set(Number(a.ch), {
+        prev: i > 0 ? arr[i - 1].word : null,
+        next: i < arr.length - 1 ? arr[i + 1].word : null,
+      });
+    });
+    return map;
+  }, [activeGuide]);
 
   const categories = useMemo(() => {
     const map: Record<string, any[]> = {};
@@ -541,12 +779,25 @@ export const Guides: React.FC = () => {
               <span className="sm:hidden">OT</span>
             </button>
 
-            <button
-              onClick={() => setIsIndexModalOpen(true)}
-              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5 relative after:absolute after:-inset-y-2 after:inset-x-0 after:content-['']"
-            >
-              INDEX
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsIndexModalOpen(true)}
+                className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5 relative after:absolute after:-inset-y-2 after:inset-x-0 after:content-['']"
+              >
+                INDEX
+              </button>
+              {/* A testament sweep — every chapter of every book in this list, in
+                  order — via AnchorDrill's sweepBookIds, the same slot every other
+                  screen's bottom bar puts its most useful action in. */}
+              <button
+                onClick={() => navigate('/practice', { state: { subject: 'chapters', sweepBookIds: (isNT ? NT_BOOKS : OT_BOOKS).map(b => b.id) } })}
+                title={`Test me on these ${isNT ? NT_BOOKS.length : OT_BOOKS.length}`}
+                className="flex items-center gap-1 text-xs font-bold text-accent uppercase tracking-wider hover:text-accent-hover transition-colors border border-card-border hover:border-accent/40 rounded-md px-3 py-1.5"
+              >
+                <ListChecks className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Test Me</span>
+              </button>
+            </div>
 
             <button
               onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
@@ -566,6 +817,7 @@ export const Guides: React.FC = () => {
           selectedId={activeGuideId}
           onSelect={(id) => { setActiveGuideId(id); setIsIndexModalOpen(false); }}
           onClose={() => setIsIndexModalOpen(false)}
+          mastery={mastery}
         />
       </div>
     );
@@ -622,6 +874,29 @@ export const Guides: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Sticky block ribbon — names whichever anchor block (Primeval, Abraham…)
+            is currently scrolled into view, so position inside a long grid survives
+            the scroll. Pinned just under the fixed header above, and only rendered
+            once activeBlockIndex has something to say (null below the grid, or on a
+            book with too few blocks to bother tracking — see the effect that sets
+            it). Slides with the same chrome-visibility state as everything else. */}
+        {activeBlockIndex !== null && activeGuide.blocks?.[activeBlockIndex] && (() => {
+          const block = activeGuide.blocks[activeBlockIndex];
+          const color = DISTRIBUTION_COLORS[activeBlockIndex % DISTRIBUTION_COLORS.length];
+          return (
+            <div
+              className={`fixed left-0 right-0 z-30 flex justify-center transition-[transform,top] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+              style={{ top: headerHeight }}
+            >
+              <div className={`max-w-2xl w-full mx-5 sm:mx-8 -mt-px px-3 py-1.5 rounded-b-md border-x border-b border-card-border bg-card-elevated flex items-center gap-2 shadow-sm`}>
+                <span className={`w-2 h-2 rounded-full ${color.bg} flex-shrink-0`} />
+                <span className={`text-[0.6875rem] font-bold uppercase tracking-widest ${color.text}`}>{block.label}</span>
+                <span className="text-[0.6875rem] text-muted">· {block.chapters}</span>
+              </div>
+            </div>
+          );
+        })()}
 
         <div className="flex flex-col gap-4 mb-2">
           <div className="flex items-center justify-between gap-4">
@@ -776,10 +1051,28 @@ export const Guides: React.FC = () => {
 
               {/* Book title moved to the fixed header above; this keeps only the
                   architecture caption so the name isn't rendered twice. */}
-              <div className="flex flex-col items-center mb-2 mt-2">
+              <div className="flex flex-col items-center mb-2 mt-2 gap-1.5">
                 <div className="text-[0.625rem] uppercase tracking-[0.2em] font-bold text-muted text-center">
                   NARRATIVE ARCHITECTURE · {activeGuide.chapters || 28} CHAPTERS
                 </div>
+                {/* The book's shape in four or five numbers — authored on 44 of the
+                    66 guides and, until now, never rendered anywhere. */}
+                {activeGuide.structureFormula && (
+                  <div className="font-heading font-bold text-accent-light text-lg tracking-wide">
+                    {activeGuide.structureFormula}
+                  </div>
+                )}
+                {/* A jump straight to the one control on this page that actually
+                    tests recall, offered up here rather than only at the bottom of
+                    a fifty- (or a hundred-and-fifty-) card scroll. */}
+                {activeGuide.memorySentence && (
+                  <button
+                    onClick={() => document.getElementById('memory-sentence-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                    className="text-[0.6875rem] font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors mt-1"
+                  >
+                    Jump to Memory Sentence ↓
+                  </button>
+                )}
               </div>
 
               {/* CHAPTER DISTRIBUTION */}
@@ -812,23 +1105,44 @@ export const Guides: React.FC = () => {
                       {isVerseBased ? 'Verse Distribution' : 'Chapter Distribution'}
                     </h3>
 
-                    {/* Bar chart */}
+                    {/* Bar chart — each segment now carries a fill for the share of
+                        its own chapters graded secure (repetition >= 6, the same
+                        threshold the shape meter and book cards read from), on top
+                        of the block-identity color it already had. Skipped for
+                        verse-based single-chapter books: their "segments" are verse
+                        ranges inside one chapter, and chapter-granularity mastery
+                        doesn't decompose across them. */}
                     <div className="flex w-full h-14 rounded-md overflow-hidden shadow-sm">
                       {activeGuide.blocks.map((block: any, i: number) => {
                          const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
                          const count = (end || start) - start + 1;
                          const widthPercent = (count / totalUnits) * 100;
                          const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
+                         let securePercent = 0;
+                         if (!isVerseBased) {
+                           let secure = 0;
+                           for (let ch = start; ch <= (end || start); ch++) {
+                             if (masteryOf(state.chapterProgress[chapterProgressKey(activeGuide.id, ch)]) === 'secure') secure++;
+                           }
+                           securePercent = (secure / count) * 100;
+                         }
                          return (
                            <button
                              key={i}
                              onClick={() => handleScrollToChapter(scrollTarget(start))}
-                             className={`${color.bg} flex flex-col items-center justify-center border-r border-background/20 last:border-0 hover:opacity-80 transition-opacity focus:outline-none`}
+                             className={`${color.bg} relative flex flex-col items-center justify-center border-r border-background/20 last:border-0 hover:opacity-80 transition-opacity focus:outline-none overflow-hidden`}
                              style={{ width: `${widthPercent}%` }}
-                             title={`Scroll to ${unitWord} ${start}`}
+                             title={`Scroll to ${unitWord} ${start}${securePercent > 0 ? ` — ${Math.round(securePercent)}% secure` : ''}`}
                            >
-                             <span className="font-bold text-white/90 text-sm">{block.chapters.replace('–', '-')}</span>
-                             <span className="text-white/70 text-[0.625rem]">{count}{unitLabel}</span>
+                             {securePercent > 0 && (
+                               <div
+                                 className="absolute inset-x-0 bottom-0 bg-white/25"
+                                 style={{ height: `${securePercent}%` }}
+                                 aria-hidden="true"
+                               />
+                             )}
+                             <span className="relative font-bold text-white/90 text-sm">{block.chapters.replace('–', '-')}</span>
+                             <span className="relative text-white/70 text-[0.625rem]">{count}{unitLabel}</span>
                            </button>
                          );
                       })}
@@ -929,12 +1243,83 @@ export const Guides: React.FC = () => {
 
               {activeGuide.anchors && (
                 <div className="mt-4 pt-6 border-t border-card-border flex flex-col gap-5">
-                  <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {activeGuide.anchors.map((anchor: any) => (
-                      <ChapterAnchorCard key={`${activeGuide.id}-${anchor.ch}`} anchor={anchor} guideId={activeGuide.id} />
-                    ))}
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
+                    <button
+                      onClick={() => setShowAllAnchors(v => !v)}
+                      className="flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
+                    >
+                      {showAllAnchors ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      {showAllAnchors ? 'Hide all' : 'Reveal all'}
+                    </button>
                   </div>
+
+                  {anchorGroups.map(({ block, colorIndex, anchors }) => {
+                    const color = DISTRIBUTION_COLORS[colorIndex % DISTRIBUTION_COLORS.length];
+                    const isCollapsed = collapsedBlocks.has(colorIndex);
+                    const revealedInBlock = anchors.filter((a: any) => showAllAnchors || revealedAnchors.has(Number(a.ch))).length;
+
+                    return (
+                      <div key={colorIndex} className="flex flex-col gap-3">
+                        {/* Grouped only when the book actually has more than one block
+                            (anchorGroups collapses single-chapter/no-block guides into
+                            one ungrouped run with block === null) — an ungrouped run
+                            skips this header entirely. */}
+                        {block && (
+                          <div
+                            ref={el => { if (el) blockHeaderRefs.current.set(colorIndex, el); else blockHeaderRefs.current.delete(colorIndex); }}
+                            className={`flex items-center gap-2 border-l-4 ${color.border} pl-3 py-1`}
+                          >
+                            <button
+                              onClick={() => setCollapsedBlocks(prev => {
+                                const next = new Set(prev);
+                                if (next.has(colorIndex)) next.delete(colorIndex); else next.add(colorIndex);
+                                return next;
+                              })}
+                              className="flex-1 flex items-center justify-between gap-2 text-left"
+                            >
+                              <span className={`font-heading font-bold text-sm ${color.text}`}>
+                                {block.label} <span className="text-muted font-normal">· {block.chapters}</span>
+                              </span>
+                              <span className="flex items-center gap-2 text-[0.625rem] text-muted font-medium tabular-nums">
+                                {revealedInBlock}/{anchors.length}
+                                {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                              </span>
+                            </button>
+                            {anchors.length > 1 && (
+                              <button
+                                onClick={() => setDrillBlock({ label: block.label, anchors })}
+                                title={`Drill the ${block.label} chain`}
+                                className="flex-shrink-0 text-[0.625rem] font-bold uppercase tracking-wider text-muted hover:text-accent border border-card-border hover:border-accent/40 rounded-md px-2 py-1 transition-colors"
+                              >
+                                Drill
+                              </button>
+                            )}
+                          </div>
+                        )}
+
+                        {!isCollapsed && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {anchors.map((anchor: any) => {
+                              const ch = Number(anchor.ch);
+                              const neighbors = anchorNeighbors.get(ch);
+                              return (
+                                <ChapterAnchorCard
+                                  key={`${activeGuide.id}-${anchor.ch}`}
+                                  anchor={anchor}
+                                  guideId={activeGuide.id}
+                                  revealed={showAllAnchors || revealedAnchors.has(ch)}
+                                  onReveal={() => setRevealedAnchors(prev => new Set(prev).add(ch))}
+                                  prevWord={neighbors?.prev}
+                                  nextWord={neighbors?.next}
+                                />
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
@@ -1015,7 +1400,16 @@ export const Guides: React.FC = () => {
           selectedId={activeGuideId}
           onSelect={(id) => { setActiveGuideId(id); setIsIndexModalOpen(false); }}
           onClose={() => setIsIndexModalOpen(false)}
+          mastery={mastery}
         />
+
+        {drillBlock && (
+          <BlockDrillModal
+            label={drillBlock.label}
+            anchors={drillBlock.anchors}
+            onClose={() => setDrillBlock(null)}
+          />
+        )}
       </div>
     );
   }
@@ -1030,17 +1424,32 @@ export const Guides: React.FC = () => {
         <h1 className="text-3xl font-heading font-bold text-primary">Bible</h1>
       </div>
 
-      <div className="relative mt-2">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="w-4 h-4 text-muted" />
+      <div className="flex items-center gap-2 mt-2">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="w-4 h-4 text-muted" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search books and study resources..."
+            className="w-full bg-card border border-card-border rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 transition-colors text-primary placeholder:text-muted shadow-sm"
+          />
         </div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search books and study resources..."
-          className="w-full bg-card border border-card-border rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 transition-colors text-primary placeholder:text-muted shadow-sm"
-        />
+        {/* A recognition pass through the same grid: art and theme word only, name
+            withheld until tapped through to the book itself. */}
+        <button
+          onClick={() => setCoversOnlyMode(v => !v)}
+          title={coversOnlyMode ? 'Show book names' : 'Hide book names — covers only'}
+          aria-pressed={coversOnlyMode}
+          className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-3 rounded-md border text-xs font-bold uppercase tracking-wide transition-colors ${
+            coversOnlyMode ? 'border-accent text-accent bg-accent/10' : 'border-card-border text-muted hover:text-primary hover:border-card-border-hover'
+          }`}
+        >
+          {coversOnlyMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          <span className="hidden sm:inline">Covers only</span>
+        </button>
       </div>
 
       <div className="flex flex-col gap-8 pb-12">
@@ -1062,15 +1471,19 @@ export const Guides: React.FC = () => {
           {isOTExpanded && (
             <div className="flex flex-col gap-6 animate-[fadeIn_0.2s_ease-out]">
               {OT_SECTIONS.map(section => {
-                const books = OT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                const books = OT_BOOKS.filter(b => b.section === section && matchesBookSearch(b, searchQuery));
                 if (!books.length) return null;
+                const division = divisionForSection(section);
                 return (
                   <div key={section} className="flex flex-col gap-3">
-                    <button 
+                    <button
                       onClick={() => toggleSection(section)}
                       className="flex items-center justify-between border-b border-card-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
                     >
-                      <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
+                      <span className="flex items-center gap-2">
+                        <span className={`w-1.5 h-1.5 rounded-full ${division.color.bg}`} aria-hidden="true" />
+                        <p className={`text-[0.6875rem] font-bold uppercase tracking-widest ${division.color.text}`}>{section}</p>
+                      </span>
                       {collapsedSections[section] ? (
                         <ChevronRight className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
                       ) : (
@@ -1080,7 +1493,7 @@ export const Guides: React.FC = () => {
                     {!collapsedSections[section] && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {books.map(book => (
-                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
+                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} mastery={mastery[book.id]} coversOnly={coversOnlyMode} />
                         ))}
                       </div>
                     )}
@@ -1109,15 +1522,19 @@ export const Guides: React.FC = () => {
           {isNTExpanded && (
             <div className="flex flex-col gap-6 animate-[fadeIn_0.2s_ease-out]">
               {NT_SECTIONS.map(section => {
-                const books = NT_BOOKS.filter(b => b.section === section && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                const books = NT_BOOKS.filter(b => b.section === section && matchesBookSearch(b, searchQuery));
                 if (!books.length) return null;
+                const division = divisionForSection(section);
                 return (
                   <div key={section} className="flex flex-col gap-3">
-                    <button 
+                    <button
                       onClick={() => toggleSection(section)}
                       className="flex items-center justify-between border-b border-card-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
                     >
-                      <p className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">{section}</p>
+                      <span className="flex items-center gap-2">
+                        <span className={`w-1.5 h-1.5 rounded-full ${division.color.bg}`} aria-hidden="true" />
+                        <p className={`text-[0.6875rem] font-bold uppercase tracking-widest ${division.color.text}`}>{section}</p>
+                      </span>
                       {collapsedSections[section] ? (
                         <ChevronRight className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
                       ) : (
@@ -1127,7 +1544,7 @@ export const Guides: React.FC = () => {
                     {!collapsedSections[section] && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {books.map(book => (
-                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} />
+                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} mastery={mastery[book.id]} coversOnly={coversOnlyMode} />
                         ))}
                       </div>
                     )}

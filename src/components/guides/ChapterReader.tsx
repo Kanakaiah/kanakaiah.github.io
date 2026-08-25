@@ -14,6 +14,11 @@ import { useToast } from '../../context/ToastContext';
 import otQuotesData from '../../data/otQuotes.json';
 import { NT_STUDY_GUIDES } from '../../data/guides';
 import { OT_STUDY_GUIDES } from '../../data/otGuides';
+import { evaluateSM2 } from '../../utils/sm2';
+import { chapterProgressKey } from '../../types/models';
+import type { ChapterProgress } from '../../types/models';
+import { divisionForSection } from '../../data/palette';
+import { useMastery } from '../../utils/mastery';
 
 const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES];
 
@@ -31,6 +36,17 @@ const cachedStrongsDicts: Record<string, Record<string, StrongsDefinition>> = {}
 const chapterTextCache = new Map<string, Promise<Verse[]>>();
 // The same chapters once they've resolved, so a revisit can render without awaiting.
 const chapterTextSettled = new Map<string, Verse[]>();
+
+// How many times the end-of-chapter recall card has been dismissed (not graded) this
+// session — module-level rather than component state because the reader component
+// instance persists across chapter navigation (see goToChapter), and the intent is a
+// per-session cap, not a per-chapter one. Resets on a full page reload, same as every
+// other module-level cache in this file.
+let recallCardDismissCount = 0;
+
+function formatShortDate(iso: string): string {
+  return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
 
 // Common function words that should NOT be underlined in α mode
 const SKIP_WORDS = new Set([
@@ -188,6 +204,72 @@ function extractHeadings(verses: Verse[]): Record<number, string[]> {
 
 const HEADING_CLASSES = 'mt-10 first-of-type:mt-0 mb-4 text-[1.2em] font-bold tracking-tight text-accent-light font-heading italic leading-snug break-words w-full block';
 
+// End-of-chapter recall card. A local component (not its own file) for the same
+// reason ChapterAnchorCard lives inside Guides.tsx — it exists only to answer the
+// one question this reader asks, and has no reason to be reused anywhere else.
+const RecallCard: React.FC<{
+  bookId: string;
+  chapter: number;
+  anchor: { word: string; scene: string };
+  revealed: boolean;
+  onReveal: () => void;
+  onGrade: (score: number) => void;
+  onDismiss: () => void;
+  chromeVisible: boolean;
+}> = ({ bookId, chapter, anchor, revealed, onReveal, onGrade, onDismiss, chromeVisible }) => {
+  const [imgErr, setImgErr] = useState(false);
+  const imgPath = `/chapters/${bookId}/ch${chapter}.png`;
+
+  return (
+    <div
+      className={`fixed bottom-0 left-0 right-0 z-20 bg-card border-t border-card-border shadow-[0_-8px_24px_rgba(0,0,0,0.12)] transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 4.75rem)' }}
+    >
+      <div className="max-w-2xl mx-auto w-full px-5 pt-4 pb-3 flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">What anchors this chapter?</span>
+          <button onClick={onDismiss} className="p-1 -mr-1 rounded-full hover:bg-card-hover transition-colors" aria-label="Dismiss">
+            <X className="w-4 h-4 text-muted" />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="relative w-16 h-16 rounded-md overflow-hidden bg-card-elevated flex-shrink-0 border border-card-border">
+            {!imgErr ? (
+              <img src={imgPath} alt="" loading="lazy" onError={() => setImgErr(true)} className={`absolute inset-0 w-full h-full object-cover transition-opacity ${revealed ? 'opacity-100' : 'opacity-100 blur-[6px]'}`} />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-lg font-heading font-bold text-muted/40">{chapter}</div>
+            )}
+          </div>
+
+          {!revealed ? (
+            <button
+              onClick={onReveal}
+              className="flex-1 text-left px-4 py-3 rounded-md border border-dashed border-card-border-hover text-sm font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
+            >
+              Tap to reveal
+            </button>
+          ) : (
+            <div className="flex-1 flex flex-col gap-0.5">
+              <span className="font-bold text-accent text-base">{anchor.word}</span>
+              <span className="text-xs text-muted italic leading-snug">{anchor.scene}</span>
+            </div>
+          )}
+        </div>
+
+        {revealed && (
+          <div className="grid grid-cols-4 gap-2 mt-1">
+            <button onClick={() => onGrade(1)} className="py-2 flex items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 text-xs font-bold">Blank</button>
+            <button onClick={() => onGrade(2)} className="py-2 flex items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 text-xs font-bold">Hard</button>
+            <button onClick={() => onGrade(4)} className="py-2 flex items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 text-xs font-bold">Good</button>
+            <button onClick={() => onGrade(5)} className="py-2 flex items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 text-xs font-bold">Easy</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Borrowed headings get a small LSB tag: the wording is the LSB's editorial choice, and
 // the NLT in particular words and places its own headings quite differently, so they
 // shouldn't read as the publisher's.
@@ -246,22 +328,105 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   };
   const [showOptions, setShowOptions] = useState(false);
   const [showAnchorScene, setShowAnchorScene] = useState(false);
-  useEffect(() => { setShowAnchorScene(false); }, [bookId, chapter]);
+  // Gates the anchor *word* itself under anchorReveal === 'tap' — separate from
+  // showAnchorScene, which gates the scene line and stays meaningful once the word
+  // is already showing (a second tap on an already-revealed anchor toggles the
+  // scene, it doesn't hide the word again).
+  const [anchorWordRevealed, setAnchorWordRevealed] = useState(false);
+  useEffect(() => { setShowAnchorScene(false); setAnchorWordRevealed(false); }, [bookId, chapter]);
+  const { state, dispatch } = useApp();
+  const bibleVersion = state.settings.bibleVersion || 'LSB';
+  const { showToast } = useToast();
+  // For the navigator's book list — same theme-word/division/mastery treatment as
+  // the Bible index modal (Guides.tsx), so the two most-seen book lists in the app
+  // read the same way instead of one carrying mnemonic context and the other not.
+  const navigatorMastery = useMastery(ALL_BOOKS);
   // The one-word chapter anchor from the book guide (e.g. "HANDS" for Genesis 27) —
   // the same mnemonic the guide page teaches, resurfaced here so it isn't lost the
   // moment a reader leaves that page. Guides key anchors by chapter number only, so
   // this doesn't apply to single-chapter books where the guide's "chapters" are
   // really verse ranges.
+  const currentGuide: any = useMemo(() => ALL_GUIDES.find((g: any) => g.id === bookId), [bookId]);
   const chapterAnchor = useMemo(() => {
-    const guide: any = ALL_GUIDES.find((g: any) => g.id === bookId);
-    return guide?.anchors?.find((a: any) => Number(a.ch) === chapter) || null;
-  }, [bookId, chapter]);
+    return currentGuide?.anchors?.find((a: any) => Number(a.ch) === chapter) || null;
+  }, [currentGuide, chapter]);
+  // The neighboring chapters' own anchors, so paging becomes a repetition of the
+  // chain instead of a bare number — "‹ STEW 25" tells you what's back there without
+  // having to go look. Only meaningful within the same book (a book boundary already
+  // shows the adjacent book's name instead — see prevLabel/nextLabel below), and not
+  // for single-chapter books, whose "anchors" are verse ranges, not chapter numbers.
+  const neighborAnchors = useMemo(() => {
+    if (!currentGuide?.anchors) return { prev: null as string | null, next: null as string | null };
+    // 'never' opts out of anchors appearing inline anywhere they weren't asked
+    // for, which includes the paging hints, not just the header chip.
+    if (state.settings.anchorReveal === 'never') return { prev: null, next: null };
+    const isVerseBased = !!currentGuide.architecture?.some((b: any) => b.unit === 'verse');
+    if (isVerseBased) return { prev: null, next: null };
+    const find = (ch: number) => currentGuide.anchors!.find((a: any) => Number(a.ch) === ch)?.word || null;
+    return { prev: find(chapter - 1), next: find(chapter + 1) };
+  }, [currentGuide, chapter, state.settings.anchorReveal]);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
   const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(cachedCrossRefs);
   const [paragraphBreaks, setParagraphBreaks] = useState<Record<string, Record<string, number[]>> | null>(cachedParagraphBreaks);
-  const { state, dispatch } = useApp();
-  const bibleVersion = state.settings.bibleVersion || 'LSB';
-  const { showToast } = useToast();
+
+  // Anchor reveal preference — 'tap' (default) hides the word until the reader taps
+  // for it, matching the header chip's own toggle below; 'always' restores the old
+  // always-visible behavior; 'never' hides it everywhere but the end-of-chapter card.
+  const anchorReveal = state.settings.anchorReveal || 'tap';
+
+  // This chapter's own recall/read record, if any — read to show "read N times" and
+  // to seed the recall card's grading with whatever SM2 state already exists.
+  const chapterKey = useMemo(() => chapterProgressKey(bookId, chapter), [bookId, chapter]);
+  const chapterRecord = state.chapterProgress[chapterKey];
+
+  // End-of-chapter recall card — fires once per chapter visit when the reader
+  // scrolls to the bottom, the same moment handleScroll already detects for the
+  // reading-progress rule. Suppressed once the anchor is already shown inline
+  // (anchorReveal === 'always') and capped at two dismissals per session so a
+  // reader who isn't interested isn't nagged on every chapter for the rest of
+  // their visit.
+  const [showRecallCard, setShowRecallCard] = useState(false);
+  const [recallCardShownThisVisit, setRecallCardShownThisVisit] = useState(false);
+  const [recallRevealed, setRecallRevealed] = useState(false);
+  useEffect(() => {
+    setShowRecallCard(false);
+    setRecallCardShownThisVisit(false);
+    setRecallRevealed(false);
+  }, [bookId, chapter]);
+
+  const markChapterRead = useCallback(() => {
+    dispatch({ type: 'MARK_CHAPTER_READ', payload: { bookId, chapter } });
+    if (state.settings.streakIncludesChapters !== false) {
+      dispatch({ type: 'RECORD_ACTIVITY' });
+    }
+  }, [dispatch, bookId, chapter, state.settings.streakIncludesChapters]);
+
+  const gradeChapterRecall = (score: number) => {
+    const base = chapterRecord?.sm2 || { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
+    const { newSM2, newStatus } = evaluateSM2(base, score);
+    const updated: ChapterProgress = {
+      bookId,
+      chapter,
+      sm2: newSM2,
+      status: newStatus,
+      attempts: (chapterRecord?.attempts || 0) + 1,
+      lastScore: score,
+      lastAttemptDate: new Date().toISOString(),
+      readCount: chapterRecord?.readCount || 0,
+      lastReadDate: chapterRecord?.lastReadDate || null,
+    };
+    dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
+    if (state.settings.streakIncludesChapters !== false) {
+      dispatch({ type: 'RECORD_ACTIVITY' });
+    }
+    setShowRecallCard(false);
+    showToast('Chapter recall logged.', 'success');
+  };
+
+  const dismissRecallCard = () => {
+    recallCardDismissCount += 1;
+    setShowRecallCard(false);
+  };
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
   const [showAddOptions, setShowAddOptions] = useState(false);
   const [showNavigator, setShowNavigator] = useState(false);
@@ -344,8 +509,19 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
     const totalHeight = target.scrollHeight - target.clientHeight;
-    if (totalHeight > 0) {
-      setScrollProgress((target.scrollTop / totalHeight) * 100);
+    if (totalHeight <= 0) return;
+    const progress = (target.scrollTop / totalHeight) * 100;
+    setScrollProgress(progress);
+
+    // Reaching the bottom is both "this chapter was read" and the moment to offer
+    // the recall card — the best-primed instant available, and the only one this
+    // reader gets for free. Guarded to fire once per chapter visit.
+    if (progress >= 98 && !recallCardShownThisVisit) {
+      setRecallCardShownThisVisit(true);
+      markChapterRead();
+      if (chapterAnchor && anchorReveal !== 'always' && recallCardDismissCount < 2) {
+        setShowRecallCard(true);
+      }
     }
   };
 
@@ -367,9 +543,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   };
 
   if (currentBook) {
+    // Within the same book, lead the label with the neighboring chapter's own
+    // anchor word — "STEW 25" instead of a bare number — so paging becomes a
+    // repetition of the chain rather than a wayfinding control that teaches
+    // nothing. Crossing a book boundary has no anchor to show (that chapter
+    // belongs to a different guide) and falls back to the plain book/chapter form.
     if (chapter > 1) {
-      prevLabel = `${bookTitle} ${chapter - 1}`;
-      prevAbbrLabel = `${getAbbr(bookTitle)} ${chapter - 1}`;
+      const anchorPrefix = neighborAnchors.prev ? `${neighborAnchors.prev} · ` : '';
+      prevLabel = `${anchorPrefix}${bookTitle} ${chapter - 1}`;
+      prevAbbrLabel = neighborAnchors.prev ? `${neighborAnchors.prev} ${chapter - 1}` : `${getAbbr(bookTitle)} ${chapter - 1}`;
     } else if (bookIndex > 0) {
       const prev = ALL_BOOKS[bookIndex - 1];
       prevLabel = `${prev.name} ${prev.chapters}`;
@@ -377,8 +559,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     }
 
     if (chapter < currentBook.chapters) {
-      nextLabel = `${bookTitle} ${chapter + 1}`;
-      nextAbbrLabel = `${getAbbr(bookTitle)} ${chapter + 1}`;
+      const anchorSuffix = neighborAnchors.next ? ` · ${neighborAnchors.next}` : '';
+      nextLabel = `${bookTitle} ${chapter + 1}${anchorSuffix}`;
+      nextAbbrLabel = neighborAnchors.next ? `${chapter + 1} ${neighborAnchors.next}` : `${getAbbr(bookTitle)} ${chapter + 1}`;
     } else if (bookIndex < ALL_BOOKS.length - 1) {
       nextLabel = `${ALL_BOOKS[bookIndex + 1].name} 1`;
       nextAbbrLabel = `${getAbbr(ALL_BOOKS[bookIndex + 1].name)} 1`;
@@ -1368,20 +1551,42 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               }`}>
                 {alphaMode ? 'KJV + Original Words' : `${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} Translation`}
               </span>
-              {chapterAnchor && (
+              {/* anchorReveal 'always' shows the word straight away and a tap
+                  only toggles the scene, matching the pre-recall behavior.
+                  'tap' (the default) asks first: the chip reads "Tap for
+                  anchor" until tapped, at which point the word and scene both
+                  reveal together — the single highest-leverage change on this
+                  screen, since the chip used to hand over the answer to the
+                  chapter's own memory device before the chapter was read.
+                  'never' drops the chip entirely; the word still surfaces
+                  through the end-of-chapter recall card. */}
+              {chapterAnchor && anchorReveal !== 'never' && (
                 <button
-                  onClick={() => setShowAnchorScene(v => !v)}
+                  onClick={() => {
+                    if (anchorReveal === 'tap' && !anchorWordRevealed) {
+                      setAnchorWordRevealed(true);
+                      setShowAnchorScene(true);
+                    } else {
+                      setShowAnchorScene(v => !v);
+                    }
+                  }}
                   className="text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-card-elevated border border-card-border text-secondary hover:text-primary hover:border-card-border-hover transition-colors"
                   title="This chapter's memory anchor"
                   aria-expanded={showAnchorScene}
                 >
-                  {chapterAnchor.word}
+                  {anchorReveal === 'tap' && !anchorWordRevealed ? 'Tap for anchor' : chapterAnchor.word}
                 </button>
               )}
             </div>
-            {chapterAnchor && showAnchorScene && (
+            {chapterAnchor && showAnchorScene && (anchorReveal !== 'tap' || anchorWordRevealed) && (
               <p className="text-xs text-muted italic text-center px-10 mt-1.5 max-w-sm mx-auto leading-snug">
                 {chapterAnchor.scene}
+              </p>
+            )}
+            {chapterRecord && chapterRecord.readCount > 0 && (
+              <p className="text-[0.625rem] text-muted mt-1 tabular-nums">
+                Read {chapterRecord.readCount} time{chapterRecord.readCount === 1 ? '' : 's'}
+                {chapterRecord.lastReadDate ? ` · last ${formatShortDate(chapterRecord.lastReadDate)}` : ''}
               </p>
             )}
           </div>
@@ -1705,6 +1910,23 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         </div>
       )}
 
+      {/* End-of-chapter recall card — slides in once handleScroll crosses ~98%.
+          The best-primed moment this reader gets for free: the reader has just
+          finished the chapter this anchor belongs to. Sits above the bottom nav
+          bar rather than replacing it, so paging away is still one tap. */}
+      {showRecallCard && chapterAnchor && (
+        <RecallCard
+          bookId={bookId}
+          chapter={chapter}
+          anchor={chapterAnchor}
+          revealed={recallRevealed}
+          onReveal={() => setRecallRevealed(true)}
+          onGrade={gradeChapterRecall}
+          onDismiss={dismissRecallCard}
+          chromeVisible={chromeVisible}
+        />
+      )}
+
       {/* Bottom Chapter Navigation Bar — hidden while the "Go back to..." return
           pill is showing (below), since both are fixed to the bottom edge and
           would otherwise stack on top of each other. */}
@@ -1725,9 +1947,19 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             <button
               onClick={() => { setNavigatorBook(bookId); setShowNavigator(true); }}
               className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
-              aria-label={chapterAnchor ? `Jump to a different book or chapter — this chapter's anchor is ${chapterAnchor.word}` : 'Jump to a different book or chapter'}
+              // The header chip above is the one place that shows or hides this
+              // chapter's anchor per anchorReveal — this button used to print the
+              // same word a second time regardless of that setting, which handed
+              // over the answer even when the chip was still hiding it. The
+              // aria-label keeps mentioning it when revealed, since a screen
+              // reader user gets no benefit from the visual hide/reveal game.
+              aria-label={
+                chapterAnchor && (anchorReveal === 'always' || anchorWordRevealed)
+                  ? `Jump to a different book or chapter — this chapter's anchor is ${chapterAnchor.word}`
+                  : 'Jump to a different book or chapter'
+              }
             >
-              {chapterAnchor ? `${chapterAnchor.word} · Ch ${chapter}` : `Ch ${chapter}`}
+              Ch {chapter}
               <ChevronDown className="w-3 h-3" />
             </button>
 
@@ -1813,29 +2045,46 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   const isOtSelected = ot?.id === navigatorBook;
                   const isNtSelected = nt?.id === navigatorBook;
 
+                  const otDivision = ot ? divisionForSection(ot.section) : null;
+                  const ntDivision = nt ? divisionForSection(nt.section) : null;
+                  const otMastery = ot ? navigatorMastery[ot.id] : undefined;
+                  const ntMastery = nt ? navigatorMastery[nt.id] : undefined;
+
                   rows.push(
                     <React.Fragment key={`row-${i}`}>
                       <button
                         onClick={() => ot && setNavigatorBook(ot.id)}
-                        className={`text-right pr-4 py-2 text-[15px] transition-colors ${
+                        className={`flex items-center justify-end gap-1.5 pr-4 py-2 transition-colors ${
                           isOtSelected
-                            ? 'text-accent font-bold bg-accent/10 rounded-r-lg'
+                            ? 'text-accent bg-accent/10 rounded-r-lg'
                             : ot ? 'text-secondary hover:text-primary' : 'pointer-events-none'
                         }`}
                         disabled={!ot}
                       >
-                        {ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}
+                        {ot && (
+                          <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${otMastery && otMastery.secure > 0 ? otDivision!.color.bg : 'bg-card-border'}`} aria-hidden="true" />
+                        )}
+                        <span className="flex flex-col items-end min-w-0">
+                          <span className={`text-[15px] leading-tight ${isOtSelected ? 'font-bold' : 'font-medium'}`}>{ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}</span>
+                          {ot && <span className={`text-[0.625rem] leading-tight truncate max-w-[110px] ${otDivision!.color.text} opacity-80`}>{ot.themeWord}</span>}
+                        </span>
                       </button>
                       <button
                         onClick={() => nt && setNavigatorBook(nt.id)}
-                        className={`text-left pl-4 py-2 text-[15px] font-medium transition-colors ${
+                        className={`flex items-center justify-start gap-1.5 pl-4 py-2 transition-colors ${
                           isNtSelected
-                            ? 'text-accent font-bold bg-accent/10 rounded-l-lg'
+                            ? 'text-accent bg-accent/10 rounded-l-lg'
                             : nt ? 'text-secondary hover:text-primary' : 'pointer-events-none'
                         }`}
                         disabled={!nt}
                       >
-                        {nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}
+                        <span className="flex flex-col items-start min-w-0">
+                          <span className={`text-[15px] leading-tight ${isNtSelected ? 'font-bold' : 'font-medium'}`}>{nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}</span>
+                          {nt && <span className={`text-[0.625rem] leading-tight truncate max-w-[110px] ${ntDivision!.color.text} opacity-80`}>{nt.themeWord}</span>}
+                        </span>
+                        {nt && (
+                          <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ntMastery && ntMastery.secure > 0 ? ntDivision!.color.bg : 'bg-card-border'}`} aria-hidden="true" />
+                        )}
                       </button>
                     </React.Fragment>
                   );

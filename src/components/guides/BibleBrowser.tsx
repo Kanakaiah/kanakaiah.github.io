@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
-import { Search, Check } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { NT_BOOKS, NT_SECTIONS, type NTBook } from '../../data/ntBooks';
 import { OT_BOOKS, OT_SECTIONS, type OTBook } from '../../data/otBooks';
+import { divisionForSection } from '../../data/palette';
+import { useMastery, type BookMasteryCounts } from '../../utils/mastery';
 
 type Book = NTBook | OTBook;
 
 // ─── Book Card ────────────────────────────────────────────────────────────────
 
-export const BookCard: React.FC<{ book: Book; onClick: () => void }> = ({ book, onClick }) => {
+export const BookCard: React.FC<{
+  book: Book;
+  onClick: () => void;
+  mastery?: BookMasteryCounts;
+  /** Drops the name, subtitle and key word, leaving only art and the theme word —
+   * a recognition pass through the same grid rather than a lookup list. See the
+   * "Covers only" toggle on the Bible index. */
+  coversOnly?: boolean;
+}> = ({ book, onClick, mastery, coversOnly }) => {
   const [imgErr, setImgErr] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const division = divisionForSection(book.section);
 
   return (
     <button
@@ -27,7 +38,7 @@ export const BookCard: React.FC<{ book: Book; onClick: () => void }> = ({ book, 
         {!imgErr ? (
           <img
             src={book.image}
-            alt={book.name}
+            alt={coversOnly ? '' : book.name}
             loading="lazy"
             onLoad={() => setImgLoaded(true)}
             onError={() => { setImgErr(true); setImgLoaded(true); }}
@@ -39,21 +50,33 @@ export const BookCard: React.FC<{ book: Book; onClick: () => void }> = ({ book, 
           </div>
         )}
 
-        {/* Single badge — guide indicator, the only thing that still sits on the image */}
-        {book.hasGuide && (
-          <div className="absolute top-3 right-3 bg-black/60 px-2.5 py-1 rounded-md flex items-center gap-1">
-            <Check className="w-2.5 h-2.5 text-white" />
-            <span className="text-[0.625rem] font-bold text-white uppercase tracking-wide">Guide</span>
+        {coversOnly && (
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-4 pt-8 pb-3">
+            <span className="font-heading font-bold uppercase tracking-wide text-sm text-white drop-shadow">{book.themeWord}</span>
           </div>
         )}
       </div>
 
-      {/* Caption — title, subtitle, and the meta line, all off the image now */}
-      <div className="p-5 flex flex-col gap-1.5">
-        <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{book.keyWord} · {book.themeWord} · {book.chapters} chapters</span>
-        <h3 className="text-primary font-heading font-semibold text-2xl leading-tight">{book.name}</h3>
-        <p className="text-secondary text-sm italic font-serif leading-snug">{book.subtitle}</p>
-      </div>
+      {!coversOnly && (
+        <>
+          {/* Caption — title, subtitle, and the meta line, all off the image now */}
+          <div className="p-5 flex flex-col gap-1.5">
+            <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{book.keyWord} · {book.themeWord} · {book.chapters} chapters</span>
+            <h3 className="text-primary font-heading font-semibold text-2xl leading-tight">{book.name}</h3>
+            <p className="text-secondary text-sm italic font-serif leading-snug">{book.subtitle}</p>
+          </div>
+          {/* A hairline rule, filled to the share of chapters graded secure, tinted
+              by the book's canon division — replaces the old "Guide" badge, which
+              every book has satisfied since every book has a guide now and so had
+              stopped communicating anything. This moves with the reader instead. */}
+          <div className="h-[3px] bg-card-elevated" aria-hidden="true">
+            <div
+              className={`h-full ${division.color.bg} transition-[width] duration-300`}
+              style={{ width: `${Math.round((mastery?.securePct ?? 0) * 100)}%` }}
+            />
+          </div>
+        </>
+      )}
     </button>
   );
 };
@@ -82,6 +105,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
   };
 
   const ALL_BOOKS: Book[] = [...OT_BOOKS, ...NT_BOOKS];
+  const mastery = useMastery(ALL_BOOKS);
   const isSearching = searchQuery.trim().length > 0;
 
   // When searching, merge both testaments and filter across all books
@@ -131,7 +155,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
               </p>
               <div className="flex flex-col gap-2">
                 {searchResults.map(book => (
-                  <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} />
+                  <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                 ))}
               </div>
             </div>
@@ -148,13 +172,17 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
             if (!books.length) return null;
             return (
               <div key={section} className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 border-b border-card-border pb-1">
-                  <p className="text-xs font-bold text-muted uppercase tracking-widest">{section}</p>
+                {/* Sticky within the scroll container — position inside a long
+                    (up to 39-book) list survives the scroll, matching the same
+                    idea as the book guide's block ribbon one level in. */}
+                <div className="sticky top-0 z-10 bg-background flex items-center gap-2 border-b border-card-border py-2">
+                  <span className={`w-1.5 h-1.5 rounded-full ${divisionForSection(section).color.bg}`} aria-hidden="true" />
+                  <p className={`text-xs font-bold uppercase tracking-widest ${divisionForSection(section).color.text}`}>{section}</p>
                   <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
                 <div className="flex flex-col gap-2">
                   {books.map(book => (
-                    <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} />
+                    <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                   ))}
                 </div>
               </div>
@@ -172,13 +200,17 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
             if (!books.length) return null;
             return (
               <div key={section} className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 border-b border-card-border pb-1">
-                  <p className="text-xs font-bold text-muted uppercase tracking-widest">{section}</p>
+                {/* Sticky within the scroll container — position inside a long
+                    (up to 39-book) list survives the scroll, matching the same
+                    idea as the book guide's block ribbon one level in. */}
+                <div className="sticky top-0 z-10 bg-background flex items-center gap-2 border-b border-card-border py-2">
+                  <span className={`w-1.5 h-1.5 rounded-full ${divisionForSection(section).color.bg}`} aria-hidden="true" />
+                  <p className={`text-xs font-bold uppercase tracking-widest ${divisionForSection(section).color.text}`}>{section}</p>
                   <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
                 <div className="flex flex-col gap-2">
                   {books.map(book => (
-                    <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} />
+                    <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                   ))}
                 </div>
               </div>

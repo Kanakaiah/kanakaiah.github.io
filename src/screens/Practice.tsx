@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2 } from '../utils/sm2';
+import { dueChapters } from '../utils/mastery';
 import type { Verse } from '../types/models';
 
 // Subcomponents
@@ -14,15 +15,36 @@ import { ScrambleMode } from '../components/practice/ScrambleMode';
 import { TypingMode } from '../components/practice/TypingMode';
 import { SpeechMode } from '../components/practice/SpeechMode';
 import { ImmersedReader } from '../components/practice/ImmersedReader';
+import { AnchorDrill } from '../components/practice/AnchorDrill';
 import { Button } from '../components/ui/Button';
 
 type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'immersed';
+
+type Subject = 'verses' | 'chapters';
 
 export const Practice: React.FC = () => {
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
+
+  // Verses vs. Chapters — the same screen and the same SM2 grading loop, pointed
+  // at a different kind of recall. Chapters renders an entirely separate
+  // component (AnchorDrill) rather than trying to thread a second item type
+  // through the verse-specific mode machinery below (ReadMode, EraserMode, TTS
+  // auto-play, the cross-verse selection state) — that machinery is real
+  // complexity earned by verses specifically, and generalizing all of it was a
+  // materially larger, riskier change than this screen's other moves for the
+  // value it would add over a clean second branch.
+  //
+  // A navigation can arrive already asking for Chapters — the testament browser's
+  // "Test me on these N" button, or a due-chapter empty-state redirect elsewhere —
+  // via location.state, the same channel Guides.tsx already uses for
+  // scrollToMemorySentence.
+  const navState = location.state as { subject?: Subject; sweepBookIds?: string[] } | null;
+  const [subject, setSubject] = useState<Subject>(navState?.subject || 'verses');
+  const sweepBookIds = navState?.sweepBookIds;
 
   const [activeMode, setActiveMode] = useState<PracticeMode>('read');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
@@ -33,6 +55,14 @@ export const Practice: React.FC = () => {
   React.useEffect(() => {
     setIsAutoPlaying(state.settings.ttsEnabled);
   }, [state.settings.ttsEnabled]);
+
+  // Consume the incoming subject/sweep request once, then clear it — otherwise
+  // it would sit in browser history and silently re-trigger a testament sweep the
+  // next time something merely navigates back to /practice.
+  React.useEffect(() => {
+    if (navState) navigate(location.pathname + location.search, { replace: true, state: {} });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [hintLevel, setHintLevel] = useState(0);
 
@@ -158,6 +188,10 @@ export const Practice: React.FC = () => {
     };
     
     dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
+    // The streak action existed in the reducer with nothing in the app ever
+    // dispatching it, so the flame on Today and in the shell header had shown
+    // zero for every session. This is where it actually starts counting.
+    dispatch({ type: 'RECORD_ACTIVITY' });
     setIsEvaluationOpen(false);
     showToast(`Score logged. Next review in ${newSM2.interval} days.`, 'success');
   };
@@ -279,6 +313,16 @@ export const Practice: React.FC = () => {
     };
   }, [verses.length]);
 
+  // Switches the whole screen to the chapter-anchor drill — see the Subject type
+  // note above. Placed ahead of the verse empty-states below so choosing it from
+  // either of their "drill chapters instead" buttons actually leaves verse-land
+  // rather than merely offering to.
+  if (subject === 'chapters') {
+    return <AnchorDrill onExit={() => setSubject('verses')} sweepBookIds={sweepBookIds} />;
+  }
+
+  const dueChapter = dueChapters(state.chapterProgress)[0];
+
   // If there are no verses, show empty state
   if (state.verses.length === 0) {
     return (
@@ -288,7 +332,11 @@ export const Practice: React.FC = () => {
         </div>
         <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
         <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
-        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+        {dueChapter ? (
+          <Button onClick={() => setSubject('chapters')}>Drill Chapter Anchors Instead</Button>
+        ) : (
+          <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+        )}
       </div>
     );
   }
@@ -297,8 +345,14 @@ export const Practice: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
         <h2 className="text-xl font-bold text-primary mb-2">You're All Caught Up!</h2>
-        <p className="text-secondary mb-6">No verses are currently due for review.</p>
-        <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+        <p className="text-secondary mb-6">
+          {dueChapter ? 'No verses due — but a chapter anchor is.' : 'No verses are currently due for review.'}
+        </p>
+        {dueChapter ? (
+          <Button onClick={() => setSubject('chapters')}>Drill Chapter Anchors</Button>
+        ) : (
+          <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
+        )}
       </div>
     );
   }
@@ -450,6 +504,24 @@ export const Practice: React.FC = () => {
         {/* Mode Selector (Moved to Bottom) — extra bottom padding clears the fixed
             verse-navigation bar below. */}
         <div className="flex flex-col gap-5 pb-24 lg:pb-24">
+            {/* Subject switch — reachable here too, not only from the two empty
+                states above, so a reader mid-verse-session can still jump over to
+                chapter anchors without leaving Practice. */}
+            <div className="flex items-center justify-center gap-1 -mt-1">
+              <span className="text-[0.625rem] font-bold uppercase tracking-widest text-muted mr-1">Practicing</span>
+              {(['verses', 'chapters'] as Subject[]).map(s => (
+                <button
+                  key={s}
+                  onClick={() => setSubject(s)}
+                  className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide transition-colors ${
+                    subject === s ? 'bg-accent text-white' : 'text-muted hover:text-primary'
+                  }`}
+                >
+                  {s === 'verses' ? 'Verses' : 'Chapters'}
+                </button>
+              ))}
+            </div>
+
             {/* Primary Modes — plain text tabs with an underline indicator */}
             <div className="grid grid-cols-4 border-b border-card-border">
               {[

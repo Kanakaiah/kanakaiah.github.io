@@ -12,6 +12,8 @@ import type { Verse } from '../types/models';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
 import { guidePath } from '../utils/readerRoute';
+import { useMastery } from '../utils/mastery';
+import { ShapeMeter } from '../components/dashboard/ShapeMeter';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
@@ -49,15 +51,60 @@ export const Dashboard: React.FC = () => {
     return { memorized, learning, accuracy, dueForReview, reviewed: highScores };
   }, [state.verses]);
 
-  // Book guides whose Memory Sentence recall is due — the structural-memory
-  // counterpart to dueForReview above, scheduled through the same SM2 engine.
-  const dueMemorySentences = useMemo(() => {
+  // Book Recall — structural memory (chapter anchors and the Memory Sentence) for
+  // the reader's library of books, the counterpart to dueForReview above for
+  // verses. Unlike the old version (only ever visible when something was overdue,
+  // and only ever a bare book name), this stays on screen with real counts and
+  // falls back to "next up" — the most-advanced-but-incomplete books — when
+  // nothing is due, so the chapter side of the app doesn't disappear from Today
+  // the moment a reader is caught up.
+  const mastery = useMastery(ALL_BOOKS);
+  const bookRecallRows = useMemo(() => {
     const now = new Date();
-    return Object.values(state.memorySentenceProgress)
-      .filter(p => new Date(p.sm2.nextDueDate) <= now)
-      .map(p => ({ progress: p, book: ALL_BOOKS.find(b => b.id === p.guideId) }))
-      .filter((entry): entry is { progress: typeof entry.progress; book: NonNullable<typeof entry.book> } => !!entry.book);
-  }, [state.memorySentenceProgress]);
+    const dueChapterCounts = new Map<string, number>();
+    Object.values(state.chapterProgress).forEach(p => {
+      if (p.attempts > 0 && new Date(p.sm2.nextDueDate) <= now) {
+        dueChapterCounts.set(p.bookId, (dueChapterCounts.get(p.bookId) || 0) + 1);
+      }
+    });
+    const dueSentenceIds = new Set(
+      Object.values(state.memorySentenceProgress)
+        .filter(p => new Date(p.sm2.nextDueDate) <= now)
+        .map(p => p.guideId)
+    );
+
+    const buildRow = (bookId: string) => {
+      const book = ALL_BOOKS.find(b => b.id === bookId);
+      if (!book) return null;
+      return {
+        book,
+        mastery: mastery[bookId],
+        dueChapterCount: dueChapterCounts.get(bookId) || 0,
+        sentenceDue: dueSentenceIds.has(bookId),
+      };
+    };
+
+    const dueBookIds = new Set([...dueChapterCounts.keys(), ...dueSentenceIds]);
+    if (dueBookIds.size > 0) {
+      return [...dueBookIds]
+        .map(buildRow)
+        .filter((r): r is NonNullable<typeof r> => !!r)
+        .sort((a, b) => (b.dueChapterCount + (b.sentenceDue ? 1 : 0)) - (a.dueChapterCount + (a.sentenceDue ? 1 : 0)))
+        .slice(0, 5);
+    }
+
+    // Nothing due — surface books already underway, most chapters secure first, so
+    // "next up" continues real momentum rather than defaulting to Genesis.
+    return ALL_BOOKS
+      .filter(b => {
+        const m = mastery[b.id];
+        return m && m.secure < m.total && (m.secure > 0 || m.learning > 0 || m.seen > 0);
+      })
+      .sort((a, b) => (mastery[b.id]?.secure || 0) - (mastery[a.id]?.secure || 0))
+      .slice(0, 3)
+      .map(b => buildRow(b.id))
+      .filter((r): r is NonNullable<typeof r> => !!r);
+  }, [state.chapterProgress, state.memorySentenceProgress, mastery]);
 
   // Stable random sort keys to prevent re-shuffling on every render
   const randomSortKeys = useMemo(() => {
@@ -159,43 +206,71 @@ export const Dashboard: React.FC = () => {
               All caught up
             </h3>
             <p className="text-base text-secondary mb-8 max-w-md leading-relaxed">
-              You have no verses due for review right now. Add some new verses or review your memorized ones.
+              {bookRecallRows.length > 0 && bookRecallRows.some(r => r.dueChapterCount > 0 || r.sentenceDue)
+                ? 'No verses due — but a chapter or two is. Keep the streak going below.'
+                : 'You have no verses due for review right now. Add some new verses or review your memorized ones.'}
             </p>
             <button
-              onClick={() => navigate('/guides')}
+              onClick={() => {
+                const dueRow = bookRecallRows.find(r => r.dueChapterCount > 0 || r.sentenceDue);
+                if (dueRow) navigate(guidePath(dueRow.book.id), { state: { scrollToMemorySentence: dueRow.sentenceDue } });
+                else navigate('/guides');
+              }}
               className="border border-card-border hover:border-accent hover:text-accent text-primary font-semibold py-3 px-6 rounded-md flex items-center gap-2 transition-colors duration-150"
             >
-              Explore Bible <ArrowRight className="w-4 h-4" />
+              {bookRecallRows.some(r => r.dueChapterCount > 0 || r.sentenceDue) ? 'Drill Chapter Anchors' : 'Explore Bible'} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
       </div>
 
-      {/* Book Recall — structural memory (chapter anchors / memory sentence) due
-          for review, alongside the verse review above rather than buried on
-          each book's guide page. */}
-      {dueMemorySentences.length > 0 && (
+      {/* Book Recall — structural memory (chapter anchors / memory sentence) for the
+          reader's books, alongside the verse review above rather than buried on
+          each book's guide page. Unlike before, this stays on screen even when
+          nothing is due — falling back to "next up" — so the chapter side of the
+          app doesn't vanish from Today the moment verse review is caught up. */}
+      {bookRecallRows.length > 0 && (
         <div className="flex flex-col gap-3 border-b border-card-border pb-6">
           <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase flex items-center gap-2">
             <BookOpen className="w-3.5 h-3.5" /> Book Recall
           </h2>
           <div className="flex flex-col gap-2">
-            {dueMemorySentences.map(({ progress, book }) => (
-              <button
-                key={progress.guideId}
-                onClick={() => navigate(guidePath(progress.guideId), { state: { scrollToMemorySentence: true } })}
-                className="flex items-center justify-between gap-4 p-4 rounded-md border border-card-border hover:border-accent/40 transition-colors text-left"
-              >
-                <div className="flex flex-col min-w-0">
-                  <span className="font-heading font-bold text-primary text-base truncate">{book.name}</span>
-                  <span className="text-xs text-secondary">Memory Sentence &middot; due for review</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
-              </button>
-            ))}
+            {bookRecallRows.map(row => {
+              const isDue = row.dueChapterCount > 0 || row.sentenceDue;
+              const secure = row.mastery?.secure ?? 0;
+              const total = row.mastery?.total ?? row.book.chapters;
+              return (
+                <button
+                  key={row.book.id}
+                  onClick={() => navigate(guidePath(row.book.id), { state: { scrollToMemorySentence: row.sentenceDue } })}
+                  className="flex items-center justify-between gap-4 p-4 rounded-md border border-card-border hover:border-accent/40 transition-colors text-left"
+                >
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-heading font-bold text-primary text-base truncate">{row.book.name}</span>
+                    <span className="text-xs text-secondary tabular-nums">
+                      {secure} of {total} anchors secure
+                      {isDue ? (
+                        <> &middot; <span className="text-accent font-semibold">
+                          {row.dueChapterCount > 0 ? `${row.dueChapterCount} due today` : 'Memory Sentence due'}
+                        </span></>
+                      ) : ' · continue'}
+                    </span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
+
+      {/* Your Shape — the Bible-wide mastery meter, one cell per book. */}
+      <div className="flex flex-col gap-3 border-b border-card-border pb-6">
+        <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase flex items-center gap-2">
+          <BookOpen className="w-3.5 h-3.5" /> Your Shape
+        </h2>
+        <ShapeMeter />
+      </div>
 
       {/* Stats Row */}
       <div className="flex items-stretch border-b border-card-border pb-6">

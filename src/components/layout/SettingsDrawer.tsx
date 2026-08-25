@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Download, Upload, Trash2, Palette, Type, Brain, EyeOff, Volume2, AlertTriangle, BookOpen } from 'lucide-react';
+import { Download, Upload, Trash2, Palette, Type, Brain, EyeOff, Volume2, AlertTriangle, BookOpen, Layers, Flame } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { Card } from '../ui/Card';
@@ -27,6 +27,17 @@ const BIBLE_VERSION_OPTIONS = [
   { value: 'NASB', label: 'New American Standard Bible 1995 (NASB95)' },
   { value: 'NLT', label: 'New Living Translation (NLT)' },
 ];
+
+const ANCHOR_REVEAL_OPTIONS = [
+  { value: 'tap', label: 'Tap to reveal (default)' },
+  { value: 'always', label: 'Always show' },
+  { value: 'never', label: 'Never show inline' },
+];
+
+const DAILY_CHAPTER_TARGET_OPTIONS = Array.from({ length: 10 }, (_, i) => {
+  const n = i + 1;
+  return { value: String(n), label: `${n} chapter${n === 1 ? '' : 's'} / day` };
+});
 
 interface SettingsDrawerProps {
   isOpen: boolean;
@@ -277,6 +288,68 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: v as 'LSB' | 'NASB' | 'NLT' } })}
                         options={BIBLE_VERSION_OPTIONS}
                       />
+                    </div>
+                  </div>
+
+                </div>
+              </Card>
+            </section>
+
+            {/* Memory Section — chapter/book recall had no settings at all despite
+                being the reason the app exists, while the reading apparatus above
+                is finely configurable. Also where the reveal-inverting moves in
+                the reader and the book guide (default: tap to reveal) get their
+                escape hatch back to the old always-visible behavior. */}
+            <section className="flex flex-col gap-4 relative z-[15]">
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-5 h-5 rounded-md bg-cyan-500/15 flex items-center justify-center">
+                  <Layers className="w-3 h-3 text-cyan-500" />
+                </div>
+                <h2 className="text-xs uppercase tracking-widest font-bold text-secondary">Memory</h2>
+              </div>
+              <Card className="p-1 overflow-visible">
+                <div className="flex flex-col divide-y divide-card-border">
+
+                  <div className="p-4 flex flex-col gap-3">
+                    <div>
+                      <h3 className="font-bold text-primary text-sm">Chapter Anchor Reveal</h3>
+                      <p className="text-xs text-secondary">When a chapter's memory anchor shows in the reader and the book guide</p>
+                    </div>
+                    <div className="w-full">
+                      <CustomSelect
+                        value={state.settings.anchorReveal || 'tap'}
+                        onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { anchorReveal: v as 'always' | 'tap' | 'never' } })}
+                        options={ANCHOR_REVEAL_OPTIONS}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-4 flex flex-col gap-3">
+                    <div>
+                      <h3 className="font-bold text-primary text-sm">Daily Chapter Target</h3>
+                      <p className="text-xs text-secondary">How many chapter anchors Book Recall aims for each day</p>
+                    </div>
+                    <div className="w-full">
+                      <CustomSelect
+                        value={String(state.settings.dailyChapterTarget || 3)}
+                        onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { dailyChapterTarget: parseInt(v, 10) } })}
+                        options={DAILY_CHAPTER_TARGET_OPTIONS}
+                      />
+                    </div>
+                  </div>
+
+                  <div onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { streakIncludesChapters: state.settings.streakIncludesChapters === false } })} role="switch" aria-checked={state.settings.streakIncludesChapters !== false} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-b-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center shrink-0">
+                        <Flame className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-primary text-sm">Streak Includes Chapters</h3>
+                        <p className="text-xs text-secondary">Count chapter and Memory Sentence reviews toward your daily streak</p>
+                      </div>
+                    </div>
+                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${state.settings.streakIncludesChapters !== false ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
+                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${state.settings.streakIncludesChapters !== false ? 'translate-x-5' : 'translate-x-0'}`} />
                     </div>
                   </div>
 
