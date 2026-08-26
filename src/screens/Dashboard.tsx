@@ -17,6 +17,7 @@ import { guidePath } from '../utils/readerRoute';
 import { useMastery } from '../utils/mastery';
 import { ShapeMeter } from '../components/dashboard/ShapeMeter';
 import { FirstLetterMode } from '../components/practice/FirstLetterMode';
+import { SEED_VERSES } from '../data/seed';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
@@ -427,7 +428,23 @@ export const Dashboard: React.FC = () => {
               <BookOpen className="w-12 h-12 text-muted mb-4 opacity-50" />
               <p className="text-secondary font-medium mb-4">No verses found.</p>
               {state.verses.length === 0 && (
-                <Button onClick={() => navigate('?add=true')}>Add Your First Verse</Button>
+                <div className="flex flex-col items-center gap-3">
+                  <Button onClick={() => navigate('?add=true')}>Add Your First Verse</Button>
+                  {/* The curated set, offered rather than imposed. It used to be loaded
+                      into every new library automatically, so a reader's first sight of
+                      the app was seventy-five passages they had not chosen, already due.
+                      Beginning a memorization practice with someone else's backlog is a
+                      poor start for something that depends on wanting the material. */}
+                  <button
+                    onClick={() => {
+                      dispatch({ type: 'HYDRATE_VERSES', payload: SEED_VERSES });
+                      showToast(`Added ${SEED_VERSES.length} passages to your library.`, 'success');
+                    }}
+                    className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
+                  >
+                    Or start with {SEED_VERSES.length} well-known passages
+                  </button>
+                </div>
               )}
             </div>
           )}

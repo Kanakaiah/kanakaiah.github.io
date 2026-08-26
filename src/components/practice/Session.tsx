@@ -10,6 +10,7 @@ import { CueText } from './CueText';
 import { chunkText, chainCue, cueForRepetition, cueLevelToNumber, scoreAttempt } from '../../utils/cue';
 import { judgeAnchor, type AnchorJudgement, type AnchorDirection } from '../../utils/anchorAnswer';
 import { ChainDrill } from './ChainDrill';
+import { saveSession, loadSession, clearSession } from '../../utils/sessionStore';
 
 const DEFAULT_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
 
@@ -73,16 +74,24 @@ export const Session: React.FC<{
       cap: SESSION_CAP,
     });
 
-  const [plan, setPlan] = useState<SessionPlan>(buildPlan);
+  // A session interrupted mid-way is resumed rather than restarted. Read once, on
+  // mount, so the restored cursor and the restored plan can never disagree.
+  const restored = useState(() => loadSession())[0];
 
-  const [index, setIndex] = useState(0);
+  const [plan, setPlan] = useState<SessionPlan>(() => restored?.plan ?? buildPlan());
+  const [index, setIndex] = useState(restored?.index ?? 0);
   const [revealed, setRevealed] = useState(false);
-  const [outcomes, setOutcomes] = useState<Outcome[]>([]);
+  const [outcomes, setOutcomes] = useState<Outcome[]>((restored?.outcomes as Outcome[]) ?? []);
+
+  // Persisted on every move through the list. Cheap — twenty items of plain data — and
+  // it is the difference between a phone call costing a moment and costing the session.
+  React.useEffect(() => { saveSession(plan, index, outcomes); }, [plan, index, outcomes]);
 
   // "Keep going" starts a genuinely new session against whatever is still due, rather
   // than replaying this one. Everything already graded has moved into the future, so
   // the fresh plan naturally picks up where this left off.
   const startAnother = () => {
+    clearSession();
     setPlan(buildPlan());
     setIndex(0);
     setRevealed(false);

@@ -1,7 +1,6 @@
 import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress, ReviewEvent } from '../types/models';
 import { chapterProgressKey, blockProgressKey } from '../types/models';
 import { appendReview } from '../utils/reviewLog';
-import { SEED_VERSES } from '../data/seed';
 
 // The app's state shape, its actions, and the pure reducer over both.
 //
@@ -12,8 +11,15 @@ import { SEED_VERSES } from '../data/seed';
 // the kind of thing that fails silently and looks fine in the UI.
 
 // --- INITIAL STATE ---
+// The seeded library is offered, not imposed.
+//
+// A new reader used to open Today and find seventy-five passages already in their
+// library and already due — someone else's choices, presented as work they owed. The
+// first thing the app did was hand them a backlog they had not agreed to, which is a
+// poor way to begin a practice that depends on the reader's own investment in what they
+// are learning. The set is still there, one tap away, on the empty state.
 export const initialState: AppState = {
-  verses: SEED_VERSES,
+  verses: [],
   streak: 0,
   lastActiveDate: null,
   theme: "black",
