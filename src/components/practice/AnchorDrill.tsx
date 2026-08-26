@@ -154,7 +154,7 @@ export const AnchorDrill: React.FC<{
     // Freeze the work list on the first grade of this session — see sessionQueue above.
     const workList = sessionQueue ?? queue;
     if (!sessionQueue) setSessionQueue(workList);
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score);
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'anchor');
     const updated: ChapterProgress = {
       bookId: current.bookId,
       chapter: current.chapter,

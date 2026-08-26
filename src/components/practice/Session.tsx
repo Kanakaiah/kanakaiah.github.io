@@ -102,7 +102,7 @@ export const Session: React.FC<{
   };
 
   const gradeVerse = (verse: Verse, score: number, attempt: VerseAttempt) => {
-    const { newSM2, newStatus } = evaluateSM2(verse.sm2, score);
+    const { newSM2, newStatus } = evaluateSM2(verse.sm2, score, 'verse');
     dispatch({
       type: 'UPDATE_VERSE',
       payload: { ...verse, sm2: newSM2, status: newStatus, attempts: (verse.attempts || 0) + 1 },
@@ -134,7 +134,7 @@ export const Session: React.FC<{
   ) => {
     const key = chapterProgressKey(bookId, chapter);
     const existing = state.chapterProgress[key];
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score);
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'anchor');
     const updated: ChapterProgress = {
       bookId, chapter,
       sm2: newSM2,
@@ -171,7 +171,7 @@ export const Session: React.FC<{
 
   const gradeTheme = (bookId: string, bookName: string, score: number) => {
     const existing = state.themeProgress[bookId];
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score);
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'theme');
     const updated: ThemeProgress = {
       bookId,
       sm2: newSM2,

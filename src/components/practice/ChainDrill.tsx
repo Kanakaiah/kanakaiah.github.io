@@ -71,7 +71,7 @@ export const ChainDrill: React.FC<{
     // top on purpose: a chain with a hole in it is a chain that fails under real use,
     // since every later chapter number is counted through the gap.
     const score = accuracy >= 1 ? 5 : accuracy >= 0.85 ? 4 : accuracy >= 0.6 ? 3 : 1;
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score);
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'chain');
 
     const updated: BlockProgress = {
       bookId, blockIndex, label,

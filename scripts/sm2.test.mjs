@@ -71,5 +71,27 @@ const clean = evaluateSM2(sm2({ repetition: 2, interval: 6 }), 4).newSM2;
 t('a clean record gains no lapse fields',
   !('lapses' in clean) && !('preLapseInterval' in clean));
 
+// ── Each layer gets its own schedule ────────────────────────────────────────────
+// A verse is verbatim serial recall of up to a hundred words; a theme is a single
+// paired associate. They used to grow through identical arithmetic.
+const climb = (kind) => {
+  let s = sm2();
+  for (let i = 0; i < 4; i++) s = evaluateSM2(s, 4, kind).newSM2;
+  return s.interval;
+};
+t('a verse grows more slowly than an anchor', climb('verse') < climb('anchor'));
+t('an anchor grows more slowly than a theme', climb('anchor') < climb('theme'));
+t('naming no kind keeps the old behaviour', climb(undefined) === climb('chain'));
+
+t('a verse second step is shorter than a theme second step',
+  evaluateSM2(sm2({ repetition: 1 }), 4, 'verse').newSM2.interval <
+  evaluateSM2(sm2({ repetition: 1 }), 4, 'theme').newSM2.interval);
+
+// Growth must never stall. A floored efactor multiplied by a growth factor below 1 would
+// otherwise leave the interval unchanged — or shrinking — on a *successful* recall,
+// trapping a hard verse in a loop it can never climb out of.
+t('a successful recall always lengthens the interval',
+  evaluateSM2(sm2({ interval: 10, repetition: 5, efactor: 1.3 }), 3, 'verse').newSM2.interval > 10);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

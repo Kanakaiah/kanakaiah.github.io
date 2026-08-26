@@ -15,6 +15,7 @@ import otQuotesData from '../../data/otQuotes.json';
 import { NT_STUDY_GUIDES } from '../../data/guides';
 import { OT_STUDY_GUIDES } from '../../data/otGuides';
 import { evaluateSM2 } from '../../utils/sm2';
+import { buildReviewEvent } from '../../utils/reviewLog';
 import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress } from '../../types/models';
 import { divisionForSection } from '../../data/palette';
@@ -412,7 +413,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   const gradeChapterRecall = (score: number) => {
     const base = chapterRecord?.sm2 || { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
-    const { newSM2, newStatus } = evaluateSM2(base, score);
+    const { newSM2, newStatus } = evaluateSM2(base, score, 'anchor');
     const updated: ChapterProgress = {
       bookId,
       chapter,
@@ -425,6 +426,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       lastReadDate: chapterRecord?.lastReadDate || null,
     };
     dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
+    // The eighth and last grading surface to start recording history. The end-of-chapter
+    // card is the one retrieval a reader meets without going looking for it, so leaving
+    // it out would have biased the record toward deliberate drilling and away from
+    // recall that happens in the course of ordinary reading.
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'anchor',
+        itemId: chapterKey,
+        gradeSubmitted: score,
+        before: chapterRecord?.sm2, after: newSM2,
+        mode: 'reveal', cueLevel: 0, direction: 'n2w',
+      }),
+    });
     if (state.settings.streakIncludesChapters !== false) {
       dispatch({ type: 'RECORD_ACTIVITY' });
     }
