@@ -42,7 +42,13 @@ interface Outcome { id: string; kind: SessionItem['kind']; label: string; score:
  * are finished", which removes the one reason a spaced system gives you to come back
  * tomorrow.
  */
-export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
+export const Session: React.FC<{
+  onExit: () => void;
+  /** Route into free practice on the whole library. The session is now what the Practice
+   * tab opens, so its empty state has to lead somewhere rather than being a dead end on
+   * the app's second most prominent screen. */
+  onFreePractice?: () => void;
+}> = ({ onExit, onFreePractice }) => {
   const { state, dispatch } = useApp();
 
   // Planned once, on mount. The plan reads from chapterProgress and the verse list,
@@ -243,11 +249,25 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       <div className="flex flex-col items-center justify-center h-full text-center px-6 gap-4">
         <h2 className="text-xl font-bold text-primary">Nothing due</h2>
         <p className="text-secondary max-w-sm">
-          No verses or chapter anchors are scheduled right now. Open a book to start learning a new one.
+          Everything you're learning is scheduled ahead. Coming back tomorrow is worth more
+          than pushing on today — but the workshop is here if you want it.
         </p>
-        <button onClick={onExit} className="text-sm font-semibold text-accent hover:text-accent-hover transition-colors">
-          Back to Today
-        </button>
+        <div className="flex flex-col gap-2 w-full max-w-xs pt-1">
+          {onFreePractice && (
+            <button
+              onClick={onFreePractice}
+              className="w-full py-3 rounded-md border border-card-border text-secondary font-bold text-sm hover:text-primary transition-colors"
+            >
+              Practise a verse anyway
+            </button>
+          )}
+          <button
+            onClick={onExit}
+            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          >
+            Back to Today
+          </button>
+        </div>
       </div>
     );
   }

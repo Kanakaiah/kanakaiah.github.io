@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Mic, MicOff } from 'lucide-react';
+import { FirstLetterMode } from './FirstLetterMode';
 
 interface SpeechModeProps {
   text: string;
-  /** Percentage of the verse's words recited correctly. Same reasoning as TypingMode:
-   * the transcript is already diffed against the target on screen, so the grade below
-   * need not be a guess. */
-  onAccuracy?: (percent: number) => void;
+  /** Fires as the transcript arrives. Unlike TypingMode this cannot easily be deferred —
+   * speech recognition streams, and there is no keystroke to hold back — but it also
+   * doesn't need to be: the reader is speaking, not reading the screen, so the target
+   * text below is a check afterwards rather than something to copy from mid-attempt. */
+  onAttempt?: (attempt: { accuracy: number; committed: string }) => void;
 }
 
 const normalize = (word: string) => word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
-export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAccuracy }) => {
+export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAttempt }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState('');
@@ -23,9 +25,9 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAccuracy }) => {
   // Same for the target text: Practice remounts this component per verse via `key`,
   // but BlockDrillModal reuses one instance across different anchor chains, so the
   // closure must not hold whichever string happened to be current at mount.
-  const onAccuracyRef = React.useRef(onAccuracy);
+  const onAttemptRef = React.useRef(onAttempt);
   const textRef = React.useRef(text);
-  useEffect(() => { onAccuracyRef.current = onAccuracy; }, [onAccuracy]);
+  useEffect(() => { onAttemptRef.current = onAttempt; }, [onAttempt]);
   useEffect(() => { textRef.current = text; }, [text]);
 
   useEffect(() => {
@@ -46,7 +48,10 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAccuracy }) => {
         const target = textRef.current.split(/\s+/).filter(w => w.trim().length > 0);
         const correct = target.reduce(
           (n, word, i) => n + (spoken[i] && normalize(spoken[i]) === normalize(word) ? 1 : 0), 0);
-        onAccuracyRef.current?.(target.length ? Math.round((correct / target.length) * 100) : 0);
+        onAttemptRef.current?.({
+          accuracy: target.length ? Math.round((correct / target.length) * 100) : 0,
+          committed: currentTranscript,
+        });
       };
 
       recognitionRef.current.onerror = (event: any) => {
@@ -96,6 +101,18 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAccuracy }) => {
 
   return (
     <div className="flex flex-col gap-6 items-center">
+      {/* The verse is withheld until the recitation stops.
+          It used to sit here in full for the whole attempt, colouring word by word as
+          you spoke — so the reader could simply read it aloud, and the accuracy this
+          mode reports (the app's only measured signal, now also the basis for checking
+          whether self-grading is honest) would have been measuring reading. First
+          letters stay up as a real cue; the diff waits until there is an attempt to
+          diff. */}
+      {isListening || !transcript ? (
+        <div className="w-full text-base leading-relaxed text-secondary mb-4 text-center">
+          <FirstLetterMode text={text} />
+        </div>
+      ) : (
       <div className="w-full text-lg leading-relaxed whitespace-pre-wrap mb-4 text-center">
         {targetWords.map((word, idx) => {
           const cleanTarget = word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
@@ -118,6 +135,7 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAccuracy }) => {
           );
         })}
       </div>
+      )}
 
       <button
         onClick={toggleListen}

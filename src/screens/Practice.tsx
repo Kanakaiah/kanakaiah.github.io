@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
-import { evaluateSM2, isDue, formatInterval, suggestedScore } from '../utils/sm2';
+import { evaluateSM2, formatInterval, suggestedScore } from '../utils/sm2';
 import { dueChapters } from '../utils/mastery';
 import type { Verse, ReviewEvent } from '../types/models';
 import { buildReviewEvent } from '../utils/reviewLog';
@@ -88,7 +88,15 @@ export const Practice: React.FC = () => {
   const [subject, setSubject] = useState<Subject>(navState?.subject || 'verse');
   const sweepBookIds = navState?.sweepBookIds;
 
-  const [activeMode, setActiveMode] = useState<PracticeMode>('read');
+  // The workshop opens on a mode that can be scored.
+  //
+  // It used to land on Read, which is the one mode with no scoring block at all — so the
+  // tab labelled "Practice" opened a screen where practising produced no record of any
+  // kind. Type is the strongest default available: it is the only mode besides Recite
+  // that can measure an attempt rather than ask about it, which is what makes the grade
+  // worth anything. Read is still one tap away, and is still the right thing for looking
+  // at a verse you are not yet trying to produce.
+  const [activeMode, setActiveMode] = useState<PracticeMode>('typing');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   
   const [isAutoPlaying, setIsAutoPlaying] = useState(state.settings.ttsEnabled);
@@ -108,15 +116,30 @@ export const Practice: React.FC = () => {
 
   const [hintLevel, setHintLevel] = useState(0);
 
-  // Filter for allDue if query param is present
-  const isAllDue = searchParams.get('mode') === 'alldue';
+  /**
+   * Two activities live behind this one route, and until now they were not distinguished.
+   *
+   * The day's work is bounded, mixed and self-terminating, and it is what the reader
+   * should meet by default. Free practice on a single verse is a genuinely different
+   * thing — deliberate, occasional, chosen — and worth keeping, but it is not a daily
+   * habit and it should be entered on purpose rather than landed in.
+   *
+   * Every route into this screen already had the right shape except the tab itself: the
+   * dashboard's "Start Session" asks for the day's work, a verse card asks for that one
+   * verse, and the guides ask for a specific drill. Only a bare /practice — the second
+   * item in the navigation, the most prominent entry in the app — opened the workshop,
+   * over the whole library, in a mode that recorded nothing. That is the split being
+   * closed here: the tab now means the same thing the Today button means, and the
+   * workshop keeps its own address.
+   */
+  const modeParam = searchParams.get('mode');
   const targetId = searchParams.get('id');
+  const isWorkshop = !!targetId || modeParam === 'free';
 
-  const verses = React.useMemo(() => {
-    return isAllDue 
-      ? state.verses.filter(v => isDue(v.sm2))
-      : state.verses;
-  }, [state.verses, isAllDue]);
+  // The workshop always works against the whole library — it is a place to pick something
+  // up deliberately, so filtering it to what happens to be due would defeat the point.
+  // The day's-work path builds its own plan and never reads this.
+  const verses = state.verses;
 
   const initialIndex = React.useMemo(() => {
     if (targetId) {
@@ -165,11 +188,22 @@ export const Practice: React.FC = () => {
   // the modes that genuinely can't know — Read and Erase have no ground truth to
   // compare against, so those stay purely self-graded.
   const [modeAccuracy, setModeAccuracy] = useState<number | null>(null);
+  // What the reader actually wrote or said, kept alongside the number so the review
+  // history can hold the attempt itself. A percentage tells you an attempt went badly;
+  // the words tell you why, which is what makes a leech worth rewording rather than
+  // simply repeating.
+  const [modeCommitted, setModeCommitted] = useState<string | null>(null);
+
+  const handleAttempt = React.useCallback((attempt: { accuracy: number; committed: string }) => {
+    setModeAccuracy(attempt.accuracy);
+    setModeCommitted(attempt.committed);
+  }, []);
 
   // Reset hint and any measured accuracy when changing verses or modes
   React.useEffect(() => {
     setHintLevel(0);
     setModeAccuracy(null);
+    setModeCommitted(null);
   }, [activeVerseIndex, activeMode]);
 
   const currentVerse = verses[activeVerseIndex];
@@ -254,6 +288,7 @@ export const Practice: React.FC = () => {
         cueLevel: Math.max(hintLevel, activeMode === 'first-letter' ? 2 : 0) as 0 | 1 | 2 | 3 | 4,
         gradeCeiling: ceilingFor(hintLevel),
         measuredAccuracy: modeAccuracy,
+        committed: modeCommitted,
       }),
     });
     // The streak action existed in the reducer with nothing in the app ever
@@ -317,9 +352,9 @@ export const Practice: React.FC = () => {
       case 'scramble':
         return <ScrambleMode key={currentVerse.id} text={currentVerse.text} />;
       case 'typing':
-        return <TypingMode key={currentVerse.id} text={currentVerse.text} onAccuracy={setModeAccuracy} />;
+        return <TypingMode key={currentVerse.id} text={currentVerse.text} onAttempt={handleAttempt} />;
       case 'speech':
-        return <SpeechMode key={currentVerse.id} text={currentVerse.text} onAccuracy={setModeAccuracy} />;
+        return <SpeechMode key={currentVerse.id} text={currentVerse.text} onAttempt={handleAttempt} />;
       default:
         return null;
     }
@@ -332,7 +367,7 @@ export const Practice: React.FC = () => {
   // these window listeners stayed live underneath them — an arrow key or a swipe during
   // a chain drill silently moved activeVerseIndex in a screen the reader could not see,
   // and they would come back to a different verse than they left.
-  const verseNavActive = subject === 'verse' && !isAllDue && !!currentVerse;
+  const verseNavActive = subject === 'verse' && isWorkshop && !!currentVerse;
   React.useEffect(() => {
     if (!verseNavActive) return;
     let touchStartX = 0;
@@ -409,14 +444,20 @@ export const Practice: React.FC = () => {
     return <AnchorDrill onExit={() => setSubject('verse')} sweepBookIds={sweepBookIds} />;
   }
 
-  // "Start Session" from Today lands here. That entry point used to open this screen's
-  // free-practice machinery filtered to due verses — six modes, manual Next, and a queue
-  // with no end — which is a workshop, not a day's work. It now gets the bounded, mixed,
-  // self-terminating session instead. Everything below stays exactly as it was and
-  // remains reachable for deliberate single-verse drilling (/practice, /practice?id=…),
-  // which is a genuinely different activity and worth keeping.
-  if (isAllDue) {
-    return <Session onExit={() => navigate('/')} />;
+  // The day's work — everything that is not an explicit request for the workshop. That
+  // now includes the Practice tab itself, which is the point: two loops meant two habits
+  // and two sets of records, and the one that was bounded and self-terminating was the
+  // one hidden behind a button on another tab.
+  //
+  // Everything below stays exactly as it was, reachable at /practice?id=… from a verse
+  // card and at /practice?mode=free from the session's own empty state.
+  if (!isWorkshop) {
+    return (
+      <Session
+        onExit={() => navigate('/')}
+        onFreePractice={() => navigate('/practice?mode=free')}
+      />
+    );
   }
 
   const dueChapter = dueChapters(state.chapterProgress)[0];
