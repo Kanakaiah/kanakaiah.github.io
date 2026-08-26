@@ -133,5 +133,30 @@ t('the most overdue item survives the cap', p.items.some(i => i.id === 'verse:an
 t('the cap is still respected', p.items.length === 5);
 t('the backlog is reported', p.heldBack === 26);
 
+// 12. A chapter can never be both taught and cold-tested in the same plan.
+//
+// RECORD_CHAIN_PASS creates a progress record for a chapter that has never been graded,
+// so a chain miss could nominate a chapter with attempts: 0 — exactly the set new
+// material is drawn from. The chapter then appeared twice in one plan: once as a cold
+// anchor test and once as an Introduce/anchor pair, producing two grades, two review
+// events, duplicate React keys, and a chapter tested before it was ever taught.
+p = buildSession(mk({chapterProgress:{
+  // Touched, so Genesis is the book underway.
+  'genesis:1': chap('genesis',1,{sm2:sm2(+9)}),
+  // Nominated by a chain miss but never actually graded.
+  'genesis:3': { bookId:'genesis', chapter:3,
+    sm2:{interval:0,repetition:0,efactor:2.5,nextDueDate:new Date().toISOString()},
+    status:'learning', attempts:0, lastScore:0, lastAttemptDate:'',
+    readCount:0, lastReadDate:null,
+    chainMisses:1, chainHits:0, lastChainDate:new Date().toISOString() },
+}}), {newChapters:3, cap:20, shuffle:noShuffle});
+
+const ids = p.items.map(i => i.id);
+t('no item appears twice in one plan', new Set(ids).size === ids.length);
+t('an ungraded chapter is not cold-tested before it is introduced',
+  p.items.every((it, n) =>
+    !(it.kind === 'anchor' && it.chapter === 3) ||
+    (p.items[n-1] && p.items[n-1].kind === 'introduce' && p.items[n-1].chapter === 3)));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail?1:0);

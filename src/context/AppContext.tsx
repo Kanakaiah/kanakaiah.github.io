@@ -14,6 +14,33 @@ interface AppContextProps {
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
+/**
+ * The one write to storage, and the only place that can fail.
+ *
+ * Both writes were bare `localStorage.setItem`. One of them runs inside a setTimeout,
+ * where a throw has nowhere to go: it is not caught by React, does not surface to the
+ * reader, and — because the rejection kills the callback before it can reschedule —
+ * simply stops all persistence for the rest of the session while the app carries on
+ * looking perfectly healthy. Quota is a real possibility now that the review history can
+ * hold four thousand events alongside a thousand-plus chapter records.
+ *
+ * There is no good recovery here: the reader's progress for this session is already in
+ * memory and will be written on the next successful attempt. What matters is that a
+ * failed write cannot take the write *loop* down with it, and that it says so once.
+ */
+let storageWarned = false;
+function persist(state: AppState): void {
+  try {
+    localStorage.setItem('remora_data', JSON.stringify(state));
+    storageWarned = false;
+  } catch (e) {
+    if (!storageWarned) {
+      storageWarned = true;
+      console.warn('Could not save progress to local storage — it may be full.', e);
+    }
+  }
+}
+
 // Reads and merges any saved state synchronously, before the first render, via
 // useReducer's lazy-init argument below. This used to happen in a mount effect
 // that dispatched HYDRATE — but that effect's own sibling "save to localStorage"
@@ -94,7 +121,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
-      localStorage.setItem('remora_data', JSON.stringify(latestState.current));
+      persist(latestState.current);
     }, 300);
 
     return () => {
@@ -106,7 +133,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const flush = () => {
       if (document.visibilityState === 'hidden') {
         if (saveTimeout.current) clearTimeout(saveTimeout.current);
-        localStorage.setItem('remora_data', JSON.stringify(latestState.current));
+        persist(latestState.current);
       }
     };
     document.addEventListener('visibilitychange', flush);

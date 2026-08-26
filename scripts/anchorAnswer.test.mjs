@@ -1,6 +1,6 @@
 // Rules for judging a typed anchor. Run: npx vite-node scripts/anchorAnswer.test.mjs
 
-import { judgeAnchor, editDistance, directionFor, normalizeAnchor } from '../src/utils/anchorAnswer.ts';
+import { judgeAnchor, judgeByDirection, judgeChapter, editDistance, directionFor, normalizeAnchor } from '../src/utils/anchorAnswer.ts';
 
 let pass = 0, fail = 0;
 const t = (name, cond) => {
@@ -60,6 +60,43 @@ t('every direction is reachable',
   new Set([directionFor(0), directionFor(3), directionFor(4)]).size === 3);
 
 t('normalize strips everything but letters and digits', normalizeAnchor('Well-Spring!') === 'wellspring');
+
+// ── The question asked must match the answer judged ─────────────────────────────
+//
+// This is the seam the original bug lived in. judgeAnchor was tested, directionFor was
+// tested, and nothing tested them together — so w2n (which shows the word and asks for
+// the chapter) was judging the typed number against the word, and every correct answer
+// scored Blank. Because directionFor sends every anchor to w2n at three clean recalls,
+// mature anchors could never escape the failure.
+const item = (direction) => ({ direction, word: 'HANDS', chapter: 27, siblings: GENESIS });
+
+t('word-to-number accepts the chapter number',
+  judgeByDirection('27', item('w2n')).verdict === 'correct');
+t('word-to-number rejects the word it just displayed as the prompt',
+  judgeByDirection('HANDS', item('w2n')).verdict !== 'correct');
+t('number-to-word accepts the word',
+  judgeByDirection('HANDS', item('n2w')).verdict === 'correct');
+t('number-to-word rejects the chapter number it just displayed',
+  judgeByDirection('27', item('n2w')).verdict !== 'correct');
+t('plate-to-word is judged as a word',
+  judgeByDirection('HANDS', item('p2w')).verdict === 'correct');
+
+// A mature anchor must be able to survive its own review.
+t('an anchor at the repetition that triggers w2n can still be answered correctly',
+  judgeByDirection('27', item(directionFor(3))).score >= 4 ||
+  judgeByDirection('HANDS', item(directionFor(3))).score >= 4);
+
+// ── Chapter answers ─────────────────────────────────────────────────────────────
+t('the exact chapter is correct', judgeChapter('27', 27, GENESIS).verdict === 'correct');
+t('whitespace is tolerated', judgeChapter('  27 ', 27, GENESIS).verdict === 'correct');
+// Counting forward from a block boundary is how the system recovers a number at all, so
+// landing next door is a miscount, not an absence of knowledge.
+t('being one chapter out is a near miss', judgeChapter('28', 27, GENESIS).verdict === 'near');
+t('being far out is wrong', judgeChapter('3', 27, GENESIS).verdict === 'wrong');
+t('a non-number is a blank', judgeChapter('HANDS', 27, GENESIS).verdict === 'wrong');
+t('an empty answer is a blank', judgeChapter('', 27, GENESIS).verdict === 'wrong');
+t('naming another anchor chapter names the confusion',
+  judgeChapter('29', 21, GENESIS).confusedWith?.word === 'STONE');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -8,7 +8,7 @@ import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress, ThemeProgress, Verse } from '../../types/models';
 import { CueText } from './CueText';
 import { chunkText, chainCue, cueForRepetition, cueLevelToNumber, scoreAttempt } from '../../utils/cue';
-import { judgeAnchor, type AnchorJudgement, type AnchorDirection } from '../../utils/anchorAnswer';
+import { judgeByDirection, type AnchorJudgement, type AnchorDirection } from '../../utils/anchorAnswer';
 import { ChainDrill } from './ChainDrill';
 import { saveSession, loadSession, clearSession } from '../../utils/sessionStore';
 
@@ -110,7 +110,15 @@ export const Session: React.FC<{
     if (state.settings.streakIncludesChapters !== false) dispatch({ type: 'RECORD_ACTIVITY' });
   };
 
-  const gradeVerse = (verse: Verse, score: number, attempt: VerseAttempt) => {
+  const gradeVerse = (planVerse: Verse, score: number, attempt: VerseAttempt) => {
+    // Grade against the verse as it stands now, not as the plan snapshotted it.
+    //
+    // A resumed session carries a plan serialized possibly hours earlier. Writing back
+    // `{ ...planVerse, sm2 }` would spread that stale snapshot over the record — silently
+    // reverting a grade given in the workshop since, or an edit to the verse's own text.
+    // Only the schedule fields belong to this grading; everything else belongs to the
+    // verse, whoever last touched it.
+    const verse = state.verses.find(v => v.id === planVerse.id) || planVerse;
     const { newSM2, newStatus } = evaluateSM2(verse.sm2, score, 'verse');
     dispatch({
       type: 'UPDATE_VERSE',
@@ -346,6 +354,7 @@ export const Session: React.FC<{
         // Reuses the drill the book guide opens, rather than a second implementation of
         // the same walk. It grades itself and reports back, and the session moves on.
         <ChainDrill
+          key={item.id}
           bookId={item.bookId}
           blockIndex={item.blockIndex}
           label={`${item.bookName} · ${item.label}`}
@@ -562,6 +571,11 @@ const VerseCardPrompt: React.FC<{
     setInput('');
     setChecked(false);
     setGaveUp(false);
+    // Restarted per part. The field means "prompt shown until answer committed", and
+    // leaving it running across a six-part passage measured time-since-mount instead —
+    // which would have made the plan's median-time-per-item indicator meaningless for
+    // exactly the longest items.
+    startedAt.current = Date.now();
   };
 
   const submit = (grade: number) => {
@@ -618,7 +632,9 @@ const VerseCardPrompt: React.FC<{
         ) : (
           <div className="flex flex-col gap-3" role="status" aria-live="polite">
             <p className="text-sm font-semibold text-primary tabular-nums">
-              {score.matched} of {score.total} words matched
+              {gaveUp
+                ? 'Read it once, out loud if you can.'
+                : `${score.matched} of ${score.total} words matched`}
             </p>
             <p className="text-lg font-serif leading-relaxed whitespace-pre-wrap">
               {score.words.map((w, i) => (
@@ -651,6 +667,17 @@ const VerseCardPrompt: React.FC<{
           className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
         >
           Next part
+        </button>
+      ) : gaveUp ? (
+        // No grade strip. The reader has just been shown the answer, so there is nothing
+        // left to judge — offering four buttons here is the exact "rate yourself while
+        // looking at it" move the rest of this card exists to remove. It grades a blank,
+        // which is what it was.
+        <button
+          onClick={() => submit(1)}
+          className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+        >
+          Got it — try again tomorrow
         </button>
       ) : (
         <div className="flex flex-col gap-2">
@@ -692,10 +719,16 @@ const AnchorCardPrompt: React.FC<{
   const [elapsedMs, setElapsedMs] = useState(0);
   React.useEffect(() => { startedAt.current = Date.now(); }, []);
 
-  const answer = () => {
+  // Takes the answer explicitly rather than reading `typed` from the enclosing render.
+  // "Skip this one" used to call setTyped('') and then answer() in the same handler, but
+  // the state update has not applied by the time answer() runs — so it judged whatever
+  // was in the box. Type the right word, press Skip, and it recorded a correct recall.
+  const answer = (value: string = typed) => {
     if (judged) return;
     setElapsedMs(Date.now() - startedAt.current);
-    setJudged(judgeAnchor(typed, item.word, item.siblings, item.chapter));
+    // Routed through judgeByDirection so the question asked and the answer judged cannot
+    // disagree: w2n asks for a chapter number and must not be checked against the word.
+    setJudged(judgeByDirection(value, item));
   };
 
   const submit = (score: number) => {
@@ -779,12 +812,12 @@ const AnchorCardPrompt: React.FC<{
       {!judged ? (
         <div className="flex flex-col gap-1.5">
           <button
-            onClick={answer}
+            onClick={() => answer()}
             className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             Answer
           </button>
-          <button onClick={() => { setTyped(''); answer(); }} className="text-[0.6875rem] text-muted hover:text-primary transition-colors py-1">
+          <button onClick={() => answer('')} className="text-[0.6875rem] text-muted hover:text-primary transition-colors py-1">
             Skip this one
           </button>
         </div>

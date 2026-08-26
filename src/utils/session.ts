@@ -188,7 +188,21 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   };
 
   for (const p of Object.values(state.chapterProgress)) {
-    if (nominated.has(chapterProgressKey(p.bookId, p.chapter))) addAnchor(p.bookId, p.chapter);
+    // `attempts > 0` matters, and its absence was a real defect.
+    //
+    // A chain pass writes chainHits/chainMisses onto chapters that have never been
+    // graded — RECORD_CHAIN_PASS creates the record if there isn't one — so a chapter
+    // could be nominated while still having no attempts at all. That is exactly the set
+    // `newPairs` below draws new material from, so the same chapter could appear twice in
+    // one plan: once as a cold anchor test and once as an Introduce/anchor pair. Two
+    // grades for one chapter in a sitting, duplicate React keys, and a chapter tested
+    // before it was ever taught — the one shape the introduce pairing exists to prevent.
+    //
+    // A nomination is a claim that a chapter already known is shakier than its schedule
+    // thinks. It cannot say anything about a chapter never learned.
+    if (p.attempts > 0 && nominated.has(chapterProgressKey(p.bookId, p.chapter))) {
+      addAnchor(p.bookId, p.chapter);
+    }
   }
   for (const d of dueChapters(state.chapterProgress, now)) addAnchor(d.bookId, d.chapter);
 

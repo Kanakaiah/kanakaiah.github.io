@@ -120,3 +120,54 @@ export function directionFor(repetition: number): AnchorDirection {
   if (repetition < 3) return 'n2w';
   return repetition % 2 === 1 ? 'w2n' : 'p2w';
 }
+
+/**
+ * Judging a chapter *number*, which is what `w2n` actually asks for.
+ *
+ * Being one or two chapters out is not the same as not knowing. The whole anchor system
+ * recovers a chapter number by counting forward from a block boundary — it is why the
+ * cards carry an "after X · before Y" line at all — so a reader who lands next door has
+ * the association and miscounted the offset. That is a Hard, and telling them it is a
+ * blank teaches them to distrust a system that was very nearly right.
+ */
+export function judgeChapter(
+  typed: string,
+  expectedChapter: number,
+  siblings: { ch: number; word: string }[] = [],
+): AnchorJudgement {
+  const n = parseInt((typed || '').trim(), 10);
+  if (!Number.isFinite(n)) return { verdict: 'wrong', score: 1 };
+  if (n === expectedChapter) return { verdict: 'correct', score: 4 };
+  if (Math.abs(n - expectedChapter) <= 2) return { verdict: 'near', score: 3 };
+
+  const confused = siblings.find(s => s.ch === n);
+  return {
+    verdict: 'wrong',
+    score: 1,
+    ...(confused ? { confusedWith: { chapter: confused.ch, word: confused.word } } : {}),
+  };
+}
+
+/**
+ * The single entry point the session uses, so the question asked and the answer judged
+ * can never disagree.
+ *
+ * They did. `w2n` shows the anchor word and asks which chapter it belongs to, with a
+ * numeric keypad — and the answer was being compared against the *word*, so typing the
+ * correct chapter number scored Blank every time. Because `directionFor` sends every
+ * anchor to `w2n` the moment it reaches three clean recalls, a mature anchor would fail,
+ * drop to repetition 0, climb back to 3, and fail again, permanently, while accruing
+ * lapses that then surfaced it as a leech. The only way to score correct was to type the
+ * word already displayed on screen as the prompt.
+ *
+ * Routing through one function means adding a fourth direction cannot reintroduce this.
+ */
+export function judgeByDirection(
+  typed: string,
+  item: { direction: AnchorDirection; word: string; chapter: number; siblings?: { ch: number; word: string }[] },
+): AnchorJudgement {
+  const siblings = item.siblings || [];
+  return item.direction === 'w2n'
+    ? judgeChapter(typed, item.chapter, siblings)
+    : judgeAnchor(typed, item.word, siblings, item.chapter);
+}
