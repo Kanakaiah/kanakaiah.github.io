@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { X, Check, RotateCcw } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useFocusTrap } from '../../utils/useFocusTrap';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
 import { blockProgressKey } from '../../types/models';
 import type { BlockProgress } from '../../types/models';
@@ -44,6 +45,7 @@ export const ChainDrill: React.FC<{
   const [revealed, setRevealed] = useState(false);
   const [results, setResults] = useState<boolean[]>([]);
   const [finished, setFinished] = useState(false);
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
 
   const key = blockProgressKey(bookId, blockIndex);
   const existing = state.blockProgress[key];
@@ -122,6 +124,7 @@ export const ChainDrill: React.FC<{
 
   return (
     <div
+      ref={trapRef}
       role="dialog"
       aria-modal="true"
       aria-label={`${label} — anchor chain drill`}

@@ -3,6 +3,21 @@ export interface SM2Data {
   repetition: number;
   efactor: number;
   nextDueDate: string; // ISO date string
+  /** How many times this item has been failed after reaching maturity. Not used by the
+   * schedule itself — it is the signal that an item is a leech, i.e. one that keeps
+   * being forgotten and probably needs rewording or breaking up rather than more
+   * repetitions. Optional: records written before this existed simply won't have it. */
+  lapses?: number;
+  /** The interval this item held immediately before its most recent lapse.
+   *
+   * Textbook SM-2 sends a failed card back to repetition 0, so a verse recalled ten
+   * times and missed once re-climbs 1 → 6 → 15 → 37 exactly as if it had never been
+   * learned. That throws away real evidence: an item that survived ten reviews is not
+   * in the same state as one seen yesterday, and a single bad day — tired, distracted,
+   * interrupted — should not cost months of accumulated schedule. Keeping the old
+   * interval lets recovery aim at a fraction of where it was rather than at zero.
+   * Cleared once it has been used. */
+  preLapseInterval?: number;
 }
 
 export interface Verse {

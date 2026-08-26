@@ -58,6 +58,7 @@ import { GUIDE_SECTIONS, SECTIONED_CATEGORIES } from '../data/guideSections';
 import { DISTRIBUTION_COLORS, divisionForSection } from '../data/palette';
 import { useApp } from '../context/AppContext';
 import { useMastery, masteryOf, type BookMasteryCounts } from '../utils/mastery';
+import { useFocusTrap } from '../utils/useFocusTrap';
 import { chapterProgressKey, blockProgressKey } from '../types/models';
 import type { ChapterProgress } from '../types/models';
 import { evaluateSM2, formatInterval, isDue } from '../utils/sm2';
@@ -246,6 +247,7 @@ const BibleIndexModal: React.FC<{
   onClose: () => void;
   mastery: Record<string, BookMasteryCounts>;
 }> = ({ isOpen, selectedId, onSelect, onClose, mastery }) => {
+  const trapRef = useFocusTrap<HTMLDivElement>(isOpen);
   // Above the early return, because hooks cannot be conditional. This overlay was a
   // bare fixed div: Escape did nothing, the page behind it still scrolled, and nothing
   // announced a dialog. It is the most-opened list in the app — three screens reach it.
@@ -263,6 +265,7 @@ const BibleIndexModal: React.FC<{
   if (!isOpen) return null;
   return (
     <div
+      ref={trapRef}
       role="dialog"
       aria-modal="true"
       aria-label="Bible books index"
