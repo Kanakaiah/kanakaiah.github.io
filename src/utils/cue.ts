@@ -95,6 +95,31 @@ export function chunkText(text: string, maxWords = MAX_CHUNK_WORDS): string[] {
  * is eventually recited whole. Deliberately short — a few words, not the whole clause —
  * so it stays a prompt and cannot become a re-read of what was just tested.
  */
+/**
+ * How much of the passage to ask for, given how well it is known.
+ *
+ * Progressive chaining, properly: part one alone, then one and two together, then one
+ * through three — the parts are *accumulated*, not merely visited in turn. Typing each
+ * part separately and calling it chaining misses the point, because the difficulty a
+ * long passage actually presents is not any one clause but holding the run of them
+ * together, and a reader who can produce six clauses in six separate boxes may still be
+ * unable to produce them as one passage.
+ *
+ * The span grows with the item's own strength, so a verse met this week is asked for one
+ * part and a verse held for months is asked for the whole thing in a single attempt.
+ */
+export function chainSpan(totalChunks: number, repetition: number): number {
+  if (totalChunks <= 1) return 1;
+  // One part while the passage is new; then one more part per successful recall.
+  const earned = Math.max(1, repetition);
+  return Math.min(totalChunks, earned);
+}
+
+/** The parts to be produced in this attempt, joined as one passage. */
+export function chainedText(chunks: string[], span: number): string {
+  return chunks.slice(0, Math.max(1, Math.min(chunks.length, span))).join(' ');
+}
+
 export function chainCue(previousChunk: string, words = 6): string {
   const parts = (previousChunk || '').split(/\s+/).filter(Boolean);
   if (parts.length === 0) return '';

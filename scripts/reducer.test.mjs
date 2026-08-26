@@ -82,11 +82,26 @@ const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
 s = appReducer({ ...base(), streak: 6, lastActiveDate: yesterday.toISOString() }, { type: 'RECORD_ACTIVITY' });
 t('a consecutive day extends the streak', s.streak === 7);
 
-// One missed day is forgiven; the streak continues. A hundred-day run collapsing over a
-// single bad Tuesday is the moment people abandon a daily habit.
-const twoDaysAgo = new Date(); twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-s = appReducer({ ...base(), streak: 100, lastActiveDate: twoDaysAgo.toISOString() }, { type: 'RECORD_ACTIVITY' });
-t('one missed day does not cost the streak', s.streak === 101);
+// Grace is real but finite. A hundred-day run collapsing over a single bad Tuesday is the
+// moment people abandon a daily habit — but forgiving *every* one-day gap would let
+// Mon/Wed/Fri/Sun grow a "daily streak" forever while the reader practised half the time.
+// A streak that survives anything measures nothing.
+const daysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
+const logOn = (offsets) => offsets.map(n => ({ ts: daysAgo(n).toISOString() }));
+
+// Six of the last seven days active: the week's grace has not been spent.
+s = appReducer({ ...base(), streak: 100, lastActiveDate: daysAgo(2).toISOString(),
+  reviewLog: logOn([2, 3, 4, 5, 6, 7]) }, { type: 'RECORD_ACTIVITY' });
+t('one missed day is forgiven when the week was otherwise complete', s.streak === 101);
+
+// Every other day: the grace has already been used this week.
+s = appReducer({ ...base(), streak: 100, lastActiveDate: daysAgo(2).toISOString(),
+  reviewLog: logOn([2, 4, 6]) }, { type: 'RECORD_ACTIVITY' });
+t('a second missed day in the same week does cost the streak', s.streak === 1);
+
+s = appReducer({ ...base(), streak: 100, lastActiveDate: daysAgo(1).toISOString(),
+  reviewLog: logOn([1, 2, 3]) }, { type: 'RECORD_ACTIVITY' });
+t('an unbroken run never needs the grace at all', s.streak === 101);
 
 const longAgo = new Date(); longAgo.setDate(longAgo.getDate() - 5);
 s = appReducer({ ...base(), streak: 200, lastActiveDate: longAgo.toISOString() }, { type: 'RECORD_ACTIVITY' });

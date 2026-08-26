@@ -158,5 +158,26 @@ t('an ungraded chapter is not cold-tested before it is introduced',
     !(it.kind === 'anchor' && it.chapter === 3) ||
     (p.items[n-1] && p.items[n-1].kind === 'introduce' && p.items[n-1].chapter === 3)));
 
+// 13. Naming a book narrows the day to it.
+const twoBooks = mk({chapterProgress:{
+  'genesis:2': chap('genesis',2),
+  'exodus:3': chap('exodus',3),
+}});
+p = buildSession(twoBooks, {newChapters:0, cap:20, shuffle:noShuffle});
+t('without a focus, every book that is due appears',
+  new Set(p.items.map(i => i.bookId)).size === 2);
+
+p = buildSession(twoBooks, {newChapters:0, cap:20, bookId:'genesis', shuffle:noShuffle});
+t('naming a book excludes the others',
+  p.items.length === 1 && p.items[0].bookId === 'genesis');
+
+// Verses belong to no book in this sense and must not be filtered away.
+p = buildSession(mk({
+  verses: [{id:'a', ref:'John 3:16', text:'x', sm2:sm2(-1), status:'review', attempts:1}],
+  chapterProgress: {'exodus:3': chap('exodus',3)},
+}), {newChapters:0, cap:20, bookId:'genesis', shuffle:noShuffle});
+t('a focus narrows the book layers without dropping due verses',
+  p.items.length === 1 && p.items[0].kind === 'verse');
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail?1:0);

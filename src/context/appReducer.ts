@@ -257,27 +257,44 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       const lastKey = state.lastActiveDate ? new Date(state.lastActiveDate).toDateString() : null;
       if (todayKey === lastKey) return state;
 
-      // One missed day no longer costs the streak.
+      // One free miss per rolling week — not one free miss, always.
       //
-      // A hundred-day run collapsing to 1 because of a single bad Tuesday is the
-      // documented moment people abandon a daily habit, and in a devotional product the
-      // cost of that is out of all proportion to the accuracy gained by being strict.
-      // A gap of one day is forgiven and the streak simply continues; two or more is a
-      // real break and starts again. The reader's honest picture of their own
-      // consistency lives on the Retention screen as "N of the last 45 days", which
-      // neither punishes a miss nor pretends it didn't happen.
-      const daysSince = (() => {
-        if (!state.lastActiveDate) return Infinity;
-        const last = new Date(state.lastActiveDate);
-        const a = new Date(last.getFullYear(), last.getMonth(), last.getDate()).getTime();
-        const today = new Date();
-        const b = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-        return Math.round((b - a) / 86400000);
-      })();
+      // A hundred-day run collapsing over a single bad Tuesday is the documented moment
+      // people abandon a daily habit, and in a devotional product that cost is out of
+      // all proportion to the accuracy gained by being strict. But forgiving *every*
+      // gap of one day, as the first attempt at this did, makes the number meaningless:
+      // reviewing Monday, Wednesday, Friday, Sunday would grow a "daily streak" forever
+      // while the reader was practising half the time. A streak that survives anything
+      // measures nothing and is worth nothing to look at.
+      //
+      // So the grace is real but finite: a one-day gap is forgiven only if there wasn't
+      // another one in the past seven days. Two days away is a genuine break either way.
+      // The unvarnished picture lives on the Retention screen as "N of the last 45
+      // days", which neither punishes a miss nor pretends it didn't happen.
+      const startOfDay = (d: Date) =>
+        new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+
+      const daysSince = state.lastActiveDate
+        ? Math.round((startOfDay(new Date()) - startOfDay(new Date(state.lastActiveDate))) / 86400000)
+        : Infinity;
+
+      // Days in the past week that had at least one graded review, counted from the
+      // history rather than tracked separately — one source of truth for "did I show up".
+      const weekAgo = Date.now() - 7 * 86400000;
+      const activeThisWeek = new Set(
+        (state.reviewLog || [])
+          .filter(e => new Date(e.ts).getTime() >= weekAgo)
+          .map(e => new Date(e.ts).toDateString())
+      ).size;
+
+      // Reviewing every day for the last seven gives seven active days (today included
+      // once this review lands). Fewer means a miss has already been forgiven recently.
+      const graceAvailable = activeThisWeek >= 6;
+      const continues = daysSince <= 1 || (daysSince === 2 && graceAvailable);
 
       return {
         ...state,
-        streak: daysSince <= 2 ? state.streak + 1 : 1,
+        streak: continues ? state.streak + 1 : 1,
         lastActiveDate: new Date().toISOString(),
       };
     }

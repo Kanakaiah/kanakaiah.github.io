@@ -1,7 +1,7 @@
 // Rules for chunking and cue withdrawal. Run: npx vite-node scripts/cue.test.mjs
 
 import {
-  chunkText, chainCue, cueForRepetition, cueLevelToNumber, cueString, cueAriaLabel,
+  chunkText, chainCue, chainSpan, chainedText, cueForRepetition, cueLevelToNumber, cueString, cueAriaLabel,
   MAX_CHUNK_WORDS,
 } from '../src/utils/cue.ts';
 
@@ -38,6 +38,25 @@ const runOn = Array.from({ length: 40 }, () => 'word').join(' ');
 t('an over-long clause is kept whole rather than broken', chunkText(runOn).length === 1);
 
 t('empty text yields no parts', chunkText('').length === 0);
+
+// ── Progressive chaining accumulates, it does not merely visit ──────────────────
+// The difficulty a long passage presents is holding the run of clauses together, not any
+// one clause. Six parts typed into six separate boxes does not test that.
+t('a short passage is always asked for whole', chainSpan(1, 0) === 1);
+t('a new passage is asked for one part', chainSpan(4, 0) === 1);
+t('each successful recall adds a part', chainSpan(4, 2) === 2 && chainSpan(4, 3) === 3);
+t('the span never exceeds the passage', chainSpan(4, 99) === 4);
+
+t('the span is the parts joined, in order',
+  chainedText(['a b', 'c d', 'e f'], 2) === 'a b c d');
+t('a full span is the whole passage',
+  chainedText(['a b', 'c d', 'e f'], 3) === 'a b c d e f');
+t('a span is never empty', chainedText(['a b', 'c d'], 0) === 'a b');
+
+// Each attempt contains every earlier clause, so the widest attempt is the passage.
+const parts3 = chunkText(GEN32);
+t('the widest span reproduces the passage exactly',
+  chainedText(parts3, parts3.length).replace(/\s+/g, ' ') === GEN32.replace(/\s+/g, ' '));
 
 // ── The chain cue ───────────────────────────────────────────────────────────────
 t('the chain cue is the tail of the previous part',

@@ -78,9 +78,12 @@ export const Practice: React.FC = () => {
   // "Test me on these N" button, or a due-chapter empty-state redirect elsewhere —
   // via location.state, the same channel Guides.tsx already uses for
   // scrollToMemorySentence.
-  const navState = location.state as { subject?: Subject; sweepBookIds?: string[] } | null;
+  const navState = location.state as { subject?: Subject; sweepBookIds?: string[]; focusBookId?: string } | null;
   const [subject, setSubject] = useState<Subject>(navState?.subject || 'verse');
   const sweepBookIds = navState?.sweepBookIds;
+  // Consumed on the first render, like sweepBookIds — the effect below clears navState
+  // so returning to this route later does not silently re-narrow the day to one book.
+  const [focusBookId] = useState(navState?.focusBookId);
 
   // The workshop opens on a mode that can be scored.
   //
@@ -450,6 +453,7 @@ export const Practice: React.FC = () => {
       <Session
         onExit={() => navigate('/')}
         onFreePractice={() => navigate('/practice?mode=free')}
+        bookId={focusBookId}
       />
     );
   }

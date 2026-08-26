@@ -76,6 +76,13 @@ export interface SessionOptions {
   newChapters: number;
   /** Ceiling on the whole list, so a large backlog can't produce an endless session. */
   cap: number;
+  /** Restrict the day to one book. A reader with a large backlog spread across the canon
+   * otherwise gets twenty items from twenty different places, which is the worst possible
+   * shape for a sitting: maximum context switching, and no sense of having finished
+   * anything. Naming a book turns an undifferentiated wall into a piece of work with an
+   * end. Verses are unaffected — this narrows the chapter, theme and chain layers, which
+   * are the ones organised by book. */
+  bookId?: string;
   /** Injectable for tests and for a stable order in a single render. */
   now?: Date;
   shuffle?: <T>(xs: T[]) => T[];
@@ -335,7 +342,9 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   // So: choose by how overdue, then shuffle the chosen few. The reader still gets a mixed
   // order — one kind running in a block lets ordinal position stand in for the answer —
   // but the work that gets done is the work most in danger.
-  const review = [...verseItems, ...anchorItems, ...themeItems, ...chainItems];
+  const focus = options.bookId;
+  const inFocus = (i: SessionItem) => !focus || !('bookId' in i) || i.bookId === focus;
+  const review = [...verseItems, ...anchorItems, ...themeItems, ...chainItems].filter(inFocus);
   const mostOverdueFirst = [...review].sort(
     (a, b) => new Date(overdueKey(a)).getTime() - new Date(overdueKey(b)).getTime());
   const admittedReview = interleave(

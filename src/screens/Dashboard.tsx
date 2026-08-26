@@ -280,6 +280,28 @@ export const Dashboard: React.FC = () => {
               );
             })}
           </div>
+          {/* "Just Genesis this week."
+              A backlog spread across the canon produces a session of twenty items from
+              twenty different places — maximum context switching, and no sense of having
+              finished anything. Naming one book turns an undifferentiated wall into a
+              piece of work with an end. Offered only when there is genuinely a choice to
+              make, which is when more than one book is owed. */}
+          {bookRecallRows.filter(r => r.dueChapterCount > 0 || r.sentenceDue).length > 1 && (
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span className="text-[0.625rem] uppercase tracking-widest text-muted">Focus on one</span>
+              {bookRecallRows
+                .filter(r => r.dueChapterCount > 0 || r.sentenceDue)
+                .map(row => (
+                  <button
+                    key={row.book.id}
+                    onClick={() => navigate('/practice', { state: { focusBookId: row.book.id } })}
+                    className="px-2.5 py-1 rounded-md border border-card-border text-[0.6875rem] font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
+                  >
+                    {row.book.name}
+                  </button>
+                ))}
+            </div>
+          )}
         </div>
       )}
 

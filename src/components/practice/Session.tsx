@@ -7,8 +7,8 @@ import { buildSession, type SessionItem, type SessionPlan } from '../../utils/se
 import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress, ThemeProgress, Verse } from '../../types/models';
 import { CueText } from './CueText';
-import { chunkText, chainCue, cueForRepetition, cueLevelToNumber, scoreAttempt } from '../../utils/cue';
-import { judgeByDirection, type AnchorJudgement, type AnchorDirection } from '../../utils/anchorAnswer';
+import { chunkText, chainSpan, chainedText, cueForRepetition, cueLevelToNumber, scoreAttempt } from '../../utils/cue';
+import { judgeAnchor, judgeByDirection, type AnchorJudgement, type AnchorDirection } from '../../utils/anchorAnswer';
 import { ChainDrill } from './ChainDrill';
 import { saveSession, loadSession, clearSession } from '../../utils/sessionStore';
 
@@ -58,11 +58,14 @@ const GRADE_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 
  */
 export const Session: React.FC<{
   onExit: () => void;
+  /** Restrict the day to one book — see SessionOptions.bookId. Passed through from a
+   * navigation that named one, so "just Genesis this week" is expressible. */
+  bookId?: string;
   /** Route into free practice on the whole library. The session is now what the Practice
    * tab opens, so its empty state has to lead somewhere rather than being a dead end on
    * the app's second most prominent screen. */
   onFreePractice?: () => void;
-}> = ({ onExit, onFreePractice }) => {
+}> = ({ onExit, onFreePractice, bookId }) => {
   const { state, dispatch } = useApp();
 
   // Planned once, on mount. The plan reads from chapterProgress and the verse list,
@@ -72,6 +75,7 @@ export const Session: React.FC<{
     buildSession(state, {
       newChapters: state.settings.dailyChapterTarget ?? 3,
       cap: SESSION_CAP,
+      bookId,
     });
 
   // A session interrupted mid-way is resumed rather than restarted. Read once, on
@@ -80,7 +84,6 @@ export const Session: React.FC<{
 
   const [plan, setPlan] = useState<SessionPlan>(() => restored?.plan ?? buildPlan());
   const [index, setIndex] = useState(restored?.index ?? 0);
-  const [revealed, setRevealed] = useState(false);
   const [outcomes, setOutcomes] = useState<Outcome[]>((restored?.outcomes as Outcome[]) ?? []);
 
   // Persisted on every move through the list. Cheap — twenty items of plain data — and
@@ -94,17 +97,16 @@ export const Session: React.FC<{
     clearSession();
     setPlan(buildPlan());
     setIndex(0);
-    setRevealed(false);
     setOutcomes([]);
   };
 
   const item = plan.items[index];
   const isComplete = index >= plan.items.length;
 
-  const advance = () => {
-    setRevealed(false);
-    setIndex(i => i + 1);
-  };
+  // Each card owns its own attempt state and is keyed by item id, so there is nothing
+  // left here to reset — the shared 'revealed' flag existed only for the reveal-then-
+  // grade cards that no longer exist.
+  const advance = () => setIndex(i => i + 1);
 
   const recordActivity = () => {
     if (state.settings.streakIncludesChapters !== false) dispatch({ type: 'RECORD_ACTIVITY' });
@@ -186,7 +188,7 @@ export const Session: React.FC<{
     advance();
   };
 
-  const gradeTheme = (bookId: string, bookName: string, score: number) => {
+  const gradeTheme = (bookId: string, bookName: string, score: number, attempt: VerseAttempt) => {
     const existing = state.themeProgress[bookId];
     const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'theme');
     const updated: ThemeProgress = {
@@ -202,7 +204,10 @@ export const Session: React.FC<{
       type: 'RECORD_REVIEW',
       payload: buildReviewEvent({
         itemKind: 'theme', itemId: bookId, gradeSubmitted: score,
-        before: existing?.sm2, after: newSM2, mode: 'reveal', cueLevel: 0,
+        before: existing?.sm2, after: newSM2, mode: 'type', cueLevel: 0,
+        measuredAccuracy: attempt.accuracy,
+        committed: attempt.committed,
+        elapsedMs: attempt.elapsedMs,
       }),
     });
     dispatch({ type: 'RECORD_ACTIVITY' });
@@ -372,10 +377,9 @@ export const Session: React.FC<{
         />
       ) : item.kind === 'theme' ? (
         <ThemeCardPrompt
+          key={item.id}
           item={item}
-          revealed={revealed}
-          onReveal={() => setRevealed(true)}
-          onGrade={score => gradeTheme(item.bookId, item.bookName, score)}
+          onGrade={(score, attempt) => gradeTheme(item.bookId, item.bookName, score, attempt)}
         />
       ) : (
         <AnchorCardPrompt
@@ -530,7 +534,11 @@ const VerseCardPrompt: React.FC<{
   onGrade: (score: number, attempt: VerseAttempt) => void;
 }> = ({ item, onGrade }) => {
   const chunks = useMemo(() => chunkText(item.verse.text), [item.verse.text]);
-  const level = cueForRepetition(item.verse.sm2?.repetition ?? 0);
+  const repetition = item.verse.sm2?.repetition ?? 0;
+  const level = cueForRepetition(repetition);
+  // Progressive chaining: part one, then one and two together, then one through three.
+  // The span is what the item has earned; `part` extends it within this sitting.
+  const earnedSpan = chainSpan(chunks.length, repetition);
 
   const [part, setPart] = useState(0);
   const [input, setInput] = useState('');
@@ -547,17 +555,21 @@ const VerseCardPrompt: React.FC<{
   const [elapsedMs, setElapsedMs] = useState(0);
   React.useEffect(() => { startedAt.current = Date.now(); }, []);
 
-  const text = chunks[part] ?? item.verse.text;
+  const span = Math.min(chunks.length, earnedSpan + part);
+  const text = chainedText(chunks, span) || item.verse.text;
   const score = useMemo(() => scoreAttempt(text, input), [text, input]);
-  const isLastPart = part >= chunks.length - 1;
+  // Done when the attempt covered the whole passage.
+  const isLastPart = span >= chunks.length;
 
   // Totals across every part, so a three-part passage is graded on the whole thing
   // rather than on whichever fragment happened to be last.
   const thisPart = { matched: gaveUp ? 0 : score.matched, total: score.total, committed: input };
   const done = [...results, ...(checked ? [thisPart] : [])];
-  const totals = done.reduce((a, r) => ({ matched: a.matched + r.matched, total: a.total + r.total }),
-    { matched: 0, total: 0 });
-  const overall = totals.total ? Math.round((totals.matched / totals.total) * 100) : 0;
+  // The last attempt is the widest one and already contains every earlier clause, so the
+  // grade comes from it alone. Summing the attempts would count the opening of the
+  // passage once for every round and quietly inflate the result.
+  const widest = done.length ? done[done.length - 1] : thisPart;
+  const overall = widest.total ? Math.round((widest.matched / widest.total) * 100) : 0;
 
   const commit = () => {
     if (checked) return;
@@ -581,7 +593,7 @@ const VerseCardPrompt: React.FC<{
   const submit = (grade: number) => {
     onGrade(grade, {
       accuracy: overall,
-      committed: done.map(r => r.committed).join(' ').trim(),
+      committed: widest.committed,
       cueLevel: cueLevelToNumber(level),
       elapsedMs,
     });
@@ -603,7 +615,9 @@ const VerseCardPrompt: React.FC<{
         </span>
         {chunks.length > 1 && (
           <span className="text-[0.6875rem] text-muted tabular-nums">
-            Part {part + 1} of {chunks.length} · {score.total} words
+            {span === chunks.length
+              ? `Whole passage · ${score.total} words`
+              : `Parts 1–${span} of ${chunks.length} · ${score.total} words`}
           </span>
         )}
       </div>
@@ -611,11 +625,8 @@ const VerseCardPrompt: React.FC<{
       <h2 className="text-2xl font-heading font-bold text-primary leading-tight">{item.verse.ref}</h2>
 
       {/* The join from the previous part — a prompt, not a re-read. */}
-      {part > 0 && (
-        <p className="text-sm font-serif italic text-muted leading-relaxed border-l-2 border-card-border pl-3">
-          {chainCue(chunks[part - 1])}
-        </p>
-      )}
+      {/* Nothing precedes part one, so there is no join to prompt with. The cue returns
+          if a later starting point is ever introduced. */}
 
       <div className="flex-1 flex flex-col justify-center gap-4 min-h-0 overflow-y-auto">
         {!checked ? (
@@ -666,7 +677,7 @@ const VerseCardPrompt: React.FC<{
           onClick={nextPart}
           className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
         >
-          Next part
+          Again, with the next part
         </button>
       ) : gaveUp ? (
         // No grade strip. The reader has just been shown the answer, so there is nothing
@@ -683,7 +694,7 @@ const VerseCardPrompt: React.FC<{
         <div className="flex flex-col gap-2">
           {chunks.length > 1 && (
             <p className="text-center text-[0.6875rem] text-muted tabular-nums">
-              Whole passage: {totals.matched} of {totals.total} words
+              Whole passage: {widest.matched} of {widest.total} words
             </p>
           )}
           <p className="text-center text-[0.6875rem] text-muted">
@@ -843,40 +854,107 @@ const AnchorCardPrompt: React.FC<{
   );
 };
 
+/**
+ * A book's theme, typed from memory.
+ *
+ * The last item kind in the daily session still on reveal-then-self-grade. It was left
+ * behind when the verse and anchor cards were rebuilt, which meant the session was
+ * asking for a produced answer on two of its three layers and taking the reader's word
+ * for it on the third — and doing so on the layer where producing is cheapest, because
+ * a theme is one or two words.
+ *
+ * The book's name and its cover are the prompt: both are things the reader already has,
+ * and neither gives the answer away.
+ */
 const ThemeCardPrompt: React.FC<{
   item: Extract<SessionItem, { kind: 'theme' }>;
-  revealed: boolean;
-  onReveal: () => void;
+  onGrade: (score: number, attempt: VerseAttempt) => void;
+}> = ({ item, onGrade }) => {
+  const [typed, setTyped] = useState('');
+  const [judged, setJudged] = useState<AnchorJudgement | null>(null);
+  const startedAt = useRef(0);
+  const [elapsedMs, setElapsedMs] = useState(0);
+  React.useEffect(() => { startedAt.current = Date.now(); }, []);
 
-  onGrade: (score: number) => void;
-}> = ({ item, revealed, onReveal, onGrade }) => (
-  <div className="flex-1 flex flex-col gap-4">
-    <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-emerald-500">Theme</span>
+  const answer = (value: string = typed) => {
+    if (judged) return;
+    setElapsedMs(Date.now() - startedAt.current);
+    // Judged as a word, with no siblings: a wrong theme is rarely another book's theme,
+    // and naming a coincidental collision across sixty-six books would mislead more than
+    // it explained.
+    setJudged(judgeAnchor(value, item.themeWord));
+  };
 
-    <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
-      <h2 className="text-3xl font-heading font-bold text-primary leading-tight">{item.bookName}</h2>
-      <p className="text-xs text-muted italic">What is this book's theme?</p>
+  const submit = (score: number) => onGrade(score, {
+    accuracy: judged?.verdict === 'correct' ? 100 : judged?.verdict === 'near' ? 60 : 0,
+    committed: typed,
+    cueLevel: 0,
+    elapsedMs,
+  });
 
-      {revealed ? (
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-2xl font-heading font-bold text-accent tracking-wide">{item.themeWord}</span>
-          <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-gold">{item.keyWord}</span>
-          <p className="text-sm text-secondary italic font-serif leading-relaxed max-w-xs">{item.subtitle}</p>
+  return (
+    <div className="flex-1 flex flex-col gap-4 min-h-0">
+      <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-emerald-500">Theme</span>
+
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center min-h-0 overflow-y-auto">
+        <h2 className="text-3xl font-heading font-bold text-primary leading-tight">{item.bookName}</h2>
+        <p className="text-xs text-muted italic">What is this book's theme?</p>
+
+        {!judged ? (
+          <input
+            type="text"
+            value={typed}
+            onChange={e => setTyped(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') answer(); }}
+            placeholder="one word"
+            aria-label={`The theme of ${item.bookName}`}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="characters"
+            spellCheck={false}
+            className="w-full max-w-xs text-center text-xl py-3 px-4 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted/60"
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-2" role="status" aria-live="polite">
+            <span className="text-2xl font-heading font-bold text-accent tracking-wide">{item.themeWord}</span>
+            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-gold">{item.keyWord}</span>
+            <p className="text-sm text-secondary italic font-serif leading-relaxed max-w-xs">{item.subtitle}</p>
+            {judged.verdict === 'correct' && <span className="text-xs font-bold text-green-500">Correct</span>}
+            {judged.verdict === 'near' && <span className="text-xs text-orange-400">Close — it's {item.themeWord}.</span>}
+          </div>
+        )}
+      </div>
+
+      {!judged ? (
+        <div className="flex flex-col gap-1.5">
+          <button
+            onClick={() => answer()}
+            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          >
+            Answer
+          </button>
+          <button onClick={() => answer('')} className="text-[0.6875rem] text-muted hover:text-primary transition-colors py-1">
+            Skip this one
+          </button>
         </div>
       ) : (
-        <><span className="sr-only">Answer hidden — recall it, then reveal.</span><span className="inline-block h-6 w-32 rounded-sm bg-card-border" aria-hidden="true" /></>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => submit(judged.score)}
+            className="py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          >
+            Continue
+          </button>
+          <button
+            onClick={() => submit(5)}
+            disabled={judged.verdict !== 'correct'}
+            title={judged.verdict !== 'correct' ? 'Only for an answer that was right' : undefined}
+            className="py-3 rounded-md border border-card-border text-secondary font-bold text-sm hover:text-primary transition-colors disabled:opacity-25 disabled:pointer-events-none"
+          >
+            That was easy
+          </button>
+        </div>
       )}
     </div>
-
-    {revealed ? (
-      <GradeStrip onGrade={onGrade} />
-    ) : (
-      <button
-        onClick={onReveal}
-        className="w-full py-3 rounded-md border border-dashed border-card-border-hover text-sm font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
-      >
-        Tap to reveal
-      </button>
-    )}
-  </div>
-);
+  );
+};
