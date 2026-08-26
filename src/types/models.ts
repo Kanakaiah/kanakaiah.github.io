@@ -168,6 +168,58 @@ export function blockProgressKey(bookId: string, blockIndex: number): string {
   return `${bookId}:${blockIndex}`;
 }
 
+/**
+ * One graded retrieval attempt, recorded as it happens.
+ *
+ * Every other record in this file is *current state* — where an item stands right now.
+ * None of them can answer the only question that matters about a memory app: is the
+ * reader actually remembering more than they used to? `sm2.repetition` looks like
+ * history and is not; it is a counter that resets, so an item reviewed forty times and
+ * lapsed twice is indistinguishable from one reviewed six times cleanly. Nothing
+ * anywhere held a dated outcome, which meant retention could not be computed, intervals
+ * could not be tuned against evidence, and no change to the app could be shown to have
+ * helped or hurt.
+ *
+ * This is that missing history. It is deliberately written *before* the changes it
+ * exists to evaluate, so those changes have a baseline to be measured against rather
+ * than a story told about them afterwards.
+ *
+ * Several fields are null at every call site today: `committed` and `measuredAccuracy`
+ * can only be filled by a mode that asks the reader to produce the answer, and the
+ * daily session currently reveals and asks for a self-grade instead. They are in the
+ * schema now because the schema is cheap to widen today and expensive to backfill in a
+ * year, and because the gap between `gradeSubmitted` and `measuredAccuracy` is the one
+ * number that says whether self-grading can be trusted at all.
+ */
+export interface ReviewEvent {
+  id: string;
+  ts: string; // ISO
+  itemKind: 'verse' | 'anchor' | 'theme' | 'chain' | 'sentence';
+  /** Verse id, "genesis:27", "genesis" for a theme, "genesis:0" for a chain. */
+  itemId: string;
+  /** Which drill direction was asked, where the item kind has more than one. */
+  direction?: 'n2w' | 'w2n' | 'p2w';
+  /** How much of the answer was on screen as a cue: 0 none … 4 all of it. Derived from
+   * hint level where one exists, so a verse read off a full hint cannot look like recall. */
+  cueLevel: 0 | 1 | 2 | 3 | 4;
+  mode: 'type' | 'speak' | 'reveal' | 'chain' | 'scramble' | 'erase';
+  /** Prompt shown → answer committed. 0 when the surface does not time the attempt. */
+  elapsedMs: number;
+  /** What the reader actually produced, where a mode collects it. Null for reveal-only. */
+  committed: string | null;
+  /** 0–100 word-match accuracy, where a mode can measure it. Null when unmeasurable. */
+  measuredAccuracy: number | null;
+  gradeSubmitted: number;
+  /** The best grade this attempt could honestly earn given the cues used. */
+  gradeCeiling: number;
+  intervalBefore: number;
+  intervalAfter: number;
+  efactorAfter: number;
+  /** The nextDueDate this review was answering — lets "how late was it?" be recomputed. */
+  scheduledFor: string | null;
+  daysLate: number;
+}
+
 export interface AppState {
   verses: Verse[];
   streak: number;
@@ -181,6 +233,8 @@ export interface AppState {
   themeProgress: Record<string, ThemeProgress>;
   /** Anchor-chain recall per narrative block. See BlockProgress above. */
   blockProgress: Record<string, BlockProgress>;
+  /** Append-only history of graded retrievals, oldest first. See ReviewEvent above. */
+  reviewLog: ReviewEvent[];
 }
 
 // Guides Data types based on guides_data.js

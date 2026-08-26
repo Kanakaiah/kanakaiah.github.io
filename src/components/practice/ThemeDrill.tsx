@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { evaluateSM2, formatInterval, isDue } from '../../utils/sm2';
+import { buildReviewEvent } from '../../utils/reviewLog';
 import type { ThemeProgress } from '../../types/models';
 import { OT_BOOKS } from '../../data/otBooks';
 import { NT_BOOKS } from '../../data/ntBooks';
@@ -90,6 +91,13 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       lastAttemptDate: new Date().toISOString(),
     };
     dispatch({ type: 'GRADE_THEME_PROGRESS', payload: updated });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'theme', itemId: current.id, gradeSubmitted: score,
+        before: existing?.sm2, after: newSM2, mode: 'reveal', cueLevel: 0,
+      }),
+    });
     dispatch({ type: 'RECORD_ACTIVITY' });
     showToast(`Score logged. Next review in ${formatInterval(newSM2.interval)}.`, 'success');
     if (index < pool.length - 1) { goTo(index + 1); }
@@ -177,12 +185,13 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
             <button
               key={g.score}
               onClick={() => handleGrade(g.score)}
-              className={`py-2.5 flex flex-col items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
+              className={`py-3 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
             >
+              {/* No interval preview. Printing what each grade buys turns the question
+                  from "did you remember it?" into a choice between a short wait and a
+                  long one — and nothing here verifies the answer. The toast on the next
+                  line reports the schedule once the grade is already in. */}
               <span className="text-xs font-bold leading-tight">{g.label}</span>
-              <span className="text-[0.625rem] opacity-80 font-medium tabular-nums">
-                {formatInterval(evaluateSM2(existing?.sm2 || DEFAULT_SM2, g.score).newSM2.interval)}
-              </span>
             </button>
           ))}
         </div>

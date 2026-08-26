@@ -37,13 +37,43 @@ p = buildSession(mk({chapterProgress:{'habakkuk:1': chap('habakkuk',1,{sm2:sm2(+
   {newChapters:2, cap:3, shuffle:noShuffle});
 t('cap admits new pairs whole or not at all', p.items.length===2 && p.heldBack===2);
 
-// 5. Reviews are kept ahead of new material when trimming
+// 5. New material holds a reserved share of the session rather than taking leftovers.
+//
+// This test used to assert the opposite — that five due verses filled a cap of five and
+// new material got nothing. That was the documented behaviour, and it was the bug: past
+// roughly nineteen due items the leftover is always zero, so any real backlog silently
+// stops a reader ever meeting a new chapter again. Reviews still take the larger share;
+// they just can no longer take all of it.
 p = buildSession(mk({
   verses: Array.from({length:5},(_,i)=>({id:'v'+i, ref:'R'+i, text:'t', sm2:sm2(-1), status:'review', attempts:1})),
   chapterProgress:{'habakkuk:1': chap('habakkuk',1,{sm2:sm2(+9)})},
 }), {newChapters:3, cap:5, shuffle:noShuffle});
-t('reviews win the cap over new material',
-  p.items.length===5 && p.items.every(i=>i.kind==='verse') && p.heldBack===4);
+t('new material keeps a reserved share when reviews would fill the cap',
+  p.items.length===5 &&
+  p.items.filter(i=>i.kind==='verse').length===3 &&
+  p.items.filter(i=>i.kind==='introduce').length===1 &&
+  p.items.filter(i=>i.kind==='anchor').length===1);
+
+// 5b. A heavy backlog can no longer starve new material to zero — the original defect.
+// Genesis rather than Habakkuk: a three-chapter book cannot offer three new chapters, so
+// it would pass this on a technicality without ever exercising the reserve.
+p = buildSession(mk({
+  verses: Array.from({length:60},(_,i)=>({id:'v'+i, ref:'R'+i, text:'t', sm2:sm2(-1), status:'review', attempts:1})),
+  chapterProgress:{'genesis:1': chap('genesis',1,{sm2:sm2(+9)})},
+}), {newChapters:3, cap:20, shuffle:noShuffle});
+t('a large backlog still admits new chapters',
+  p.items.filter(i=>i.kind==='introduce').length===3 && p.items.length===20);
+
+// 5c. Every admitted Introduce still sits immediately before its own retrieval.
+t('the reserve never splits a pair', p.items.every((it,i)=>
+  it.kind!=='introduce' || (p.items[i+1] && p.items[i+1].kind==='anchor' && p.items[i+1].chapter===it.chapter)));
+
+// 5d. New material that exceeds its reserved share is reported, not silently dropped.
+p = buildSession(mk({
+  chapterProgress:{'genesis:1': chap('genesis',1,{sm2:sm2(+9)})},
+}), {newChapters:8, cap:10, shuffle:noShuffle});
+t('new material beyond the reserve is reported as held back',
+  p.items.filter(i=>i.kind==='introduce').length===1 && p.newHeldBack===14);
 
 // 6. A finished book does not keep offering new chapters
 const allDone = {}; for (let c=1;c<=3;c++) allDone['habakkuk:'+c]=chap('habakkuk',c,{sm2:sm2(+9)});

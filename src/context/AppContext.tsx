@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
-import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress } from '../types/models';
+import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress, ReviewEvent } from '../types/models';
 import { chapterProgressKey, blockProgressKey } from '../types/models';
+import { appendReview } from '../utils/reviewLog';
 import { SEED_VERSES } from '../data/seed';
 
 // --- INITIAL STATE ---
@@ -14,6 +15,7 @@ const initialState: AppState = {
   chapterProgress: {},
   themeProgress: {},
   blockProgress: {},
+  reviewLog: [],
   settings: {
     ttsEnabled: false,
     recallMasking: false,
@@ -44,6 +46,7 @@ export type AppAction =
   | { type: 'GRADE_THEME_PROGRESS'; payload: ThemeProgress }
   | { type: 'GRADE_BLOCK_PROGRESS'; payload: BlockProgress }
   | { type: 'RECORD_CHAIN_PASS'; payload: { bookId: string; results: { chapter: number; revealed: boolean }[] } }
+  | { type: 'RECORD_REVIEW'; payload: ReviewEvent }
   | { type: 'RECORD_ACTIVITY' };
 
 // --- REDUCER ---
@@ -184,6 +187,14 @@ function appReducer(state: AppState, action: AppAction): AppState {
 
       return { ...state, chapterProgress };
     }
+    case 'RECORD_REVIEW':
+      // Deliberately separate from the four GRADE_* actions rather than folded into
+      // them. Those write *current state*, and each is dispatched from a surface that
+      // knows only its own item kind; this writes history, is uniform across kinds, and
+      // is capped. Keeping them apart means a new drill can start recording history
+      // without touching the reducer, and a mistake in one cannot corrupt the other.
+      return { ...state, reviewLog: appendReview(state.reviewLog || [], action.payload) };
+
     case 'RECORD_ACTIVITY': {
       // Any graded review — a verse, a memory sentence, or a chapter — counts as a
       // day's activity toward the streak. One calendar day (not a rolling 24h
@@ -263,6 +274,11 @@ function loadInitialState(): AppState {
           // above already backfills {}; this guards a stored null from a bad write.
           themeProgress: parsed.themeProgress || {},
           blockProgress: parsed.blockProgress || {},
+          // Profiles saved before the review history existed have no key for it. The
+          // spread above backfills [], and this guards a stored null from a bad write —
+          // an Array check rather than `|| []` because a corrupted object here would make
+          // every selector throw, on screens the reader then cannot get out of.
+          reviewLog: Array.isArray(parsed.reviewLog) ? parsed.reviewLog : [],
         };
       }
     }

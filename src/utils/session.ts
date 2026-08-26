@@ -57,6 +57,10 @@ export interface SessionPlan {
   items: SessionItem[];
   /** Everything that was due but did not fit the cap — surfaced as "keep going". */
   heldBack: number;
+  /** New chapters that were offered but did not fit their reserved share. Reported
+   * separately from `heldBack` so the session can say the specific true thing rather
+   * than folding new material into one undifferentiated count. */
+  newHeldBack: number;
 }
 
 export interface SessionOptions {
@@ -256,19 +260,50 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
     }
   }
 
-  // Reviews come first when trimming: an overdue item has already lost more retention
-  // than a new one has to lose, and new material not reached today is simply offered
-  // again tomorrow. New pairs are then admitted whole or not at all — a cap that cut
-  // between an Introduce and its retrieval would leave a chapter taught but never
-  // tested, which is the one shape this session is built to avoid.
-  const review = interleave([...verseItems, ...anchorItems, ...themeItems, ...chainItems], shuffle);
-  const items: SessionItem[] = review.slice(0, options.cap);
+  // New material gets a reserved share of the session, taken before reviews are trimmed.
+  //
+  // Reviews used to fill the cap first, with new pairs admitted only from whatever was
+  // left over. That sounds conservative and is: past about nineteen due items the
+  // leftover is always zero, so a reader with any real backlog is quietly served nothing
+  // new — indefinitely, and with nothing on screen saying so. They believe they are
+  // working through Genesis; they are not. A queue that can never reach the end of a
+  // book is not a schedule, and a stall the reader cannot see is the failure most likely
+  // to end the habit altogether.
+  //
+  // So the daily chapter target is treated as a commitment rather than a leftover, held
+  // to a third of the session so that it can never swallow the day's reviews either. The
+  // floor of one pair means even a very small cap still teaches something.
+  const RESERVE_FRACTION = 0.3;
+  const maxNewSlots = Math.max(2, Math.floor(options.cap * RESERVE_FRACTION));
 
+  const admittedPairs: SessionItem[][] = [];
+  let newSlots = 0;
   for (const pair of newPairs) {
-    if (items.length + pair.length > options.cap) break;
-    items.push(...pair);
+    // Whole or not at all: a cap that cut between an Introduce and its retrieval would
+    // leave a chapter taught and never tested, the one shape this session exists to avoid.
+    if (newSlots + pair.length > maxNewSlots) break;
+    admittedPairs.push(pair);
+    newSlots += pair.length;
   }
 
-  const totalOffered = review.length + newPairs.flat().length;
-  return { items, heldBack: Math.max(0, totalOffered - items.length) };
+  const review = interleave([...verseItems, ...anchorItems, ...themeItems, ...chainItems], shuffle);
+  const admittedReview = review.slice(0, Math.max(0, options.cap - newSlots));
+
+  // Placement: a short warm-up of familiar items, then the new material, then the rest.
+  // Appending new pairs to the very end would reproduce the same bug in a milder form —
+  // an abandoned session still never reaches them — and meeting an unfamiliar chapter as
+  // the very first thing of the day is its own kind of discouraging.
+  const WARM_UP = 3;
+  const items: SessionItem[] = [
+    ...admittedReview.slice(0, WARM_UP),
+    ...admittedPairs.flat(),
+    ...admittedReview.slice(WARM_UP),
+  ];
+
+  const newOffered = newPairs.flat().length;
+  return {
+    items,
+    heldBack: Math.max(0, review.length + newOffered - items.length),
+    newHeldBack: Math.max(0, newOffered - newSlots),
+  };
 }

@@ -3,6 +3,7 @@ import { X, Check, RotateCcw } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useFocusTrap } from '../../utils/useFocusTrap';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
+import { buildReviewEvent } from '../../utils/reviewLog';
 import { blockProgressKey } from '../../types/models';
 import type { BlockProgress } from '../../types/models';
 
@@ -82,6 +83,18 @@ export const ChainDrill: React.FC<{
       lastAttemptDate: new Date().toISOString(),
     };
     dispatch({ type: 'GRADE_BLOCK_PROGRESS', payload: updated });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'chain', itemId: key, gradeSubmitted: score,
+        before: existing?.sm2, after: newSM2, mode: 'chain', cueLevel: 0,
+        // `accuracy` is left out of measuredAccuracy on purpose. It is an aggregate of
+        // per-link "Had it / Missed" taps — self-report, just at finer grain — and
+        // feeding it in would have the honesty gap comparing a self-report against
+        // itself and reporting a reassuring zero. That field is reserved for a produced
+        // answer diffed against the real text.
+      }),
+    });
 
     // Per-chapter evidence, not a per-chapter grade. `revealed: true` means "needed
     // the answer", which is what a miss is here.

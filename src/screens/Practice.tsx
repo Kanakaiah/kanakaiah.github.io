@@ -3,9 +3,10 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
-import { evaluateSM2, isDue, formatInterval } from '../utils/sm2';
+import { evaluateSM2, isDue, formatInterval, suggestedScore } from '../utils/sm2';
 import { dueChapters } from '../utils/mastery';
-import type { Verse } from '../types/models';
+import type { Verse, ReviewEvent } from '../types/models';
+import { buildReviewEvent } from '../utils/reviewLog';
 
 // Subcomponents
 import { ReadMode } from '../components/practice/ReadMode';
@@ -35,14 +36,17 @@ const SUBJECTS: { id: Subject; label: string }[] = [
   { id: 'verse', label: 'Verse' },
 ];
 
-/** Maps measured word-accuracy onto the four grades. The boundaries are deliberately
- * strict at the top: word-for-word memorization is the goal, so 90% is "Good" rather
- * than "Easy" — a verse recalled with one word in ten wrong is not one to push out to
- * a long interval. Below 70% the attempt failed, whatever it felt like. */
-const suggestedScore = (accuracy: number): number =>
-  accuracy >= 98 ? 5 : accuracy >= 90 ? 4 : accuracy >= 70 ? 3 : 1;
-
 const SUGGESTED_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 5: 'Easy' };
+
+/** Practice's own mode names, in the vocabulary the review history uses. Read mode has
+ * no scoring block, so it can never reach the log. */
+const MODE_TO_LOG: Partial<Record<PracticeMode, ReviewEvent['mode']>> = {
+  typing: 'type',
+  speech: 'speak',
+  scramble: 'scramble',
+  eraser: 'erase',
+  'first-letter': 'reveal',
+};
 
 /**
  * The best grade a hinted attempt can honestly earn.
@@ -236,12 +240,31 @@ export const Practice: React.FC = () => {
     };
     
     dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
+    // The only surface in the app that can currently measure an attempt rather than ask
+    // about it. `modeAccuracy` is real ground truth from Type and Recite; recording it
+    // next to the grade the reader chose is what makes the honesty gap computable.
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'verse', itemId: currentVerse.id, gradeSubmitted: score,
+        before: currentVerse.sm2, after: newSM2,
+        mode: MODE_TO_LOG[activeMode] ?? 'reveal',
+        // A hint level is a cue level. First-letter mode carries a standing cue of its
+        // own even with no hint pressed, so the recorded cue is whichever is stronger.
+        cueLevel: Math.max(hintLevel, activeMode === 'first-letter' ? 2 : 0) as 0 | 1 | 2 | 3 | 4,
+        gradeCeiling: ceilingFor(hintLevel),
+        measuredAccuracy: modeAccuracy,
+      }),
+    });
     // The streak action existed in the reducer with nothing in the app ever
     // dispatching it, so the flame on Today and in the shell header had shown
     // zero for every session. This is where it actually starts counting.
     dispatch({ type: 'RECORD_ACTIVITY' });
     setIsEvaluationOpen(false);
-    showToast(`Score logged. Next review in ${newSM2.interval} days.`, 'success');
+    // formatInterval, not raw days: this said "Next review in 63 days" where every other
+    // grading surface in the app says "2 mo". It is also now the only place the interval
+    // appears at all, the grade buttons having stopped advertising what each one buys.
+    showToast(`Score logged. Next review in ${formatInterval(newSM2.interval)}.`, 'success');
   };
 
   const handleHintClick = () => {
@@ -575,21 +598,17 @@ export const Practice: React.FC = () => {
                   </p>
                 )}
                 <div className="grid grid-cols-4 gap-3">
-                  <button onClick={() => handleScore(1)} disabled={1 > ceilingFor(hintLevel)} title={1 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 1 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(1)} disabled={1 > ceilingFor(hintLevel)} title={1 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 1 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Blank</span>
-                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 1).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(3)} disabled={3 > ceilingFor(hintLevel)} title={3 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 3 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(3)} disabled={3 > ceilingFor(hintLevel)} title={3 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 3 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Hard</span>
-                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 3).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(4)} disabled={4 > ceilingFor(hintLevel)} title={4 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 4 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(4)} disabled={4 > ceilingFor(hintLevel)} title={4 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 4 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Good</span>
-                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 4).newSM2.interval)}</span>
                   </button>
-                  <button onClick={() => handleScore(5)} disabled={5 > ceilingFor(hintLevel)} title={5 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 5 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
+                  <button onClick={() => handleScore(5)} disabled={5 > ceilingFor(hintLevel)} title={5 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 5 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
                     <span className="text-sm font-bold leading-tight">Easy</span>
-                    <span className="text-[0.6875rem] opacity-80 font-medium">{formatInterval(evaluateSM2(currentVerse.sm2, 5).newSM2.interval)}</span>
                   </button>
                 </div>
                 <button onClick={() => setIsEvaluationOpen(false)} className="text-muted text-sm font-medium hover:text-primary transition-colors py-1">Cancel</button>

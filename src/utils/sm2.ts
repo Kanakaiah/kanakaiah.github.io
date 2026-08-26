@@ -21,6 +21,20 @@ export function formatInterval(days: number): string {
 }
 
 /**
+ * Maps measured word-accuracy onto the four grades. The boundaries are deliberately
+ * strict at the top: word-for-word memorization is the goal, so 90% is "Good" rather
+ * than "Easy" — a verse recalled with one word in ten wrong is not one to push out to
+ * a long interval. Below 70% the attempt failed, whatever it felt like.
+ *
+ * Lives here beside `evaluateSM2` rather than inside the practice screen because the
+ * review history now measures self-grading against it. If the screen's idea of what 90%
+ * is worth ever drifted from the one used to audit those grades, the audit would quietly
+ * be measuring nothing.
+ */
+export const suggestedScore = (accuracy: number): number =>
+  accuracy >= 98 ? 5 : accuracy >= 90 ? 4 : accuracy >= 70 ? 3 : 1;
+
+/**
  * The one definition of "due" in the app.
  *
  * `status` records which *phase* an item is in — 'learning' until three successful

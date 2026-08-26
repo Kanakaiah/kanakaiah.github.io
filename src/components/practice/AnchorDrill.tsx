@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
+import { buildReviewEvent } from '../../utils/reviewLog';
 import { dueChapters } from '../../utils/mastery';
 import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress } from '../../types/models';
@@ -23,6 +24,12 @@ const DIRECTIONS: { id: Direction; label: string; prompt: string }[] = [
   { id: 'word-to-number', label: 'Word → Number', prompt: 'Which chapter is this?' },
   { id: 'plate-to-word', label: 'Plate → Word', prompt: 'What anchors this chapter?' },
 ];
+
+const DIRECTION_TO_LOG: Record<Direction, 'n2w' | 'w2n' | 'p2w'> = {
+  'number-to-word': 'n2w',
+  'word-to-number': 'w2n',
+  'plate-to-word': 'p2w',
+};
 
 interface QueueItem {
   bookId: string;
@@ -160,6 +167,20 @@ export const AnchorDrill: React.FC<{
       lastReadDate: existing?.lastReadDate || null,
     };
     dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'anchor',
+        itemId: chapterProgressKey(current.bookId, current.chapter),
+        gradeSubmitted: score,
+        before: existing?.sm2, after: newSM2,
+        mode: 'reveal', cueLevel: 0,
+        // Which way round the question was asked. Worth recording because the three
+        // directions are not equally hard, and until now nothing distinguished a chapter
+        // known cold from one only ever recognised off its plate.
+        direction: DIRECTION_TO_LOG[direction],
+      }),
+    });
     if (state.settings.streakIncludesChapters !== false) {
       dispatch({ type: 'RECORD_ACTIVITY' });
     }

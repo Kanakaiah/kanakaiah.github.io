@@ -3,6 +3,7 @@ import { Eye, EyeOff, Check, CaseSensitive } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
+import { buildReviewEvent } from '../../utils/reviewLog';
 
 import type { MemorySentenceProgress } from '../../types/models';
 import { FirstLetterMode } from '../practice/FirstLetterMode';
@@ -174,6 +175,16 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
       lastAttemptDate: new Date().toISOString(),
     };
     dispatch({ type: 'UPDATE_MEMORY_SENTENCE_PROGRESS', payload: updated });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'sentence', itemId: guideId, gradeSubmitted: score,
+        before: progress?.sm2, after: newSM2,
+        // Every anchor the reader had to tap open was on screen by the time they graded,
+        // so a pass through this sentence is a cued recall, not a cold one.
+        mode: 'reveal', cueLevel: 2,
+      }),
+    });
 
     // Tapping a blurred word to reveal it is the reader admitting they didn't have
     // it — a genuinely useful per-chapter signal. It used to be written as a full
@@ -315,21 +326,17 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
           <div className="max-w-md w-full self-center bg-card-elevated border border-card-border rounded-lg p-4 flex flex-col gap-3 animate-[fadeScaleIn_0.2s_ease-out]">
             <p className="text-center text-sm font-semibold text-primary">How well did you know the sentence?</p>
             <div className="grid grid-cols-4 gap-2">
-              <button onClick={() => handleScore(1)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95">
+              <button onClick={() => handleScore(1)} className="py-3 flex items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95">
                 <span className="text-xs font-bold leading-tight">Blank</span>
-                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 1).newSM2.interval)}</span>
               </button>
-              <button onClick={() => handleScore(3)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
+              <button onClick={() => handleScore(3)} className="py-3 flex items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
                 <span className="text-xs font-bold leading-tight">Hard</span>
-                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 3).newSM2.interval)}</span>
               </button>
-              <button onClick={() => handleScore(4)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
+              <button onClick={() => handleScore(4)} className="py-3 flex items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
                 <span className="text-xs font-bold leading-tight">Good</span>
-                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 4).newSM2.interval)}</span>
               </button>
-              <button onClick={() => handleScore(5)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95">
+              <button onClick={() => handleScore(5)} className="py-3 flex items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95">
                 <span className="text-xs font-bold leading-tight">Easy</span>
-                <span className="text-[0.625rem] opacity-80 font-medium">{formatInterval(evaluateSM2(progress?.sm2 || DEFAULT_SM2, 5).newSM2.interval)}</span>
               </button>
             </div>
             <button onClick={() => setIsGrading(false)} className="text-muted text-xs font-medium hover:text-primary transition-colors py-0.5">Cancel</button>

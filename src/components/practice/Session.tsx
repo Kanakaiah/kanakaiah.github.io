@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, Flame } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
+import { buildReviewEvent } from '../../utils/reviewLog';
 import { buildSession, type SessionItem, type SessionPlan } from '../../utils/session';
 import { chapterProgressKey } from '../../types/models';
-import type { ChapterProgress, SM2Data, ThemeProgress, Verse } from '../../types/models';
+import type { ChapterProgress, ThemeProgress, Verse } from '../../types/models';
 import { FirstLetterMode } from './FirstLetterMode';
 import { ChainDrill } from './ChainDrill';
 
@@ -87,6 +88,17 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       type: 'UPDATE_VERSE',
       payload: { ...verse, sm2: newSM2, status: newStatus, attempts: (verse.attempts || 0) + 1 },
     });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'verse', itemId: verse.id, gradeSubmitted: score,
+        before: verse.sm2, after: newSM2,
+        // First letters sit on screen for the whole attempt here, so this is not an
+        // uncued recall. Recording it as cueLevel 0 would let the daily loop look
+        // stronger in the history than it is, which is the opposite of the point.
+        mode: 'reveal', cueLevel: 2,
+      }),
+    });
     dispatch({ type: 'RECORD_ACTIVITY' });
     setOutcomes(o => [...o, { id: verse.id, kind: 'verse', label: verse.ref, score, interval: newSM2.interval }]);
     advance();
@@ -110,6 +122,16 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       lastChainDate: existing?.lastChainDate,
     };
     dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'anchor', itemId: key, gradeSubmitted: score,
+        before: existing?.sm2, after: newSM2,
+        // The masked answer is a fixed-width bar carrying no information about the word,
+        // so this genuinely is an uncued attempt.
+        mode: 'reveal', cueLevel: 0, direction: 'n2w',
+      }),
+    });
     recordActivity();
     setOutcomes(o => [...o, { id: key, kind: 'anchor', label: `${bookName} ${chapter}`, score, interval: newSM2.interval }]);
     advance();
@@ -127,6 +149,13 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       lastAttemptDate: new Date().toISOString(),
     };
     dispatch({ type: 'GRADE_THEME_PROGRESS', payload: updated });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'theme', itemId: bookId, gradeSubmitted: score,
+        before: existing?.sm2, after: newSM2, mode: 'reveal', cueLevel: 0,
+      }),
+    });
     dispatch({ type: 'RECORD_ACTIVITY' });
     setOutcomes(o => [...o, { id: `theme:${bookId}`, kind: 'theme', label: bookName, score, interval: newSM2.interval }]);
     advance();
@@ -175,6 +204,16 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
           <Flame className="w-4 h-4 text-gold" />
           <span className="text-sm font-bold text-primary">{state.streak}-day streak</span>
         </div>
+
+        {/* A stall the reader cannot see is the failure most likely to end the habit.
+            When the backlog has pushed new chapters past their reserved share, the
+            session says so rather than letting progress through a book simply stop
+            without explanation. */}
+        {plan.newHeldBack > 0 && (
+          <p className="text-center text-[0.6875rem] text-muted px-4">
+            Reviews filled today — new chapters resume as the backlog clears.
+          </p>
+        )}
 
         <div className="mt-auto flex flex-col gap-2">
           <button
@@ -259,7 +298,6 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
           item={item}
           revealed={revealed}
           onReveal={() => setRevealed(true)}
-          existingSM2={state.themeProgress[item.bookId]?.sm2 || DEFAULT_SM2}
           onGrade={score => gradeTheme(item.bookId, item.bookName, score)}
         />
       ) : (
@@ -267,7 +305,6 @@ export const Session: React.FC<{ onExit: () => void }> = ({ onExit }) => {
           item={item}
           revealed={revealed}
           onReveal={() => setRevealed(true)}
-          existingSM2={state.chapterProgress[chapterProgressKey(item.bookId, item.chapter)]?.sm2 || DEFAULT_SM2}
           onGrade={score => gradeAnchor(item.bookId, item.bookName, item.chapter, score)}
         />
       )}
@@ -291,18 +328,28 @@ const Row: React.FC<{ label: string; value: string; tone?: 'good' | 'bad' }> = (
   </div>
 );
 
-const GradeStrip: React.FC<{ sm2: SM2Data; onGrade: (score: number) => void }> = ({ sm2, onGrade }) => (
+/**
+ * Four grades, and no preview of what each one buys.
+ *
+ * Every button used to carry the interval it would produce — Blank 1 day, Easy 2 months
+ * — which turns an honest question about recall into a visible trade between a short
+ * wait and a long one. Nothing in the app verifies these grades, so the schedule rests
+ * entirely on the reader reporting a memory rather than choosing a reward, and printing
+ * the reward beside the choice is the one thing most likely to stop them doing that.
+ *
+ * The interval is not hidden, only moved: the session's closing summary reports the
+ * schedule the day's answers actually produced, at the point where knowing it can no
+ * longer bias it.
+ */
+const GradeStrip: React.FC<{ onGrade: (score: number) => void }> = ({ onGrade }) => (
   <div className="grid grid-cols-4 gap-2">
     {GRADES.map(g => (
       <button
         key={g.score}
         onClick={() => onGrade(g.score)}
-        className={`py-2.5 flex flex-col items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
+        className={`py-3 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
       >
         <span className="text-xs font-bold leading-tight">{g.label}</span>
-        <span className="text-[0.625rem] opacity-80 font-medium tabular-nums">
-          {formatInterval(evaluateSM2(sm2, g.score).newSM2.interval)}
-        </span>
       </button>
     ))}
   </div>
@@ -397,7 +444,7 @@ const VerseCardPrompt: React.FC<{
     </div>
 
     {revealed ? (
-      <GradeStrip sm2={item.verse.sm2} onGrade={onGrade} />
+      <GradeStrip onGrade={onGrade} />
     ) : (
       <button
         onClick={onReveal}
@@ -413,9 +460,9 @@ const AnchorCardPrompt: React.FC<{
   item: Extract<SessionItem, { kind: 'anchor' }>;
   revealed: boolean;
   onReveal: () => void;
-  existingSM2: SM2Data;
+
   onGrade: (score: number) => void;
-}> = ({ item, revealed, onReveal, existingSM2, onGrade }) => (
+}> = ({ item, revealed, onReveal, onGrade }) => (
   <div className="flex-1 flex flex-col gap-4">
     <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-gold">
       Anchor · {item.bookName}
@@ -441,7 +488,7 @@ const AnchorCardPrompt: React.FC<{
     </div>
 
     {revealed ? (
-      <GradeStrip sm2={existingSM2} onGrade={onGrade} />
+      <GradeStrip onGrade={onGrade} />
     ) : (
       <button
         onClick={onReveal}
@@ -457,9 +504,9 @@ const ThemeCardPrompt: React.FC<{
   item: Extract<SessionItem, { kind: 'theme' }>;
   revealed: boolean;
   onReveal: () => void;
-  existingSM2: SM2Data;
+
   onGrade: (score: number) => void;
-}> = ({ item, revealed, onReveal, existingSM2, onGrade }) => (
+}> = ({ item, revealed, onReveal, onGrade }) => (
   <div className="flex-1 flex flex-col gap-4">
     <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-emerald-500">Theme</span>
 
@@ -479,7 +526,7 @@ const ThemeCardPrompt: React.FC<{
     </div>
 
     {revealed ? (
-      <GradeStrip sm2={existingSM2} onGrade={onGrade} />
+      <GradeStrip onGrade={onGrade} />
     ) : (
       <button
         onClick={onReveal}
