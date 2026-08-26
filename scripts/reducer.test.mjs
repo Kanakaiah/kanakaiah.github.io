@@ -82,9 +82,15 @@ const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
 s = appReducer({ ...base(), streak: 6, lastActiveDate: yesterday.toISOString() }, { type: 'RECORD_ACTIVITY' });
 t('a consecutive day extends the streak', s.streak === 7);
 
+// One missed day is forgiven; the streak continues. A hundred-day run collapsing over a
+// single bad Tuesday is the moment people abandon a daily habit.
+const twoDaysAgo = new Date(); twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+s = appReducer({ ...base(), streak: 100, lastActiveDate: twoDaysAgo.toISOString() }, { type: 'RECORD_ACTIVITY' });
+t('one missed day does not cost the streak', s.streak === 101);
+
 const longAgo = new Date(); longAgo.setDate(longAgo.getDate() - 5);
 s = appReducer({ ...base(), streak: 200, lastActiveDate: longAgo.toISOString() }, { type: 'RECORD_ACTIVITY' });
-t('a gap resets the streak to 1', s.streak === 1);
+t('a real gap still resets the streak', s.streak === 1);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

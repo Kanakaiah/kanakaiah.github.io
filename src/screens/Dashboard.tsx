@@ -308,12 +308,22 @@ export const Dashboard: React.FC = () => {
         );
       })()}
 
-      {/* Your Shape — the Bible-wide mastery meter, one cell per book. */}
+      {/* Your Shape — the Bible-wide mastery meter, one cell per book.
+          Paired with a route into Retention, because everything in this block counts
+          activity: "secure" is repetition >= 6, a tally of consecutive successful
+          self-grades. It is a fair picture of ground covered and a poor one of what is
+          actually still held, and the honest version of that question now has a home. */}
       <div className="flex flex-col gap-3 border-b border-card-border pb-6">
         <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase flex items-center gap-2">
           <BookOpen className="w-3.5 h-3.5" /> Your Shape
         </h2>
         <ShapeMeter />
+        <button
+          onClick={() => navigate('/retention')}
+          className="self-start flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-hover transition-colors pt-1"
+        >
+          What would you still recall? <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </div>
 
       {/* Stats Row */}

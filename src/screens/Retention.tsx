@@ -1,0 +1,203 @@
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { useApp } from '../context/AppContext';
+import { retentionByInterval, honestyGap, firstTryRetention, wasRecalled } from '../utils/reviewLog';
+import { leeches, activeDays } from '../utils/leeches';
+import { useNow } from '../utils/useNow';
+
+/**
+ * What would I still know if I stopped today?
+ *
+ * Every number the app showed before this was activity: verses memorized, chapters
+ * secure, a streak, a shape meter — all of them counting things done rather than things
+ * held. Worse, two of them were activity wearing retention's name, because "secure" and
+ * "Memorized" are both `repetition >= 6`, a count of consecutive successful *self-grades*
+ * that an item can reach with its efactor pinned at the floor.
+ *
+ * This screen only shows numbers that are about memory, and says plainly when it does
+ * not yet have enough to say anything.
+ */
+
+const pct = (n: number | null) => (n === null ? '—' : `${Math.round(n * 100)}%`);
+
+const LAYERS: { kind: 'theme' | 'anchor' | 'verse'; label: string }[] = [
+  { kind: 'theme', label: 'Theme' },
+  { kind: 'anchor', label: 'Anchor' },
+  { kind: 'verse', label: 'Verse' },
+];
+
+export const Retention: React.FC = () => {
+  const { state } = useApp();
+  const navigate = useNavigate();
+  const now = useNow();
+  // Memoized rather than defaulted inline: `x || []` builds a fresh array on every render
+  // when the key is absent, which would change the identity every memo below depends on
+  // and re-walk the whole history each time — up to 4,000 events, four times over.
+  const log = useMemo(() => state.reviewLog || [], [state.reviewLog]);
+
+  const headline = useMemo(() => firstTryRetention(log, 30, now), [log, now]);
+  const curve = useMemo(() => retentionByInterval(log, 90, now), [log, now]);
+  const gap = useMemo(() => honestyGap(log, 30, now), [log, now]);
+  const worst = useMemo(() => leeches(state).slice(0, 5), [state]);
+  const active = useMemo(() => activeDays(state, 45, now), [state, now]);
+
+  const byLayer = useMemo(() => LAYERS.map(l => {
+    const rows = log.filter(e => e.itemKind === l.kind && e.intervalBefore > 0 && e.cueLevel <= 1);
+    const recalled = rows.filter(wasRecalled).length;
+    return { ...l, attempts: rows.length, rate: rows.length >= 5 ? recalled / rows.length : null };
+  }), [log]);
+
+  const overdue = useMemo(() => {
+    let n = 0;
+    for (const v of state.verses) if (new Date(v.sm2.nextDueDate) <= now) n++;
+    for (const p of Object.values(state.chapterProgress)) {
+      if (p.attempts > 0 && new Date(p.sm2.nextDueDate) <= now) n++;
+    }
+    return n;
+  }, [state.verses, state.chapterProgress, now]);
+
+  // Below this there is nothing honest to report, and a headline drawn from four reviews
+  // would be noise presented as a finding.
+  const tooEarly = headline.attempts < 5;
+
+  return (
+    <div className="flex flex-col gap-7 max-w-2xl mx-auto w-full pb-16">
+      <div className="flex items-center gap-3 pt-1">
+        <button onClick={() => navigate('/')} className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors" aria-label="Back to Today">
+          <ArrowLeft className="w-5 h-5 text-secondary" />
+        </button>
+        <h1 className="text-2xl font-heading font-semibold text-primary">Retention</h1>
+      </div>
+
+      {tooEarly ? (
+        <div className="flex flex-col gap-3 border border-card-border rounded-md p-6">
+          <p className="text-lg font-heading font-semibold text-primary">Not enough reviews yet</p>
+          <p className="text-secondary leading-relaxed">
+            Retention needs about a week of reviews before it can tell you anything. Keep going.
+          </p>
+          <p className="text-sm text-muted leading-relaxed">
+            This screen will show what you'd still recall unaided — not how much you've practised.
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* The one number that is actually about memory. */}
+          <div className="flex flex-col gap-1">
+            <span className="text-5xl font-heading font-bold text-primary tabular-nums">
+              {pct(headline.rate)}
+            </span>
+            <span className="text-sm text-secondary">recalled on the first try, last 30 days</span>
+            <span className="text-xs text-muted tabular-nums">across {headline.attempts} reviews</span>
+            {overdue > 0 && (
+              // A large backlog makes the number above optimistic — it counts only what
+              // was actually reviewed — and the screen should say so rather than let it
+              // read as good news.
+              <span className="text-xs text-orange-400 mt-1">
+                {overdue} items overdue. This counts only what you've actually reviewed.
+              </span>
+            )}
+          </div>
+
+          {/* The forgetting curve — the diagnostic the scheduler has never had. */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">How long it holds</h2>
+            <div className="flex items-end gap-2 h-32" role="img" aria-label={
+              `Retention by interval: ${curve.filter(b => b.rate !== null)
+                .map(b => `${pct(b.rate)} at ${b.label}`).join(', ') || 'not enough data yet'}`
+            }>
+              {curve.map(b => (
+                <div key={b.label} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+                  <span className="text-[0.625rem] text-muted tabular-nums">{pct(b.rate)}</span>
+                  <div
+                    className={`w-full rounded-t-sm ${b.rate === null ? 'bg-card-border' : b.rate >= 0.85 ? 'bg-emerald-500/70' : b.rate >= 0.7 ? 'bg-gold/70' : 'bg-red-500/60'}`}
+                    style={{ height: `${Math.max(4, (b.rate ?? 0) * 100)}%` }}
+                  />
+                  <span className="text-[0.625rem] text-muted">{b.label}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-secondary leading-relaxed">
+              {curveRead(curve)}
+            </p>
+          </section>
+
+          {/* The honesty gap: what was claimed against what was produced. */}
+          {gap && (
+            <section className="flex flex-col gap-2 border border-card-border rounded-md p-4">
+              <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Are your grades honest?</h2>
+              <p className="text-sm text-secondary leading-relaxed">
+                {gap.gap >= 0.5
+                  ? `You grade yourself about ${gap.gap.toFixed(1)} of a grade above what you actually
+                     typed, across ${gap.n} measured attempts. Intervals are running longer than the
+                     recall behind them.`
+                  : gap.gap <= -0.5
+                  ? `You grade yourself harder than the words you produced, across ${gap.n} measured
+                     attempts. Nothing is broken — you may just be scoring on meaning rather than
+                     wording.`
+                  : `Your grades match what you actually produced, across ${gap.n} measured attempts.`}
+              </p>
+            </section>
+          )}
+
+          {/* Retention per layer, not counts per layer. */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">By layer</h2>
+            <div className="flex flex-col divide-y divide-card-border border-y border-card-border">
+              {byLayer.map(l => (
+                <div key={l.kind} className="flex items-baseline justify-between py-2.5">
+                  <span className="text-sm text-primary font-medium">{l.label}</span>
+                  <span className="flex items-baseline gap-3">
+                    <span className="text-sm font-bold text-primary tabular-nums">{pct(l.rate)}</span>
+                    <span className="text-xs text-muted tabular-nums w-16 text-right">{l.attempts} reviews</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* The leech list — the only place the app suggests changing the material rather
+          than reviewing it harder. Omitted entirely when empty: an absent problem should
+          be absent, not shown as a hopeful empty state. */}
+      {worst.length > 0 && (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Costing you the most</h2>
+          <ul className="flex flex-col divide-y divide-card-border border-y border-card-border">
+            {worst.map(l => (
+              <li key={l.key} className="flex items-baseline justify-between py-2.5 gap-3">
+                <span className="text-sm text-primary truncate">{l.label}</span>
+                <span className="text-xs text-muted tabular-nums whitespace-nowrap">
+                  {l.lapses} lapses · {l.attempts} reviews
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-sm text-secondary leading-relaxed">
+            These keep slipping. Reword the hook, split the passage, or set it aside —
+            more repetitions is the one thing that reliably won't help.
+          </p>
+        </section>
+      )}
+
+      <p className="text-sm text-muted">
+        Reviewed on <span className="font-semibold text-secondary tabular-nums">{active}</span> of the last 45 days.
+      </p>
+    </div>
+  );
+};
+
+/** The chart in words. A graph nobody can interpret is decoration. */
+function curveRead(curve: ReturnType<typeof retentionByInterval>): string {
+  const known = curve.filter(b => b.rate !== null);
+  if (known.length < 2) return 'Not enough reviews at long intervals yet to draw a curve.';
+  const longest = known[known.length - 1];
+  if ((longest.rate ?? 1) < 0.7) {
+    return `Below target at ${longest.label}. Intervals are running longer than your recall — consider grading harder, or reviewing sooner.`;
+  }
+  if ((longest.rate ?? 0) >= 0.9) {
+    return `Holding well out to ${longest.label}. There may be room to let intervals run longer.`;
+  }
+  return `Roughly on target out to ${longest.label}.`;
+}
