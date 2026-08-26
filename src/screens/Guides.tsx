@@ -62,6 +62,7 @@ import { useFocusTrap } from '../utils/useFocusTrap';
 import { chapterProgressKey, blockProgressKey } from '../types/models';
 import type { ChapterProgress } from '../types/models';
 import { evaluateSM2, formatInterval, isDue } from '../utils/sm2';
+import { buildReviewEvent } from '../utils/reviewLog';
 
 
 // Defaults to the plate and the chapter number only — the word and scene (and the
@@ -114,8 +115,6 @@ const ChapterAnchorCard = ({
     if (path) navigate(path);
   };
 
-  const existingSM2 = state.chapterProgress[chapterProgressKey(guideId, Number(anchor.ch))]?.sm2
-    || DEFAULT_CHAPTER_SM2;
 
   // Graded on this pass — the card gives up its plate and becomes a one-line receipt.
   // A fifty-card Genesis page (or a hundred-and-fifty-card Psalms one) is otherwise an
@@ -222,13 +221,13 @@ const ChapterAnchorCard = ({
           <button
             key={g.score}
             onClick={() => onGrade(g.score)}
-            className={`py-2 flex flex-col items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
+            className={`py-2.5 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
             aria-label={`${g.label} — chapter ${anchor.ch}`}
           >
+            {/* No interval preview, matching every other grade strip. Printing what each
+                grade buys turns "did you remember it?" into a choice between a short wait
+                and a long one, and nothing here verifies the answer. */}
             <span className="text-[0.6875rem] font-bold leading-tight">{g.label}</span>
-            <span className="text-[0.5625rem] opacity-80 font-medium tabular-nums">
-              {formatInterval(evaluateSM2(existingSM2, g.score).newSM2.interval)}
-            </span>
           </button>
         ))}
       </div>
@@ -498,6 +497,21 @@ export const Guides: React.FC = () => {
       lastReadDate: existing?.lastReadDate || null,
     };
     dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
+    // The grid is the highest-volume retrieval surface in the app — fifty cold, properly
+    // withheld cued recalls per book, and more anchors graded here in one sitting than a
+    // drill session produces in a week. Leaving it out of the review history would have
+    // biased every retention number toward the small, deliberate sessions and away from
+    // the way anchors are actually learned.
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'anchor', itemId: key, gradeSubmitted: score,
+        before: existing?.sm2, after: newSM2,
+        // The plate is blurred and the word withheld until tapped, and the prompt names
+        // the chapter — the same cold number→word question the session asks.
+        mode: 'reveal', cueLevel: 0, direction: 'n2w',
+      }),
+    });
     if (state.settings.streakIncludesChapters !== false) {
       dispatch({ type: 'RECORD_ACTIVITY' });
     }
