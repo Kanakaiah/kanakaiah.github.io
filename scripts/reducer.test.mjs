@@ -92,5 +92,31 @@ const longAgo = new Date(); longAgo.setDate(longAgo.getDate() - 5);
 s = appReducer({ ...base(), streak: 200, lastActiveDate: longAgo.toISOString() }, { type: 'RECORD_ACTIVITY' });
 t('a real gap still resets the streak', s.streak === 1);
 
+// ── Postponing a backlog reschedules; it never pretends anything was recalled ────
+const late = (d) => ({ interval: 30, repetition: 5, efactor: 2.5,
+  nextDueDate: new Date(Date.now() - d * 86400000).toISOString() });
+const big = { ...base(), verses: [
+  ...Array.from({ length: 20 }, (_, i) =>
+    ({ id: 'v' + i, ref: 'R' + i, text: 't', sm2: late(50), status: 'review', attempts: 4 })),
+  { id: 'future', ref: 'Later', text: 't', status: 'review', attempts: 4,
+    sm2: { interval: 30, repetition: 5, efactor: 2.5,
+      nextDueDate: new Date(Date.now() + 20 * 86400000).toISOString() } },
+] };
+
+s = appReducer(big, { type: 'POSTPONE_BACKLOG', payload: { days: 14 } });
+const nowMs = Date.now();
+t('every overdue item moves out of the past',
+  s.verses.filter(v => v.id !== 'future')
+    .every(v => new Date(v.sm2.nextDueDate).getTime() >= nowMs - 1000));
+t('an item that was not overdue is untouched',
+  s.verses.find(v => v.id === 'future').sm2.nextDueDate ===
+  big.verses.find(v => v.id === 'future').sm2.nextDueDate);
+// Dropping the whole backlog on one future date would just rebuild the same wall.
+t('the backlog is fanned out rather than stacked on one day',
+  new Set(s.verses.map(v => v.sm2.nextDueDate.slice(0, 10))).size > 1);
+t('postponing never touches interval, repetition or efactor',
+  s.verses.every(v => v.sm2.interval === 30 && v.sm2.repetition === 5 && v.sm2.efactor === 2.5));
+t('postponing records no review history', (s.reviewLog || []).length === 0);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

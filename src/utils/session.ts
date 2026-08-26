@@ -37,8 +37,8 @@ const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES] as unknown as GuideL
  * is asked about on its own.
  */
 
-export interface VerseItem { kind: 'verse'; id: string; verse: Verse }
-export interface AnchorItem { kind: 'anchor'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string;
+export interface VerseItem { kind: 'verse'; id: string; verse: Verse; dueAt: string }
+export interface AnchorItem { kind: 'anchor'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string; dueAt: string;
   /** Which way round to ask, chosen by the schedule rather than by the reader — see
    * directionFor(). A reader left to pick settles into whichever direction is easiest,
    * and the schedule then credits it as though all of them had been tested. */
@@ -52,12 +52,12 @@ export interface IntroduceItem { kind: 'introduce'; id: string; bookId: string; 
 
 /** A book's theme word, reviewed on the same loop. Only ever a *review* here: new
  * themes are met in the Theme deck, the way new verses are met by adding them. */
-export interface ThemeItem { kind: 'theme'; id: string; bookId: string; bookName: string; themeWord: string; keyWord: string; subtitle: string }
+export interface ThemeItem { kind: 'theme'; id: string; bookId: string; bookName: string; themeWord: string; keyWord: string; subtitle: string; dueAt: string }
 
 /** One narrative block's anchor chain, due for another pass. Sequence has its own
  * schedule because it is its own skill — knowing every word of PRIMEVAL individually
  * is not the same as being able to run the chain. */
-export interface ChainItem { kind: 'chain'; id: string; bookId: string; bookName: string; blockIndex: number; label: string; anchors: { ch: number; word: string }[] }
+export interface ChainItem { kind: 'chain'; id: string; bookId: string; bookName: string; blockIndex: number; label: string; anchors: { ch: number; word: string }[]; dueAt: string }
 
 export type SessionItem = VerseItem | AnchorItem | IntroduceItem | ThemeItem | ChainItem;
 
@@ -132,6 +132,10 @@ function interleave(items: SessionItem[], shuffle: <T>(xs: T[]) => T[]): Session
   return shuffle(items);
 }
 
+/** When an item was due. Introduce items carry no schedule and never reach the sort. */
+const overdueKey = (item: SessionItem): string =>
+  'dueAt' in item ? item.dueAt : new Date().toISOString();
+
 const defaultShuffle = <T,>(xs: T[]): T[] => {
   const out = [...xs];
   for (let i = out.length - 1; i > 0; i--) {
@@ -147,7 +151,8 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
 
   const verseItems: VerseItem[] = state.verses
     .filter(v => isDue(v.sm2, now))
-    .map(v => ({ kind: 'verse', id: `verse:${v.id}`, verse: v }));
+    .map(v => ({ kind: 'verse', id: `verse:${v.id}`, verse: v,
+      dueAt: v.sm2?.nextDueDate || now.toISOString() }));
 
   // Chapters a chain pass exposed as shaky, promoted to the front of the anchor queue.
   //
@@ -200,6 +205,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
         bookId: bId, bookName: book.name, chapter,
         word: anchor.word, scene: anchor.scene,
         direction: directionFor(repetition),
+        dueAt: state.chapterProgress[chapterProgressKey(bId, chapter)]?.sm2?.nextDueDate || now.toISOString(),
         siblings: bookAnchors.map(a => ({ ch: a.ch, word: a.word })),
       };
     })
@@ -216,6 +222,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
         id: `theme:${p.bookId}`,
         bookId: p.bookId, bookName: book.name,
         themeWord: book.themeWord, keyWord: book.keyWord, subtitle: book.subtitle,
+        dueAt: p.sm2.nextDueDate,
       };
     })
     .filter((x): x is ThemeItem => !!x);
@@ -236,7 +243,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
         kind: 'chain' as const,
         id: `chain:${b.bookId}:${b.blockIndex}`,
         bookId: b.bookId, bookName: book.name,
-        blockIndex: b.blockIndex, label: b.label, anchors,
+        blockIndex: b.blockIndex, label: b.label, anchors, dueAt: b.sm2.nextDueDate,
       };
     })
     .filter((x): x is ChainItem => !!x);
@@ -269,6 +276,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
             // Always the cold number → word question: this is the chapter's first
             // retrieval, moments after being introduced.
             direction: 'n2w',
+            dueAt: now.toISOString(),
             siblings: anchors.map(x => ({ ch: x.ch, word: x.word })),
           },
         ]);
@@ -302,8 +310,22 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
     newSlots += pair.length;
   }
 
-  const review = interleave([...verseItems, ...anchorItems, ...themeItems, ...chainItems], shuffle);
-  const admittedReview = review.slice(0, Math.max(0, options.cap - newSlots));
+  // Selection and presentation are two different questions, and conflating them was
+  // throwing away the more important one.
+  //
+  // Everything due was shuffled and then truncated at the cap, so *which* items a reader
+  // with a backlog got was random. An item two hundred days overdue and one due this
+  // morning had an equal chance of being dropped, which is precisely backwards: the
+  // overdue one has already lost most of what it had, and every further day costs more.
+  //
+  // So: choose by how overdue, then shuffle the chosen few. The reader still gets a mixed
+  // order — one kind running in a block lets ordinal position stand in for the answer —
+  // but the work that gets done is the work most in danger.
+  const review = [...verseItems, ...anchorItems, ...themeItems, ...chainItems];
+  const mostOverdueFirst = [...review].sort(
+    (a, b) => new Date(overdueKey(a)).getTime() - new Date(overdueKey(b)).getTime());
+  const admittedReview = interleave(
+    mostOverdueFirst.slice(0, Math.max(0, options.cap - newSlots)), shuffle);
 
   // Placement: a short warm-up of familiar items, then the new material, then the rest.
   // Appending new pairs to the very end would reproduce the same bug in a milder form —

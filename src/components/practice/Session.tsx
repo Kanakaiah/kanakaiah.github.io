@@ -264,6 +264,19 @@ export const Session: React.FC<{
               Keep going — {plan.heldBack} more due
             </button>
           )}
+          {/* A backlog this size cannot shrink faster than it grows at twenty items a
+              day, and the thing readers actually reach for at that point is abandoning
+              the library. Spreading it forward is the smaller loss. Nothing is marked
+              recalled — only rescheduled — and the offer appears only when the arithmetic
+              genuinely doesn't work. */}
+          {plan.heldBack > SESSION_CAP * 3 && (
+            <button
+              onClick={() => { dispatch({ type: 'POSTPONE_BACKLOG', payload: { days: 14 } }); onExit(); }}
+              className="w-full py-2.5 text-[0.6875rem] text-muted hover:text-primary transition-colors"
+            >
+              Too much — spread the {plan.heldBack} overdue across the next two weeks
+            </button>
+          )}
         </div>
       </div>
     );

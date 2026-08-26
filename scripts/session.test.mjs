@@ -119,5 +119,19 @@ p = buildSession(mk({blockProgress:{'genesis:0':{
 t('a due chain is queued with its whole block',
   p.items.length===1 && p.items[0].kind==='chain' && p.items[0].anchors.length===11);
 
+// 11. With a backlog, the cap keeps the most overdue rather than a random sample.
+// This is the whole point of triage: an item two hundred days late has already lost most
+// of what it had, and every further day costs more than one due this morning.
+const old = (d) => ({ interval: 1, repetition: 1, efactor: 2.5,
+  nextDueDate: new Date(Date.now() - d * 86400000).toISOString() });
+p = buildSession(mk({ verses: [
+  ...Array.from({ length: 30 }, (_, i) =>
+    ({ id: 'fresh' + i, ref: 'F' + i, text: 't', sm2: old(1), status: 'review', attempts: 1 })),
+  { id: 'ancient', ref: 'Ancient', text: 't', sm2: old(200), status: 'review', attempts: 1 },
+] }), { newChapters: 0, cap: 5, shuffle: noShuffle });
+t('the most overdue item survives the cap', p.items.some(i => i.id === 'verse:ancient'));
+t('the cap is still respected', p.items.length === 5);
+t('the backlog is reported', p.heldBack === 26);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail?1:0);

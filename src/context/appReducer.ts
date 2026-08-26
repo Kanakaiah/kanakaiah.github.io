@@ -54,6 +54,7 @@ export type AppAction =
   | { type: 'GRADE_BLOCK_PROGRESS'; payload: BlockProgress }
   | { type: 'RECORD_CHAIN_PASS'; payload: { bookId: string; results: { chapter: number; revealed: boolean }[] } }
   | { type: 'RECORD_REVIEW'; payload: ReviewEvent }
+  | { type: 'POSTPONE_BACKLOG'; payload: { days: number } }
   | { type: 'RECORD_ACTIVITY' };
 
 // --- REDUCER ---
@@ -205,6 +206,41 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       // is capped. Keeping them apart means a new drill can start recording history
       // without touching the reducer, and a mistake in one cannot corrupt the other.
       return { ...state, reviewLog: appendReview(state.reviewLog || [], action.payload) };
+
+    case 'POSTPONE_BACKLOG': {
+      // Spreading a backlog forward instead of leaving it as a wall.
+      //
+      // A reader returning after three weeks away meets several hundred overdue items and
+      // a session cap of twenty, which means the backlog cannot shrink faster than it
+      // grows and there is no way to say so. The alternative people actually reach for is
+      // abandoning the library, so the app should offer something better than nothing.
+      //
+      // Only *overdue* items move, and they are fanned out across the window rather than
+      // all pushed to the same day — dropping them on one future date would rebuild the
+      // same wall a few weeks later. Nothing here touches interval, repetition or
+      // efactor: this reschedules, it does not pretend anything was recalled.
+      const { days } = action.payload;
+      const now = Date.now();
+      const spread = (i: number, total: number) =>
+        new Date(now + Math.floor((i / Math.max(1, total)) * days) * 86400000).toISOString();
+
+      const overdueVerses = state.verses.filter(v => new Date(v.sm2.nextDueDate).getTime() <= now);
+      let vi = 0;
+      const verses = state.verses.map(v =>
+        new Date(v.sm2.nextDueDate).getTime() <= now
+          ? { ...v, sm2: { ...v.sm2, nextDueDate: spread(vi++, overdueVerses.length) } }
+          : v);
+
+      const chapterEntries = Object.entries(state.chapterProgress);
+      const overdueChapters = chapterEntries.filter(([, p]) => p.attempts > 0 && new Date(p.sm2.nextDueDate).getTime() <= now);
+      let ci = 0;
+      const chapterProgress = { ...state.chapterProgress };
+      for (const [key, p] of overdueChapters) {
+        chapterProgress[key] = { ...p, sm2: { ...p.sm2, nextDueDate: spread(ci++, overdueChapters.length) } };
+      }
+
+      return { ...state, verses, chapterProgress };
+    }
 
     case 'RECORD_ACTIVITY': {
       // Any graded review — a verse, a memory sentence, or a chapter — counts as a
