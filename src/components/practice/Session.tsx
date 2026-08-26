@@ -672,23 +672,32 @@ const VerseCardPrompt: React.FC<{
             I can't get it
           </button>
         </div>
+      ) : gaveUp ? (
+        // Giving up ends the attempt, whatever span it happened on — checked *before*
+        // the widen branch, and the order matters.
+        //
+        // The other way round, giving up on part one displayed that text and then offered
+        // "again, with the next part", where the next span *contains* the part just read.
+        // The reader would retype what was on screen seconds earlier, that wider attempt
+        // would become the one the grade is drawn from, and the blank would erase itself
+        // into a strong score. Widening only ever follows an attempt the reader actually
+        // made.
+        //
+        // No grade strip either: the answer is already visible, so there is nothing left
+        // to judge, and offering four buttons here is the exact "rate yourself while
+        // looking at it" move this card exists to remove. It records the blank it was.
+        <button
+          onClick={() => submit(1)}
+          className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+        >
+          Got it — try again tomorrow
+        </button>
       ) : !isLastPart ? (
         <button
           onClick={nextPart}
           className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
         >
           Again, with the next part
-        </button>
-      ) : gaveUp ? (
-        // No grade strip. The reader has just been shown the answer, so there is nothing
-        // left to judge — offering four buttons here is the exact "rate yourself while
-        // looking at it" move the rest of this card exists to remove. It grades a blank,
-        // which is what it was.
-        <button
-          onClick={() => submit(1)}
-          className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
-        >
-          Got it — try again tomorrow
         </button>
       ) : (
         <div className="flex flex-col gap-2">
