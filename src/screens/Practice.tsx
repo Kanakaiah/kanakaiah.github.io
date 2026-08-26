@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { BookOpen, ArrowLeft, ArrowRight, Eye, Eraser, Keyboard, FileText, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
+import { BookOpen, ArrowLeft, ArrowRight, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2, formatInterval, suggestedScore } from '../utils/sm2';
@@ -29,12 +29,6 @@ type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' |
  * had no home at all. Naming the navigation after the goal is what makes the anchor
  * and theme layers discoverable rather than buried. */
 type Subject = 'theme' | 'anchor' | 'verse';
-
-const SUBJECTS: { id: Subject; label: string }[] = [
-  { id: 'theme', label: 'Theme' },
-  { id: 'anchor', label: 'Anchor' },
-  { id: 'verse', label: 'Verse' },
-];
 
 const SUGGESTED_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 5: 'Easy' };
 
@@ -658,69 +652,43 @@ export const Practice: React.FC = () => {
           </div>
         )}
 
-        {/* Mode Selector (Moved to Bottom) — extra bottom padding clears the fixed
-            verse-navigation bar below. */}
-        <div className="flex flex-col gap-5 pb-24 lg:pb-24">
-            {/* Theme · Anchor · Verse — the product's three goals as one segmented
-                control. A real control at full size, not 10px of text: this is the
-                only route to two of the three layers. */}
-            <div className="flex items-center justify-center">
-              <div className="inline-flex rounded-md border border-card-border overflow-hidden">
-                {SUBJECTS.map(s => (
-                  <button
-                    key={s.id}
-                    onClick={() => setSubject(s.id)}
-                    aria-pressed={subject === s.id}
-                    className={`px-5 py-2 text-xs font-bold uppercase tracking-widest transition-colors border-r border-card-border last:border-r-0 ${
-                      subject === s.id ? 'bg-accent text-white' : 'text-muted hover:text-primary hover:bg-card-hover'
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+        {/* One row of modes, and nothing else.
 
-            {/* Primary Modes — plain text tabs with an underline indicator */}
-            <div className="grid grid-cols-4 border-b border-card-border">
+            This was three stacked control groups wrapped around a card holding up to a
+            hundred and nine words to be held in mind: a three-way Theme/Anchor/Verse
+            switch, four mode tabs, and a second "More" row — nine controls, alongside a
+            hint button, a TTS toggle, tap-to-toggle chrome, swipe and arrow-key
+            navigation. Each one is a decision competing for the working memory the
+            passage itself needs, which in a memorization product is the most expensive
+            kind of clutter there is and the easiest to stop noticing.
+
+            The subject switch is gone entirely. The Practice tab now opens the day's
+            work, and the theme and anchor decks are reached from Today and from the book
+            guides; inside the workshop the subject is already settled — it is this verse.
+            The two mode rows became one, ordered from most help to least. */}
+        <div className="flex flex-col gap-4 pb-24 lg:pb-24">
+            <div className="grid grid-cols-6 border-b border-card-border">
               {[
-                { id: 'read', icon: Eye, label: 'Read' },
-                { id: 'eraser', icon: Eraser, label: 'Erase' },
-                { id: 'first-letter', icon: Keyboard, label: 'Letters' },
-                { id: 'typing', icon: FileText, label: 'Type' },
+                { id: 'read', label: 'Read' },
+                { id: 'eraser', label: 'Erase' },
+                { id: 'first-letter', label: 'Letters' },
+                { id: 'scramble', label: 'Order' },
+                { id: 'typing', label: 'Type' },
+                { id: 'speech', label: 'Recite' },
               ].map(mode => (
                 <button
                   key={mode.id}
                   onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  className={`flex flex-col items-center gap-2 py-3 px-2 border-b-2 -mb-px transition-colors duration-150
-                    ${activeMode === mode.id
+                  aria-pressed={activeMode === mode.id}
+                  className={`py-3 px-1 border-b-2 -mb-px text-xs font-bold transition-colors duration-150 ${
+                    activeMode === mode.id
                       ? 'border-accent text-accent'
-                      : 'border-transparent text-secondary hover:text-primary'}`}
+                      : 'border-transparent text-secondary hover:text-primary'
+                  }`}
                 >
-                  <mode.icon className="w-5 h-5" />
-                  <span className="text-xs font-bold">{mode.label}</span>
+                  {mode.label}
                 </button>
               ))}
-            </div>
-
-            {/* Secondary Modes — compact text row */}
-            <div className="flex items-center justify-center gap-4 mt-1 text-sm font-semibold text-muted">
-              <span className="text-xs uppercase tracking-widest opacity-80">More</span>
-              <div className="w-px h-4 bg-card-border" />
-              <div className="flex items-center gap-4">
-                {[
-                  { id: 'scramble', label: 'Scramble' },
-                  { id: 'speech', label: 'Recite' }
-                ].map((mode) => (
-                  <button
-                    key={mode.id}
-                    onClick={() => setActiveMode(mode.id as PracticeMode)}
-                    className={`transition-colors ${activeMode === mode.id ? 'text-accent font-bold' : 'hover:text-primary'}`}
-                  >
-                    {mode.label}
-                  </button>
-                ))}
-              </div>
             </div>
         </div>
       </div>
