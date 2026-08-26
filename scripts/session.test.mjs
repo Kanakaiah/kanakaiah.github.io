@@ -80,6 +80,17 @@ const allDone = {}; for (let c=1;c<=3;c++) allDone['habakkuk:'+c]=chap('habakkuk
 t('finished book stops producing new material', currentBookId(allDone)===null);
 t('unfinished book is the current one', currentBookId({'habakkuk:1':chap('habakkuk',1)})==='habakkuk');
 
+// 6b. Anchors carry the direction the scheduler chose and the book's other anchors.
+p = buildSession(mk({chapterProgress:{'genesis:2': chap('genesis',2,{sm2:{interval:1,repetition:0,efactor:2.5,nextDueDate:new Date(Date.now()-86400000).toISOString()}})}}),
+  {newChapters:0, cap:20, shuffle:noShuffle});
+t('a still-learning anchor is asked number to word', p.items[0].direction==='n2w');
+t('an anchor carries its siblings so a confusion can be named',
+  p.items[0].siblings.length===50 && p.items[0].siblings.some(s=>s.ch===29 && s.word==='STONE'));
+
+p = buildSession(mk({chapterProgress:{'genesis:2': chap('genesis',2,{sm2:{interval:40,repetition:5,efactor:2.5,nextDueDate:new Date(Date.now()-86400000).toISOString()}})}}),
+  {newChapters:0, cap:20, shuffle:noShuffle});
+t('a known anchor is asked another way round', p.items[0].direction!=='n2w');
+
 // 7. Due chapter anchors are queued with their word
 p = buildSession(mk({chapterProgress:{'habakkuk:2': chap('habakkuk',2)}}),
   {newChapters:0, cap:20, shuffle:noShuffle});

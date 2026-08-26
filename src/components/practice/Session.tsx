@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { ArrowLeft, ArrowRight, Check, Flame } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flame } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { evaluateSM2, formatInterval, suggestedScore } from '../../utils/sm2';
 import { buildReviewEvent } from '../../utils/reviewLog';
@@ -8,6 +8,7 @@ import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress, ThemeProgress, Verse } from '../../types/models';
 import { CueText } from './CueText';
 import { chunkText, chainCue, cueForRepetition, cueLevelToNumber, scoreAttempt } from '../../utils/cue';
+import { judgeAnchor, type AnchorJudgement, type AnchorDirection } from '../../utils/anchorAnswer';
 import { ChainDrill } from './ChainDrill';
 
 const DEFAULT_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
@@ -127,7 +128,10 @@ export const Session: React.FC<{
     advance();
   };
 
-  const gradeAnchor = (bookId: string, bookName: string, chapter: number, score: number) => {
+  const gradeAnchor = (
+    bookId: string, bookName: string, chapter: number, score: number,
+    attempt: VerseAttempt, direction: AnchorDirection,
+  ) => {
     const key = chapterProgressKey(bookId, chapter);
     const existing = state.chapterProgress[key];
     const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score);
@@ -150,9 +154,14 @@ export const Session: React.FC<{
       payload: buildReviewEvent({
         itemKind: 'anchor', itemId: key, gradeSubmitted: score,
         before: existing?.sm2, after: newSM2,
-        // The masked answer is a fixed-width bar carrying no information about the word,
-        // so this genuinely is an uncued attempt.
-        mode: 'reveal', cueLevel: 0, direction: 'n2w',
+        // A produced answer, and the direction it was produced in. Recording the
+        // direction is what lets a chapter known cold be told apart from one only ever
+        // recognised off its plate — the three are not equally hard, and nothing
+        // distinguished them before.
+        mode: 'type', cueLevel: 0, direction,
+        measuredAccuracy: attempt.accuracy,
+        committed: attempt.committed,
+        elapsedMs: attempt.elapsedMs,
       }),
     });
     recordActivity();
@@ -339,10 +348,9 @@ export const Session: React.FC<{
         />
       ) : (
         <AnchorCardPrompt
+          key={item.id}
           item={item}
-          revealed={revealed}
-          onReveal={() => setRevealed(true)}
-          onGrade={score => gradeAnchor(item.bookId, item.bookName, item.chapter, score)}
+          onGrade={(score, attempt) => gradeAnchor(item.bookId, item.bookName, item.chapter, score, attempt, item.direction)}
         />
       )}
 
@@ -639,49 +647,146 @@ const VerseCardPrompt: React.FC<{
   );
 };
 
+/**
+ * One chapter's anchor, typed from memory.
+ *
+ * The card used to be a blanked bar, "Tap to reveal", and four grade buttons — a cued
+ * recall the reader marked themselves, with the answer already on screen when they did
+ * it. For a *single word* that is an unusually cheap thing to fix: typing one word is
+ * not the friction that makes typed recall unreasonable for a hundred-word passage, and
+ * it converts the largest body of content in the app — 1,189 anchors — from self-report
+ * into measurement.
+ *
+ * The answer then grades itself, so there is no four-button strip here at all. What is
+ * left for the reader to judge is only whether it came instantly, which is one button.
+ */
 const AnchorCardPrompt: React.FC<{
   item: Extract<SessionItem, { kind: 'anchor' }>;
-  revealed: boolean;
-  onReveal: () => void;
+  onGrade: (score: number, attempt: VerseAttempt) => void;
+}> = ({ item, onGrade }) => {
+  const [typed, setTyped] = useState('');
+  const [judged, setJudged] = useState<AnchorJudgement | null>(null);
+  const startedAt = useRef(0);
+  const [elapsedMs, setElapsedMs] = useState(0);
+  React.useEffect(() => { startedAt.current = Date.now(); }, []);
 
-  onGrade: (score: number) => void;
-}> = ({ item, revealed, onReveal, onGrade }) => (
-  <div className="flex-1 flex flex-col gap-4">
-    <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-gold">
-      Anchor · {item.bookName}
-    </span>
+  const answer = () => {
+    if (judged) return;
+    setElapsedMs(Date.now() - startedAt.current);
+    setJudged(judgeAnchor(typed, item.word, item.siblings, item.chapter));
+  };
 
-    <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
-      <span className="text-6xl font-heading font-bold text-accent leading-none">{item.chapter}</span>
-      <p className="text-xs text-muted italic">What anchors this chapter?</p>
+  const submit = (score: number) => {
+    onGrade(score, {
+      accuracy: judged?.verdict === 'correct' ? 100 : judged?.verdict === 'near' ? 60 : 0,
+      committed: typed,
+      cueLevel: 0,
+      elapsedMs,
+    });
+  };
 
-      {revealed ? (
-        <div className="flex flex-col items-center gap-3">
-          {/* The answer arrives with its picture, always — pairing the word with an
-              image is the strongest lever there is on an arbitrary association. */}
+  const prompt =
+    item.direction === 'w2n' ? 'Which chapter is this?'
+    : 'What anchors this chapter?';
+
+  return (
+    <div className="flex-1 flex flex-col gap-4 min-h-0">
+      <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-gold">
+        Anchor · {item.bookName}
+      </span>
+
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center min-h-0 overflow-y-auto">
+        {/* The cue, whichever way round the scheduler asked. */}
+        {item.direction === 'w2n' ? (
+          <span className="text-3xl font-heading font-bold text-accent">{item.word}</span>
+        ) : item.direction === 'p2w' ? (
           <Plate bookId={item.bookId} chapter={item.chapter} className="w-36 h-36" />
-          <span className="text-2xl font-heading font-bold text-primary">{item.word}</span>
-          <span className="text-sm text-muted italic">{item.scene}</span>
+        ) : (
+          <span className="text-6xl font-heading font-bold text-accent leading-none">{item.chapter}</span>
+        )}
+        <p className="text-xs text-muted italic">{prompt}</p>
+
+        {!judged ? (
+          <input
+            type="text"
+            value={typed}
+            onChange={e => setTyped(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') answer(); }}
+            placeholder={item.direction === 'w2n' ? 'chapter number' : 'one word'}
+            aria-label={item.direction === 'w2n'
+              ? `Which chapter of ${item.bookName} is anchored by ${item.word}?`
+              : `The anchor word for ${item.bookName} chapter ${item.chapter}`}
+            inputMode={item.direction === 'w2n' ? 'numeric' : 'text'}
+            // iOS will otherwise quietly rewrite CIRCUMCISION, MELCHIZEDEK and EBENEZER
+            // into something else entirely, which would destroy the measurement.
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="characters"
+            spellCheck={false}
+            className="w-full max-w-xs text-center text-xl py-3 px-4 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted/60"
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-3" role="status" aria-live="polite">
+            {/* The answer always arrives with its picture. Pairing an arbitrary
+                number↔word association with an image is the strongest lever available,
+                and 48 books of purpose-drawn plates exist for exactly this moment. */}
+            {item.direction !== 'p2w' && <Plate bookId={item.bookId} chapter={item.chapter} className="w-36 h-36" />}
+            <span className="text-2xl font-heading font-bold text-primary">
+              {item.direction === 'w2n' ? `Chapter ${item.chapter}` : item.word}
+            </span>
+            <span className="text-sm text-muted italic">{item.scene}</span>
+
+            {judged.verdict === 'correct' && (
+              <span className="text-xs font-bold text-green-500">Correct</span>
+            )}
+            {judged.verdict === 'near' && (
+              <span className="text-xs text-orange-400">Close — it's {item.word}.</span>
+            )}
+            {/* Naming the confusion is the useful half of a wrong answer: Genesis holds
+                WELL(21)/WELLS(26) and STONE(29)/STICKS(30), and mixing those up is the
+                dominant way anchors fail. */}
+            {judged.verdict === 'wrong' && judged.confusedWith && (
+              <span className="text-xs text-red-400">
+                You wrote {judged.confusedWith.word} — that's chapter {judged.confusedWith.chapter}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {!judged ? (
+        <div className="flex flex-col gap-1.5">
+          <button
+            onClick={answer}
+            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          >
+            Answer
+          </button>
+          <button onClick={() => { setTyped(''); answer(); }} className="text-[0.6875rem] text-muted hover:text-primary transition-colors py-1">
+            Skip this one
+          </button>
         </div>
       ) : (
-        // A fixed-width bar, not the word blurred: length alone would give away
-        // STEW versus CIRCUMCISION.
-        <span className="inline-block h-5 w-28 rounded-sm bg-card-border" aria-hidden="true" />
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => submit(judged.score)}
+            className="py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          >
+            Continue
+          </button>
+          <button
+            onClick={() => submit(5)}
+            disabled={judged.verdict !== 'correct'}
+            title={judged.verdict !== 'correct' ? 'Only for an answer that was right' : undefined}
+            className="py-3 rounded-md border border-card-border text-secondary font-bold text-sm hover:text-primary transition-colors disabled:opacity-25 disabled:pointer-events-none"
+          >
+            That was easy
+          </button>
+        </div>
       )}
     </div>
-
-    {revealed ? (
-      <GradeStrip onGrade={onGrade} />
-    ) : (
-      <button
-        onClick={onReveal}
-        className="w-full py-3 rounded-md border border-dashed border-card-border-hover text-sm font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
-      >
-        <Check className="w-4 h-4 inline mr-1.5 -mt-0.5" /> Tap to reveal
-      </button>
-    )}
-  </div>
-);
+  );
+};
 
 const ThemeCardPrompt: React.FC<{
   item: Extract<SessionItem, { kind: 'theme' }>;

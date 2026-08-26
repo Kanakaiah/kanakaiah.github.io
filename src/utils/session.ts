@@ -2,6 +2,7 @@ import type { AppState, Verse, ChapterProgress } from '../types/models';
 import { chapterProgressKey } from '../types/models';
 import { isDue } from './sm2';
 import { dueChapters } from './mastery';
+import { directionFor, type AnchorDirection } from './anchorAnswer';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
@@ -37,7 +38,14 @@ const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES] as unknown as GuideL
  */
 
 export interface VerseItem { kind: 'verse'; id: string; verse: Verse }
-export interface AnchorItem { kind: 'anchor'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string }
+export interface AnchorItem { kind: 'anchor'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string;
+  /** Which way round to ask, chosen by the schedule rather than by the reader — see
+   * directionFor(). A reader left to pick settles into whichever direction is easiest,
+   * and the schedule then credits it as though all of them had been tested. */
+  direction: AnchorDirection;
+  /** The rest of the book's anchors, so a wrong answer that is another chapter's word
+   * can be named as the confusion it is rather than merely marked wrong. */
+  siblings: { ch: number; word: string }[] }
 /** Encoding, not testing. Shown once for a chapter with no attempts, and always
  * immediately followed by that same chapter's first cold retrieval. */
 export interface IntroduceItem { kind: 'introduce'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string; prevWord: string | null }
@@ -181,14 +189,18 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
 
   const anchorItems: AnchorItem[] = anchorCandidates
     .map(({ bookId: bId, chapter }) => {
-      const anchor = anchorsOf(bId).find(a => a.ch === chapter);
+      const bookAnchors = anchorsOf(bId);
+      const anchor = bookAnchors.find(a => a.ch === chapter);
       const book = bookFor(bId);
       if (!anchor || !book) return null;
+      const repetition = state.chapterProgress[chapterProgressKey(bId, chapter)]?.sm2?.repetition ?? 0;
       return {
         kind: 'anchor' as const,
         id: `anchor:${bId}:${chapter}`,
         bookId: bId, bookName: book.name, chapter,
         word: anchor.word, scene: anchor.scene,
+        direction: directionFor(repetition),
+        siblings: bookAnchors.map(a => ({ ch: a.ch, word: a.word })),
       };
     })
     .filter((x): x is AnchorItem => !!x);
@@ -254,6 +266,10 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
           {
             kind: 'anchor', id: `anchor:${bookId}:${a.ch}`,
             bookId, bookName: book.name, chapter: a.ch, word: a.word, scene: a.scene,
+            // Always the cold number → word question: this is the chapter's first
+            // retrieval, moments after being introduced.
+            direction: 'n2w',
+            siblings: anchors.map(x => ({ ch: x.ch, word: x.word })),
           },
         ]);
       }
