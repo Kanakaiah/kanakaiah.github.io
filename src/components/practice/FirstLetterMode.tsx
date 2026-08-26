@@ -1,27 +1,20 @@
-import React, { useMemo } from 'react';
+import React from 'react';
+import { CueText } from './CueText';
 
 interface FirstLetterModeProps {
   text: string;
 }
 
-export const FirstLetterMode: React.FC<FirstLetterModeProps> = ({ text }) => {
-  const convertedText = useMemo(() => {
-    const words = text.split(/(\s+)/);
-    return words.map(chunk => {
-      if (chunk.trim().length === 0) return chunk;
-      
-      return chunk.split("").map((char, index) => {
-        if (/^[a-zA-Z0-9]$/.test(char)) {
-          return index === 0 ? char : "_";
-        }
-        return char;
-      }).join("");
-    }).join("");
-  }, [text]);
-
-  return (
-    <div className="text-lg leading-relaxed font-semibold tracking-[0.1em] text-primary whitespace-pre-wrap">
-      {convertedText}
-    </div>
-  );
-};
+/**
+ * First letters of every word.
+ *
+ * Now a thin wrapper over CueText, which carries the spoken equivalent of the cue.
+ * This component used to emit `T___ h_ s___` as literal text, which a screen reader
+ * reads as a run of underscores or skips entirely — so the app's primary prompt
+ * mechanism was inaudible to anyone not looking at it, on every surface that used it.
+ * Kept as its own name because several callers want exactly this level and shouldn't
+ * have to know about the cue scale.
+ */
+export const FirstLetterMode: React.FC<FirstLetterModeProps> = ({ text }) => (
+  <CueText text={text} level="first-letters" />
+);

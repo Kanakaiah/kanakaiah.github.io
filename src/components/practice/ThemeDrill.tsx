@@ -175,7 +175,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
         ) : (
           // A fixed-width bar rather than the word blurred — length alone separates
           // GARDEN from BURNING BUSH.
-          <span className="inline-block h-6 w-32 rounded-sm bg-card-border" aria-hidden="true" />
+          <><span className="sr-only">Answer hidden — recall it, then reveal.</span><span className="inline-block h-6 w-32 rounded-sm bg-card-border" aria-hidden="true" /></>
         )}
       </div>
 

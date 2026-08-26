@@ -224,7 +224,7 @@ export const ChainDrill: React.FC<{
             {revealed ? (
               <span className="text-2xl font-heading font-bold text-primary tracking-wide">{current.word}</span>
             ) : (
-              <span className="inline-block h-7 w-32 rounded-sm bg-card-border" aria-hidden="true" />
+              <><span className="sr-only">Answer hidden — recall it, then reveal.</span><span className="inline-block h-7 w-32 rounded-sm bg-card-border" aria-hidden="true" /></>
             )}
           </div>
 

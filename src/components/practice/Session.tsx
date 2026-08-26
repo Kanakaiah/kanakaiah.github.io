@@ -809,7 +809,7 @@ const ThemeCardPrompt: React.FC<{
           <p className="text-sm text-secondary italic font-serif leading-relaxed max-w-xs">{item.subtitle}</p>
         </div>
       ) : (
-        <span className="inline-block h-6 w-32 rounded-sm bg-card-border" aria-hidden="true" />
+        <><span className="sr-only">Answer hidden — recall it, then reveal.</span><span className="inline-block h-6 w-32 rounded-sm bg-card-border" aria-hidden="true" /></>
       )}
     </div>
 
