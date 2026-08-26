@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { ArrowLeft, ArrowRight, Check, Flame } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { evaluateSM2, formatInterval } from '../../utils/sm2';
+import { evaluateSM2, formatInterval, suggestedScore } from '../../utils/sm2';
 import { buildReviewEvent } from '../../utils/reviewLog';
 import { buildSession, type SessionItem, type SessionPlan } from '../../utils/session';
 import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress, ThemeProgress, Verse } from '../../types/models';
-import { FirstLetterMode } from './FirstLetterMode';
+import { CueText } from './CueText';
+import { chunkText, chainCue, cueForRepetition, cueLevelToNumber, scoreAttempt } from '../../utils/cue';
 import { ChainDrill } from './ChainDrill';
 
 const DEFAULT_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
@@ -32,6 +33,17 @@ const KIND_COLOR: Record<SessionItem['kind'], string> = {
 };
 
 interface Outcome { id: string; kind: SessionItem['kind']; label: string; score: number; interval: number }
+
+/** What the verse card measured, handed up so the review history records the attempt and
+ * not merely the grade the reader chose afterwards. */
+export interface VerseAttempt {
+  accuracy: number;
+  committed: string;
+  cueLevel: 0 | 1 | 2 | 3 | 4;
+  elapsedMs: number;
+}
+
+const GRADE_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 5: 'Easy' };
 
 /**
  * A day's work, with an end.
@@ -88,7 +100,7 @@ export const Session: React.FC<{
     if (state.settings.streakIncludesChapters !== false) dispatch({ type: 'RECORD_ACTIVITY' });
   };
 
-  const gradeVerse = (verse: Verse, score: number) => {
+  const gradeVerse = (verse: Verse, score: number, attempt: VerseAttempt) => {
     const { newSM2, newStatus } = evaluateSM2(verse.sm2, score);
     dispatch({
       type: 'UPDATE_VERSE',
@@ -99,10 +111,15 @@ export const Session: React.FC<{
       payload: buildReviewEvent({
         itemKind: 'verse', itemId: verse.id, gradeSubmitted: score,
         before: verse.sm2, after: newSM2,
-        // First letters sit on screen for the whole attempt here, so this is not an
-        // uncued recall. Recording it as cueLevel 0 would let the daily loop look
-        // stronger in the history than it is, which is the opposite of the point.
-        mode: 'reveal', cueLevel: 2,
+        // The daily loop now measures its own attempts, so this is the surface the
+        // honesty gap is mostly computed from — and the cue level is whatever the item's
+        // strength earned rather than a constant, so a verse still being shown in full
+        // can never be mistaken in the history for one recalled cold.
+        mode: 'type',
+        cueLevel: attempt.cueLevel,
+        measuredAccuracy: attempt.accuracy,
+        committed: attempt.committed,
+        elapsedMs: attempt.elapsedMs,
       }),
     });
     dispatch({ type: 'RECORD_ACTIVITY' });
@@ -308,10 +325,10 @@ export const Session: React.FC<{
         <IntroduceCard item={item} onDone={advance} />
       ) : item.kind === 'verse' ? (
         <VerseCardPrompt
+          // Keyed so the card's own part/attempt state cannot survive into the next verse.
+          key={item.id}
           item={item}
-          revealed={revealed}
-          onReveal={() => setRevealed(true)}
-          onGrade={score => gradeVerse(item.verse, score)}
+          onGrade={(score, attempt) => gradeVerse(item.verse, score, attempt)}
         />
       ) : item.kind === 'theme' ? (
         <ThemeCardPrompt
@@ -361,13 +378,18 @@ const Row: React.FC<{ label: string; value: string; tone?: 'good' | 'bad' }> = (
  * schedule the day's answers actually produced, at the point where knowing it can no
  * longer bias it.
  */
-const GradeStrip: React.FC<{ onGrade: (score: number) => void }> = ({ onGrade }) => (
+const GradeStrip: React.FC<{ onGrade: (score: number) => void; suggested?: number }> = ({ onGrade, suggested }) => (
   <div className="grid grid-cols-4 gap-2">
     {GRADES.map(g => (
       <button
         key={g.score}
         onClick={() => onGrade(g.score)}
-        className={`py-3 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
+        // The suggestion is a ring around one button, never a pre-submitted answer: the
+        // reader may know they were guessing, or that a "wrong" word was a synonym the
+        // diff cannot forgive.
+        className={`py-3 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className} ${
+          suggested === g.score ? 'ring-2 ring-accent ring-offset-2 ring-offset-background' : ''
+        }`}
       >
         <span className="text-xs font-bold leading-tight">{g.label}</span>
       </button>
@@ -443,38 +465,179 @@ const IntroduceCard: React.FC<{ item: Extract<SessionItem, { kind: 'introduce' }
   </div>
 );
 
+/**
+ * One verse, learned in parts, produced before it is shown.
+ *
+ * This card used to be first-letters, a "Show the verse" button, and four grade buttons
+ * — the reader looked at the answer and then rated how well they had known it. That is
+ * the weakest arrangement available on both counts. Judgements of learning made with the
+ * answer visible are systematically inflated, and the inflated grade was converted
+ * straight into a longer interval, so the error compounded through the schedule rather
+ * than averaging out. And nothing was ever produced, so nothing could be checked.
+ *
+ * Now: the passage is split at its own phrase boundaries, each part is typed from
+ * memory, and the text arrives only once there is an attempt to compare it against. The
+ * cue that remains is set by the item's own repetition count rather than being the same
+ * for a verse met yesterday and one held for a year. Each part after the first is cued by
+ * the tail of the one before, because the join is the thing that has to work when the
+ * passage is finally recited whole.
+ *
+ * The grade is still the reader's — a diff cannot forgive a synonym or judge a
+ * right-idea-wrong-order attempt — but it is now anchored to a measurement instead of
+ * to a feeling, and the gap between the two is recorded.
+ */
 const VerseCardPrompt: React.FC<{
   item: Extract<SessionItem, { kind: 'verse' }>;
-  revealed: boolean;
-  onReveal: () => void;
-  onGrade: (score: number) => void;
-}> = ({ item, revealed, onReveal, onGrade }) => (
-  <div className="flex-1 flex flex-col gap-4">
-    <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-accent">Verse</span>
-    <h2 className="text-2xl font-heading font-bold text-primary">{item.verse.ref}</h2>
+  onGrade: (score: number, attempt: VerseAttempt) => void;
+}> = ({ item, onGrade }) => {
+  const chunks = useMemo(() => chunkText(item.verse.text), [item.verse.text]);
+  const level = cueForRepetition(item.verse.sm2?.repetition ?? 0);
 
-    <div className="flex-1 flex flex-col justify-center">
-      {revealed ? (
-        <p className="text-lg font-serif leading-relaxed text-primary">{item.verse.text}</p>
+  const [part, setPart] = useState(0);
+  const [input, setInput] = useState('');
+  const [checked, setChecked] = useState(false);
+  // Giving up is a commit with no credit, not a separate path. Tracked as a flag rather
+  // than by pushing a zero row, because `checked` already contributes the current part to
+  // the totals below — doing both would count this part twice.
+  const [gaveUp, setGaveUp] = useState(false);
+  const [results, setResults] = useState<{ matched: number; total: number; committed: string }[]>([]);
+  // Prompt shown → answer committed. Started in an effect rather than at render so the
+  // clock is read outside the render pass, and frozen at the moment of commit so it
+  // measures the attempt rather than however long the correction was then looked at.
+  const startedAt = useRef(0);
+  const [elapsedMs, setElapsedMs] = useState(0);
+  React.useEffect(() => { startedAt.current = Date.now(); }, []);
+
+  const text = chunks[part] ?? item.verse.text;
+  const score = useMemo(() => scoreAttempt(text, input), [text, input]);
+  const isLastPart = part >= chunks.length - 1;
+
+  // Totals across every part, so a three-part passage is graded on the whole thing
+  // rather than on whichever fragment happened to be last.
+  const thisPart = { matched: gaveUp ? 0 : score.matched, total: score.total, committed: input };
+  const done = [...results, ...(checked ? [thisPart] : [])];
+  const totals = done.reduce((a, r) => ({ matched: a.matched + r.matched, total: a.total + r.total }),
+    { matched: 0, total: 0 });
+  const overall = totals.total ? Math.round((totals.matched / totals.total) * 100) : 0;
+
+  const commit = () => {
+    if (checked) return;
+    setElapsedMs(Date.now() - startedAt.current);
+    setChecked(true);
+  };
+
+  const nextPart = () => {
+    setResults(r => [...r, thisPart]);
+    setPart(p => p + 1);
+    setInput('');
+    setChecked(false);
+    setGaveUp(false);
+  };
+
+  const submit = (grade: number) => {
+    onGrade(grade, {
+      accuracy: overall,
+      committed: done.map(r => r.committed).join(' ').trim(),
+      cueLevel: cueLevelToNumber(level),
+      elapsedMs,
+    });
+  };
+
+  // Giving up honestly, rather than revealing and then rating yourself against what you
+  // just read. Records the blank it actually is.
+  const giveUp = () => {
+    setElapsedMs(Date.now() - startedAt.current);
+    setGaveUp(true);
+    setChecked(true);
+  };
+
+  return (
+    <div className="flex-1 flex flex-col gap-4 min-h-0">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-accent">
+          Verse · {item.verse.translation}
+        </span>
+        {chunks.length > 1 && (
+          <span className="text-[0.6875rem] text-muted tabular-nums">
+            Part {part + 1} of {chunks.length} · {score.total} words
+          </span>
+        )}
+      </div>
+
+      <h2 className="text-2xl font-heading font-bold text-primary leading-tight">{item.verse.ref}</h2>
+
+      {/* The join from the previous part — a prompt, not a re-read. */}
+      {part > 0 && (
+        <p className="text-sm font-serif italic text-muted leading-relaxed border-l-2 border-card-border pl-3">
+          {chainCue(chunks[part - 1])}
+        </p>
+      )}
+
+      <div className="flex-1 flex flex-col justify-center gap-4 min-h-0 overflow-y-auto">
+        {!checked ? (
+          <>
+            <CueText text={text} level={level} />
+            <textarea
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="Type it from memory…"
+              aria-label={`Type ${item.verse.ref}${chunks.length > 1 ? `, part ${part + 1} of ${chunks.length}` : ''}, from memory`}
+              className="w-full min-h-[120px] p-4 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted/60 resize-none text-base"
+            />
+          </>
+        ) : (
+          <div className="flex flex-col gap-3" role="status" aria-live="polite">
+            <p className="text-sm font-semibold text-primary tabular-nums">
+              {score.matched} of {score.total} words matched
+            </p>
+            <p className="text-lg font-serif leading-relaxed whitespace-pre-wrap">
+              {score.words.map((w, i) => (
+                <React.Fragment key={i}>
+                  <span className={w.ok ? 'text-primary' : 'text-red-500 underline decoration-red-500/50 underline-offset-4'}>
+                    {w.word}
+                  </span>{' '}
+                </React.Fragment>
+              ))}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {!checked ? (
+        <div className="flex flex-col gap-1.5">
+          <button
+            onClick={commit}
+            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          >
+            Check
+          </button>
+          <button onClick={giveUp} className="text-[0.6875rem] text-muted hover:text-primary transition-colors py-1">
+            I can't get it
+          </button>
+        </div>
+      ) : !isLastPart ? (
+        <button
+          onClick={nextPart}
+          className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+        >
+          Next part
+        </button>
       ) : (
-        <div className="text-base leading-relaxed text-secondary">
-          <FirstLetterMode text={item.verse.text} />
+        <div className="flex flex-col gap-2">
+          {chunks.length > 1 && (
+            <p className="text-center text-[0.6875rem] text-muted tabular-nums">
+              Whole passage: {totals.matched} of {totals.total} words
+            </p>
+          )}
+          <p className="text-center text-[0.6875rem] text-muted">
+            Suggested: <span className="font-bold text-accent">{GRADE_LABEL[suggestedScore(overall)]}</span> — change it if that's not right
+          </p>
+          <GradeStrip onGrade={submit} suggested={suggestedScore(overall)} />
         </div>
       )}
     </div>
-
-    {revealed ? (
-      <GradeStrip onGrade={onGrade} />
-    ) : (
-      <button
-        onClick={onReveal}
-        className="w-full py-3 rounded-md border border-dashed border-card-border-hover text-sm font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
-      >
-        Show the verse
-      </button>
-    )}
-  </div>
-);
+  );
+};
 
 const AnchorCardPrompt: React.FC<{
   item: Extract<SessionItem, { kind: 'anchor' }>;

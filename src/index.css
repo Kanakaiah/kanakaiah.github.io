@@ -234,3 +234,21 @@ select option {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* Visible to screen readers only.
+   The app's prompts are largely built from withheld text — rows of underscores, blanked
+   answer bars — which carry their meaning entirely in how they look. Each of those now
+   pairs a decorative visual with a spoken equivalent, and this is where the spoken half
+   lives. Tailwind ships this utility, but the v4 build here is scoped to classes it finds
+   in markup and these are the only uses, so it is defined once explicitly. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
