@@ -52,7 +52,10 @@ export const Retention: React.FC = () => {
   // screen invites fiddling with the schedule on a hunch, which is the opposite of
   // letting the measurement drive the change.
   const longest = curve.filter(b => b.rate !== null).slice(-1)[0];
-  const needsShortening = !!longest && (longest.rate ?? 1) < 0.8;
+  // Shown when the curve asks for it — or whenever the dial is already turned, so a
+  // reader whose retention has recovered can turn it back. Gating purely on the warning
+  // meant the control vanished the moment it worked, leaving the scale stuck on forever.
+  const needsShortening = (!!longest && (longest.rate ?? 1) < 0.8) || scale !== 1;
 
   // Adherence. A memory technique people stop using has an effect size of zero, so a rise
   // in retention alongside a fall in completion is a loss — and these are the only

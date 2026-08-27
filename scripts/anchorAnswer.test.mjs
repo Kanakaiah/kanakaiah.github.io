@@ -123,5 +123,16 @@ t('Numbers 13 has a plate', hasChapterArt('numbers', 13));
 t('Numbers 14 does not — coverage stops mid-book', !hasChapterArt('numbers', 14));
 t('Job has none at all', !hasChapterArt('job', 1));
 t('a chapter below one is never claimed', !hasChapterArt('genesis', 0));
+
+// ── The plate question is never claimed without a plate ──────────────────────────
+// Fixed in the session first; the standalone drill was missed, and it is the surface
+// where the reader picks the plate direction deliberately.
+t('a book with no art never yields the plate direction',
+  [0,1,2,3,4,5,6,7].every(r => directionFor(r, hasChapterArt('job', 1)) !== 'p2w'));
+t('Numbers past its art coverage never yields it either',
+  [3,4,5,6].every(r => directionFor(r, hasChapterArt('numbers', 20)) !== 'p2w'));
+t('Numbers within coverage still does',
+  [4,6].some(r => directionFor(r, hasChapterArt('numbers', 5)) === 'p2w'));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

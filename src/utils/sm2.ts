@@ -168,17 +168,29 @@ export function evaluateSM2(
   // in lockstep, arriving as a wall that the drill queue's own cap then truncates.
   // Short intervals are left exact so the "1 day" / "3 days" printed on the grade
   // button is precisely what the reader gets.
-  // The reader's global scale, applied once, here. Floored at a day: shortening a
-  // schedule must never collapse it to "again today", which would turn spaced repetition
-  // into massed repetition and undo the point of the whole system.
-  if (intervalScale !== 1) interval = Math.max(1, Math.round(interval * intervalScale));
-
   const nextDate = new Date();
   let daysUntilDue = interval;
   if (interval >= 4) {
     const spread = Math.round(interval * 0.15);
     daysUntilDue = Math.max(1, interval + (Math.floor(Math.random() * (spread * 2 + 1)) - spread));
   }
+
+  // The reader's global scale, applied to the *due date* and not to the stored interval.
+  //
+  // Scaling the interval itself compounded: the stored value is the base of the next
+  // growth step, so a "30% shorter" setting multiplied by 0.7 again on every review —
+  // 4→9→19→40 became 3→4→6→9, which is 89% shorter by the sixth review and not what the
+  // button says. The setting is meant to shift the whole schedule uniformly, and a reader
+  // who turns it back to Normal should get the schedule they would have had.
+  //
+  // Keeping `interval` unscaled also means the number is still the item's own measured
+  // strength, so turning the dial down and back up loses nothing.
+  //
+  // Floored at a day: shortening must never collapse to "again today", which would turn
+  // spaced repetition into massed repetition.
+  const scale = Number.isFinite(intervalScale) ? Math.min(1.5, Math.max(0.5, intervalScale)) : 1;
+  if (scale !== 1) daysUntilDue = Math.max(1, Math.round(daysUntilDue * scale));
+
   nextDate.setDate(nextDate.getDate() + daysUntilDue);
 
   return {

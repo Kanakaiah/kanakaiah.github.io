@@ -150,26 +150,39 @@ export const Session: React.FC<{
   //
   // A resumed session is the same sitting continuing, not a new start, so it is not
   // counted again; and a session with nothing due was never really started.
-  // Clock read in an effect, not at render: reading it during render makes the component
-  // impure, and the value is only ever needed once the session is actually under way.
+  // The clock starts when *this* sitting starts, whether or not it is a fresh session.
+  //
+  // It used to be set only inside the SESSION_STARTED branch, which returns early on a
+  // resume — so a resumed session finished with `startedAt` still 0 and reported a
+  // duration measured from 1970. One such session pushed the mean session length to
+  // thirty million minutes, permanently, because the total is persisted.
   const startedAt = useRef(0);
+  React.useEffect(() => { startedAt.current = Date.now(); }, []);
+
+  // Whether this sitting has already been resolved — completed or abandoned, once each.
+  //
+  // Started/completed/abandoned have to agree or the completion rate is nonsense. A
+  // resumed session suppresses only the *start*, since it is the same sitting continuing;
+  // its completion still counts, which is what makes `completed <= started` hold. And
+  // "keep going" opens a genuinely new session inside the same mount, so both flags reset
+  // there — without that, every session after the first in a sitting recorded nothing at
+  // all and a reader who always keeps going stayed at one forever.
+  const resolved = useRef(false);
   const countedStart = useRef(false);
   React.useEffect(() => {
     if (countedStart.current || restored || plan.items.length === 0) return;
     countedStart.current = true;
-    startedAt.current = Date.now();
     dispatch({ type: 'SESSION_STARTED' });
   }, [plan.items.length, restored, dispatch]);
 
   // Where people stop is the useful half: consistently quitting at item three says
-  // something specific that a completion rate does not. Registered on unmount so it
-  // catches the back arrow, a route change and the tab closing alike — and guarded by
-  // `countedDone` so a finished session is never also recorded as abandoned.
-  const countedDone = useRef(false);
-  // Mirrored in an effect rather than assigned during render — the cleanup below runs
-  // after the component is gone and needs the last values, but writing refs while
-  // rendering is exactly the impurity that makes a component's output depend on when it
-  // happened to be called.
+  // something a completion rate does not.
+  //
+  // Mirrored in an effect rather than assigned during render, because writing refs while
+  // rendering makes the output depend on when the component happened to be called. Under
+  // StrictMode the mirror runs before the simulated unmount, so a *restored* session would
+  // otherwise report an abandon at mount — hence the `countedStart` guard here too: a
+  // sitting that never registered a start has nothing to abandon.
   const liveIndex = useRef(index);
   const liveTotal = useRef(plan.items.length);
   React.useEffect(() => {
@@ -178,16 +191,19 @@ export const Session: React.FC<{
   }, [index, plan.items.length]);
 
   React.useEffect(() => () => {
-    if (countedDone.current) return;
+    // Not on unload — React cleanups do not run then. This catches the back arrow and
+    // route changes, which is where abandonment actually happens.
+    if (resolved.current || !countedStart.current) return;
     if (liveTotal.current > 0 && liveIndex.current > 0 && liveIndex.current < liveTotal.current) {
+      resolved.current = true;
       dispatch({ type: 'SESSION_ABANDONED', payload: { atIndex: liveIndex.current } });
     }
   }, [dispatch]);
 
   const finished = plan.items.length > 0 && index >= plan.items.length;
   React.useEffect(() => {
-    if (!finished || countedDone.current) return;
-    countedDone.current = true;
+    if (!finished || resolved.current) return;
+    resolved.current = true;
     dispatch({
       type: 'SESSION_COMPLETED',
       payload: { itemsGraded: outcomes.length, durationMs: Date.now() - startedAt.current },
@@ -199,6 +215,17 @@ export const Session: React.FC<{
   // the fresh plan naturally picks up where this left off.
   const startAnother = () => {
     clearSession();
+    // A genuinely new session, so it counts as one. Leaving these set meant every
+    // session after the first in a sitting recorded nothing — not started, not
+    // completed, not abandoned — so a reader who always keeps going stayed at one
+    // started session forever while doing several.
+    //
+    // Dispatched here rather than by clearing `countedStart`: the mount effect keys on
+    // plan length, which the new plan is about to change, so clearing the flag would let
+    // it fire again and count this same session twice.
+    resolved.current = false;
+    startedAt.current = Date.now();
+    dispatch({ type: 'SESSION_STARTED' });
     setPlan(buildPlan());
     setIndex(0);
     setOutcomes([]);
@@ -395,12 +422,12 @@ export const Session: React.FC<{
               the library. Spreading it forward is the smaller loss. Nothing is marked
               recalled — only rescheduled — and the offer appears only when the arithmetic
               genuinely doesn't work. */}
-          {plan.heldBack > SESSION_CAP * 3 && (
+          {plan.heldBackAll > SESSION_CAP * 3 && (
             <button
               onClick={() => { dispatch({ type: 'POSTPONE_BACKLOG', payload: { days: 14 } }); onExit(); }}
               className="w-full py-2.5 text-[0.6875rem] text-muted hover:text-primary transition-colors"
             >
-              Too much — spread the {plan.heldBack} overdue across the next two weeks
+              Too much — spread the {plan.heldBackAll} overdue across the next two weeks
             </button>
           )}
         </div>
@@ -474,11 +501,21 @@ export const Session: React.FC<{
             // chains, reporting "8 items reviewed" for a session of nine. The drill has
             // already written the grade and the review event; this is only the session's
             // own tally of what it put in front of the reader.
-            const graded = state.blockProgress[blockProgressKey(item.bookId, item.blockIndex)];
-            setOutcomes(o => [...o, {
-              id: item.id, kind: 'chain', label: `${item.bookName} · ${item.label}`,
-              score: graded?.lastScore ?? 0, interval: graded?.sm2.interval ?? 0,
-            }]);
+            // Only if it was actually graded. `onClose` also fires on the drill's X and on
+            // Escape, which can happen at link two of ten — recording an outcome there
+            // counted an item that was never reviewed and, with score 0, listed it under
+            // "Fell back". The previous version under-counted chains by one; this one
+            // over-corrected into counting closes rather than grades.
+            const key = blockProgressKey(item.bookId, item.blockIndex);
+            const graded = state.blockProgress[key];
+            const gradedNow = graded && graded.lastAttemptDate &&
+              Date.now() - new Date(graded.lastAttemptDate).getTime() < 60_000;
+            if (gradedNow) {
+              setOutcomes(o => [...o, {
+                id: item.id, kind: 'chain', label: `${item.bookName} · ${item.label}`,
+                score: graded.lastScore, interval: graded.sm2.interval,
+              }]);
+            }
             advance();
           }}
         />
@@ -657,7 +694,12 @@ const VerseCardPrompt: React.FC<{
   const earnedSpan = chainSpan(chunks.length, repetition);
   // The encoding pass: never once recalled, so the text is on screen and there is nothing
   // to test yet. cueForRepetition already returns full text at zero; this names it.
-  const isEncoding = repetition === 0;
+  // Matched to cueForRepetition, which returns 'full' at repetition 0 *and* 1 — not just
+  // 0. With the off-by-one, a verse on its second review showed the entire text under a
+  // button saying "Check", and offered "I can't get it": exactly the guaranteed blank
+  // with the answer on screen that this card exists to remove. Repetition 1 is also where
+  // every verse lands the day after a lapse, so it was far from an edge case.
+  const isEncoding = level === 'full';
   const offline = useOffline();
 
   const [part, setPart] = useState(0);

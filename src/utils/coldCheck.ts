@@ -81,11 +81,20 @@ function lastSuccessByItem(log: ReviewEvent[]): Map<string, number> {
   const out = new Map<string, number>();
   for (const e of log) {
     if (e.gradeSubmitted < 3) continue;
-    // A grade earned with the text on screen is not evidence of retention — the rest of
-    // the app already refuses to count it (firstTryRetention excludes cueLevel > 1), and
-    // counting it here would mean a verse the reader has only ever transcribed could
-    // never go cold. Older events predate the field and are trusted as before.
-    if ((e.cueLevel ?? 0) > 1) continue;
+    // A grade earned with the *whole answer* on screen is not evidence of retention: the
+    // reader was copying. Only that case is excluded.
+    //
+    // The first attempt at this excluded everything above cueLevel 1, borrowing the
+    // threshold from firstTryRetention — but that scale runs full(4), first-letters(3),
+    // sparse(2), none(0), and verses sit at 3 or 2 for repetitions 2 through 5. So the
+    // filter quietly removed every verse below repetition 6 from the pool: they had no
+    // recorded success at all, `coldFor` returned null, and they could never be asked.
+    // The check silently became a mature-verses-only measurement, which is the opposite
+    // of a representative sample.
+    //
+    // First letters and every-third-word are genuine recall — most of the passage has to
+    // come from memory — so they count. Only the full text does not.
+    if ((e.cueLevel ?? 0) >= 4) continue;
     const key = `${e.itemKind}:${e.itemId}`;
     const t = new Date(e.ts).getTime();
     const prev = out.get(key);

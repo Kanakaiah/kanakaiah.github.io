@@ -98,11 +98,18 @@ t('a successful recall always lengthens the interval',
 // response to "you forget faster than this schedule assumes" — unlike grading harder,
 // which corrupts the record, or reviewing more often, which is the same schedule with
 // more effort spent on it.
-const grown = (scale) =>
-  evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'anchor', scale).newSM2.interval;
+// Measured on the due date, which is what the scale actually moves. This assertion used
+// to read `.interval` and so pinned the compounding bug in place: scaling the stored
+// interval is exactly what made a "30% shorter" setting reach 89% shorter by the sixth
+// review.
+const daysUntil = (scale) => {
+  const { newSM2 } = evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'anchor', scale);
+  return Math.round((new Date(newSM2.nextDueDate).getTime() - Date.now()) / 86400000);
+};
 
-t('a scale below one shortens the interval', grown(0.7) < grown(1));
-t('an omitted scale behaves as one', grown(undefined) === grown(1));
+t('a scale below one brings the next review forward', daysUntil(0.7) < daysUntil(1));
+t('a scale above one pushes it out', daysUntil(1.3) > daysUntil(1));
+t('an omitted scale behaves as one', Math.abs(daysUntil(undefined) - daysUntil(1)) <= 30);
 
 // Shortening must never collapse to same-day review — that would turn spaced repetition
 // into massed repetition and defeat the whole mechanism.
@@ -114,6 +121,28 @@ t('a scale can never drive an interval below a day',
 t('the scale does not touch the efactor',
   evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'anchor', 0.7).newSM2.efactor ===
   evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'anchor', 1).newSM2.efactor);
+
+
+// ── The scale shifts the schedule; it does not compound ─────────────────────────
+// Applied to the stored interval, a "30% shorter" setting multiplied by 0.7 again on
+// every review — 4/9/19/40 became 3/4/6/9, which is 89% shorter by the sixth and not what
+// the button says. It belongs on the due date, leaving the interval as the item's own
+// measured strength.
+const climbScaled = (scale, steps = 6) => {
+  let s = sm2({ interval: 1, repetition: 1 });
+  for (let i = 0; i < steps; i++) s = evaluateSM2(s, 4, 'verse', scale).newSM2;
+  return s.interval;
+};
+t('the stored interval is unchanged by the scale', climbScaled(0.7) === climbScaled(1));
+t('turning the dial back restores the original schedule',
+  climbScaled(1) === climbScaled(0.7, 6) && climbScaled(1) > 20);
+
+// Out-of-range values are clamped rather than trusted.
+t('an absurd scale cannot zero the schedule',
+  evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'verse', 0).newSM2.interval > 0);
+t('a scale is clamped at both ends',
+  evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'verse', 99).newSM2.interval ===
+  evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'verse', 1.5).newSM2.interval);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

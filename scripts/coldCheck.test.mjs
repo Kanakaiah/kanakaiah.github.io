@@ -169,5 +169,24 @@ for (let i = 0; i < draws; i++) {
 t('the sample does not favour the kind added first',
   Math.abs(versePicks / draws - 0.5) < 0.05);
 
+
+// ── The pool is not silently restricted to mature verses ────────────────────────
+// Borrowing firstTryRetention's cueLevel > 1 threshold removed every verse at repetitions
+// 2 to 5 — they log cue level 3 or 2 — so they had no recorded success at all and could
+// never be asked. The check quietly became a mature-verses-only measurement.
+for (const cue of [0, 2, 3]) {
+  const st = base({
+    verses: [verse('v', 'Genesis 1:1')],
+    reviewLog: [{ ...ev('verse', 'v', daysAgo(60)), cueLevel: cue }],
+  });
+  t('a recall at cue level ' + cue + ' counts toward going cold', buildColdCheck(st, 5).length === 1);
+}
+// Only the whole answer on screen is disqualifying.
+const copied = base({
+  verses: [verse('v', 'Genesis 1:1')],
+  reviewLog: [{ ...ev('verse', 'v', daysAgo(60)), cueLevel: 4 }],
+});
+t('a full-text copy-through still does not', buildColdCheck(copied, 5).length === 0);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
