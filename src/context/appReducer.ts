@@ -1,4 +1,4 @@
-import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress, ReviewEvent } from '../types/models';
+import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress, ReviewEvent, ColdCheckRecord } from '../types/models';
 import { chapterProgressKey, blockProgressKey } from '../types/models';
 import { appendReview } from '../utils/reviewLog';
 
@@ -29,6 +29,8 @@ export const initialState: AppState = {
   themeProgress: {},
   blockProgress: {},
   reviewLog: [],
+  coldChecks: [],
+  adherence: { started: 0, completed: 0, itemsGraded: 0, completedMs: 0, abandonedAtSum: 0, abandonedCount: 0 },
   settings: {
     ttsEnabled: false,
     recallMasking: false,
@@ -61,6 +63,10 @@ export type AppAction =
   | { type: 'RECORD_CHAIN_PASS'; payload: { bookId: string; results: { chapter: number; revealed: boolean }[] } }
   | { type: 'RECORD_REVIEW'; payload: ReviewEvent }
   | { type: 'POSTPONE_BACKLOG'; payload: { days: number } }
+  | { type: 'RECORD_COLD_CHECK'; payload: ColdCheckRecord }
+  | { type: 'SESSION_STARTED' }
+  | { type: 'SESSION_COMPLETED'; payload: { itemsGraded: number; durationMs: number } }
+  | { type: 'SESSION_ABANDONED'; payload: { atIndex: number } }
   | { type: 'RECORD_ACTIVITY' };
 
 // --- REDUCER ---
@@ -247,6 +253,44 @@ export function appReducer(state: AppState, action: AppAction): AppState {
 
       return { ...state, verses, chapterProgress };
     }
+
+    case 'RECORD_COLD_CHECK':
+      // Kept whole rather than capped: five items roughly monthly is a handful of rows a
+      // year, and the entire value of this measurement is the trend across all of them.
+      return { ...state, coldChecks: [...(state.coldChecks || []), action.payload] };
+
+    // ── Adherence ────────────────────────────────────────────────────────────────
+    // Counted separately from the review history because they answer a different
+    // question. The history says whether recall is holding; these say whether anyone is
+    // still turning up. A technique people abandon has an effect size of zero, so a rise
+    // in retention alongside a collapse in completion is a loss — and until now the app
+    // could not have told those apart.
+    case 'SESSION_STARTED':
+      return { ...state, adherence: { ...state.adherence, started: state.adherence.started + 1 } };
+
+    case 'SESSION_COMPLETED':
+      return {
+        ...state,
+        adherence: {
+          ...state.adherence,
+          completed: state.adherence.completed + 1,
+          itemsGraded: state.adherence.itemsGraded + action.payload.itemsGraded,
+          completedMs: state.adherence.completedMs + action.payload.durationMs,
+        },
+      };
+
+    case 'SESSION_ABANDONED':
+      // Where people stop is more useful than how often: consistently quitting at item
+      // three says something specific about item three's cost that a completion rate does
+      // not. Summed with a count so the mean survives without storing a row per session.
+      return {
+        ...state,
+        adherence: {
+          ...state.adherence,
+          abandonedAtSum: state.adherence.abandonedAtSum + action.payload.atIndex,
+          abandonedCount: state.adherence.abandonedCount + 1,
+        },
+      };
 
     case 'RECORD_ACTIVITY': {
       // Any graded review — a verse, a memory sentence, or a chapter — counts as a

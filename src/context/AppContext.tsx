@@ -90,6 +90,11 @@ function loadInitialState(): AppState {
           // an Array check rather than `|| []` because a corrupted object here would make
           // every selector throw, on screens the reader then cannot get out of.
           reviewLog: Array.isArray(parsed.reviewLog) ? parsed.reviewLog : [],
+          // Same guard as reviewLog, for the same reason: a profile written before these
+          // existed has no key, and a corrupted non-array would make every selector throw
+          // on a screen the reader then cannot leave.
+          coldChecks: Array.isArray(parsed.coldChecks) ? parsed.coldChecks : [],
+          adherence: { ...initialState.adherence, ...(parsed.adherence || {}) },
         };
       }
     }

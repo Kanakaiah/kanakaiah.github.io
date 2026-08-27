@@ -220,6 +220,44 @@ export interface ReviewEvent {
   daysLate: number;
 }
 
+/**
+ * One completed cold check. Small and rare by design — five items, roughly monthly — so
+ * the whole history is a handful of rows and is kept in full rather than capped.
+ *
+ * The median days-cold travels with the score because a rising number means nothing on
+ * its own: a check that happened to sample fresher items would look like improvement.
+ * Both halves are needed to read a trend.
+ */
+export interface ColdCheckRecord {
+  ts: string;
+  correct: number;
+  total: number;
+  medianColdFor: number;
+}
+
+/**
+ * Adherence, which the audit called a guardrail and meant it: a memory technique people
+ * stop using has an effect size of zero. Retention rising while sessions collapse is a
+ * loss, and without these the app could not tell the two apart.
+ *
+ * Counts only — no per-session rows. The question is whether people finish what they
+ * start and keep coming back, and that needs totals, not a diary.
+ */
+export interface AdherenceStats {
+  /** Sessions opened with at least one item to do. */
+  started: number;
+  /** Sessions carried to the end-of-day summary. */
+  completed: number;
+  /** Items graded inside completed sessions, for a mean session length. */
+  itemsGraded: number;
+  /** Summed duration of completed sessions, ms. */
+  completedMs: number;
+  /** Index reached when a session was abandoned, summed with a count — together these
+   * give the average point at which people stop, without storing a row per session. */
+  abandonedAtSum: number;
+  abandonedCount: number;
+}
+
 export interface AppState {
   verses: Verse[];
   streak: number;
@@ -235,6 +273,12 @@ export interface AppState {
   blockProgress: Record<string, BlockProgress>;
   /** Append-only history of graded retrievals, oldest first. See ReviewEvent above. */
   reviewLog: ReviewEvent[];
+  /** Unscheduled, ungraded recall checks — the app's one independent read on retention.
+   * Everything else it records is scheduled review, which measures the scheduler as much
+   * as the reader. See utils/coldCheck.ts. */
+  coldChecks: ColdCheckRecord[];
+  /** Whether sessions are finished, not merely started. See AdherenceStats. */
+  adherence: AdherenceStats;
 }
 
 // Guides Data types based on guides_data.js

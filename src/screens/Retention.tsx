@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { retentionByInterval, honestyGap, firstTryRetention, wasRecalled } from '../utils/reviewLog';
 import { leeches, activeDays } from '../utils/leeches';
 import { useNow } from '../utils/useNow';
+import { coldCheckAvailable, COLD_DAYS, COLD_CHECK_SIZE } from '../utils/coldCheck';
+import { ColdCheck } from '../components/practice/ColdCheck';
 
 /**
  * What would I still know if I stopped today?
@@ -41,6 +43,18 @@ export const Retention: React.FC = () => {
   const gap = useMemo(() => honestyGap(log, 30, now), [log, now]);
   const worst = useMemo(() => leeches(state).slice(0, 5), [state]);
   const active = useMemo(() => activeDays(state, 45, now), [state, now]);
+  const coldAvailable = useMemo(() => coldCheckAvailable(state, now), [state, now]);
+  const coldChecks = state.coldChecks || [];
+  const lastCold = coldChecks[coldChecks.length - 1];
+  const [checking, setChecking] = useState(false);
+
+  // Adherence. A memory technique people stop using has an effect size of zero, so a rise
+  // in retention alongside a fall in completion is a loss — and these are the only
+  // numbers here that could reveal it.
+  const a = state.adherence;
+  const completionRate = a.started > 0 ? a.completed / a.started : null;
+  const meanMinutes = a.completed > 0 ? Math.round(a.completedMs / a.completed / 60000) : null;
+  const meanAbandonAt = a.abandonedCount > 0 ? Math.round(a.abandonedAtSum / a.abandonedCount) : null;
 
   const byLayer = useMemo(() => LAYERS.map(l => {
     const rows = log.filter(e => e.itemKind === l.kind && e.intervalBefore > 0 && e.cueLevel <= 1);
@@ -157,6 +171,77 @@ export const Retention: React.FC = () => {
           </section>
         </>
       )}
+
+      {/* The Cold Check — the one number here that is not measured on the scheduler's
+          own terms. Everything above asks items when they are due, so a healthy rate
+          partly reports that the scheduler chose good moments; this asks things the
+          schedule is not asking for and records the answer without acting on it. */}
+      <section className="flex flex-col gap-3 border border-card-border rounded-md p-4">
+        <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Cold check</h2>
+        {coldAvailable > 0 ? (
+          <>
+            <p className="text-sm text-secondary leading-relaxed">
+              {coldAvailable} {coldAvailable === 1 ? 'item has' : 'items have'} gone {COLD_DAYS}+ days
+              without a successful recall. A check asks {COLD_CHECK_SIZE} of them and changes nothing —
+              no grades, no schedule.
+            </p>
+            <button
+              onClick={() => setChecking(true)}
+              className="self-start px-4 py-2 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            >
+              Run a cold check
+            </button>
+          </>
+        ) : (
+          <p className="text-sm text-secondary leading-relaxed">
+            Nothing has been away long enough yet. This becomes available once something you
+            once knew has had {COLD_DAYS} days to fade — the waiting is what makes it mean anything.
+          </p>
+        )}
+        {lastCold && (
+          <p className="text-xs text-muted tabular-nums">
+            Last check: {lastCold.correct} of {lastCold.total}, after a median{' '}
+            {lastCold.medianColdFor} days away · {new Date(lastCold.ts).toLocaleDateString()}
+          </p>
+        )}
+      </section>
+
+      {/* Adherence — the guardrail on everything else. */}
+      {a.started > 0 && (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Are you finishing?</h2>
+          <div className="flex flex-col divide-y divide-card-border border-y border-card-border">
+            <div className="flex items-baseline justify-between py-2.5">
+              <span className="text-sm text-primary font-medium">Sessions finished</span>
+              <span className="text-sm font-bold text-primary tabular-nums">
+                {completionRate === null ? '—' : `${Math.round(completionRate * 100)}%`}
+                <span className="text-xs text-muted font-normal"> of {a.started}</span>
+              </span>
+            </div>
+            {meanMinutes !== null && (
+              <div className="flex items-baseline justify-between py-2.5">
+                <span className="text-sm text-primary font-medium">Typical session</span>
+                <span className="text-sm font-bold text-primary tabular-nums">{meanMinutes} min</span>
+              </div>
+            )}
+            {meanAbandonAt !== null && (
+              <div className="flex items-baseline justify-between py-2.5">
+                <span className="text-sm text-primary font-medium">When you stop early</span>
+                <span className="text-sm font-bold text-primary tabular-nums">item {meanAbandonAt}</span>
+              </div>
+            )}
+          </div>
+          {completionRate !== null && completionRate < 0.6 && (
+            <p className="text-sm text-orange-400 leading-relaxed">
+              More than a third of sessions go unfinished. If that started recently, the day's
+              work has probably become too long or too hard — shorten it before trusting any
+              retention number above.
+            </p>
+          )}
+        </section>
+      )}
+
+      {checking && <ColdCheck onClose={() => setChecking(false)} />}
 
       {/* The leech list — the only place the app suggests changing the material rather
           than reviewing it harder. Omitted entirely when empty: an absent problem should
