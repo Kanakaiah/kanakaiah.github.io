@@ -179,5 +179,33 @@ p = buildSession(mk({
 t('a focus narrows the book layers without dropping due verses',
   p.items.length === 1 && p.items[0].kind === 'verse');
 
+
+// 14. A named book governs new material, not only reviews.
+//
+// Focus filtered the review list while new chapters came from currentBookId — the most
+// recently *touched* book, computed independently. Ask for Genesis the day after reading
+// Exodus and the session was one Genesis review and six Exodus items, under a button
+// labelled Genesis. The earlier tests all passed newChapters: 0, which disabled the very
+// path that carried the bug.
+p = buildSession(mk({chapterProgress:{
+  'genesis:1': chap('genesis',1,{sm2:sm2(-5)}),
+  'exodus:3':  chap('exodus',3,{sm2:sm2(-1)}),
+}}), {newChapters:3, cap:20, bookId:'genesis', shuffle:noShuffle});
+t('new material follows the focus, not the last-touched book',
+  p.items.every(i => i.bookId === 'genesis'));
+t('the focused session still teaches something new',
+  p.items.some(i => i.kind === 'introduce'));
+
+// The true backlog stays visible even when the day is narrowed, so the offer to spread it
+// cannot silently vanish for a reader who always focuses. Chapters, not verses — verses
+// belong to no book in this sense and are deliberately never filtered by focus.
+const wideBacklog = {};
+for (let c = 1; c <= 30; c++) wideBacklog['exodus:' + c] = chap('exodus', c);
+wideBacklog['genesis:2'] = chap('genesis', 2);
+p = buildSession(mk({ chapterProgress: wideBacklog }),
+  {newChapters:0, cap:5, bookId:'genesis', shuffle:noShuffle});
+t('a focused session reports only its own remaining work', p.heldBack === 0);
+t('and still knows the size of the whole backlog', p.heldBackAll >= 25);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail?1:0);

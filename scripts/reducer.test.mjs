@@ -89,15 +89,11 @@ t('a consecutive day extends the streak', s.streak === 7);
 const daysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
 const logOn = (offsets) => offsets.map(n => ({ ts: daysAgo(n).toISOString() }));
 
-// Six of the last seven days active: the week's grace has not been spent.
-s = appReducer({ ...base(), streak: 100, lastActiveDate: daysAgo(2).toISOString(),
-  reviewLog: logOn([2, 3, 4, 5, 6, 7]) }, { type: 'RECORD_ACTIVITY' });
-t('one missed day is forgiven when the week was otherwise complete', s.streak === 101);
-
-// Every other day: the grace has already been used this week.
-s = appReducer({ ...base(), streak: 100, lastActiveDate: daysAgo(2).toISOString(),
-  reviewLog: logOn([2, 4, 6]) }, { type: 'RECORD_ACTIVITY' });
-t('a second missed day in the same week does cost the streak', s.streak === 1);
+// The grace is tracked rather than inferred from the review log — see the block at the
+// end of this file for the full rule. Here: never spent, so a one-day gap is forgiven.
+s = appReducer({ ...base(), streak: 100, lastActiveDate: daysAgo(2).toISOString() },
+  { type: 'RECORD_ACTIVITY' });
+t('one missed day is forgiven when the grace is available', s.streak === 101);
 
 s = appReducer({ ...base(), streak: 100, lastActiveDate: daysAgo(1).toISOString(),
   reviewLog: logOn([1, 2, 3]) }, { type: 'RECORD_ACTIVITY' });
@@ -132,6 +128,52 @@ t('the backlog is fanned out rather than stacked on one day',
 t('postponing never touches interval, repetition or efactor',
   s.verses.every(v => v.sm2.interval === 30 && v.sm2.repetition === 5 && v.sm2.efactor === 2.5));
 t('postponing records no review history', (s.reviewLog || []).length === 0);
+
+
+// ── Grace is one free miss per week, tracked rather than inferred ────────────────
+// Inferring it from the review log made the rule depend on which surface earned the day
+// and denied it entirely to anyone with under a week of history.
+const dAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
+
+// Four days old, practised daily, misses one. Nothing has been forgiven yet.
+s = appReducer({ ...base(), streak: 4, lastActiveDate: dAgo(2).toISOString() },
+  { type: 'RECORD_ACTIVITY' });
+t('a new reader gets the free miss too', s.streak === 5);
+t('spending the grace is recorded', !!s.lastGraceDate);
+
+// Having just spent it, a second gap this week is a real break.
+s = appReducer({ ...base(), streak: 40, lastActiveDate: dAgo(2).toISOString(),
+  lastGraceDate: dAgo(3).toISOString() }, { type: 'RECORD_ACTIVITY' });
+t('a second gap in the same week costs the streak', s.streak === 1);
+
+// A week later the grace is available again.
+s = appReducer({ ...base(), streak: 40, lastActiveDate: dAgo(2).toISOString(),
+  lastGraceDate: dAgo(9).toISOString() }, { type: 'RECORD_ACTIVITY' });
+t('the grace comes back after a week', s.streak === 41);
+
+// A streak kept by a surface that writes no review event must still get its grace.
+s = appReducer({ ...base(), streak: 30, lastActiveDate: dAgo(2).toISOString(), reviewLog: [] },
+  { type: 'RECORD_ACTIVITY' });
+t('grace does not depend on the review log', s.streak === 31);
+
+// ── Postponing actually moves everything ────────────────────────────────────────
+// The first version put item zero at day zero — still overdue — and never reached the
+// far end of the window.
+const stale = (d) => ({ interval: 30, repetition: 5, efactor: 2.5,
+  nextDueDate: new Date(Date.now() - d * 86400000).toISOString() });
+const oneOverdue = { ...base(), verses: [
+  { id: 'only', ref: 'R', text: 't', sm2: stale(40), status: 'review', attempts: 4 }] };
+s = appReducer(oneOverdue, { type: 'POSTPONE_BACKLOG', payload: { days: 14 } });
+t('a single overdue item is genuinely moved',
+  new Date(s.verses[0].sm2.nextDueDate).getTime() > Date.now() + 86000000);
+
+const manyOverdue = { ...base(), verses: Array.from({ length: 10 }, (_, i) =>
+  ({ id: 'v' + i, ref: 'R' + i, text: 't', sm2: stale(40), status: 'review', attempts: 4 })) };
+s = appReducer(manyOverdue, { type: 'POSTPONE_BACKLOG', payload: { days: 14 } });
+const soonest = Math.min(...s.verses.map(v => new Date(v.sm2.nextDueDate).getTime()));
+t('no item is left due today', soonest > Date.now() + 3600000);
+t('the spread still reaches across the window',
+  new Set(s.verses.map(v => v.sm2.nextDueDate.slice(0, 10))).size > 1);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

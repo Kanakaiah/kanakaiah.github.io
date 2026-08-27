@@ -69,6 +69,10 @@ export interface SessionPlan {
   items: SessionItem[];
   /** Everything that was due but did not fit the cap — surfaced as "keep going". */
   heldBack: number;
+  /** The same count ignoring any book focus, so a focused sitting still knows when the
+   * library as a whole has outgrown what can be caught up with. Gating the offer to
+   * spread a backlog on the focused count meant it silently never appeared. */
+  heldBackAll: number;
   /** New chapters that were offered but did not fit their reserved share. Reported
    * separately from `heldBack` so the session can say the specific true thing rather
    * than folding new material into one undifferentiated count. */
@@ -278,7 +282,14 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   // and then immediately tested. Built as [introduce, anchor] pairs so the encoding
   // step and the retrieval it exists to set up can never be separated.
   const newPairs: SessionItem[][] = [];
-  const bookId = currentBookId(state.chapterProgress);
+  // A named focus governs new material too.
+  //
+  // Focus used to filter only the review list, while new chapters came from
+  // `currentBookId` — the most recently *touched* book, computed independently. Ask for
+  // "just Genesis" the day after reading Exodus and the session was one Genesis review
+  // followed by six Exodus items, from a button that said Genesis. The whole point of
+  // naming a book is that the sitting is about that book.
+  const bookId = options.bookId ?? currentBookId(state.chapterProgress);
   if (bookId && options.newChapters > 0) {
     const book = bookFor(bookId);
     const anchors = anchorsOf(bookId);
@@ -350,7 +361,8 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   // but the work that gets done is the work most in danger.
   const focus = options.bookId;
   const inFocus = (i: SessionItem) => !focus || !('bookId' in i) || i.bookId === focus;
-  const review = [...verseItems, ...anchorItems, ...themeItems, ...chainItems].filter(inFocus);
+  const allDue = [...verseItems, ...anchorItems, ...themeItems, ...chainItems];
+  const review = allDue.filter(inFocus);
   const mostOverdueFirst = [...review].sort(
     (a, b) => new Date(overdueKey(a)).getTime() - new Date(overdueKey(b)).getTime());
   const admittedReview = interleave(
@@ -370,7 +382,14 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   const newOffered = newPairs.flat().length;
   return {
     items,
+    // What is left of *this* session's work — so in a focused sitting "keep going" offers
+    // more of the book asked for, not the rest of the canon.
     heldBack: Math.max(0, review.length + newOffered - items.length),
+    // The true backlog, ignoring focus. Kept separate because the two answer different
+    // questions: a reader working through Genesis every day should still be told when the
+    // library as a whole has grown past what they can ever catch up with, and gating that
+    // on the focused count meant the offer to spread it silently never appeared.
+    heldBackAll: Math.max(0, allDue.length + newOffered - items.length),
     newHeldBack: Math.max(0, newOffered - newSlots),
   };
 }

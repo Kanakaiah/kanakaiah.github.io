@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { evaluateSM2, formatInterval, suggestedScore } from '../../utils/sm2';
 import { buildReviewEvent } from '../../utils/reviewLog';
 import { buildSession, type SessionItem, type SessionPlan } from '../../utils/session';
-import { chapterProgressKey } from '../../types/models';
+import { chapterProgressKey, blockProgressKey } from '../../types/models';
 import type { ChapterProgress, ThemeProgress, Verse } from '../../types/models';
 import { CueText } from './CueText';
 import { chunkText, chainSpan, chainedText, cueForRepetition, cueLevelToNumber, scoreAttempt } from '../../utils/cue';
@@ -139,6 +139,60 @@ export const Session: React.FC<{
   // Persisted on every move through the list. Cheap — twenty items of plain data — and
   // it is the difference between a phone call costing a moment and costing the session.
   React.useEffect(() => { saveSession(plan, index, outcomes); }, [plan, index, outcomes]);
+
+  // Adherence: whether sessions are finished, not merely opened.
+  //
+  // Counted here because this is the only place that knows. The reducer has carried these
+  // actions and the Retention screen has rendered their totals since both were written —
+  // and nothing dispatched them, so every figure sat at zero and the section never
+  // appeared. That is precisely the collect-and-drop failure this codebase has now made
+  // four times (`lapses`, `chainHits`, `RECORD_ACTIVITY`, and this).
+  //
+  // A resumed session is the same sitting continuing, not a new start, so it is not
+  // counted again; and a session with nothing due was never really started.
+  // Clock read in an effect, not at render: reading it during render makes the component
+  // impure, and the value is only ever needed once the session is actually under way.
+  const startedAt = useRef(0);
+  const countedStart = useRef(false);
+  React.useEffect(() => {
+    if (countedStart.current || restored || plan.items.length === 0) return;
+    countedStart.current = true;
+    startedAt.current = Date.now();
+    dispatch({ type: 'SESSION_STARTED' });
+  }, [plan.items.length, restored, dispatch]);
+
+  // Where people stop is the useful half: consistently quitting at item three says
+  // something specific that a completion rate does not. Registered on unmount so it
+  // catches the back arrow, a route change and the tab closing alike — and guarded by
+  // `countedDone` so a finished session is never also recorded as abandoned.
+  const countedDone = useRef(false);
+  // Mirrored in an effect rather than assigned during render — the cleanup below runs
+  // after the component is gone and needs the last values, but writing refs while
+  // rendering is exactly the impurity that makes a component's output depend on when it
+  // happened to be called.
+  const liveIndex = useRef(index);
+  const liveTotal = useRef(plan.items.length);
+  React.useEffect(() => {
+    liveIndex.current = index;
+    liveTotal.current = plan.items.length;
+  }, [index, plan.items.length]);
+
+  React.useEffect(() => () => {
+    if (countedDone.current) return;
+    if (liveTotal.current > 0 && liveIndex.current > 0 && liveIndex.current < liveTotal.current) {
+      dispatch({ type: 'SESSION_ABANDONED', payload: { atIndex: liveIndex.current } });
+    }
+  }, [dispatch]);
+
+  const finished = plan.items.length > 0 && index >= plan.items.length;
+  React.useEffect(() => {
+    if (!finished || countedDone.current) return;
+    countedDone.current = true;
+    dispatch({
+      type: 'SESSION_COMPLETED',
+      payload: { itemsGraded: outcomes.length, durationMs: Date.now() - startedAt.current },
+    });
+  }, [finished, outcomes.length, dispatch]);
 
   // "Keep going" starts a genuinely new session against whatever is still due, rather
   // than replaying this one. Everything already graded has moved into the future, so
@@ -414,7 +468,19 @@ export const Session: React.FC<{
           blockIndex={item.blockIndex}
           label={`${item.bookName} · ${item.label}`}
           anchors={item.anchors}
-          onClose={advance}
+          onClose={() => {
+            // A chain grades itself inside the drill, so nothing here recorded that it
+            // happened — the day's summary counted every other kind and silently omitted
+            // chains, reporting "8 items reviewed" for a session of nine. The drill has
+            // already written the grade and the review event; this is only the session's
+            // own tally of what it put in front of the reader.
+            const graded = state.blockProgress[blockProgressKey(item.bookId, item.blockIndex)];
+            setOutcomes(o => [...o, {
+              id: item.id, kind: 'chain', label: `${item.bookName} · ${item.label}`,
+              score: graded?.lastScore ?? 0, interval: graded?.sm2.interval ?? 0,
+            }]);
+            advance();
+          }}
         />
       ) : item.kind === 'introduce' ? (
         <IntroduceCard item={item} onDone={advance} />
@@ -703,7 +769,7 @@ const VerseCardPrompt: React.FC<{
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Type it from memory…"
-              aria-label={`Type ${item.verse.ref}${chunks.length > 1 ? `, part ${part + 1} of ${chunks.length}` : ''}, from memory`}
+              aria-label={`Type ${item.verse.ref}${chunks.length > 1 ? `, parts 1 to ${span} of ${chunks.length}` : ''}, from memory`}
               className="w-full min-h-[120px] p-4 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted/60 resize-none text-base"
             />
           </>
@@ -810,6 +876,9 @@ const AnchorCardPrompt: React.FC<{
 }> = ({ item, onGrade }) => {
   const [typed, setTyped] = useState('');
   const [judged, setJudged] = useState<AnchorJudgement | null>(null);
+  // The value actually put to the judge, kept so the review history records the attempt
+  // that was scored rather than whatever remains in the input.
+  const [answered, setAnswered] = useState('');
   const startedAt = useRef(0);
   const [elapsedMs, setElapsedMs] = useState(0);
   React.useEffect(() => { startedAt.current = Date.now(); }, []);
@@ -820,6 +889,7 @@ const AnchorCardPrompt: React.FC<{
   // was in the box. Type the right word, press Skip, and it recorded a correct recall.
   const answer = (value: string = typed) => {
     if (judged) return;
+    setAnswered(value);
     setElapsedMs(Date.now() - startedAt.current);
     // Routed through judgeByDirection so the question asked and the answer judged cannot
     // disagree: w2n asks for a chapter number and must not be checked against the word.
@@ -829,7 +899,10 @@ const AnchorCardPrompt: React.FC<{
   const submit = (score: number) => {
     onGrade(score, {
       accuracy: judged?.verdict === 'correct' ? 100 : judged?.verdict === 'near' ? 60 : 0,
-      committed: typed,
+      // What was actually judged, not what is still in the box. Skip judges the empty
+      // string; recording `typed` wrote an event saying the reader produced "HANDS" and
+      // then scored it Blank.
+      committed: answered,
       cueLevel: 0,
       elapsedMs,
     });
@@ -972,12 +1045,16 @@ const ThemeCardPrompt: React.FC<{
 }> = ({ item, onGrade }) => {
   const [typed, setTyped] = useState('');
   const [judged, setJudged] = useState<AnchorJudgement | null>(null);
+  // The value actually put to the judge, kept so the review history records the attempt
+  // that was scored rather than whatever remains in the input.
+  const [answered, setAnswered] = useState('');
   const startedAt = useRef(0);
   const [elapsedMs, setElapsedMs] = useState(0);
   React.useEffect(() => { startedAt.current = Date.now(); }, []);
 
   const answer = (value: string = typed) => {
     if (judged) return;
+    setAnswered(value);
     setElapsedMs(Date.now() - startedAt.current);
     // Judged as a word, with no siblings: a wrong theme is rarely another book's theme,
     // and naming a coincidental collision across sixty-six books would mislead more than
@@ -987,7 +1064,8 @@ const ThemeCardPrompt: React.FC<{
 
   const submit = (score: number) => onGrade(score, {
     accuracy: judged?.verdict === 'correct' ? 100 : judged?.verdict === 'near' ? 60 : 0,
-    committed: typed,
+    // The judged answer, not the leftover input — see the anchor card above.
+    committed: answered,
     cueLevel: 0,
     elapsedMs,
   });

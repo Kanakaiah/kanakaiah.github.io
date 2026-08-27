@@ -81,9 +81,12 @@ export const ColdCheck: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </button>
         <div className="flex flex-col items-center">
           <span className="text-sm font-bold text-primary tracking-wide">Cold check</span>
-          <span className="text-[0.625rem] text-muted uppercase tracking-widest">
-            {done ? 'Complete' : `${index + 1} of ${items.length}`}
-          </span>
+          {/* Empty means there is no position to report — this said "1 of 0". */}
+          {items.length > 0 && (
+            <span className="text-[0.625rem] text-muted uppercase tracking-widest">
+              {done ? 'Complete' : `${index + 1} of ${items.length}`}
+            </span>
+          )}
         </div>
         <div className="w-9" />
       </div>
@@ -131,27 +134,8 @@ export const ColdCheck: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     );
   }
 
-  return (
-    <div
-      ref={trapRef}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Cold check"
-      className="fixed inset-0 z-[75] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
-    >
-      <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
-        <button onClick={onClose} className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors" aria-label="Close cold check">
-          <X className="w-5 h-5 text-secondary" />
-        </button>
-        <div className="flex flex-col items-center">
-          <span className="text-sm font-bold text-primary tracking-wide">Cold check</span>
-          <span className="text-[0.625rem] text-muted uppercase tracking-widest">
-            {index + 1} of {items.length}
-          </span>
-        </div>
-        <div className="w-9" />
-      </div>
-
+  return shell(
+    <>
       <div className="flex-1 flex flex-col items-center justify-center px-6 gap-5 text-center min-h-0 overflow-y-auto">
         <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-muted">
           {item.kind === 'verse' ? 'Verse' : item.kind === 'anchor' ? 'Anchor' : 'Theme'}
@@ -201,6 +185,6 @@ export const ColdCheck: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           {shown ? (index < items.length - 1 ? 'Next' : 'Finish') : 'Show me'}
         </button>
       </div>
-    </div>
+    </>
   );
 };

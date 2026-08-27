@@ -287,6 +287,11 @@ export interface AppState {
   coldChecks: ColdCheckRecord[];
   /** Whether sessions are finished, not merely started. See AdherenceStats. */
   adherence: AdherenceStats;
+  /** When the streak's one-free-miss-per-week grace was last spent. Absent means never.
+   * Recorded rather than inferred: deriving it from the review log made the rule depend
+   * on which surface earned the day, and denied the grace entirely to readers with less
+   * than a week of history. */
+  lastGraceDate?: string;
 }
 
 // Guides Data types based on guides_data.js

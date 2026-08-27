@@ -233,8 +233,15 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       // efactor: this reschedules, it does not pretend anything was recalled.
       const { days } = action.payload;
       const now = Date.now();
+      // Fanned across days 1..days inclusive.
+      //
+      // The first version used `floor((i / total) * days)`, which put item zero at day
+      // zero — still overdue, unchanged — and never reached `days` at all: a single
+      // overdue verse was "postponed" to right now, and sixty were postponed with the
+      // first five still due today. Postponing has to move everything it touches, or the
+      // wall it exists to dismantle is still standing when the reader returns.
       const spread = (i: number, total: number) =>
-        new Date(now + Math.floor((i / Math.max(1, total)) * days) * 86400000).toISOString();
+        new Date(now + (1 + Math.floor((i / Math.max(1, total)) * (days - 1))) * 86400000).toISOString();
 
       const overdueVerses = state.verses.filter(v => new Date(v.sm2.nextDueDate).getTime() <= now);
       let vi = 0;
@@ -322,24 +329,30 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         ? Math.round((startOfDay(new Date()) - startOfDay(new Date(state.lastActiveDate))) / 86400000)
         : Infinity;
 
-      // Days in the past week that had at least one graded review, counted from the
-      // history rather than tracked separately — one source of truth for "did I show up".
-      const weekAgo = Date.now() - 7 * 86400000;
-      const activeThisWeek = new Set(
-        (state.reviewLog || [])
-          .filter(e => new Date(e.ts).getTime() >= weekAgo)
-          .map(e => new Date(e.ts).toDateString())
-      ).size;
+      // Whether the week's grace has already been spent, tracked directly.
+      //
+      // The first version inferred this from the review log — "were you active on six of
+      // the last seven days?" — which is a different rule than the one stated, and wrong
+      // twice over. It denied the free miss to anyone with fewer than six days of history
+      // at all, so a new reader who practised every day for four and then missed one lost
+      // everything. And it silently excluded the surfaces that keep a streak without
+      // writing a graded review: a reader whose daily practice is the Memory Sentence
+      // recorded activity, kept a streak, and had zero "active days" by that measure, so
+      // their first missed day always reset it.
+      //
+      // Recording the grace itself has neither problem. It is one date, it means exactly
+      // what the rule says, and it does not care which surface earned the day.
+      const graceUsedAt = state.lastGraceDate ? new Date(state.lastGraceDate).getTime() : 0;
+      const graceAvailable = Date.now() - graceUsedAt >= 7 * 86400000;
 
-      // Reviewing every day for the last seven gives seven active days (today included
-      // once this review lands). Fewer means a miss has already been forgiven recently.
-      const graceAvailable = activeThisWeek >= 6;
-      const continues = daysSince <= 1 || (daysSince === 2 && graceAvailable);
+      const forgiven = daysSince === 2 && graceAvailable;
+      const continues = daysSince <= 1 || forgiven;
 
       return {
         ...state,
         streak: continues ? state.streak + 1 : 1,
         lastActiveDate: new Date().toISOString(),
+        ...(forgiven ? { lastGraceDate: new Date().toISOString() } : {}),
       };
     }
     default:

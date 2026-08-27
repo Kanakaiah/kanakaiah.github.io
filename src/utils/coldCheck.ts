@@ -56,6 +56,19 @@ export interface ColdCheckResult {
 
 const daysBetween = (a: number, b: number) => Math.floor((a - b) / 86400000);
 
+/** A correct shuffle. Sorting by a random comparator is not one: the comparator is
+ * inconsistent, and it measurably favours whatever was pushed first — here that was
+ * verses, which would have quietly skewed the sample toward one layer of the three. The
+ * session module has had a proper implementation all along. */
+function fisherYates<T>(xs: T[]): T[] {
+  const out = [...xs];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 /**
  * The last time each item was recalled *successfully*, from the review history.
  *
@@ -68,6 +81,11 @@ function lastSuccessByItem(log: ReviewEvent[]): Map<string, number> {
   const out = new Map<string, number>();
   for (const e of log) {
     if (e.gradeSubmitted < 3) continue;
+    // A grade earned with the text on screen is not evidence of retention — the rest of
+    // the app already refuses to count it (firstTryRetention excludes cueLevel > 1), and
+    // counting it here would mean a verse the reader has only ever transcribed could
+    // never go cold. Older events predate the field and are trusted as before.
+    if ((e.cueLevel ?? 0) > 1) continue;
     const key = `${e.itemKind}:${e.itemId}`;
     const t = new Date(e.ts).getTime();
     const prev = out.get(key);
@@ -87,7 +105,7 @@ export function buildColdCheck(
   state: AppState,
   size = COLD_CHECK_SIZE,
   now: Date = new Date(),
-  shuffle: <T>(xs: T[]) => T[] = xs => [...xs].sort(() => Math.random() - 0.5),
+  shuffle: <T>(xs: T[]) => T[] = fisherYates,
 ): ColdItem[] {
   const lastSuccess = lastSuccessByItem(state.reviewLog || []);
   const nowMs = now.getTime();
@@ -144,10 +162,19 @@ export function summarizeColdCheck(
   correctKeys: Set<string>,
   now: Date = new Date(),
 ): ColdCheckResult {
+  // A real median, averaging the two middle values on an even count.
+  //
+  // Taking the upper middle biased this upward — [30,200] reported 200 — and it is
+  // reachable in normal use, since a check runs on however many items are cold, often two
+  // or four. Upward bias is the worst direction for this particular field: it exists so a
+  // soft sample cannot be mistaken for progress, and rounding it up does exactly that.
   const cold = items.map(i => i.coldFor).sort((a, b) => a - b);
-  const median = cold.length
-    ? cold[Math.floor(cold.length / 2)]
-    : 0;
+  const mid = Math.floor(cold.length / 2);
+  const median = cold.length === 0
+    ? 0
+    : cold.length % 2 === 1
+      ? cold[mid]
+      : Math.round((cold[mid - 1] + cold[mid]) / 2);
   return {
     ts: now.toISOString(),
     correct: items.filter(i => correctKeys.has(i.key)).length,

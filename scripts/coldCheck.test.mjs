@@ -117,5 +117,57 @@ a = appReducer(a, { type: 'SESSION_ABANDONED', payload: { atIndex: 5 } });
 t('where people stop is averaged without storing a row each',
   a.adherence.abandonedAtSum / a.adherence.abandonedCount === 4);
 
+
+// ── The median is a median ──────────────────────────────────────────────────────
+// Taking the upper of two middle values biased this upward, and upward is the worst
+// direction: the field exists so a soft sample cannot be mistaken for progress.
+const med = (...days) => summarizeColdCheck(
+  days.map((d, i) => ({ key: 'k' + i, coldFor: d })), new Set()).medianColdFor;
+t('an odd count takes the middle value', med(30, 50, 90) === 50);
+t('an even count averages the two middle values', med(30, 40, 60, 200) === 50);
+t('two items average rather than round up', med(30, 200) === 115);
+t('an empty check reports zero', med() === 0);
+
+// ── An answer read off the text is not a recall ─────────────────────────────────
+// The rest of the app already refuses to count a cued answer (firstTryRetention excludes
+// cueLevel > 1). Counting it here would mean a verse the reader has only ever transcribed
+// could never go cold — the encoding pass alone would keep resetting the clock.
+s = base({
+  verses: [verse('copied', 'Genesis 1:1')],
+  reviewLog: [
+    { ...ev('verse', 'copied', daysAgo(60)), cueLevel: 0 },
+    { ...ev('verse', 'copied', daysAgo(2)),  cueLevel: 4 },
+  ],
+});
+t('a recent copy-through does not reset the cold clock', buildColdCheck(s, 5).length === 1);
+
+s = base({
+  verses: [verse('recalled', 'Genesis 1:1')],
+  reviewLog: [{ ...ev('verse', 'recalled', daysAgo(2)), cueLevel: 0 }],
+});
+t('a genuine uncued recall does', buildColdCheck(s, 5).length === 0);
+
+// ── The sample is not skewed toward whichever kind was pushed first ─────────────
+// sort(() => Math.random() - 0.5) is an inconsistent comparator and measurably favours
+// the head of the array — which was always verses.
+const many = base({
+  verses: Array.from({ length: 10 }, (_, i) => verse('v' + i, 'R' + i)),
+  themeProgress: Object.fromEntries(['habakkuk','jonah','nahum','micah','amos','hosea','joel','obadiah','malachi','haggai']
+    .map(id => [id, { bookId: id, sm2: { interval: 30, repetition: 4, efactor: 2.5, nextDueDate: daysAgo(-5) },
+      status: 'review', attempts: 4, lastScore: 4, lastAttemptDate: daysAgo(45) }])),
+  reviewLog: [
+    ...Array.from({ length: 10 }, (_, i) => ({ ...ev('verse', 'v' + i, daysAgo(45)), cueLevel: 0 })),
+    ...['habakkuk','jonah','nahum','micah','amos','hosea','joel','obadiah','malachi','haggai']
+      .map(id => ({ ...ev('theme', id, daysAgo(45)), cueLevel: 0 })),
+  ],
+});
+let versePicks = 0, draws = 4000;
+for (let i = 0; i < draws; i++) {
+  versePicks += buildColdCheck(many, 1).filter(x => x.kind === 'verse').length;
+}
+// Ten of each: a fair draw is 50%. The biased comparator sat several points high.
+t('the sample does not favour the kind added first',
+  Math.abs(versePicks / draws - 0.5) < 0.05);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
