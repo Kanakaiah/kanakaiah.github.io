@@ -413,7 +413,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   const gradeChapterRecall = (score: number) => {
     const base = chapterRecord?.sm2 || { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
-    const { newSM2, newStatus } = evaluateSM2(base, score, 'anchor');
+    const { newSM2, newStatus } = evaluateSM2(base, score, 'anchor', state.settings.intervalScale ?? 1);
     const updated: ChapterProgress = {
       bookId,
       chapter,

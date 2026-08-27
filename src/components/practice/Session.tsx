@@ -48,6 +48,56 @@ export interface VerseAttempt {
 const GRADE_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 5: 'Easy' };
 
 /**
+ * How overdue an item is, in whole days.
+ *
+ * Shown because a reader meeting a verse they last saw in spring should know that before
+ * they judge how the attempt went — an answer that feels like a failure is a different
+ * event at three days than at three months, and without the number the reader supplies
+ * their own, usually harsher, guess. Stated flatly and without comment: no exclamation,
+ * no "yikes", nothing that turns a fact into a reprimand.
+ */
+const daysLate = (dueAt: string | undefined, now = Date.now()): number => {
+  if (!dueAt) return 0;
+  return Math.max(0, Math.floor((now - new Date(dueAt).getTime()) / 86400000));
+};
+
+const LateBadge: React.FC<{ dueAt?: string }> = ({ dueAt }) => {
+  const late = daysLate(dueAt);
+  // A day or two late is ordinary life, not a fact worth reporting.
+  if (late < 3) return null;
+  return (
+    <span className="text-[0.625rem] font-bold uppercase tracking-widest text-orange-400">
+      {late} days late
+    </span>
+  );
+};
+
+/**
+ * Whether the browser believes it is offline.
+ *
+ * Only worth saying where it changes what the reader is looking at. Verse text is stored
+ * with the verse, so the passage itself is never missing — but the reader's chosen
+ * translation is fetched, and a cached fallback quietly differing from the version they
+ * expect is exactly the kind of thing that reads as a memory failure when it is nothing
+ * of the sort.
+ */
+function useOffline(): boolean {
+  const [offline, setOffline] = useState(() =>
+    typeof navigator !== 'undefined' && navigator.onLine === false);
+  React.useEffect(() => {
+    const on = () => setOffline(false);
+    const off = () => setOffline(true);
+    window.addEventListener('online', on);
+    window.addEventListener('offline', off);
+    return () => {
+      window.removeEventListener('online', on);
+      window.removeEventListener('offline', off);
+    };
+  }, []);
+  return offline;
+}
+
+/**
  * A day's work, with an end.
  *
  * Every queue in the app before this wrapped forever: the anchor drill reset to index
@@ -121,7 +171,7 @@ export const Session: React.FC<{
     // Only the schedule fields belong to this grading; everything else belongs to the
     // verse, whoever last touched it.
     const verse = state.verses.find(v => v.id === planVerse.id) || planVerse;
-    const { newSM2, newStatus } = evaluateSM2(verse.sm2, score, 'verse');
+    const { newSM2, newStatus } = evaluateSM2(verse.sm2, score, 'verse', state.settings.intervalScale ?? 1);
     dispatch({
       type: 'UPDATE_VERSE',
       payload: { ...verse, sm2: newSM2, status: newStatus, attempts: (verse.attempts || 0) + 1 },
@@ -153,7 +203,7 @@ export const Session: React.FC<{
   ) => {
     const key = chapterProgressKey(bookId, chapter);
     const existing = state.chapterProgress[key];
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'anchor');
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'anchor', state.settings.intervalScale ?? 1);
     const updated: ChapterProgress = {
       bookId, chapter,
       sm2: newSM2,
@@ -190,7 +240,7 @@ export const Session: React.FC<{
 
   const gradeTheme = (bookId: string, bookName: string, score: number, attempt: VerseAttempt) => {
     const existing = state.themeProgress[bookId];
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'theme');
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'theme', state.settings.intervalScale ?? 1);
     const updated: ThemeProgress = {
       bookId,
       sm2: newSM2,
@@ -539,6 +589,10 @@ const VerseCardPrompt: React.FC<{
   // Progressive chaining: part one, then one and two together, then one through three.
   // The span is what the item has earned; `part` extends it within this sitting.
   const earnedSpan = chainSpan(chunks.length, repetition);
+  // The encoding pass: never once recalled, so the text is on screen and there is nothing
+  // to test yet. cueForRepetition already returns full text at zero; this names it.
+  const isEncoding = repetition === 0;
+  const offline = useOffline();
 
   const [part, setPart] = useState(0);
   const [input, setInput] = useState('');
@@ -610,8 +664,11 @@ const VerseCardPrompt: React.FC<{
   return (
     <div className="flex-1 flex flex-col gap-4 min-h-0">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-accent">
-          Verse · {item.verse.translation}
+        <span className="flex items-baseline gap-2">
+          <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-accent">
+            Verse · {item.verse.translation}
+          </span>
+          <LateBadge dueAt={item.dueAt} />
         </span>
         {chunks.length > 1 && (
           <span className="text-[0.6875rem] text-muted tabular-nums">
@@ -623,6 +680,16 @@ const VerseCardPrompt: React.FC<{
       </div>
 
       <h2 className="text-2xl font-heading font-bold text-primary leading-tight">{item.verse.ref}</h2>
+
+      {/* The passage itself is stored with the verse and never goes missing, but the
+          reader's chosen translation is fetched — and a cached fallback quietly differing
+          from the version they learned reads exactly like a memory failure when it is
+          nothing of the sort. */}
+      {offline && (
+        <p className="text-[0.6875rem] text-muted -mt-2">
+          Showing the saved {item.verse.translation} text — you're offline.
+        </p>
+      )}
 
       {/* The join from the previous part — a prompt, not a re-read. */}
       {/* Nothing precedes part one, so there is no join to prompt with. The cue returns
@@ -666,11 +733,19 @@ const VerseCardPrompt: React.FC<{
             onClick={commit}
             className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
-            Check
+            {/* A verse never once recalled is not a test, and asking for one guarantees a
+                blank — which teaches nothing and costs the reader something. The first pass
+                is copying: the text is already on screen, because cueForRepetition returns
+                'full' at zero, and the button now says so honestly instead of implying an
+                answer is expected. The cue withdraws on its own from the next review. */}
+            {isEncoding ? 'Copy it through' : 'Check'}
           </button>
-          <button onClick={giveUp} className="text-[0.6875rem] text-muted hover:text-primary transition-colors py-1">
-            I can't get it
-          </button>
+          {/* Nothing to give up on while the answer is in front of you. */}
+          {!isEncoding && (
+            <button onClick={giveUp} className="text-[0.6875rem] text-muted hover:text-primary transition-colors py-1">
+              I can't get it
+            </button>
+          )}
         </div>
       ) : gaveUp ? (
         // Giving up ends the attempt, whatever span it happened on — checked *before*
@@ -766,9 +841,25 @@ const AnchorCardPrompt: React.FC<{
 
   return (
     <div className="flex-1 flex flex-col gap-4 min-h-0">
-      <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-gold">
-        Anchor · {item.bookName}
-      </span>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="flex items-baseline gap-2">
+          <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-gold">
+            Anchor · {item.bookName}
+          </span>
+          {/* Why this one came round early. The nomination has been computed since chain
+              evidence was introduced and used only to reorder the queue, so an anchor could
+              arrive well before its due date with nothing on screen explaining it. */}
+          {item.nominated && (
+            <span
+              className="w-1.5 h-1.5 rounded-full bg-gold shrink-0"
+              title="Missed in the chain recently"
+              aria-label="Missed in the chain recently"
+              role="img"
+            />
+          )}
+        </span>
+        <LateBadge dueAt={item.dueAt} />
+      </div>
 
       <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center min-h-0 overflow-y-auto">
         {/* The cue, whichever way round the scheduler asked. */}

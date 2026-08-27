@@ -30,7 +30,7 @@ const LAYERS: { kind: 'theme' | 'anchor' | 'verse'; label: string }[] = [
 ];
 
 export const Retention: React.FC = () => {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
   const navigate = useNavigate();
   const now = useNow();
   // Memoized rather than defaulted inline: `x || []` builds a fresh array on every render
@@ -47,6 +47,12 @@ export const Retention: React.FC = () => {
   const coldChecks = state.coldChecks || [];
   const lastCold = coldChecks[coldChecks.length - 1];
   const [checking, setChecking] = useState(false);
+  const scale = state.settings.intervalScale ?? 1;
+  // Only offered when the curve has actually asked for it: a dial that is always on
+  // screen invites fiddling with the schedule on a hunch, which is the opposite of
+  // letting the measurement drive the change.
+  const longest = curve.filter(b => b.rate !== null).slice(-1)[0];
+  const needsShortening = !!longest && (longest.rate ?? 1) < 0.8;
 
   // Adherence. A memory technique people stop using has an effect size of zero, so a rise
   // in retention alongside a fall in completion is a loss — and these are the only
@@ -134,6 +140,41 @@ export const Retention: React.FC = () => {
             <p className="text-sm text-secondary leading-relaxed">
               {curveRead(curve)}
             </p>
+
+            {/* The dial that answers the measurement.
+                SM-2 assumes a forgetting curve; the chart above is the first thing in this
+                app able to say whether this reader matches it. When it says intervals run
+                past what they hold, the honest response is to shorten every interval a
+                little — not to grade harder, which corrupts the record, and not to review
+                more often, which is the same schedule with more effort spent on it.
+                Offered only when the curve has actually asked for it. */}
+            {needsShortening && (
+              <div className="flex flex-col gap-2 border border-orange-400/30 bg-orange-400/5 rounded-md p-4">
+                <p className="text-sm text-secondary leading-relaxed">
+                  You're forgetting faster than the schedule assumes. Shortening every
+                  interval brings reviews forward across the board.
+                </p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {[0.7, 0.85, 1].map(v => (
+                    <button
+                      key={v}
+                      onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { intervalScale: v } })}
+                      aria-pressed={scale === v}
+                      className={`px-3 py-1.5 rounded-md border text-xs font-bold transition-colors ${
+                        scale === v
+                          ? 'bg-accent text-white border-accent'
+                          : 'border-card-border text-secondary hover:text-primary'
+                      }`}
+                    >
+                      {v === 1 ? 'Normal' : `${Math.round((1 - v) * 100)}% shorter`}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[0.6875rem] text-muted">
+                  Applies to intervals as they're earned. Nothing already scheduled moves.
+                </p>
+              </div>
+            )}
           </section>
 
           {/* The honesty gap: what was claimed against what was produced. */}

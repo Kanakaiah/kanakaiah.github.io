@@ -45,7 +45,11 @@ export interface AnchorItem { kind: 'anchor'; id: string; bookId: string; bookNa
   direction: AnchorDirection;
   /** The rest of the book's anchors, so a wrong answer that is another chapter's word
    * can be named as the confusion it is rather than merely marked wrong. */
-  siblings: { ch: number; word: string }[] }
+  siblings: { ch: number; word: string }[];
+  /** Pulled forward because a recent chain pass had to reveal this word. The nomination
+   * was already computed here and used only to reorder the queue, so an anchor could
+   * arrive early with no indication of why — see the chainHits note in models.ts. */
+  nominated: boolean }
 /** Encoding, not testing. Shown once for a chapter with no attempts, and always
  * immediately followed by that same chapter's first cold retrieval. */
 export interface IntroduceItem { kind: 'introduce'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string; prevWord: string | null }
@@ -226,6 +230,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
         bookId: bId, bookName: book.name, chapter,
         word: anchor.word, scene: anchor.scene,
         direction: directionFor(repetition),
+        nominated: nominated.has(chapterProgressKey(bId, chapter)),
         dueAt: state.chapterProgress[chapterProgressKey(bId, chapter)]?.sm2?.nextDueDate || now.toISOString(),
         siblings: bookAnchors.map(a => ({ ch: a.ch, word: a.word })),
       };
@@ -297,6 +302,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
             // Always the cold number → word question: this is the chapter's first
             // retrieval, moments after being introduced.
             direction: 'n2w',
+            nominated: false,
             dueAt: now.toISOString(),
             siblings: anchors.map(x => ({ ch: x.ch, word: x.word })),
           },

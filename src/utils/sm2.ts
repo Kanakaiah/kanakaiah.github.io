@@ -105,7 +105,15 @@ export function isDue(sm2: SM2Data | undefined, now: Date = new Date()): boolean
   return new Date(sm2.nextDueDate) <= now;
 }
 
-export function evaluateSM2(sm2: SM2Data, score: number, kind?: ScheduleKind): { newSM2: SM2Data, newStatus: 'learning' | 'review' } {
+export function evaluateSM2(
+  sm2: SM2Data,
+  score: number,
+  kind?: ScheduleKind,
+  /** Global scale from settings — see UserSettings.intervalScale. Applied at the end so
+   * it shifts the schedule without touching the efactor, which is the item's own measured
+   * difficulty and belongs to the item rather than to the reader's global preference. */
+  intervalScale = 1,
+): { newSM2: SM2Data, newStatus: 'learning' | 'review' } {
   const profile = profileFor(kind);
   let { interval, repetition, efactor = 2.5 } = sm2;
   let lapses = sm2.lapses || 0;
@@ -160,6 +168,11 @@ export function evaluateSM2(sm2: SM2Data, score: number, kind?: ScheduleKind): {
   // in lockstep, arriving as a wall that the drill queue's own cap then truncates.
   // Short intervals are left exact so the "1 day" / "3 days" printed on the grade
   // button is precisely what the reader gets.
+  // The reader's global scale, applied once, here. Floored at a day: shortening a
+  // schedule must never collapse it to "again today", which would turn spaced repetition
+  // into massed repetition and undo the point of the whole system.
+  if (intervalScale !== 1) interval = Math.max(1, Math.round(interval * intervalScale));
+
   const nextDate = new Date();
   let daysUntilDue = interval;
   if (interval >= 4) {

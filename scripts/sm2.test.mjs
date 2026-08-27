@@ -93,5 +93,27 @@ t('a verse second step is shorter than a theme second step',
 t('a successful recall always lengthens the interval',
   evaluateSM2(sm2({ interval: 10, repetition: 5, efactor: 1.3 }), 3, 'verse').newSM2.interval > 10);
 
+// ── The global interval scale ───────────────────────────────────────────────────
+// The one dial that answers the retention curve. Shortening every interval is the honest
+// response to "you forget faster than this schedule assumes" — unlike grading harder,
+// which corrupts the record, or reviewing more often, which is the same schedule with
+// more effort spent on it.
+const grown = (scale) =>
+  evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'anchor', scale).newSM2.interval;
+
+t('a scale below one shortens the interval', grown(0.7) < grown(1));
+t('an omitted scale behaves as one', grown(undefined) === grown(1));
+
+// Shortening must never collapse to same-day review — that would turn spaced repetition
+// into massed repetition and defeat the whole mechanism.
+t('a scale can never drive an interval below a day',
+  evaluateSM2(sm2({ interval: 1, repetition: 5 }), 4, 'verse', 0.1).newSM2.interval >= 1);
+
+// The efactor is the item's own measured difficulty. It belongs to the item, not to a
+// global preference, and a reader shortening their schedule must not silently rewrite it.
+t('the scale does not touch the efactor',
+  evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'anchor', 0.7).newSM2.efactor ===
+  evaluateSM2(sm2({ interval: 40, repetition: 5 }), 4, 'anchor', 1).newSM2.efactor);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

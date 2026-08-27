@@ -165,7 +165,7 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
 
   const handleScore = (score: number) => {
     if (!guideId) return;
-    const { newSM2, newStatus } = evaluateSM2(progress?.sm2 || DEFAULT_SM2, score, 'sentence');
+    const { newSM2, newStatus } = evaluateSM2(progress?.sm2 || DEFAULT_SM2, score, 'sentence', state.settings.intervalScale ?? 1);
     const updated: MemorySentenceProgress = {
       guideId,
       sm2: newSM2,

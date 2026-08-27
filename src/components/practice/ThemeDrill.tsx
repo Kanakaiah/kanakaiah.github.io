@@ -81,7 +81,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
   const handleGrade = (score: number) => {
     if (!current) return;
     if (!frozenPool) setFrozenPool(livePool);
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'theme');
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'theme', state.settings.intervalScale ?? 1);
     const updated: ThemeProgress = {
       bookId: current.id,
       sm2: newSM2,

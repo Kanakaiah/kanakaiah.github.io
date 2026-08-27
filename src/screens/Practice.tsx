@@ -261,7 +261,7 @@ export const Practice: React.FC = () => {
     // this should never actually bite — but the grade that reaches the scheduler is the
     // one that matters, and it must not depend on the UI having behaved.
     const score = Math.min(rawScore, ceilingFor(hintLevel));
-    const { newSM2, newStatus } = evaluateSM2(currentVerse.sm2, score, 'verse');
+    const { newSM2, newStatus } = evaluateSM2(currentVerse.sm2, score, 'verse', state.settings.intervalScale ?? 1);
     
     const updatedVerse: Verse = {
       ...currentVerse,

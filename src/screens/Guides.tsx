@@ -483,7 +483,7 @@ export const Guides: React.FC = () => {
   const handleGradeAnchor = (bookId: string, chapter: number, score: number) => {
     const key = chapterProgressKey(bookId, chapter);
     const existing = state.chapterProgress[key];
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_CHAPTER_SM2, score, 'anchor');
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_CHAPTER_SM2, score, 'anchor', state.settings.intervalScale ?? 1);
     const updated: ChapterProgress = {
       ...(existing || { readCount: 0, lastReadDate: null }),
       bookId,

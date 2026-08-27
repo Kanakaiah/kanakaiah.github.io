@@ -56,6 +56,14 @@ export interface UserSettings {
   // Chapter/book memory. See AnchorReveal above for the default.
   anchorReveal?: AnchorReveal;
   dailyChapterTarget?: number;
+  /** Global scale on every newly-computed interval, 0.5 to 1.5. Undefined means 1.
+   *
+   * SM-2 assumes a forgetting curve; the retention screen can now show whether this
+   * reader actually matches it. When the curve says intervals are running past what they
+   * hold, the honest fix is to shorten every interval a little — not to grade harder,
+   * which corrupts the record, and not to review more, which is the same schedule with
+   * more effort. This is the one dial that answers the measurement. */
+  intervalScale?: number;
   streakIncludesChapters?: boolean;
 }
 
