@@ -3,6 +3,7 @@ import { chapterProgressKey } from '../types/models';
 import { isDue } from './sm2';
 import { dueChapters } from './mastery';
 import { directionFor, type AnchorDirection } from './anchorAnswer';
+import { hasChapterArt } from '../data/chapterArt';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
@@ -233,7 +234,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
         id: `anchor:${bId}:${chapter}`,
         bookId: bId, bookName: book.name, chapter,
         word: anchor.word, scene: anchor.scene,
-        direction: directionFor(repetition),
+        direction: directionFor(repetition, hasChapterArt(bId, chapter)),
         nominated: nominated.has(chapterProgressKey(bId, chapter)),
         dueAt: state.chapterProgress[chapterProgressKey(bId, chapter)]?.sm2?.nextDueDate || now.toISOString(),
         siblings: bookAnchors.map(a => ({ ch: a.ch, word: a.word })),

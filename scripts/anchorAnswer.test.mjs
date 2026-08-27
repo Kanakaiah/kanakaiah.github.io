@@ -1,6 +1,7 @@
 // Rules for judging a typed anchor. Run: npx vite-node scripts/anchorAnswer.test.mjs
 
 import { judgeAnchor, judgeByDirection, judgeChapter, editDistance, directionFor, normalizeAnchor } from '../src/utils/anchorAnswer.ts';
+import { hasChapterArt } from '../src/data/chapterArt.ts';
 
 let pass = 0, fail = 0;
 const t = (name, cond) => {
@@ -98,5 +99,29 @@ t('an empty answer is a blank', judgeChapter('', 27, GENESIS).verdict === 'wrong
 t('naming another anchor chapter names the confusion',
   judgeChapter('29', 21, GENESIS).confusedWith?.word === 'STONE');
 
+// ── A plate question is only asked where a plate exists ─────────────────────────
+// Seventeen books have no chapter art, and Numbers is covered only to chapter 13. There
+// the card fell back to showing the chapter number — which is the number-to-word question
+// — while the history went on recording 'p2w'. The direction field exists to tell a
+// chapter known cold from one recognised off its picture; for a quarter of the canon it
+// was recording the opposite of what happened.
+t('with art, a mature anchor rotates through the plate question',
+  directionFor(4, true) === 'p2w');
+t('without art, it never claims one', directionFor(4, false) === 'n2w');
+t('without art the other direction is unaffected', directionFor(3, false) === 'w2n');
+t('a still-learning anchor is asked the same way either way',
+  directionFor(0, false) === 'n2w' && directionFor(0, true) === 'n2w');
+t('both askable directions are still reached without art',
+  new Set([directionFor(3, false), directionFor(4, false)]).size === 2);
+// The default keeps every existing caller behaving as it did.
+t('art is assumed unless stated', directionFor(4) === directionFor(4, true));
+
+// ── Against the real manifest ───────────────────────────────────────────────────
+t('Genesis 1 has a plate', hasChapterArt('genesis', 1));
+t('Genesis 50 has a plate', hasChapterArt('genesis', 50));
+t('Numbers 13 has a plate', hasChapterArt('numbers', 13));
+t('Numbers 14 does not — coverage stops mid-book', !hasChapterArt('numbers', 14));
+t('Job has none at all', !hasChapterArt('job', 1));
+t('a chapter below one is never claimed', !hasChapterArt('genesis', 0));
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

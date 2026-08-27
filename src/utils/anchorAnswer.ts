@@ -116,8 +116,22 @@ export function judgeAnchor(
  */
 export type AnchorDirection = 'n2w' | 'w2n' | 'p2w';
 
-export function directionFor(repetition: number): AnchorDirection {
+/**
+ * Which way round to ask, given how well the anchor is known and whether a plate exists.
+ *
+ * `hasArt` is not a detail. A plate prompt is a materially easier question — the picture
+ * carries most of the association — and seventeen books of the canon have no chapter art
+ * at all, with Numbers covered only to chapter 13. In those books the card fell back to
+ * showing the chapter number, which *is* the number→word question, while the review
+ * history went on recording `direction: 'p2w'`. The field exists precisely so a chapter
+ * known cold can be told apart from one only ever recognised off its picture, and for a
+ * quarter of the canon it was saying the opposite of what happened.
+ *
+ * Without art the rotation is simply the two directions that can honestly be asked.
+ */
+export function directionFor(repetition: number, hasArt = true): AnchorDirection {
   if (repetition < 3) return 'n2w';
+  if (!hasArt) return repetition % 2 === 1 ? 'w2n' : 'n2w';
   return repetition % 2 === 1 ? 'w2n' : 'p2w';
 }
 
