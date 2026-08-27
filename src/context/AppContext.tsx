@@ -1,215 +1,10 @@
 import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
-import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress } from '../types/models';
-import { chapterProgressKey, blockProgressKey } from '../types/models';
-import { SEED_VERSES } from '../data/seed';
+import type { AppState, Verse } from '../types/models';
+import { appReducer, initialState, type AppAction } from './appReducer';
 
-// --- INITIAL STATE ---
-const initialState: AppState = {
-  verses: SEED_VERSES,
-  streak: 0,
-  lastActiveDate: null,
-  theme: "black",
-  sortOrder: "smart",
-  memorySentenceProgress: {},
-  chapterProgress: {},
-  themeProgress: {},
-  blockProgress: {},
-  settings: {
-    ttsEnabled: false,
-    recallMasking: false,
-    bionicReading: false,
-    fontSize: 1,
-    fontFamily: 'serif',
-    bibleVersion: 'LSB',
-    anchorReveal: 'tap',
-    dailyChapterTarget: 3,
-    streakIncludesChapters: true,
-  }
-};
-
-// --- ACTION TYPES ---
-export type AppAction =
-  | { type: 'HYDRATE'; payload: AppState }
-  | { type: 'ADD_VERSE'; payload: Verse }
-  | { type: 'UPDATE_VERSE'; payload: Verse }
-  | { type: 'DELETE_VERSE'; payload: string }
-  | { type: 'HYDRATE_VERSES'; payload: Verse[] }
-  | { type: 'SET_THEME'; payload: string }
-  | { type: 'SET_SORT_ORDER'; payload: AppState['sortOrder'] }
-  | { type: 'UPDATE_SETTINGS'; payload: Partial<UserSettings> }
-  | { type: 'UPDATE_STREAK'; payload: { streak: number, lastActiveDate: string } }
-  | { type: 'UPDATE_MEMORY_SENTENCE_PROGRESS'; payload: MemorySentenceProgress }
-  | { type: 'GRADE_CHAPTER_PROGRESS'; payload: ChapterProgress }
-  | { type: 'MARK_CHAPTER_READ'; payload: { bookId: string; chapter: number } }
-  | { type: 'GRADE_THEME_PROGRESS'; payload: ThemeProgress }
-  | { type: 'GRADE_BLOCK_PROGRESS'; payload: BlockProgress }
-  | { type: 'RECORD_CHAIN_PASS'; payload: { bookId: string; results: { chapter: number; revealed: boolean }[] } }
-  | { type: 'RECORD_ACTIVITY' };
-
-// --- REDUCER ---
-function appReducer(state: AppState, action: AppAction): AppState {
-  switch (action.type) {
-    case 'HYDRATE': {
-      // Deduplicate verses on load to clean up any corrupted state from older versions
-      const verses = action.payload.verses || [];
-      const uniqueVerses: typeof verses = [];
-      const seen = new Set<string>();
-      for (const v of verses) {
-        const key = `${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          uniqueVerses.push(v);
-        }
-      }
-      return {
-        ...state,
-        ...action.payload,
-        verses: uniqueVerses,
-        settings: {
-          ...state.settings,
-          ...(action.payload.settings || {})
-        }
-      };
-    }
-    case 'ADD_VERSE':
-      return { ...state, verses: [...state.verses, action.payload] };
-    case 'UPDATE_VERSE':
-      return {
-        ...state,
-        verses: state.verses.map(v => v.id === action.payload.id ? action.payload : v)
-      };
-    case 'DELETE_VERSE':
-      return {
-        ...state,
-        verses: state.verses.filter(v => v.id !== action.payload)
-      };
-    case 'HYDRATE_VERSES': {
-      const existingKeys = new Set(state.verses.map(v => `${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`));
-      const uniqueNewVerses = action.payload.filter(v => !existingKeys.has(`${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`));
-      return {
-        ...state,
-        verses: [...state.verses, ...uniqueNewVerses]
-      };
-    }
-    case 'SET_THEME':
-      return { ...state, theme: action.payload };
-    case 'SET_SORT_ORDER':
-      return { ...state, sortOrder: action.payload };
-    case 'UPDATE_SETTINGS':
-      return { ...state, settings: { ...state.settings, ...action.payload } };
-    case 'UPDATE_STREAK':
-      return { ...state, streak: action.payload.streak, lastActiveDate: action.payload.lastActiveDate };
-    case 'UPDATE_MEMORY_SENTENCE_PROGRESS':
-      return {
-        ...state,
-        memorySentenceProgress: {
-          ...state.memorySentenceProgress,
-          [action.payload.guideId]: action.payload,
-        },
-      };
-    case 'GRADE_CHAPTER_PROGRESS': {
-      const key = chapterProgressKey(action.payload.bookId, action.payload.chapter);
-      return {
-        ...state,
-        chapterProgress: {
-          ...state.chapterProgress,
-          [key]: action.payload,
-        },
-      };
-    }
-    case 'MARK_CHAPTER_READ': {
-      const { bookId, chapter } = action.payload;
-      const key = chapterProgressKey(bookId, chapter);
-      const existing = state.chapterProgress[key];
-      const updated: ChapterProgress = existing
-        ? { ...existing, readCount: existing.readCount + 1, lastReadDate: new Date().toISOString() }
-        : {
-            bookId,
-            chapter,
-            sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
-            status: 'learning',
-            attempts: 0,
-            lastScore: 0,
-            lastAttemptDate: '',
-            readCount: 1,
-            lastReadDate: new Date().toISOString(),
-          };
-      return {
-        ...state,
-        chapterProgress: {
-          ...state.chapterProgress,
-          [key]: updated,
-        },
-      };
-    }
-    case 'GRADE_THEME_PROGRESS':
-      return {
-        ...state,
-        themeProgress: { ...state.themeProgress, [action.payload.bookId]: action.payload },
-      };
-    case 'GRADE_BLOCK_PROGRESS': {
-      const key = blockProgressKey(action.payload.bookId, action.payload.blockIndex);
-      return { ...state, blockProgress: { ...state.blockProgress, [key]: action.payload } };
-    }
-    case 'RECORD_CHAIN_PASS': {
-      // One pass through a book's Memory Sentence. Records *evidence*, never a grade —
-      // see the chainHits note on ChapterProgress. Deliberately does not touch `sm2`,
-      // `status`, `attempts` or `lastScore`, so a chapter's real schedule and its
-      // mastery level stay derived entirely from isolated cued recall.
-      const { bookId, results } = action.payload;
-      const now = new Date().toISOString();
-      const chapterProgress = { ...state.chapterProgress };
-
-      for (const { chapter, revealed } of results) {
-        const key = chapterProgressKey(bookId, chapter);
-        const existing = chapterProgress[key];
-        const base: ChapterProgress = existing || {
-          bookId,
-          chapter,
-          sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
-          status: 'learning',
-          attempts: 0,
-          lastScore: 0,
-          lastAttemptDate: '',
-          readCount: 0,
-          lastReadDate: null,
-        };
-        chapterProgress[key] = {
-          ...base,
-          chainHits: (base.chainHits || 0) + (revealed ? 0 : 1),
-          chainMisses: (base.chainMisses || 0) + (revealed ? 1 : 0),
-          lastChainDate: now,
-        };
-      }
-
-      return { ...state, chapterProgress };
-    }
-    case 'RECORD_ACTIVITY': {
-      // Any graded review — a verse, a memory sentence, or a chapter — counts as a
-      // day's activity toward the streak. One calendar day (not a rolling 24h
-      // window) so reviewing at 11pm and again at 7am the same morning doesn't
-      // silently cost the streak.
-      const todayKey = new Date().toDateString();
-      const lastKey = state.lastActiveDate ? new Date(state.lastActiveDate).toDateString() : null;
-      if (todayKey === lastKey) return state;
-
-      const isYesterday = (() => {
-        if (!lastKey) return false;
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        return lastKey === yesterday.toDateString();
-      })();
-
-      return {
-        ...state,
-        streak: isYesterday ? state.streak + 1 : 1,
-        lastActiveDate: new Date().toISOString(),
-      };
-    }
-    default:
-      return state;
-  }
-}
+// Re-exported so the many screens that already import their action type from here keep
+// working; the shape itself now lives beside the reducer that consumes it.
+export type { AppAction } from './appReducer';
 
 // --- CONTEXT ---
 interface AppContextProps {
@@ -218,6 +13,33 @@ interface AppContextProps {
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
+
+/**
+ * The one write to storage, and the only place that can fail.
+ *
+ * Both writes were bare `localStorage.setItem`. One of them runs inside a setTimeout,
+ * where a throw has nowhere to go: it is not caught by React, does not surface to the
+ * reader, and — because the rejection kills the callback before it can reschedule —
+ * simply stops all persistence for the rest of the session while the app carries on
+ * looking perfectly healthy. Quota is a real possibility now that the review history can
+ * hold four thousand events alongside a thousand-plus chapter records.
+ *
+ * There is no good recovery here: the reader's progress for this session is already in
+ * memory and will be written on the next successful attempt. What matters is that a
+ * failed write cannot take the write *loop* down with it, and that it says so once.
+ */
+let storageWarned = false;
+function persist(state: AppState): void {
+  try {
+    localStorage.setItem('remora_data', JSON.stringify(state));
+    storageWarned = false;
+  } catch (e) {
+    if (!storageWarned) {
+      storageWarned = true;
+      console.warn('Could not save progress to local storage — it may be full.', e);
+    }
+  }
+}
 
 // Reads and merges any saved state synchronously, before the first render, via
 // useReducer's lazy-init argument below. This used to happen in a mount effect
@@ -263,6 +85,16 @@ function loadInitialState(): AppState {
           // above already backfills {}; this guards a stored null from a bad write.
           themeProgress: parsed.themeProgress || {},
           blockProgress: parsed.blockProgress || {},
+          // Profiles saved before the review history existed have no key for it. The
+          // spread above backfills [], and this guards a stored null from a bad write —
+          // an Array check rather than `|| []` because a corrupted object here would make
+          // every selector throw, on screens the reader then cannot get out of.
+          reviewLog: Array.isArray(parsed.reviewLog) ? parsed.reviewLog : [],
+          // Same guard as reviewLog, for the same reason: a profile written before these
+          // existed has no key, and a corrupted non-array would make every selector throw
+          // on a screen the reader then cannot leave.
+          coldChecks: Array.isArray(parsed.coldChecks) ? parsed.coldChecks : [],
+          adherence: { ...initialState.adherence, ...(parsed.adherence || {}) },
         };
       }
     }
@@ -294,7 +126,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
-      localStorage.setItem('remora_data', JSON.stringify(latestState.current));
+      persist(latestState.current);
     }, 300);
 
     return () => {
@@ -306,7 +138,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const flush = () => {
       if (document.visibilityState === 'hidden') {
         if (saveTimeout.current) clearTimeout(saveTimeout.current);
-        localStorage.setItem('remora_data', JSON.stringify(latestState.current));
+        persist(latestState.current);
       }
     };
     document.addEventListener('visibilitychange', flush);

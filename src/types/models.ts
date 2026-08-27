@@ -56,6 +56,14 @@ export interface UserSettings {
   // Chapter/book memory. See AnchorReveal above for the default.
   anchorReveal?: AnchorReveal;
   dailyChapterTarget?: number;
+  /** Global scale on every newly-computed interval, 0.5 to 1.5. Undefined means 1.
+   *
+   * SM-2 assumes a forgetting curve; the retention screen can now show whether this
+   * reader actually matches it. When the curve says intervals are running past what they
+   * hold, the honest fix is to shorten every interval a little — not to grade harder,
+   * which corrupts the record, and not to review more, which is the same schedule with
+   * more effort. This is the one dial that answers the measurement. */
+  intervalScale?: number;
   streakIncludesChapters?: boolean;
 }
 
@@ -168,6 +176,96 @@ export function blockProgressKey(bookId: string, blockIndex: number): string {
   return `${bookId}:${blockIndex}`;
 }
 
+/**
+ * One graded retrieval attempt, recorded as it happens.
+ *
+ * Every other record in this file is *current state* — where an item stands right now.
+ * None of them can answer the only question that matters about a memory app: is the
+ * reader actually remembering more than they used to? `sm2.repetition` looks like
+ * history and is not; it is a counter that resets, so an item reviewed forty times and
+ * lapsed twice is indistinguishable from one reviewed six times cleanly. Nothing
+ * anywhere held a dated outcome, which meant retention could not be computed, intervals
+ * could not be tuned against evidence, and no change to the app could be shown to have
+ * helped or hurt.
+ *
+ * This is that missing history. It is deliberately written *before* the changes it
+ * exists to evaluate, so those changes have a baseline to be measured against rather
+ * than a story told about them afterwards.
+ *
+ * Several fields are null at every call site today: `committed` and `measuredAccuracy`
+ * can only be filled by a mode that asks the reader to produce the answer, and the
+ * daily session currently reveals and asks for a self-grade instead. They are in the
+ * schema now because the schema is cheap to widen today and expensive to backfill in a
+ * year, and because the gap between `gradeSubmitted` and `measuredAccuracy` is the one
+ * number that says whether self-grading can be trusted at all.
+ */
+export interface ReviewEvent {
+  id: string;
+  ts: string; // ISO
+  itemKind: 'verse' | 'anchor' | 'theme' | 'chain' | 'sentence';
+  /** Verse id, "genesis:27", "genesis" for a theme, "genesis:0" for a chain. */
+  itemId: string;
+  /** Which drill direction was asked, where the item kind has more than one. */
+  direction?: 'n2w' | 'w2n' | 'p2w';
+  /** How much of the answer was on screen as a cue: 0 none … 4 all of it. Derived from
+   * hint level where one exists, so a verse read off a full hint cannot look like recall. */
+  cueLevel: 0 | 1 | 2 | 3 | 4;
+  mode: 'type' | 'speak' | 'reveal' | 'chain' | 'scramble' | 'erase';
+  /** Prompt shown → answer committed. 0 when the surface does not time the attempt. */
+  elapsedMs: number;
+  /** What the reader actually produced, where a mode collects it. Null for reveal-only. */
+  committed: string | null;
+  /** 0–100 word-match accuracy, where a mode can measure it. Null when unmeasurable. */
+  measuredAccuracy: number | null;
+  gradeSubmitted: number;
+  /** The best grade this attempt could honestly earn given the cues used. */
+  gradeCeiling: number;
+  intervalBefore: number;
+  intervalAfter: number;
+  efactorAfter: number;
+  /** The nextDueDate this review was answering — lets "how late was it?" be recomputed. */
+  scheduledFor: string | null;
+  daysLate: number;
+}
+
+/**
+ * One completed cold check. Small and rare by design — five items, roughly monthly — so
+ * the whole history is a handful of rows and is kept in full rather than capped.
+ *
+ * The median days-cold travels with the score because a rising number means nothing on
+ * its own: a check that happened to sample fresher items would look like improvement.
+ * Both halves are needed to read a trend.
+ */
+export interface ColdCheckRecord {
+  ts: string;
+  correct: number;
+  total: number;
+  medianColdFor: number;
+}
+
+/**
+ * Adherence, which the audit called a guardrail and meant it: a memory technique people
+ * stop using has an effect size of zero. Retention rising while sessions collapse is a
+ * loss, and without these the app could not tell the two apart.
+ *
+ * Counts only — no per-session rows. The question is whether people finish what they
+ * start and keep coming back, and that needs totals, not a diary.
+ */
+export interface AdherenceStats {
+  /** Sessions opened with at least one item to do. */
+  started: number;
+  /** Sessions carried to the end-of-day summary. */
+  completed: number;
+  /** Items graded inside completed sessions, for a mean session length. */
+  itemsGraded: number;
+  /** Summed duration of completed sessions, ms. */
+  completedMs: number;
+  /** Index reached when a session was abandoned, summed with a count — together these
+   * give the average point at which people stop, without storing a row per session. */
+  abandonedAtSum: number;
+  abandonedCount: number;
+}
+
 export interface AppState {
   verses: Verse[];
   streak: number;
@@ -181,6 +279,19 @@ export interface AppState {
   themeProgress: Record<string, ThemeProgress>;
   /** Anchor-chain recall per narrative block. See BlockProgress above. */
   blockProgress: Record<string, BlockProgress>;
+  /** Append-only history of graded retrievals, oldest first. See ReviewEvent above. */
+  reviewLog: ReviewEvent[];
+  /** Unscheduled, ungraded recall checks — the app's one independent read on retention.
+   * Everything else it records is scheduled review, which measures the scheduler as much
+   * as the reader. See utils/coldCheck.ts. */
+  coldChecks: ColdCheckRecord[];
+  /** Whether sessions are finished, not merely started. See AdherenceStats. */
+  adherence: AdherenceStats;
+  /** When the streak's one-free-miss-per-week grace was last spent. Absent means never.
+   * Recorded rather than inferred: deriving it from the review log made the rule depend
+   * on which surface earned the day, and denied the grace entirely to readers with less
+   * than a week of history. */
+  lastGraceDate?: string;
 }
 
 // Guides Data types based on guides_data.js

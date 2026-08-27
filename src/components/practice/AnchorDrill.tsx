@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
+import { buildReviewEvent } from '../../utils/reviewLog';
 import { dueChapters } from '../../utils/mastery';
 import { chapterProgressKey } from '../../types/models';
 import type { ChapterProgress } from '../../types/models';
@@ -11,6 +12,7 @@ import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_STUDY_GUIDES } from '../../data/otGuides';
 import { NT_STUDY_GUIDES } from '../../data/guides';
 import { CustomSelect } from '../ui/CustomSelect';
+import { hasChapterArt } from '../../data/chapterArt';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES];
@@ -23,6 +25,12 @@ const DIRECTIONS: { id: Direction; label: string; prompt: string }[] = [
   { id: 'word-to-number', label: 'Word → Number', prompt: 'Which chapter is this?' },
   { id: 'plate-to-word', label: 'Plate → Word', prompt: 'What anchors this chapter?' },
 ];
+
+const DIRECTION_TO_LOG: Record<Direction, 'n2w' | 'w2n' | 'p2w'> = {
+  'number-to-word': 'n2w',
+  'word-to-number': 'w2n',
+  'plate-to-word': 'p2w',
+};
 
 interface QueueItem {
   bookId: string;
@@ -142,12 +150,26 @@ export const AnchorDrill: React.FC<{
 
   const existing = current ? state.chapterProgress[chapterProgressKey(current.bookId, current.chapter)] : undefined;
 
+  // Whether this chapter actually has art, decided before the card renders rather than by
+  // an <img> failing to load.
+  //
+  // The onError fallback draws the chapter numeral — which *is* the number-to-word
+  // question — while the review history went on recording plate-to-word. Seventeen books
+  // have no art at all and Numbers stops at chapter 13, so for a quarter of the canon the
+  // direction field was saying the opposite of what had been asked. The session was fixed
+  // for this; this drill was missed, and it is the surface where the reader can choose the
+  // plate direction on purpose.
+  const plateAvailable = !!current && hasChapterArt(current.bookId, current.chapter);
+  // Fall back to the cold question rather than silently mislabelling the easy one.
+  const effectiveDirection: Direction =
+    direction === 'plate-to-word' && !plateAvailable ? 'number-to-word' : direction;
+
   const handleGrade = (score: number) => {
     if (!current) return;
     // Freeze the work list on the first grade of this session — see sessionQueue above.
     const workList = sessionQueue ?? queue;
     if (!sessionQueue) setSessionQueue(workList);
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score);
+    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'anchor', state.settings.intervalScale ?? 1);
     const updated: ChapterProgress = {
       bookId: current.bookId,
       chapter: current.chapter,
@@ -160,6 +182,20 @@ export const AnchorDrill: React.FC<{
       lastReadDate: existing?.lastReadDate || null,
     };
     dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
+    dispatch({
+      type: 'RECORD_REVIEW',
+      payload: buildReviewEvent({
+        itemKind: 'anchor',
+        itemId: chapterProgressKey(current.bookId, current.chapter),
+        gradeSubmitted: score,
+        before: existing?.sm2, after: newSM2,
+        mode: 'reveal', cueLevel: 0,
+        // Which way round the question was asked. Worth recording because the three
+        // directions are not equally hard, and until now nothing distinguished a chapter
+        // known cold from one only ever recognised off its plate.
+        direction: DIRECTION_TO_LOG[effectiveDirection],
+      }),
+    });
     if (state.settings.streakIncludesChapters !== false) {
       dispatch({ type: 'RECORD_ACTIVITY' });
     }
@@ -175,7 +211,7 @@ export const AnchorDrill: React.FC<{
     }
   };
 
-  const directionMeta = DIRECTIONS.find(d => d.id === direction)!;
+  const directionMeta = DIRECTIONS.find(d => d.id === effectiveDirection)!;
   const imgPath = current ? `/chapters/${current.bookId}/ch${current.chapter}.png` : '';
 
   // One plate, used as the prompt in plate-to-word and as part of the answer in the
@@ -262,13 +298,13 @@ export const AnchorDrill: React.FC<{
       <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
         <p className="text-xs font-sans text-muted italic">{directionMeta.prompt}</p>
 
-        {direction === 'plate-to-word' && plateEl}
+        {effectiveDirection === 'plate-to-word' && plateEl}
 
-        {direction === 'number-to-word' && (
+        {effectiveDirection === 'number-to-word' && (
           <span className="text-6xl font-heading font-bold text-accent">{current.chapter}</span>
         )}
 
-        {direction === 'word-to-number' && (
+        {effectiveDirection === 'word-to-number' && (
           <span className="text-3xl font-heading font-bold text-accent text-center">{current.word}</span>
         )}
 
@@ -286,8 +322,8 @@ export const AnchorDrill: React.FC<{
                 image is the strongest lever available for learning an arbitrary
                 number↔word association, and 48 books of purpose-drawn chapter art were
                 being withheld from the two directions people actually drill. */}
-            {direction !== 'plate-to-word' && plateEl}
-            {direction === 'word-to-number' ? (
+            {effectiveDirection !== 'plate-to-word' && plateEl}
+            {effectiveDirection === 'word-to-number' ? (
               <span className="text-4xl font-heading font-bold text-primary">Chapter {current.chapter}</span>
             ) : (
               <span className="text-2xl font-heading font-bold text-primary">{current.word}</span>

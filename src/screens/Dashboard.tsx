@@ -17,6 +17,7 @@ import { guidePath } from '../utils/readerRoute';
 import { useMastery } from '../utils/mastery';
 import { ShapeMeter } from '../components/dashboard/ShapeMeter';
 import { FirstLetterMode } from '../components/practice/FirstLetterMode';
+import { SEED_VERSES } from '../data/seed';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
@@ -279,6 +280,28 @@ export const Dashboard: React.FC = () => {
               );
             })}
           </div>
+          {/* "Just Genesis this week."
+              A backlog spread across the canon produces a session of twenty items from
+              twenty different places — maximum context switching, and no sense of having
+              finished anything. Naming one book turns an undifferentiated wall into a
+              piece of work with an end. Offered only when there is genuinely a choice to
+              make, which is when more than one book is owed. */}
+          {bookRecallRows.filter(r => r.dueChapterCount > 0 || r.sentenceDue).length > 1 && (
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span className="text-[0.625rem] uppercase tracking-widest text-muted">Focus on one</span>
+              {bookRecallRows
+                .filter(r => r.dueChapterCount > 0 || r.sentenceDue)
+                .map(row => (
+                  <button
+                    key={row.book.id}
+                    onClick={() => navigate('/practice', { state: { focusBookId: row.book.id } })}
+                    className="px-2.5 py-1 rounded-md border border-card-border text-[0.6875rem] font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
+                  >
+                    {row.book.name}
+                  </button>
+                ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -308,12 +331,22 @@ export const Dashboard: React.FC = () => {
         );
       })()}
 
-      {/* Your Shape — the Bible-wide mastery meter, one cell per book. */}
+      {/* Your Shape — the Bible-wide mastery meter, one cell per book.
+          Paired with a route into Retention, because everything in this block counts
+          activity: "secure" is repetition >= 6, a tally of consecutive successful
+          self-grades. It is a fair picture of ground covered and a poor one of what is
+          actually still held, and the honest version of that question now has a home. */}
       <div className="flex flex-col gap-3 border-b border-card-border pb-6">
         <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase flex items-center gap-2">
           <BookOpen className="w-3.5 h-3.5" /> Your Shape
         </h2>
         <ShapeMeter />
+        <button
+          onClick={() => navigate('/retention')}
+          className="self-start flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-hover transition-colors pt-1"
+        >
+          What would you still recall? <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </div>
 
       {/* Stats Row */}
@@ -417,7 +450,23 @@ export const Dashboard: React.FC = () => {
               <BookOpen className="w-12 h-12 text-muted mb-4 opacity-50" />
               <p className="text-secondary font-medium mb-4">No verses found.</p>
               {state.verses.length === 0 && (
-                <Button onClick={() => navigate('?add=true')}>Add Your First Verse</Button>
+                <div className="flex flex-col items-center gap-3">
+                  <Button onClick={() => navigate('?add=true')}>Add Your First Verse</Button>
+                  {/* The curated set, offered rather than imposed. It used to be loaded
+                      into every new library automatically, so a reader's first sight of
+                      the app was seventy-five passages they had not chosen, already due.
+                      Beginning a memorization practice with someone else's backlog is a
+                      poor start for something that depends on wanting the material. */}
+                  <button
+                    onClick={() => {
+                      dispatch({ type: 'HYDRATE_VERSES', payload: SEED_VERSES });
+                      showToast(`Added ${SEED_VERSES.length} passages to your library.`, 'success');
+                    }}
+                    className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
+                  >
+                    Or start with {SEED_VERSES.length} well-known passages
+                  </button>
+                </div>
               )}
             </div>
           )}

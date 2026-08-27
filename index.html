@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <!-- No maximum-scale / user-scalable=no. Those were suppressing pinch-zoom on an
+         app whose entire content is long passages of serif scripture — the one kind of
+         page where a reader most needs to enlarge the text in place. The in-app font
+         size setting is not a substitute: it lives in a drawer, so using it means
+         leaving the passage you were struggling to read. WCAG 1.4.4. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Remora</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

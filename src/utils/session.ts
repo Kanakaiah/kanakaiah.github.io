@@ -2,6 +2,8 @@ import type { AppState, Verse, ChapterProgress } from '../types/models';
 import { chapterProgressKey } from '../types/models';
 import { isDue } from './sm2';
 import { dueChapters } from './mastery';
+import { directionFor, type AnchorDirection } from './anchorAnswer';
+import { hasChapterArt } from '../data/chapterArt';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
@@ -36,20 +38,31 @@ const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES] as unknown as GuideL
  * is asked about on its own.
  */
 
-export interface VerseItem { kind: 'verse'; id: string; verse: Verse }
-export interface AnchorItem { kind: 'anchor'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string }
+export interface VerseItem { kind: 'verse'; id: string; verse: Verse; dueAt: string }
+export interface AnchorItem { kind: 'anchor'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string; dueAt: string;
+  /** Which way round to ask, chosen by the schedule rather than by the reader — see
+   * directionFor(). A reader left to pick settles into whichever direction is easiest,
+   * and the schedule then credits it as though all of them had been tested. */
+  direction: AnchorDirection;
+  /** The rest of the book's anchors, so a wrong answer that is another chapter's word
+   * can be named as the confusion it is rather than merely marked wrong. */
+  siblings: { ch: number; word: string }[];
+  /** Pulled forward because a recent chain pass had to reveal this word. The nomination
+   * was already computed here and used only to reorder the queue, so an anchor could
+   * arrive early with no indication of why — see the chainHits note in models.ts. */
+  nominated: boolean }
 /** Encoding, not testing. Shown once for a chapter with no attempts, and always
  * immediately followed by that same chapter's first cold retrieval. */
 export interface IntroduceItem { kind: 'introduce'; id: string; bookId: string; bookName: string; chapter: number; word: string; scene: string; prevWord: string | null }
 
 /** A book's theme word, reviewed on the same loop. Only ever a *review* here: new
  * themes are met in the Theme deck, the way new verses are met by adding them. */
-export interface ThemeItem { kind: 'theme'; id: string; bookId: string; bookName: string; themeWord: string; keyWord: string; subtitle: string }
+export interface ThemeItem { kind: 'theme'; id: string; bookId: string; bookName: string; themeWord: string; keyWord: string; subtitle: string; dueAt: string }
 
 /** One narrative block's anchor chain, due for another pass. Sequence has its own
  * schedule because it is its own skill — knowing every word of PRIMEVAL individually
  * is not the same as being able to run the chain. */
-export interface ChainItem { kind: 'chain'; id: string; bookId: string; bookName: string; blockIndex: number; label: string; anchors: { ch: number; word: string }[] }
+export interface ChainItem { kind: 'chain'; id: string; bookId: string; bookName: string; blockIndex: number; label: string; anchors: { ch: number; word: string }[]; dueAt: string }
 
 export type SessionItem = VerseItem | AnchorItem | IntroduceItem | ThemeItem | ChainItem;
 
@@ -57,6 +70,14 @@ export interface SessionPlan {
   items: SessionItem[];
   /** Everything that was due but did not fit the cap — surfaced as "keep going". */
   heldBack: number;
+  /** The same count ignoring any book focus, so a focused sitting still knows when the
+   * library as a whole has outgrown what can be caught up with. Gating the offer to
+   * spread a backlog on the focused count meant it silently never appeared. */
+  heldBackAll: number;
+  /** New chapters that were offered but did not fit their reserved share. Reported
+   * separately from `heldBack` so the session can say the specific true thing rather
+   * than folding new material into one undifferentiated count. */
+  newHeldBack: number;
 }
 
 export interface SessionOptions {
@@ -64,6 +85,13 @@ export interface SessionOptions {
   newChapters: number;
   /** Ceiling on the whole list, so a large backlog can't produce an endless session. */
   cap: number;
+  /** Restrict the day to one book. A reader with a large backlog spread across the canon
+   * otherwise gets twenty items from twenty different places, which is the worst possible
+   * shape for a sitting: maximum context switching, and no sense of having finished
+   * anything. Naming a book turns an undifferentiated wall into a piece of work with an
+   * end. Verses are unaffected — this narrows the chapter, theme and chain layers, which
+   * are the ones organised by book. */
+  bookId?: string;
   /** Injectable for tests and for a stable order in a single render. */
   now?: Date;
   shuffle?: <T>(xs: T[]) => T[];
@@ -120,6 +148,10 @@ function interleave(items: SessionItem[], shuffle: <T>(xs: T[]) => T[]): Session
   return shuffle(items);
 }
 
+/** When an item was due. Introduce items carry no schedule and never reach the sort. */
+const overdueKey = (item: SessionItem): string =>
+  'dueAt' in item ? item.dueAt : new Date().toISOString();
+
 const defaultShuffle = <T,>(xs: T[]): T[] => {
   const out = [...xs];
   for (let i = out.length - 1; i > 0; i--) {
@@ -135,7 +167,8 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
 
   const verseItems: VerseItem[] = state.verses
     .filter(v => isDue(v.sm2, now))
-    .map(v => ({ kind: 'verse', id: `verse:${v.id}`, verse: v }));
+    .map(v => ({ kind: 'verse', id: `verse:${v.id}`, verse: v,
+      dueAt: v.sm2?.nextDueDate || now.toISOString() }));
 
   // Chapters a chain pass exposed as shaky, promoted to the front of the anchor queue.
   //
@@ -171,20 +204,40 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   };
 
   for (const p of Object.values(state.chapterProgress)) {
-    if (nominated.has(chapterProgressKey(p.bookId, p.chapter))) addAnchor(p.bookId, p.chapter);
+    // `attempts > 0` matters, and its absence was a real defect.
+    //
+    // A chain pass writes chainHits/chainMisses onto chapters that have never been
+    // graded — RECORD_CHAIN_PASS creates the record if there isn't one — so a chapter
+    // could be nominated while still having no attempts at all. That is exactly the set
+    // `newPairs` below draws new material from, so the same chapter could appear twice in
+    // one plan: once as a cold anchor test and once as an Introduce/anchor pair. Two
+    // grades for one chapter in a sitting, duplicate React keys, and a chapter tested
+    // before it was ever taught — the one shape the introduce pairing exists to prevent.
+    //
+    // A nomination is a claim that a chapter already known is shakier than its schedule
+    // thinks. It cannot say anything about a chapter never learned.
+    if (p.attempts > 0 && nominated.has(chapterProgressKey(p.bookId, p.chapter))) {
+      addAnchor(p.bookId, p.chapter);
+    }
   }
   for (const d of dueChapters(state.chapterProgress, now)) addAnchor(d.bookId, d.chapter);
 
   const anchorItems: AnchorItem[] = anchorCandidates
     .map(({ bookId: bId, chapter }) => {
-      const anchor = anchorsOf(bId).find(a => a.ch === chapter);
+      const bookAnchors = anchorsOf(bId);
+      const anchor = bookAnchors.find(a => a.ch === chapter);
       const book = bookFor(bId);
       if (!anchor || !book) return null;
+      const repetition = state.chapterProgress[chapterProgressKey(bId, chapter)]?.sm2?.repetition ?? 0;
       return {
         kind: 'anchor' as const,
         id: `anchor:${bId}:${chapter}`,
         bookId: bId, bookName: book.name, chapter,
         word: anchor.word, scene: anchor.scene,
+        direction: directionFor(repetition, hasChapterArt(bId, chapter)),
+        nominated: nominated.has(chapterProgressKey(bId, chapter)),
+        dueAt: state.chapterProgress[chapterProgressKey(bId, chapter)]?.sm2?.nextDueDate || now.toISOString(),
+        siblings: bookAnchors.map(a => ({ ch: a.ch, word: a.word })),
       };
     })
     .filter((x): x is AnchorItem => !!x);
@@ -200,6 +253,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
         id: `theme:${p.bookId}`,
         bookId: p.bookId, bookName: book.name,
         themeWord: book.themeWord, keyWord: book.keyWord, subtitle: book.subtitle,
+        dueAt: p.sm2.nextDueDate,
       };
     })
     .filter((x): x is ThemeItem => !!x);
@@ -220,7 +274,7 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
         kind: 'chain' as const,
         id: `chain:${b.bookId}:${b.blockIndex}`,
         bookId: b.bookId, bookName: book.name,
-        blockIndex: b.blockIndex, label: b.label, anchors,
+        blockIndex: b.blockIndex, label: b.label, anchors, dueAt: b.sm2.nextDueDate,
       };
     })
     .filter((x): x is ChainItem => !!x);
@@ -229,7 +283,14 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
   // and then immediately tested. Built as [introduce, anchor] pairs so the encoding
   // step and the retrieval it exists to set up can never be separated.
   const newPairs: SessionItem[][] = [];
-  const bookId = currentBookId(state.chapterProgress);
+  // A named focus governs new material too.
+  //
+  // Focus used to filter only the review list, while new chapters came from
+  // `currentBookId` — the most recently *touched* book, computed independently. Ask for
+  // "just Genesis" the day after reading Exodus and the session was one Genesis review
+  // followed by six Exodus items, from a button that said Genesis. The whole point of
+  // naming a book is that the sitting is about that book.
+  const bookId = options.bookId ?? currentBookId(state.chapterProgress);
   if (bookId && options.newChapters > 0) {
     const book = bookFor(bookId);
     const anchors = anchorsOf(bookId);
@@ -250,25 +311,86 @@ export function buildSession(state: AppState, options: SessionOptions): SessionP
           {
             kind: 'anchor', id: `anchor:${bookId}:${a.ch}`,
             bookId, bookName: book.name, chapter: a.ch, word: a.word, scene: a.scene,
+            // Always the cold number → word question: this is the chapter's first
+            // retrieval, moments after being introduced.
+            direction: 'n2w',
+            nominated: false,
+            dueAt: now.toISOString(),
+            siblings: anchors.map(x => ({ ch: x.ch, word: x.word })),
           },
         ]);
       }
     }
   }
 
-  // Reviews come first when trimming: an overdue item has already lost more retention
-  // than a new one has to lose, and new material not reached today is simply offered
-  // again tomorrow. New pairs are then admitted whole or not at all — a cap that cut
-  // between an Introduce and its retrieval would leave a chapter taught but never
-  // tested, which is the one shape this session is built to avoid.
-  const review = interleave([...verseItems, ...anchorItems, ...themeItems, ...chainItems], shuffle);
-  const items: SessionItem[] = review.slice(0, options.cap);
+  // New material gets a reserved share of the session, taken before reviews are trimmed.
+  //
+  // Reviews used to fill the cap first, with new pairs admitted only from whatever was
+  // left over. That sounds conservative and is: past about nineteen due items the
+  // leftover is always zero, so a reader with any real backlog is quietly served nothing
+  // new — indefinitely, and with nothing on screen saying so. They believe they are
+  // working through Genesis; they are not. A queue that can never reach the end of a
+  // book is not a schedule, and a stall the reader cannot see is the failure most likely
+  // to end the habit altogether.
+  //
+  // So the daily chapter target is treated as a commitment rather than a leftover, held
+  // to a third of the session so that it can never swallow the day's reviews either. The
+  // floor of one pair means even a very small cap still teaches something.
+  const RESERVE_FRACTION = 0.3;
+  const maxNewSlots = Math.max(2, Math.floor(options.cap * RESERVE_FRACTION));
 
+  const admittedPairs: SessionItem[][] = [];
+  let newSlots = 0;
   for (const pair of newPairs) {
-    if (items.length + pair.length > options.cap) break;
-    items.push(...pair);
+    // Whole or not at all: a cap that cut between an Introduce and its retrieval would
+    // leave a chapter taught and never tested, the one shape this session exists to avoid.
+    if (newSlots + pair.length > maxNewSlots) break;
+    admittedPairs.push(pair);
+    newSlots += pair.length;
   }
 
-  const totalOffered = review.length + newPairs.flat().length;
-  return { items, heldBack: Math.max(0, totalOffered - items.length) };
+  // Selection and presentation are two different questions, and conflating them was
+  // throwing away the more important one.
+  //
+  // Everything due was shuffled and then truncated at the cap, so *which* items a reader
+  // with a backlog got was random. An item two hundred days overdue and one due this
+  // morning had an equal chance of being dropped, which is precisely backwards: the
+  // overdue one has already lost most of what it had, and every further day costs more.
+  //
+  // So: choose by how overdue, then shuffle the chosen few. The reader still gets a mixed
+  // order — one kind running in a block lets ordinal position stand in for the answer —
+  // but the work that gets done is the work most in danger.
+  const focus = options.bookId;
+  const inFocus = (i: SessionItem) => !focus || !('bookId' in i) || i.bookId === focus;
+  const allDue = [...verseItems, ...anchorItems, ...themeItems, ...chainItems];
+  const review = allDue.filter(inFocus);
+  const mostOverdueFirst = [...review].sort(
+    (a, b) => new Date(overdueKey(a)).getTime() - new Date(overdueKey(b)).getTime());
+  const admittedReview = interleave(
+    mostOverdueFirst.slice(0, Math.max(0, options.cap - newSlots)), shuffle);
+
+  // Placement: a short warm-up of familiar items, then the new material, then the rest.
+  // Appending new pairs to the very end would reproduce the same bug in a milder form —
+  // an abandoned session still never reaches them — and meeting an unfamiliar chapter as
+  // the very first thing of the day is its own kind of discouraging.
+  const WARM_UP = 3;
+  const items: SessionItem[] = [
+    ...admittedReview.slice(0, WARM_UP),
+    ...admittedPairs.flat(),
+    ...admittedReview.slice(WARM_UP),
+  ];
+
+  const newOffered = newPairs.flat().length;
+  return {
+    items,
+    // What is left of *this* session's work — so in a focused sitting "keep going" offers
+    // more of the book asked for, not the rest of the canon.
+    heldBack: Math.max(0, review.length + newOffered - items.length),
+    // The true backlog, ignoring focus. Kept separate because the two answer different
+    // questions: a reader working through Genesis every day should still be told when the
+    // library as a whole has grown past what they can ever catch up with, and gating that
+    // on the focused count meant the offer to spread it silently never appeared.
+    heldBackAll: Math.max(0, allDue.length + newOffered - items.length),
+    newHeldBack: Math.max(0, newOffered - newSlots),
+  };
 }

@@ -72,17 +72,24 @@ export const EraserMode: React.FC<EraserModeProps> = ({ text }) => {
             return <span key={idx}>{word}</span>;
           }
           const isHidden = hiddenIndices.has(idx);
+          // A button, not a span with a click handler. These are the only way to operate
+          // this mode, and as spans they were unreachable by keyboard and announced as
+          // nothing — the whole exercise was mouse-or-touch only. `aria-pressed` carries
+          // the hidden/shown state that the background colour carries visually.
           return (
-            <span
+            <button
+              type="button"
               key={idx}
               onClick={() => toggleWord(idx)}
-              className={`cursor-pointer transition-all duration-200 px-1 rounded hover:bg-accent/10 ${
-                isHidden ? 'bg-secondary text-transparent select-none' : ''
+              aria-pressed={isHidden}
+              aria-label={isHidden ? `${word} — hidden, activate to reveal` : `${word} — activate to hide`}
+              className={`cursor-pointer transition-all duration-200 px-1 rounded hover:bg-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                isHidden ? 'text-transparent select-none' : ''
               }`}
               style={isHidden ? { backgroundColor: 'var(--text-muted)' } : {}}
             >
               {word}
-            </span>
+            </button>
           );
         })}
       </div>

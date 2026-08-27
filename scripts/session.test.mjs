@@ -37,18 +37,59 @@ p = buildSession(mk({chapterProgress:{'habakkuk:1': chap('habakkuk',1,{sm2:sm2(+
   {newChapters:2, cap:3, shuffle:noShuffle});
 t('cap admits new pairs whole or not at all', p.items.length===2 && p.heldBack===2);
 
-// 5. Reviews are kept ahead of new material when trimming
+// 5. New material holds a reserved share of the session rather than taking leftovers.
+//
+// This test used to assert the opposite — that five due verses filled a cap of five and
+// new material got nothing. That was the documented behaviour, and it was the bug: past
+// roughly nineteen due items the leftover is always zero, so any real backlog silently
+// stops a reader ever meeting a new chapter again. Reviews still take the larger share;
+// they just can no longer take all of it.
 p = buildSession(mk({
   verses: Array.from({length:5},(_,i)=>({id:'v'+i, ref:'R'+i, text:'t', sm2:sm2(-1), status:'review', attempts:1})),
   chapterProgress:{'habakkuk:1': chap('habakkuk',1,{sm2:sm2(+9)})},
 }), {newChapters:3, cap:5, shuffle:noShuffle});
-t('reviews win the cap over new material',
-  p.items.length===5 && p.items.every(i=>i.kind==='verse') && p.heldBack===4);
+t('new material keeps a reserved share when reviews would fill the cap',
+  p.items.length===5 &&
+  p.items.filter(i=>i.kind==='verse').length===3 &&
+  p.items.filter(i=>i.kind==='introduce').length===1 &&
+  p.items.filter(i=>i.kind==='anchor').length===1);
+
+// 5b. A heavy backlog can no longer starve new material to zero — the original defect.
+// Genesis rather than Habakkuk: a three-chapter book cannot offer three new chapters, so
+// it would pass this on a technicality without ever exercising the reserve.
+p = buildSession(mk({
+  verses: Array.from({length:60},(_,i)=>({id:'v'+i, ref:'R'+i, text:'t', sm2:sm2(-1), status:'review', attempts:1})),
+  chapterProgress:{'genesis:1': chap('genesis',1,{sm2:sm2(+9)})},
+}), {newChapters:3, cap:20, shuffle:noShuffle});
+t('a large backlog still admits new chapters',
+  p.items.filter(i=>i.kind==='introduce').length===3 && p.items.length===20);
+
+// 5c. Every admitted Introduce still sits immediately before its own retrieval.
+t('the reserve never splits a pair', p.items.every((it,i)=>
+  it.kind!=='introduce' || (p.items[i+1] && p.items[i+1].kind==='anchor' && p.items[i+1].chapter===it.chapter)));
+
+// 5d. New material that exceeds its reserved share is reported, not silently dropped.
+p = buildSession(mk({
+  chapterProgress:{'genesis:1': chap('genesis',1,{sm2:sm2(+9)})},
+}), {newChapters:8, cap:10, shuffle:noShuffle});
+t('new material beyond the reserve is reported as held back',
+  p.items.filter(i=>i.kind==='introduce').length===1 && p.newHeldBack===14);
 
 // 6. A finished book does not keep offering new chapters
 const allDone = {}; for (let c=1;c<=3;c++) allDone['habakkuk:'+c]=chap('habakkuk',c,{sm2:sm2(+9)});
 t('finished book stops producing new material', currentBookId(allDone)===null);
 t('unfinished book is the current one', currentBookId({'habakkuk:1':chap('habakkuk',1)})==='habakkuk');
+
+// 6b. Anchors carry the direction the scheduler chose and the book's other anchors.
+p = buildSession(mk({chapterProgress:{'genesis:2': chap('genesis',2,{sm2:{interval:1,repetition:0,efactor:2.5,nextDueDate:new Date(Date.now()-86400000).toISOString()}})}}),
+  {newChapters:0, cap:20, shuffle:noShuffle});
+t('a still-learning anchor is asked number to word', p.items[0].direction==='n2w');
+t('an anchor carries its siblings so a confusion can be named',
+  p.items[0].siblings.length===50 && p.items[0].siblings.some(s=>s.ch===29 && s.word==='STONE'));
+
+p = buildSession(mk({chapterProgress:{'genesis:2': chap('genesis',2,{sm2:{interval:40,repetition:5,efactor:2.5,nextDueDate:new Date(Date.now()-86400000).toISOString()}})}}),
+  {newChapters:0, cap:20, shuffle:noShuffle});
+t('a known anchor is asked another way round', p.items[0].direction!=='n2w');
 
 // 7. Due chapter anchors are queued with their word
 p = buildSession(mk({chapterProgress:{'habakkuk:2': chap('habakkuk',2)}}),
@@ -77,6 +118,94 @@ p = buildSession(mk({blockProgress:{'genesis:0':{
 }}}), {newChapters:0, cap:20, shuffle:noShuffle});
 t('a due chain is queued with its whole block',
   p.items.length===1 && p.items[0].kind==='chain' && p.items[0].anchors.length===11);
+
+// 11. With a backlog, the cap keeps the most overdue rather than a random sample.
+// This is the whole point of triage: an item two hundred days late has already lost most
+// of what it had, and every further day costs more than one due this morning.
+const old = (d) => ({ interval: 1, repetition: 1, efactor: 2.5,
+  nextDueDate: new Date(Date.now() - d * 86400000).toISOString() });
+p = buildSession(mk({ verses: [
+  ...Array.from({ length: 30 }, (_, i) =>
+    ({ id: 'fresh' + i, ref: 'F' + i, text: 't', sm2: old(1), status: 'review', attempts: 1 })),
+  { id: 'ancient', ref: 'Ancient', text: 't', sm2: old(200), status: 'review', attempts: 1 },
+] }), { newChapters: 0, cap: 5, shuffle: noShuffle });
+t('the most overdue item survives the cap', p.items.some(i => i.id === 'verse:ancient'));
+t('the cap is still respected', p.items.length === 5);
+t('the backlog is reported', p.heldBack === 26);
+
+// 12. A chapter can never be both taught and cold-tested in the same plan.
+//
+// RECORD_CHAIN_PASS creates a progress record for a chapter that has never been graded,
+// so a chain miss could nominate a chapter with attempts: 0 — exactly the set new
+// material is drawn from. The chapter then appeared twice in one plan: once as a cold
+// anchor test and once as an Introduce/anchor pair, producing two grades, two review
+// events, duplicate React keys, and a chapter tested before it was ever taught.
+p = buildSession(mk({chapterProgress:{
+  // Touched, so Genesis is the book underway.
+  'genesis:1': chap('genesis',1,{sm2:sm2(+9)}),
+  // Nominated by a chain miss but never actually graded.
+  'genesis:3': { bookId:'genesis', chapter:3,
+    sm2:{interval:0,repetition:0,efactor:2.5,nextDueDate:new Date().toISOString()},
+    status:'learning', attempts:0, lastScore:0, lastAttemptDate:'',
+    readCount:0, lastReadDate:null,
+    chainMisses:1, chainHits:0, lastChainDate:new Date().toISOString() },
+}}), {newChapters:3, cap:20, shuffle:noShuffle});
+
+const ids = p.items.map(i => i.id);
+t('no item appears twice in one plan', new Set(ids).size === ids.length);
+t('an ungraded chapter is not cold-tested before it is introduced',
+  p.items.every((it, n) =>
+    !(it.kind === 'anchor' && it.chapter === 3) ||
+    (p.items[n-1] && p.items[n-1].kind === 'introduce' && p.items[n-1].chapter === 3)));
+
+// 13. Naming a book narrows the day to it.
+const twoBooks = mk({chapterProgress:{
+  'genesis:2': chap('genesis',2),
+  'exodus:3': chap('exodus',3),
+}});
+p = buildSession(twoBooks, {newChapters:0, cap:20, shuffle:noShuffle});
+t('without a focus, every book that is due appears',
+  new Set(p.items.map(i => i.bookId)).size === 2);
+
+p = buildSession(twoBooks, {newChapters:0, cap:20, bookId:'genesis', shuffle:noShuffle});
+t('naming a book excludes the others',
+  p.items.length === 1 && p.items[0].bookId === 'genesis');
+
+// Verses belong to no book in this sense and must not be filtered away.
+p = buildSession(mk({
+  verses: [{id:'a', ref:'John 3:16', text:'x', sm2:sm2(-1), status:'review', attempts:1}],
+  chapterProgress: {'exodus:3': chap('exodus',3)},
+}), {newChapters:0, cap:20, bookId:'genesis', shuffle:noShuffle});
+t('a focus narrows the book layers without dropping due verses',
+  p.items.length === 1 && p.items[0].kind === 'verse');
+
+
+// 14. A named book governs new material, not only reviews.
+//
+// Focus filtered the review list while new chapters came from currentBookId — the most
+// recently *touched* book, computed independently. Ask for Genesis the day after reading
+// Exodus and the session was one Genesis review and six Exodus items, under a button
+// labelled Genesis. The earlier tests all passed newChapters: 0, which disabled the very
+// path that carried the bug.
+p = buildSession(mk({chapterProgress:{
+  'genesis:1': chap('genesis',1,{sm2:sm2(-5)}),
+  'exodus:3':  chap('exodus',3,{sm2:sm2(-1)}),
+}}), {newChapters:3, cap:20, bookId:'genesis', shuffle:noShuffle});
+t('new material follows the focus, not the last-touched book',
+  p.items.every(i => i.bookId === 'genesis'));
+t('the focused session still teaches something new',
+  p.items.some(i => i.kind === 'introduce'));
+
+// The true backlog stays visible even when the day is narrowed, so the offer to spread it
+// cannot silently vanish for a reader who always focuses. Chapters, not verses — verses
+// belong to no book in this sense and are deliberately never filtered by focus.
+const wideBacklog = {};
+for (let c = 1; c <= 30; c++) wideBacklog['exodus:' + c] = chap('exodus', c);
+wideBacklog['genesis:2'] = chap('genesis', 2);
+p = buildSession(mk({ chapterProgress: wideBacklog }),
+  {newChapters:0, cap:5, bookId:'genesis', shuffle:noShuffle});
+t('a focused session reports only its own remaining work', p.heldBack === 0);
+t('and still knows the size of the whole backlog', p.heldBackAll >= 25);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail?1:0);
