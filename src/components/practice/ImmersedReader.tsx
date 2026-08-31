@@ -38,11 +38,19 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
   const pinchStartDist = useRef<number | null>(null);
   const pinchStartZoom = useRef(1);
 
+  const scrollRef = useRef<HTMLElement>(null);
+
   // Mirrors chromeVisible so the toggle can read it without an impure state updater.
   const chromeVisibleRef = useRef(true);
   useEffect(() => {
     chromeVisibleRef.current = chromeVisible;
   }, [chromeVisible]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [verse.id]);
 
   // Show the controls, then fade them out again after a period of stillness.
   const revealChrome = useCallback(() => {
@@ -255,7 +263,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
       </header>
 
       {/* The page */}
-      <main className="flex-1 overflow-y-auto">
+      <main ref={scrollRef} className="flex-1 overflow-y-auto">
         <div className="min-h-full flex items-center px-6 sm:px-10 py-24">
           {/* Keyed by verse so the whole block — reference, text, translation —
               remounts and replays its entrance animation together on navigation,

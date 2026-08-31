@@ -334,7 +334,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // is already showing (a second tap on an already-revealed anchor toggles the
   // scene, it doesn't hide the word again).
   const [anchorWordRevealed, setAnchorWordRevealed] = useState(false);
-  useEffect(() => { setShowAnchorScene(false); setAnchorWordRevealed(false); }, [bookId, chapter]);
+  useEffect(() => { 
+    setShowAnchorScene(false); 
+    setAnchorWordRevealed(false); 
+    setScrollProgress(0);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [bookId, chapter]);
   const { state, dispatch } = useApp();
   const bibleVersion = state.settings.bibleVersion || 'LSB';
   const { showToast } = useToast();
@@ -457,6 +464,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const [showVersionPicker, setShowVersionPicker] = useState(false);
   const [navigatorBook, setNavigatorBook] = useState(bookId);
   const chapterGridRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [retryCount, setRetryCount] = useState(0);
   // Which "book-chapter" the current `verses` state actually holds data for. A ref, not
   // state: it must be visible to the pendingHighlight effect below within the *same*
@@ -1717,6 +1725,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       </div>
 
       <div
+        ref={scrollContainerRef}
         // Side padding steps up through the foldable range: an unfolded foldable sits
         // around 670-840px, where the reading measure alone doesn't bind, so without
         // this the text would run edge-to-edge with only a phone's 20px gutter.
