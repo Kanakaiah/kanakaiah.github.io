@@ -557,6 +557,30 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     }
   };
 
+  // If a chapter is very short (e.g. Psalm 117) and fits entirely on screen,
+  // the user will never scroll, so handleScroll will never fire.
+  // We check for this case after the chapter renders.
+  useEffect(() => {
+    if (loading || verses.length === 0 || recallCardShownThisVisit) return;
+    
+    const timer = setTimeout(() => {
+      const target = scrollContainerRef.current;
+      if (!target) return;
+      
+      const totalHeight = target.scrollHeight - target.clientHeight;
+      // If the content fits entirely in the viewport, it's already "read"
+      if (totalHeight <= 0) {
+        setRecallCardShownThisVisit(true);
+        markChapterRead();
+        if (chapterAnchor && anchorReveal !== 'always' && recallCardDismissCount < 2) {
+          setShowRecallCard(true);
+        }
+      }
+    }, 150); // Short delay to ensure DOM is fully laid out
+    
+    return () => clearTimeout(timer);
+  }, [loading, verses, recallCardShownThisVisit, markChapterRead, chapterAnchor, anchorReveal, recallCardDismissCount]);
+
   // Compute prev/next labels for the navigation bar
   const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
   const currentBook = bookIndex !== -1 ? ALL_BOOKS[bookIndex] : null;
