@@ -816,7 +816,7 @@ export const Guides: React.FC = () => {
           // Closing lands on the book's own guide page. Previously this dropped the
           // reader params and kept whatever ?guide= happened to be set, which was
           // already updated to follow the book being read.
-          onClose={() => navigate(guidePath(readerRef.bookId))}
+          onClose={() => navigate(guidePath(readerRef.bookId), { state: { fromReader: true } })}
         />
       </>
     );
@@ -957,12 +957,16 @@ export const Guides: React.FC = () => {
               // somewhere they had never been. History is the honest answer when there
               // is one; the testament browser stays the fallback for a cold deep link.
               onClick={() => {
-                if (window.history.length > 1) navigate(-1);
-                else setActiveGuideId(
-                  activeGuide.type === 'book-guide'
-                    ? (OT_BOOKS.some(b => b.id === activeGuide.id) ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)
-                    : null
-                );
+                const state = location.state as { fromReader?: boolean } | null;
+                if (window.history.length > 1 && !state?.fromReader) {
+                  navigate(-1);
+                } else {
+                  setActiveGuideId(
+                    activeGuide.type === 'book-guide'
+                      ? (OT_BOOKS.some(b => b.id === activeGuide.id) ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)
+                      : null
+                  );
+                }
               }}
               className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
