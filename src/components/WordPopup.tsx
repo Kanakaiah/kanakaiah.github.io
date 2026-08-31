@@ -31,13 +31,22 @@ export function WordPopup({
   // --- Drag-to-dismiss state ---
   const [dragY, setDragY] = useState(0);
   const dragStartY = useRef<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const scroller = scrollContainerRef.current;
+    if (scroller && scroller.scrollTop > 0) return;
     dragStartY.current = e.touches[0].clientY;
   }, []);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (dragStartY.current === null) return;
+    const scroller = scrollContainerRef.current;
+    if (scroller && scroller.scrollTop > 0) {
+      dragStartY.current = null;
+      setDragY(0);
+      return;
+    }
     const delta = e.touches[0].clientY - dragStartY.current;
     // Only allow dragging downward
     setDragY(Math.max(0, delta));
@@ -91,7 +100,7 @@ export function WordPopup({
         </button>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6">
+        <div className="flex-1 overflow-y-auto px-6 pb-6" ref={scrollContainerRef}>
           <StrongsEntry
             word={word}
             definition={def}

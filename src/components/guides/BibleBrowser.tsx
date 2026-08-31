@@ -112,7 +112,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
   const searchResults = isSearching
     ? ALL_BOOKS.filter(b => {
         const q = searchQuery.toLowerCase();
-        return b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q);
+        return b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q) || b.subtitle.toLowerCase().includes(q);
       })
     : [];
 
@@ -168,7 +168,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
         <>
           {NT_SECTIONS.map(section => {
             const q = searchQuery.toLowerCase();
-            const books = NT_BOOKS.filter(b => b.section === section && (b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q)));
+            const books = NT_BOOKS.filter(b => b.section === section && (b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q) || b.subtitle.toLowerCase().includes(q)));
             if (!books.length) return null;
             return (
               <div key={section} className="flex flex-col gap-3">
@@ -196,7 +196,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
         <>
           {OT_SECTIONS.map(section => {
             const q = searchQuery.toLowerCase();
-            const books = OT_BOOKS.filter(b => b.section === section && (b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q)));
+            const books = OT_BOOKS.filter(b => b.section === section && (b.name.toLowerCase().includes(q) || b.themeWord.toLowerCase().includes(q) || b.keyWord.toLowerCase().includes(q) || b.subtitle.toLowerCase().includes(q)));
             if (!books.length) return null;
             return (
               <div key={section} className="flex flex-col gap-3">
