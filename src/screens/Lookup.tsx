@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, AlertCircle, BookOpen } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { readerPath } from '../utils/readerRoute';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -18,22 +18,25 @@ const TRANSLATION_OPTIONS = [
 
 export const Lookup: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchTranslation, setSearchTranslation] = useState('web');
+  const urlQuery = searchParams.get('q') || '';
+  const urlTranslation = searchParams.get('t') || 'web';
+
+  const [searchQuery, setSearchQuery] = useState(urlQuery);
+  const [searchTranslation, setSearchTranslation] = useState(urlTranslation);
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchError, setSearchError] = useState<string | null>(null);
 
-  const handleSearch = async (overrideQuery?: string) => {
-    const queryToUse = (typeof overrideQuery === 'string' ? overrideQuery : searchQuery) || searchQuery;
+  const performSearch = useCallback(async (queryToUse: string, translationToUse: string) => {
     if (!queryToUse.trim()) return;
     setIsLoading(true);
     setSearchError(null);
     setSearchResults([]);
 
-    const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(searchTranslation);
-    const parseTranslation = isBolls ? 'web' : searchTranslation;
+    const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(translationToUse);
+    const parseTranslation = isBolls ? 'web' : translationToUse;
     const rawQueries = queryToUse.replace(/[\u2013\u2014]/g, '-').split(';').map(q => q.trim()).filter(Boolean);
     const queries = [];
     let currentBook = '';
@@ -93,8 +96,8 @@ export const Lookup: React.FC = () => {
           let combinedText = '';
           for (const [chStr, vNums] of Object.entries(versesByChapter)) {
             const ch = parseInt(chStr);
-            const bollsRes = await fetch(`https://bolls.life/get-text/${searchTranslation}/${bollsId}/${ch}/`);
-            if (!bollsRes.ok) throw new Error(`Could not fetch ${searchTranslation} translation.`);
+            const bollsRes = await fetch(`https://bolls.life/get-text/${translationToUse}/${bollsId}/${ch}/`);
+            if (!bollsRes.ok) throw new Error(`Could not fetch ${translationToUse} translation.`);
             
             const chapterData = await bollsRes.json();
             const requestedVerses = chapterData.filter((v: any) => vNums.includes(v.verse));
@@ -117,7 +120,7 @@ export const Lookup: React.FC = () => {
           results.push({
             reference: data.reference,
             text: combinedText.trim(),
-            translation_name: searchTranslation,
+            translation_name: translationToUse,
             bookId: normalName,
             chapter: firstVerse.chapter,
             verse: firstVerse.verse
@@ -125,6 +128,7 @@ export const Lookup: React.FC = () => {
         } else {
           results.push({
             ...data,
+            translation_name: translationToUse,
             bookId: normalName,
             chapter: firstVerse.chapter,
             verse: firstVerse.verse
@@ -141,6 +145,22 @@ export const Lookup: React.FC = () => {
       setSearchResults(results);
     }
     setIsLoading(false);
+  }, []);
+
+  const hasSearchedRef = useRef(false);
+
+  useEffect(() => {
+    if (urlQuery && urlTranslation && !hasSearchedRef.current) {
+      hasSearchedRef.current = true;
+      performSearch(urlQuery, urlTranslation);
+    }
+  }, [urlQuery, urlTranslation, performSearch]);
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+    setSearchParams({ q: searchQuery, t: searchTranslation });
+    hasSearchedRef.current = true;
+    performSearch(searchQuery, searchTranslation);
   };
 
   return (
@@ -210,7 +230,7 @@ export const Lookup: React.FC = () => {
                       <Button 
                         onClick={() => {
                           const path = readerPath(res.bookId, res.chapter, res.verse);
-                          if (path) navigate(path, { state: { returnTo: '/lookup' } });
+                          if (path) navigate(path, { state: { returnTo: `/lookup?q=${encodeURIComponent(searchQuery)}&t=${encodeURIComponent(searchTranslation)}` } });
                         }}
                         variant="secondary"
                         className="mt-2 w-full justify-center"
