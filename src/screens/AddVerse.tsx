@@ -50,7 +50,24 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
 
     const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(searchTranslation);
     const parseTranslation = isBolls ? 'web' : searchTranslation;
-    const queries = queryToUse.split(';').map(q => q.trim()).filter(Boolean);
+    const rawQueries = queryToUse.replace(/[\u2013\u2014]/g, '-').split(';').map(q => q.trim()).filter(Boolean);
+    const queries = [];
+    let currentBook = '';
+    const refPattern = /^([1-3]?\s*[A-Za-z]+(?:\s+[A-Za-z]+)*)?\s*(\d.*)$/;
+
+    for (const part of rawQueries) {
+      const match = part.match(refPattern);
+      if (match) {
+        const book = match[1];
+        const rest = match[2];
+        if (book) {
+          currentBook = book.trim();
+        }
+        queries.push(currentBook ? `${currentBook} ${rest}` : part);
+      } else {
+        queries.push(part);
+      }
+    }
     const results = [];
     let hasError = false;
 
