@@ -8,6 +8,7 @@ import { Dashboard } from './screens/Dashboard';
 import { Practice } from './screens/Practice';
 import { Guides } from './screens/Guides';
 import { Retention } from './screens/Retention';
+import { Lookup } from './screens/Lookup';
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="practice" element={<Practice />} />
+              <Route path="lookup" element={<Lookup />} />
               {/* Where the app answers what it is actually for: not how much has been
                   practised, but what would still be recalled if you stopped today. */}
               <Route path="retention" element={<Retention />} />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { Home, BookOpen, Target, Settings2, Flame, Plus } from 'lucide-react';
+import { Home, BookOpen, Target, Settings2, Flame, Plus, Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { SettingsDrawer } from '../../components/layout/SettingsDrawer';
 import { AddVerseSheet } from '../../components/layout/AddVerseSheet';
@@ -62,6 +62,7 @@ export const AppLayout: React.FC = () => {
 
   const navLinks = [
     { to: "/", icon: Home, label: "Today" },
+    { to: "/lookup", icon: Search, label: "Lookup" },
     { to: "/practice", icon: Target, label: "Practice" },
     { to: "/guides", icon: BookOpen, label: "Bible" },
   ];
