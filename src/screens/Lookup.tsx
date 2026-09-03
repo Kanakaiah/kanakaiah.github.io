@@ -227,16 +227,15 @@ export const Lookup: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-primary text-base md:text-lg font-serif leading-relaxed flex-1">"{res.text}"</p>
-                      <Button 
+                      <button 
                         onClick={() => {
                           const path = readerPath(res.bookId, res.chapter, res.verse);
                           if (path) navigate(path, { state: { returnTo: `/lookup?q=${encodeURIComponent(searchQuery)}&t=${encodeURIComponent(searchTranslation)}` } });
                         }}
-                        variant="secondary"
-                        className="mt-2 w-full justify-center"
+                        className="text-accent hover:text-accent-hover text-sm font-bold tracking-wide uppercase self-end flex items-center gap-1.5 pt-2"
                       >
-                        <BookOpen className="w-4 h-4 mr-2" /> Read Chapter
-                      </Button>
+                        Context <BookOpen className="w-3.5 h-3.5" />
+                      </button>
                   </div>
                 ))}
               </div>
