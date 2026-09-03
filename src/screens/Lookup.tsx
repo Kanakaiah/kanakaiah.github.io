@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Search, AlertCircle, Plus } from 'lucide-react';
-import { useApp } from '../context/AppContext';
-import { useToast } from '../context/ToastContext';
+import { Search, AlertCircle, BookOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { readerPath } from '../utils/readerRoute';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { CustomSelect } from '../components/ui/CustomSelect';
-import type { Verse } from '../types/models';
 
 const TRANSLATION_OPTIONS = [
   { value: 'LSB', label: 'LSB (Legacy Standard)' },
@@ -18,8 +17,7 @@ const TRANSLATION_OPTIONS = [
 ];
 
 export const Lookup: React.FC = () => {
-  const { state, dispatch } = useApp();
-  const { showToast } = useToast();
+  const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchTranslation, setSearchTranslation] = useState('web');
@@ -66,11 +64,12 @@ export const Lookup: React.FC = () => {
         }
         
         const data = await response.json();
+        const firstVerse = data.verses[0];
+        let normalName = firstVerse.book_name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (normalName === 'songofsongs') normalName = 'songofsolomon';
 
         if (isBolls) {
-          const bookName = data.verses[0].book_name;
-          let normalName = bookName.toLowerCase().replace(/[^a-z0-9]/g, '');
-          if (normalName === 'songofsongs') normalName = 'songofsolomon';
+          const bookName = firstVerse.book_name;
           
           const BOLLS_BOOKS = [
             "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", 
@@ -118,10 +117,18 @@ export const Lookup: React.FC = () => {
           results.push({
             reference: data.reference,
             text: combinedText.trim(),
-            translation_name: searchTranslation
+            translation_name: searchTranslation,
+            bookId: normalName,
+            chapter: firstVerse.chapter,
+            verse: firstVerse.verse
           });
         } else {
-          results.push(data);
+          results.push({
+            ...data,
+            bookId: normalName,
+            chapter: firstVerse.chapter,
+            verse: firstVerse.verse
+          });
         }
       } catch (err: any) {
         setSearchError(err.message || `Failed to search for verse: ${query}`);
@@ -134,33 +141,6 @@ export const Lookup: React.FC = () => {
       setSearchResults(results);
     }
     setIsLoading(false);
-  };
-
-  const addVerseToLibrary = (ref: string, text: string, translation: string) => {
-    if (state.verses.some(v => v.ref.toLowerCase() === ref.toLowerCase() && v.translation.toLowerCase() === translation.toLowerCase())) {
-      showToast(`'${ref} (${translation})' is already in your library!`, 'error');
-      return;
-    }
-
-    const newVerse: Verse = {
-      id: "v_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9),
-      ref,
-      text: text.trim(),
-      translation,
-      addedDate: new Date().toISOString(),
-      status: "learning",
-      sm2: {
-        interval: 0,
-        repetition: 0,
-        efactor: 2.5,
-        nextDueDate: new Date().toISOString()
-      },
-      streak: 0,
-      attempts: 0
-    };
-
-    dispatch({ type: 'ADD_VERSE', payload: newVerse });
-    showToast(`Added ${ref} to library!`, 'success');
   };
 
   return (
@@ -215,19 +195,6 @@ export const Lookup: React.FC = () => {
                 <h3 className="text-lg font-heading font-bold text-primary">
                   {searchResults.length} Result{searchResults.length !== 1 ? 's' : ''}
                 </h3>
-                {searchResults.length > 1 && (
-                  <Button 
-                    onClick={() => {
-                      searchResults.forEach(res => {
-                        addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase());
-                      });
-                    }}
-                    variant="ghost"
-                    className="text-sm py-1.5 px-3"
-                  >
-                    <Plus className="w-4 h-4 mr-1.5" /> Add All to Library
-                  </Button>
-                )}
               </div>
 
               <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
@@ -240,13 +207,16 @@ export const Lookup: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-primary text-base md:text-lg font-serif leading-relaxed flex-1">"{res.text}"</p>
-                    <Button 
-                      onClick={() => addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase())}
-                      variant="secondary"
-                      className="mt-2 w-full justify-center"
-                    >
-                      <Plus className="w-4 h-4 mr-2" /> Add to Library
-                    </Button>
+                      <Button 
+                        onClick={() => {
+                          const path = readerPath(res.bookId, res.chapter, res.verse);
+                          if (path) navigate(path, { state: { returnTo: '/lookup' } });
+                        }}
+                        variant="secondary"
+                        className="mt-2 w-full justify-center"
+                      >
+                        <BookOpen className="w-4 h-4 mr-2" /> Read Chapter
+                      </Button>
                   </div>
                 ))}
               </div>

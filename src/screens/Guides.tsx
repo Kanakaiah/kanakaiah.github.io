@@ -816,7 +816,14 @@ export const Guides: React.FC = () => {
           // Closing lands on the book's own guide page. Previously this dropped the
           // reader params and kept whatever ?guide= happened to be set, which was
           // already updated to follow the book being read.
-          onClose={() => navigate(guidePath(readerRef.bookId), { state: { fromReader: true } })}
+          onClose={() => {
+            const state = location.state as { returnTo?: string } | null;
+            if (state?.returnTo) {
+              navigate(state.returnTo);
+            } else {
+              navigate(guidePath(readerRef.bookId), { state: { fromReader: true } });
+            }
+          }}
         />
       </>
     );
