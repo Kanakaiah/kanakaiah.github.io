@@ -362,6 +362,7 @@ export const Guides: React.FC = () => {
   // Read-only now — the screen's own state lives in the path; query params are only
   // inspected to redirect links written before that was true.
   const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'books' | 'guides'>('books');
   const [searchQuery, setSearchQuery] = useState('');
   const [collapsedSections2, setCollapsedSections2] = useState<Record<string, boolean>>(
     () => Object.fromEntries(GUIDE_SECTIONS.filter(s => !s.defaultOpen).map(s => [s.id, true]))
@@ -1566,6 +1567,21 @@ export const Guides: React.FC = () => {
         <h1 className="text-3xl font-heading font-bold text-primary">Bible</h1>
       </div>
 
+      <div className="flex bg-card p-1 rounded-lg shadow-sm border border-card-border mt-[-10px] sm:max-w-[300px]">
+        <button
+          onClick={() => setActiveTab('books')}
+          className={`flex-1 py-1.5 text-sm font-bold tracking-wide uppercase rounded-md transition-all duration-200 ${activeTab === 'books' ? 'bg-accent/10 text-accent shadow-sm' : 'text-muted hover:text-primary hover:bg-card-elevated'}`}
+        >
+          Books
+        </button>
+        <button
+          onClick={() => setActiveTab('guides')}
+          className={`flex-1 py-1.5 text-sm font-bold tracking-wide uppercase rounded-md transition-all duration-200 ${activeTab === 'guides' ? 'bg-accent/10 text-accent shadow-sm' : 'text-muted hover:text-primary hover:bg-card-elevated'}`}
+        >
+          Guides
+        </button>
+      </div>
+
       <div className="flex items-center gap-2 mt-2">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -1595,6 +1611,8 @@ export const Guides: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-8 pb-12">
+        {activeTab === 'books' && (
+          <>
         {/* ── Bible Books — OT ── */}
         <div className="flex flex-col gap-3">
           <button 
@@ -1697,6 +1715,11 @@ export const Guides: React.FC = () => {
           )}
         </div>
 
+          </>
+        )}
+
+        {activeTab === 'guides' && (
+          <>
         {/* ── Study resources ── */}
         {resourceSections.map(section => {
           // A search that matched something should show it, not leave the reader to
@@ -1750,6 +1773,8 @@ export const Guides: React.FC = () => {
             </div>
           );
         })}
+          </>
+        )}
       </div>
     </div>
   );
