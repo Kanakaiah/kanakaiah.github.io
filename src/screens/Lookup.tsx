@@ -165,10 +165,6 @@ export const Lookup: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-background overflow-hidden relative isolate">
-      <div className="sticky top-0 z-40 bg-card/90 backdrop-blur-md border-b border-card-border px-4 py-3 flex items-center justify-center shrink-0 shadow-sm transition-all duration-300">
-        <h1 className="text-xl font-heading font-bold text-primary tracking-tight">Lookup</h1>
-      </div>
-
       <div className="flex-1 overflow-y-auto w-full max-w-4xl mx-auto px-4 py-8 pb-32">
         <div className="flex flex-col gap-6">
           <div className="text-center mb-4">
