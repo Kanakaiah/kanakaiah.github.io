@@ -228,9 +228,9 @@ export const Lookup: React.FC = () => {
                           const path = readerPath(res.bookId, res.chapter, res.verse);
                           if (path) navigate(path, { state: { returnTo: `/lookup?q=${encodeURIComponent(searchQuery)}&t=${encodeURIComponent(searchTranslation)}` } });
                         }}
-                        className="text-accent hover:text-accent-hover text-sm font-bold tracking-wide uppercase self-end flex items-center gap-1.5 pt-2"
+                        className="text-secondary hover:text-accent text-[11px] font-bold tracking-wider uppercase self-end flex items-center gap-1 pt-1"
                       >
-                        Context <BookOpen className="w-3.5 h-3.5" />
+                        Context <BookOpen className="w-3 h-3 opacity-80" />
                       </button>
                   </div>
                 ))}
