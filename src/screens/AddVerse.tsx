@@ -59,7 +59,9 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       const match = part.match(refPattern);
       if (match) {
         const book = match[1];
-        const rest = match[2];
+        // Normalize spaces between verse numbers to commas so the API can parse them.
+        // e.g. "11:1 13" → "11:1,13" and "6:41 43" → "6:41,43"
+        const rest = match[2].replace(/(\d)\s+(?=\d)/g, '$1,');
         if (book) {
           currentBook = book.trim();
         }

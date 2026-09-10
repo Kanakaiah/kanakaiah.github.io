@@ -271,14 +271,10 @@ const RecallCard: React.FC<{
   );
 };
 
-// Borrowed headings get a small LSB tag: the wording is the LSB's editorial choice, and
-// the NLT in particular words and places its own headings quite differently, so they
-// shouldn't read as the publisher's.
+// Headings from other translations are used when the selected translation 
+// lacks them. They are rendered without a translation tag to avoid confusion.
 function renderHeading(text: string, borrowed = false): string {
-  const tag = borrowed
-    ? '<span class="ml-2 align-middle text-[0.55em] font-bold tracking-widest text-muted uppercase not-italic">LSB</span>'
-    : '';
-  return `<div class="${HEADING_CLASSES}">${text}${tag}</div>`;
+  return `<div class="${HEADING_CLASSES}">${text}</div>`;
 }
 
 export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClose, onStudyOriginalWord }: ChapterReaderProps) {
