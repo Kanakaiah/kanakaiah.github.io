@@ -273,7 +273,7 @@ const RecallCard: React.FC<{
 
 // Headings from other translations are used when the selected translation 
 // lacks them. They are rendered without a translation tag to avoid confusion.
-function renderHeading(text: string, borrowed = false): string {
+function renderHeading(text: string, _borrowed = false): string {
   return `<div class="${HEADING_CLASSES}">${text}</div>`;
 }
 
