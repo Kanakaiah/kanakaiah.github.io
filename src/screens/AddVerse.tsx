@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, PenLine, AlertCircle, Plus } from 'lucide-react';
+import { Search, PenLine, AlertCircle, Plus, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { Input } from '../components/ui/Input';
@@ -29,7 +29,25 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
 
   const [activeTab, setActiveTab] = useState<'manual' | 'search'>('manual');
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
-  
+  const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+
+  const handleCreateGroup = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (newGroupName.trim()) {
+      const newId = `topic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      dispatch({
+        type: 'ADD_TOPIC',
+        payload: {
+          id: newId,
+          name: newGroupName.trim(),
+        },
+      });
+      setSelectedTopicIds(prev => [...prev, newId]);
+      setNewGroupName('');
+      setIsAddingGroup(false);
+    }
+  };
   // Search Tab State
   const [searchQuery, setSearchQuery] = useState('');
   const [searchTranslation, setSearchTranslation] = useState('web');
@@ -199,33 +217,65 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       </div>
 
       {/* Global Group Selector */}
-      {state.topics && state.topics.length > 0 && (
-        <div className="flex flex-col gap-3 -mt-4 mb-2">
-          <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider text-center">Assign to Groups (Optional)</span>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {state.topics.map(topic => {
-              const isActive = selectedTopicIds.includes(topic.id);
-              return (
-                <button
-                  key={topic.id}
-                  onClick={() => {
-                    setSelectedTopicIds(prev => 
-                      isActive ? prev.filter(id => id !== topic.id) : [...prev, topic.id]
-                    );
-                  }}
-                  className={`text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border ${
-                    isActive 
-                      ? 'bg-accent/15 text-accent border-accent/30' 
-                      : 'bg-transparent text-secondary border-card-border hover:border-card-border-hover hover:text-primary'
-                  }`}
-                >
-                  {topic.name}
-                </button>
-              );
-            })}
-          </div>
+      <div className="flex flex-col gap-3 -mt-4 mb-2">
+        <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider text-center">Assign to Groups (Optional)</span>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {state.topics?.map(topic => {
+            const isActive = selectedTopicIds.includes(topic.id);
+            return (
+              <button
+                key={topic.id}
+                onClick={() => {
+                  setSelectedTopicIds(prev => 
+                    isActive ? prev.filter(id => id !== topic.id) : [...prev, topic.id]
+                  );
+                }}
+                className={`text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border ${
+                  isActive 
+                    ? 'bg-accent/15 text-accent border-accent/30' 
+                    : 'bg-transparent text-secondary border-card-border hover:border-card-border-hover hover:text-primary'
+                }`}
+              >
+                {topic.name}
+              </button>
+            );
+          })}
+          
+          {isAddingGroup ? (
+            <form onSubmit={handleCreateGroup} className="flex items-center gap-1">
+              <input
+                type="text"
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+                placeholder="New group..."
+                className="text-[0.8125rem] px-3 py-1.5 rounded-full bg-card border border-accent text-primary focus:outline-none w-32"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') setIsAddingGroup(false);
+                }}
+                onBlur={() => {
+                  if (!newGroupName.trim()) setIsAddingGroup(false);
+                }}
+              />
+              <button
+                type="submit"
+                disabled={!newGroupName.trim()}
+                className="p-1.5 rounded-full text-accent hover:bg-accent/10 disabled:opacity-50 transition-colors"
+                aria-label="Save group"
+              >
+                <Check className="w-4 h-4" />
+              </button>
+            </form>
+          ) : (
+            <button
+              onClick={() => setIsAddingGroup(true)}
+              className="text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border bg-transparent text-secondary border-card-border border-dashed hover:border-solid hover:border-accent hover:text-accent flex items-center gap-1"
+            >
+              <Plus className="w-3.5 h-3.5" /> New Group
+            </button>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Mode Selection Buttons */}
       <div className="grid grid-cols-2 gap-3 bg-card-elevated p-2 rounded-lg border border-card-border">
