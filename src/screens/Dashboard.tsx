@@ -452,6 +452,9 @@ export const Dashboard: React.FC = () => {
               {state.verses.length === 0 && (
                 <div className="flex flex-col items-center gap-3">
                   <Button onClick={() => navigate('?add=true')}>Add Your First Verse</Button>
+                  <p className="text-[0.8125rem] text-muted max-w-xs leading-relaxed mt-2 px-4">
+                    Verses you add are scheduled for review using spaced repetition. You'll see them frequently at first, then at increasing intervals as you secure them in memory.
+                  </p>
                   {/* The curated set, offered rather than imposed. It used to be loaded
                       into every new library automatically, so a reader's first sight of
                       the app was seventy-five passages they had not chosen, already due.

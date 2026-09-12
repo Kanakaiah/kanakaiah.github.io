@@ -337,6 +337,15 @@ export const Practice: React.FC = () => {
 
   const isImmersed = activeMode === 'immersed';
 
+  // Hint for tap-to-toggle discoverability
+  React.useEffect(() => {
+    const hasSeenHint = localStorage.getItem('remora_tap_hint');
+    if (!hasSeenHint && isImmersed) {
+      showToast('Tap anywhere to read fullscreen', 'info');
+      localStorage.setItem('remora_tap_hint', 'true');
+    }
+  }, [isImmersed, showToast]);
+
   // Render the current mode's workspace (immersive reading renders separately)
   const renderWorkspace = () => {
     switch (activeMode) {
