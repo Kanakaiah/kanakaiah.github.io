@@ -31,6 +31,7 @@ export const initialState: AppState = {
   reviewLog: [],
   coldChecks: [],
   adherence: { started: 0, completed: 0, itemsGraded: 0, completedMs: 0, abandonedAtSum: 0, abandonedCount: 0 },
+  topics: [],
   settings: {
     ttsEnabled: false,
     recallMasking: false,
@@ -67,7 +68,11 @@ export type AppAction =
   | { type: 'SESSION_STARTED' }
   | { type: 'SESSION_COMPLETED'; payload: { itemsGraded: number; durationMs: number } }
   | { type: 'SESSION_ABANDONED'; payload: { atIndex: number } }
-  | { type: 'RECORD_ACTIVITY' };
+  | { type: 'RECORD_ACTIVITY' }
+  | { type: 'ADD_TOPIC'; payload: { id: string; name: string } }
+  | { type: 'RENAME_TOPIC'; payload: { id: string; name: string } }
+  | { type: 'DELETE_TOPIC'; payload: string }
+  | { type: 'TOGGLE_VERSE_TOPIC'; payload: { verseId: string; topicId: string } };
 
 // --- REDUCER ---
 // Exported for the tests in scripts/. It is a pure function of (state, action) and is
@@ -353,6 +358,40 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         streak: continues ? state.streak + 1 : 1,
         lastActiveDate: new Date().toISOString(),
         ...(forgiven ? { lastGraceDate: new Date().toISOString() } : {}),
+      };
+    }
+    case 'ADD_TOPIC':
+      return {
+        ...state,
+        topics: [...(state.topics || []), { id: action.payload.id, name: action.payload.name, createdAt: new Date().toISOString() }]
+      };
+    case 'RENAME_TOPIC':
+      return {
+        ...state,
+        topics: (state.topics || []).map(t => t.id === action.payload.id ? { ...t, name: action.payload.name } : t)
+      };
+    case 'DELETE_TOPIC':
+      return {
+        ...state,
+        topics: (state.topics || []).filter(t => t.id !== action.payload),
+        verses: state.verses.map(v => v.topicIds?.includes(action.payload)
+          ? { ...v, topicIds: v.topicIds.filter(id => id !== action.payload) }
+          : v
+        )
+      };
+    case 'TOGGLE_VERSE_TOPIC': {
+      const { verseId, topicId } = action.payload;
+      return {
+        ...state,
+        verses: state.verses.map(v => {
+          if (v.id !== verseId) return v;
+          const current = v.topicIds || [];
+          const hasTopic = current.includes(topicId);
+          return {
+            ...v,
+            topicIds: hasTopic ? current.filter(id => id !== topicId) : [...current, topicId]
+          };
+        })
       };
     }
     default:

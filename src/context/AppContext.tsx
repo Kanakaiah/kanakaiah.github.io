@@ -95,6 +95,7 @@ function loadInitialState(): AppState {
           // on a screen the reader then cannot leave.
           coldChecks: Array.isArray(parsed.coldChecks) ? parsed.coldChecks : [],
           adherence: { ...initialState.adherence, ...(parsed.adherence || {}) },
+          topics: Array.isArray(parsed.topics) ? parsed.topics : [],
         };
       }
     }

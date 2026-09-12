@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame } from 'lucide-react';
+import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame, Tags } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';
@@ -9,6 +9,7 @@ import { parseReference } from '../utils/bible';
 import { isDue } from '../utils/sm2';
 import { useNow } from '../utils/useNow';
 import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
+import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
 import { useToast } from '../context/ToastContext';
 import type { Verse } from '../types/models';
 import { OT_BOOKS } from '../data/otBooks';
@@ -29,6 +30,8 @@ export const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [activeTopicFilter, setActiveTopicFilter] = useState<string | null>(null);
+  const [isManageTopicsOpen, setIsManageTopicsOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const { showToast } = useToast();
@@ -126,9 +129,13 @@ export const Dashboard: React.FC = () => {
 
       // Filter
       const masteryPct = Math.min(100, Math.round((v.sm2.repetition / 6) * 100));
-      if (activeFilter === 'review') return isDue(v.sm2, now);
-      if (activeFilter === 'learning') return v.status === 'learning' && masteryPct < 100;
-      if (activeFilter === 'memorized') return masteryPct >= 100;
+      if (activeFilter === 'review' && !isDue(v.sm2, now)) return false;
+      if (activeFilter === 'learning' && (v.status !== 'learning' || masteryPct >= 100)) return false;
+      if (activeFilter === 'memorized' && masteryPct < 100) return false;
+      
+      // Topic filter
+      if (activeTopicFilter && (!v.topicIds || !v.topicIds.includes(activeTopicFilter))) return false;
+
       return true;
     });
 
@@ -371,6 +378,12 @@ export const Dashboard: React.FC = () => {
       <div className="flex flex-col gap-6 mt-2">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-heading font-semibold text-primary tracking-tight">Your Library</h2>
+          <button
+            onClick={() => setIsManageTopicsOpen(true)}
+            className="flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
+          >
+            <Tags className="w-3.5 h-3.5" /> Manage Groups
+          </button>
         </div>
 
         <div className="relative group">
@@ -382,6 +395,35 @@ export const Dashboard: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+
+        {/* Topic Filters */}
+        {state.topics && state.topics.length > 0 && (
+          <div className="flex overflow-x-auto pb-2 -mb-4 scrollbar-hide gap-2 snap-x">
+            <button
+              onClick={() => setActiveTopicFilter(null)}
+              className={`flex items-center px-3 py-1.5 rounded-full border text-[0.8125rem] font-medium transition-colors snap-center whitespace-nowrap ${
+                activeTopicFilter === null
+                  ? 'bg-accent/15 border-accent/30 text-accent'
+                  : 'bg-transparent border-card-border text-secondary hover:border-card-border-hover hover:text-primary'
+              }`}
+            >
+              All Topics
+            </button>
+            {state.topics.map(topic => (
+              <button
+                key={topic.id}
+                onClick={() => setActiveTopicFilter(topic.id)}
+                className={`flex items-center px-3 py-1.5 rounded-full border text-[0.8125rem] font-medium transition-colors snap-center whitespace-nowrap ${
+                  activeTopicFilter === topic.id
+                    ? 'bg-accent/15 border-accent/30 text-accent'
+                    : 'bg-transparent border-card-border text-secondary hover:border-card-border-hover hover:text-primary'
+                }`}
+              >
+                {topic.name}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 relative">
           <div className="flex overflow-x-auto pb-2 -mb-2 scrollbar-hide gap-2 flex-1 snap-x">
@@ -492,6 +534,11 @@ export const Dashboard: React.FC = () => {
             showToast('Verse deleted', 'info');
           }}
         />
+      )}
+
+      {/* Manage Topics Modal */}
+      {isManageTopicsOpen && (
+        <ManageTopicsModal onClose={() => setIsManageTopicsOpen(false)} />
       )}
     </div>
   );

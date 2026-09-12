@@ -20,6 +20,12 @@ export interface SM2Data {
   preLapseInterval?: number;
 }
 
+export interface Topic {
+  id: string;
+  name: string;
+  createdAt: string; // ISO date string
+}
+
 export interface Verse {
   id: string;
   ref: string;
@@ -30,6 +36,7 @@ export interface Verse {
   sm2: SM2Data;
   streak: number;
   attempts: number;
+  topicIds?: string[];
 }
 
 export type BibleVersion = 'LSB' | 'NASB' | 'NLT';
@@ -292,6 +299,8 @@ export interface AppState {
    * on which surface earned the day, and denied the grace entirely to readers with less
    * than a week of history. */
   lastGraceDate?: string;
+  /** Custom user-created groupings for memory verses. */
+  topics?: Topic[];
 }
 
 // Guides Data types based on guides_data.js

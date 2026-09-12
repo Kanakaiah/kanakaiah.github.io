@@ -7,6 +7,7 @@ import { Button } from '../ui/Button';
 import { OT_BOOKS } from '../../data/otBooks';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { readerPath } from '../../utils/readerRoute';
+import { useApp } from '../../context/AppContext';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -20,6 +21,7 @@ interface VerseDetailModalProps {
 
 export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpen, onClose, onPractice, onDelete }) => {
   const navigate = useNavigate();
+  const { state, dispatch } = useApp();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const handleClose = () => {
@@ -72,6 +74,26 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
           </div>
 
           <p className="text-primary leading-relaxed text-lg font-serif whitespace-pre-wrap">{verse.text}</p>
+
+          {state.topics && state.topics.length > 0 && (
+            <div className="border-t border-card-border pt-4">
+              <span className="text-xs font-semibold text-muted uppercase tracking-wider mb-2 block">Groups</span>
+              <div className="flex flex-wrap gap-2">
+                {state.topics.map(topic => {
+                  const isActive = verse.topicIds?.includes(topic.id);
+                  return (
+                    <button
+                      key={topic.id}
+                      onClick={() => dispatch({ type: 'TOGGLE_VERSE_TOPIC', payload: { verseId: verse.id, topicId: topic.id } })}
+                      className={`text-[0.8125rem] px-3 py-1 rounded-full font-medium transition-colors border ${isActive ? 'bg-accent/15 text-accent border-accent/30' : 'bg-transparent text-secondary border-card-border hover:border-accent/50'}`}
+                    >
+                      {topic.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-3 gap-3 border-t border-card-border pt-6">
             <div className="flex flex-col items-center">
