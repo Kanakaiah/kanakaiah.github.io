@@ -114,12 +114,14 @@ export const Dashboard: React.FC = () => {
       .filter((r): r is NonNullable<typeof r> => !!r);
   }, [state.chapterProgress, state.memorySentenceProgress, mastery, now]);
 
+  const [shuffleTrigger, setShuffleTrigger] = useState(0);
+
   // Stable random sort keys to prevent re-shuffling on every render
   const randomSortKeys = useMemo(() => {
     const keys = new Map<string, number>();
     state.verses.forEach(v => keys.set(v.id, Math.random()));
     return keys;
-  }, [state.verses, state.sortOrder === 'random']);
+  }, [state.verses, state.sortOrder === 'random', shuffleTrigger]);
 
   // We want a stable random verse for the hero section so it doesn't flicker on re-renders,
   // but changes when the app is opened (i.e. component mounts).
@@ -179,6 +181,9 @@ export const Dashboard: React.FC = () => {
 
   const handleSortChange = (sort: any) => {
     dispatch({ type: 'SET_SORT_ORDER', payload: sort });
+    if (sort === 'random') {
+      setShuffleTrigger(prev => prev + 1);
+    }
     setIsSortOpen(false);
   };
 
