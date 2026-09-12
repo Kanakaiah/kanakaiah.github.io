@@ -28,6 +28,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<'manual' | 'search'>('manual');
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   
   // Search Tab State
   const [searchQuery, setSearchQuery] = useState('');
@@ -173,7 +174,8 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
         nextDueDate: new Date().toISOString()
       },
       streak: 0,
-      attempts: 0
+      attempts: 0,
+      ...(selectedTopicIds.length > 0 ? { topicIds: selectedTopicIds } : {})
     };
 
     dispatch({ type: 'ADD_VERSE', payload: newVerse });
@@ -195,6 +197,35 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
         <h2 className="text-3xl font-heading font-bold text-primary tracking-tight mb-2">Add New Verses</h2>
         <p className="text-secondary text-sm">Grow your library by searching or adding verses manually.</p>
       </div>
+
+      {/* Global Group Selector */}
+      {state.topics && state.topics.length > 0 && (
+        <div className="flex flex-col gap-3 -mt-4 mb-2">
+          <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider text-center">Assign to Groups (Optional)</span>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {state.topics.map(topic => {
+              const isActive = selectedTopicIds.includes(topic.id);
+              return (
+                <button
+                  key={topic.id}
+                  onClick={() => {
+                    setSelectedTopicIds(prev => 
+                      isActive ? prev.filter(id => id !== topic.id) : [...prev, topic.id]
+                    );
+                  }}
+                  className={`text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border ${
+                    isActive 
+                      ? 'bg-accent/15 text-accent border-accent/30' 
+                      : 'bg-transparent text-secondary border-card-border hover:border-card-border-hover hover:text-primary'
+                  }`}
+                >
+                  {topic.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Mode Selection Buttons */}
       <div className="grid grid-cols-2 gap-3 bg-card-elevated p-2 rounded-lg border border-card-border">
