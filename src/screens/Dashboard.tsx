@@ -165,7 +165,7 @@ export const Dashboard: React.FC = () => {
     });
 
     return result;
-  }, [state.verses, searchQuery, activeFilter, state.sortOrder, randomSortKeys, now]);
+  }, [state.verses, searchQuery, activeFilter, activeTopicFilter, state.sortOrder, randomSortKeys, now]);
 
   const handleSortChange = (sort: any) => {
     dispatch({ type: 'SET_SORT_ORDER', payload: sort });
