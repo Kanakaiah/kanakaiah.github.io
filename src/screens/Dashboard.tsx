@@ -121,6 +121,16 @@ export const Dashboard: React.FC = () => {
     return keys;
   }, [state.verses, state.sortOrder === 'random']);
 
+  // We want a stable random verse for the hero section so it doesn't flicker on re-renders,
+  // but changes when the app is opened (i.e. component mounts).
+  const [heroRandomValue] = useState(() => Math.random());
+  
+  const heroVerse = useMemo(() => {
+    if (stats.dueForReview.length === 0) return null;
+    const index = Math.floor(heroRandomValue * stats.dueForReview.length);
+    return stats.dueForReview[index];
+  }, [stats.dueForReview, heroRandomValue]);
+
   // Filtering and Sorting
   const filteredAndSortedVerses = useMemo(() => {
     let result = state.verses.filter(v => {
@@ -191,7 +201,7 @@ export const Dashboard: React.FC = () => {
           <Flame className="w-3.5 h-3.5" /> Daily Practice
         </h2>
 
-        {stats.dueForReview.length > 0 ? (
+        {heroVerse ? (
           <div>
             {/* The reference leads; the text does not appear.
                 This block used to print the whole verse in 3xl serif directly above a
@@ -204,10 +214,10 @@ export const Dashboard: React.FC = () => {
                 start recall — without handing over the words. FirstLetterMode already
                 takes a bare string, which is how the memory sentence reuses it too. */}
             <h3 className="text-3xl md:text-4xl font-heading font-semibold text-primary leading-tight mb-4">
-              {stats.dueForReview[0].ref}
+              {heroVerse.ref}
             </h3>
             <div className="mb-5 text-primary/90 max-w-2xl">
-              <FirstLetterMode text={stats.dueForReview[0].text} />
+              <FirstLetterMode text={heroVerse.text} />
             </div>
             <div className="flex items-baseline gap-3 mb-8">
               <span className="text-sm text-muted">
