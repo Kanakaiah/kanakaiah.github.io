@@ -103,7 +103,9 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
 
   const handleClearData = () => {
     localStorage.removeItem('remora_data');
-    window.location.reload();
+    dispatch({ type: 'CLEAR_DATA' });
+    setShowDeleteConfirm(false);
+    onClose();
   };
 
   return (

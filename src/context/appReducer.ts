@@ -72,7 +72,8 @@ export type AppAction =
   | { type: 'ADD_TOPIC'; payload: { id: string; name: string } }
   | { type: 'RENAME_TOPIC'; payload: { id: string; name: string } }
   | { type: 'DELETE_TOPIC'; payload: string }
-  | { type: 'TOGGLE_VERSE_TOPIC'; payload: { verseId: string; topicId: string } };
+  | { type: 'TOGGLE_VERSE_TOPIC'; payload: { verseId: string; topicId: string } }
+  | { type: 'CLEAR_DATA' };
 
 // --- REDUCER ---
 // Exported for the tests in scripts/. It is a pure function of (state, action) and is
@@ -99,9 +100,12 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         verses: uniqueVerses,
         settings: {
           ...state.settings,
-          ...(action.payload.settings || {})
+          ...(action.payload.settings || {}),
         }
       };
+    }
+    case 'CLEAR_DATA': {
+      return { ...initialState };
     }
     case 'ADD_VERSE':
       return { ...state, verses: [...state.verses, action.payload] };
