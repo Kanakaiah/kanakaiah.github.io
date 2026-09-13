@@ -43,7 +43,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           name: newGroupName.trim(),
         },
       });
-      setSelectedTopicIds(prev => [...prev, newId]);
+      setSelectedTopicIds([newId]);
       setNewGroupName('');
       setIsAddingGroup(false);
     }

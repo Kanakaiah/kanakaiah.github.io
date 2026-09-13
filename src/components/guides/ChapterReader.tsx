@@ -352,7 +352,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     if (!newGroupName.trim()) return;
     const newTopic = { id: crypto.randomUUID(), name: newGroupName.trim() };
     dispatch({ type: 'ADD_TOPIC', payload: newTopic });
-    setSelectedTopicIds(prev => [...prev, newTopic.id]);
+    setSelectedTopicIds([newTopic.id]);
     setNewGroupName('');
     setIsAddingGroup(false);
   };
