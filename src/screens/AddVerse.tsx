@@ -126,6 +126,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             versesByChapter[v.chapter].push(v.verse);
           });
 
+          const individualVerses: any[] = [];
           let combinedText = '';
           for (const [chStr, vNums] of Object.entries(versesByChapter)) {
             const ch = parseInt(chStr);
@@ -136,7 +137,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             const requestedVerses = chapterData.filter((v: any) => vNums.includes(v.verse));
             
             const textChunk = requestedVerses.map((v: any) => {
-              return v.text
+              const cleanText = v.text
                 .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
                 .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
                 .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
@@ -144,6 +145,15 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                 .replace(/<\/p>/gi, ' ')
                 .replace(/<[^>]*>/g, '')
                 .trim();
+                
+              individualVerses.push({
+                book_name: data.verses[0].book_name,
+                chapter: ch,
+                verse: v.verse,
+                text: cleanText
+              });
+              
+              return cleanText;
             }).join(' ');
             
             combinedText += textChunk + ' ';
@@ -153,7 +163,8 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           results.push({
             reference: data.reference,
             text: combinedText.trim(),
-            translation_name: searchTranslation
+            translation_name: searchTranslation,
+            verses: individualVerses
           });
         } else {
           results.push(data);
@@ -361,12 +372,65 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                     </span>
                   </div>
                   <p className="text-primary text-sm font-serif leading-relaxed">{res.text}</p>
-                  <Button 
-                    onClick={() => addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase())}
-                    className="mt-2 self-end"
-                  >
-                    Add to Library
-                  </Button>
+                  <div className="mt-2 flex flex-col sm:flex-row gap-2 justify-end">
+                    {res.verses && res.verses.length > 1 ? (
+                      <>
+                        <Button 
+                          variant="secondary"
+                          onClick={() => {
+                            let skipped = 0;
+                            res.verses.forEach((v: any) => {
+                              const ref = `${v.book_name} ${v.chapter}:${v.verse}`;
+                              // Check if exists
+                              if (state.verses.some(existing => existing.ref.toLowerCase() === ref.toLowerCase() && existing.translation.toLowerCase() === (res.translation_name || searchTranslation.toUpperCase()).toLowerCase())) {
+                                skipped++;
+                                return;
+                              }
+                              
+                              const newVerse: any = {
+                                id: "v_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9),
+                                ref,
+                                text: v.text.trim(),
+                                translation: res.translation_name || searchTranslation.toUpperCase(),
+                                addedDate: new Date().toISOString(),
+                                status: "learning",
+                                sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+                                streak: 0,
+                                attempts: 0,
+                                ...(selectedTopicIds.length > 0 ? { topicIds: selectedTopicIds } : {})
+                              };
+                              dispatch({ type: 'ADD_VERSE', payload: newVerse });
+                            });
+                            
+                            const added = res.verses.length - skipped;
+                            if (added > 0 && skipped > 0) {
+                              showToast(`Added ${added} individual verses (${skipped} skipped as duplicate)`, 'success');
+                            } else if (added > 0) {
+                              showToast(`Added ${added} individual verses to library!`, 'success');
+                            } else {
+                              showToast(`All ${skipped} verses are already in your library!`, 'error');
+                            }
+                            
+                            if (onVerseAdded) onVerseAdded();
+                            else navigate('/');
+                          }}
+                        >
+                          Add Individually ({res.verses.length})
+                        </Button>
+                        <Button 
+                          onClick={() => addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase())}
+                        >
+                          Add Combined (1)
+                        </Button>
+                      </>
+                    ) : (
+                      <Button 
+                        onClick={() => addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase())}
+                      >
+                        Add to Library
+                      </Button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
