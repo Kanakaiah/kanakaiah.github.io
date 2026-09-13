@@ -72,7 +72,7 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} variant="dialog" size="sm" showCloseButton={false}>
-      <div className="relative p-6">
+      <div className="relative p-6 overflow-y-auto">
         <div className="absolute right-3 top-3 flex items-center gap-0.5">
           <button
             onClick={onPrev}
