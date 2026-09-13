@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, AlignLeft, Trash2, BookOpen } from 'lucide-react';
+import { X, AlignLeft, Trash2, BookOpen, Plus, Check } from 'lucide-react';
 import type { Verse } from '../../types/models';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -23,6 +23,18 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
   const navigate = useNavigate();
   const { state, dispatch } = useApp();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+
+  const handleCreateGroup = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newGroupName.trim()) return;
+    const newTopic = { id: crypto.randomUUID(), name: newGroupName.trim() };
+    dispatch({ type: 'ADD_TOPIC', payload: newTopic });
+    dispatch({ type: 'TOGGLE_VERSE_TOPIC', payload: { verseId: verse.id, topicId: newTopic.id } });
+    setNewGroupName('');
+    setIsAddingGroup(false);
+  };
 
   const handleClose = () => {
     setConfirmingDelete(false);
@@ -75,25 +87,57 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
 
           <p className="text-primary leading-relaxed text-lg font-serif whitespace-pre-wrap">{verse.text}</p>
 
-          {state.topics && state.topics.length > 0 && (
-            <div className="border-t border-card-border pt-4">
-              <span className="text-xs font-semibold text-muted uppercase tracking-wider mb-2 block">Groups</span>
-              <div className="flex flex-wrap gap-2">
-                {state.topics.map(topic => {
-                  const isActive = verse.topicIds?.includes(topic.id);
-                  return (
-                    <button
-                      key={topic.id}
-                      onClick={() => dispatch({ type: 'TOGGLE_VERSE_TOPIC', payload: { verseId: verse.id, topicId: topic.id } })}
-                      className={`text-[0.8125rem] px-3 py-1 rounded-full font-medium transition-colors border ${isActive ? 'bg-accent/15 text-accent border-accent/30' : 'bg-transparent text-secondary border-card-border hover:border-accent/50'}`}
-                    >
-                      {topic.name}
-                    </button>
-                  );
-                })}
-              </div>
+          <div className="border-t border-card-border pt-4">
+            <span className="text-xs font-semibold text-muted uppercase tracking-wider mb-2 block">Groups</span>
+            <div className="flex flex-wrap gap-2">
+              {state.topics?.map(topic => {
+                const isActive = verse.topicIds?.includes(topic.id);
+                return (
+                  <button
+                    key={topic.id}
+                    onClick={() => dispatch({ type: 'TOGGLE_VERSE_TOPIC', payload: { verseId: verse.id, topicId: topic.id } })}
+                    className={`text-[0.8125rem] px-3 py-1 rounded-full font-medium transition-colors border ${isActive ? 'bg-accent/15 text-accent border-accent/30' : 'bg-transparent text-secondary border-card-border hover:border-accent/50'}`}
+                  >
+                    {topic.name}
+                  </button>
+                );
+              })}
+              
+              {isAddingGroup ? (
+                <form onSubmit={handleCreateGroup} className="flex items-center gap-1">
+                  <input
+                    type="text"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    placeholder="New group..."
+                    className="text-[0.8125rem] px-3 py-1 rounded-full bg-card border border-accent text-primary focus:outline-none w-28"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') setIsAddingGroup(false);
+                    }}
+                    onBlur={() => {
+                      if (!newGroupName.trim()) setIsAddingGroup(false);
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!newGroupName.trim()}
+                    className="p-1 rounded-full text-accent hover:bg-accent/10 disabled:opacity-50 transition-colors"
+                    aria-label="Save group"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                </form>
+              ) : (
+                <button
+                  onClick={() => setIsAddingGroup(true)}
+                  className="text-[0.8125rem] px-3 py-1 rounded-full font-medium transition-colors border bg-transparent text-secondary border-card-border border-dashed hover:border-solid hover:border-accent hover:text-accent flex items-center gap-1"
+                >
+                  <Plus className="w-3.5 h-3.5" /> New Group
+                </button>
+              )}
             </div>
-          )}
+          </div>
 
           <div className="grid grid-cols-3 gap-3 border-t border-card-border pt-6">
             <div className="flex flex-col items-center">
