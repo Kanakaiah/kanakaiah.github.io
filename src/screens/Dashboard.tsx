@@ -534,22 +534,31 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Verse Detail Modal */}
-      {selectedVerse && (
-        <VerseDetailModal
-          verse={state.verses.find(v => v.id === selectedVerse.id) || selectedVerse}
-          isOpen={true}
-          onClose={() => setSelectedVerse(null)}
-          onPractice={() => {
-            setSelectedVerse(null);
-            navigate('/practice?id=' + selectedVerse.id);
-          }}
-          onDelete={() => {
-            dispatch({ type: 'DELETE_VERSE', payload: selectedVerse.id });
-            setSelectedVerse(null);
-            showToast('Verse deleted', 'info');
-          }}
-        />
-      )}
+      {selectedVerse && (() => {
+        const liveVerse = state.verses.find(v => v.id === selectedVerse.id) || selectedVerse;
+        const currentIndex = filteredAndSortedVerses.findIndex(v => v.id === selectedVerse.id);
+        const hasNext = currentIndex >= 0 && currentIndex < filteredAndSortedVerses.length - 1;
+        const hasPrev = currentIndex > 0;
+        
+        return (
+          <VerseDetailModal
+            verse={liveVerse}
+            isOpen={true}
+            onClose={() => setSelectedVerse(null)}
+            onNext={hasNext ? () => setSelectedVerse(filteredAndSortedVerses[currentIndex + 1]) : undefined}
+            onPrev={hasPrev ? () => setSelectedVerse(filteredAndSortedVerses[currentIndex - 1]) : undefined}
+            onPractice={() => {
+              setSelectedVerse(null);
+              navigate('/practice?id=' + selectedVerse.id);
+            }}
+            onDelete={() => {
+              dispatch({ type: 'DELETE_VERSE', payload: selectedVerse.id });
+              setSelectedVerse(null);
+              showToast('Verse deleted', 'info');
+            }}
+          />
+        );
+      })()}
 
       {/* Manage Topics Modal */}
       {isManageTopicsOpen && (

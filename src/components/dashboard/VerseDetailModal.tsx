@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, AlignLeft, Trash2, BookOpen, Plus, Check } from 'lucide-react';
+import { X, AlignLeft, Trash2, BookOpen, Plus, Check, ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Verse } from '../../types/models';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -17,9 +17,11 @@ interface VerseDetailModalProps {
   onClose: () => void;
   onPractice: () => void;
   onDelete: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
 }
 
-export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpen, onClose, onPractice, onDelete }) => {
+export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpen, onClose, onPractice, onDelete, onNext, onPrev }) => {
   const navigate = useNavigate();
   const { state, dispatch } = useApp();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -71,13 +73,32 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
   return (
     <Modal isOpen={isOpen} onClose={handleClose} variant="dialog" size="sm" showCloseButton={false}>
       <div className="relative p-6">
-        <button
-          onClick={handleClose}
-          className="absolute right-4 top-4 text-secondary hover:text-primary transition-colors"
-          aria-label="Close"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        <div className="absolute right-3 top-3 flex items-center gap-0.5">
+          <button
+            onClick={onPrev}
+            disabled={!onPrev}
+            className="p-2 text-secondary hover:text-primary hover:bg-card-hover rounded-md transition-colors disabled:opacity-25 disabled:hover:bg-transparent"
+            aria-label="Previous verse"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={onNext}
+            disabled={!onNext}
+            className="p-2 text-secondary hover:text-primary hover:bg-card-hover rounded-md transition-colors disabled:opacity-25 disabled:hover:bg-transparent"
+            aria-label="Next verse"
+          >
+            <ArrowRight className="w-4 h-4" />
+          </button>
+          <div className="w-px h-4 bg-card-border mx-1" />
+          <button
+            onClick={handleClose}
+            className="p-2 text-secondary hover:text-primary hover:bg-card-hover rounded-md transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
         <div className="flex flex-col gap-6 pt-2">
           <div>
