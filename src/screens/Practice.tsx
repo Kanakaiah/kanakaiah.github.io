@@ -215,7 +215,8 @@ export const Practice: React.FC = () => {
     setModeCommitted(null);
   }, [activeVerseIndex, activeMode]);
 
-  const currentVerse = verses[activeVerseIndex];
+  const safeVerseIndex = activeVerseIndex >= verses.length ? Math.max(0, verses.length - 1) : activeVerseIndex;
+  const currentVerse = verses[safeVerseIndex];
 
   const handleToggleTTS = () => {
     if (isAutoPlaying) {
@@ -744,7 +745,7 @@ export const Practice: React.FC = () => {
             onClick={() => setIsNavigatorOpen(true)}
             className="flex flex-col items-center justify-center text-[0.6875rem] font-bold text-muted uppercase tracking-widest bg-card-elevated hover:bg-card-hover border border-card-border rounded-md px-4 py-1.5 transition-colors text-center min-w-[5rem]"
           >
-            <span>{verses.length > 0 ? `${activeVerseIndex + 1} OF ${verses.length}` : '0 OF 0'}</span>
+            <span>{verses.length > 0 ? `${safeVerseIndex + 1} OF ${verses.length}` : '0 OF 0'}</span>
             {activeTopicFilter && state.topics?.some(t => t.id === activeTopicFilter) && (
               <span className="block text-[9px] text-accent truncate max-w-[100px] opacity-90 mt-[1px] leading-none">
                 {state.topics?.find(t => t.id === activeTopicFilter)?.name}
