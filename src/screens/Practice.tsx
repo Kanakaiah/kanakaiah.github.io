@@ -20,6 +20,7 @@ import { AnchorDrill } from '../components/practice/AnchorDrill';
 import { ThemeDrill } from '../components/practice/ThemeDrill';
 import { Session } from '../components/practice/Session';
 import { Button } from '../components/ui/Button';
+import { Modal } from '../components/ui/Modal';
 
 type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'immersed';
 
@@ -136,7 +137,14 @@ export const Practice: React.FC = () => {
   // The workshop always works against the whole library — it is a place to pick something
   // up deliberately, so filtering it to what happens to be due would defeat the point.
   // The day's-work path builds its own plan and never reads this.
-  const verses = state.verses;
+  const [activeTopicFilter, setActiveTopicFilter] = useState<string | null>(null);
+  const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
+
+  // The workshop works against the whole library or a filtered topic
+  const verses = React.useMemo(() => {
+    if (!activeTopicFilter) return state.verses;
+    return state.verses.filter(v => v.topicIds?.includes(activeTopicFilter));
+  }, [state.verses, activeTopicFilter]);
 
   const initialIndex = React.useMemo(() => {
     if (targetId) {
@@ -151,6 +159,10 @@ export const Practice: React.FC = () => {
   React.useEffect(() => {
     setActiveVerseIndex(initialIndex);
   }, [initialIndex]);
+
+  React.useEffect(() => {
+    setActiveVerseIndex(0);
+  }, [activeTopicFilter]);
 
   // Chrome (fixed header + bottom verse-nav) visibility — tap-to-toggle, the same
   // rule the chapter reader and the guide pages use: a tap on empty space toggles,
@@ -728,9 +740,17 @@ export const Practice: React.FC = () => {
             <span className="sm:hidden">Prev</span>
           </button>
 
-          <span className="text-xs font-bold text-muted uppercase tracking-wider border border-card-border rounded-md px-3 py-1.5">
-            {activeVerseIndex + 1} of {verses.length}
-          </span>
+          <button
+            onClick={() => setIsNavigatorOpen(true)}
+            className="flex flex-col items-center justify-center text-[0.6875rem] font-bold text-muted uppercase tracking-widest bg-card-elevated hover:bg-card-hover border border-card-border rounded-md px-4 py-1.5 transition-colors text-center min-w-[5rem]"
+          >
+            <span>{verses.length > 0 ? `${activeVerseIndex + 1} OF ${verses.length}` : '0 OF 0'}</span>
+            {activeTopicFilter && state.topics?.some(t => t.id === activeTopicFilter) && (
+              <span className="block text-[9px] text-accent truncate max-w-[100px] opacity-90 mt-[1px] leading-none">
+                {state.topics?.find(t => t.id === activeTopicFilter)?.name}
+              </span>
+            )}
+          </button>
 
           <button
             onClick={handleNext}
@@ -743,6 +763,41 @@ export const Practice: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <Modal isOpen={isNavigatorOpen} onClose={() => setIsNavigatorOpen(false)} title="Filter by Group">
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => {
+              setActiveTopicFilter(null);
+              setIsNavigatorOpen(false);
+            }}
+            className={`px-4 py-3 rounded-lg border text-left font-medium transition-colors ${!activeTopicFilter ? 'bg-accent/15 border-accent text-accent' : 'bg-card border-card-border hover:border-accent/50 text-primary'}`}
+          >
+            All Verses ({state.verses.length})
+          </button>
+          
+          {state.topics?.map(topic => {
+            const count = state.verses.filter(v => v.topicIds?.includes(topic.id)).length;
+            if (count === 0) return null; // Only show groups that actually have verses
+            
+            return (
+              <button
+                key={topic.id}
+                onClick={() => {
+                  setActiveTopicFilter(topic.id);
+                  setIsNavigatorOpen(false);
+                }}
+                className={`px-4 py-3 rounded-lg border text-left font-medium transition-colors flex justify-between items-center ${activeTopicFilter === topic.id ? 'bg-accent/15 border-accent text-accent' : 'bg-card border-card-border hover:border-accent/50 text-primary'}`}
+              >
+                <span>{topic.name}</span>
+                <span className={`text-xs font-bold px-2 py-1 rounded-md ${activeTopicFilter === topic.id ? 'bg-accent/20' : 'bg-card-elevated text-secondary'}`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </Modal>
     </div>
   );
 };
