@@ -536,7 +536,7 @@ export const Dashboard: React.FC = () => {
       {/* Verse Detail Modal */}
       {selectedVerse && (
         <VerseDetailModal
-          verse={selectedVerse}
+          verse={state.verses.find(v => v.id === selectedVerse.id) || selectedVerse}
           isOpen={true}
           onClose={() => setSelectedVerse(null)}
           onPractice={() => {
