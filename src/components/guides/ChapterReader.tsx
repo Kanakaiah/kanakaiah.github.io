@@ -323,6 +323,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     const path = readerPath(targetBookId, targetChapter);
     if (path) navigate(path, { replace });
   };
+  
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+
   const [showOptions, setShowOptions] = useState(false);
   const [showAnchorScene, setShowAnchorScene] = useState(false);
   // Gates the anchor *word* itself under anchorReveal === 'tap' — separate from
@@ -341,6 +346,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const { state, dispatch } = useApp();
   const bibleVersion = state.settings.bibleVersion || 'LSB';
   const { showToast } = useToast();
+  
+  const handleCreateGroup = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newGroupName.trim()) return;
+    const newTopic = { id: crypto.randomUUID(), name: newGroupName.trim() };
+    dispatch({ type: 'ADD_TOPIC', payload: newTopic });
+    setSelectedTopicIds(prev => [...prev, newTopic.id]);
+    setNewGroupName('');
+    setIsAddingGroup(false);
+  };
   // For the navigator's book list — same theme-word/division/mastery treatment as
   // the Bible index modal (Guides.tsx), so the two most-seen book lists in the app
   // read the same way instead of one carrying mnemonic context and the other not.
@@ -942,11 +957,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   };
 
   const handleAddClick = () => {
-    if (selectedVerses.length > 1) {
-      setShowAddOptions(true);
-    } else {
-      executeAdd('individual');
-    }
+    setShowAddOptions(true);
   };
 
   const executeAdd = (mode: 'individual' | 'combined') => {
@@ -982,7 +993,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               status: 'learning',
               sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
               streak: 0,
-              attempts: 0
+              attempts: 0,
+              topicIds: selectedTopicIds.length > 0 ? selectedTopicIds : undefined
             }
           });
           addedCount++;
@@ -1043,7 +1055,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             status: 'learning',
             sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
             streak: 0,
-            attempts: 0
+            attempts: 0,
+            topicIds: selectedTopicIds.length > 0 ? selectedTopicIds : undefined
           }
         });
         addedCount++;
@@ -1932,25 +1945,101 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       {showAddOptions && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
           <div className="bg-card-elevated border border-card-border rounded-lg shadow-md p-6 w-full max-w-sm">
-            <h3 className="text-xl font-bold text-primary mb-2">How to add?</h3>
-            <p className="text-sm text-secondary mb-6">You have selected {selectedVerses.length} verses. Would you like to add them as individual verses or combine consecutive verses into single entries?</p>
+            <h3 className="text-xl font-bold text-primary mb-2">Add to Library</h3>
+            <p className="text-sm text-secondary mb-5">
+              {selectedVerses.length > 1 
+                ? `You have selected ${selectedVerses.length} verses.`
+                : 'Save this verse to your memory library.'}
+            </p>
+
+            {/* Group Selector */}
+            <div className="mb-6">
+              <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider block mb-2">Assign to Groups (Optional)</span>
+              <div className="flex flex-wrap items-center gap-2">
+                {state.topics?.map(topic => {
+                  const isActive = selectedTopicIds.includes(topic.id);
+                  return (
+                    <button
+                      key={topic.id}
+                      onClick={() => {
+                        setSelectedTopicIds(prev => 
+                          isActive ? prev.filter(id => id !== topic.id) : [...prev, topic.id]
+                        );
+                      }}
+                      className={`text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border ${
+                        isActive 
+                          ? 'bg-accent/15 text-accent border-accent/30' 
+                          : 'bg-transparent text-secondary border-card-border hover:border-card-border-hover hover:text-primary'
+                      }`}
+                    >
+                      {topic.name}
+                    </button>
+                  );
+                })}
+                
+                {isAddingGroup ? (
+                  <form onSubmit={handleCreateGroup} className="flex items-center gap-1">
+                    <input
+                      type="text"
+                      value={newGroupName}
+                      onChange={(e) => setNewGroupName(e.target.value)}
+                      placeholder="New group..."
+                      className="text-[0.8125rem] px-3 py-1.5 rounded-full bg-card border border-accent text-primary focus:outline-none w-28"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') setIsAddingGroup(false);
+                      }}
+                      onBlur={() => {
+                        if (!newGroupName.trim()) setIsAddingGroup(false);
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={!newGroupName.trim()}
+                      className="p-1.5 rounded-full text-accent hover:bg-accent/10 disabled:opacity-50 transition-colors"
+                      aria-label="Save group"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  </form>
+                ) : (
+                  <button
+                    onClick={() => setIsAddingGroup(true)}
+                    className="text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border bg-transparent text-secondary border-card-border border-dashed hover:border-solid hover:border-accent hover:text-accent flex items-center gap-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> New Group
+                  </button>
+                )}
+              </div>
+            </div>
 
             <div className="flex flex-col gap-3">
-              <button
-                onClick={() => executeAdd('combined')}
-                className="w-full py-3 px-4 bg-accent text-white font-bold rounded-md hover:bg-accent-hover transition-colors flex flex-col items-start"
-              >
-                <span>Combine Consecutive</span>
-                <span className="text-xs font-normal text-white/70 mt-0.5">e.g. 1:3-5 and 1:7</span>
-              </button>
+              {selectedVerses.length > 1 ? (
+                <>
+                  <button
+                    onClick={() => executeAdd('combined')}
+                    className="w-full py-3 px-4 bg-accent text-white font-bold rounded-md hover:bg-accent-hover transition-colors flex flex-col items-start"
+                  >
+                    <span>Combine Consecutive</span>
+                    <span className="text-xs font-normal text-white/70 mt-0.5">e.g. 1:3-5 and 1:7</span>
+                  </button>
 
-              <button
-                onClick={() => executeAdd('individual')}
-                className="w-full py-3 px-4 bg-card border border-card-border text-primary font-bold rounded-md hover:bg-card-hover transition-colors flex flex-col items-start"
-              >
-                <span>Individual Verses</span>
-                <span className="text-xs font-normal text-secondary mt-0.5">Add {selectedVerses.length} separate entries</span>
-              </button>
+                  <button
+                    onClick={() => executeAdd('individual')}
+                    className="w-full py-3 px-4 bg-card border border-card-border text-primary font-bold rounded-md hover:bg-card-hover transition-colors flex flex-col items-start"
+                  >
+                    <span>Individual Verses</span>
+                    <span className="text-xs font-normal text-secondary mt-0.5">Add {selectedVerses.length} separate entries</span>
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => executeAdd('individual')}
+                  className="w-full py-3 px-4 bg-accent text-white font-bold rounded-md hover:bg-accent-hover transition-colors flex justify-center"
+                >
+                  Save to Library
+                </button>
+              )}
               
               <button 
                 onClick={() => setShowAddOptions(false)}
