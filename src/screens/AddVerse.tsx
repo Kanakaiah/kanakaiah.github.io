@@ -360,6 +360,15 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             </div>
           </div>
           
+          {searchQuery.split(';').length > 20 && (
+            <div className="p-3 border border-blue-500/30 bg-blue-500/10 rounded-md text-blue-400 flex flex-col sm:flex-row items-start gap-3">
+              <div className="mt-0.5"><AlertCircle className="w-5 h-5 shrink-0" /></div>
+              <p className="text-sm font-medium leading-relaxed">
+                You are adding a massive batch of verses. To protect the public Bible API from crashing, verses will be added slowly one-by-one. If the API forces a timeout halfway through, <strong>just save the ones that succeeded, wait 60 seconds, and paste the remainder in a new search!</strong>
+              </p>
+            </div>
+          )}
+
           <Button onClick={() => handleSearch()} isLoading={isLoading} className="w-full">
             Search
           </Button>
