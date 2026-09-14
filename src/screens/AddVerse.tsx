@@ -109,13 +109,12 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       return fetch(url);
     };
 
-    const results = [];
-    let hasError = false;
+    const baseDelay = queries.length > 20 ? 800 : 400; // longer delay for massive batches
 
     for (let i = 0; i < queries.length; i++) {
       const query = queries[i];
       try {
-        if (i > 0) await new Promise(res => setTimeout(res, 500)); // prevent rate limits on bulk queries
+        if (i > 0) await new Promise(res => setTimeout(res, baseDelay)); // prevent rate limits on bulk queries
         
         const response = await fetchWithRetry(`https://bible-api.com/${encodeURIComponent(query)}?translation=${parseTranslation}`);
         
@@ -185,29 +184,26 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             await new Promise(res => setTimeout(res, 250)); // stagger bolls requests slightly
           }
 
-          results.push({
+          const resultObj = {
             reference: data.reference,
             text: combinedText.trim(),
             translation_name: searchTranslation,
             verses: individualVerses
-          });
+          };
+          setSearchResults(prev => [...prev, resultObj]);
         } else {
-          results.push(data);
+          setSearchResults(prev => [...prev, data]);
         }
       } catch (err: any) {
         if (err.message === 'Failed to fetch') {
-          setSearchError(`Network error or rate limit exceeded while fetching '${query}'. Try adding them in smaller batches.`);
+          setSearchError(`Rate limit exceeded at '${query}'. The verses fetched so far have been kept. Please wait a minute and try adding the rest in a new batch.`);
         } else {
           setSearchError(err.message || `Failed to search for verse: ${query}`);
         }
-        hasError = true;
-        break; // Stop processing if one fails to keep it consistent
+        break; // Stop processing but keep the ones we got
       }
     }
     
-    if (!hasError) {
-      setSearchResults(results);
-    }
     setIsLoading(false);
   };
 
