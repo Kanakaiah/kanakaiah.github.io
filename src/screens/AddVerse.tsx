@@ -89,15 +89,35 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
         queries.push(part);
       }
     }
+    const fetchWithRetry = async (url: string, retries = 3) => {
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+          const res = await fetch(url);
+          if (res.status === 429 && attempt < retries) {
+            await new Promise(r => setTimeout(r, 1500 * Math.pow(1.5, attempt)));
+            continue;
+          }
+          return res;
+        } catch (err: any) {
+          if (err.message === 'Failed to fetch' && attempt < retries) {
+            await new Promise(r => setTimeout(r, 1500 * Math.pow(1.5, attempt)));
+            continue;
+          }
+          throw err;
+        }
+      }
+      return fetch(url);
+    };
+
     const results = [];
     let hasError = false;
 
     for (let i = 0; i < queries.length; i++) {
       const query = queries[i];
       try {
-        if (i > 0) await new Promise(res => setTimeout(res, 400)); // prevent rate limits on bulk queries
+        if (i > 0) await new Promise(res => setTimeout(res, 500)); // prevent rate limits on bulk queries
         
-        const response = await fetch(`https://bible-api.com/${encodeURIComponent(query)}?translation=${parseTranslation}`);
+        const response = await fetchWithRetry(`https://bible-api.com/${encodeURIComponent(query)}?translation=${parseTranslation}`);
         
         if (!response.ok) {
           throw new Error(response.status === 429 
@@ -135,7 +155,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           let combinedText = '';
           for (const [chStr, vNums] of Object.entries(versesByChapter)) {
             const ch = parseInt(chStr);
-            const bollsRes = await fetch(`https://bolls.life/get-text/${searchTranslation}/${bollsId}/${ch}/`);
+            const bollsRes = await fetchWithRetry(`https://bolls.life/get-text/${searchTranslation}/${bollsId}/${ch}/`);
             if (!bollsRes.ok) throw new Error(`Could not fetch ${searchTranslation} translation.`);
             
             const chapterData = await bollsRes.json();
