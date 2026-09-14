@@ -79,6 +79,14 @@ function loadInitialState(): AppState {
               v.text = v.text.replace(/For the choir director\.\s*Of David\.?/i, '').trim();
             }
             
+            // Migrate old long translation names to short codes
+            if (v.translation) {
+              const t = v.translation.toLowerCase();
+              if (t === 'world english bible' || t === 'web') v.translation = 'WEB';
+              else if (t === 'king james version' || t === 'kjv') v.translation = 'KJV';
+              else if (t === 'bible in basic english' || t === 'bbe') v.translation = 'BBE';
+            }
+            
             uniqueVerses.push(v);
           }
         }

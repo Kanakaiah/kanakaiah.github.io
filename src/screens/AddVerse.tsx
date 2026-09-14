@@ -390,7 +390,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                 <Button 
                   onClick={() => {
                     searchResults.forEach(res => {
-                      addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase(), true);
+                      addVerseToLibrary(res.reference, res.text, searchTranslation.toUpperCase(), true);
                     });
                     if (onVerseAdded) onVerseAdded();
                     else navigate('/');
@@ -406,7 +406,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                   <div className="flex justify-between items-center">
                     <span className="font-heading font-bold text-lg text-accent-light">{res.reference}</span>
                     <span className="px-2 py-1 rounded text-xs font-bold bg-accent/20 text-accent-light">
-                      {res.translation_name || searchTranslation.toUpperCase()}
+                      {searchTranslation.toUpperCase()}
                     </span>
                   </div>
                   <p className="text-primary text-sm font-serif leading-relaxed">{res.text}</p>
@@ -420,7 +420,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                             res.verses.forEach((v: any) => {
                               const ref = `${v.book_name} ${v.chapter}:${v.verse}`;
                               // Check if exists
-                              if (state.verses.some(existing => existing.ref.toLowerCase() === ref.toLowerCase() && existing.translation.toLowerCase() === (res.translation_name || searchTranslation.toUpperCase()).toLowerCase())) {
+                              if (state.verses.some(existing => existing.ref.toLowerCase() === ref.toLowerCase() && existing.translation.toLowerCase() === (searchTranslation.toUpperCase()).toLowerCase())) {
                                 skipped++;
                                 return;
                               }
@@ -429,7 +429,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                                 id: "v_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9),
                                 ref,
                                 text: v.text.trim(),
-                                translation: res.translation_name || searchTranslation.toUpperCase(),
+                                translation: searchTranslation.toUpperCase(),
                                 addedDate: new Date().toISOString(),
                                 status: "learning",
                                 sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
@@ -456,14 +456,14 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                           Add Individually ({res.verses.length})
                         </Button>
                         <Button 
-                          onClick={() => addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase())}
+                          onClick={() => addVerseToLibrary(res.reference, res.text, searchTranslation.toUpperCase())}
                         >
                           Add Combined (1)
                         </Button>
                       </>
                     ) : (
                       <Button 
-                        onClick={() => addVerseToLibrary(res.reference, res.text, res.translation_name || searchTranslation.toUpperCase())}
+                        onClick={() => addVerseToLibrary(res.reference, res.text, searchTranslation.toUpperCase())}
                       >
                         Add to Library
                       </Button>
