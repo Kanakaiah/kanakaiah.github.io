@@ -4,8 +4,6 @@ export function useWakeLock() {
   const wakeLockRef = useRef<any>(null);
 
   useEffect(() => {
-    let isMounted = true;
-    
     const requestWakeLock = async () => {
       try {
         if ('wakeLock' in navigator) {
@@ -27,7 +25,6 @@ export function useWakeLock() {
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      isMounted = false;
       if (wakeLockRef.current !== null) {
         wakeLockRef.current.release().catch(() => {}).finally(() => {
           wakeLockRef.current = null;
