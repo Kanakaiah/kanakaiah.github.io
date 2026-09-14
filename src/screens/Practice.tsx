@@ -157,7 +157,7 @@ export const Practice: React.FC = () => {
       ? state.verses.filter(v => v.topicIds?.includes(activeTopicFilter))
       : [...state.verses];
 
-    const now = Date.now();
+    const now = new Date();
     base.sort((a, b) => {
       if (state.sortOrder === 'smart') {
         const isADue = isDue(a.sm2, now);
