@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight, Play, Square, Minus, Plus } from 'lucide-react';
 import { ReadMode } from './ReadMode';
 import type { Verse } from '../../types/models';
+import { useWakeLock } from '../../hooks/useWakeLock';
 
 const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 3;
@@ -31,6 +32,8 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
   isAutoPlaying,
   onToggleAutoPlay,
 }) => {
+  useWakeLock();
+  
   const [zoom, setZoom] = useState(1);
   const [chromeVisible, setChromeVisible] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);

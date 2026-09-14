@@ -21,6 +21,7 @@ import { ThemeDrill } from '../components/practice/ThemeDrill';
 import { Session } from '../components/practice/Session';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
+import { useWakeLock } from '../hooks/useWakeLock';
 
 type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'immersed';
 
@@ -60,6 +61,8 @@ const HINT_GRADE_CEILING: Record<number, number> = { 0: 5, 1: 4, 2: 3, 3: 3, 4: 
 const ceilingFor = (hintLevel: number) => HINT_GRADE_CEILING[hintLevel] ?? 5;
 
 export const Practice: React.FC = () => {
+  useWakeLock();
+  
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
