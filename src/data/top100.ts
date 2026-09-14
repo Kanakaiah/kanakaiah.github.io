@@ -92,7 +92,7 @@ export const TOP_100_VERSES: Verse[] = [
   {
     id: "top100-9",
     ref: "Psalms 46:1",
-    text: "For the choir director. Of the sons of Korah. According to Alamoth. A Song.God is our refuge and strength, A very present help in trouble.",
+    text: "God is our refuge and strength, A very present help in trouble.",
     translation: "LSB",
     addedDate: new Date().toISOString(),
     status: "learning",

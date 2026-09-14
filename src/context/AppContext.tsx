@@ -69,6 +69,12 @@ function loadInitialState(): AppState {
           const key = `${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`;
           if (!seen.has(key)) {
             seen.add(key);
+            
+            // Clean up accidental psalm titles from the Top 100 starter pack
+            if (v.ref.toLowerCase() === 'psalms 46:1' && v.text.includes('Alamoth')) {
+              v.text = v.text.replace(/For the choir director.*?A Song\.?/i, '').trim();
+            }
+            
             uniqueVerses.push(v);
           }
         }
