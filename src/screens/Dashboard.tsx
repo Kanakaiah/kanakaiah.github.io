@@ -19,6 +19,7 @@ import { useMastery } from '../utils/mastery';
 import { ShapeMeter } from '../components/dashboard/ShapeMeter';
 import { FirstLetterMode } from '../components/practice/FirstLetterMode';
 import { SEED_VERSES } from '../data/seed';
+import { TOP_100_VERSES } from '../data/top100';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 type FilterType = 'all' | 'review' | 'learning' | 'memorized';
@@ -517,15 +518,34 @@ export const Dashboard: React.FC = () => {
                       the app was seventy-five passages they had not chosen, already due.
                       Beginning a memorization practice with someone else's backlog is a
                       poor start for something that depends on wanting the material. */}
-                  <button
-                    onClick={() => {
-                      dispatch({ type: 'HYDRATE_VERSES', payload: SEED_VERSES });
-                      showToast(`Added ${SEED_VERSES.length} passages to your library.`, 'success');
-                    }}
-                    className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
-                  >
-                    Or start with {SEED_VERSES.length} well-known passages
-                  </button>
+                  <div className="flex flex-col gap-3 mt-2">
+                    <button
+                      onClick={() => {
+                        const topicId = crypto.randomUUID();
+                        dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
+                        const versesWithTopic = SEED_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
+                        dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
+                        showToast(`Added ${SEED_VERSES.length} passages to 'Well-Known' group.`, 'success');
+                      }}
+                      className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
+                    >
+                      Or start with {SEED_VERSES.length} well-known passages
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        const topicId = crypto.randomUUID();
+                        dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
+                        // TOP_100_VERSES is imported at the top
+                        const versesWithTopic = TOP_100_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
+                        dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
+                        showToast(`Added 100 passages to 'Top 100' group.`, 'success');
+                      }}
+                      className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
+                    >
+                      Or start with the Top 100 most popular verses
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
