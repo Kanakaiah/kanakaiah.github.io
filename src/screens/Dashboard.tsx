@@ -575,7 +575,9 @@ export const Dashboard: React.FC = () => {
             onPrev={hasPrev ? () => setSelectedVerse(filteredAndSortedVerses[currentIndex - 1]) : undefined}
             onPractice={() => {
               setSelectedVerse(null);
-              navigate('/practice?id=' + selectedVerse.id);
+              let url = '/practice?id=' + selectedVerse.id;
+              if (activeTopicFilter) url += '&topic=' + activeTopicFilter;
+              navigate(url);
             }}
             onDelete={() => {
               dispatch({ type: 'DELETE_VERSE', payload: selectedVerse.id });

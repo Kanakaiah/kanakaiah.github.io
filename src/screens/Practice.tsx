@@ -135,12 +135,13 @@ export const Practice: React.FC = () => {
    */
   const modeParam = searchParams.get('mode');
   const targetId = searchParams.get('id');
+  const topicParam = searchParams.get('topic');
   const isWorkshop = !!targetId || modeParam === 'free';
 
   // The workshop always works against the whole library — it is a place to pick something
   // up deliberately, so filtering it to what happens to be due would defeat the point.
   // The day's-work path builds its own plan and never reads this.
-  const [activeTopicFilter, setActiveTopicFilter] = useState<string | null>(null);
+  const [activeTopicFilter, setActiveTopicFilter] = useState<string | null>(topicParam);
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
 
   // The workshop works against the whole library or a filtered topic
