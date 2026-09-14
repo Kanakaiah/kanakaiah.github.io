@@ -3,8 +3,9 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { BookOpen, ArrowLeft, ArrowRight, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
-import { evaluateSM2, formatInterval, suggestedScore } from '../utils/sm2';
+import { evaluateSM2, formatInterval, suggestedScore, isDue } from '../utils/sm2';
 import { dueChapters } from '../utils/mastery';
+import { parseReference } from '../utils/bible';
 import type { Verse, ReviewEvent } from '../types/models';
 import { buildReviewEvent } from '../utils/reviewLog';
 
@@ -144,11 +145,45 @@ export const Practice: React.FC = () => {
   const [activeTopicFilter, setActiveTopicFilter] = useState<string | null>(topicParam);
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
 
-  // The workshop works against the whole library or a filtered topic
+  const [randomSortKeys] = useState(() => {
+    const keys = new Map<string, number>();
+    state.verses.forEach(v => keys.set(v.id, Math.random()));
+    return keys;
+  });
+
+  // The workshop works against the whole library or a filtered topic, sorted by user preference
   const verses = React.useMemo(() => {
-    if (!activeTopicFilter) return state.verses;
-    return state.verses.filter(v => v.topicIds?.includes(activeTopicFilter));
-  }, [state.verses, activeTopicFilter]);
+    const base = activeTopicFilter
+      ? state.verses.filter(v => v.topicIds?.includes(activeTopicFilter))
+      : [...state.verses];
+
+    const now = Date.now();
+    base.sort((a, b) => {
+      if (state.sortOrder === 'smart') {
+        const isADue = isDue(a.sm2, now);
+        const isBDue = isDue(b.sm2, now);
+        if (isADue && !isBDue) return -1;
+        if (!isADue && isBDue) return 1;
+        return (a.sm2.repetition || 0) - (b.sm2.repetition || 0);
+      }
+      if (state.sortOrder === 'bible-asc' || state.sortOrder === 'bible-desc') {
+        const aParsed = parseReference(a.ref);
+        const bParsed = parseReference(b.ref);
+        let diff = aParsed.bookIndex - bParsed.bookIndex;
+        if (diff === 0) diff = aParsed.chapter - bParsed.chapter;
+        if (diff === 0) diff = aParsed.verse - bParsed.verse;
+        return state.sortOrder === 'bible-asc' ? diff : -diff;
+      }
+      if (state.sortOrder === 'random') {
+        const valA = randomSortKeys.get(a.id) || 0;
+        const valB = randomSortKeys.get(b.id) || 0;
+        return valA - valB;
+      }
+      return 0;
+    });
+
+    return base;
+  }, [state.verses, activeTopicFilter, state.sortOrder, randomSortKeys]);
 
   const initialIndex = React.useMemo(() => {
     if (targetId) {
