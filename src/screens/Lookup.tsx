@@ -14,7 +14,7 @@ export const Lookup: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const urlQuery = searchParams.get('q') || '';
-  const urlTranslation = searchParams.get('t') || 'web';
+  const urlTranslation = searchParams.get('t') || 'WEB';
 
   const [searchQuery, setSearchQuery] = useState(urlQuery);
   const [searchTranslation, setSearchTranslation] = useState(urlTranslation);
@@ -29,7 +29,7 @@ export const Lookup: React.FC = () => {
     setSearchResults([]);
 
     const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(translationToUse);
-    const parseTranslation = isBolls ? 'web' : translationToUse;
+    const parseTranslation = isBolls ? 'WEB' : translationToUse;
     const rawQueries = queryToUse.replace(/[\u2013\u2014]/g, '-').split(';').map(q => q.trim()).filter(Boolean);
     const queries = [];
     let currentBook = '';

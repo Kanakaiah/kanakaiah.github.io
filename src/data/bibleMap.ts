@@ -25,9 +25,9 @@ export const BIBLE_VERSION_LABELS: Record<string, string> = {
   NASB: 'NASB95',
   ESV: 'ESV',
   NLT: 'NLT',
-  web: 'WEB',
-  kjv: 'KJV',
-  bbe: 'BBE',
+  WEB: 'WEB',
+  KJV: 'KJV',
+  BBE: 'BBE',
 };
 
 export const TRANSLATION_OPTIONS = [
@@ -35,9 +35,9 @@ export const TRANSLATION_OPTIONS = [
   { value: 'NASB', label: 'NASB95' },
   { value: 'ESV', label: 'ESV' },
   { value: 'NLT', label: 'NLT' },
-  { value: 'web', label: 'WEB (World English)' },
-  { value: 'kjv', label: 'KJV' },
-  { value: 'bbe', label: 'BBE (Basic English)' },
+  { value: 'WEB', label: 'WEB (World English)' },
+  { value: 'KJV', label: 'KJV' },
+  { value: 'BBE', label: 'BBE (Basic English)' },
 ];
 
 // USFM book codes, as used in bible.com URLs (.../GEN.1.LSB). All 66 are listed: a

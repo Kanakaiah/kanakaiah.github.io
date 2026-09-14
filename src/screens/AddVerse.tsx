@@ -43,7 +43,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   };
   // Search Tab State
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchTranslation, setSearchTranslation] = useState('web');
+  const [searchTranslation, setSearchTranslation] = useState('WEB');
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchError, setSearchError] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
     setSearchResults([]);
 
     const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(searchTranslation);
-    const parseTranslation = isBolls ? 'web' : searchTranslation;
+    const parseTranslation = isBolls ? 'WEB' : searchTranslation;
     const rawQueries = queryToUse.replace(/[\u2013\u2014]/g, '-').split(';').map(q => q.trim()).filter(Boolean);
     const queries = [];
     let currentBook = '';
