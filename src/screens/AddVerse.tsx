@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, PenLine, AlertCircle, Plus, Check } from 'lucide-react';
+import { Search, PenLine, AlertCircle, Plus, Check, Library } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { CustomSelect } from '../components/ui/CustomSelect';
 import type { Verse } from '../types/models';
+import { SEED_VERSES } from '../data/seed';
+import { TOP_100_VERSES } from '../data/top100';
 
 const TRANSLATION_OPTIONS = [
   { value: 'LSB', label: 'LSB (Legacy Standard)' },
@@ -27,7 +29,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'manual' | 'search'>('manual');
+  const [activeTab, setActiveTab] = useState<'manual' | 'search' | 'collections'>('manual');
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
@@ -314,28 +316,39 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       </div>
 
       {/* Mode Selection Buttons */}
-      <div className="grid grid-cols-2 gap-3 bg-card-elevated p-2 rounded-lg border border-card-border">
+      <div className="grid grid-cols-3 gap-2 bg-card-elevated p-2 rounded-lg border border-card-border">
         <button
           onClick={() => setActiveTab('manual')}
-          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-md transition-colors duration-150 ${
+          className={`flex flex-col items-center justify-center gap-1.5 p-3 sm:p-4 rounded-md transition-colors duration-150 ${
             activeTab === 'manual'
               ? 'bg-accent text-white'
               : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
-          <PenLine className="w-6 h-6 mb-1" />
-          <span className="font-heading font-bold text-[0.9rem] leading-tight">Manual<br />Entry</span>
+          <PenLine className="w-5 h-5" />
+          <span className="font-heading font-bold text-[0.8rem] leading-tight text-center">Manual</span>
         </button>
         <button
           onClick={() => setActiveTab('search')}
-          className={`flex flex-col items-center justify-center gap-2 p-5 rounded-md transition-colors duration-150 ${
+          className={`flex flex-col items-center justify-center gap-1.5 p-3 sm:p-4 rounded-md transition-colors duration-150 ${
             activeTab === 'search'
               ? 'bg-accent text-white'
               : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
-          <Search className="w-6 h-6 mb-1" />
-          <span className="font-heading font-bold text-[0.9rem] leading-tight">Pick from<br />Top Verses</span>
+          <Search className="w-5 h-5" />
+          <span className="font-heading font-bold text-[0.8rem] leading-tight text-center">Search API</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('collections')}
+          className={`flex flex-col items-center justify-center gap-1.5 p-3 sm:p-4 rounded-md transition-colors duration-150 ${
+            activeTab === 'collections'
+              ? 'bg-accent text-white'
+              : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
+          }`}
+        >
+          <Library className="w-5 h-5" />
+          <span className="font-heading font-bold text-[0.8rem] leading-tight text-center">Collections</span>
         </button>
       </div>
 
@@ -534,6 +547,54 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           >
             Add Verse
           </Button>
+        </div>
+      )}
+
+      {/* COLLECTIONS TAB */}
+      {activeTab === 'collections' && (
+        <div className="flex flex-col gap-4">
+          <p className="text-secondary text-sm mb-2">
+            Kickstart your memory journey with curated collections of popular verses. Adding a collection automatically groups them together for easy practice.
+          </p>
+
+          <div className="p-4 bg-card-elevated border border-card-border rounded-lg flex flex-col gap-3">
+            <h3 className="font-heading font-bold text-lg text-primary">Top 100 Verses</h3>
+            <p className="text-sm text-muted">The 100 most popular Bible verses according to global search data.</p>
+            <Button
+              onClick={() => {
+                const topicId = crypto.randomUUID();
+                dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
+                const versesWithTopic = TOP_100_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
+                dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
+                showToast(`Added 100 passages to 'Top 100' group!`, 'success');
+                if (onVerseAdded) onVerseAdded();
+                else navigate('/');
+              }}
+              className="mt-2"
+            >
+              <Plus className="w-4 h-4 mr-2" /> Add Top 100
+            </Button>
+          </div>
+
+          <div className="p-4 bg-card-elevated border border-card-border rounded-lg flex flex-col gap-3">
+            <h3 className="font-heading font-bold text-lg text-primary">75 Well-Known Verses</h3>
+            <p className="text-sm text-muted">A hand-picked selection of deeply encouraging and essential scriptures.</p>
+            <Button
+              onClick={() => {
+                const topicId = crypto.randomUUID();
+                dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
+                const versesWithTopic = SEED_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
+                dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
+                showToast(`Added ${SEED_VERSES.length} passages to 'Well-Known' group!`, 'success');
+                if (onVerseAdded) onVerseAdded();
+                else navigate('/');
+              }}
+              className="mt-2"
+              variant="secondary"
+            >
+              <Plus className="w-4 h-4 mr-2" /> Add 75 Well-Known
+            </Button>
+          </div>
         </div>
       )}
     </div>
