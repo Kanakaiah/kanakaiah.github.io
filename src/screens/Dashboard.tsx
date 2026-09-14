@@ -521,8 +521,11 @@ export const Dashboard: React.FC = () => {
                   <div className="flex flex-col gap-3 mt-2">
                     <button
                       onClick={() => {
-                        const topicId = crypto.randomUUID();
-                        dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
+                        const existingTopic = (state.topics || []).find(t => t.name === 'Well-Known');
+                        const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
+                        if (!existingTopic) {
+                          dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
+                        }
                         const versesWithTopic = SEED_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
                         dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
                         showToast(`Added ${SEED_VERSES.length} passages to 'Well-Known' group.`, 'success');
@@ -534,8 +537,11 @@ export const Dashboard: React.FC = () => {
                     
                     <button
                       onClick={() => {
-                        const topicId = crypto.randomUUID();
-                        dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
+                        const existingTopic = (state.topics || []).find(t => t.name === 'Top 100');
+                        const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
+                        if (!existingTopic) {
+                          dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
+                        }
                         // TOP_100_VERSES is imported at the top
                         const versesWithTopic = TOP_100_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
                         dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });

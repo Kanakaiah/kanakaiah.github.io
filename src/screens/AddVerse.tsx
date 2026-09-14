@@ -562,8 +562,11 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             <p className="text-sm text-muted">The 100 most popular Bible verses according to global search data.</p>
             <Button
               onClick={() => {
-                const topicId = crypto.randomUUID();
-                dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
+                const existingTopic = (state.topics || []).find(t => t.name === 'Top 100');
+                const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
+                if (!existingTopic) {
+                  dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
+                }
                 const versesWithTopic = TOP_100_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
                 dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
                 showToast(`Added 100 passages to 'Top 100' group!`, 'success');
@@ -581,8 +584,11 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             <p className="text-sm text-muted">A hand-picked selection of deeply encouraging and essential scriptures.</p>
             <Button
               onClick={() => {
-                const topicId = crypto.randomUUID();
-                dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
+                const existingTopic = (state.topics || []).find(t => t.name === 'Well-Known');
+                const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
+                if (!existingTopic) {
+                  dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
+                }
                 const versesWithTopic = SEED_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
                 dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
                 showToast(`Added ${SEED_VERSES.length} passages to 'Well-Known' group!`, 'success');
