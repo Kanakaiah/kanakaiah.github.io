@@ -155,7 +155,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       <div className="flex-1 flex flex-col items-center justify-center gap-5 text-center">
         {/* The prompt: the book, by name and by its cover. Both are things the reader
             already has; neither gives the answer away. */}
-        <div className="w-40 h-40 rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center">
+        <div className="w-52 aspect-[4/3] rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center">
           {!imgErr ? (
             <img src={current.image} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover" />
           ) : (

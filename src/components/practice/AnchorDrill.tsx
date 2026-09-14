@@ -218,7 +218,7 @@ export const AnchorDrill: React.FC<{
   // other two. The 18 books with no art yet fall back to the large numeral, which
   // still reads as a plate-shaped thing rather than a broken image.
   const plateEl = (
-    <div className="w-40 h-40 rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center flex-shrink-0">
+    <div className="w-52 aspect-[4/3] rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center flex-shrink-0">
       {!imgErr ? (
         <img src={imgPath} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover" />
       ) : (

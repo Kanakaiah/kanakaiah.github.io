@@ -981,7 +981,7 @@ const AnchorCardPrompt: React.FC<{
         {item.direction === 'w2n' ? (
           <span className="text-3xl font-heading font-bold text-accent">{item.word}</span>
         ) : item.direction === 'p2w' ? (
-          <Plate bookId={item.bookId} chapter={item.chapter} className="w-36 h-36" />
+          <Plate bookId={item.bookId} chapter={item.chapter} className="w-48 aspect-[4/3]" />
         ) : (
           <span className="text-6xl font-heading font-bold text-accent leading-none">{item.chapter}</span>
         )}
@@ -1011,7 +1011,7 @@ const AnchorCardPrompt: React.FC<{
             {/* The answer always arrives with its picture. Pairing an arbitrary
                 number↔word association with an image is the strongest lever available,
                 and 48 books of purpose-drawn plates exist for exactly this moment. */}
-            {item.direction !== 'p2w' && <Plate bookId={item.bookId} chapter={item.chapter} className="w-36 h-36" />}
+            {item.direction !== 'p2w' && <Plate bookId={item.bookId} chapter={item.chapter} className="w-48 aspect-[4/3]" />}
             <span className="text-2xl font-heading font-bold text-primary">
               {item.direction === 'w2n' ? `Chapter ${item.chapter}` : item.word}
             </span>

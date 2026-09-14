@@ -30,7 +30,7 @@ export const BookCard: React.FC<{
       {/* Plate — mirrors ChapterAnchorCard's image treatment (Guides.tsx) so a book's
           illustration reads the same way its own chapters' do: art on top, caption below
           on the card's normal background, rather than text overlaid on the image. */}
-      <div className="relative h-56 bg-card-elevated overflow-hidden">
+      <div className="relative aspect-[4/3] bg-card-elevated overflow-hidden">
         {!imgLoaded && !imgErr && (
           <div className="absolute inset-0 skeleton" />
         )}
