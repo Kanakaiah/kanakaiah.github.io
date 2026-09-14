@@ -92,12 +92,17 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
     const results = [];
     let hasError = false;
 
-    for (const query of queries) {
+    for (let i = 0; i < queries.length; i++) {
+      const query = queries[i];
       try {
+        if (i > 0) await new Promise(res => setTimeout(res, 400)); // prevent rate limits on bulk queries
+        
         const response = await fetch(`https://bible-api.com/${encodeURIComponent(query)}?translation=${parseTranslation}`);
         
         if (!response.ok) {
-          throw new Error(`Verse reference not found: '${query}'`);
+          throw new Error(response.status === 429 
+            ? `Rate limit exceeded while fetching '${query}'. Try adding fewer verses.` 
+            : `Verse reference not found: '${query}'`);
         }
         
         const data = await response.json();
@@ -170,7 +175,11 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           results.push(data);
         }
       } catch (err: any) {
-        setSearchError(err.message || `Failed to search for verse: ${query}`);
+        if (err.message === 'Failed to fetch') {
+          setSearchError(`Network error or rate limit exceeded while fetching '${query}'. Try adding them in smaller batches.`);
+        } else {
+          setSearchError(err.message || `Failed to search for verse: ${query}`);
+        }
         hasError = true;
         break; // Stop processing if one fails to keep it consistent
       }
