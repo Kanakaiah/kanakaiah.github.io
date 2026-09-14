@@ -153,7 +153,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
               <p className="text-xs font-bold text-muted uppercase tracking-widest border-b border-card-border pb-1">
                 {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} across all books
               </p>
-              <div className="flex flex-col gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {searchResults.map(book => (
                   <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                 ))}
@@ -180,7 +180,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
                   <p className={`text-xs font-bold uppercase tracking-widest ${divisionForSection(section).color.text}`}>{section}</p>
                   <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {books.map(book => (
                     <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                   ))}
@@ -208,7 +208,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
                   <p className={`text-xs font-bold uppercase tracking-widest ${divisionForSection(section).color.text}`}>{section}</p>
                   <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {books.map(book => (
                     <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                   ))}
