@@ -120,11 +120,35 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         verses: state.verses.filter(v => v.id !== action.payload)
       };
     case 'HYDRATE_VERSES': {
-      const existingKeys = new Set(state.verses.map(v => `${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`));
-      const uniqueNewVerses = action.payload.filter(v => !existingKeys.has(`${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`));
+      const payloadMap = new Map();
+      for (const v of action.payload) {
+        payloadMap.set(`${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`, v);
+      }
+
+      const existingKeys = new Set<string>();
+      const updatedVerses = state.verses.map(v => {
+        const key = `${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`;
+        existingKeys.add(key);
+        if (payloadMap.has(key)) {
+          const payloadVerse = payloadMap.get(key);
+          const newTopics = payloadVerse.topicIds || [];
+          if (newTopics.length > 0) {
+            const currentTopics = v.topicIds || [];
+            const mergedTopics = Array.from(new Set([...currentTopics, ...newTopics]));
+            return { ...v, topicIds: mergedTopics };
+          }
+        }
+        return v;
+      });
+
+      const uniqueNewVerses = action.payload.filter(v => {
+        const key = `${v.ref.toLowerCase()}-${v.translation?.toLowerCase() || 'lsb'}`;
+        return !existingKeys.has(key);
+      });
+
       return {
         ...state,
-        verses: [...state.verses, ...uniqueNewVerses]
+        verses: [...updatedVerses, ...uniqueNewVerses]
       };
     }
     case 'SET_THEME':
