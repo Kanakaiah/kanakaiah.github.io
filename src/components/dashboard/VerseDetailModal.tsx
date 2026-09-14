@@ -55,13 +55,13 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
       
       // If this verse uses a translation the Chapter Reader supports, switch the reader 
       // to it automatically before navigating so they see context in the same version.
-      const isValidTranslation = TRANSLATION_OPTIONS.some(
+      const validTranslation = TRANSLATION_OPTIONS.find(
         opt => opt.value.toLowerCase() === verse.translation.toLowerCase()
       );
-      if (isValidTranslation) {
+      if (validTranslation) {
         dispatch({ 
           type: 'UPDATE_SETTINGS', 
-          payload: { bibleVersion: verse.translation as any } 
+          payload: { bibleVersion: validTranslation.value as any } 
         });
       }
 

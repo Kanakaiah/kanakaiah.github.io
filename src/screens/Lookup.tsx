@@ -220,13 +220,13 @@ export const Lookup: React.FC = () => {
                     <p className="text-primary text-base md:text-lg font-serif leading-relaxed flex-1">"{res.text}"</p>
                         <button 
                           onClick={() => {
-                            const isValidTranslation = TRANSLATION_OPTIONS.some(
+                            const validTranslation = TRANSLATION_OPTIONS.find(
                               opt => opt.value.toLowerCase() === searchTranslation.toLowerCase()
                             );
-                            if (isValidTranslation) {
+                            if (validTranslation) {
                               dispatch({
                                 type: 'UPDATE_SETTINGS',
-                                payload: { bibleVersion: searchTranslation as any }
+                                payload: { bibleVersion: validTranslation.value as any }
                               });
                             }
                             const path = readerPath(res.bookId, res.chapter, res.verse);

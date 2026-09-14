@@ -1,6 +1,7 @@
 import type { UserSettings, Verse, AppState, MemorySentenceProgress, ChapterProgress, ThemeProgress, BlockProgress, ReviewEvent, ColdCheckRecord } from '../types/models';
 import { chapterProgressKey, blockProgressKey } from '../types/models';
 import { appendReview } from '../utils/reviewLog';
+import { TRANSLATION_OPTIONS } from '../data/bibleMap';
 
 // The app's state shape, its actions, and the pure reducer over both.
 //
@@ -155,8 +156,14 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, theme: action.payload };
     case 'SET_SORT_ORDER':
       return { ...state, sortOrder: action.payload };
-    case 'UPDATE_SETTINGS':
-      return { ...state, settings: { ...state.settings, ...action.payload } };
+    case 'UPDATE_SETTINGS': {
+      const newSettings = { ...state.settings, ...action.payload };
+      if (action.payload.bibleVersion) {
+        const valid = TRANSLATION_OPTIONS.find(opt => opt.value.toLowerCase() === action.payload.bibleVersion?.toLowerCase());
+        if (valid) newSettings.bibleVersion = valid.value as any;
+      }
+      return { ...state, settings: newSettings };
+    }
     case 'UPDATE_STREAK':
       return { ...state, streak: action.payload.streak, lastActiveDate: action.payload.lastActiveDate };
     case 'UPDATE_MEMORY_SENTENCE_PROGRESS':

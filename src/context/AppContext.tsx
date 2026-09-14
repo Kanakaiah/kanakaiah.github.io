@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
 import type { AppState, Verse } from '../types/models';
 import { appReducer, initialState, type AppAction } from './appReducer';
+import { TRANSLATION_OPTIONS } from '../data/bibleMap';
 
 // Re-exported so the many screens that already import their action type from here keep
 // working; the shape itself now lives beside the reducer that consumes it.
@@ -81,11 +82,17 @@ function loadInitialState(): AppState {
             uniqueVerses.push(v);
           }
         }
+        const finalSettings = { ...initialState.settings, ...(parsed.settings || {}) };
+        if (finalSettings.bibleVersion) {
+          const valid = TRANSLATION_OPTIONS.find(opt => opt.value.toLowerCase() === finalSettings.bibleVersion?.toLowerCase());
+          if (valid) finalSettings.bibleVersion = valid.value as any;
+        }
+
         return {
           ...initialState,
           ...parsed,
           verses: uniqueVerses,
-          settings: { ...initialState.settings, ...(parsed.settings || {}) },
+          settings: finalSettings,
           // A profile saved before chapterProgress existed has no key for it —
           // spreading `parsed` over `initialState` above already backfills {},
           // this just guards against a stored `null` from a corrupted write.
