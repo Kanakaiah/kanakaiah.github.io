@@ -164,7 +164,7 @@ export const SEED_VERSES: Verse[] = [
     {
         id: "seed-11",
         ref: "Psalm 14:1",
-        text: "For the choir director. Of David. The wicked fool says in his heart, “There is no God.”\nThey act corruptly, they commit abominable deeds;\nThere is no one who does good.",
+        text: "The wicked fool says in his heart, \u201CThere is no God.\u201D\nThey act corruptly, they commit abominable deeds;\nThere is no one who does good.",
         translation: "LSB",
         addedDate: new Date().toISOString(),
         status: "learning",

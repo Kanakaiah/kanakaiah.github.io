@@ -74,6 +74,9 @@ function loadInitialState(): AppState {
             if (v.ref.toLowerCase() === 'psalms 46:1' && v.text.includes('Alamoth')) {
               v.text = v.text.replace(/For the choir director.*?A Song\.?/i, '').trim();
             }
+            if ((v.ref.toLowerCase() === 'psalms 14:1' || v.ref.toLowerCase() === 'psalm 14:1') && v.text.includes('Of David.')) {
+              v.text = v.text.replace(/For the choir director\.\s*Of David\.?/i, '').trim();
+            }
             
             uniqueVerses.push(v);
           }
