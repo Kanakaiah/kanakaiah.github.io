@@ -146,6 +146,9 @@ export const Practice: React.FC = () => {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
 
   const [randomSortKeys] = useState(() => {
+    if (navState && 'randomSortKeys' in navState && navState.randomSortKeys) {
+      return new Map<string, number>(navState.randomSortKeys as Iterable<[string, number]>);
+    }
     const keys = new Map<string, number>();
     state.verses.forEach(v => keys.set(v.id, Math.random()));
     return keys;

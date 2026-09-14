@@ -577,7 +577,7 @@ export const Dashboard: React.FC = () => {
               setSelectedVerse(null);
               let url = '/practice?id=' + selectedVerse.id;
               if (activeTopicFilter) url += '&topic=' + activeTopicFilter;
-              navigate(url);
+              navigate(url, { state: { randomSortKeys: Array.from(randomSortKeys.entries()) } });
             }}
             onDelete={() => {
               dispatch({ type: 'DELETE_VERSE', payload: selectedVerse.id });
