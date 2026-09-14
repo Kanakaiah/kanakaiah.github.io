@@ -43,8 +43,9 @@ export interface StudyGuide {
   chapters?: number;
   structureFormula?: string;
   blocks?: GuideBlock[];
-  anchors: GuideAnchor[];
+  anchors?: GuideAnchor[];
   memorySentence?: string;
   keyVerses?: GuideVerse[];
   architecture?: ArchitectureBlock[];
+  sections?: any[];
 }

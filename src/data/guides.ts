@@ -9,9 +9,11 @@ import { PAULINE_COMMENTARIES } from './paulineCommentaries';
 import { GENERAL_EPISTLES_COMMENTARIES } from './generalEpistlesCommentaries';
 import { REVELATION_COMMENTARIES } from './revelationCommentaries';
 import { PREACHERS_GUIDE } from './preachers';
+import { MV_COLLECTIONS } from './memoryVersesCollections';
 
 export const NT_STUDY_GUIDES = [
   PREACHERS_GUIDE,
+  ...MV_COLLECTIONS,
 
   // 1. ROMAN ROAD
   {
