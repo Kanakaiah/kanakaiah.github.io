@@ -8,6 +8,7 @@ import { OT_BOOKS } from '../../data/otBooks';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { readerPath } from '../../utils/readerRoute';
 import { useApp } from '../../context/AppContext';
+import { TRANSLATION_OPTIONS } from '../../data/bibleMap';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -51,6 +52,19 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
       const chapter = match[2];
       const verseNum = match[3];
       const book = ALL_BOOKS.find(b => b.name.toLowerCase() === bookName.toLowerCase());
+      
+      // If this verse uses a translation the Chapter Reader supports, switch the reader 
+      // to it automatically before navigating so they see context in the same version.
+      const isValidTranslation = TRANSLATION_OPTIONS.some(
+        opt => opt.value.toLowerCase() === verse.translation.toLowerCase()
+      );
+      if (isValidTranslation) {
+        dispatch({ 
+          type: 'UPDATE_SETTINGS', 
+          payload: { bibleVersion: verse.translation as any } 
+        });
+      }
+
       // The verse now rides in the path, and the reader scrolls to and flashes it. The
       // old ?highlightVerse= form landed on the chapter and then did nothing with it.
       const path = book && readerPath(book.id, parseInt(chapter, 10), parseInt(verseNum, 10));

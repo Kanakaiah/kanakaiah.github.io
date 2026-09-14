@@ -5,18 +5,11 @@ import { readerPath } from '../utils/readerRoute';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { CustomSelect } from '../components/ui/CustomSelect';
-
-const TRANSLATION_OPTIONS = [
-  { value: 'LSB', label: 'LSB (Legacy Standard)' },
-  { value: 'NASB', label: 'NASB95' },
-  { value: 'ESV', label: 'ESV' },
-  { value: 'NLT', label: 'NLT' },
-  { value: 'web', label: 'WEB (World English)' },
-  { value: 'kjv', label: 'KJV' },
-  { value: 'bbe', label: 'BBE (Basic English)' },
-];
+import { useApp } from '../context/AppContext';
+import { TRANSLATION_OPTIONS } from '../data/bibleMap';
 
 export const Lookup: React.FC = () => {
+  const { dispatch } = useApp();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -225,13 +218,22 @@ export const Lookup: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-primary text-base md:text-lg font-serif leading-relaxed flex-1">"{res.text}"</p>
-                      <button 
-                        onClick={() => {
-                          const path = readerPath(res.bookId, res.chapter, res.verse);
-                          if (path) navigate(path, { state: { returnTo: `/lookup?q=${encodeURIComponent(searchQuery)}&t=${encodeURIComponent(searchTranslation)}` } });
-                        }}
-                        className="text-secondary hover:text-accent text-[11px] font-bold tracking-wider uppercase self-end flex items-center gap-1 pt-1"
-                      >
+                        <button 
+                          onClick={() => {
+                            const isValidTranslation = TRANSLATION_OPTIONS.some(
+                              opt => opt.value.toLowerCase() === searchTranslation.toLowerCase()
+                            );
+                            if (isValidTranslation) {
+                              dispatch({
+                                type: 'UPDATE_SETTINGS',
+                                payload: { bibleVersion: searchTranslation as any }
+                              });
+                            }
+                            const path = readerPath(res.bookId, res.chapter, res.verse);
+                            if (path) navigate(path, { state: { returnTo: `/lookup?q=${encodeURIComponent(searchQuery)}&t=${encodeURIComponent(searchTranslation)}` } });
+                          }}
+                          className="text-secondary hover:text-accent text-[11px] font-bold tracking-wider uppercase self-end flex items-center gap-1 pt-1"
+                        >
                         Context <BookOpen className="w-3 h-3 opacity-80" />
                       </button>
                   </div>
