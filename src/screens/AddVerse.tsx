@@ -9,16 +9,7 @@ import { CustomSelect } from '../components/ui/CustomSelect';
 import type { Verse } from '../types/models';
 import { SEED_VERSES } from '../data/seed';
 import { TOP_100_VERSES } from '../data/top100';
-
-const TRANSLATION_OPTIONS = [
-  { value: 'LSB', label: 'LSB (Legacy Standard)' },
-  { value: 'NASB', label: 'NASB95' },
-  { value: 'ESV', label: 'ESV' },
-  { value: 'NLT', label: 'NLT' },
-  { value: 'web', label: 'WEB (World English)' },
-  { value: 'kjv', label: 'KJV' },
-  { value: 'bbe', label: 'BBE (Basic English)' },
-];
+import { TRANSLATION_OPTIONS } from '../data/bibleMap';
 
 interface AddVerseProps {
   onVerseAdded?: () => void;

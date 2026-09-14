@@ -73,12 +73,6 @@ const FONT_SIZE_LABELS = (size: number): string => {
   return 'XL';
 };
 
-const BIBLE_VERSION_OPTIONS: { value: 'LSB' | 'NASB' | 'NLT'; label: string }[] = [
-  { value: 'LSB', label: 'Legacy Standard Bible (LSB)' },
-  { value: 'NASB', label: 'New American Standard Bible 1995 (NASB95)' },
-  { value: 'NLT', label: 'New Living Translation (NLT)' },
-];
-
 // Parses a "book chapter:verse" reference string (e.g. "genesis 1:1", or a multi-word
 // book like "song of solomon 3:1") into a resolved book id. Anchored on the trailing
 // "chapter:verse" so everything before it is treated as the book name regardless of
@@ -135,7 +129,7 @@ interface ChapterReaderProps {
   onStudyOriginalWord?: (verseRef: { book: number; chapter: number; verse: number }) => void;
 }
 
-import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS, normalizeCrossRefKey } from '../../data/bibleMap';
+import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS, TRANSLATION_OPTIONS, normalizeCrossRefKey } from '../../data/bibleMap';
 import { readerPath } from '../../utils/readerRoute';
 import { readingDisplay } from '../../data/readingPresets';
 
@@ -2146,11 +2140,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                 <>
                   <div className="fixed inset-0 z-[74]" onClick={() => setShowVersionPicker(false)} />
                   <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-card-border rounded-lg shadow-md z-[75] overflow-hidden animate-[fadeScaleIn_0.15s_ease-out]">
-                    {BIBLE_VERSION_OPTIONS.map(opt => (
+                    {TRANSLATION_OPTIONS.map(opt => (
                       <button
                         key={opt.value}
                         onClick={() => {
-                          dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: opt.value } });
+                          dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: opt.value as any } });
                           setShowVersionPicker(false);
                         }}
                         className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-card-hover ${

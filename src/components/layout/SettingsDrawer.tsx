@@ -7,6 +7,7 @@ import { Button } from '../ui/Button';
 import { CustomSelect } from '../ui/CustomSelect';
 import { Modal } from '../ui/Modal';
 import { activePreset, READING_PRESET_LABELS, READING_PRESETS } from '../../data/readingPresets';
+import { TRANSLATION_OPTIONS } from '../../data/bibleMap';
 
 const THEME_OPTIONS = [
   { value: 'black', label: 'Midnight', swatch: '#0c0a08' },
@@ -20,12 +21,6 @@ const FONT_SIZE_OPTIONS = [
   { value: '1', label: 'Normal / System Match' },
   { value: '1.15', label: 'Large' },
   { value: '1.3', label: 'Extra Large' },
-];
-
-const BIBLE_VERSION_OPTIONS = [
-  { value: 'LSB', label: 'Legacy Standard Bible (LSB)' },
-  { value: 'NASB', label: 'New American Standard Bible 1995 (NASB95)' },
-  { value: 'NLT', label: 'New Living Translation (NLT)' },
 ];
 
 const ANCHOR_REVEAL_OPTIONS = [
@@ -287,8 +282,8 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                     <div className="w-full">
                       <CustomSelect
                         value={state.settings.bibleVersion || 'LSB'}
-                        onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: v as 'LSB' | 'NASB' | 'NLT' } })}
-                        options={BIBLE_VERSION_OPTIONS}
+                        onChange={(v) => dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: v as any } })}
+                        options={TRANSLATION_OPTIONS}
                       />
                     </div>
                   </div>

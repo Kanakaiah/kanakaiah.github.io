@@ -23,8 +23,22 @@ export const BOLLS_BIBLE_MAP: Record<string, number> = {
 export const BIBLE_VERSION_LABELS: Record<string, string> = {
   LSB: 'LSB',
   NASB: 'NASB95',
+  ESV: 'ESV',
   NLT: 'NLT',
+  web: 'WEB',
+  kjv: 'KJV',
+  bbe: 'BBE',
 };
+
+export const TRANSLATION_OPTIONS = [
+  { value: 'LSB', label: 'LSB (Legacy Standard)' },
+  { value: 'NASB', label: 'NASB95' },
+  { value: 'ESV', label: 'ESV' },
+  { value: 'NLT', label: 'NLT' },
+  { value: 'web', label: 'WEB (World English)' },
+  { value: 'kjv', label: 'KJV' },
+  { value: 'bbe', label: 'BBE (Basic English)' },
+];
 
 // USFM book codes, as used in bible.com URLs (.../GEN.1.LSB). All 66 are listed: a
 // partial map means an unlisted book has to fall back to *some* book, and a link that
