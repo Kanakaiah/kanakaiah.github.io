@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks, Check, Plus, Loader2 } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks, Check, Plus, Loader2, Settings } from 'lucide-react';
 import { useSearchParams, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
@@ -19,6 +19,7 @@ import { fetchVerseText, formatVerseNumbers, parseVerseRef } from '../utils/vers
 import { useToast } from '../context/ToastContext';
 import { Modal } from '../components/ui/Modal';
 import { Button } from '../components/ui/Button';
+import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -375,6 +376,7 @@ export const Guides: React.FC = () => {
   const [addAllTranslation, setAddAllTranslation] = useState<string>(state.settings.bibleVersion || 'LSB');
 
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [isManageTopicsOpen, setIsManageTopicsOpen] = useState(false);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
@@ -1693,7 +1695,16 @@ export const Guides: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider text-center">Assign to Groups (Optional)</span>
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider">Assign to Groups (Optional)</span>
+                <button
+                  onClick={() => setIsManageTopicsOpen(true)}
+                  className="text-muted hover:text-primary transition-colors p-1 rounded hover:bg-card-border flex items-center"
+                  title="Manage Groups"
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                </button>
+              </div>
               <div className="flex flex-wrap items-center justify-center gap-2">
                 {state.topics?.map(topic => {
                   const isActive = selectedTopicIds.includes(topic.id);
@@ -1754,6 +1765,10 @@ export const Guides: React.FC = () => {
             </Button>
           </div>
         </Modal>
+
+        {isManageTopicsOpen && (
+          <ManageTopicsModal onClose={() => setIsManageTopicsOpen(false)} />
+        )}
       </div>
     );
   }
@@ -1977,6 +1992,10 @@ export const Guides: React.FC = () => {
           </>
         )}
       </div>
+
+      {isManageTopicsOpen && (
+        <ManageTopicsModal onClose={() => setIsManageTopicsOpen(false)} />
+      )}
     </div>
   );
 };

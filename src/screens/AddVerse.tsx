@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, PenLine, AlertCircle, Plus, Check, Library } from 'lucide-react';
+import { Search, PenLine, AlertCircle, Plus, Check, Library, Settings } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { CustomSelect } from '../components/ui/CustomSelect';
+import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
 import type { Verse } from '../types/models';
 import { SEED_VERSES } from '../data/seed';
 import { TOP_100_VERSES } from '../data/top100';
@@ -23,6 +24,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
   const [activeTab, setActiveTab] = useState<'manual' | 'search' | 'collections'>('manual');
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [isManageTopicsOpen, setIsManageTopicsOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
 
   const handleCreateGroup = (e?: React.FormEvent) => {
@@ -247,7 +249,16 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
 
       {/* Global Group Selector */}
       <div className="flex flex-col gap-3 -mt-4 mb-2">
-        <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider text-center">Assign to Groups (Optional)</span>
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider">Assign to Groups (Optional)</span>
+          <button
+            onClick={() => setIsManageTopicsOpen(true)}
+            className="text-muted hover:text-primary transition-colors p-1 rounded hover:bg-card-border flex items-center"
+            title="Manage Groups"
+          >
+            <Settings className="w-3.5 h-3.5" />
+          </button>
+        </div>
         <div className="flex flex-wrap items-center justify-center gap-2">
           {state.topics?.map(topic => {
             const isActive = selectedTopicIds.includes(topic.id);
@@ -605,6 +616,10 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             </Button>
           </div>
         </div>
+      )}
+
+      {isManageTopicsOpen && (
+        <ManageTopicsModal onClose={() => setIsManageTopicsOpen(false)} />
       )}
     </div>
   );
