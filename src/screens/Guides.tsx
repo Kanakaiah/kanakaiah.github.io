@@ -1470,18 +1470,17 @@ export const Guides: React.FC = () => {
                   })}
                 </div>
               )}
+            </div>
+          )}
 
-              {activeGuide.keyVerses && (
-                <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
-                  <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
-                  <div className="flex flex-col gap-3">
-                    {activeGuide.keyVerses.map((kv: any, i: number) => (
-                      <KeyVerseCard key={`${activeGuide.id}-${kv.ref}-${i}`} verse={kv} bookId={activeGuide.id} />
-                    ))}
-                  </div>
-                </div>
-              )}
-
+          {activeGuide.keyVerses && (
+            <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
+              <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
+              <div className="flex flex-col gap-3">
+                {activeGuide.keyVerses.map((kv: any, i: number) => (
+                  <KeyVerseCard key={`${activeGuide.id}-${kv.ref}-${i}`} verse={kv} bookId={activeGuide.id} />
+                ))}
+              </div>
             </div>
           )}
 
