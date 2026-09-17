@@ -1566,7 +1566,7 @@ export const Guides: React.FC = () => {
               </div>
               <div className="flex flex-col gap-3">
                 {activeGuide.keyVerses.map((kv: any, i: number) => (
-                  <KeyVerseCard key={`${activeGuide.id}-${kv.ref}-${i}`} verse={kv} bookId={activeGuide.id} />
+                  <KeyVerseCard key={`${activeGuide.id}-${kv.ref}-${i}`} verse={kv} bookId={activeGuide.id} preferredVersion={addAllTranslation} />
                 ))}
               </div>
             </div>

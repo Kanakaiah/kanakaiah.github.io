@@ -15,19 +15,21 @@ interface KeyVerseCardProps {
   verse: GuideVerse;
   /** Guide id, used as the book for book-relative refs like "2:4". */
   bookId?: string;
+  /** Override the global bible version for fetching this verse */
+  preferredVersion?: string;
 }
 
 // Verse text that already opens with a quotation mark is quoting a speaker inside the
 // passage (LSB's Habakkuk 2:4 starts mid-oracle, for one). Wrapping that in the card's
 // own decorative quotes reads as a stutter, so the card only supplies quotes when the
 // text doesn't bring its own.
-const hasOpeningQuote = (text: string) => /^["“„«]/.test(text);
+const hasOpeningQuote = (text: string) => /^["'“‘]/.test(text);
 
-export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId }) => {
+export const KeyVerseCard: React.FC<KeyVerseCardProps> = ({ verse, bookId, preferredVersion }) => {
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const bibleVersion = state.settings.bibleVersion || 'LSB';
+  const bibleVersion = preferredVersion || state.settings.bibleVersion || 'LSB';
 
   const parsedRef = useMemo(() => parseVerseRef(verse.ref, bookId), [verse.ref, bookId]);
   const storedText = useMemo(() => stripWrappingQuotes(verse.text), [verse.text]);
