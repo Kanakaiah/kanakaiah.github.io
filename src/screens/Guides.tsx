@@ -61,6 +61,7 @@ const BROWSER_SLUG_TO_ID: Record<string, string> = {
 };
 
 import { BOOK_SHORT, youVersionChapterUrl } from '../data/bibleMap';
+import { getBookName } from '../utils/localization';
 import { GUIDE_SECTIONS, SECTIONED_CATEGORIES } from '../data/guideSections';
 import { DISTRIBUTION_COLORS, divisionForSection } from '../data/palette';
 import { useApp } from '../context/AppContext';
@@ -253,6 +254,7 @@ const BibleIndexModal: React.FC<{
   onClose: () => void;
   mastery: Record<string, BookMasteryCounts>;
 }> = ({ isOpen, selectedId, onSelect, onClose, mastery }) => {
+  const { state } = useApp();
   const trapRef = useFocusTrap<HTMLDivElement>(isOpen);
   // Above the early return, because hooks cannot be conditional. This overlay was a
   // bare fixed div: Escape did nothing, the page behind it still scrolled, and nothing
@@ -332,7 +334,7 @@ const BibleIndexModal: React.FC<{
                       <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${otMastery && otMastery.secure > 0 ? otDivision!.color.bg : 'bg-card-border'}`} aria-hidden="true" />
                     )}
                     <span className="flex flex-col items-end min-w-0">
-                      <span className={`text-[15px] leading-tight ${isOtSelected ? 'font-bold' : 'font-medium'}`}>{ot ? (BOOK_SHORT[ot.id] || ot.name) : ''}</span>
+                      <span className={`text-[15px] leading-tight ${isOtSelected ? 'font-bold' : 'font-medium'}`}>{ot ? getBookName(ot.id, BOOK_SHORT[ot.id] || ot.name, state.settings.bibleVersion) : ""}</span>
                       {ot && <span className={`text-[0.625rem] leading-tight truncate max-w-[110px] ${otDivision!.color.text} opacity-80`}>{ot.themeWord}</span>}
                     </span>
                   </button>
@@ -346,7 +348,7 @@ const BibleIndexModal: React.FC<{
                     disabled={!nt}
                   >
                     <span className="flex flex-col items-start min-w-0">
-                      <span className={`text-[15px] leading-tight ${isNtSelected ? 'font-bold' : 'font-medium'}`}>{nt ? (BOOK_SHORT[nt.id] || nt.name) : ''}</span>
+                      <span className={`text-[15px] leading-tight ${isNtSelected ? 'font-bold' : 'font-medium'}`}>{nt ? getBookName(nt.id, BOOK_SHORT[nt.id] || nt.name, state.settings.bibleVersion) : ""}</span>
                       {nt && <span className={`text-[0.625rem] leading-tight truncate max-w-[110px] ${ntDivision!.color.text} opacity-80`}>{nt.themeWord}</span>}
                     </span>
                     {nt && (
