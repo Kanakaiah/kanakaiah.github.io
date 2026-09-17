@@ -152,7 +152,7 @@ function chapterCacheKey(version: string, bollsId: number, chapter: number): str
  * rather than the result so a chapter opened twice in quick succession (or React's
  * dev-only double-invoked effect) makes a single request.
  */
-function fetchChapterText(version: string, bollsId: number, chapter: number): Promise<Verse[]> {
+function fetchChapterText(version: string, bollsId: number, chapter: number, bookId: string): Promise<Verse[]> {
   const cacheKey = chapterCacheKey(version, bollsId, chapter);
   const cached = chapterTextCache.get(cacheKey);
   if (cached) return cached;
@@ -162,16 +162,45 @@ function fetchChapterText(version: string, bollsId: number, chapter: number): Pr
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-  const pending = fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`, { signal: controller.signal })
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch chapter text.');
-      return res.json() as Promise<Verse[]>;
-    })
-    .then(data => {
-      chapterTextSettled.set(cacheKey, data);
-      return data;
-    })
-    .finally(() => clearTimeout(timeoutId));
+  let pending: Promise<Verse[]>;
+
+  if (version === 'TELIRV') {
+    const bookName = bookId === 'songofsolomon' ? 'song of solomon' : bookId;
+    const url = `https://api.biblesupersearch.com/api?bible=te_irv&reference=${encodeURIComponent(bookName)}%20${chapter}`;
+    
+    pending = fetch(url, { signal: controller.signal })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch verse text from SuperSearch.');
+        return res.json();
+      })
+      .then(data => {
+        const versesObj = data?.results?.[0]?.verses?.te_irv?.[chapter.toString()];
+        if (!versesObj) throw new Error('Invalid response structure from SuperSearch.');
+        
+        const verses: Verse[] = [];
+        for (const [verseNumStr, verseData] of Object.entries(versesObj)) {
+          verses.push({
+            pk: parseInt(verseNumStr, 10),
+            verse: parseInt(verseNumStr, 10),
+            text: (verseData as any).text
+          });
+        }
+        chapterTextSettled.set(cacheKey, verses);
+        return verses;
+      })
+      .finally(() => clearTimeout(timeoutId));
+  } else {
+    pending = fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`, { signal: controller.signal })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch chapter text.');
+        return res.json() as Promise<Verse[]>;
+      })
+      .then(data => {
+        chapterTextSettled.set(cacheKey, data);
+        return data;
+      })
+      .finally(() => clearTimeout(timeoutId));
+  }
 
   // A rejected promise must not stay cached, or one dropped connection would pin the
   // error on that chapter for the rest of the session.
@@ -797,8 +826,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         // of the two round trips rather than their sum. A failed LSB request only costs
         // the headings — the chapter itself still renders.
         const [data, lsbData] = await Promise.all([
-          fetchChapterText(bibleVersion, bollsId, chapter),
-          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter).catch(() => null),
+          fetchChapterText(bibleVersion, bollsId, chapter, bookId),
+          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter, bookId).catch(() => null),
         ]);
 
         if (cancelled) return;

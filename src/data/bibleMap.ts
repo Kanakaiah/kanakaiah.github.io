@@ -29,6 +29,7 @@ export const BIBLE_VERSION_LABELS: Record<string, string> = {
   KJV: 'KJV',
   BBE: 'BBE',
   TBSI: 'Tamil (TBSI)',
+  TELIRV: 'Telugu (IRV)',
 };
 
 export const TRANSLATION_OPTIONS = [
@@ -40,6 +41,7 @@ export const TRANSLATION_OPTIONS = [
   { value: 'KJV', label: 'KJV' },
   { value: 'BBE', label: 'BBE (Basic English)' },
   { value: 'TBSI', label: 'Tamil (TBSI)' },
+  { value: 'TELIRV', label: 'Telugu (IRV)' },
 ];
 
 // USFM book codes, as used in bible.com URLs (.../GEN.1.LSB). All 66 are listed: a

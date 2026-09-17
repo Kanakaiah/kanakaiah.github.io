@@ -93,16 +93,45 @@ export function formatVerseNumbers(verses: number[]): string {
 // callers don't each fire their own fetch.
 const chapterCache = new Map<string, Promise<BollsVerse[]>>();
 
-function fetchChapter(version: string, bollsId: number, chapter: number): Promise<BollsVerse[]> {
+function fetchChapter(version: string, bollsId: number, chapter: number, bookId: string): Promise<BollsVerse[]> {
   const cacheKey = `${version}:${bollsId}:${chapter}`;
   const cached = chapterCache.get(cacheKey);
   if (cached) return cached;
 
-  const pending = fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`)
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch verse text.');
-      return res.json();
-    });
+  let pending: Promise<BollsVerse[]>;
+
+  if (version === 'TELIRV') {
+    // Bible SuperSearch API needs a string book name. We can format it nicely.
+    // Replace songofsolomon with "song of solomon", otherwise keep bookId as is.
+    const bookName = bookId === 'songofsolomon' ? 'song of solomon' : bookId;
+    const url = `https://api.biblesupersearch.com/api?bible=te_irv&reference=${encodeURIComponent(bookName)}%20${chapter}`;
+    
+    pending = fetch(url)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch verse text from SuperSearch.');
+        return res.json();
+      })
+      .then(data => {
+        const versesObj = data?.results?.[0]?.verses?.te_irv?.[chapter.toString()];
+        if (!versesObj) throw new Error('Invalid response structure from SuperSearch.');
+        
+        const verses: BollsVerse[] = [];
+        for (const [verseNumStr, verseData] of Object.entries(versesObj)) {
+          verses.push({
+            verse: parseInt(verseNumStr, 10),
+            text: (verseData as any).text
+          });
+        }
+        return verses;
+      });
+  } else {
+    // Default Bolls Life API
+    pending = fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch verse text.');
+        return res.json();
+      });
+  }
 
   // A rejected promise must not stay cached, or one offline moment would pin the
   // fallback text in place for the rest of the session.
@@ -133,7 +162,7 @@ function toPlainText(html: string): string {
 
 /** Fetches the referenced verses in `version` and joins them into one quotable line. */
 export async function fetchVerseText(version: string, ref: ParsedVerseRef): Promise<string> {
-  const chapterData = await fetchChapter(version, ref.bollsId, ref.chapter);
+  const chapterData = await fetchChapter(version, ref.bollsId, ref.chapter, ref.bookId);
 
   const text = ref.verses
     .map(n => chapterData.find(v => v.verse === n))
