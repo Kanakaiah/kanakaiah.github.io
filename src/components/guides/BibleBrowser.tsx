@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
+import { getBookName } from '../../utils/localization';
+import { useApp } from '../../context/AppContext';
 import { NT_BOOKS, NT_SECTIONS, type NTBook } from '../../data/ntBooks';
 import { OT_BOOKS, OT_SECTIONS, type OTBook } from '../../data/otBooks';
 import { divisionForSection } from '../../data/palette';
@@ -21,6 +23,8 @@ export const BookCard: React.FC<{
   const [imgErr, setImgErr] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const division = divisionForSection(book.section);
+  const { state } = useApp();
+  const displayName = getBookName(book.id, book.name, state.settings.bibleVersion);
 
   return (
     <button
@@ -38,7 +42,7 @@ export const BookCard: React.FC<{
         {!imgErr ? (
           <img
             src={book.image}
-            alt={coversOnly ? '' : book.name}
+            alt={coversOnly ? '' : displayName}
             loading="lazy"
             onLoad={() => setImgLoaded(true)}
             onError={() => { setImgErr(true); setImgLoaded(true); }}
@@ -62,7 +66,7 @@ export const BookCard: React.FC<{
           {/* Caption — title, subtitle, and the meta line, all off the image now */}
           <div className="p-5 flex flex-col gap-1.5">
             <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{book.keyWord} · {book.themeWord} · {book.chapters} chapters</span>
-            <h3 className="text-primary font-heading font-semibold text-2xl leading-tight">{book.name}</h3>
+            <h3 className="text-primary font-heading font-semibold text-2xl leading-tight">{displayName}</h3>
             <p className="text-secondary text-sm italic font-serif leading-snug">{book.subtitle}</p>
           </div>
           {/* A hairline rule, filled to the share of chapters graded secure, tinted

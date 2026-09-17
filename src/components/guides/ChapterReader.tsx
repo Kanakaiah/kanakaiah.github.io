@@ -5,6 +5,7 @@ import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 import { CROSS_REFS_URL } from '../../data/crossRefsUrl';
 import { CrossReferenceModal } from './CrossReferenceModal';
+import { getBookName } from '../../utils/localization';
 import { WordPopup } from '../WordPopup';
 import { StrongsOccurrencesModal } from '../StrongsOccurrencesModal';
 
@@ -640,21 +641,21 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     // belongs to a different guide) and falls back to the plain book/chapter form.
     if (chapter > 1) {
       const anchorPrefix = neighborAnchors.prev ? `${neighborAnchors.prev} · ` : '';
-      prevLabel = `${anchorPrefix}${bookTitle} ${chapter - 1}`;
-      prevAbbrLabel = neighborAnchors.prev ? `${neighborAnchors.prev} ${chapter - 1}` : `${getAbbr(bookTitle)} ${chapter - 1}`;
+      prevLabel = `${anchorPrefix}${getBookName(bookId, bookTitle, state.settings.bibleVersion)} ${chapter - 1}`;
+      prevAbbrLabel = neighborAnchors.prev ? `${neighborAnchors.prev} ${chapter - 1}` : `${getAbbr(getBookName(bookId, bookTitle, state.settings.bibleVersion))} ${chapter - 1}`;
     } else if (bookIndex > 0) {
       const prev = ALL_BOOKS[bookIndex - 1];
-      prevLabel = `${prev.name} ${prev.chapters}`;
-      prevAbbrLabel = `${getAbbr(prev.name)} ${prev.chapters}`;
+      prevLabel = `${getBookName(prev.id, prev.name, state.settings.bibleVersion)} ${prev.chapters}`;
+      prevAbbrLabel = `${getAbbr(getBookName(prev.id, prev.name, state.settings.bibleVersion))} ${prev.chapters}`;
     }
 
     if (chapter < currentBook.chapters) {
       const anchorSuffix = neighborAnchors.next ? ` · ${neighborAnchors.next}` : '';
-      nextLabel = `${bookTitle} ${chapter + 1}${anchorSuffix}`;
-      nextAbbrLabel = neighborAnchors.next ? `${chapter + 1} ${neighborAnchors.next}` : `${getAbbr(bookTitle)} ${chapter + 1}`;
+      nextLabel = `${getBookName(bookId, bookTitle, state.settings.bibleVersion)} ${chapter + 1}${anchorSuffix}`;
+      nextAbbrLabel = neighborAnchors.next ? `${chapter + 1} ${neighborAnchors.next}` : `${getAbbr(getBookName(bookId, bookTitle, state.settings.bibleVersion))} ${chapter + 1}`;
     } else if (bookIndex < ALL_BOOKS.length - 1) {
-      nextLabel = `${ALL_BOOKS[bookIndex + 1].name} 1`;
-      nextAbbrLabel = `${getAbbr(ALL_BOOKS[bookIndex + 1].name)} 1`;
+      nextLabel = `${getBookName(ALL_BOOKS[bookIndex + 1].id, ALL_BOOKS[bookIndex + 1].name, state.settings.bibleVersion)} 1`;
+      nextAbbrLabel = `${getAbbr(getBookName(ALL_BOOKS[bookIndex + 1].id, ALL_BOOKS[bookIndex + 1].name, state.settings.bibleVersion))} 1`;
     }
   }
 
@@ -1629,7 +1630,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           </button>
           <div className="flex flex-col items-center justify-center pt-1">
             <h2 className="text-4xl font-bold tracking-tight text-primary font-heading mb-2">
-              {bookTitle} {chapter}
+              {getBookName(bookId, bookTitle, state.settings.bibleVersion)} {chapter}
             </h2>
             <div className="flex items-center gap-1.5">
               <span className={`text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full transition-colors ${
@@ -2342,7 +2343,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
       {returnStack.length > 0 && selectedVerses.length === 0 && (() => {
         const topReturn = returnStack[returnStack.length - 1];
-        const topReturnBookName = ALL_BOOKS.find(b => b.id === topReturn.book)?.name || topReturn.book;
+        const topReturnBookEnglish = ALL_BOOKS.find(b => b.id === topReturn.book)?.name || topReturn.book;
+        const topReturnBookName = getBookName(topReturn.book, topReturnBookEnglish, state.settings.bibleVersion);
         return (
           <div
             className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
@@ -2386,7 +2388,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   <button
                     onClick={() => {
                       setCrossRefPeekSource({ book: bookId, chapter });
-                      setShowCrossReferences([`${topReturnBookName.toLowerCase()} ${topReturn.chapter}:${topReturn.verse}`]);
+                      setShowCrossReferences([`${topReturnBookEnglish.toLowerCase()} ${topReturn.chapter}:${topReturn.verse}`]);
                     }}
                     className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
                     title="View references for original verse"

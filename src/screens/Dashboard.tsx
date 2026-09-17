@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame, Tags } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { getBookName } from '../utils/localization';
 import { VerseCard } from '../components/dashboard/VerseCard';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -288,7 +289,7 @@ export const Dashboard: React.FC = () => {
                   className="flex items-center justify-between gap-4 p-4 rounded-md border border-card-border hover:border-accent/40 transition-colors text-left"
                 >
                   <div className="flex flex-col min-w-0">
-                    <span className="font-heading font-bold text-primary text-base truncate">{row.book.name}</span>
+                    <span className="font-heading font-bold text-primary text-base truncate">{getBookName(row.book.id, row.book.name, state.settings.bibleVersion)}</span>
                     <span className="text-xs text-secondary tabular-nums">
                       {secure} of {total} anchors secure
                       {rowHasWork ? (
@@ -320,7 +321,7 @@ export const Dashboard: React.FC = () => {
                     onClick={() => navigate('/practice', { state: { focusBookId: row.book.id } })}
                     className="px-2.5 py-1 rounded-md border border-card-border text-[0.6875rem] font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
                   >
-                    {row.book.name}
+                    {getBookName(row.book.id, row.book.name, state.settings.bibleVersion)}
                   </button>
                 ))}
             </div>
