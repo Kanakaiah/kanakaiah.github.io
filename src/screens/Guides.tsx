@@ -17,6 +17,8 @@ import { CustomSelect } from '../components/ui/CustomSelect';
 import { TRANSLATION_OPTIONS } from '../data/bibleMap';
 import { fetchVerseText, formatVerseNumbers, parseVerseRef } from '../utils/verseText';
 import { useToast } from '../context/ToastContext';
+import { Modal } from '../components/ui/Modal';
+import { Button } from '../components/ui/Button';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -371,7 +373,12 @@ export const Guides: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddingAll, setIsAddingAll] = useState(false);
   const [addAllTranslation, setAddAllTranslation] = useState<string>(state.settings.bibleVersion || 'LSB');
-  const [addAllGroup, setAddAllGroup] = useState<string>('default');
+
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+
   const [collapsedSections2, setCollapsedSections2] = useState<Record<string, boolean>>(
     () => Object.fromEntries(GUIDE_SECTIONS.filter(s => !s.defaultOpen).map(s => [s.id, true]))
   );
@@ -678,28 +685,44 @@ export const Guides: React.FC = () => {
     return null;
   }, [activeGuideId]);
 
-  const groupOptions = useMemo(() => {
-    const opts = [{ value: 'default', label: `New: ${activeGuide?.title || 'Collection'}` }];
-    (state.topics || []).forEach(t => {
-      opts.push({ value: t.id, label: t.name });
-    });
-    return opts;
-  }, [state.topics, activeGuide]);
+  useEffect(() => {
+    if (isGroupModalOpen) {
+      setIsAddingGroup(false);
+      setNewGroupName('');
+    }
+  }, [isGroupModalOpen]);
+
+  const handleCreateGroup = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = newGroupName.trim();
+    if (trimmed) {
+      const newTopicId = crypto.randomUUID();
+      dispatch({ type: 'ADD_TOPIC', payload: { id: newTopicId, name: trimmed } });
+      setSelectedTopicIds(prev => [...prev, newTopicId]);
+      setNewGroupName('');
+      setIsAddingGroup(false);
+    }
+  };
+
+  const handleOpenAddAll = () => {
+    if (!activeGuide) return;
+    const existingTopic = (state.topics || []).find(t => t.name === activeGuide.title);
+    if (existingTopic) {
+      setSelectedTopicIds([existingTopic.id]);
+    } else {
+      const newTopicId = crypto.randomUUID();
+      dispatch({ type: 'ADD_TOPIC', payload: { id: newTopicId, name: activeGuide.title } });
+      setSelectedTopicIds([newTopicId]);
+    }
+    setIsGroupModalOpen(true);
+  };
 
   const handleAddAllKeyVerses = async () => {
+    setIsGroupModalOpen(false);
     if (!activeGuide?.keyVerses?.length) return;
     setIsAddingAll(true);
     
     try {
-      let topicId = addAllGroup;
-      if (topicId === 'default') {
-        const existingTopic = (state.topics || []).find(t => t.name === activeGuide.title);
-        topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
-        if (!existingTopic) {
-          dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: activeGuide.title } });
-        }
-      }
-
       let addedCount = 0;
       let skippedCount = 0;
 
@@ -729,7 +752,7 @@ export const Guides: React.FC = () => {
               sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
               streak: 0,
               attempts: 0,
-              topicIds: [topicId]
+              ...(selectedTopicIds.length > 0 ? { topicIds: selectedTopicIds } : {})
             }
           });
           addedCount++;
@@ -738,7 +761,7 @@ export const Guides: React.FC = () => {
       }
       
       if (addedCount > 0) {
-        showToast(`Added ${addedCount} verses to topic '${activeGuide.title}'!${skippedCount > 0 ? ` (${skippedCount} already existed)` : ''}`, 'success');
+        showToast(`Added ${addedCount} verses to your library!${skippedCount > 0 ? ` (${skippedCount} already existed)` : ''}`, 'success');
       } else if (skippedCount > 0) {
         showToast(`All ${skippedCount} verses are already in your library!`, 'error');
       } else {
@@ -1566,15 +1589,8 @@ export const Guides: React.FC = () => {
                       options={TRANSLATION_OPTIONS}
                     />
                   </div>
-                  <div className="w-40">
-                    <CustomSelect
-                      value={addAllGroup}
-                      onChange={setAddAllGroup}
-                      options={groupOptions}
-                    />
-                  </div>
                   <button
-                    onClick={handleAddAllKeyVerses}
+                    onClick={handleOpenAddAll}
                     disabled={isAddingAll}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-accent/20 hover:bg-accent/30 text-accent-light border border-accent/30 rounded-md text-sm font-bold transition-colors disabled:opacity-50"
                   >
@@ -1666,6 +1682,78 @@ export const Guides: React.FC = () => {
             onClose={() => setDrillBlock(null)}
           />
         )}
+
+        <Modal isOpen={isGroupModalOpen} onClose={() => setIsGroupModalOpen(false)} variant="sheet" size="md">
+          <div className="flex flex-col gap-6 p-4">
+            <div className="flex flex-col items-center gap-1">
+              <h2 className="text-xl font-heading font-bold text-primary text-center">Add All Verses</h2>
+              <p className="text-sm text-muted text-center max-w-[280px]">
+                You are about to add {activeGuide.keyVerses?.length} verses to your library in the {addAllTranslation} translation.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider text-center">Assign to Groups (Optional)</span>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {state.topics?.map(topic => {
+                  const isActive = selectedTopicIds.includes(topic.id);
+                  return (
+                    <button
+                      key={topic.id}
+                      onClick={() => {
+                        setSelectedTopicIds(prev => 
+                          isActive ? prev.filter(id => id !== topic.id) : [...prev, topic.id]
+                        );
+                      }}
+                      className={`text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border ${
+                        isActive 
+                          ? 'bg-accent/15 text-accent border-accent/30' 
+                          : 'bg-transparent text-secondary border-card-border hover:border-card-border-hover hover:text-primary'
+                      }`}
+                    >
+                      {topic.name}
+                    </button>
+                  );
+                })}
+                
+                {isAddingGroup ? (
+                  <form onSubmit={handleCreateGroup} className="flex items-center gap-1">
+                    <input
+                      type="text"
+                      value={newGroupName}
+                      onChange={(e) => setNewGroupName(e.target.value)}
+                      placeholder="New group..."
+                      className="text-[0.8125rem] px-3 py-1.5 rounded-full bg-card border border-accent text-primary focus:outline-none w-32"
+                      autoFocus
+                      onBlur={() => {
+                        if (!newGroupName.trim()) setIsAddingGroup(false);
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={!newGroupName.trim()}
+                      className="p-1.5 rounded-full text-accent hover:bg-accent/10 disabled:opacity-50 transition-colors"
+                      aria-label="Save group"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  </form>
+                ) : (
+                  <button
+                    onClick={() => setIsAddingGroup(true)}
+                    className="text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border bg-transparent text-secondary border-card-border border-dashed hover:border-solid hover:border-accent hover:text-accent flex items-center gap-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> New Group
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <Button onClick={handleAddAllKeyVerses} className="w-full text-lg h-12">
+              Confirm and Add Verses
+            </Button>
+          </div>
+        </Modal>
       </div>
     );
   }
