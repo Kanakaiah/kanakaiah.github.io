@@ -1581,8 +1581,8 @@ export const Guides: React.FC = () => {
             <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
-                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                  <div className="w-48">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+                  <div className="flex-1 sm:flex-none sm:w-56 min-w-[120px]">
                     <CustomSelect
                       value={addAllTranslation}
                       onChange={setAddAllTranslation}
