@@ -626,6 +626,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   let nextAbbrLabel: string | null = null;
 
   const getAbbr = (name: string) => {
+    // String truncation breaks complex scripts (abrogates combining marks)
+    // and they don't have established 3-letter abbreviations anyway.
+    if (/[^\x00-\x7F]/.test(name)) return name;
+
     if (name.length <= 4) return name;
     if (name.startsWith('1 ') || name.startsWith('2 ') || name.startsWith('3 ')) {
       return name.substring(0, 5).replace(' ', '');
