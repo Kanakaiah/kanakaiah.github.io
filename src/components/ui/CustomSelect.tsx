@@ -90,17 +90,17 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
   const listboxId = 'custom-select-listbox';
 
   return (
-    <div className={`relative ${className}`} ref={containerRef} onKeyDown={handleKeyDown}>
+    <div className={`relative inline-block ${className}`} ref={containerRef} onKeyDown={handleKeyDown}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full h-14 flex items-center justify-between gap-2 px-4 bg-card border border-card-border rounded-md text-primary font-medium hover:border-card-border-hover transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
+        className="w-full h-14 flex items-center justify-between gap-2 px-4 bg-card border border-card-border rounded-md text-primary font-medium hover:border-card-border-hover transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent whitespace-nowrap"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-activedescendant={isOpen && highlightedIndex >= 0 ? `custom-select-option-${highlightedIndex}` : undefined}
       >
-        <span className="truncate">{selectedOption?.label}</span>
-        <ChevronDown className={`w-4 h-4 text-secondary transition-transform duration-200 ${isOpen ? 'rotate-180 text-accent' : ''}`} />
+        <span>{selectedOption?.label}</span>
+        <ChevronDown className={`w-4 h-4 text-secondary shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-accent' : ''}`} />
       </button>
 
       {isOpen && (
@@ -109,7 +109,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
           role="listbox"
           id={listboxId}
           aria-label="Options"
-          className="absolute z-50 w-full mt-2 py-2 bg-card border border-card-border rounded-md shadow-md max-h-60 overflow-y-auto animate-[fadeScaleIn_0.15s_ease-out]"
+          className="absolute z-50 min-w-full w-max mt-2 py-2 bg-card border border-card-border rounded-md shadow-md max-h-60 overflow-y-auto animate-[fadeScaleIn_0.15s_ease-out]"
         >
           {options.map((option, index) => (
             <button

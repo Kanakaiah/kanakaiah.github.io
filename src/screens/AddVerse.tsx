@@ -355,7 +355,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
-            <div className="w-full sm:w-72 shrink-0">
+            <div className="w-full sm:w-auto shrink-0">
               <CustomSelect
                 value={searchTranslation}
                 onChange={setSearchTranslation}
