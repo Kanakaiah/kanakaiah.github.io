@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks, Check } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks, Check, Plus, Loader2 } from 'lucide-react';
 import { useSearchParams, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
@@ -13,6 +13,10 @@ import { KeyVerseCard } from '../components/guides/KeyVerseCard';
 import { RecordCards } from '../components/guides/RecordCards';
 import { OriginalWordModal } from '../components/OriginalWordModal';
 import { ChainDrill, type ChainAnchor } from '../components/practice/ChainDrill';
+import { CustomSelect } from '../components/ui/CustomSelect';
+import { TRANSLATION_OPTIONS } from '../data/bibleMap';
+import { fetchVerseText, formatVerseNumbers, parseVerseRef } from '../utils/verseText';
+import { useToast } from '../context/ToastContext';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
@@ -359,11 +363,14 @@ const BibleIndexModal: React.FC<{
 
 export const Guides: React.FC = () => {
   const { state, dispatch } = useApp();
+  const { showToast } = useToast();
   // Read-only now — the screen's own state lives in the path; query params are only
   // inspected to redirect links written before that was true.
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'books' | 'guides'>('books');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAddingAll, setIsAddingAll] = useState(false);
+  const [addAllTranslation, setAddAllTranslation] = useState<string>(state.settings.bibleVersion || 'LSB');
   const [collapsedSections2, setCollapsedSections2] = useState<Record<string, boolean>>(
     () => Object.fromEntries(GUIDE_SECTIONS.filter(s => !s.defaultOpen).map(s => [s.id, true]))
   );
@@ -669,6 +676,68 @@ export const Guides: React.FC = () => {
     
     return null;
   }, [activeGuideId]);
+
+  const handleAddAllKeyVerses = async () => {
+    if (!activeGuide?.keyVerses?.length) return;
+    setIsAddingAll(true);
+    
+    try {
+      const existingTopic = (state.topics || []).find(t => t.name === activeGuide.title);
+      const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
+      if (!existingTopic) {
+        dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: activeGuide.title } });
+      }
+
+      let addedCount = 0;
+      let skippedCount = 0;
+
+      for (const kv of activeGuide.keyVerses) {
+        const parsed = parseVerseRef(kv.ref, activeGuide.id);
+        if (!parsed) continue;
+        
+        const bookName = ALL_BOOKS.find(b => b.id === parsed.bookId)?.name || parsed.bookId;
+        const refToSave = `${bookName} ${parsed.chapter}:${formatVerseNumbers(parsed.verses)}`;
+        
+        if (state.verses.some(v => v.ref === refToSave && v.translation === addAllTranslation)) {
+           skippedCount++;
+           continue;
+        }
+
+        const text = await fetchVerseText(addAllTranslation, parsed);
+        if (text) {
+          dispatch({
+            type: 'ADD_VERSE',
+            payload: {
+              id: crypto.randomUUID(),
+              ref: refToSave,
+              text,
+              translation: addAllTranslation,
+              addedDate: new Date().toISOString(),
+              status: 'learning',
+              sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+              streak: 0,
+              attempts: 0,
+              topicIds: [topicId]
+            }
+          });
+          addedCount++;
+        }
+        await new Promise(r => setTimeout(r, 200));
+      }
+      
+      if (addedCount > 0) {
+        showToast(`Added ${addedCount} verses to topic '${activeGuide.title}'!${skippedCount > 0 ? ` (${skippedCount} already existed)` : ''}`, 'success');
+      } else if (skippedCount > 0) {
+        showToast(`All ${skippedCount} verses are already in your library!`, 'error');
+      } else {
+        showToast('Failed to add verses.', 'error');
+      }
+    } catch (e) {
+      showToast('Error adding verses. Please try again.', 'error');
+    } finally {
+      setIsAddingAll(false);
+    }
+  };
 
   // The anchor grid, partitioned under the book's own blocks (Primeval, Abraham,
   // Jacob, Joseph — the same four the distribution bar above already draws) instead
@@ -1475,7 +1544,26 @@ export const Guides: React.FC = () => {
 
           {activeGuide.keyVerses && (
             <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
-              <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
+                <div className="flex items-center gap-2">
+                  <div className="w-32">
+                    <CustomSelect
+                      value={addAllTranslation}
+                      onChange={setAddAllTranslation}
+                      options={TRANSLATION_OPTIONS}
+                    />
+                  </div>
+                  <button
+                    onClick={handleAddAllKeyVerses}
+                    disabled={isAddingAll}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-accent/20 hover:bg-accent/30 text-accent-light border border-accent/30 rounded-md text-sm font-bold transition-colors disabled:opacity-50"
+                  >
+                    {isAddingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    Add All
+                  </button>
+                </div>
+              </div>
               <div className="flex flex-col gap-3">
                 {activeGuide.keyVerses.map((kv: any, i: number) => (
                   <KeyVerseCard key={`${activeGuide.id}-${kv.ref}-${i}`} verse={kv} bookId={activeGuide.id} />
