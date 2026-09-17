@@ -1582,7 +1582,7 @@ export const Guides: React.FC = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
                 <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                  <div className="w-32">
+                  <div className="w-48">
                     <CustomSelect
                       value={addAllTranslation}
                       onChange={setAddAllTranslation}
