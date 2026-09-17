@@ -1,7 +1,7 @@
 {
   "totalAnchors": 260,
-  "totalGenerated": 216,
-  "totalMissing": 44,
+  "totalGenerated": 260,
+  "totalMissing": 0,
   "completedBooks": [
     "john",
     "romans",
@@ -17,148 +17,19 @@
     "colossians",
     "james",
     "1peter",
-    "mark"
+    "mark",
+    "2corinthians",
+    "1timothy",
+    "2timothy",
+    "1john",
+    "titus",
+    "philemon",
+    "2peter",
+    "jude",
+    "2john",
+    "3john",
+    "1thessalonians",
+    "2thessalonians"
   ],
-  "missingDetails": [
-    {
-      "book": "2corinthians",
-      "total": 13,
-      "generated": 2,
-      "missing": 11,
-      "missingChapters": [
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13
-      ]
-    },
-    {
-      "book": "1timothy",
-      "total": 6,
-      "generated": 0,
-      "missing": 6,
-      "missingChapters": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ]
-    },
-    {
-      "book": "2timothy",
-      "total": 4,
-      "generated": 0,
-      "missing": 4,
-      "missingChapters": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    {
-      "book": "1john",
-      "total": 5,
-      "generated": 0,
-      "missing": 5,
-      "missingChapters": [
-        1,
-        2,
-        3,
-        4,
-        5
-      ]
-    },
-    {
-      "book": "titus",
-      "total": 3,
-      "generated": 0,
-      "missing": 3,
-      "missingChapters": [
-        1,
-        2,
-        3
-      ]
-    },
-    {
-      "book": "philemon",
-      "total": 1,
-      "generated": 0,
-      "missing": 1,
-      "missingChapters": [
-        1
-      ]
-    },
-    {
-      "book": "2peter",
-      "total": 3,
-      "generated": 0,
-      "missing": 3,
-      "missingChapters": [
-        1,
-        2,
-        3
-      ]
-    },
-    {
-      "book": "jude",
-      "total": 1,
-      "generated": 0,
-      "missing": 1,
-      "missingChapters": [
-        1
-      ]
-    },
-    {
-      "book": "2john",
-      "total": 1,
-      "generated": 0,
-      "missing": 1,
-      "missingChapters": [
-        1
-      ]
-    },
-    {
-      "book": "3john",
-      "total": 1,
-      "generated": 0,
-      "missing": 1,
-      "missingChapters": [
-        1
-      ]
-    },
-    {
-      "book": "1thessalonians",
-      "total": 5,
-      "generated": 0,
-      "missing": 5,
-      "missingChapters": [
-        1,
-        2,
-        3,
-        4,
-        5
-      ]
-    },
-    {
-      "book": "2thessalonians",
-      "total": 3,
-      "generated": 0,
-      "missing": 3,
-      "missingChapters": [
-        1,
-        2,
-        3
-      ]
-    }
-  ]
+  "missingDetails": []
 }

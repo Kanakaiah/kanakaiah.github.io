@@ -429,6 +429,13 @@ export const Guides: React.FC = () => {
     }
   }, [searchParams, navigate]);
 
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'guides' || tab === 'books') {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
   const handleScrollToChapter = (ch: number) => {
     const el = document.getElementById(`chapter-anchor-${ch}`);
     if (el) {
