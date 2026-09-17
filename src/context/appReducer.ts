@@ -405,15 +405,24 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         topics: (state.topics || []).map(t => t.id === action.payload.id ? { ...t, name: action.payload.name } : t)
       };
-    case 'DELETE_TOPIC':
+    case 'DELETE_TOPIC': {
+      const topicId = action.payload;
       return {
         ...state,
-        topics: (state.topics || []).filter(t => t.id !== action.payload),
-        verses: state.verses.map(v => v.topicIds?.includes(action.payload)
-          ? { ...v, topicIds: v.topicIds.filter(id => id !== action.payload) }
-          : v
-        )
+        topics: (state.topics || []).filter(t => t.id !== topicId),
+        verses: state.verses.filter(v => {
+          // If the verse doesn't have this topic, keep it
+          if (!v.topicIds || !v.topicIds.includes(topicId)) return true;
+          // If it DOES have this topic, it should only be kept if it has AT LEAST ONE OTHER topic.
+          return v.topicIds.length > 1;
+        }).map(v => {
+          if (v.topicIds?.includes(topicId)) {
+            return { ...v, topicIds: v.topicIds.filter(id => id !== topicId) };
+          }
+          return v;
+        })
       };
+    }
     case 'TOGGLE_VERSE_TOPIC': {
       const { verseId, topicId } = action.payload;
       return {

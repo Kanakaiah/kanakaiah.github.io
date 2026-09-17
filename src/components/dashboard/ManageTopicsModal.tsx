@@ -45,7 +45,7 @@ export const ManageTopicsModal: React.FC<ManageTopicsModalProps> = ({ onClose })
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this group? Verses will remain in your library.')) {
+    if (window.confirm('Are you sure you want to delete this group? All verses that belong exclusively to this group will also be permanently deleted.')) {
       dispatch({ type: 'DELETE_TOPIC', payload: id });
     }
   };
@@ -121,7 +121,7 @@ export const ManageTopicsModal: React.FC<ManageTopicsModalProps> = ({ onClose })
                   ) : (
                     <>
                       <span className="text-primary font-medium">{topic.name}</span>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-1 transition-opacity">
                         <button
                           onClick={() => startEditing(topic.id, topic.name)}
                           className="p-1.5 text-muted hover:text-primary hover:bg-card-border rounded transition-colors"
