@@ -371,6 +371,7 @@ export const Guides: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddingAll, setIsAddingAll] = useState(false);
   const [addAllTranslation, setAddAllTranslation] = useState<string>(state.settings.bibleVersion || 'LSB');
+  const [addAllGroup, setAddAllGroup] = useState<string>('default');
   const [collapsedSections2, setCollapsedSections2] = useState<Record<string, boolean>>(
     () => Object.fromEntries(GUIDE_SECTIONS.filter(s => !s.defaultOpen).map(s => [s.id, true]))
   );
@@ -677,15 +678,26 @@ export const Guides: React.FC = () => {
     return null;
   }, [activeGuideId]);
 
+  const groupOptions = useMemo(() => {
+    const opts = [{ value: 'default', label: `New: ${activeGuide?.title || 'Collection'}` }];
+    (state.topics || []).forEach(t => {
+      opts.push({ value: t.id, label: t.name });
+    });
+    return opts;
+  }, [state.topics, activeGuide]);
+
   const handleAddAllKeyVerses = async () => {
     if (!activeGuide?.keyVerses?.length) return;
     setIsAddingAll(true);
     
     try {
-      const existingTopic = (state.topics || []).find(t => t.name === activeGuide.title);
-      const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
-      if (!existingTopic) {
-        dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: activeGuide.title } });
+      let topicId = addAllGroup;
+      if (topicId === 'default') {
+        const existingTopic = (state.topics || []).find(t => t.name === activeGuide.title);
+        topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
+        if (!existingTopic) {
+          dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: activeGuide.title } });
+        }
       }
 
       let addedCount = 0;
@@ -1546,12 +1558,19 @@ export const Guides: React.FC = () => {
             <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                   <div className="w-32">
                     <CustomSelect
                       value={addAllTranslation}
                       onChange={setAddAllTranslation}
                       options={TRANSLATION_OPTIONS}
+                    />
+                  </div>
+                  <div className="w-40">
+                    <CustomSelect
+                      value={addAllGroup}
+                      onChange={setAddAllGroup}
+                      options={groupOptions}
                     />
                   </div>
                   <button
