@@ -592,6 +592,18 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
               <Plus className="w-4 h-4 mr-2" /> Add 75 Well-Known
             </Button>
           </div>
+
+          <div className="p-4 bg-card-elevated border border-card-border rounded-lg flex flex-col gap-3">
+            <h3 className="font-heading font-bold text-lg text-primary">Topical Memory Collections</h3>
+            <p className="text-sm text-muted">Explore these thematic and book-specific collections in the <a href="/#/guides" className="text-accent hover:underline font-bold" onClick={(e) => { e.preventDefault(); navigate('/guides'); }}>Guides tab</a> to view and add them in your preferred translation.</p>
+            <Button
+              onClick={() => navigate('/guides')}
+              className="mt-2"
+              variant="secondary"
+            >
+              <Library className="w-4 h-4 mr-2" /> View Collections in Guides
+            </Button>
+          </div>
         </div>
       )}
     </div>
