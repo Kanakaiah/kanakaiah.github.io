@@ -260,3 +260,5 @@ select option {
   white-space: nowrap;
   border-width: 0;
 }
+
+.words-of-jesus { color: #ef4444; } /* red-500 */

@@ -31,3 +31,5 @@ prompts
 *.njsproj
 *.sln
 *.sw?
+temp_tamil/  
+temp_telugu/  

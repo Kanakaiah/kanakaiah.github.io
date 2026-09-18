@@ -165,27 +165,18 @@ function fetchChapterText(version: string, bollsId: number, chapter: number, boo
 
   let pending: Promise<Verse[]>;
 
-  if (version === 'TELIRV') {
-    const bookName = bookId === 'songofsolomon' ? 'song of solomon' : bookId;
-    const url = `https://api.biblesupersearch.com/api?bible=te_irv&reference=${encodeURIComponent(bookName)}%20${chapter}`;
+  if (version === 'TELIRV' || version === 'TBSI') {
+    const folder = version === 'TELIRV' ? 'telugu_irv' : 'tamil_bsi';
+    const url = `/bible/${folder}/${bollsId}.json`;
     
     pending = fetch(url, { signal: controller.signal })
       .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch verse text from SuperSearch.');
+        if (!res.ok) throw new Error('Failed to fetch verse text from local static files.');
         return res.json();
       })
-      .then(data => {
-        const versesObj = data?.results?.[0]?.verses?.te_irv?.[chapter.toString()];
-        if (!versesObj) throw new Error('Invalid response structure from SuperSearch.');
-        
-        const verses: Verse[] = [];
-        for (const [verseNumStr, verseData] of Object.entries(versesObj)) {
-          verses.push({
-            pk: parseInt(verseNumStr, 10),
-            verse: parseInt(verseNumStr, 10),
-            text: (verseData as any).text
-          });
-        }
+      .then(bookData => {
+        const verses = bookData[chapter.toString()];
+        if (!verses) throw new Error('Invalid response structure or missing chapter.');
         chapterTextSettled.set(cacheKey, verses);
         return verses;
       })

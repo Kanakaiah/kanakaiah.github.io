@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "fs-extra": "^11.4.0",
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-router-dom": "^7.16.0"
+    "react-router-dom": "^7.16.0",
+    "usfm-js": "^3.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
