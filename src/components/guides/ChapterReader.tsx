@@ -832,7 +832,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         // the headings — the chapter itself still renders.
         const [data, lsbData] = await Promise.all([
           fetchChapterText(bibleVersion, bollsId, chapter, bookId),
-          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter, bookId).catch(() => null),
+          (bibleVersion === 'LSB' || bibleVersion === 'TBSI' || bibleVersion === 'TELIRV') ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter, bookId).catch(() => null),
         ]);
 
         if (cancelled) return;
