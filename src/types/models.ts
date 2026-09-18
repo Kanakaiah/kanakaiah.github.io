@@ -39,7 +39,7 @@ export interface Verse {
   topicIds?: string[];
 }
 
-export type BibleVersion = 'LSB' | 'NASB' | 'NLT' | 'ESV' | 'WEB' | 'KJV' | 'BBE' | 'TBSI' | 'TELIRV';
+export type BibleVersion = 'LSB' | 'NASB' | 'NLT' | 'ESV' | 'WEB' | 'KJV' | 'BSB' | 'TBSI' | 'TELIRV';
 
 // Whether a chapter's memory anchor shows on arrival ('always', the pre-recall
 // behavior), only once tapped ('tap'), or never inline (view it only through the

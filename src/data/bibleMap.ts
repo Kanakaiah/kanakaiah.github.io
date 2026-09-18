@@ -27,7 +27,7 @@ export const BIBLE_VERSION_LABELS: Record<string, string> = {
   NLT: 'NLT',
   WEB: 'WEB',
   KJV: 'KJV',
-  BBE: 'BBE',
+  BSB: 'BSB',
   TBSI: 'Tamil (TBSI)',
   TELIRV: 'Telugu (IRV)',
 };
@@ -39,7 +39,7 @@ export const TRANSLATION_OPTIONS = [
   { value: 'NLT', label: 'NLT' },
   { value: 'WEB', label: 'WEB (World English)' },
   { value: 'KJV', label: 'KJV' },
-  { value: 'BBE', label: 'BBE (Basic English)' },
+  { value: 'BSB', label: 'BSB (Berean Standard)' },
   { value: 'TBSI', label: 'Tamil (TBSI)' },
   { value: 'TELIRV', label: 'Telugu (IRV)' },
 ];

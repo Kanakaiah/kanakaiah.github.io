@@ -84,7 +84,7 @@ function loadInitialState(): AppState {
               const t = v.translation.toLowerCase();
               if (t === 'world english bible' || t === 'web') v.translation = 'WEB';
               else if (t === 'king james version' || t === 'kjv') v.translation = 'KJV';
-              else if (t === 'bible in basic english' || t === 'bbe') v.translation = 'BBE';
+              else if (t === 'berean standard bible' || t === 'bsb') v.translation = 'BSB';
             }
             
             uniqueVerses.push(v);
