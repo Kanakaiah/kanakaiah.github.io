@@ -1280,6 +1280,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       // Fix missing spaces after punctuation globally in the text (like "Of David.Yahweh")
       text = text.replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2');
 
+      // Strip Strong's tags and translator footnotes from KJV texts
+      text = text.replace(/<S>\d+<\/S>/gi, '');
+      text = text.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
+
       // === Fix #1: Style <i> tags as translator-supplied words ===
       // The LSB uses <i> to mark words added by the translator for English readability.
       // Render them with reduced opacity so readers can distinguish original from supplied text.
