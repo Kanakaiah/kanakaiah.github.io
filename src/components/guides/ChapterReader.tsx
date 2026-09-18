@@ -1290,9 +1290,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         });
       }
 
+      const chapterBreaks = paragraphBreaks?.[bookId]?.[String(chapter)];
+      const isFirstVerseOfChapter = verses.length > 0 && v.verse === verses[0].verse;
+      const isParagraphStart = !isFirstVerseOfChapter && (
+        chapterBreaks ? chapterBreaks.includes(v.verse) : (hasHeading || hasLeadingBr)
+      );
+
       // Append in correct order
       if (heading) {
         html += heading;
+      } else if (isParagraphStart) {
+        // If it's a paragraph start but there's no heading taking up space, inject a line break
+        html += `<div class="block w-full h-5"></div>`;
       }
 
       if (psalmTitle) {
@@ -1324,11 +1333,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       // the chapter's very first verse — it's trivially a "new paragraph" already, and
       // marking it is redundant with the section heading (matches Blue Letter Bible's own
       // convention, which never shows a paragraph mark on a chapter's opening verse).
-      const chapterBreaks = paragraphBreaks?.[bookId]?.[String(chapter)];
-      const isFirstVerseOfChapter = verses.length > 0 && v.verse === verses[0].verse;
-      const isParagraphStart = !isFirstVerseOfChapter && (
-        chapterBreaks ? chapterBreaks.includes(v.verse) : (hasHeading || hasLeadingBr)
-      );
       const pilcrowHtml = isParagraphStart && display.showParagraphMarks
         ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>`
         : '';
