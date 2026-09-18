@@ -628,7 +628,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const getAbbr = (name: string) => {
     // String truncation breaks complex scripts (abrogates combining marks)
     // and they don't have established 3-letter abbreviations anyway.
-    if (/[^\x00-\x7F]/.test(name)) return name;
+    if (state.settings.bibleVersion === 'TELIRV' || state.settings.bibleVersion === 'TBSI') return name;
 
     if (name.length <= 4) return name;
     if (name.startsWith('1 ') || name.startsWith('2 ') || name.startsWith('3 ')) {

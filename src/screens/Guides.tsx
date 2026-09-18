@@ -1641,9 +1641,9 @@ export const Guides: React.FC = () => {
               title={prevBook?.name || ''}
             >
               <ChevronLeft className="w-4 h-4 flex-shrink-0" />
-              <span className="hidden sm:block truncate max-w-[120px]">{prevBook?.name}</span>
+              <span className="hidden sm:block truncate max-w-[120px]">{prevBook ? getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion) : ""}</span>
               <span className="sm:hidden truncate max-w-[80px]">
-                {prevBook ? (prevBook.name.length <= 4 ? prevBook.name : (prevBook.name.startsWith('1 ') || prevBook.name.startsWith('2 ') || prevBook.name.startsWith('3 ') ? prevBook.name.substring(0, 5).replace(' ', '') : prevBook.name.substring(0, 3))) : ''}
+                {prevBook ? ((state.settings.bibleVersion === 'TELIRV' || state.settings.bibleVersion === 'TBSI') ? getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion) : (getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion).length <= 4 ? getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion) : (getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion).startsWith("1 ") || getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion).startsWith("2 ") || getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion).startsWith("3 ") ? getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion).substring(0, 5).replace(" ", "") : getBookName(prevBook.id, prevBook.name, state.settings.bibleVersion).substring(0, 3)))) : ""}
               </span>
             </button>
 
@@ -1659,9 +1659,9 @@ export const Guides: React.FC = () => {
               className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-card-hover text-secondary hover:text-primary relative after:absolute after:-inset-y-1 after:inset-x-0 after:content-['']"
               title={nextBook?.name || ''}
             >
-              <span className="hidden sm:block truncate max-w-[120px]">{nextBook?.name}</span>
+              <span className="hidden sm:block truncate max-w-[120px]">{nextBook ? getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion) : ""}</span>
               <span className="sm:hidden truncate max-w-[80px]">
-                {nextBook ? (nextBook.name.length <= 4 ? nextBook.name : (nextBook.name.startsWith('1 ') || nextBook.name.startsWith('2 ') || nextBook.name.startsWith('3 ') ? nextBook.name.substring(0, 5).replace(' ', '') : nextBook.name.substring(0, 3))) : ''}
+                {nextBook ? ((state.settings.bibleVersion === 'TELIRV' || state.settings.bibleVersion === 'TBSI') ? getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion) : (getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion).length <= 4 ? getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion) : (getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion).startsWith("1 ") || getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion).startsWith("2 ") || getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion).startsWith("3 ") ? getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion).substring(0, 5).replace(" ", "") : getBookName(nextBook.id, nextBook.name, state.settings.bibleVersion).substring(0, 3)))) : ""}
               </span>
               <ChevronRight className="w-4 h-4 flex-shrink-0" />
             </button>
