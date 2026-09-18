@@ -153,7 +153,7 @@ function chapterCacheKey(version: string, bollsId: number, chapter: number): str
  * rather than the result so a chapter opened twice in quick succession (or React's
  * dev-only double-invoked effect) makes a single request.
  */
-function fetchChapterText(version: string, bollsId: number, chapter: number, bookId: string): Promise<Verse[]> {
+function fetchChapterText(version: string, bollsId: number, chapter: number): Promise<Verse[]> {
   const cacheKey = chapterCacheKey(version, bollsId, chapter);
   const cached = chapterTextCache.get(cacheKey);
   if (cached) return cached;
@@ -822,8 +822,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         // of the two round trips rather than their sum. A failed LSB request only costs
         // the headings — the chapter itself still renders.
         const [data, lsbData] = await Promise.all([
-          fetchChapterText(bibleVersion, bollsId, chapter, bookId),
-          (bibleVersion === 'LSB' || bibleVersion === 'TBSI' || bibleVersion === 'TELIRV') ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter, bookId).catch(() => null),
+          fetchChapterText(bibleVersion, bollsId, chapter),
+          (bibleVersion === 'LSB' || bibleVersion === 'TBSI' || bibleVersion === 'TELIRV') ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter).catch(() => null),
         ]);
 
         if (cancelled) return;
