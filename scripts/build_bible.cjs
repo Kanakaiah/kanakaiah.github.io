@@ -20,19 +20,40 @@ const BOOK_MAP = {
   '1JN': 62, '2JN': 63, '3JN': 64, 'JUD': 65, 'REV': 66
 };
 
-function renderVerseObjects(objects) {
+function renderVerseObjects(objects, state = { inWj: false }) {
   if (!objects) return '';
   let text = '';
   for (const obj of objects) {
-    if (obj.type === 'text') {
-      text += obj.text;
-    } else if (obj.tag === 'wj') {
-      text += `<span class="words-of-jesus">${obj.text}</span>`;
-    } else if (obj.text) {
-      text += obj.text;
+    if (obj.type === 'footnote' || obj.tag === 'f') {
+      continue;
+    }
+
+    let isWjStart = false;
+    if (obj.tag === 'wj') {
+      state.inWj = true;
+      isWjStart = true;
+      text += `<span class="words-of-jesus">`;
+    }
+
+    let inner = obj.text || obj.content || '';
+    if (obj.children) {
+      inner += renderVerseObjects(obj.children, state);
+    }
+
+    if (inner) {
+      if (obj.tag === 'add') {
+        text += `<i>${inner}</i>`;
+      } else {
+        text += inner;
+      }
+    }
+
+    if (obj.tag === 'wj*' || (isWjStart && obj.endTag === 'wj*')) {
+      state.inWj = false;
+      text += `</span>`;
     }
   }
-  return text.replace(/\n/g, ' ').trim();
+  return text;
 }
 
 async function convertUsfmDir(inputDir, outputDir) {
@@ -54,13 +75,28 @@ async function convertUsfmDir(inputDir, outputDir) {
     const bookId = BOOK_MAP[bookAbbr];
     const bookData = {};
 
+    let state = { inWj: false };
+
     for (const [chapterNum, chapterData] of Object.entries(parsed.chapters)) {
       const versesArray = [];
       
       for (const [verseNum, verseData] of Object.entries(chapterData)) {
         if (verseNum === 'front') continue;
         
-        let verseText = renderVerseObjects(verseData.verseObjects);
+        let wasInWj = state.inWj;
+        let verseText = renderVerseObjects(verseData.verseObjects, state);
+
+        if (state.inWj) {
+           verseText += '</span>';
+        } else if (!state.inWj && verseText.includes('<span class="words-of-jesus">') && verseText.split('<span class="words-of-jesus">').length > verseText.split('</span>').length) {
+           verseText += '</span>';
+        }
+        
+        if (wasInWj) {
+           verseText = '<span class="words-of-jesus">' + verseText;
+        }
+
+        verseText = verseText.replace(/\n/g, ' ').trim();
         const nums = verseNum.split('-');
         
         versesArray.push({
@@ -88,6 +124,12 @@ async function main() {
   await convertUsfmDir(
     path.join(__dirname, '../temp_tamil/usfm'),
     path.join(__dirname, '../public/bible/tamil_bsi')
+  );
+  
+  console.log('Building Berean Standard Bible (BSB)...');
+  await convertUsfmDir(
+    path.join(__dirname, '../temp_bsb'),
+    path.join(__dirname, '../public/bible/bsb')
   );
   
   console.log('Done!');

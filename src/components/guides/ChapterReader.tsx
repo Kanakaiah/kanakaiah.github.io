@@ -165,8 +165,8 @@ function fetchChapterText(version: string, bollsId: number, chapter: number, boo
 
   let pending: Promise<Verse[]>;
 
-  if (version === 'TELIRV' || version === 'TBSI') {
-    const folder = version === 'TELIRV' ? 'telugu_irv' : 'tamil_bsi';
+  if (version === 'TELIRV' || version === 'TBSI' || version === 'BSB') {
+    const folder = version === 'TELIRV' ? 'telugu_irv' : version === 'TBSI' ? 'tamil_bsi' : 'bsb';
     const url = `/bible/${folder}/${bollsId}.json`;
     
     pending = fetch(url, { signal: controller.signal })
