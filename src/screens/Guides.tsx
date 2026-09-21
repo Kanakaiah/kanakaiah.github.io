@@ -963,21 +963,22 @@ export const Guides: React.FC = () => {
             page and the chapter reader. */}
         <div
           ref={headerRef}
-          className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+          className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-5 sm:px-8 lg:px-8`}
           style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         >
-          <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative flex items-center justify-center min-h-[3rem]">
+          <div className="max-w-4xl mx-auto w-full pb-3 relative flex items-center justify-between min-h-[3rem]">
             <button
               onClick={() => setActiveGuideId(null)}
-              className="absolute left-5 sm:left-8 top-1/2 -translate-y-1/2 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
+              className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
               aria-label="Go back"
             >
               <ArrowLeft className="w-6 h-6 text-secondary" />
             </button>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2">
+            <h2 className="absolute left-1/2 -translate-x-1/2 text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2 w-full pointer-events-none">
               {isNT ? 'New Testament' : 'Old Testament'}
             </h2>
+            <div className="w-10 flex-shrink-0" aria-hidden="true" />
           </div>
         </div>
 
@@ -1072,10 +1073,10 @@ export const Guides: React.FC = () => {
             wrapper instead of the viewport. */}
         <div
           ref={headerRef}
-          className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+          className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-5 sm:px-8 lg:px-8`}
           style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         >
-          <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
+          <div className="max-w-4xl mx-auto w-full pb-3 relative flex items-center justify-between min-h-[3rem]">
             <button
               // Back goes back. This sent every book guide to the testament browser —
               // a screen most readers arrive at a book without ever having seen, since
@@ -1094,17 +1095,18 @@ export const Guides: React.FC = () => {
                   );
                 }
               }}
-              className="absolute left-5 sm:left-8 top-1/2 -translate-y-1/2 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
+              className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
               aria-label="Go back"
             >
               <ArrowLeft className="w-6 h-6 text-secondary" />
             </button>
-            <h2 className={`font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2 ${
+            <h2 className={`absolute left-1/2 -translate-x-1/2 font-bold tracking-tight text-primary font-heading text-center leading-tight line-clamp-2 px-12 w-full pointer-events-none ${
               activeGuide.title.length > 18 ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl'
             }`}>
               {activeGuide.title}
             </h2>
+            <div className="w-10 flex-shrink-0" aria-hidden="true" />
           </div>
         </div>
 
