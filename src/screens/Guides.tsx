@@ -966,20 +966,18 @@ export const Guides: React.FC = () => {
           className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
           style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         >
-          <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
+          <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative flex items-center justify-center min-h-[3rem]">
             <button
               onClick={() => setActiveGuideId(null)}
-              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
+              className="absolute left-5 sm:left-8 top-1/2 -translate-y-1/2 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
               aria-label="Go back"
             >
               <ArrowLeft className="w-6 h-6 text-secondary" />
             </button>
-            <div className="flex flex-col items-center justify-center pt-1">
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2">
-                {isNT ? 'New Testament' : 'Old Testament'}
-              </h2>
-            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2">
+              {isNT ? 'New Testament' : 'Old Testament'}
+            </h2>
           </div>
         </div>
 
@@ -1096,25 +1094,17 @@ export const Guides: React.FC = () => {
                   );
                 }
               }}
-              className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
+              className="absolute left-5 sm:left-8 top-1/2 -translate-y-1/2 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
               title="Go back"
               aria-label="Go back"
             >
               <ArrowLeft className="w-6 h-6 text-secondary" />
             </button>
-            <div className="flex flex-col items-center justify-center pt-1">
-              {/* Wraps rather than truncating, and steps down a size for long titles.
-                  Every book name is ≤15 characters so they keep the reader's large
-                  display size; only topical guide titles ("The Roman Road to
-                  Salvation", 27 chars) shrink, which is what stops them being cut off
-                  by an ellipsis on a phone. The header's height is measured, so the
-                  content padding follows whichever size/line count results. */}
-              <h2 className={`font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2 ${
-                activeGuide.title.length > 18 ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl'
-              }`}>
-                {activeGuide.title}
-              </h2>
-            </div>
+            <h2 className={`font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2 ${
+              activeGuide.title.length > 18 ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl'
+            }`}>
+              {activeGuide.title}
+            </h2>
           </div>
         </div>
 
