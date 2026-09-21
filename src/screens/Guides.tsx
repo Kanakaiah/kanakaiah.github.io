@@ -401,7 +401,7 @@ export const Guides: React.FC = () => {
   // of the book's blocks are collapsed. All three reset when the active guide
   // changes, in the same effect below.
   const [revealedAnchors, setRevealedAnchors] = useState<Set<number>>(new Set());
-  const [showAllAnchors, setShowAllAnchors] = useState(false);
+  const [showAllAnchors, setShowAllAnchors] = useState(state.settings.anchorReveal === 'always');
   const [collapsedBlocks, setCollapsedBlocks] = useState<Set<number>>(new Set());
   // Chapters graded during this visit, mapped to the interval the grade earned, so a
   // finished card can collapse to a receipt. Visit-scoped rather than read back out of
@@ -498,10 +498,15 @@ export const Guides: React.FC = () => {
   // like the "answers already showing" behavior this was built to replace.
   useEffect(() => {
     setRevealedAnchors(new Set());
-    setShowAllAnchors(false);
+    setShowAllAnchors(state.settings.anchorReveal === 'always');
     setCollapsedBlocks(new Set());
     setGradedAnchors(new Map());
   }, [activeGuideId]);
+
+  // If the user toggles the global anchor reveal setting while on this page, reflect it
+  useEffect(() => {
+    setShowAllAnchors(state.settings.anchorReveal === 'always');
+  }, [state.settings.anchorReveal]);
 
   // Writes the grid's retrieval to the same ChapterProgress record the anchor drill,
   // the reader's end-of-chapter card and the shape meter all read from — so working
