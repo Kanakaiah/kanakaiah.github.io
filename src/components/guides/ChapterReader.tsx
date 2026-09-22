@@ -1622,20 +1622,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         className={`fixed top-0 left-0 right-0 z-30 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-5 sm:px-8 lg:px-8`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
       >
-        <div className="max-w-2xl mx-auto w-full pb-3 relative flex items-center justify-between min-h-[3rem]">
+        <div className="max-w-2xl mx-auto w-full pb-3 relative">
           <button
             onClick={onClose}
-            className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
+            className="absolute left-0 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
             title="Go back"
             aria-label="Go back"
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
           </button>
-          <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center justify-center w-full pointer-events-none">
+          <div className="flex flex-col items-center justify-center pt-1">
             <h2 className="text-4xl font-bold tracking-tight text-primary font-heading mb-2">
               {getBookName(bookId, bookTitle, state.settings.bibleVersion)} {chapter}
             </h2>
-            <div className="flex items-center gap-1.5 pointer-events-auto">
+            <div className="flex items-center gap-1.5">
               <span className={`text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full transition-colors ${
                 alphaMode
                   ? 'text-yellow-300 bg-yellow-500/15'
