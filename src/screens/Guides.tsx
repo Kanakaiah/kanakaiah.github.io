@@ -96,14 +96,23 @@ const ChapterAnchorCard = ({
   graded?: { score: number; interval: number };
   onGrade: (score: number) => void;
 }) => {
+  const [imgSrc, setImgSrc] = useState(`/chapters/${guideId}/ch${anchor.ch}.png`);
   const [imgErr, setImgErr] = useState(false);
   const navigate = useNavigate();
   const { state } = useApp();
-  const imgPath = `/chapters/${guideId}/ch${anchor.ch}.png`;
 
   useEffect(() => {
+    setImgSrc(`/chapters/${guideId}/ch${anchor.ch}.png`);
     setImgErr(false);
-  }, [imgPath]);
+  }, [guideId, anchor.ch]);
+
+  const handleImageError = () => {
+    if (imgSrc.endsWith('.png')) {
+      setImgSrc(`/chapters/${guideId}/ch${anchor.ch}.jpg`);
+    } else {
+      setImgErr(true);
+    }
+  };
 
   // Only a real fallback destination for a card that opens in a new tab or gets its
   // link copied — an ordinary click is handled below and never leaves the app. Null
@@ -176,10 +185,10 @@ const ChapterAnchorCard = ({
       <div className="relative aspect-[4/3] bg-card-elevated overflow-hidden">
         {!imgErr ? (
           <img
-            src={imgPath}
+            src={imgSrc}
             alt={revealed ? anchor.word : `Chapter ${anchor.ch}`}
             loading="lazy"
-            onError={() => setImgErr(true)}
+            onError={handleImageError}
             className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-200 ${revealed ? '' : 'blur-[10px] scale-105'}`}
           />
         ) : (
