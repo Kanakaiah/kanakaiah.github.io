@@ -4,10 +4,9 @@ import { useApp } from '../../context/AppContext';
 interface ReadModeProps {
   text: string;
   isImmersed?: boolean;
-  zoomLevel?: number;
 }
 
-export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zoomLevel = 1 }) => {
+export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false }) => {
   const { state } = useApp();
   const [unmaskedIndices, setUnmaskedIndices] = useState<number[]>([]);
 
@@ -66,7 +65,7 @@ export const ReadMode: React.FC<ReadModeProps> = ({ text, isImmersed = false, zo
         // Immersive reading gets a much larger, fluid measure that scales with the
         // viewport; a unitless line-height then tracks the type size automatically.
         fontSize: isImmersed
-          ? `calc(clamp(1.5rem, 3.2vw, 2.25rem) * ${zoomLevel * (state.settings.fontSize || 1)})`
+          ? `calc(clamp(1.5rem, 3.2vw, 2.25rem) * ${(state.settings.fontSize || 1)})`
           : `${1.125 * (state.settings.fontSize || 1)}rem`,
         lineHeight: isImmersed
           ? 1.5

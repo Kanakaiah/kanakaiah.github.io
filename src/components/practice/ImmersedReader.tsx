@@ -3,13 +3,17 @@ import { X, ChevronLeft, ChevronRight, Play, Square, Minus, Plus } from 'lucide-
 import { ReadMode } from './ReadMode';
 import type { Verse } from '../../types/models';
 import { useWakeLock } from '../../hooks/useWakeLock';
+import { useApp } from '../../context/AppContext';
 
-const MIN_ZOOM = 0.6;
-const MAX_ZOOM = 3;
-const ZOOM_STEP = 0.15;
+const FONT_SIZE_LABELS = (size: number): string => {
+  if (size <= 0.90) return 'XS';
+  if (size <= 1.05) return 'S';
+  if (size <= 1.20) return 'M';
+  if (size <= 1.35) return 'L';
+  return 'XL';
+};
+
 const IDLE_MS = 4000;
-
-const clampZoom = (z: number) => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z));
 
 interface ImmersedReaderProps {
   verse: Verse;
@@ -34,12 +38,17 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
 }) => {
   useWakeLock();
   
-  const [zoom, setZoom] = useState(1);
+  const { state, dispatch } = useApp();
+  const fontSize = state.settings.fontSize || 1;
+  const setFontSize = (size: number) => {
+    dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: Math.max(0.85, Math.min(1.45, size)) } });
+  };
+
   const [chromeVisible, setChromeVisible] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pinchStartDist = useRef<number | null>(null);
-  const pinchStartZoom = useRef(1);
+  const pinchStartFontSize = useRef(1);
 
   const scrollRef = useRef<HTMLElement>(null);
 
@@ -150,14 +159,14 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 2) {
         pinchStartDist.current = distance(e.touches);
-        pinchStartZoom.current = zoom;
+        pinchStartFontSize.current = fontSize;
       }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length === 2 && pinchStartDist.current !== null) {
         e.preventDefault(); // block the browser's own page zoom
-        setZoom(clampZoom(pinchStartZoom.current * (distance(e.touches) / pinchStartDist.current)));
+        setFontSize(parseFloat((pinchStartFontSize.current * (distance(e.touches) / pinchStartDist.current)).toFixed(2)));
       }
     };
 
@@ -173,7 +182,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [zoom]);
+  }, [fontSize]);
 
   // `invisible` (visibility:hidden) rather than just opacity so faded controls also
   // drop out of hit-testing and the tab order instead of being invisibly focusable.
@@ -224,24 +233,24 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
 
         <div className="flex items-center gap-0.5">
           <button
-            onClick={() => setZoom(z => clampZoom(z - ZOOM_STEP))}
-            disabled={zoom <= MIN_ZOOM}
+            onClick={() => setFontSize(parseFloat((fontSize - 0.15).toFixed(2)))}
+            disabled={fontSize <= 0.85}
             className={iconButton}
             aria-label="Decrease text size"
           >
             <Minus className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setZoom(1)}
-            className="px-1 py-2 text-[0.6875rem] font-bold tabular-nums text-muted hover:text-primary transition-colors w-11 text-center"
+            onClick={() => setFontSize(1)}
+            className="px-1 py-2 text-[0.6875rem] font-bold tabular-nums text-muted hover:text-primary transition-colors min-w-11 text-center"
             aria-label="Reset text size"
             title="Reset text size"
           >
-            {Math.round(zoom * 100)}%
+            {FONT_SIZE_LABELS(fontSize)}
           </button>
           <button
-            onClick={() => setZoom(z => clampZoom(z + ZOOM_STEP))}
-            disabled={zoom >= MAX_ZOOM}
+            onClick={() => setFontSize(parseFloat((fontSize + 0.15).toFixed(2)))}
+            disabled={fontSize >= 1.45}
             className={iconButton}
             aria-label="Increase text size"
           >
@@ -283,7 +292,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
               )}
             </div>
 
-            <ReadMode text={verse.text} isImmersed zoomLevel={zoom} />
+            <ReadMode text={verse.text} isImmersed />
           </div>
         </div>
       </main>
