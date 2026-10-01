@@ -353,6 +353,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   useEffect(() => { 
     setShowAnchorScene(false); 
     setAnchorWordRevealed(false); 
+    setShowOptions(false);
     setScrollProgress(0);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
