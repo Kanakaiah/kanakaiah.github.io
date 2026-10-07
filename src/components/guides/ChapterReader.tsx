@@ -531,7 +531,19 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const revealChrome = useCallback(() => setChromeVisible(true), []);
   const toggleChrome = useCallback(() => setChromeVisible(v => !v), []);
 
+  useEffect(() => {
+    if (!chromeVisible) {
+      setShowOptions(false);
+      setWordPopup(null);
+    }
+  }, [chromeVisible]);
+
   const handleContentClick = (e: React.MouseEvent) => {
+    if (showOptions || wordPopup) {
+      setShowOptions(false);
+      setWordPopup(null);
+      return;
+    }
     const target = e.target as HTMLElement;
     const isMeaningfulTap = !!target.closest('.verse-span, .alpha-word, .alpha-verse-span, button, a');
     if (isMeaningfulTap) {
