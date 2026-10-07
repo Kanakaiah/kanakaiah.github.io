@@ -566,6 +566,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   }, []);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (showOptions) setShowOptions(false);
+    if (wordPopup) setWordPopup(null);
+
     const target = e.currentTarget;
     const totalHeight = target.scrollHeight - target.clientHeight;
     if (totalHeight <= 0) return;
@@ -1713,7 +1716,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
             {showOptions && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowOptions(false)} />
+                <div className="fixed inset-0 z-40" onClick={() => setShowOptions(false)} onTouchStart={() => setShowOptions(false)} />
                 <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-card-border rounded-lg shadow-md z-50 overflow-hidden p-4 flex flex-col gap-4 animate-[fadeScaleIn_0.15s_ease-out]">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-primary">Text Size</span>
