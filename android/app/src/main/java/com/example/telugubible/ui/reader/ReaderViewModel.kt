@@ -73,6 +73,14 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun selectBookAndChapterById(bookId: Int, chapter: Int = 1) {
+        viewModelScope.launch {
+            val books = _uiState.value.books.ifEmpty { repository.getBooks() }
+            val target = books.firstOrNull { it.id == bookId } ?: return@launch
+            selectBookAndChapter(target, chapter)
+        }
+    }
+
     fun selectBookAndChapter(book: Book, chapter: Int) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, showBookSelector = false) }

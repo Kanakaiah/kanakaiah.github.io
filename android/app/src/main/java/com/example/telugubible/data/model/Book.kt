@@ -8,5 +8,8 @@ data class Book(
     val nameTa: String?,
     val testament: String, // "OT" or "NT"
     val section: String,
-    val chapters: Int
+    val chapters: Int,
+    val themeWord: String = "",
+    val keyWord: String = "",
+    val subtitle: String = ""
 )

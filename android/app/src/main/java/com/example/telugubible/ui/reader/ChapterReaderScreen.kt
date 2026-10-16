@@ -20,13 +20,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.telugubible.theme.RemoraTextPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterReaderScreen(
     viewModel: ReaderViewModel,
+    onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -40,6 +44,17 @@ fun ChapterReaderScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = RemoraTextPrimary
+                            )
+                        }
+                    }
+                },
                 title = {
                     val bookTitle = if (state.language == BibleLanguage.TELUGU) {
                         state.currentBook?.nameTe ?: ""

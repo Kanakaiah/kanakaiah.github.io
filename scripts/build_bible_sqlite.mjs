@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { DatabaseSync } from 'node:sqlite';
+import { OT_BOOKS } from '../src/data/otBooks.ts';
+import { NT_BOOKS } from '../src/data/ntBooks.ts';
 
 const ROOT_DIR = process.cwd();
 const ASSETS_DIR = path.join(ROOT_DIR, 'android', 'app', 'src', 'main', 'assets');
@@ -30,7 +32,10 @@ CREATE TABLE books (
   name_ta TEXT,
   testament TEXT NOT NULL,
   section TEXT NOT NULL,
-  chapters INTEGER NOT NULL
+  chapters INTEGER NOT NULL,
+  theme_word TEXT,
+  key_word TEXT,
+  subtitle TEXT
 );
 
 CREATE TABLE verses (
@@ -63,6 +68,26 @@ CREATE TABLE paragraph_breaks (
   chapter INTEGER NOT NULL,
   verse INTEGER NOT NULL,
   PRIMARY KEY (book_id, chapter, verse)
+);
+
+CREATE TABLE user_verses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  chapter INTEGER NOT NULL,
+  verse INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'learning',
+  repetition INTEGER NOT NULL DEFAULT 0,
+  interval INTEGER NOT NULL DEFAULT 0,
+  efactor REAL NOT NULL DEFAULT 2.5,
+  next_due_date INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  UNIQUE(book_id, chapter, verse),
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+CREATE TABLE user_stats (
+  key TEXT PRIMARY KEY,
+  val TEXT
 );
 `);
 
@@ -140,18 +165,28 @@ const BOOK_LIST = [
   { id: 66, key: 'revelation', name_en: 'Revelation', name_te: 'ప్రకటన గ్రంథము', name_ta: 'வெளிப்படுத்தல்', testament: 'NT', section: 'Apocalyptic', chapters: 22 }
 ];
 
-// Insert books
+// Insert books with Remora metadata
+const META_MAP = new Map();
+for (const b of [...OT_BOOKS, ...NT_BOOKS]) {
+  META_MAP.set(b.id.toLowerCase(), {
+    themeWord: b.themeWord || '',
+    keyWord: b.keyWord || '',
+    subtitle: b.subtitle || ''
+  });
+}
+
 const insertBookStmt = db.prepare(`
-  INSERT INTO books (id, book_key, name_en, name_te, name_ta, testament, section, chapters)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO books (id, book_key, name_en, name_te, name_ta, testament, section, chapters, theme_word, key_word, subtitle)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
 db.exec('BEGIN TRANSACTION;');
 for (const b of BOOK_LIST) {
-  insertBookStmt.run(b.id, b.key, b.name_en, b.name_te, b.name_ta, b.testament, b.section, b.chapters);
+  const meta = META_MAP.get(b.key.toLowerCase()) || { themeWord: '', keyWord: '', subtitle: '' };
+  insertBookStmt.run(b.id, b.key, b.name_en, b.name_te, b.name_ta, b.testament, b.section, b.chapters, meta.themeWord, meta.keyWord, meta.subtitle);
 }
 db.exec('COMMIT;');
-console.log('Inserted 66 books.');
+console.log('Inserted 66 books with Remora theme words and subtitles.');
 
 // Insert Verses
 const insertVerseStmt = db.prepare(`
@@ -287,6 +322,30 @@ if (fs.existsSync(pBreakPath)) {
   db.exec('COMMIT;');
   console.log(`Inserted ${pbCount} paragraph breaks.`);
 }
+
+// Seed memory verses for Remora Spaced Repetition (Today & Practice)
+const seedVerses = [
+  { bookId: 1, chapter: 1, verse: 1 },    // Genesis 1:1
+  { bookId: 20, chapter: 3, verse: 5 },   // Proverbs 3:5
+  { bookId: 43, chapter: 3, verse: 16 },  // John 3:16
+  { bookId: 45, chapter: 8, verse: 28 },  // Romans 8:28
+  { bookId: 50, chapter: 4, verse: 13 },  // Philippians 4:13
+];
+
+const insertUserVerseStmt = db.prepare(`
+  INSERT INTO user_verses (book_id, chapter, verse, status, repetition, interval, efactor, next_due_date, created_at)
+  VALUES (?, ?, ?, 'learning', 1, 1, 2.5, ?, ?)
+`);
+
+db.exec('BEGIN TRANSACTION;');
+const now = Date.now();
+for (const sv of seedVerses) {
+  insertUserVerseStmt.run(sv.bookId, sv.chapter, sv.verse, now, now);
+}
+// Seed user stats (streak = 14)
+db.prepare("INSERT INTO user_stats (key, val) VALUES ('streak', '14')").run();
+db.exec('COMMIT;');
+console.log('Seeded initial memory verses and user stats.');
 
 // Optimize DB
 db.exec('VACUUM;');
