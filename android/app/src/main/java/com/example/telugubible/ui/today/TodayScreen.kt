@@ -10,11 +10,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,25 +53,64 @@ fun TodayScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 96.dp),
+                contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 1. Streak Banner
+                // 1. Remora Hero: Daily Practice
                 item {
-                    StreakBanner(streak = state.streak)
-                }
-
-                // 2. Review & Progress Summary Cards
-                item {
-                    ReviewSummaryRow(
+                    RemoraHeroDailyPractice(
+                        heroVerse = state.heroVerse,
                         dueCount = state.dueCount,
-                        memorizedCount = state.memorizedCount,
-                        learningCount = state.learningCount,
-                        onStartReview = onNavigateToPractice
+                        onStartSession = onNavigateToPractice
                     )
                 }
 
-                // 3. Filter Row
+                // 2. Curated Collections Banners (Top 100 & 75 Well-Known)
+                item {
+                    CuratedCollectionsSection(
+                        onAddTop100 = { viewModel.addCollection("top_100") },
+                        onAddWellKnown = { viewModel.addCollection("well_known") }
+                    )
+                }
+
+                // 3. Spaced Repetition Stats Row
+                item {
+                    SpacedRepetitionSummaryRow(
+                        memorizedCount = state.memorizedCount,
+                        learningCount = state.learningCount,
+                        dueCount = state.dueCount
+                    )
+                }
+
+                // 4. Search Filter Input
+                item {
+                    OutlinedTextField(
+                        value = state.searchQuery,
+                        onValueChange = { viewModel.setSearchQuery(it) },
+                        placeholder = { Text("Search verses...", color = RemoraTextMuted, fontSize = 13.sp) },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = RemoraTextMuted) },
+                        trailingIcon = {
+                            if (state.searchQuery.isNotEmpty()) {
+                                IconButton(onClick = { viewModel.setSearchQuery("") }) {
+                                    Icon(Icons.Default.Close, contentDescription = "Clear", tint = RemoraTextMuted)
+                                }
+                            }
+                        },
+                        singleLine = true,
+                        shape = RoundedCornerShape(10.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = RemoraCardBg,
+                            unfocusedContainerColor = RemoraCardBg,
+                            focusedTextColor = RemoraTextPrimary,
+                            unfocusedTextColor = RemoraTextPrimary,
+                            focusedBorderColor = RemoraAccent,
+                            unfocusedBorderColor = RemoraCardBorder
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                // 5. Filter Chips Row
                 item {
                     FilterTabs(
                         currentFilter = state.filter,
@@ -80,17 +122,19 @@ fun TodayScreen(
                     )
                 }
 
-                // 4. Memory Verse Cards
+                // 6. Memory Verse Cards List
                 if (state.filteredVerses.isEmpty()) {
                     item {
                         EmptyVerseState(
                             filter = state.filter,
-                            onAddClick = { viewModel.toggleAddDialog(true) }
+                            onAddTop100 = { viewModel.addCollection("top_100") },
+                            onAddWellKnown = { viewModel.addCollection("well_known") },
+                            onOpenAdd = { viewModel.toggleAddDialog(true) }
                         )
                     }
                 } else {
                     items(state.filteredVerses, key = { it.id }) { verse ->
-                        MemoryVerseCard(
+                        RemoraVerseCard(
                             verse = verse,
                             onPractice = onNavigateToPractice,
                             onRead = { onNavigateToReader(verse.bookId, verse.chapter) },
@@ -101,73 +145,142 @@ fun TodayScreen(
             }
         }
 
-        // Floating Action Button to Add Verse
+        // Floating Action Button (+) — Terracotta circle, always visible above navigation
         FloatingActionButton(
             onClick = { viewModel.toggleAddDialog(true) },
             containerColor = RemoraAccent,
             contentColor = Color.White,
             shape = CircleShape,
+            elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 6.dp),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(20.dp)
+                .padding(end = 20.dp, bottom = 24.dp)
+                .size(56.dp)
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Add Verse")
+            Icon(Icons.Default.Add, contentDescription = "Add Verse", modifier = Modifier.size(26.dp))
         }
 
-        // Add Verse Dialog
+        // Add Verse Sheet (Modal Bottom Sheet with 3 Tabs)
         if (state.showAddDialog) {
-            AddVerseDialog(
+            AddVerseSheet(
                 books = state.books,
+                collections = state.presetCollections,
+                searchResults = state.searchResults,
+                isSearching = state.isSearchingInDialog,
                 onDismiss = { viewModel.toggleAddDialog(false) },
-                onAdd = { bookId, chapter, verse ->
-                    viewModel.addVerse(bookId, chapter, verse)
-                }
+                onAddSingleVerse = { bookId, ch, vs -> viewModel.addVerse(bookId, ch, vs) },
+                onAddCollection = { collId -> viewModel.addCollection(collId) },
+                onSearchVerses = { q -> viewModel.searchVersesForDialog(q) }
             )
+        }
+
+        // Notification Snackbar
+        state.messageBanner?.let { msg ->
+            Snackbar(
+                action = {
+                    TextButton(onClick = { viewModel.dismissMessage() }) {
+                        Text("OK", color = RemoraAccentLight)
+                    }
+                },
+                containerColor = RemoraCardBgElevated,
+                contentColor = RemoraTextPrimary,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 80.dp)
+            ) {
+                Text(msg)
+            }
         }
     }
 }
 
 @Composable
-private fun StreakBanner(streak: Int) {
+private fun RemoraHeroDailyPractice(
+    heroVerse: UserMemoryVerse?,
+    dueCount: Int,
+    onStartSession: () -> Unit
+) {
     Surface(
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(16.dp),
         color = RemoraCardBg,
         border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(46.dp)
-                    .clip(CircleShape)
-                    .background(RemoraGold.copy(alpha = 0.15f)),
-                contentAlignment = Alignment.Center
-            ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     Icons.Default.LocalFireDepartment,
                     contentDescription = null,
-                    tint = RemoraGold,
-                    modifier = Modifier.size(28.dp)
+                    tint = RemoraAccent,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "DAILY PRACTICE",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.5.sp,
+                    color = RemoraAccent
                 )
             }
-            Spacer(modifier = Modifier.width(14.dp))
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "$streak Day Streak",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
-                    )
-                }
-                Spacer(modifier = Modifier.height(2.dp))
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (heroVerse != null && dueCount > 0) {
                 Text(
-                    text = "Keep the Word hidden in your heart today.",
+                    text = "${heroVerse.bookNameEn} · ${heroVerse.bookNameTe} ${heroVerse.chapter}:${heroVerse.verse}",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = RemoraTextPrimary
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // First Letter Memory Cue
+                val cue = buildFirstLetterCue(heroVerse.textEn ?: heroVerse.textTe ?: "")
+                if (cue.isNotBlank()) {
+                    Text(
+                        text = cue,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = 1.sp,
+                        color = RemoraTextSecondary,
+                        lineHeight = 22.sp
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+
+                Text(
+                    text = if (dueCount == 1) "1 verse due for review" else "$dueCount verses due for review",
                     fontSize = 13.sp,
-                    color = RemoraTextSecondary
+                    color = RemoraTextMuted
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onStartSession,
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+                ) {
+                    Text("Start Session", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+                }
+            } else {
+                Text(
+                    text = "All caught up",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = RemoraTextPrimary
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "No verses currently due. Review your memorized verses anytime or add more from the curated collections below.",
+                    fontSize = 13.sp,
+                    color = RemoraTextSecondary,
+                    lineHeight = 18.sp
                 )
             }
         }
@@ -175,62 +288,24 @@ private fun StreakBanner(streak: Int) {
 }
 
 @Composable
-private fun ReviewSummaryRow(
-    dueCount: Int,
-    memorizedCount: Int,
-    learningCount: Int,
-    onStartReview: () -> Unit
+private fun CuratedCollectionsSection(
+    onAddTop100: () -> Unit,
+    onAddWellKnown: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        // Due card with Action
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = RemoraCardBgElevated,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = "READY FOR REVIEW",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = if (dueCount > 0) RemoraAccentLight else RemoraTextMuted
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = if (dueCount > 0) "$dueCount verses due today" else "All caught up for today!",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = RemoraTextPrimary
-                    )
-                }
+        Text(
+            text = "CURATED COLLECTIONS",
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.2.sp,
+            color = RemoraTextMuted
+        )
 
-                if (dueCount > 0) {
-                    Button(
-                        onClick = onStartReview,
-                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                        shape = RoundedCornerShape(8.dp),
-                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-                    ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Practice", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                    }
-                }
-            }
-        }
-
-        // Stats row (Memorized & Learning)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+            // Top 100 Card
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = RemoraCardBg,
@@ -239,22 +314,34 @@ private fun ReviewSummaryRow(
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
-                        text = "MEMORIZED",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = GradeEasy
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "$memorizedCount verses",
-                        fontSize = 16.sp,
+                        text = "Top 100 Verses",
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = RemoraTextPrimary
                     )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Most popular global passages.",
+                        fontSize = 11.sp,
+                        color = RemoraTextSecondary,
+                        lineHeight = 15.sp
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Button(
+                        onClick = onAddTop100,
+                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                        shape = RoundedCornerShape(6.dp),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Add Top 100", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
 
+            // 75 Well-Known Card
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = RemoraCardBg,
@@ -263,21 +350,80 @@ private fun ReviewSummaryRow(
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
-                        text = "LEARNING",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = GradeGood
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "$learningCount verses",
-                        fontSize = 16.sp,
+                        text = "75 Well-Known",
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = RemoraTextPrimary
                     )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Essential & encouraging verses.",
+                        fontSize = 11.sp,
+                        color = RemoraTextSecondary,
+                        lineHeight = 15.sp
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    OutlinedButton(
+                        onClick = onAddWellKnown,
+                        shape = RoundedCornerShape(6.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraGold),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, tint = RemoraGold, modifier = Modifier.size(14.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Add 75 Verses", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = RemoraGold)
+                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun SpacedRepetitionSummaryRow(
+    memorizedCount: Int,
+    learningCount: Int,
+    dueCount: Int
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        MetricPill(label = "DUE", count = dueCount, color = RemoraAccent, modifier = Modifier.weight(1f))
+        MetricPill(label = "LEARNING", count = learningCount, color = GradeGood, modifier = Modifier.weight(1f))
+        MetricPill(label = "MEMORIZED", count = memorizedCount, color = GradeEasy, modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun MetricPill(
+    label: String,
+    count: Int,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = RoundedCornerShape(10.dp),
+        color = RemoraCardBg,
+        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+        modifier = modifier
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = label,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
+                color = color
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "$count",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = RemoraTextPrimary
+            )
         }
     }
 }
@@ -291,12 +437,10 @@ private fun FilterTabs(
     memorizedCount: Int,
     onSelectFilter: (VerseFilter) -> Unit
 ) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         val items = listOf(
-            Triple(VerseFilter.ALL, "All", allCount),
-            Triple(VerseFilter.DUE, "Due", dueCount),
+            Triple(VerseFilter.ALL, "All verses", allCount),
+            Triple(VerseFilter.DUE, "Review due", dueCount),
             Triple(VerseFilter.LEARNING, "Learning", learningCount),
             Triple(VerseFilter.MEMORIZED, "Memorized", memorizedCount)
         )
@@ -304,7 +448,7 @@ private fun FilterTabs(
             val isSelected = currentFilter == filter
             Surface(
                 onClick = { onSelectFilter(filter) },
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(8.dp),
                 color = if (isSelected) RemoraAccent else RemoraCardBg,
                 border = androidx.compose.foundation.BorderStroke(
                     1.dp,
@@ -316,7 +460,7 @@ private fun FilterTabs(
                     fontSize = 12.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                     color = if (isSelected) Color.White else RemoraTextSecondary,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
             }
         }
@@ -324,7 +468,7 @@ private fun FilterTabs(
 }
 
 @Composable
-private fun MemoryVerseCard(
+private fun RemoraVerseCard(
     verse: UserMemoryVerse,
     onPractice: () -> Unit,
     onRead: () -> Unit,
@@ -332,6 +476,7 @@ private fun MemoryVerseCard(
 ) {
     val isDue = verse.nextDueDate <= System.currentTimeMillis()
     val isMemorized = verse.status == "memorized"
+    val indicatorColor = if (isDue || isMemorized) RemoraGold else RemoraAccent
 
     Surface(
         shape = RoundedCornerShape(12.dp),
@@ -339,113 +484,134 @@ private fun MemoryVerseCard(
         border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            // Header: Reference + Status Chip
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "${verse.bookNameEn} · ${verse.bookNameTe} ${verse.chapter}:${verse.verse}",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextPrimary
-                )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            // Left color hairline indicator
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .fillMaxHeight()
+                    .background(indicatorColor)
+            )
 
-                Surface(
-                    shape = RoundedCornerShape(6.dp),
-                    color = when {
-                        isDue -> RemoraAccent.copy(alpha = 0.2f)
-                        isMemorized -> GradeEasy.copy(alpha = 0.2f)
-                        else -> GradeGood.copy(alpha = 0.2f)
-                    }
+            Column(modifier = Modifier.padding(16.dp)) {
+                // Header: Ref + Translation badge + Status
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "${verse.bookNameEn} · ${verse.bookNameTe} ${verse.chapter}:${verse.verse}",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = RemoraTextPrimary
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = RemoraCardBgElevated,
+                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                        ) {
+                            Text(
+                                text = "BSB · IRV",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraTextMuted,
+                                modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+
                     Text(
                         text = when {
-                            isDue -> "DUE"
+                            isDue -> "DUE NOW"
                             isMemorized -> "MEMORIZED"
-                            else -> "STAGE ${verse.repetition}"
+                            else -> "LEARNING"
                         },
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         color = when {
-                            isDue -> RemoraAccentLight
+                            isDue -> RemoraGold
                             isMemorized -> GradeEasy
-                            else -> GradeGood
-                        },
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                            else -> RemoraAccent
+                        }
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-            // Telugu Verse Text
-            if (!verse.textTe.isNullOrBlank()) {
-                Text(
-                    text = verse.textTe,
-                    fontSize = 16.sp,
-                    lineHeight = 24.sp,
-                    color = RemoraTextPrimary
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-            }
+                // Telugu Text
+                if (!verse.textTe.isNullOrBlank()) {
+                    Text(
+                        text = verse.textTe,
+                        fontSize = 16.sp,
+                        lineHeight = 24.sp,
+                        color = RemoraTextPrimary
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
 
-            // English Verse Text
-            if (!verse.textEn.isNullOrBlank()) {
-                Text(
-                    text = verse.textEn,
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    color = RemoraTextSecondary
-                )
-            }
+                // English Text
+                if (!verse.textEn.isNullOrBlank()) {
+                    Text(
+                        text = verse.textEn,
+                        fontSize = 13.sp,
+                        lineHeight = 19.sp,
+                        color = RemoraTextSecondary
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(14.dp))
-            Divider(color = RemoraCardBorder, thickness = 1.dp)
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
+                HorizontalDivider(color = RemoraCardBorder, thickness = 1.dp)
+                Spacer(modifier = Modifier.height(10.dp))
 
-            // Action row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedButton(
-                        onClick = onRead,
-                        shape = RoundedCornerShape(6.dp),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
-                    ) {
-                        Icon(Icons.Default.MenuBook, contentDescription = null, tint = RemoraTextSecondary, modifier = Modifier.size(14.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Read", fontSize = 12.sp, color = RemoraTextSecondary)
+                // Footer: Mastery Dots + Actions
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Mastery Dots (5 dots)
+                    val score = verse.repetition.coerceIn(0, 5)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                            for (i in 0 until 5) {
+                                Text(
+                                    text = if (i < score) "●" else "○",
+                                    fontSize = 11.sp,
+                                    color = if (i < score) RemoraAccent else RemoraTextMuted.copy(alpha = 0.4f)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Mastery: $score/5",
+                            fontSize = 11.sp,
+                            color = RemoraTextMuted
+                        )
                     }
 
-                    if (isDue) {
-                        Button(
-                            onClick = onPractice,
+                    // Action buttons
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        OutlinedButton(
+                            onClick = onRead,
                             shape = RoundedCornerShape(6.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
                         ) {
-                            Text("Practice", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = RemoraTextSecondary, modifier = Modifier.size(13.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("Read", fontSize = 11.sp, color = RemoraTextSecondary)
+                        }
+
+                        IconButton(
+                            onClick = onDelete,
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Icon(Icons.Default.DeleteOutline, contentDescription = "Delete", tint = RemoraTextMuted, modifier = Modifier.size(16.dp))
                         }
                     }
-                }
-
-                IconButton(
-                    onClick = onDelete,
-                    modifier = Modifier.size(28.dp)
-                ) {
-                    Icon(
-                        Icons.Default.DeleteOutline,
-                        contentDescription = "Delete",
-                        tint = RemoraTextMuted,
-                        modifier = Modifier.size(18.dp)
-                    )
                 }
             }
         }
@@ -453,141 +619,57 @@ private fun MemoryVerseCard(
 }
 
 @Composable
-private fun EmptyVerseState(filter: VerseFilter, onAddClick: () -> Unit) {
+private fun EmptyVerseState(
+    filter: VerseFilter,
+    onAddTop100: () -> Unit,
+    onAddWellKnown: () -> Unit,
+    onOpenAdd: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 40.dp),
+            .padding(vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = RemoraTextMuted, modifier = Modifier.size(44.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = when (filter) {
                 VerseFilter.DUE -> "No verses currently due for review."
-                VerseFilter.MEMORIZED -> "No memorized verses yet. Keep reviewing!"
+                VerseFilter.MEMORIZED -> "No memorized verses yet."
                 VerseFilter.LEARNING -> "No verses currently in learning."
-                VerseFilter.ALL -> "No memory verses saved yet."
+                VerseFilter.ALL -> "No verses found in your library."
             },
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             color = RemoraTextSecondary
         )
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = onAddClick,
-            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-            Spacer(modifier = Modifier.width(6.dp))
-            Text("Add a Memory Verse")
+        Spacer(modifier = Modifier.height(14.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = onAddTop100,
+                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Add Top 100", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            }
+            OutlinedButton(
+                onClick = onAddWellKnown,
+                shape = RoundedCornerShape(8.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraGold)
+            ) {
+                Text("Add 75 Well-Known", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = RemoraGold)
+            }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AddVerseDialog(
-    books: List<com.example.telugubible.data.model.Book>,
-    onDismiss: () -> Unit,
-    onAdd: (Int, Int, Int) -> Unit
-) {
-    var selectedBookIndex by remember { mutableStateOf(0) }
-    var chapterText by remember { mutableStateOf("1") }
-    var verseText by remember { mutableStateOf("1") }
-    var isExpanded by remember { mutableStateOf(false) }
-
-    val currentBook = books.getOrNull(selectedBookIndex)
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Add Memory Verse", color = RemoraTextPrimary) },
-        containerColor = RemoraCardBg,
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text("Select Bible book, chapter, and verse:", color = RemoraTextSecondary, fontSize = 13.sp)
-
-                // Book dropdown
-                ExposedDropdownMenuBox(
-                    expanded = isExpanded,
-                    onExpandedChange = { isExpanded = !isExpanded }
-                ) {
-                    OutlinedTextField(
-                        value = "${currentBook?.nameEn ?: ""} (${currentBook?.nameTe ?: ""})",
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
-                        modifier = Modifier
-                            .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                            .fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = RemoraTextPrimary,
-                            unfocusedTextColor = RemoraTextPrimary,
-                            focusedBorderColor = RemoraAccent,
-                            unfocusedBorderColor = RemoraCardBorder
-                        )
-                    )
-                    ExposedDropdownMenu(
-                        expanded = isExpanded,
-                        onDismissRequest = { isExpanded = false },
-                        modifier = Modifier.background(RemoraCardBgElevated)
-                    ) {
-                        books.forEachIndexed { index, b ->
-                            DropdownMenuItem(
-                                text = { Text("${b.nameEn} (${b.nameTe})", color = RemoraTextPrimary) },
-                                onClick = {
-                                    selectedBookIndex = index
-                                    isExpanded = false
-                                }
-                            )
-                        }
-                    }
-                }
-
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    OutlinedTextField(
-                        value = chapterText,
-                        onValueChange = { chapterText = it.filter { c -> c.isDigit() } },
-                        label = { Text("Chapter") },
-                        modifier = Modifier.weight(1f),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = RemoraTextPrimary,
-                            unfocusedTextColor = RemoraTextPrimary,
-                            focusedBorderColor = RemoraAccent,
-                            unfocusedBorderColor = RemoraCardBorder
-                        )
-                    )
-
-                    OutlinedTextField(
-                        value = verseText,
-                        onValueChange = { verseText = it.filter { c -> c.isDigit() } },
-                        label = { Text("Verse") },
-                        modifier = Modifier.weight(1f),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = RemoraTextPrimary,
-                            unfocusedTextColor = RemoraTextPrimary,
-                            focusedBorderColor = RemoraAccent,
-                            unfocusedBorderColor = RemoraCardBorder
-                        )
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    val book = currentBook ?: return@Button
-                    val ch = chapterText.toIntOrNull() ?: 1
-                    val vs = verseText.toIntOrNull() ?: 1
-                    onAdd(book.id, ch, vs)
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent)
-            ) {
-                Text("Add to Today", fontWeight = FontWeight.Bold)
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel", color = RemoraTextSecondary)
-            }
+private fun buildFirstLetterCue(text: String): String {
+    return text.split("\\s+".toRegex())
+        .take(16)
+        .mapNotNull { word ->
+            val first = word.firstOrNull { it.isLetterOrDigit() }
+            if (first != null) "$first " else null
         }
-    )
+        .joinToString("")
+        .trim() + "..."
 }

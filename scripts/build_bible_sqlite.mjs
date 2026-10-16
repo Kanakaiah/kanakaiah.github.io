@@ -3,6 +3,8 @@ import path from 'path';
 import { DatabaseSync } from 'node:sqlite';
 import { OT_BOOKS } from '../src/data/otBooks.ts';
 import { NT_BOOKS } from '../src/data/ntBooks.ts';
+import { SEED_VERSES } from '../src/data/seed.ts';
+import { TOP_100_VERSES } from '../src/data/top100.ts';
 
 const ROOT_DIR = process.cwd();
 const ASSETS_DIR = path.join(ROOT_DIR, 'android', 'app', 'src', 'main', 'assets');
@@ -88,6 +90,24 @@ CREATE TABLE user_verses (
 CREATE TABLE user_stats (
   key TEXT PRIMARY KEY,
   val TEXT
+);
+
+CREATE TABLE preset_collections (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  count INTEGER NOT NULL
+);
+
+CREATE TABLE preset_verses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  collection_id TEXT NOT NULL,
+  reference TEXT NOT NULL,
+  book_id INTEGER NOT NULL,
+  chapter INTEGER NOT NULL,
+  verse INTEGER NOT NULL,
+  FOREIGN KEY (collection_id) REFERENCES preset_collections(id),
+  FOREIGN KEY (book_id) REFERENCES books(id)
 );
 `);
 
@@ -346,6 +366,64 @@ for (const sv of seedVerses) {
 db.prepare("INSERT INTO user_stats (key, val) VALUES ('streak', '14')").run();
 db.exec('COMMIT;');
 console.log('Seeded initial memory verses and user stats.');
+
+// Preset Collections (75 Well-Known & Top 100)
+const bookMap = new Map();
+for (const b of BOOK_LIST) {
+  bookMap.set(b.name_en.toLowerCase(), b.id);
+  bookMap.set(b.key.toLowerCase(), b.id);
+}
+bookMap.set('psalms', 19);
+bookMap.set('psalm', 19);
+
+function parseRef(ref) {
+  const m = ref.match(/^([1-3]?\s*[A-Za-z]+(?:\s+[A-Za-z]+)*)\s+(\d+)[:.](\d+)/);
+  if (!m) return null;
+  const bName = m[1].trim().toLowerCase();
+  const bookId = bookMap.get(bName);
+  const ch = parseInt(m[2], 10);
+  const vs = parseInt(m[3], 10);
+  return { bookId, ch, vs, ref };
+}
+
+db.exec('BEGIN TRANSACTION;');
+const insertCollStmt = db.prepare(`
+  INSERT INTO preset_collections (id, title, description, count)
+  VALUES (?, ?, ?, ?)
+`);
+insertCollStmt.run(
+  'well_known',
+  '75 Well-Known Verses',
+  'A hand-picked selection of deeply encouraging and essential scriptures.',
+  SEED_VERSES.length
+);
+insertCollStmt.run(
+  'top_100',
+  'Top 100 Verses',
+  'The 100 most popular Bible verses according to global search data.',
+  TOP_100_VERSES.length
+);
+
+const insertPresetVerseStmt = db.prepare(`
+  INSERT INTO preset_verses (collection_id, reference, book_id, chapter, verse)
+  VALUES (?, ?, ?, ?, ?)
+`);
+
+for (const s of SEED_VERSES) {
+  const p = parseRef(s.ref);
+  if (p && p.bookId) {
+    insertPresetVerseStmt.run('well_known', s.ref, p.bookId, p.ch, p.vs);
+  }
+}
+
+for (const t of TOP_100_VERSES) {
+  const p = parseRef(t.ref);
+  if (p && p.bookId) {
+    insertPresetVerseStmt.run('top_100', t.ref, p.bookId, p.ch, p.vs);
+  }
+}
+db.exec('COMMIT;');
+console.log(`Inserted preset collections: 75 Well-Known and 100 Top verses.`);
 
 // Optimize DB
 db.exec('VACUUM;');

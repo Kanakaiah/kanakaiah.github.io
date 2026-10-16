@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
@@ -18,7 +19,7 @@ class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(conte
 
     companion object {
         const val DB_NAME = "bible.db"
-        const val DB_VERSION = 2
+        const val DB_VERSION = 3
         private const val PREFS_NAME = "bible_db_prefs"
         private const val KEY_COPIED_VERSION = "copied_db_version"
     }
@@ -366,5 +367,61 @@ class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(conte
             }
         }
         return 14
+    }
+
+    fun getPresetCollections(): List<PresetCollection> {
+        val list = mutableListOf<PresetCollection>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT id, title, description, count FROM preset_collections ORDER BY count ASC", null)
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(
+                    PresetCollection(
+                        id = it.getString(0),
+                        title = it.getString(1),
+                        description = it.getString(2),
+                        count = it.getInt(3)
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    fun addPresetCollection(collectionId: String): Int {
+        val db = writableDatabase
+        val now = System.currentTimeMillis()
+        val cursor = db.rawQuery(
+            "SELECT book_id, chapter, verse FROM preset_verses WHERE collection_id = ?",
+            arrayOf(collectionId)
+        )
+        var insertedCount = 0
+        db.beginTransaction()
+        try {
+            cursor.use {
+                while (it.moveToNext()) {
+                    val bId = it.getInt(0)
+                    val ch = it.getInt(1)
+                    val vs = it.getInt(2)
+                    val values = ContentValues().apply {
+                        put("book_id", bId)
+                        put("chapter", ch)
+                        put("verse", vs)
+                        put("status", "learning")
+                        put("repetition", 0)
+                        put("interval", 0)
+                        put("efactor", 2.5)
+                        put("next_due_date", now)
+                        put("created_at", now)
+                    }
+                    val rowId = db.insertWithOnConflict("user_verses", null, values, SQLiteDatabase.CONFLICT_IGNORE)
+                    if (rowId != -1L) insertedCount++
+                }
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+        return insertedCount
     }
 }

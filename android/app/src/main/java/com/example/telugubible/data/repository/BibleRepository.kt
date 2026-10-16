@@ -58,4 +58,12 @@ class BibleRepository(private val dbHelper: BibleDatabaseHelper) {
     suspend fun getStreak(): Int = withContext(Dispatchers.IO) {
         dbHelper.getStreak()
     }
+
+    suspend fun getPresetCollections(): List<com.example.telugubible.data.model.PresetCollection> = withContext(Dispatchers.IO) {
+        dbHelper.getPresetCollections()
+    }
+
+    suspend fun addPresetCollection(collectionId: String): Int = withContext(Dispatchers.IO) {
+        dbHelper.addPresetCollection(collectionId)
+    }
 }
