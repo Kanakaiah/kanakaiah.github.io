@@ -26,12 +26,29 @@ import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.theme.*
 import com.example.telugubible.util.CueUtils
 
+enum class PracticeSubject {
+    VERSES,
+    ANCHORS
+}
+
 @Composable
 fun PracticeScreen(
     viewModel: PracticeViewModel,
     onNavigateToBible: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var activeSubject by remember { mutableStateOf(PracticeSubject.VERSES) }
+
+    if (activeSubject == PracticeSubject.ANCHORS) {
+        val anchorViewModel: AnchorDrillViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+        AnchorDrill(
+            viewModel = anchorViewModel,
+            onExit = { activeSubject = PracticeSubject.VERSES },
+            modifier = modifier
+        )
+        return
+    }
+
     val state by viewModel.uiState.collectAsState()
 
     Box(
@@ -50,7 +67,8 @@ fun PracticeScreen(
                 FinishedState(
                     isEmpty = state.verses.isEmpty(),
                     onRestart = { viewModel.restart() },
-                    onBrowseBible = onNavigateToBible
+                    onBrowseBible = onNavigateToBible,
+                    onPracticeAnchors = { activeSubject = PracticeSubject.ANCHORS }
                 )
             }
             else -> {
@@ -70,6 +88,49 @@ fun PracticeScreen(
                     ) {
                         // Top Header: Progress Indicator & Mode Switcher
                         Column {
+                            // Subject Switcher (Verses vs Chapter Anchors)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 12.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Surface(
+                                    shape = RoundedCornerShape(20.dp),
+                                    color = RemoraCardBgElevated,
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                                ) {
+                                    Row(modifier = Modifier.padding(3.dp)) {
+                                        Surface(
+                                            onClick = { /* already in verses */ },
+                                            shape = RoundedCornerShape(16.dp),
+                                            color = RemoraAccent
+                                        ) {
+                                            Text(
+                                                text = "Memory Verses",
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White,
+                                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 5.dp)
+                                            )
+                                        }
+                                        Surface(
+                                            onClick = { activeSubject = PracticeSubject.ANCHORS },
+                                            shape = RoundedCornerShape(16.dp),
+                                            color = Color.Transparent
+                                        ) {
+                                            Text(
+                                                text = "Chapter Anchors",
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = RemoraTextSecondary,
+                                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 5.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -462,7 +523,8 @@ private fun GradeButton(
 private fun FinishedState(
     isEmpty: Boolean,
     onRestart: () -> Unit,
-    onBrowseBible: () -> Unit
+    onBrowseBible: () -> Unit,
+    onPracticeAnchors: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -511,6 +573,18 @@ private fun FinishedState(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = onPracticeAnchors,
+            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent.copy(alpha = 0.2f)),
+            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraAccent),
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.fillMaxWidth(0.7f)
+        ) {
+            Text("Practice Chapter Anchors 🎯", color = RemoraAccentLight, fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         if (!isEmpty) {
             Button(
