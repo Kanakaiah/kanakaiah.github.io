@@ -15,5 +15,7 @@ data class UserMemoryVerse(
     val interval: Int,
     val efactor: Double,
     val nextDueDate: Long,
-    val createdAt: Long
+    val createdAt: Long,
+    val lapses: Int = 0,
+    val attempts: Int = 0
 )

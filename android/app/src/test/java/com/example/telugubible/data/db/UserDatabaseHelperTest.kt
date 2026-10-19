@@ -220,4 +220,62 @@ class UserDatabaseHelperTest {
         assertEquals(99, newHelper.getStreak())
         newHelper.close()
     }
+
+    @Test
+    fun testReviewLogAndRetentionPersistence() {
+        userDbHelper.addUserVerse(1, 1, 1)
+        val verse = userDbHelper.getUserVerses().first()
+
+        userDbHelper.gradeUserVerse(verse.id, score = 4, cueLevel = 0, mode = "typing", measuredAccuracy = 0.95)
+        userDbHelper.gradeChapterAnchor(bookId = 1, chapter = 1, score = 5)
+
+        val log = userDbHelper.getReviewLog()
+        assertEquals(2, log.size)
+
+        val verseEntry = log[0]
+        assertEquals("verse", verseEntry.itemKind)
+        assertEquals(verse.id.toString(), verseEntry.itemId)
+        assertEquals(4, verseEntry.score)
+        assertEquals(0, verseEntry.cueLevel)
+        assertEquals("typing", verseEntry.mode)
+        assertNotNull(verseEntry.measuredAccuracy)
+        assertEquals(0.95, verseEntry.measuredAccuracy!!, 0.001)
+
+        val anchorEntry = log[1]
+        assertEquals("anchor", anchorEntry.itemKind)
+        assertEquals("1:1", anchorEntry.itemId)
+        assertEquals(5, anchorEntry.score)
+    }
+
+    @Test
+    fun testColdChecksPersistence() {
+        assertNull(userDbHelper.getLastColdCheck())
+
+        userDbHelper.recordColdCheck(correct = 4, total = 5, medianColdFor = 42)
+        val last = userDbHelper.getLastColdCheck()
+        assertNotNull(last)
+        assertEquals(4, last?.correct)
+        assertEquals(5, last?.total)
+        assertEquals(42, last?.medianColdFor)
+    }
+
+    @Test
+    fun testIntervalScaleAffectsGrading() {
+        userDbHelper.addUserVerse(19, 23, 1)
+        val verse = userDbHelper.getUserVerses().first()
+
+        // Set scale to 0.70 (30% shorter)
+        userDbHelper.updateIntervalScale(0.70)
+        assertEquals(0.70, userDbHelper.getAppSettings().intervalScale, 0.001)
+
+        // Rep 1 -> interval 1
+        userDbHelper.gradeUserVerse(verse.id, score = 5)
+        // Rep 2 -> interval 6
+        userDbHelper.gradeUserVerse(verse.id, score = 5)
+        // Rep 3 -> interval = 6 * efactor * 0.70 < 6 * 2.6
+        userDbHelper.gradeUserVerse(verse.id, score = 5)
+
+        val updated = userDbHelper.getUserVerses().first()
+        assertTrue("Interval should be scaled shorter", updated.interval < 16)
+    }
 }

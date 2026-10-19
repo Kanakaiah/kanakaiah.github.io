@@ -11,6 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TrackChanges
@@ -37,6 +38,8 @@ import com.example.telugubible.ui.practice.PracticeScreen
 import com.example.telugubible.ui.practice.PracticeViewModel
 import com.example.telugubible.ui.reader.ChapterReaderScreen
 import com.example.telugubible.ui.reader.ReaderViewModel
+import com.example.telugubible.ui.retention.RetentionScreen
+import com.example.telugubible.ui.retention.RetentionViewModel
 import com.example.telugubible.ui.settings.SettingsScreen
 import com.example.telugubible.ui.settings.SettingsViewModel
 import com.example.telugubible.ui.today.TodayScreen
@@ -56,6 +59,7 @@ fun MainScaffold(
     bibleBrowserViewModel: BibleBrowserViewModel = viewModel(),
     bookGuideViewModel: BookGuideViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
+    retentionViewModel: RetentionViewModel = viewModel(),
     practiceViewModel: PracticeViewModel = viewModel(),
     lookupViewModel: LookupViewModel = viewModel(),
     readerViewModel: ReaderViewModel = viewModel()
@@ -64,6 +68,7 @@ fun MainScaffold(
     var activeGuideBookId by remember { mutableStateOf<Int?>(null) }
     var isInReaderMode by remember { mutableStateOf(false) }
     var isInSettingsMode by remember { mutableStateOf(false) }
+    var isInRetentionMode by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
 
     val todayState by todayViewModel.uiState.collectAsState()
@@ -74,13 +79,15 @@ fun MainScaffold(
         isInReaderMode = true
     }
 
-    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode) {
+    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode || isInRetentionMode) {
         if (isInReaderMode) {
             isInReaderMode = false
         } else if (activeGuideBookId != null) {
             activeGuideBookId = null
         } else if (isInSettingsMode) {
             isInSettingsMode = false
+        } else if (isInRetentionMode) {
+            isInRetentionMode = false
         }
     }
 
@@ -100,6 +107,11 @@ fun MainScaffold(
         SettingsScreen(
             viewModel = settingsViewModel,
             onBack = { isInSettingsMode = false }
+        )
+    } else if (isInRetentionMode) {
+        RetentionScreen(
+            viewModel = retentionViewModel,
+            onBack = { isInRetentionMode = false }
         )
     } else {
         Scaffold(
@@ -124,12 +136,14 @@ fun MainScaffold(
                         }
                     },
                     actions = {
-                        // Streak Pill
+                        // Streak Pill (Click to open Retention)
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = RemoraCardBgElevated,
                             border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                            modifier = Modifier.padding(end = 6.dp)
+                            modifier = Modifier
+                                .padding(end = 6.dp)
+                                .clickable { isInRetentionMode = true }
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -149,6 +163,16 @@ fun MainScaffold(
                                     color = RemoraTextPrimary
                                 )
                             }
+                        }
+
+                        // Retention / Insights button
+                        IconButton(onClick = { isInRetentionMode = true }) {
+                            Icon(
+                                Icons.Default.Insights,
+                                contentDescription = "Retention Analytics",
+                                tint = RemoraTextSecondary,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
 
                         // Settings button
@@ -237,7 +261,8 @@ fun MainScaffold(
                         RemoraTab.TODAY -> TodayScreen(
                             viewModel = todayViewModel,
                             onNavigateToPractice = { selectedTab = RemoraTab.PRACTICE },
-                            onNavigateToReader = openReader
+                            onNavigateToReader = openReader,
+                            onNavigateToRetention = { isInRetentionMode = true }
                         )
                         RemoraTab.LOOKUP -> LookupScreen(
                             viewModel = lookupViewModel,

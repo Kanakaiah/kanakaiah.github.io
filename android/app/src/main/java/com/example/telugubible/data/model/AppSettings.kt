@@ -13,5 +13,6 @@ data class AppSettings(
     val showSectionHeadings: Boolean = true,
     val showVerseNumbers: Boolean = true,
     val showParagraphMarks: Boolean = true,
-    val showCrossRefMarkers: Boolean = true
+    val showCrossRefMarkers: Boolean = true,
+    val intervalScale: Double = 1.0
 )

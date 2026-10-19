@@ -4,11 +4,14 @@ import android.content.Context
 import com.example.telugubible.data.db.BibleDatabaseHelper
 import com.example.telugubible.data.db.ChapterProgressEntity
 import com.example.telugubible.data.db.UserDatabaseHelper
+import com.example.telugubible.data.model.AdherenceStats
 import com.example.telugubible.data.model.AppSettings
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.BookGuide
 import com.example.telugubible.data.model.ChapterAnchor
+import com.example.telugubible.data.model.ColdCheckResult
 import com.example.telugubible.data.model.PresetCollection
+import com.example.telugubible.data.model.ReviewLogEntry
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
@@ -89,7 +92,9 @@ class BibleRepository(
                 interval = uv.interval,
                 efactor = uv.efactor,
                 nextDueDate = uv.nextDueDate,
-                createdAt = uv.createdAt
+                createdAt = uv.createdAt,
+                lapses = uv.lapses,
+                attempts = uv.attempts
             )
         }
     }
@@ -102,8 +107,14 @@ class BibleRepository(
         userDbHelper.removeUserVerse(id)
     }
 
-    suspend fun gradeUserVerse(id: Long, score: Int) = withContext(ioDispatcher) {
-        userDbHelper.gradeUserVerse(id, score)
+    suspend fun gradeUserVerse(
+        id: Long,
+        score: Int,
+        cueLevel: Int = 0,
+        mode: String = "reveal",
+        measuredAccuracy: Double? = null
+    ) = withContext(ioDispatcher) {
+        userDbHelper.gradeUserVerse(id, score, cueLevel, mode, measuredAccuracy)
     }
 
     suspend fun getStreak(): Int = withContext(ioDispatcher) {
@@ -143,8 +154,36 @@ class BibleRepository(
         userDbHelper.getChapterProgress(bookId)
     }
 
+    suspend fun getAllChapterProgress(): List<ChapterProgressEntity> = withContext(ioDispatcher) {
+        userDbHelper.getAllChapterProgress()
+    }
+
     suspend fun gradeChapterAnchor(bookId: Int, chapter: Int, score: Int): ChapterProgressEntity = withContext(ioDispatcher) {
         userDbHelper.gradeChapterAnchor(bookId, chapter, score)
+    }
+
+    suspend fun getReviewLog(): List<ReviewLogEntry> = withContext(ioDispatcher) {
+        userDbHelper.getReviewLog()
+    }
+
+    suspend fun recordColdCheck(correct: Int, total: Int, medianColdFor: Int): Long = withContext(ioDispatcher) {
+        userDbHelper.recordColdCheck(correct, total, medianColdFor)
+    }
+
+    suspend fun getLastColdCheck(): ColdCheckResult? = withContext(ioDispatcher) {
+        userDbHelper.getLastColdCheck()
+    }
+
+    suspend fun recordSessionAdherence(completed: Boolean, durationMs: Long, abandonedAt: Int? = null) = withContext(ioDispatcher) {
+        userDbHelper.recordSessionAdherence(completed, durationMs, abandonedAt)
+    }
+
+    suspend fun getAdherenceStats(): AdherenceStats = withContext(ioDispatcher) {
+        userDbHelper.getAdherenceStats()
+    }
+
+    suspend fun updateIntervalScale(scale: Double) = withContext(ioDispatcher) {
+        userDbHelper.updateIntervalScale(scale)
     }
 
     suspend fun getAppSettings(): AppSettings = withContext(ioDispatcher) {

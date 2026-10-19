@@ -36,6 +36,7 @@ fun TodayScreen(
     viewModel: TodayViewModel,
     onNavigateToPractice: () -> Unit,
     onNavigateToReader: (Int, Int) -> Unit,
+    onNavigateToRetention: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -82,6 +83,50 @@ fun TodayScreen(
                         learningCount = state.learningCount,
                         dueCount = state.dueCount
                     )
+                }
+
+                // Retention & Memory Diagnostic Shortcut
+                item {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = RemoraCardBg,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onNavigateToRetention() }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 14.dp, vertical = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "What would you still recall?",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = RemoraTextPrimary
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = "Retention",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = RemoraAccent
+                                )
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowForward,
+                                    contentDescription = null,
+                                    tint = RemoraAccent,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                            }
+                        }
+                    }
                 }
 
                 // 4. Translation Language Selector (BSB English vs IRV Telugu)
