@@ -3,6 +3,7 @@ package com.example.telugubible.data.repository
 import android.content.Context
 import com.example.telugubible.data.db.BibleDatabaseHelper
 import com.example.telugubible.data.db.ChapterProgressEntity
+import com.example.telugubible.data.db.ThemeProgressEntity
 import com.example.telugubible.data.db.UserDatabaseHelper
 import com.example.telugubible.data.model.AdherenceStats
 import com.example.telugubible.data.model.AppSettings
@@ -204,6 +205,18 @@ class BibleRepository(
 
     suspend fun clearAllUserData() = withContext(ioDispatcher) {
         userDbHelper.clearAllUserData()
+    }
+
+    suspend fun getThemeProgress(bookId: Int): ThemeProgressEntity? = withContext(ioDispatcher) {
+        userDbHelper.getThemeProgress(bookId)
+    }
+
+    suspend fun getAllThemeProgress(): Map<Int, ThemeProgressEntity> = withContext(ioDispatcher) {
+        userDbHelper.getAllThemeProgress()
+    }
+
+    suspend fun gradeThemeProgress(bookId: Int, score: Int): ThemeProgressEntity = withContext(ioDispatcher) {
+        userDbHelper.gradeThemeProgress(bookId, score)
     }
 }
 

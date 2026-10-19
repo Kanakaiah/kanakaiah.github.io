@@ -41,12 +41,24 @@ data class ChapterProgressEntity(
     val attempts: Int = 0
 )
 
+data class ThemeProgressEntity(
+    val bookId: Int,
+    val status: String = "learning",
+    val repetition: Int = 0,
+    val interval: Int = 0,
+    val efactor: Double = 2.5,
+    val nextDueDate: Long = 0L,
+    val lapses: Int = 0,
+    val attempts: Int = 0,
+    val lastScore: Int = 0
+)
+
 class UserDatabaseHelper(private val context: Context) :
     SQLiteOpenHelper(context, USER_DB_NAME, null, USER_DB_VERSION) {
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 3
+        const val USER_DB_VERSION = 4
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -157,6 +169,21 @@ class UserDatabaseHelper(private val context: Context) :
             );
             """.trimIndent()
         )
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS theme_progress (
+                book_id INTEGER PRIMARY KEY,
+                status TEXT NOT NULL DEFAULT 'learning',
+                repetition INTEGER NOT NULL DEFAULT 0,
+                interval INTEGER NOT NULL DEFAULT 0,
+                efactor REAL NOT NULL DEFAULT 2.5,
+                next_due_date INTEGER NOT NULL,
+                lapses INTEGER NOT NULL DEFAULT 0,
+                attempts INTEGER NOT NULL DEFAULT 0,
+                last_score INTEGER NOT NULL DEFAULT 0
+            );
+            """.trimIndent()
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -218,6 +245,23 @@ class UserDatabaseHelper(private val context: Context) :
                     completed INTEGER NOT NULL,
                     duration_ms INTEGER NOT NULL,
                     abandoned_at INTEGER DEFAULT NULL
+                );
+                """.trimIndent()
+            )
+        }
+        if (oldVersion < 4) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS theme_progress (
+                    book_id INTEGER PRIMARY KEY,
+                    status TEXT NOT NULL DEFAULT 'learning',
+                    repetition INTEGER NOT NULL DEFAULT 0,
+                    interval INTEGER NOT NULL DEFAULT 0,
+                    efactor REAL NOT NULL DEFAULT 2.5,
+                    next_due_date INTEGER NOT NULL,
+                    lapses INTEGER NOT NULL DEFAULT 0,
+                    attempts INTEGER NOT NULL DEFAULT 0,
+                    last_score INTEGER NOT NULL DEFAULT 0
                 );
                 """.trimIndent()
             )
@@ -637,6 +681,135 @@ class UserDatabaseHelper(private val context: Context) :
             put("new_efactor", newEfactor)
             put("item_kind", "anchor")
             put("item_id", "$bookId:$chapter")
+            put("cue_level", 0)
+            put("mode", "reveal")
+        }
+        db.insert("review_log", null, logValues)
+
+        return entity
+    }
+
+    fun getThemeProgress(bookId: Int): ThemeProgressEntity? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT book_id, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score FROM theme_progress WHERE book_id = ?",
+            arrayOf(bookId.toString())
+        )
+        cursor.use {
+            if (it.moveToNext()) {
+                return ThemeProgressEntity(
+                    bookId = it.getInt(0),
+                    status = it.getString(1),
+                    repetition = it.getInt(2),
+                    interval = it.getInt(3),
+                    efactor = it.getDouble(4),
+                    nextDueDate = it.getLong(5),
+                    lapses = it.getInt(6),
+                    attempts = it.getInt(7),
+                    lastScore = it.getInt(8)
+                )
+            }
+        }
+        return null
+    }
+
+    fun getAllThemeProgress(): Map<Int, ThemeProgressEntity> {
+        val map = mutableMapOf<Int, ThemeProgressEntity>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT book_id, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score FROM theme_progress",
+            null
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                val bId = it.getInt(0)
+                map[bId] = ThemeProgressEntity(
+                    bookId = bId,
+                    status = it.getString(1),
+                    repetition = it.getInt(2),
+                    interval = it.getInt(3),
+                    efactor = it.getDouble(4),
+                    nextDueDate = it.getLong(5),
+                    lapses = it.getInt(6),
+                    attempts = it.getInt(7),
+                    lastScore = it.getInt(8)
+                )
+            }
+        }
+        return map
+    }
+
+    fun gradeThemeProgress(bookId: Int, score: Int): ThemeProgressEntity {
+        val existing = getThemeProgress(bookId)
+        val rep = existing?.repetition ?: 0
+        val interval = existing?.interval ?: 0
+        val efactor = existing?.efactor ?: 2.5
+        val lapses = existing?.lapses ?: 0
+        val attempts = (existing?.attempts ?: 0) + 1
+
+        val scale = getAppSettings().intervalScale
+        var newRep = 0
+        var newInterval = 1
+        var newEfactor = efactor
+        var newLapses = lapses
+
+        if (score >= 3) {
+            newRep = rep + 1
+            newInterval = when (rep) {
+                0 -> 1
+                1 -> 6
+                else -> max(1, (interval * efactor * scale).roundToInt())
+            }
+            val efactorAdjustment = 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)
+            newEfactor = max(1.3, efactor + efactorAdjustment)
+        } else {
+            newRep = 0
+            newInterval = 1
+            newEfactor = max(1.3, efactor - 0.2)
+            newLapses = lapses + 1
+        }
+
+        val status = if (newRep >= 6) "mastered" else if (newRep > 0) "review" else "learning"
+        val now = System.currentTimeMillis()
+        val nextDueDate = now + (newInterval.toLong() * 24L * 60L * 60L * 1000L)
+
+        val entity = ThemeProgressEntity(
+            bookId = bookId,
+            status = status,
+            repetition = newRep,
+            interval = newInterval,
+            efactor = newEfactor,
+            nextDueDate = nextDueDate,
+            lapses = newLapses,
+            attempts = attempts,
+            lastScore = score
+        )
+
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("book_id", bookId)
+            put("status", status)
+            put("repetition", newRep)
+            put("interval", newInterval)
+            put("efactor", newEfactor)
+            put("next_due_date", nextDueDate)
+            put("lapses", newLapses)
+            put("attempts", attempts)
+            put("last_score", score)
+        }
+        db.insertWithOnConflict("theme_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+
+        // Record in review log
+        val logValues = ContentValues().apply {
+            put("verse_id", 0)
+            put("score", score)
+            put("review_date", now)
+            put("prev_interval", interval)
+            put("new_interval", newInterval)
+            put("prev_efactor", efactor)
+            put("new_efactor", newEfactor)
+            put("item_kind", "theme")
+            put("item_id", bookId.toString())
             put("cue_level", 0)
             put("mode", "reveal")
         }

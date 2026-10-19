@@ -28,7 +28,8 @@ import com.example.telugubible.util.CueUtils
 
 enum class PracticeSubject {
     VERSES,
-    ANCHORS
+    ANCHORS,
+    THEMES
 }
 
 @Composable
@@ -43,6 +44,16 @@ fun PracticeScreen(
         val anchorViewModel: AnchorDrillViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
         AnchorDrill(
             viewModel = anchorViewModel,
+            onExit = { activeSubject = PracticeSubject.VERSES },
+            modifier = modifier
+        )
+        return
+    }
+
+    if (activeSubject == PracticeSubject.THEMES) {
+        val themeViewModel: ThemeDrillViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+        ThemeDrill(
+            viewModel = themeViewModel,
             onExit = { activeSubject = PracticeSubject.VERSES },
             modifier = modifier
         )
@@ -68,7 +79,8 @@ fun PracticeScreen(
                     isEmpty = state.verses.isEmpty(),
                     onRestart = { viewModel.restart() },
                     onBrowseBible = onNavigateToBible,
-                    onPracticeAnchors = { activeSubject = PracticeSubject.ANCHORS }
+                    onPracticeAnchors = { activeSubject = PracticeSubject.ANCHORS },
+                    onPracticeThemes = { activeSubject = PracticeSubject.THEMES }
                 )
             }
             else -> {
@@ -121,6 +133,19 @@ fun PracticeScreen(
                                         ) {
                                             Text(
                                                 text = "Chapter Anchors",
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = RemoraTextSecondary,
+                                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 5.dp)
+                                            )
+                                        }
+                                        Surface(
+                                            onClick = { activeSubject = PracticeSubject.THEMES },
+                                            shape = RoundedCornerShape(16.dp),
+                                            color = Color.Transparent
+                                        ) {
+                                            Text(
+                                                text = "Book Themes",
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.Bold,
                                                 color = RemoraTextSecondary,
@@ -524,7 +549,8 @@ private fun FinishedState(
     isEmpty: Boolean,
     onRestart: () -> Unit,
     onBrowseBible: () -> Unit,
-    onPracticeAnchors: () -> Unit
+    onPracticeAnchors: () -> Unit,
+    onPracticeThemes: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -582,6 +608,18 @@ private fun FinishedState(
             modifier = Modifier.fillMaxWidth(0.7f)
         ) {
             Text("Practice Chapter Anchors 🎯", color = RemoraAccentLight, fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = onPracticeThemes,
+            colors = ButtonDefaults.buttonColors(containerColor = RemoraGold.copy(alpha = 0.2f)),
+            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraGold),
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.fillMaxWidth(0.7f)
+        ) {
+            Text("Practice Book Themes 📖", color = RemoraGold, fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
