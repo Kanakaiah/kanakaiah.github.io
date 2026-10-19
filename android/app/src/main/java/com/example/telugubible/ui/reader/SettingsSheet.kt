@@ -1,14 +1,18 @@
 package com.example.telugubible.ui.reader
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,10 +22,14 @@ import androidx.compose.ui.unit.sp
 fun SettingsSheet(
     fontSizeScale: FontSizeScale,
     language: BibleLanguage,
+    readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
+    readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF,
     onIncreaseFontSize: () -> Unit,
     onDecreaseFontSize: () -> Unit,
     onResetFontSize: () -> Unit,
     onLanguageChange: (BibleLanguage) -> Unit,
+    onThemeChange: (ReaderTheme) -> Unit = {},
+    onFontFamilyChange: (ReaderFontFamily) -> Unit = {},
     onDismiss: () -> Unit
 ) {
     ModalBottomSheet(
@@ -32,7 +40,7 @@ fun SettingsSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
-                .padding(bottom = 32.dp),
+                .padding(bottom = 36.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
@@ -41,7 +49,84 @@ fun SettingsSheet(
                 fontWeight = FontWeight.Bold
             )
 
-            // Text Size Control
+            // 1. Theme Palette Selector (Obsidian, Umber, Sepia, Paper)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Theme Palette",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    ReaderTheme.entries.forEach { theme ->
+                        val isSelected = theme == readerTheme
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = theme.backgroundColor,
+                            border = BorderStroke(
+                                width = if (isSelected) 2.dp else 1.dp,
+                                color = if (isSelected) theme.accentColor else Color.Gray.copy(alpha = 0.3f)
+                            ),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp)
+                                .clickable { onThemeChange(theme) }
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(10.dp)
+                                            .clip(CircleShape)
+                                            .background(theme.accentColor)
+                                    )
+                                    Text(
+                                        text = theme.label,
+                                        fontSize = 12.sp,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                        color = theme.textColor
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. Typography Font Style (Serif vs Sans)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Font Family",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    FilterChip(
+                        selected = readerFontFamily == ReaderFontFamily.SERIF,
+                        onClick = { onFontFamilyChange(ReaderFontFamily.SERIF) },
+                        label = { Text("Serif (Classic)") },
+                        modifier = Modifier.weight(1f)
+                    )
+                    FilterChip(
+                        selected = readerFontFamily == ReaderFontFamily.SANS_SERIF,
+                        onClick = { onFontFamilyChange(ReaderFontFamily.SANS_SERIF) },
+                        label = { Text("Sans (Modern)") },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            // 3. Text Size Control
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = "Text Size",
@@ -92,7 +177,7 @@ fun SettingsSheet(
                 }
             }
 
-            // Translation Switcher
+            // 4. Translation Switcher
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = "Bible Translation",

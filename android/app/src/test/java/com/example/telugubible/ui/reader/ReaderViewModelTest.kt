@@ -35,6 +35,7 @@ class ReaderViewModelTest {
     private lateinit var bibleDbHelper: BibleDatabaseHelper
     private lateinit var userDbHelper: UserDatabaseHelper
     private lateinit var repository: BibleRepository
+    private lateinit var kjvService: com.example.telugubible.data.service.KjvService
     private lateinit var viewModel: ReaderViewModel
 
     @Before
@@ -49,7 +50,8 @@ class ReaderViewModelTest {
         bibleDbHelper = BibleDatabaseHelper(application)
         userDbHelper = UserDatabaseHelper(application)
         repository = BibleRepository(bibleDbHelper, userDbHelper, testDispatcher)
-        viewModel = ReaderViewModel(application, repository)
+        kjvService = com.example.telugubible.data.service.KjvService(testDispatcher)
+        viewModel = ReaderViewModel(application, repository, kjvService)
     }
 
     @After
@@ -152,5 +154,71 @@ class ReaderViewModelTest {
         assertEquals(FontSizeScale.M, viewModel.uiState.value.fontSizeScale)
         viewModel.decreaseFontSize()
         assertEquals(FontSizeScale.S, viewModel.uiState.value.fontSizeScale)
+    }
+
+    @Test
+    fun testOriginalWordsAndStrongsLookup() = runTest {
+        advanceUntilIdle()
+
+        // Seed KJV cache for Genesis 1:1
+        kjvService.seedCache(
+            1, 1,
+            mapOf(1 to "In the beginning<S>7225</S> God<S>430</S> created<S>1254</S> the heaven<S>8064</S> and the earth.<S>776</S>")
+        )
+
+        viewModel.openOriginalWords(1)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(1, state.originalWordsVerse)
+        assertFalse(state.isOriginalWordsLoading)
+        assertTrue(state.originalWordsList.isNotEmpty())
+
+        val firstWord = state.originalWordsList.firstOrNull { it.strongsId == "H7225" }
+        assertNotNull(firstWord)
+        assertEquals("H7225", firstWord?.strongsId)
+        assertNotNull(firstWord?.entry)
+        assertEquals("רֵאשִׁית", firstWord?.entry?.lemma)
+
+        // Test direct Strong's lookup
+        viewModel.lookupStrongs("H7225")
+        advanceUntilIdle()
+        assertEquals("H7225", viewModel.uiState.value.selectedStrongs?.id)
+        assertEquals("רֵאשִׁית", viewModel.uiState.value.selectedStrongs?.lemma)
+
+        viewModel.dismissStrongs()
+        assertNull(viewModel.uiState.value.selectedStrongs)
+
+        viewModel.dismissOriginalWords()
+        assertNull(viewModel.uiState.value.originalWordsVerse)
+        assertTrue(viewModel.uiState.value.originalWordsList.isEmpty())
+    }
+
+    @Test
+    fun testReaderThemeAndTypography() = runTest {
+        advanceUntilIdle()
+
+        assertEquals(ReaderTheme.OBSIDIAN, viewModel.uiState.value.readerTheme)
+        assertEquals(ReaderFontFamily.SERIF, viewModel.uiState.value.readerFontFamily)
+
+        viewModel.setReaderTheme(ReaderTheme.SEPIA)
+        assertEquals(ReaderTheme.SEPIA, viewModel.uiState.value.readerTheme)
+
+        viewModel.setReaderTheme(ReaderTheme.PAPER)
+        assertEquals(ReaderTheme.PAPER, viewModel.uiState.value.readerTheme)
+
+        viewModel.setReaderFontFamily(ReaderFontFamily.SANS_SERIF)
+        assertEquals(ReaderFontFamily.SANS_SERIF, viewModel.uiState.value.readerFontFamily)
+    }
+
+    @Test
+    fun testAlphaModeToggle() = runTest {
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.alphaMode)
+        viewModel.toggleAlphaMode()
+        assertTrue(viewModel.uiState.value.alphaMode)
+        viewModel.toggleAlphaMode()
+        assertFalse(viewModel.uiState.value.alphaMode)
     }
 }

@@ -5,9 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.CrossReference
+import com.example.telugubible.data.model.OriginalWord
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.repository.BibleRepository
+import com.example.telugubible.data.service.KjvService
+import com.example.telugubible.util.StrongsParser
 import com.example.telugubible.util.TtsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,12 +51,20 @@ data class ReaderUiState(
     val selectedStrongs: StrongsEntry? = null,
     val isImmersive: Boolean = false,
     val isLoading: Boolean = true,
-    val toastMessage: String? = null
+    val toastMessage: String? = null,
+    val alphaMode: Boolean = false,
+    val originalWordsVerse: Int? = null,
+    val originalWordsList: List<OriginalWord> = emptyList(),
+    val isOriginalWordsLoading: Boolean = false,
+    val kjvChapterVerses: Map<Int, String> = emptyMap(),
+    val readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
+    val readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF
 )
 
 class ReaderViewModel(
     application: Application,
-    private val repository: BibleRepository = BibleRepository(application)
+    private val repository: BibleRepository = BibleRepository(application),
+    private val kjvService: KjvService = KjvService()
 ) : AndroidViewModel(application) {
 
     private val ttsManager = TtsManager(application)
@@ -120,13 +131,20 @@ class ReaderViewModel(
                     isLoading = true,
                     showBookSelector = false,
                     selectedVerses = emptySet(),
-                    crossRefSheetVerses = null
+                    crossRefSheetVerses = null,
+                    originalWordsVerse = null,
+                    originalWordsList = emptyList()
                 )
             }
             val verses = repository.getVerses(book.id, chapter)
             val breaks = repository.getParagraphBreaks(book.id, chapter)
             val crossRefCounts = repository.getCrossReferenceCountsForChapter(book.id, chapter)
             val otQuotes = repository.getOtQuotesForChapter(book.id, chapter)
+            val kjvMap = if (_uiState.value.alphaMode) {
+                kjvService.getChapterKjv(book.id, chapter) ?: emptyMap()
+            } else {
+                emptyMap()
+            }
             _uiState.update {
                 it.copy(
                     currentBook = book,
@@ -135,6 +153,7 @@ class ReaderViewModel(
                     paragraphBreaks = breaks,
                     crossRefCounts = crossRefCounts,
                     otQuotes = otQuotes,
+                    kjvChapterVerses = kjvMap,
                     isLoading = false
                 )
             }
@@ -337,6 +356,91 @@ class ReaderViewModel(
 
     fun dismissStrongs() {
         _uiState.update { it.copy(selectedStrongs = null) }
+    }
+
+    // Theme & Typography
+    fun setReaderTheme(theme: ReaderTheme) {
+        _uiState.update { it.copy(readerTheme = theme) }
+    }
+
+    fun setReaderFontFamily(fontFamily: ReaderFontFamily) {
+        _uiState.update { it.copy(readerFontFamily = fontFamily) }
+    }
+
+    // Alpha / Study Mode
+    fun toggleAlphaMode() {
+        val newMode = !_uiState.value.alphaMode
+        _uiState.update { it.copy(alphaMode = newMode) }
+        if (newMode && _uiState.value.kjvChapterVerses.isEmpty()) {
+            val book = _uiState.value.currentBook ?: return
+            val chapter = _uiState.value.currentChapter
+            viewModelScope.launch {
+                val map = kjvService.getChapterKjv(book.id, chapter)
+                if (map != null) {
+                    _uiState.update { it.copy(kjvChapterVerses = map) }
+                }
+            }
+        }
+    }
+
+    // Original Words Sheet
+    fun openOriginalWords(verseNumber: Int) {
+        val book = _uiState.value.currentBook ?: return
+        val chapter = _uiState.value.currentChapter
+        val isOT = book.id <= 39
+
+        _uiState.update {
+            it.copy(
+                originalWordsVerse = verseNumber,
+                isOriginalWordsLoading = true,
+                originalWordsList = emptyList()
+            )
+        }
+
+        viewModelScope.launch {
+            var taggedText = _uiState.value.kjvChapterVerses[verseNumber]
+            if (taggedText == null) {
+                val kjvMap = kjvService.getChapterKjv(book.id, chapter)
+                if (kjvMap != null) {
+                    _uiState.update { it.copy(kjvChapterVerses = kjvMap) }
+                    taggedText = kjvMap[verseNumber]
+                }
+            }
+
+            val wordsList = if (!taggedText.isNullOrBlank()) {
+                val parsed = StrongsParser.parseTaggedText(taggedText, isOT)
+                parsed.map { (english, strongsId) ->
+                    val entry = strongsId?.let { repository.getStrongs(it) }
+                    OriginalWord(english = english, strongsId = strongsId, entry = entry)
+                }
+            } else {
+                val verse = _uiState.value.verses.firstOrNull { it.verse == verseNumber }
+                val enText = verse?.textEn ?: ""
+                val tokens = enText.split(Regex("[^a-zA-Z]+")).filter { it.length > 2 }
+                tokens.map { token ->
+                    val results = repository.searchStrongs(token)
+                    val match = results.firstOrNull { it.lang == if (isOT) "H" else "G" } ?: results.firstOrNull()
+                    OriginalWord(english = token, strongsId = match?.id, entry = match)
+                }
+            }
+
+            _uiState.update {
+                it.copy(
+                    originalWordsList = wordsList,
+                    isOriginalWordsLoading = false
+                )
+            }
+        }
+    }
+
+    fun dismissOriginalWords() {
+        _uiState.update {
+            it.copy(
+                originalWordsVerse = null,
+                originalWordsList = emptyList(),
+                isOriginalWordsLoading = false
+            )
+        }
     }
 
     override fun onCleared() {

@@ -35,9 +35,15 @@ import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.ui.input.pointer.pointerInput
+import com.example.telugubible.theme.RemoraAccent
+import com.example.telugubible.theme.RemoraAccentLight
 import com.example.telugubible.theme.RemoraGold
 import com.example.telugubible.theme.RemoraTextPrimary
 import com.example.telugubible.theme.RemoraTextSecondary
+import com.example.telugubible.util.StrongsParser
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.launch
 
@@ -53,6 +59,7 @@ fun ChapterReaderScreen(
     val clipboardManager = LocalClipboardManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var totalDragX by remember { mutableFloatStateOf(0f) }
 
     // Scroll to top when book or chapter changes
     LaunchedEffect(state.currentBook?.id, state.currentChapter) {
@@ -68,6 +75,7 @@ fun ChapterReaderScreen(
     }
 
     Scaffold(
+        containerColor = state.readerTheme.backgroundColor,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -77,7 +85,7 @@ fun ChapterReaderScreen(
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
-                                tint = RemoraTextPrimary
+                                tint = state.readerTheme.textColor
                             )
                         }
                     }
@@ -100,14 +108,33 @@ fun ChapterReaderScreen(
                             Text(
                                 text = "$bookTitle ${state.currentChapter}",
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = state.readerTheme.textColor
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "▼", fontSize = 11.sp, color = MaterialTheme.colorScheme.primary)
+                            Text(text = "▼", fontSize = 11.sp, color = state.readerTheme.accentColor)
                         }
                     }
                 },
                 actions = {
+                    // Alpha Study Mode Button
+                    IconButton(onClick = { viewModel.toggleAlphaMode() }) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = if (state.alphaMode) state.readerTheme.accentColor else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "α",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (state.alphaMode) Color.White else state.readerTheme.textColor
+                                )
+                            }
+                        }
+                    }
+
                     // TTS Audio Playback Button
                     IconButton(onClick = { viewModel.toggleTts() }) {
                         Surface(
@@ -119,7 +146,7 @@ fun ChapterReaderScreen(
                                 Icon(
                                     imageVector = if (state.isTtsSpeaking) Icons.Default.Stop else Icons.Default.VolumeUp,
                                     contentDescription = "Read Aloud",
-                                    tint = if (state.isTtsSpeaking) Color.Black else RemoraTextPrimary,
+                                    tint = if (state.isTtsSpeaking) Color.Black else state.readerTheme.textColor,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -145,7 +172,7 @@ fun ChapterReaderScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = state.readerTheme.cardColor
                 )
             )
         },
@@ -155,7 +182,7 @@ fun ChapterReaderScreen(
                 Surface(
                     tonalElevation = 4.dp,
                     shadowElevation = 8.dp,
-                    color = MaterialTheme.colorScheme.surface
+                    color = state.readerTheme.cardColor
                 ) {
                     Row(
                         modifier = Modifier
@@ -175,7 +202,7 @@ fun ChapterReaderScreen(
                         Text(
                             text = "Ch ${state.currentChapter} / ${state.currentBook?.chapters ?: 1}",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = state.readerTheme.secondaryTextColor
                         )
 
                         Button(
@@ -192,7 +219,7 @@ fun ChapterReaderScreen(
                     tonalElevation = 8.dp,
                     shadowElevation = 12.dp,
                     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    color = state.readerTheme.cardColor,
                     border = BorderStroke(1.dp, RemoraGold.copy(alpha = 0.3f))
                 ) {
                     Row(
@@ -208,14 +235,14 @@ fun ChapterReaderScreen(
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = "Clear selection",
-                                    tint = RemoraTextSecondary
+                                    tint = state.readerTheme.secondaryTextColor
                                 )
                             }
                             Text(
                                 text = "${state.selectedVerses.size} selected",
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary
+                                color = state.readerTheme.textColor
                             )
                         }
 
@@ -223,6 +250,19 @@ fun ChapterReaderScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            // Original Words Button (if 1 verse selected)
+                            if (state.selectedVerses.size == 1) {
+                                FilledTonalButton(
+                                    onClick = {
+                                        viewModel.openOriginalWords(state.selectedVerses.first())
+                                    },
+                                    shape = RoundedCornerShape(10.dp),
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                                ) {
+                                    Text("α Words", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
+                            }
+
                             // Copy Button
                             FilledTonalButton(
                                 onClick = {
@@ -292,7 +332,24 @@ fun ChapterReaderScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .pointerInput(state.currentBook?.id, state.currentChapter) {
+                        detectHorizontalDragGestures(
+                            onDragStart = { totalDragX = 0f },
+                            onDragEnd = {
+                                if (totalDragX < -150f) {
+                                    viewModel.nextChapter()
+                                } else if (totalDragX > 150f) {
+                                    viewModel.previousChapter()
+                                }
+                                totalDragX = 0f
+                            },
+                            onDragCancel = { totalDragX = 0f },
+                            onHorizontalDrag = { _, dragAmount ->
+                                totalDragX += dragAmount
+                            }
+                        )
+                    },
                 contentPadding = PaddingValues(top = 12.dp, bottom = 48.dp)
             ) {
                 // Chapter Illustration Card
@@ -338,12 +395,12 @@ fun ChapterReaderScreen(
                     Surface(
                         shape = RoundedCornerShape(10.dp),
                         color = when {
-                            isSelected -> RemoraGold.copy(alpha = 0.16f)
+                            isSelected -> state.readerTheme.accentColor.copy(alpha = 0.16f)
                             isSpeaking -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
                             else -> Color.Transparent
                         },
                         border = when {
-                            isSelected -> BorderStroke(1.dp, RemoraGold.copy(alpha = 0.5f))
+                            isSelected -> BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.5f))
                             isSpeaking -> BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                             else -> null
                         },
@@ -352,76 +409,114 @@ fun ChapterReaderScreen(
                             .padding(vertical = 2.dp)
                             .clickable { viewModel.toggleVerseSelection(verse.verse) }
                     ) {
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.Top
+                                .padding(horizontal = 8.dp, vertical = 6.dp)
                         ) {
-                            val annotatedText = buildAnnotatedString {
-                                // Verse Number
-                                withStyle(
-                                    SpanStyle(
-                                        fontSize = (baseFontSize.value * 0.65f).sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (isSelected) RemoraGold else MaterialTheme.colorScheme.primary,
-                                        baselineShift = BaselineShift.Superscript
-                                    )
-                                ) {
-                                    append("${verse.verse} ")
-                                }
-
-                                // Cross-Reference Indicator
-                                if (hasCrossRefs) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                val annotatedText = buildAnnotatedString {
+                                    // Verse Number
                                     withStyle(
                                         SpanStyle(
-                                            fontSize = (baseFontSize.value * 0.60f).sp,
+                                            fontSize = (baseFontSize.value * 0.65f).sp,
                                             fontWeight = FontWeight.Bold,
+                                            color = if (isSelected) state.readerTheme.accentColor else state.readerTheme.accentColor,
+                                            baselineShift = BaselineShift.Superscript
+                                        )
+                                    ) {
+                                        append("${verse.verse} ")
+                                    }
+
+                                    // Cross-Reference Indicator
+                                    if (hasCrossRefs) {
+                                        withStyle(
+                                            SpanStyle(
+                                                fontSize = (baseFontSize.value * 0.60f).sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = RemoraGold,
+                                                baselineShift = BaselineShift.Superscript
+                                            )
+                                        ) {
+                                            append("✻ ")
+                                        }
+                                    }
+
+                                    // OT Quote Indicator
+                                    if (isOtQuote) {
+                                        withStyle(
+                                            SpanStyle(
+                                                fontSize = (baseFontSize.value * 0.55f).sp,
+                                                fontWeight = FontWeight.ExtraBold,
+                                                color = Color(0xFFEF5350),
+                                                baselineShift = BaselineShift.Superscript
+                                            )
+                                        ) {
+                                            append("[OT] ")
+                                        }
+                                    }
+
+                                    append(verseText)
+                                }
+
+                                Text(
+                                    text = annotatedText,
+                                    fontSize = baseFontSize,
+                                    lineHeight = baseLineHeight,
+                                    fontFamily = state.readerFontFamily.fontFamily,
+                                    color = state.readerTheme.textColor,
+                                    modifier = Modifier.weight(1f)
+                                )
+
+                                // Quick individual xref tap button
+                                if (hasCrossRefs) {
+                                    IconButton(
+                                        onClick = { viewModel.openCrossReferences(listOf(verse.verse)) },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Text(
+                                            text = "✻",
                                             color = RemoraGold,
-                                            baselineShift = BaselineShift.Superscript
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold
                                         )
-                                    ) {
-                                        append("✻ ")
                                     }
                                 }
-
-                                // OT Quote Indicator
-                                if (isOtQuote) {
-                                    withStyle(
-                                        SpanStyle(
-                                            fontSize = (baseFontSize.value * 0.55f).sp,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            color = Color(0xFFEF5350),
-                                            baselineShift = BaselineShift.Superscript
-                                        )
-                                    ) {
-                                        append("[OT] ")
-                                    }
-                                }
-
-                                append(verseText)
                             }
 
-                            Text(
-                                text = annotatedText,
-                                fontSize = baseFontSize,
-                                lineHeight = baseLineHeight,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            // Quick individual xref tap button
-                            if (hasCrossRefs) {
-                                IconButton(
-                                    onClick = { viewModel.openCrossReferences(listOf(verse.verse)) },
-                                    modifier = Modifier.size(24.dp)
-                                ) {
-                                    Text(
-                                        text = "✻",
-                                        color = RemoraGold,
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                            // Alpha Mode Original Word Chips
+                            if (state.alphaMode) {
+                                val taggedKjv = state.kjvChapterVerses[verse.verse]
+                                if (!taggedKjv.isNullOrBlank()) {
+                                    val parsed = StrongsParser.parseTaggedText(taggedKjv, (state.currentBook?.id ?: 1) <= 39)
+                                    val wordsWithStrongs = parsed.filter { !it.second.isNullOrBlank() }
+                                    if (wordsWithStrongs.isNotEmpty()) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        LazyRow(
+                                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                        ) {
+                                            items(wordsWithStrongs) { (token, sId) ->
+                                                Surface(
+                                                    shape = RoundedCornerShape(6.dp),
+                                                    color = state.readerTheme.accentColor.copy(alpha = 0.15f),
+                                                    border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.35f)),
+                                                    modifier = Modifier.clickable { sId?.let { viewModel.lookupStrongs(it) } }
+                                                ) {
+                                                    Text(
+                                                        text = "${sId ?: ""} $token".trim(),
+                                                        fontSize = 11.sp,
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        color = state.readerTheme.accentColor,
+                                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -461,15 +556,36 @@ fun ChapterReaderScreen(
             )
         }
 
+        // Original Words Modal Sheet
+        if (state.originalWordsVerse != null) {
+            val bookName = state.currentBook?.nameEn ?: ""
+            val ch = state.currentChapter
+            val v = state.originalWordsVerse!!
+            OriginalWordsSheet(
+                verseRefLabel = "$bookName $ch:$v",
+                isOldTestament = (state.currentBook?.id ?: 1) <= 39,
+                words = state.originalWordsList,
+                isLoading = state.isOriginalWordsLoading,
+                onSelectStrongs = { entry ->
+                    viewModel.lookupStrongs(entry.id)
+                },
+                onDismiss = { viewModel.dismissOriginalWords() }
+            )
+        }
+
         // Settings sheet
         if (state.showSettings) {
             SettingsSheet(
                 fontSizeScale = state.fontSizeScale,
                 language = state.language,
+                readerTheme = state.readerTheme,
+                readerFontFamily = state.readerFontFamily,
                 onIncreaseFontSize = { viewModel.increaseFontSize() },
                 onDecreaseFontSize = { viewModel.decreaseFontSize() },
                 onResetFontSize = { viewModel.resetFontSize() },
                 onLanguageChange = { viewModel.setLanguage(it) },
+                onThemeChange = { viewModel.setReaderTheme(it) },
+                onFontFamilyChange = { viewModel.setReaderFontFamily(it) },
                 onDismiss = { viewModel.toggleSettings(false) }
             )
         }
