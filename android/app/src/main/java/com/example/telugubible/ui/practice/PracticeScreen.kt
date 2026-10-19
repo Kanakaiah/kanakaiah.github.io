@@ -3,7 +3,9 @@ package com.example.telugubible.ui.practice
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.theme.*
+import com.example.telugubible.util.CueUtils
 
 @Composable
 fun PracticeScreen(
@@ -53,13 +56,19 @@ fun PracticeScreen(
             else -> {
                 val verse = state.currentVerse
                 if (verse != null) {
+                    val isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH
+                    val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
+                    val badgeText = if (isEnglish) "BSB" else "IRV"
+                    val activeText = (if (isEnglish) verse.textEn else verse.textTe)
+                        ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 72.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Top Progress Indicator
+                        // Top Header: Progress Indicator & Mode Switcher
                         Column {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -91,9 +100,40 @@ fun PracticeScreen(
                                     .height(4.dp)
                                     .clip(RoundedCornerShape(2.dp))
                             )
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // Mode Selector Pills
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                PracticeMode.entries.forEach { mode ->
+                                    val isSelected = state.activeMode == mode
+                                    Surface(
+                                        onClick = { viewModel.setPracticeMode(mode) },
+                                        shape = RoundedCornerShape(16.dp),
+                                        color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBgElevated,
+                                        border = androidx.compose.foundation.BorderStroke(
+                                            1.dp,
+                                            if (isSelected) RemoraAccent else RemoraCardBorder
+                                        )
+                                    ) {
+                                        Text(
+                                            text = mode.label,
+                                            fontSize = 11.sp,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                            color = if (isSelected) RemoraAccentLight else RemoraTextMuted,
+                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                        )
+                                    }
+                                }
+                            }
                         }
 
-                        // Center Memory Flashcard
+                        // Center Memory Content
                         Surface(
                             shape = RoundedCornerShape(16.dp),
                             color = RemoraCardBg,
@@ -101,7 +141,7 @@ fun PracticeScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
-                                .padding(vertical = 16.dp)
+                                .padding(vertical = 12.dp)
                         ) {
                             Column(
                                 modifier = Modifier
@@ -110,12 +150,6 @@ fun PracticeScreen(
                                 verticalArrangement = Arrangement.SpaceBetween
                             ) {
                                 // Card Top: Reference + Translation Toggle Badge
-                                val isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH
-                                val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
-                                val badgeText = if (isEnglish) "BSB" else "IRV"
-                                val activeText = (if (isEnglish) verse.textEn else verse.textTe)
-                                    ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
-
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -163,66 +197,79 @@ fun PracticeScreen(
                                     }
                                 }
 
-                                // Card Center: Prompt or Revealed Text
+                                // Card Center: Active Drill Mode
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .weight(1f)
-                                        .padding(vertical = 16.dp),
+                                        .padding(vertical = 12.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    if (!state.isRevealed) {
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center,
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(12.dp))
-                                                .clickable { viewModel.revealVerse() }
-                                                .padding(24.dp)
-                                        ) {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(54.dp)
-                                                    .clip(CircleShape)
-                                                    .background(RemoraAccent.copy(alpha = 0.15f)),
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Icon(
-                                                    Icons.Default.Visibility,
-                                                    contentDescription = "Reveal",
-                                                    tint = RemoraAccent,
-                                                    modifier = Modifier.size(28.dp)
-                                                )
-                                            }
-                                            Spacer(modifier = Modifier.height(14.dp))
-                                            Text(
-                                                text = "Recall in your heart",
-                                                fontSize = 17.sp,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = RemoraTextPrimary
-                                            )
-                                            Spacer(modifier = Modifier.height(4.dp))
-                                            Text(
-                                                text = "Tap here to check your recall",
-                                                fontSize = 13.sp,
-                                                color = RemoraTextSecondary
+                                    when (state.activeMode) {
+                                        PracticeMode.TYPING -> {
+                                            TypingMode(
+                                                text = activeText,
+                                                onAttempt = { accuracy, committed ->
+                                                    viewModel.recordAttempt(accuracy, committed)
+                                                },
+                                                modifier = Modifier.fillMaxSize()
                                             )
                                         }
-                                    } else {
-                                        // Single translation revealed text (clean, no clutter)
-                                        Text(
-                                            text = activeText,
-                                            fontSize = if (isEnglish) 18.sp else 20.sp,
-                                            lineHeight = if (isEnglish) 26.sp else 30.sp,
-                                            fontWeight = FontWeight.Normal,
-                                            color = RemoraTextPrimary,
-                                            textAlign = TextAlign.Start,
-                                            modifier = Modifier.fillMaxWidth()
-                                        )
+                                        else -> {
+                                            // FLASHCARD (and default for other drill modes)
+                                            if (!state.isRevealed) {
+                                                Column(
+                                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                                    verticalArrangement = Arrangement.Center,
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(12.dp))
+                                                        .clickable { viewModel.revealVerse() }
+                                                        .padding(24.dp)
+                                                ) {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(54.dp)
+                                                            .clip(CircleShape)
+                                                            .background(RemoraAccent.copy(alpha = 0.15f)),
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                        Icon(
+                                                            Icons.Default.Visibility,
+                                                            contentDescription = "Reveal",
+                                                            tint = RemoraAccent,
+                                                            modifier = Modifier.size(28.dp)
+                                                        )
+                                                    }
+                                                    Spacer(modifier = Modifier.height(14.dp))
+                                                    Text(
+                                                        text = "Recall in your heart",
+                                                        fontSize = 17.sp,
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        color = RemoraTextPrimary
+                                                    )
+                                                    Spacer(modifier = Modifier.height(4.dp))
+                                                    Text(
+                                                        text = "Tap here to check your recall",
+                                                        fontSize = 13.sp,
+                                                        color = RemoraTextSecondary
+                                                    )
+                                                }
+                                            } else {
+                                                Text(
+                                                    text = activeText,
+                                                    fontSize = if (isEnglish) 18.sp else 20.sp,
+                                                    lineHeight = if (isEnglish) 26.sp else 30.sp,
+                                                    fontWeight = FontWeight.Normal,
+                                                    color = RemoraTextPrimary,
+                                                    textAlign = TextAlign.Start,
+                                                    modifier = Modifier.fillMaxWidth()
+                                                )
+                                            }
+                                        }
                                     }
                                 }
 
-                                // Card Bottom: Hint / Stage indicator
+                                // Card Bottom: Stage indicator
                                 Text(
                                     text = "Stage ${verse.repetition} · Interval ${verse.interval}d",
                                     fontSize = 12.sp,
@@ -233,15 +280,42 @@ fun PracticeScreen(
 
                         // Bottom Scoring Bar: 4 Remora Grading Buttons
                         if (state.isRevealed) {
+                            val suggested = state.modeAccuracy?.let { CueUtils.suggestedScore(it) }
+                            val suggestedLabel = suggested?.let { CueUtils.suggestedLabel(it) }
+
                             Column {
-                                Text(
-                                    text = "HOW WAS YOUR RECALL?",
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 1.sp,
-                                    color = RemoraTextMuted,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
+                                if (state.modeAccuracy != null && suggestedLabel != null) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 6.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "${state.modeAccuracy}% of words matched",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = RemoraTextSecondary
+                                        )
+                                        Text(
+                                            text = "Suggested: $suggestedLabel",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = RemoraAccentLight
+                                        )
+                                    }
+                                } else {
+                                    Text(
+                                        text = "HOW WAS YOUR RECALL?",
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        letterSpacing = 1.sp,
+                                        color = RemoraTextMuted,
+                                        modifier = Modifier.padding(bottom = 8.dp)
+                                    )
+                                }
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -250,6 +324,7 @@ fun PracticeScreen(
                                         label = "Blank",
                                         score = 1,
                                         color = GradeBlank,
+                                        isSuggested = suggested == 1,
                                         onClick = { viewModel.gradeCurrent(1) },
                                         modifier = Modifier.weight(1f)
                                     )
@@ -257,6 +332,7 @@ fun PracticeScreen(
                                         label = "Hard",
                                         score = 3,
                                         color = GradeHard,
+                                        isSuggested = suggested == 3,
                                         onClick = { viewModel.gradeCurrent(3) },
                                         modifier = Modifier.weight(1f)
                                     )
@@ -264,6 +340,7 @@ fun PracticeScreen(
                                         label = "Good",
                                         score = 4,
                                         color = GradeGood,
+                                        isSuggested = suggested == 4,
                                         onClick = { viewModel.gradeCurrent(4) },
                                         modifier = Modifier.weight(1f)
                                     )
@@ -271,21 +348,24 @@ fun PracticeScreen(
                                         label = "Easy",
                                         score = 5,
                                         color = GradeEasy,
+                                        isSuggested = suggested == 5,
                                         onClick = { viewModel.gradeCurrent(5) },
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
                             }
                         } else {
-                            Button(
-                                onClick = { viewModel.revealVerse() },
-                                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                shape = RoundedCornerShape(10.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(48.dp)
-                            ) {
-                                Text("Reveal Verse", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                            if (state.activeMode == PracticeMode.FLASHCARD) {
+                                Button(
+                                    onClick = { viewModel.revealVerse() },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(48.dp)
+                                ) {
+                                    Text("Reveal Verse", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }
@@ -300,21 +380,25 @@ private fun GradeButton(
     label: String,
     score: Int,
     color: Color,
+    isSuggested: Boolean = false,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(8.dp),
-        color = color.copy(alpha = 0.15f),
-        border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.4f)),
+        color = if (isSuggested) color.copy(alpha = 0.28f) else color.copy(alpha = 0.15f),
+        border = androidx.compose.foundation.BorderStroke(
+            if (isSuggested) 2.dp else 1.dp,
+            if (isSuggested) color else color.copy(alpha = 0.4f)
+        ),
         modifier = modifier.height(48.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
                 text = label,
                 fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
+                fontWeight = if (isSuggested) FontWeight.ExtraBold else FontWeight.Bold,
                 color = color
             )
         }

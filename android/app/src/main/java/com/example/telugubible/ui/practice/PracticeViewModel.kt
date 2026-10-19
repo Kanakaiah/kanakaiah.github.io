@@ -6,11 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.repository.BibleRepository
+import com.example.telugubible.util.CueLevel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+enum class PracticeMode(val label: String) {
+    FLASHCARD("Flashcard"),
+    TYPING("Type"),
+    FIRST_LETTER("First Letters"),
+    ERASER("Eraser"),
+    SCRAMBLE("Scramble")
+}
 
 data class PracticeUiState(
     val verses: List<UserMemoryVerse> = emptyList(),
@@ -18,7 +27,10 @@ data class PracticeUiState(
     val isRevealed: Boolean = false,
     val isFinished: Boolean = false,
     val isLoading: Boolean = true,
-    val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH
+    val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH,
+    val activeMode: PracticeMode = PracticeMode.TYPING,
+    val modeAccuracy: Int? = null,
+    val modeCommitted: String? = null
 ) {
     val currentVerse: UserMemoryVerse?
         get() = verses.getOrNull(currentIndex)
@@ -35,6 +47,7 @@ class PracticeViewModel(
         const val KEY_SESSION_REVEALED = "practice_session_is_revealed"
         const val KEY_SESSION_TIME = "practice_session_timestamp"
         const val KEY_SESSION_LANG = "practice_session_display_lang"
+        const val KEY_SESSION_MODE = "practice_session_active_mode"
         private const val SESSION_EXPIRY_MS = 12 * 60 * 60 * 1000L // 12 hours
     }
 
@@ -56,6 +69,7 @@ class PracticeViewModel(
             var restoredIndex = 0
             var restoredRevealed = false
             var restoredLang = _uiState.value.displayLanguage
+            var restoredMode = _uiState.value.activeMode
 
             if (!forceNewSession) {
                 val savedIdsStr = repository.getSessionState(KEY_SESSION_VERSE_IDS)
@@ -74,6 +88,10 @@ class PracticeViewModel(
                         if (savedLang != null) {
                             restoredLang = try { DisplayLanguage.valueOf(savedLang) } catch (_: Exception) { restoredLang }
                         }
+                        val savedMode = repository.getSessionState(KEY_SESSION_MODE)
+                        if (savedMode != null) {
+                            restoredMode = try { PracticeMode.valueOf(savedMode) } catch (_: Exception) { restoredMode }
+                        }
                     }
                 }
             }
@@ -86,7 +104,10 @@ class PracticeViewModel(
                         isRevealed = restoredRevealed,
                         isFinished = false,
                         isLoading = false,
-                        displayLanguage = restoredLang
+                        displayLanguage = restoredLang,
+                        activeMode = restoredMode,
+                        modeAccuracy = null,
+                        modeCommitted = null
                     )
                 }
             } else {
@@ -99,7 +120,8 @@ class PracticeViewModel(
                         verseIds = queue.map { it.id },
                         index = 0,
                         isRevealed = false,
-                        lang = restoredLang
+                        lang = restoredLang,
+                        mode = restoredMode
                     )
                 } else {
                     clearSessionState()
@@ -112,10 +134,41 @@ class PracticeViewModel(
                         isRevealed = false,
                         isFinished = queue.isEmpty(),
                         isLoading = false,
-                        displayLanguage = restoredLang
+                        displayLanguage = restoredLang,
+                        activeMode = restoredMode,
+                        modeAccuracy = null,
+                        modeCommitted = null
                     )
                 }
             }
+        }
+    }
+
+    fun setPracticeMode(mode: PracticeMode) {
+        _uiState.update {
+            it.copy(
+                activeMode = mode,
+                isRevealed = false,
+                modeAccuracy = null,
+                modeCommitted = null
+            )
+        }
+        viewModelScope.launch {
+            repository.setSessionState(KEY_SESSION_MODE, mode.name)
+            repository.setSessionState(KEY_SESSION_REVEALED, "false")
+        }
+    }
+
+    fun recordAttempt(accuracy: Int, committed: String) {
+        _uiState.update {
+            it.copy(
+                modeAccuracy = accuracy,
+                modeCommitted = committed,
+                isRevealed = true
+            )
+        }
+        viewModelScope.launch {
+            repository.setSessionState(KEY_SESSION_REVEALED, "true")
         }
     }
 
@@ -127,9 +180,17 @@ class PracticeViewModel(
     }
 
     fun setDisplayLanguage(lang: DisplayLanguage) {
-        _uiState.update { it.copy(displayLanguage = lang) }
+        _uiState.update {
+            it.copy(
+                displayLanguage = lang,
+                isRevealed = false,
+                modeAccuracy = null,
+                modeCommitted = null
+            )
+        }
         viewModelScope.launch {
             repository.setSessionState(KEY_SESSION_LANG, lang.name)
+            repository.setSessionState(KEY_SESSION_REVEALED, "false")
         }
     }
 
@@ -147,19 +208,63 @@ class PracticeViewModel(
         val verse = state.currentVerse ?: return
 
         viewModelScope.launch {
-            repository.gradeUserVerse(verse.id, score)
+            val (cueLevel, modeName, accuracy) = when (state.activeMode) {
+                PracticeMode.TYPING -> Triple(
+                    CueLevel.FIRST_LETTERS.levelNumber,
+                    "typing",
+                    state.modeAccuracy?.let { it / 100.0 }
+                )
+                PracticeMode.FLASHCARD -> Triple(
+                    0,
+                    "reveal",
+                    null
+                )
+                PracticeMode.FIRST_LETTER -> Triple(
+                    CueLevel.FIRST_LETTERS.levelNumber,
+                    "first_letters",
+                    null
+                )
+                PracticeMode.ERASER -> Triple(
+                    CueLevel.SPARSE.levelNumber,
+                    "eraser",
+                    null
+                )
+                PracticeMode.SCRAMBLE -> Triple(
+                    1,
+                    "scramble",
+                    null
+                )
+            }
+
+            repository.gradeUserVerse(
+                id = verse.id,
+                score = score,
+                cueLevel = cueLevel,
+                mode = modeName,
+                measuredAccuracy = accuracy
+            )
 
             val nextIndex = state.currentIndex + 1
             if (nextIndex >= state.verses.size) {
                 clearSessionState()
-                _uiState.update { it.copy(isFinished = true, currentIndex = nextIndex) }
+                _uiState.update {
+                    it.copy(
+                        isFinished = true,
+                        currentIndex = nextIndex,
+                        isRevealed = false,
+                        modeAccuracy = null,
+                        modeCommitted = null
+                    )
+                }
             } else {
                 repository.setSessionState(KEY_SESSION_INDEX, nextIndex.toString())
                 repository.setSessionState(KEY_SESSION_REVEALED, "false")
                 _uiState.update {
                     it.copy(
                         currentIndex = nextIndex,
-                        isRevealed = false
+                        isRevealed = false,
+                        modeAccuracy = null,
+                        modeCommitted = null
                     )
                 }
             }
@@ -174,13 +279,15 @@ class PracticeViewModel(
         verseIds: List<Long>,
         index: Int,
         isRevealed: Boolean,
-        lang: DisplayLanguage
+        lang: DisplayLanguage,
+        mode: PracticeMode
     ) {
         repository.setSessionState(KEY_SESSION_VERSE_IDS, verseIds.joinToString(","))
         repository.setSessionState(KEY_SESSION_INDEX, index.toString())
         repository.setSessionState(KEY_SESSION_REVEALED, isRevealed.toString())
         repository.setSessionState(KEY_SESSION_TIME, System.currentTimeMillis().toString())
         repository.setSessionState(KEY_SESSION_LANG, lang.name)
+        repository.setSessionState(KEY_SESSION_MODE, mode.name)
     }
 
     private suspend fun clearSessionState() {
@@ -188,5 +295,6 @@ class PracticeViewModel(
         repository.setSessionState(KEY_SESSION_INDEX, null)
         repository.setSessionState(KEY_SESSION_REVEALED, null)
         repository.setSessionState(KEY_SESSION_TIME, null)
+        repository.setSessionState(KEY_SESSION_MODE, null)
     }
 }
