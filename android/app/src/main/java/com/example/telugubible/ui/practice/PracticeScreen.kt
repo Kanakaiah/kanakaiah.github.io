@@ -27,6 +27,7 @@ import com.example.telugubible.theme.*
 import com.example.telugubible.util.CueUtils
 
 enum class PracticeSubject {
+    SESSION,
     VERSES,
     ANCHORS,
     THEMES
@@ -38,7 +39,17 @@ fun PracticeScreen(
     onNavigateToBible: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var activeSubject by remember { mutableStateOf(PracticeSubject.VERSES) }
+    var activeSubject by remember { mutableStateOf(PracticeSubject.SESSION) }
+
+    if (activeSubject == PracticeSubject.SESSION) {
+        val sessionViewModel: DailySessionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+        DailySessionPlayer(
+            viewModel = sessionViewModel,
+            onExit = { activeSubject = PracticeSubject.VERSES },
+            modifier = modifier
+        )
+        return
+    }
 
     if (activeSubject == PracticeSubject.ANCHORS) {
         val anchorViewModel: AnchorDrillViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
@@ -112,7 +123,24 @@ fun PracticeScreen(
                                     color = RemoraCardBgElevated,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
                                 ) {
-                                    Row(modifier = Modifier.padding(3.dp)) {
+                                    Row(
+                                        modifier = Modifier
+                                            .horizontalScroll(rememberScrollState())
+                                            .padding(3.dp)
+                                    ) {
+                                        Surface(
+                                            onClick = { activeSubject = PracticeSubject.SESSION },
+                                            shape = RoundedCornerShape(16.dp),
+                                            color = Color.Transparent
+                                        ) {
+                                            Text(
+                                                text = "Daily Session 🔥",
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = RemoraGold,
+                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
+                                            )
+                                        }
                                         Surface(
                                             onClick = { /* already in verses */ },
                                             shape = RoundedCornerShape(16.dp),
@@ -123,7 +151,7 @@ fun PracticeScreen(
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.Bold,
                                                 color = Color.White,
-                                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 5.dp)
+                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
                                             )
                                         }
                                         Surface(
