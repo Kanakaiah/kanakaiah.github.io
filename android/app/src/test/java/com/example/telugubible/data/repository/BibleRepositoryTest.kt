@@ -162,5 +162,46 @@ class BibleRepositoryTest {
         assertEquals(2, secondGrade.repetition)
         assertEquals(6, secondGrade.interval)
     }
+
+    @Test
+    fun testCrossReferencesQuerying() = runTest {
+        // Query cross-references for Genesis 1:1 (bookId = 1, chapter = 1, verse = 1)
+        val crossRefs = repository.getCrossReferences(1, 1, 1)
+        assertTrue("Genesis 1:1 should have cross-references", crossRefs.isNotEmpty())
+        assertEquals(25, crossRefs.size)
+
+        val first = crossRefs[0]
+        assertEquals(1, first.fromBookId)
+        assertEquals(1, first.fromChapter)
+        assertEquals(1, first.fromVerse)
+        assertEquals("Jeremiah 32:17", first.toRef)
+        assertEquals(24, first.toBookId) // Jeremiah is book 24
+        assertEquals(32, first.toChapter)
+        assertEquals(17, first.toVerse)
+        assertNotNull("Target verse text in English should be populated", first.targetTextEn)
+
+        val count = repository.getCrossReferenceCount(1, 1, 1)
+        assertEquals(crossRefs.size, count)
+
+        val chapterCounts = repository.getCrossReferenceCountsForChapter(1, 1)
+        assertTrue("Chapter counts should have entry for verse 1", chapterCounts.containsKey(1))
+        assertEquals(25, chapterCounts[1])
+    }
+
+    @Test
+    fun testOtQuotes() = runTest {
+        // Matthew 1:23 quotes Isaiah 7:14
+        assertTrue("Matthew 1:23 should be an OT quote", repository.isOtQuote(40, 1, 23))
+        org.junit.Assert.assertFalse("Matthew 1:1 is not an OT quote", repository.isOtQuote(40, 1, 1))
+
+        // Matthew 2 quotes in verses 6, 15, 18, 23
+        val ch2Quotes = repository.getOtQuotesForChapter(40, 2)
+        assertEquals(4, ch2Quotes.size)
+        assertTrue(ch2Quotes.contains(6))
+        assertTrue(ch2Quotes.contains(15))
+        assertTrue(ch2Quotes.contains(18))
+        assertTrue(ch2Quotes.contains(23))
+    }
 }
+
 

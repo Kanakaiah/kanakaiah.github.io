@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.BookGuide
 import com.example.telugubible.data.model.ChapterAnchor
+import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.GuideBlock
 import com.example.telugubible.data.model.GuideKeyVerse
 import com.example.telugubible.data.model.PresetCollection
@@ -22,7 +23,7 @@ class BibleDatabaseHelper(val context: Context) :
     companion object {
         const val ASSET_NAME = "bible.db"
         const val STATIC_DB_NAME = "bible_static.db"
-        const val STATIC_DB_VERSION = 5
+        const val STATIC_DB_VERSION = 6
         private const val PREFS_NAME = "bible_static_db_prefs"
         private const val KEY_COPIED_VERSION = "copied_static_db_version"
 
@@ -506,5 +507,98 @@ class BibleDatabaseHelper(val context: Context) :
             anchor.copy(prevWord = prevWord, nextWord = nextWord)
         }
     }
+
+    fun getCrossReferences(bookId: Int, chapter: Int, verse: Int): List<CrossReference> {
+        val list = mutableListOf<CrossReference>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT cr.id, cr.from_book_id, cr.from_chapter, cr.from_verse, cr.to_ref,
+                   cr.to_book_id, cr.to_chapter, cr.to_verse, cr.to_end_verse,
+                   v.text_en, v.text_te
+            FROM cross_references cr
+            LEFT JOIN verses v ON v.book_id = cr.to_book_id AND v.chapter = cr.to_chapter AND v.verse = cr.to_verse
+            WHERE cr.from_book_id = ? AND cr.from_chapter = ? AND cr.from_verse = ?
+            ORDER BY cr.id ASC
+            """.trimIndent(),
+            arrayOf(bookId.toString(), chapter.toString(), verse.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(
+                    CrossReference(
+                        id = it.getLong(0),
+                        fromBookId = it.getInt(1),
+                        fromChapter = it.getInt(2),
+                        fromVerse = it.getInt(3),
+                        toRef = it.getString(4),
+                        toBookId = if (it.isNull(5)) null else it.getInt(5),
+                        toChapter = if (it.isNull(6)) null else it.getInt(6),
+                        toVerse = if (it.isNull(7)) null else it.getInt(7),
+                        toEndVerse = if (it.isNull(8)) null else it.getInt(8),
+                        targetTextEn = if (it.isNull(9)) null else it.getString(9),
+                        targetTextTe = if (it.isNull(10)) null else it.getString(10)
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    fun getCrossReferenceCount(bookId: Int, chapter: Int, verse: Int): Int {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) FROM cross_references WHERE from_book_id = ? AND from_chapter = ? AND from_verse = ?",
+            arrayOf(bookId.toString(), chapter.toString(), verse.toString())
+        )
+        cursor.use {
+            if (it.moveToNext()) {
+                return it.getInt(0)
+            }
+        }
+        return 0
+    }
+
+    fun getCrossReferenceCountsForChapter(bookId: Int, chapter: Int): Map<Int, Int> {
+        val map = mutableMapOf<Int, Int>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT from_verse, COUNT(*) FROM cross_references WHERE from_book_id = ? AND from_chapter = ? GROUP BY from_verse",
+            arrayOf(bookId.toString(), chapter.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                map[it.getInt(0)] = it.getInt(1)
+            }
+        }
+        return map
+    }
+
+    fun isOtQuote(bookId: Int, chapter: Int, verse: Int): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT 1 FROM ot_quotes WHERE nt_book_id = ? AND nt_chapter = ? AND nt_verse = ? LIMIT 1",
+            arrayOf(bookId.toString(), chapter.toString(), verse.toString())
+        )
+        cursor.use {
+            return it.moveToNext()
+        }
+    }
+
+    fun getOtQuotesForChapter(bookId: Int, chapter: Int): Set<Int> {
+        val set = mutableSetOf<Int>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT nt_verse FROM ot_quotes WHERE nt_book_id = ? AND nt_chapter = ?",
+            arrayOf(bookId.toString(), chapter.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                set.add(it.getInt(0))
+            }
+        }
+        return set
+    }
 }
+
 

@@ -11,6 +11,7 @@ import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.BookGuide
 import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.data.model.ColdCheckResult
+import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.ReviewLogEntry
 import com.example.telugubible.data.model.StrongsEntry
@@ -218,6 +219,27 @@ class BibleRepository(
     suspend fun gradeThemeProgress(bookId: Int, score: Int): ThemeProgressEntity = withContext(ioDispatcher) {
         userDbHelper.gradeThemeProgress(bookId, score)
     }
+
+    suspend fun getCrossReferences(bookId: Int, chapter: Int, verse: Int): List<CrossReference> = withContext(ioDispatcher) {
+        bibleDbHelper.getCrossReferences(bookId, chapter, verse)
+    }
+
+    suspend fun getCrossReferenceCount(bookId: Int, chapter: Int, verse: Int): Int = withContext(ioDispatcher) {
+        bibleDbHelper.getCrossReferenceCount(bookId, chapter, verse)
+    }
+
+    suspend fun getCrossReferenceCountsForChapter(bookId: Int, chapter: Int): Map<Int, Int> = withContext(ioDispatcher) {
+        bibleDbHelper.getCrossReferenceCountsForChapter(bookId, chapter)
+    }
+
+    suspend fun isOtQuote(bookId: Int, chapter: Int, verse: Int): Boolean = withContext(ioDispatcher) {
+        bibleDbHelper.isOtQuote(bookId, chapter, verse)
+    }
+
+    suspend fun getOtQuotesForChapter(bookId: Int, chapter: Int): Set<Int> = withContext(ioDispatcher) {
+        bibleDbHelper.getOtQuotesForChapter(bookId, chapter)
+    }
 }
+
 
 

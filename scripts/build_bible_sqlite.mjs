@@ -153,6 +153,26 @@ CREATE TABLE chapter_anchors (
   FOREIGN KEY (book_id) REFERENCES books(id)
 );
 CREATE INDEX idx_chapter_anchors_book ON chapter_anchors(book_id);
+
+CREATE TABLE cross_references (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  from_book_id INTEGER NOT NULL,
+  from_chapter INTEGER NOT NULL,
+  from_verse INTEGER NOT NULL,
+  to_ref TEXT NOT NULL,
+  to_book_id INTEGER,
+  to_chapter INTEGER,
+  to_verse INTEGER,
+  to_end_verse INTEGER
+);
+CREATE INDEX idx_cross_refs_from ON cross_references(from_book_id, from_chapter, from_verse);
+
+CREATE TABLE ot_quotes (
+  nt_book_id INTEGER NOT NULL,
+  nt_chapter INTEGER NOT NULL,
+  nt_verse INTEGER NOT NULL,
+  PRIMARY KEY (nt_book_id, nt_chapter, nt_verse)
+);
 `);
 
 console.log('Tables created successfully.');
@@ -581,6 +601,102 @@ for (const g of allGuides) {
 db.exec('COMMIT;');
 await viteServer.close();
 console.log(`Inserted ${guideCount} guides, ${blockCount} blocks, ${keyVerseCount} key verses, ${anchorCount} chapter anchors.`);
+
+// Insert OT Quotes
+console.log('Inserting OT quotes mapping...');
+const otQuotesPath = path.join(ROOT_DIR, 'src', 'data', 'otQuotes.json');
+if (fs.existsSync(otQuotesPath)) {
+  const otQuotesData = JSON.parse(fs.readFileSync(otQuotesPath, 'utf8'));
+  const insertOtQuoteStmt = db.prepare(`
+    INSERT OR IGNORE INTO ot_quotes (nt_book_id, nt_chapter, nt_verse)
+    VALUES (?, ?, ?)
+  `);
+  db.exec('BEGIN TRANSACTION;');
+  let otQuoteCount = 0;
+  for (const [bookIdStr, chapters] of Object.entries(otQuotesData)) {
+    const ntBookId = parseInt(bookIdStr, 10);
+    for (const [chStr, verses] of Object.entries(chapters)) {
+      const ntChapter = parseInt(chStr, 10);
+      for (const v of verses) {
+        insertOtQuoteStmt.run(ntBookId, ntChapter, v);
+        otQuoteCount++;
+      }
+    }
+  }
+  db.exec('COMMIT;');
+  console.log(`Inserted ${otQuoteCount} OT quote verses.`);
+}
+
+// Insert Cross References
+console.log('Inserting cross references (~457K rows)...');
+const crossRefsPath = path.join(ROOT_DIR, 'public', 'data', 'cross_references.json');
+if (fs.existsSync(crossRefsPath)) {
+  const crossRefsData = JSON.parse(fs.readFileSync(crossRefsPath, 'utf8'));
+  const insertCrossRefStmt = db.prepare(`
+    INSERT INTO cross_references (
+      from_book_id, from_chapter, from_verse, to_ref, to_book_id, to_chapter, to_verse, to_end_verse
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const CROSS_REF_BOOK_KEY_TO_ID = {
+    genesis: 1, exodus: 2, leviticus: 3, numbers: 4, deuteronomy: 5,
+    joshua: 6, judges: 7, ruth: 8, '1samuel': 9, '2samuel': 10,
+    '1kings': 11, '2kings': 12, '1chronicles': 13, '2chronicles': 14,
+    ezra: 15, nehemiah: 16, esther: 17, job: 18, psalms: 19, proverbs: 20,
+    ecclesiastes: 21, songofsolomon: 22, isaiah: 23, jeremiah: 24, lamentations: 25,
+    ezekiel: 26, daniel: 27, hosea: 28, joel: 29, amos: 30, obadiah: 31,
+    jonah: 32, micah: 33, nahum: 34, habakkuk: 35, zephaniah: 36,
+    haggai: 37, zechariah: 38, malachi: 39,
+    matthew: 40, mark: 41, luke: 42, john: 43, acts: 44,
+    romans: 45, '1corinthians': 46, '2corinthians': 47, galatians: 48,
+    ephesians: 49, philippians: 50, colossians: 51, '1thessalonians': 52,
+    '2thessalonians': 53, '1timothy': 54, '2timothy': 55, titus: 56,
+    philemon: 57, hebrews: 58, james: 59, '1peter': 60, '2peter': 61,
+    '1john': 62, '2john': 63, '3john': 64, jude: 65, revelation: 66,
+    psalm: 19,
+    songofsongs: 22
+  };
+
+  db.exec('BEGIN TRANSACTION;');
+  let crossRefCount = 0;
+  for (const [key, refs] of Object.entries(crossRefsData)) {
+    const m = key.match(/^(.+?)\s+(\d+):(\d+)$/);
+    if (!m) continue;
+    const rawBook = m[1].toLowerCase().replace(/\s+/g, '');
+    const fromBookId = CROSS_REF_BOOK_KEY_TO_ID[rawBook];
+    if (!fromBookId) continue;
+    const fromChapter = parseInt(m[2], 10);
+    const fromVerse = parseInt(m[3], 10);
+
+    for (const ref of refs) {
+      const rm = ref.match(/^(.+?)\s+(\d+):(\d+)(?:-(\d+))?$/);
+      let toBookId = null;
+      let toChapter = null;
+      let toVerse = null;
+      let toEndVerse = null;
+      if (rm) {
+        const cleanToBook = rm[1].toLowerCase().replace(/\s+/g, '');
+        toBookId = CROSS_REF_BOOK_KEY_TO_ID[cleanToBook] || null;
+        toChapter = parseInt(rm[2], 10);
+        toVerse = parseInt(rm[3], 10);
+        toEndVerse = rm[4] ? parseInt(rm[4], 10) : null;
+      }
+      insertCrossRefStmt.run(
+        fromBookId,
+        fromChapter,
+        fromVerse,
+        ref,
+        toBookId,
+        toChapter,
+        toVerse,
+        toEndVerse
+      );
+      crossRefCount++;
+    }
+  }
+  db.exec('COMMIT;');
+  console.log(`Inserted ${crossRefCount} cross references.`);
+}
 
 // Optimize DB
 db.exec('VACUUM;');
