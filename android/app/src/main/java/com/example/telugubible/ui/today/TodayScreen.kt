@@ -147,6 +147,7 @@ fun TodayScreen(
                         RemoraVerseCard(
                             verse = verse,
                             displayLanguage = state.displayLanguage,
+                            onClick = { viewModel.selectVerseForDetail(verse) },
                             onPractice = onNavigateToPractice,
                             onRead = { onNavigateToReader(verse.bookId, verse.chapter) },
                             onDelete = { viewModel.removeVerse(verse.id) }
@@ -154,6 +155,33 @@ fun TodayScreen(
                     }
                 }
             }
+        }
+
+        // Verse Detail Sheet (Modal Bottom Sheet on card tap)
+        state.selectedVerseForDetail?.let { detailVerse ->
+            val filteredList = state.filteredVerses
+            val currentIndex = filteredList.indexOfFirst { it.id == detailVerse.id }
+            VerseDetailSheet(
+                verse = detailVerse,
+                displayLanguage = state.displayLanguage,
+                hasPrev = currentIndex > 0,
+                hasNext = currentIndex != -1 && currentIndex + 1 < filteredList.size,
+                onPrev = { viewModel.selectPreviousVerse() },
+                onNext = { viewModel.selectNextVerse() },
+                onToggleLanguage = { viewModel.toggleDisplayLanguage() },
+                onDismiss = { viewModel.selectVerseForDetail(null) },
+                onPractice = {
+                    viewModel.selectVerseForDetail(null)
+                    onNavigateToPractice()
+                },
+                onReadInChapter = {
+                    viewModel.selectVerseForDetail(null)
+                    onNavigateToReader(detailVerse.bookId, detailVerse.chapter)
+                },
+                onDelete = {
+                    viewModel.removeVerse(detailVerse.id)
+                }
+            )
         }
 
         // Floating Action Button (+) — Terracotta circle, always visible above navigation
@@ -596,6 +624,7 @@ private fun LanguageSelectorRow(
 private fun RemoraVerseCard(
     verse: UserMemoryVerse,
     displayLanguage: DisplayLanguage,
+    onClick: () -> Unit = {},
     onPractice: () -> Unit,
     onRead: () -> Unit,
     onDelete: () -> Unit
@@ -613,6 +642,7 @@ private fun RemoraVerseCard(
         ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
 
     Surface(
+        onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         color = RemoraCardBg,
         border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),

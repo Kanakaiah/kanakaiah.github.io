@@ -29,3 +29,8 @@ val GradeEasy = Color(0xFF22C55E)   // Green (Score 5)
 // Pill & Chip Backgrounds
 val RemoraChipBg = Color(0xFF1A1715)
 val RemoraChipBorder = Color(0xFF2E2823)
+
+// Semantic Helpers
+val RemoraDanger = GradeBlank
+val RemoraSurface = RemoraBackground
+

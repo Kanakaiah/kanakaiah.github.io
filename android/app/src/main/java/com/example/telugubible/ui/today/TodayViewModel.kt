@@ -35,13 +35,16 @@ data class TodayUiState(
     val dueCount: Int = 0,
     val isLoading: Boolean = true,
     val showAddDialog: Boolean = false,
+    val selectedVerseForDetail: UserMemoryVerse? = null,
     val searchResults: List<VerseSearchResult> = emptyList(),
     val isSearchingInDialog: Boolean = false,
     val messageBanner: String? = null
 )
 
-class TodayViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = BibleRepository(BibleDatabaseHelper(application))
+class TodayViewModel(
+    application: Application,
+    private val repository: BibleRepository = BibleRepository(application)
+) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(TodayUiState())
     val uiState: StateFlow<TodayUiState> = _uiState.asStateFlow()
@@ -100,6 +103,15 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.update { it.copy(displayLanguage = lang) }
     }
 
+    fun toggleDisplayLanguage() {
+        val newLang = if (_uiState.value.displayLanguage == DisplayLanguage.ENGLISH) {
+            DisplayLanguage.TELUGU
+        } else {
+            DisplayLanguage.ENGLISH
+        }
+        setDisplayLanguage(newLang)
+    }
+
     private fun filterAndSearchList(
         list: List<UserMemoryVerse>,
         filter: VerseFilter,
@@ -125,8 +137,33 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun selectVerseForDetail(verse: UserMemoryVerse?) {
+        _uiState.update { it.copy(selectedVerseForDetail = verse) }
+    }
+
+    fun selectNextVerse() {
+        val current = _uiState.value.selectedVerseForDetail ?: return
+        val list = _uiState.value.filteredVerses
+        val currentIndex = list.indexOfFirst { it.id == current.id }
+        if (currentIndex != -1 && currentIndex + 1 < list.size) {
+            _uiState.update { it.copy(selectedVerseForDetail = list[currentIndex + 1]) }
+        }
+    }
+
+    fun selectPreviousVerse() {
+        val current = _uiState.value.selectedVerseForDetail ?: return
+        val list = _uiState.value.filteredVerses
+        val currentIndex = list.indexOfFirst { it.id == current.id }
+        if (currentIndex > 0) {
+            _uiState.update { it.copy(selectedVerseForDetail = list[currentIndex - 1]) }
+        }
+    }
+
     fun removeVerse(id: Long) {
         viewModelScope.launch {
+            if (_uiState.value.selectedVerseForDetail?.id == id) {
+                _uiState.update { it.copy(selectedVerseForDetail = null) }
+            }
             repository.removeUserVerse(id)
             loadData()
         }
