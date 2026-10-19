@@ -3,11 +3,12 @@ package com.example.telugubible.ui.reader
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.telugubible.data.db.BibleDatabaseHelper
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.repository.BibleRepository
+import com.example.telugubible.util.TtsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,23 +34,49 @@ data class ReaderUiState(
     val currentChapter: Int = 1,
     val verses: List<Verse> = emptyList(),
     val paragraphBreaks: Set<Int> = emptySet(),
+    val crossRefCounts: Map<Int, Int> = emptyMap(),
+    val otQuotes: Set<Int> = emptySet(),
+    val selectedVerses: Set<Int> = emptySet(),
+    val crossRefSheetVerses: List<Int>? = null,
+    val crossRefsForSheet: List<CrossReference> = emptyList(),
+    val isTtsSpeaking: Boolean = false,
+    val activeTtsVerse: Int? = null,
     val fontSizeScale: FontSizeScale = FontSizeScale.S,
     val language: BibleLanguage = BibleLanguage.TELUGU,
     val showBookSelector: Boolean = false,
     val showSettings: Boolean = false,
     val selectedStrongs: StrongsEntry? = null,
     val isImmersive: Boolean = false,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val toastMessage: String? = null
 )
 
-class ReaderViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = BibleRepository(BibleDatabaseHelper(application))
+class ReaderViewModel(
+    application: Application,
+    private val repository: BibleRepository = BibleRepository(application)
+) : AndroidViewModel(application) {
+
+    private val ttsManager = TtsManager(application)
 
     private val _uiState = MutableStateFlow(ReaderUiState())
     val uiState: StateFlow<ReaderUiState> = _uiState.asStateFlow()
 
     init {
         loadInitialData()
+        observeTts()
+    }
+
+    private fun observeTts() {
+        viewModelScope.launch {
+            ttsManager.state.collect { tts ->
+                _uiState.update {
+                    it.copy(
+                        isTtsSpeaking = tts.isSpeaking,
+                        activeTtsVerse = tts.currentVerse
+                    )
+                }
+            }
+        }
     }
 
     private fun loadInitialData() {
@@ -59,6 +86,8 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
             if (firstBook != null) {
                 val verses = repository.getVerses(firstBook.id, 1)
                 val breaks = repository.getParagraphBreaks(firstBook.id, 1)
+                val crossRefCounts = repository.getCrossReferenceCountsForChapter(firstBook.id, 1)
+                val otQuotes = repository.getOtQuotesForChapter(firstBook.id, 1)
                 _uiState.update {
                     it.copy(
                         books = books,
@@ -66,6 +95,8 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
                         currentChapter = 1,
                         verses = verses,
                         paragraphBreaks = breaks,
+                        crossRefCounts = crossRefCounts,
+                        otQuotes = otQuotes,
                         isLoading = false
                     )
                 }
@@ -83,15 +114,27 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
 
     fun selectBookAndChapter(book: Book, chapter: Int) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, showBookSelector = false) }
+            ttsManager.stop()
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    showBookSelector = false,
+                    selectedVerses = emptySet(),
+                    crossRefSheetVerses = null
+                )
+            }
             val verses = repository.getVerses(book.id, chapter)
             val breaks = repository.getParagraphBreaks(book.id, chapter)
+            val crossRefCounts = repository.getCrossReferenceCountsForChapter(book.id, chapter)
+            val otQuotes = repository.getOtQuotesForChapter(book.id, chapter)
             _uiState.update {
                 it.copy(
                     currentBook = book,
                     currentChapter = chapter,
                     verses = verses,
                     paragraphBreaks = breaks,
+                    crossRefCounts = crossRefCounts,
+                    otQuotes = otQuotes,
                     isLoading = false
                 )
             }
@@ -125,6 +168,128 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
                 selectBookAndChapter(prevBook, prevBook.chapters)
             }
         }
+    }
+
+    // Verse Multi-Selection
+    fun toggleVerseSelection(verseNumber: Int) {
+        _uiState.update { current ->
+            val set = current.selectedVerses.toMutableSet()
+            if (set.contains(verseNumber)) {
+                set.remove(verseNumber)
+            } else {
+                set.add(verseNumber)
+            }
+            current.copy(selectedVerses = set)
+        }
+    }
+
+    fun clearVerseSelection() {
+        _uiState.update { it.copy(selectedVerses = emptySet()) }
+    }
+
+    fun selectAllVerses() {
+        _uiState.update { current ->
+            current.copy(selectedVerses = current.verses.map { it.verse }.toSet())
+        }
+    }
+
+    fun formatSelectedVersesForClipboard(): String {
+        val book = _uiState.value.currentBook ?: return ""
+        val ch = _uiState.value.currentChapter
+        val lang = _uiState.value.language
+        val selected = _uiState.value.selectedVerses.sorted()
+        if (selected.isEmpty()) return ""
+
+        val bookTitle = if (lang == BibleLanguage.TELUGU) book.nameTe else book.nameEn
+        val refRange = if (selected.size == 1) "$ch:${selected.first()}" else "$ch:${selected.first()}-${selected.last()}"
+        val header = "$bookTitle $refRange"
+
+        val versesMap = _uiState.value.verses.associateBy { it.verse }
+        val lines = selected.mapNotNull { vNum ->
+            val v = versesMap[vNum] ?: return@mapNotNull null
+            val text = if (lang == BibleLanguage.TELUGU) v.textTe ?: v.textEn else v.textEn ?: v.textTe
+            "$vNum $text"
+        }
+        return "$header\n${lines.joinToString("\n")}"
+    }
+
+    fun addSelectedVersesToMemory(onSuccess: (count: Int) -> Unit = {}) {
+        viewModelScope.launch {
+            val book = _uiState.value.currentBook ?: return@launch
+            val ch = _uiState.value.currentChapter
+            val selected = _uiState.value.selectedVerses.toList()
+            if (selected.isEmpty()) return@launch
+
+            var addedCount = 0
+            for (v in selected) {
+                val success = repository.addUserVerse(book.id, ch, v)
+                if (success) addedCount++
+            }
+            _uiState.update {
+                it.copy(
+                    selectedVerses = emptySet(),
+                    toastMessage = "Added $addedCount verse${if (addedCount == 1) "" else "s"} to memory"
+                )
+            }
+            onSuccess(addedCount)
+        }
+    }
+
+    // Cross-References
+    fun openCrossReferences(verseNumbers: List<Int>) {
+        viewModelScope.launch {
+            val currentBook = _uiState.value.currentBook ?: return@launch
+            val ch = _uiState.value.currentChapter
+            val list = mutableListOf<CrossReference>()
+            for (v in verseNumbers) {
+                list.addAll(repository.getCrossReferences(currentBook.id, ch, v))
+            }
+            _uiState.update {
+                it.copy(
+                    crossRefSheetVerses = verseNumbers,
+                    crossRefsForSheet = list
+                )
+            }
+        }
+    }
+
+    fun dismissCrossReferences() {
+        _uiState.update {
+            it.copy(crossRefSheetVerses = null, crossRefsForSheet = emptyList())
+        }
+    }
+
+    // TTS
+    fun toggleTts() {
+        if (_uiState.value.isTtsSpeaking) {
+            stopTts()
+        } else {
+            startTts()
+        }
+    }
+
+    fun startTts() {
+        val verses = _uiState.value.verses
+        val lang = _uiState.value.language
+        val selected = _uiState.value.selectedVerses
+        val targetVerses = if (selected.isNotEmpty()) {
+            verses.filter { it.verse in selected }
+        } else {
+            verses
+        }
+        val pairs = targetVerses.map { v ->
+            val text = if (lang == BibleLanguage.TELUGU) v.textTe ?: v.textEn ?: "" else v.textEn ?: v.textTe ?: ""
+            Pair(v.verse, text)
+        }
+        ttsManager.playVerses(pairs)
+    }
+
+    fun stopTts() {
+        ttsManager.stop()
+    }
+
+    fun clearToast() {
+        _uiState.update { it.copy(toastMessage = null) }
     }
 
     fun increaseFontSize() {
@@ -172,5 +337,10 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
 
     fun dismissStrongs() {
         _uiState.update { it.copy(selectedStrongs = null) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ttsManager.shutdown()
     }
 }

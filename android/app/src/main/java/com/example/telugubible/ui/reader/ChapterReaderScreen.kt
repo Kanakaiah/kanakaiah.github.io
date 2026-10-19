@@ -1,5 +1,9 @@
 package com.example.telugubible.ui.reader
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,6 +11,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,17 +26,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.telugubible.theme.RemoraGold
 import com.example.telugubible.theme.RemoraTextPrimary
+import com.example.telugubible.theme.RemoraTextSecondary
+import androidx.compose.ui.graphics.asImageBitmap
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,13 +50,25 @@ fun ChapterReaderScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
+    val clipboardManager = LocalClipboardManager.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     // Scroll to top when book or chapter changes
     LaunchedEffect(state.currentBook?.id, state.currentChapter) {
         listState.scrollToItem(0)
     }
 
+    // Show toast message if present
+    LaunchedEffect(state.toastMessage) {
+        state.toastMessage?.let { msg ->
+            snackbarHostState.showSnackbar(msg)
+            viewModel.clearToast()
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 navigationIcon = {
@@ -81,6 +108,24 @@ fun ChapterReaderScreen(
                     }
                 },
                 actions = {
+                    // TTS Audio Playback Button
+                    IconButton(onClick = { viewModel.toggleTts() }) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = if (state.isTtsSpeaking) RemoraGold else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = if (state.isTtsSpeaking) Icons.Default.Stop else Icons.Default.VolumeUp,
+                                    contentDescription = "Read Aloud",
+                                    tint = if (state.isTtsSpeaking) Color.Black else RemoraTextPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+
                     // Typography / Settings Button
                     IconButton(onClick = { viewModel.toggleSettings(true) }) {
                         Surface(
@@ -105,37 +150,124 @@ fun ChapterReaderScreen(
             )
         },
         bottomBar = {
-            Surface(
-                tonalElevation = 4.dp,
-                shadowElevation = 8.dp,
-                color = MaterialTheme.colorScheme.surface
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+            if (state.selectedVerses.isEmpty()) {
+                // Regular Chapter Navigation Bar
+                Surface(
+                    tonalElevation = 4.dp,
+                    shadowElevation = 8.dp,
+                    color = MaterialTheme.colorScheme.surface
                 ) {
-                    FilledTonalButton(
-                        onClick = { viewModel.previousChapter() },
-                        shape = RoundedCornerShape(12.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .navigationBarsPadding()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("← Previous")
+                        FilledTonalButton(
+                            onClick = { viewModel.previousChapter() },
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text("← Previous")
+                        }
+
+                        Text(
+                            text = "Ch ${state.currentChapter} / ${state.currentBook?.chapters ?: 1}",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        Button(
+                            onClick = { viewModel.nextChapter() },
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text("Next →")
+                        }
                     }
-
-                    Text(
-                        text = "Ch ${state.currentChapter} / ${state.currentBook?.chapters ?: 1}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Button(
-                        onClick = { viewModel.nextChapter() },
-                        shape = RoundedCornerShape(12.dp)
+                }
+            } else {
+                // Multi-Selection Floating Action Bar (Remora Parity)
+                Surface(
+                    tonalElevation = 8.dp,
+                    shadowElevation = 12.dp,
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = BorderStroke(1.dp, RemoraGold.copy(alpha = 0.3f))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .navigationBarsPadding()
+                            .padding(horizontal = 16.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Next →")
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(onClick = { viewModel.clearVerseSelection() }) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Clear selection",
+                                    tint = RemoraTextSecondary
+                                )
+                            }
+                            Text(
+                                text = "${state.selectedVerses.size} selected",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraTextPrimary
+                            )
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Copy Button
+                            FilledTonalButton(
+                                onClick = {
+                                    val text = viewModel.formatSelectedVersesForClipboard()
+                                    clipboardManager.setText(AnnotatedString(text))
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("Copied ${state.selectedVerses.size} verse(s) to clipboard")
+                                    }
+                                    viewModel.clearVerseSelection()
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Icon(Icons.Default.ContentCopy, contentDescription = "Copy", modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Copy", fontSize = 12.sp)
+                            }
+
+                            // Refs Button (Open Cross References)
+                            FilledTonalButton(
+                                onClick = {
+                                    viewModel.openCrossReferences(state.selectedVerses.sorted())
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Icon(Icons.Default.MenuBook, contentDescription = "Refs", modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Refs", fontSize = 12.sp)
+                            }
+
+                            // Memorize Button
+                            Button(
+                                onClick = {
+                                    viewModel.addSelectedVersesToMemory()
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = RemoraGold, contentColor = Color.Black),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = "Add to Memory", modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Memorize", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
                     }
                 }
             }
@@ -160,7 +292,7 @@ fun ChapterReaderScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 16.dp),
                 contentPadding = PaddingValues(top = 12.dp, bottom = 48.dp)
             ) {
                 // Chapter Illustration Card
@@ -188,6 +320,11 @@ fun ChapterReaderScreen(
                 // Verses List
                 items(state.verses, key = { it.id }) { verse ->
                     val isParagraphStart = verse.verse in state.paragraphBreaks && verse.verse > 1
+                    val isSelected = verse.verse in state.selectedVerses
+                    val isSpeaking = state.activeTtsVerse == verse.verse
+                    val hasCrossRefs = (state.crossRefCounts[verse.verse] ?: 0) > 0
+                    val isOtQuote = verse.verse in state.otQuotes
+
                     val verseText = if (state.language == BibleLanguage.TELUGU) {
                         verse.textTe ?: verse.textEn ?: ""
                     } else {
@@ -198,31 +335,118 @@ fun ChapterReaderScreen(
                         Spacer(modifier = Modifier.height(14.dp))
                     }
 
-                    val annotatedText = buildAnnotatedString {
-                        withStyle(
-                            SpanStyle(
-                                fontSize = (baseFontSize.value * 0.65f).sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                baselineShift = BaselineShift.Superscript
-                            )
-                        ) {
-                            append("${verse.verse} ")
-                        }
-                        append(verseText)
-                    }
-
-                    Text(
-                        text = annotatedText,
-                        fontSize = baseFontSize,
-                        lineHeight = baseLineHeight,
-                        color = MaterialTheme.colorScheme.onSurface,
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = when {
+                            isSelected -> RemoraGold.copy(alpha = 0.16f)
+                            isSpeaking -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
+                            else -> Color.Transparent
+                        },
+                        border = when {
+                            isSelected -> BorderStroke(1.dp, RemoraGold.copy(alpha = 0.5f))
+                            isSpeaking -> BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                            else -> null
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 3.dp)
-                    )
+                            .padding(vertical = 2.dp)
+                            .clickable { viewModel.toggleVerseSelection(verse.verse) }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            val annotatedText = buildAnnotatedString {
+                                // Verse Number
+                                withStyle(
+                                    SpanStyle(
+                                        fontSize = (baseFontSize.value * 0.65f).sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (isSelected) RemoraGold else MaterialTheme.colorScheme.primary,
+                                        baselineShift = BaselineShift.Superscript
+                                    )
+                                ) {
+                                    append("${verse.verse} ")
+                                }
+
+                                // Cross-Reference Indicator
+                                if (hasCrossRefs) {
+                                    withStyle(
+                                        SpanStyle(
+                                            fontSize = (baseFontSize.value * 0.60f).sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = RemoraGold,
+                                            baselineShift = BaselineShift.Superscript
+                                        )
+                                    ) {
+                                        append("✻ ")
+                                    }
+                                }
+
+                                // OT Quote Indicator
+                                if (isOtQuote) {
+                                    withStyle(
+                                        SpanStyle(
+                                            fontSize = (baseFontSize.value * 0.55f).sp,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = Color(0xFFEF5350),
+                                            baselineShift = BaselineShift.Superscript
+                                        )
+                                    ) {
+                                        append("[OT] ")
+                                    }
+                                }
+
+                                append(verseText)
+                            }
+
+                            Text(
+                                text = annotatedText,
+                                fontSize = baseFontSize,
+                                lineHeight = baseLineHeight,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            // Quick individual xref tap button
+                            if (hasCrossRefs) {
+                                IconButton(
+                                    onClick = { viewModel.openCrossReferences(listOf(verse.verse)) },
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Text(
+                                        text = "✻",
+                                        color = RemoraGold,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
+        }
+
+        // Cross Reference Modal Sheet
+        if (state.crossRefSheetVerses != null) {
+            val bookName = state.currentBook?.nameEn ?: ""
+            val ch = state.currentChapter
+            val versesStr = state.crossRefSheetVerses!!.joinToString(", ")
+            val label = "$bookName $ch:$versesStr"
+
+            CrossReferenceSheet(
+                fromRefLabel = label,
+                crossReferences = state.crossRefsForSheet,
+                language = state.language,
+                onDismiss = { viewModel.dismissCrossReferences() },
+                onNavigateToTarget = { bookId, targetCh, verse ->
+                    viewModel.dismissCrossReferences()
+                    viewModel.selectBookAndChapterById(bookId, targetCh)
+                }
+            )
         }
 
         // Book and Chapter selector sheet
@@ -310,4 +534,3 @@ fun AsyncNativeImage(
         }
     }
 }
-
