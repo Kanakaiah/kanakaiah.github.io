@@ -35,6 +35,8 @@ fun BibleBrowserScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showCommentarySheet by remember { mutableStateOf(false) }
+    var showPreachersSheet by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -70,10 +72,63 @@ fun BibleBrowserScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Testament Switcher (OT / NT) - only shown when not actively searching
+        // Quick Study & Testament Switcher - only shown when not actively searching
         if (state.searchQuery.isBlank()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Surface(
+                    onClick = { showCommentarySheet = true },
+                    shape = RoundedCornerShape(10.dp),
+                    color = RemoraCardBg,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text("📜", fontSize = 13.sp)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Commentaries",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = RemoraTextPrimary
+                        )
+                    }
+                }
+
+                Surface(
+                    onClick = { showPreachersSheet = true },
+                    shape = RoundedCornerShape(10.dp),
+                    color = RemoraCardBg,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text("⛪", fontSize = 13.sp)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Theologians",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = RemoraTextPrimary
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -155,6 +210,18 @@ fun BibleBrowserScreen(
                 }
             }
         }
+    }
+
+    if (showCommentarySheet) {
+        CommentarySheet(
+            onDismiss = { showCommentarySheet = false }
+        )
+    }
+
+    if (showPreachersSheet) {
+        PreachersSheet(
+            onDismiss = { showPreachersSheet = false }
+        )
     }
 }
 

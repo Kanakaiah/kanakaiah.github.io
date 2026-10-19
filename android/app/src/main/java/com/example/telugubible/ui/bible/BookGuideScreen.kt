@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.telugubible.data.commentary.CommentaryData
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.BookGuide
 import com.example.telugubible.data.model.ChapterAnchor
@@ -74,6 +75,8 @@ fun BookGuideScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    var showCommentarySheet by remember { mutableStateOf(false) }
+    var showPreachersSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(bookId) {
         viewModel.loadBookGuide(bookId)
@@ -114,6 +117,15 @@ fun BookGuideScreen(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
                             tint = RemoraTextPrimary
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showCommentarySheet = true }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.MenuBook,
+                            contentDescription = "Commentaries",
+                            tint = RemoraAccentLight
                         )
                     }
                 },
@@ -329,6 +341,125 @@ fun BookGuideScreen(
                                 }
                             }
                         }
+                    }
+
+                    // 6. Scholarly Commentaries & Historical Perspectives
+                    item {
+                        CommentariesGuideSection(
+                            book = book,
+                            onOpenCommentaries = { showCommentarySheet = true },
+                            onOpenPreachers = { showPreachersSheet = true }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    if (showCommentarySheet && state.book != null) {
+        CommentarySheet(
+            bookId = state.book!!.id,
+            bookNameEn = state.book!!.nameEn,
+            onDismiss = { showCommentarySheet = false }
+        )
+    }
+
+    if (showPreachersSheet) {
+        PreachersSheet(
+            onDismiss = { showPreachersSheet = false }
+        )
+    }
+}
+
+@Composable
+private fun CommentariesGuideSection(
+    book: Book,
+    onOpenCommentaries: () -> Unit,
+    onOpenPreachers: () -> Unit
+) {
+    val series = CommentaryData.getSeriesForBook(book.id)
+    val sections = CommentaryData.getSectionsForBook(book.id, book.nameEn)
+    val entriesCount = sections.sumOf { it.entries.size }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "SCHOLARLY COMMENTARIES & THEOLOGIANS",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp,
+            color = RemoraAccentLight
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = RemoraCardBg,
+            border = BorderStroke(1.dp, RemoraCardBorder),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = series?.icon ?: "📜",
+                        fontSize = 24.sp
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = series?.title ?: "Canonical Commentary Series",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = RemoraTextPrimary
+                        )
+                        Text(
+                            text = "$entriesCount critical scholarly references & strategy notes",
+                            fontSize = 12.sp,
+                            color = RemoraTextSecondary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = onOpenCommentaries,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = RemoraAccent.copy(alpha = 0.2f),
+                            contentColor = RemoraAccentLight
+                        ),
+                        border = BorderStroke(1.dp, RemoraAccent.copy(alpha = 0.4f)),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Browse Commentaries",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    OutlinedButton(
+                        onClick = onOpenPreachers,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = RemoraTextSecondary
+                        ),
+                        border = BorderStroke(1.dp, RemoraCardBorderHover),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "⛪ Theologians",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                 }
             }

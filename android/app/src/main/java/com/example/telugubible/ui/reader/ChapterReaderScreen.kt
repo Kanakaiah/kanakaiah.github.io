@@ -43,6 +43,7 @@ import com.example.telugubible.theme.RemoraAccentLight
 import com.example.telugubible.theme.RemoraGold
 import com.example.telugubible.theme.RemoraTextPrimary
 import com.example.telugubible.theme.RemoraTextSecondary
+import com.example.telugubible.ui.bible.CommentarySheet
 import com.example.telugubible.util.StrongsParser
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.launch
@@ -59,6 +60,7 @@ fun ChapterReaderScreen(
     val clipboardManager = LocalClipboardManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var showCommentarySheet by remember { mutableStateOf(false) }
     var totalDragX by remember { mutableFloatStateOf(0f) }
 
     // Scroll to top when book or chapter changes
@@ -166,6 +168,22 @@ fun ChapterReaderScreen(
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                    }
+
+                    // Commentary Series Button
+                    IconButton(onClick = { showCommentarySheet = true }) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "📜",
+                                    fontSize = 16.sp
                                 )
                             }
                         }
@@ -595,6 +613,15 @@ fun ChapterReaderScreen(
             StrongsDialog(
                 entry = entry,
                 onDismiss = { viewModel.dismissStrongs() }
+            )
+        }
+
+        // Scholarly Commentary Sheet
+        if (showCommentarySheet && state.currentBook != null) {
+            CommentarySheet(
+                bookId = state.currentBook!!.id,
+                bookNameEn = state.currentBook!!.nameEn,
+                onDismiss = { showCommentarySheet = false }
             )
         }
     }
