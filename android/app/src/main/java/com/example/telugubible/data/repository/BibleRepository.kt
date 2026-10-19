@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.telugubible.data.db.BibleDatabaseHelper
 import com.example.telugubible.data.db.ChapterProgressEntity
 import com.example.telugubible.data.db.UserDatabaseHelper
+import com.example.telugubible.data.model.AppSettings
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.BookGuide
 import com.example.telugubible.data.model.ChapterAnchor
@@ -145,5 +146,26 @@ class BibleRepository(
     suspend fun gradeChapterAnchor(bookId: Int, chapter: Int, score: Int): ChapterProgressEntity = withContext(ioDispatcher) {
         userDbHelper.gradeChapterAnchor(bookId, chapter, score)
     }
+
+    suspend fun getAppSettings(): AppSettings = withContext(ioDispatcher) {
+        userDbHelper.getAppSettings()
+    }
+
+    suspend fun saveAppSettings(settings: AppSettings) = withContext(ioDispatcher) {
+        userDbHelper.saveAppSettings(settings)
+    }
+
+    suspend fun exportUserDataJson(): String = withContext(ioDispatcher) {
+        userDbHelper.exportUserDataJson()
+    }
+
+    suspend fun restoreUserDataJson(jsonString: String): Boolean = withContext(ioDispatcher) {
+        userDbHelper.restoreUserDataJson(jsonString)
+    }
+
+    suspend fun clearAllUserData() = withContext(ioDispatcher) {
+        userDbHelper.clearAllUserData()
+    }
 }
+
 

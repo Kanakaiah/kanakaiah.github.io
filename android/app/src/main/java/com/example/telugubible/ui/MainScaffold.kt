@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TrackChanges
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
@@ -36,6 +37,8 @@ import com.example.telugubible.ui.practice.PracticeScreen
 import com.example.telugubible.ui.practice.PracticeViewModel
 import com.example.telugubible.ui.reader.ChapterReaderScreen
 import com.example.telugubible.ui.reader.ReaderViewModel
+import com.example.telugubible.ui.settings.SettingsScreen
+import com.example.telugubible.ui.settings.SettingsViewModel
 import com.example.telugubible.ui.today.TodayScreen
 import com.example.telugubible.ui.today.TodayViewModel
 
@@ -52,6 +55,7 @@ fun MainScaffold(
     todayViewModel: TodayViewModel = viewModel(),
     bibleBrowserViewModel: BibleBrowserViewModel = viewModel(),
     bookGuideViewModel: BookGuideViewModel = viewModel(),
+    settingsViewModel: SettingsViewModel = viewModel(),
     practiceViewModel: PracticeViewModel = viewModel(),
     lookupViewModel: LookupViewModel = viewModel(),
     readerViewModel: ReaderViewModel = viewModel()
@@ -59,6 +63,7 @@ fun MainScaffold(
     var selectedTab by remember { mutableStateOf(RemoraTab.TODAY) }
     var activeGuideBookId by remember { mutableStateOf<Int?>(null) }
     var isInReaderMode by remember { mutableStateOf(false) }
+    var isInSettingsMode by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
 
     val todayState by todayViewModel.uiState.collectAsState()
@@ -69,11 +74,13 @@ fun MainScaffold(
         isInReaderMode = true
     }
 
-    BackHandler(enabled = isInReaderMode || activeGuideBookId != null) {
+    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode) {
         if (isInReaderMode) {
             isInReaderMode = false
         } else if (activeGuideBookId != null) {
             activeGuideBookId = null
+        } else if (isInSettingsMode) {
+            isInSettingsMode = false
         }
     }
 
@@ -88,6 +95,11 @@ fun MainScaffold(
             bookId = activeGuideBookId!!,
             onBack = { activeGuideBookId = null },
             onOpenReader = openReader
+        )
+    } else if (isInSettingsMode) {
+        SettingsScreen(
+            viewModel = settingsViewModel,
+            onBack = { isInSettingsMode = false }
         )
     } else {
         Scaffold(
@@ -137,6 +149,16 @@ fun MainScaffold(
                                     color = RemoraTextPrimary
                                 )
                             }
+                        }
+
+                        // Settings button
+                        IconButton(onClick = { isInSettingsMode = true }) {
+                            Icon(
+                                Icons.Default.Settings,
+                                contentDescription = "Settings",
+                                tint = RemoraTextSecondary,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
 
                         // Info / About button

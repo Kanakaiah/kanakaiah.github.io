@@ -4,6 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.telugubible.data.model.AppSettings
+import org.json.JSONArray
+import org.json.JSONObject
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -485,5 +488,205 @@ class UserDatabaseHelper(private val context: Context) :
 
         return entity
     }
+
+    // App Settings & Preferences
+    fun getAppSettings(): AppSettings {
+        return AppSettings(
+            theme = getSetting("setting_theme", "black"),
+            fontSize = getSetting("setting_fontSize", "1.0").toFloatOrNull() ?: 1.0f,
+            ttsEnabled = getSetting("setting_ttsEnabled", "true").toBoolean(),
+            recallMasking = getSetting("setting_recallMasking", "false").toBoolean(),
+            bionicReading = getSetting("setting_bionicReading", "false").toBoolean(),
+            bibleVersion = getSetting("setting_bibleVersion", "BSB"),
+            anchorReveal = getSetting("setting_anchorReveal", "tap"),
+            dailyChapterTarget = getSetting("setting_dailyChapterTarget", "3").toIntOrNull() ?: 3,
+            streakIncludesChapters = getSetting("setting_streakIncludesChapters", "true").toBoolean(),
+            showSectionHeadings = getSetting("setting_showSectionHeadings", "true").toBoolean(),
+            showVerseNumbers = getSetting("setting_showVerseNumbers", "true").toBoolean(),
+            showParagraphMarks = getSetting("setting_showParagraphMarks", "true").toBoolean(),
+            showCrossRefMarkers = getSetting("setting_showCrossRefMarkers", "true").toBoolean()
+        )
+    }
+
+    fun saveAppSettings(settings: AppSettings) {
+        setSetting("setting_theme", settings.theme)
+        setSetting("setting_fontSize", settings.fontSize.toString())
+        setSetting("setting_ttsEnabled", settings.ttsEnabled.toString())
+        setSetting("setting_recallMasking", settings.recallMasking.toString())
+        setSetting("setting_bionicReading", settings.bionicReading.toString())
+        setSetting("setting_bibleVersion", settings.bibleVersion)
+        setSetting("setting_anchorReveal", settings.anchorReveal)
+        setSetting("setting_dailyChapterTarget", settings.dailyChapterTarget.toString())
+        setSetting("setting_streakIncludesChapters", settings.streakIncludesChapters.toString())
+        setSetting("setting_showSectionHeadings", settings.showSectionHeadings.toString())
+        setSetting("setting_showVerseNumbers", settings.showVerseNumbers.toString())
+        setSetting("setting_showParagraphMarks", settings.showParagraphMarks.toString())
+        setSetting("setting_showCrossRefMarkers", settings.showCrossRefMarkers.toString())
+    }
+
+    fun getSetting(key: String, defaultValue: String): String {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT val FROM user_stats WHERE key = ?", arrayOf(key))
+        cursor.use {
+            if (it.moveToNext()) {
+                return it.getString(0) ?: defaultValue
+            }
+        }
+        return defaultValue
+    }
+
+    fun setSetting(key: String, value: String) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("key", key)
+            put("val", value)
+        }
+        db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+    }
+
+    // Backup & Restore
+    fun exportUserDataJson(): String {
+        val root = JSONObject()
+        val versesArray = JSONArray()
+        val userVerses = getUserVerses()
+        for (v in userVerses) {
+            val obj = JSONObject().apply {
+                put("id", v.id)
+                put("book_id", v.bookId)
+                put("chapter", v.chapter)
+                put("verse", v.verse)
+                put("status", v.status)
+                put("repetition", v.repetition)
+                put("interval", v.interval)
+                put("efactor", v.efactor)
+                put("next_due_date", v.nextDueDate)
+                put("created_at", v.createdAt)
+                put("lapses", v.lapses)
+                put("pre_lapse_interval", v.preLapseInterval)
+                put("attempts", v.attempts)
+            }
+            versesArray.put(obj)
+        }
+        root.put("verses", versesArray)
+
+        // Chapter progress
+        val progressObj = JSONObject()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT book_id, chapter, status, repetition, interval, efactor, next_due_date FROM chapter_progress", null)
+        cursor.use {
+            while (it.moveToNext()) {
+                val key = "${it.getInt(0)}:${it.getInt(1)}"
+                val item = JSONObject().apply {
+                    put("book_id", it.getInt(0))
+                    put("chapter", it.getInt(1))
+                    put("status", it.getString(2))
+                    put("repetition", it.getInt(3))
+                    put("interval", it.getInt(4))
+                    put("efactor", it.getDouble(5))
+                    put("next_due_date", it.getLong(6))
+                }
+                progressObj.put(key, item)
+            }
+        }
+        root.put("chapterProgress", progressObj)
+
+        // Stats & Settings
+        val statsObj = JSONObject()
+        val statsCursor = db.rawQuery("SELECT key, val FROM user_stats", null)
+        statsCursor.use {
+            while (it.moveToNext()) {
+                statsObj.put(it.getString(0), it.getString(1))
+            }
+        }
+        root.put("stats", statsObj)
+
+        return root.toString(2)
+    }
+
+    fun restoreUserDataJson(jsonString: String): Boolean {
+        return try {
+            val root = JSONObject(jsonString)
+            val db = writableDatabase
+            db.beginTransaction()
+            try {
+                if (root.has("verses")) {
+                    val arr = root.getJSONArray("verses")
+                    for (i in 0 until arr.length()) {
+                        val item = arr.getJSONObject(i)
+                        val values = ContentValues().apply {
+                            put("book_id", item.optInt("book_id", item.optInt("bookId", 1)))
+                            put("chapter", item.optInt("chapter", 1))
+                            put("verse", item.optInt("verse", 1))
+                            put("status", item.optString("status", "learning"))
+                            put("repetition", item.optInt("repetition", 0))
+                            put("interval", item.optInt("interval", 0))
+                            put("efactor", item.optDouble("efactor", 2.5))
+                            put("next_due_date", item.optLong("next_due_date", item.optLong("nextDueDate", System.currentTimeMillis())))
+                            put("created_at", item.optLong("created_at", item.optLong("createdAt", System.currentTimeMillis())))
+                            put("lapses", item.optInt("lapses", 0))
+                            put("pre_lapse_interval", item.optInt("pre_lapse_interval", 0))
+                            put("attempts", item.optInt("attempts", 0))
+                        }
+                        db.insertWithOnConflict("user_verses", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                    }
+                }
+
+                if (root.has("chapterProgress")) {
+                    val prog = root.getJSONObject("chapterProgress")
+                    val keys = prog.keys()
+                    while (keys.hasNext()) {
+                        val k = keys.next()
+                        val item = prog.getJSONObject(k)
+                        val values = ContentValues().apply {
+                            put("book_id", item.optInt("book_id", 1))
+                            put("chapter", item.optInt("chapter", 1))
+                            put("status", item.optString("status", "learning"))
+                            put("repetition", item.optInt("repetition", 0))
+                            put("interval", item.optInt("interval", 0))
+                            put("efactor", item.optDouble("efactor", 2.5))
+                            put("next_due_date", item.optLong("next_due_date", System.currentTimeMillis()))
+                        }
+                        db.insertWithOnConflict("chapter_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                    }
+                }
+
+                if (root.has("stats")) {
+                    val stats = root.getJSONObject("stats")
+                    val keys = stats.keys()
+                    while (keys.hasNext()) {
+                        val k = keys.next()
+                        val v = stats.getString(k)
+                        val values = ContentValues().apply {
+                            put("key", k)
+                            put("val", v)
+                        }
+                        db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                    }
+                }
+                db.setTransactionSuccessful()
+                true
+            } finally {
+                db.endTransaction()
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun clearAllUserData() {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            db.delete("user_verses", null, null)
+            db.delete("chapter_progress", null, null)
+            db.delete("session_state", null, null)
+            db.delete("review_log", null, null)
+            db.delete("user_stats", null, null)
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
 }
+
 
