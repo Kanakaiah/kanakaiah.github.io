@@ -9,53 +9,57 @@ import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.model.VerseSearchResult
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class BibleRepository(
     private val bibleDbHelper: BibleDatabaseHelper,
-    private val userDbHelper: UserDatabaseHelper
+    private val userDbHelper: UserDatabaseHelper,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
     constructor(context: Context) : this(
         BibleDatabaseHelper.getInstance(context),
-        UserDatabaseHelper.getInstance(context)
+        UserDatabaseHelper.getInstance(context),
+        Dispatchers.IO
     )
 
     constructor(bibleDbHelper: BibleDatabaseHelper) : this(
         bibleDbHelper,
-        UserDatabaseHelper.getInstance(bibleDbHelper.context)
+        UserDatabaseHelper.getInstance(bibleDbHelper.context),
+        Dispatchers.IO
     )
 
-    suspend fun getBooks(): List<Book> = withContext(Dispatchers.IO) {
+    suspend fun getBooks(): List<Book> = withContext(ioDispatcher) {
         bibleDbHelper.getAllBooks()
     }
 
-    suspend fun getBook(bookId: Int): Book? = withContext(Dispatchers.IO) {
+    suspend fun getBook(bookId: Int): Book? = withContext(ioDispatcher) {
         bibleDbHelper.getBook(bookId)
     }
 
-    suspend fun getVerses(bookId: Int, chapter: Int): List<Verse> = withContext(Dispatchers.IO) {
+    suspend fun getVerses(bookId: Int, chapter: Int): List<Verse> = withContext(ioDispatcher) {
         bibleDbHelper.getVerses(bookId, chapter)
     }
 
-    suspend fun getParagraphBreaks(bookId: Int, chapter: Int): Set<Int> = withContext(Dispatchers.IO) {
+    suspend fun getParagraphBreaks(bookId: Int, chapter: Int): Set<Int> = withContext(ioDispatcher) {
         bibleDbHelper.getParagraphBreaks(bookId, chapter)
     }
 
-    suspend fun getStrongs(id: String): StrongsEntry? = withContext(Dispatchers.IO) {
+    suspend fun getStrongs(id: String): StrongsEntry? = withContext(ioDispatcher) {
         bibleDbHelper.getStrongs(id)
     }
 
-    suspend fun searchVerses(query: String, limit: Int = 40): List<VerseSearchResult> = withContext(Dispatchers.IO) {
+    suspend fun searchVerses(query: String, limit: Int = 40): List<VerseSearchResult> = withContext(ioDispatcher) {
         bibleDbHelper.searchVerses(query, limit)
     }
 
-    suspend fun searchStrongs(query: String, limit: Int = 30): List<StrongsEntry> = withContext(Dispatchers.IO) {
+    suspend fun searchStrongs(query: String, limit: Int = 30): List<StrongsEntry> = withContext(ioDispatcher) {
         bibleDbHelper.searchStrongs(query, limit)
     }
 
-    suspend fun getUserMemoryVerses(): List<UserMemoryVerse> = withContext(Dispatchers.IO) {
+    suspend fun getUserMemoryVerses(): List<UserMemoryVerse> = withContext(ioDispatcher) {
         val userVerses = userDbHelper.getUserVerses()
         if (userVerses.isEmpty()) return@withContext emptyList()
 
@@ -86,39 +90,39 @@ class BibleRepository(
         }
     }
 
-    suspend fun addUserVerse(bookId: Int, chapter: Int, verse: Int): Boolean = withContext(Dispatchers.IO) {
+    suspend fun addUserVerse(bookId: Int, chapter: Int, verse: Int): Boolean = withContext(ioDispatcher) {
         userDbHelper.addUserVerse(bookId, chapter, verse)
     }
 
-    suspend fun removeUserVerse(id: Long) = withContext(Dispatchers.IO) {
+    suspend fun removeUserVerse(id: Long) = withContext(ioDispatcher) {
         userDbHelper.removeUserVerse(id)
     }
 
-    suspend fun gradeUserVerse(id: Long, score: Int) = withContext(Dispatchers.IO) {
+    suspend fun gradeUserVerse(id: Long, score: Int) = withContext(ioDispatcher) {
         userDbHelper.gradeUserVerse(id, score)
     }
 
-    suspend fun getStreak(): Int = withContext(Dispatchers.IO) {
+    suspend fun getStreak(): Int = withContext(ioDispatcher) {
         userDbHelper.getStreak()
     }
 
-    suspend fun setStreak(streak: Int) = withContext(Dispatchers.IO) {
+    suspend fun setStreak(streak: Int) = withContext(ioDispatcher) {
         userDbHelper.setStreak(streak)
     }
 
-    suspend fun getSessionState(key: String): String? = withContext(Dispatchers.IO) {
+    suspend fun getSessionState(key: String): String? = withContext(ioDispatcher) {
         userDbHelper.getSessionState(key)
     }
 
-    suspend fun setSessionState(key: String, value: String?) = withContext(Dispatchers.IO) {
+    suspend fun setSessionState(key: String, value: String?) = withContext(ioDispatcher) {
         userDbHelper.setSessionState(key, value)
     }
 
-    suspend fun getPresetCollections(): List<PresetCollection> = withContext(Dispatchers.IO) {
+    suspend fun getPresetCollections(): List<PresetCollection> = withContext(ioDispatcher) {
         bibleDbHelper.getPresetCollections()
     }
 
-    suspend fun addPresetCollection(collectionId: String): Int = withContext(Dispatchers.IO) {
+    suspend fun addPresetCollection(collectionId: String): Int = withContext(ioDispatcher) {
         val verses = bibleDbHelper.getPresetVerses(collectionId)
         userDbHelper.addUserVerses(verses)
     }

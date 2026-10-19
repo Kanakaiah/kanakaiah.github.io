@@ -60,7 +60,7 @@ class BibleRepositoryTest {
         assertEquals(1, memoryVerses.size)
         val v = memoryVerses[0]
         assertEquals(1, v.bookId)
-        assertEquals("GEN", v.bookKey)
+        assertEquals("genesis", v.bookKey)
         assertEquals("Genesis", v.bookNameEn)
         assertEquals("ఆదికాండము", v.bookNameTe)
         assertEquals(1, v.chapter)

@@ -47,7 +47,7 @@ class PracticeViewModelTest {
 
         bibleDbHelper = BibleDatabaseHelper(application)
         userDbHelper = UserDatabaseHelper(application)
-        repository = BibleRepository(bibleDbHelper, userDbHelper)
+        repository = BibleRepository(bibleDbHelper, userDbHelper, testDispatcher)
     }
 
     @After
