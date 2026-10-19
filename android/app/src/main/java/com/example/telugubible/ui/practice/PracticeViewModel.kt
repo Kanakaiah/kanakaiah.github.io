@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 enum class PracticeMode(val label: String) {
     FLASHCARD("Flashcard"),
     TYPING("Type"),
-    FIRST_LETTER("First Letters"),
-    ERASER("Eraser"),
-    SCRAMBLE("Scramble")
+    FIRST_LETTER("Letters"),
+    ERASER("Erase"),
+    SCRAMBLE("Order")
 }
 
 data class PracticeUiState(
@@ -30,10 +30,42 @@ data class PracticeUiState(
     val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH,
     val activeMode: PracticeMode = PracticeMode.TYPING,
     val modeAccuracy: Int? = null,
-    val modeCommitted: String? = null
+    val modeCommitted: String? = null,
+    val hintRevealedRatio: Float? = null,
+    val eraserHiddenRatio: Float? = null,
+    val scrambleAccuracy: Float? = null
 ) {
     val currentVerse: UserMemoryVerse?
         get() = verses.getOrNull(currentIndex)
+
+    val gradeCeiling: Int
+        get() {
+            if (activeMode == PracticeMode.ERASER) {
+                val hidden = eraserHiddenRatio ?: return 5
+                return when {
+                    hidden >= 0.75f -> 5
+                    hidden >= 0.50f -> 4
+                    hidden >= 0.25f -> 3
+                    else -> 1
+                }
+            }
+            if (activeMode == PracticeMode.SCRAMBLE) {
+                val acc = scrambleAccuracy ?: return 5
+                return when {
+                    acc >= 0.90f -> 5
+                    acc >= 0.75f -> 4
+                    acc >= 0.50f -> 3
+                    else -> 1
+                }
+            }
+            val ratio = hintRevealedRatio ?: return 5
+            return when {
+                ratio <= 0.05f -> 5
+                ratio <= 0.25f -> 4
+                ratio <= 0.75f -> 3
+                else -> 1
+            }
+        }
 }
 
 class PracticeViewModel(
@@ -107,7 +139,10 @@ class PracticeViewModel(
                         displayLanguage = restoredLang,
                         activeMode = restoredMode,
                         modeAccuracy = null,
-                        modeCommitted = null
+                        modeCommitted = null,
+                        hintRevealedRatio = null,
+                        eraserHiddenRatio = null,
+                        scrambleAccuracy = null
                     )
                 }
             } else {
@@ -137,7 +172,10 @@ class PracticeViewModel(
                         displayLanguage = restoredLang,
                         activeMode = restoredMode,
                         modeAccuracy = null,
-                        modeCommitted = null
+                        modeCommitted = null,
+                        hintRevealedRatio = null,
+                        eraserHiddenRatio = null,
+                        scrambleAccuracy = null
                     )
                 }
             }
@@ -150,7 +188,10 @@ class PracticeViewModel(
                 activeMode = mode,
                 isRevealed = false,
                 modeAccuracy = null,
-                modeCommitted = null
+                modeCommitted = null,
+                hintRevealedRatio = null,
+                eraserHiddenRatio = null,
+                scrambleAccuracy = null
             )
         }
         viewModelScope.launch {
@@ -172,6 +213,42 @@ class PracticeViewModel(
         }
     }
 
+    fun recordFirstLetterAttempt(revealedRatio: Float) {
+        _uiState.update {
+            it.copy(
+                hintRevealedRatio = revealedRatio,
+                isRevealed = true
+            )
+        }
+        viewModelScope.launch {
+            repository.setSessionState(KEY_SESSION_REVEALED, "true")
+        }
+    }
+
+    fun recordEraserAttempt(hiddenRatio: Float) {
+        _uiState.update {
+            it.copy(
+                eraserHiddenRatio = hiddenRatio,
+                isRevealed = true
+            )
+        }
+        viewModelScope.launch {
+            repository.setSessionState(KEY_SESSION_REVEALED, "true")
+        }
+    }
+
+    fun recordScrambleAttempt(accuracy: Float) {
+        _uiState.update {
+            it.copy(
+                scrambleAccuracy = accuracy,
+                isRevealed = true
+            )
+        }
+        viewModelScope.launch {
+            repository.setSessionState(KEY_SESSION_REVEALED, "true")
+        }
+    }
+
     fun revealVerse() {
         _uiState.update { it.copy(isRevealed = true) }
         viewModelScope.launch {
@@ -185,7 +262,10 @@ class PracticeViewModel(
                 displayLanguage = lang,
                 isRevealed = false,
                 modeAccuracy = null,
-                modeCommitted = null
+                modeCommitted = null,
+                hintRevealedRatio = null,
+                eraserHiddenRatio = null,
+                scrambleAccuracy = null
             )
         }
         viewModelScope.launch {
@@ -207,6 +287,9 @@ class PracticeViewModel(
         val state = _uiState.value
         val verse = state.currentVerse ?: return
 
+        // Anti-cheating guard: cap submitted score to allowed ceiling
+        val effectiveScore = score.coerceAtMost(state.gradeCeiling)
+
         viewModelScope.launch {
             val (cueLevel, modeName, accuracy) = when (state.activeMode) {
                 PracticeMode.TYPING -> Triple(
@@ -219,26 +302,35 @@ class PracticeViewModel(
                     "reveal",
                     null
                 )
-                PracticeMode.FIRST_LETTER -> Triple(
-                    CueLevel.FIRST_LETTERS.levelNumber,
-                    "first_letters",
-                    null
-                )
-                PracticeMode.ERASER -> Triple(
-                    CueLevel.SPARSE.levelNumber,
-                    "eraser",
-                    null
-                )
-                PracticeMode.SCRAMBLE -> Triple(
-                    1,
-                    "scramble",
-                    null
-                )
+                PracticeMode.FIRST_LETTER -> {
+                    val ratio = state.hintRevealedRatio ?: 0f
+                    val cue = when {
+                        ratio > 0.75f -> CueLevel.FULL.levelNumber
+                        ratio > 0.25f -> CueLevel.FIRST_LETTERS.levelNumber
+                        ratio > 0f -> CueLevel.SPARSE.levelNumber
+                        else -> CueLevel.FIRST_LETTERS.levelNumber
+                    }
+                    val acc = (1.0 - ratio.toDouble()).coerceIn(0.0, 1.0)
+                    Triple(cue, "first_letters", acc)
+                }
+                PracticeMode.ERASER -> {
+                    val hidden = state.eraserHiddenRatio ?: 0.25f
+                    val cue = when {
+                        hidden >= 0.75f -> CueLevel.NONE.levelNumber
+                        hidden >= 0.50f -> CueLevel.SPARSE.levelNumber
+                        else -> CueLevel.FULL.levelNumber
+                    }
+                    Triple(cue, "eraser", hidden.toDouble())
+                }
+                PracticeMode.SCRAMBLE -> {
+                    val acc = state.scrambleAccuracy ?: 1.0f
+                    Triple(1, "scramble", acc.toDouble())
+                }
             }
 
             repository.gradeUserVerse(
                 id = verse.id,
-                score = score,
+                score = effectiveScore,
                 cueLevel = cueLevel,
                 mode = modeName,
                 measuredAccuracy = accuracy
@@ -253,7 +345,10 @@ class PracticeViewModel(
                         currentIndex = nextIndex,
                         isRevealed = false,
                         modeAccuracy = null,
-                        modeCommitted = null
+                        modeCommitted = null,
+                        hintRevealedRatio = null,
+                        eraserHiddenRatio = null,
+                        scrambleAccuracy = null
                     )
                 }
             } else {
@@ -264,7 +359,10 @@ class PracticeViewModel(
                         currentIndex = nextIndex,
                         isRevealed = false,
                         modeAccuracy = null,
-                        modeCommitted = null
+                        modeCommitted = null,
+                        hintRevealedRatio = null,
+                        eraserHiddenRatio = null,
+                        scrambleAccuracy = null
                     )
                 }
             }

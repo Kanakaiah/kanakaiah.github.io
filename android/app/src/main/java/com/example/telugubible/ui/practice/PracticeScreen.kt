@@ -215,6 +215,33 @@ fun PracticeScreen(
                                                 modifier = Modifier.fillMaxSize()
                                             )
                                         }
+                                        PracticeMode.FIRST_LETTER -> {
+                                            FirstLetterMode(
+                                                text = activeText,
+                                                onComplete = { ratio ->
+                                                    viewModel.recordFirstLetterAttempt(ratio)
+                                                },
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
+                                        PracticeMode.ERASER -> {
+                                            EraserMode(
+                                                text = activeText,
+                                                onComplete = { ratio ->
+                                                    viewModel.recordEraserAttempt(ratio)
+                                                },
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
+                                        PracticeMode.SCRAMBLE -> {
+                                            ScrambleMode(
+                                                text = activeText,
+                                                onComplete = { acc ->
+                                                    viewModel.recordScrambleAttempt(acc)
+                                                },
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
                                         else -> {
                                             // FLASHCARD (and default for other drill modes)
                                             if (!state.isRevealed) {
@@ -305,6 +332,24 @@ fun PracticeScreen(
                                             color = RemoraAccentLight
                                         )
                                     }
+                                } else if (state.gradeCeiling < 5) {
+                                    val ceilingName = when (state.gradeCeiling) {
+                                        4 -> "Good"
+                                        3 -> "Hard"
+                                        else -> "Blank"
+                                    }
+                                    val reason = when (state.activeMode) {
+                                        PracticeMode.ERASER -> "Words still visible"
+                                        PracticeMode.SCRAMBLE -> "Word order mistakes"
+                                        else -> "Hint used"
+                                    }
+                                    Text(
+                                        text = "$reason — best available grade is $ceilingName.",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = GradeHard,
+                                        modifier = Modifier.padding(bottom = 6.dp)
+                                    )
                                 } else {
                                     Text(
                                         text = "HOW WAS YOUR RECALL?",
@@ -325,6 +370,7 @@ fun PracticeScreen(
                                         score = 1,
                                         color = GradeBlank,
                                         isSuggested = suggested == 1,
+                                        enabled = 1 <= state.gradeCeiling,
                                         onClick = { viewModel.gradeCurrent(1) },
                                         modifier = Modifier.weight(1f)
                                     )
@@ -333,6 +379,7 @@ fun PracticeScreen(
                                         score = 3,
                                         color = GradeHard,
                                         isSuggested = suggested == 3,
+                                        enabled = 3 <= state.gradeCeiling,
                                         onClick = { viewModel.gradeCurrent(3) },
                                         modifier = Modifier.weight(1f)
                                     )
@@ -341,6 +388,7 @@ fun PracticeScreen(
                                         score = 4,
                                         color = GradeGood,
                                         isSuggested = suggested == 4,
+                                        enabled = 4 <= state.gradeCeiling,
                                         onClick = { viewModel.gradeCurrent(4) },
                                         modifier = Modifier.weight(1f)
                                     )
@@ -349,6 +397,7 @@ fun PracticeScreen(
                                         score = 5,
                                         color = GradeEasy,
                                         isSuggested = suggested == 5,
+                                        enabled = 5 <= state.gradeCeiling,
                                         onClick = { viewModel.gradeCurrent(5) },
                                         modifier = Modifier.weight(1f)
                                     )
@@ -381,16 +430,20 @@ private fun GradeButton(
     score: Int,
     color: Color,
     isSuggested: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val opacity = if (enabled) 1.0f else 0.25f
+
     Surface(
-        onClick = onClick,
+        onClick = { if (enabled) onClick() },
+        enabled = enabled,
         shape = RoundedCornerShape(8.dp),
-        color = if (isSuggested) color.copy(alpha = 0.28f) else color.copy(alpha = 0.15f),
+        color = if (isSuggested) color.copy(alpha = 0.28f * opacity) else color.copy(alpha = 0.15f * opacity),
         border = androidx.compose.foundation.BorderStroke(
             if (isSuggested) 2.dp else 1.dp,
-            if (isSuggested) color else color.copy(alpha = 0.4f)
+            if (isSuggested) color.copy(alpha = opacity) else color.copy(alpha = 0.4f * opacity)
         ),
         modifier = modifier.height(48.dp)
     ) {
@@ -399,7 +452,7 @@ private fun GradeButton(
                 text = label,
                 fontSize = 13.sp,
                 fontWeight = if (isSuggested) FontWeight.ExtraBold else FontWeight.Bold,
-                color = color
+                color = color.copy(alpha = opacity)
             )
         }
     }

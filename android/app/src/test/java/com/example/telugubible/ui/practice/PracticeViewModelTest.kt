@@ -180,5 +180,192 @@ class PracticeViewModelTest {
         assertFalse(vm.uiState.value.isRevealed)
         assertNull(vm.uiState.value.modeAccuracy)
         assertNull(vm.uiState.value.modeCommitted)
+        assertNull(vm.uiState.value.hintRevealedRatio)
+    }
+
+    @Test
+    fun testFirstLetterModeCeilingEnforcement() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.FIRST_LETTER)
+        advanceUntilIdle()
+
+        // 50% words revealed -> ceiling is Hard (3)
+        vm.recordFirstLetterAttempt(revealedRatio = 0.50f)
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(3, vm.uiState.value.gradeCeiling)
+
+        // Attempting to submit Easy (5) should be capped to 3
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("first_letters", log.mode)
+        assertEquals(3, log.score) // capped to 3!
+        assertEquals(3, log.cueLevel)
+        assertEquals(0.50, log.measuredAccuracy!!, 0.001)
+    }
+
+    @Test
+    fun testFirstLetterModeNoHintsUsed() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.FIRST_LETTER)
+        advanceUntilIdle()
+
+        // 0% words revealed -> full recall from first letters, ceiling is 5
+        vm.recordFirstLetterAttempt(revealedRatio = 0f)
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(5, vm.uiState.value.gradeCeiling)
+
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("first_letters", log.mode)
+        assertEquals(5, log.score)
+        assertEquals(3, log.cueLevel)
+        assertEquals(1.0, log.measuredAccuracy!!, 0.001)
+    }
+
+    @Test
+    fun testEraserModeCeilingEnforcement() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.ERASER)
+        advanceUntilIdle()
+
+        // 35% words hidden -> ceiling is Hard (3)
+        vm.recordEraserAttempt(hiddenRatio = 0.35f)
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(3, vm.uiState.value.gradeCeiling)
+
+        // Submitting 5 should be capped to 3
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("eraser", log.mode)
+        assertEquals(3, log.score)
+        assertEquals(4, log.cueLevel)
+        assertEquals(0.35, log.measuredAccuracy!!, 0.001)
+    }
+
+    @Test
+    fun testEraserModeHighErasedRecall() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.ERASER)
+        advanceUntilIdle()
+
+        // 85% words hidden -> ceiling is Easy (5)
+        vm.recordEraserAttempt(hiddenRatio = 0.85f)
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(5, vm.uiState.value.gradeCeiling)
+
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("eraser", log.mode)
+        assertEquals(5, log.score)
+        assertEquals(0, log.cueLevel)
+        assertEquals(0.85, log.measuredAccuracy!!, 0.001)
+    }
+
+    @Test
+    fun testScrambleModeCeilingEnforcement() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.SCRAMBLE)
+        advanceUntilIdle()
+
+        // 60% accuracy due to word order mistakes -> ceiling is Hard (3)
+        vm.recordScrambleAttempt(accuracy = 0.60f)
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(3, vm.uiState.value.gradeCeiling)
+
+        // Submitting 5 should be capped to 3
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("scramble", log.mode)
+        assertEquals(3, log.score)
+        assertEquals(1, log.cueLevel)
+        assertEquals(0.60, log.measuredAccuracy!!, 0.001)
+    }
+
+    @Test
+    fun testScrambleModePerfectAssembly() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.SCRAMBLE)
+        advanceUntilIdle()
+
+        // 100% accuracy -> ceiling is Easy (5)
+        vm.recordScrambleAttempt(accuracy = 1.0f)
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(5, vm.uiState.value.gradeCeiling)
+
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("scramble", log.mode)
+        assertEquals(5, log.score)
+        assertEquals(1, log.cueLevel)
+        assertEquals(1.0, log.measuredAccuracy!!, 0.001)
     }
 }
+
+
+
