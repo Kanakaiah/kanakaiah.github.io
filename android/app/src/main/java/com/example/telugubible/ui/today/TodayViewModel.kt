@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.example.telugubible.data.model.DisplayLanguage
+import com.example.telugubible.util.BookMasteryCounts
+import com.example.telugubible.util.MasteryUtils
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -38,7 +40,13 @@ data class TodayUiState(
     val selectedVerseForDetail: UserMemoryVerse? = null,
     val searchResults: List<VerseSearchResult> = emptyList(),
     val isSearchingInDialog: Boolean = false,
-    val messageBanner: String? = null
+    val messageBanner: String? = null,
+    val masteryByBook: Map<Int, BookMasteryCounts> = emptyMap(),
+    val totalSecureChapters: Int = 0,
+    val totalBibleChapters: Int = 1189,
+    val dueChaptersByBook: Map<Int, Int> = emptyMap(),
+    val dueThemesCount: Int = 0,
+    val secureThemesCount: Int = 0
 )
 
 class TodayViewModel(
@@ -60,6 +68,8 @@ class TodayViewModel(
             val verses = repository.getUserMemoryVerses()
             val streak = repository.getStreak()
             val collections = repository.getPresetCollections()
+            val chapterProgress = repository.getAllChapterProgress()
+            val themeProgress = repository.getAllThemeProgress()
 
             val now = System.currentTimeMillis()
             val memorized = verses.count { it.status == "memorized" }
@@ -69,6 +79,24 @@ class TodayViewModel(
             val hero = dueList.firstOrNull() ?: verses.firstOrNull()
 
             val filtered = filterAndSearchList(verses, _uiState.value.filter, _uiState.value.searchQuery, now)
+
+            // Calculate Book Mastery for all 66 books
+            val masteryMap = books.associate { book ->
+                val pList = chapterProgress.filter { it.bookId == book.id }
+                book.id to MasteryUtils.calculateBookMastery(book.id, book.chapters, pList, now)
+            }
+            val totalSecure = masteryMap.values.sumOf { it.secure }
+            val totalChapters = books.sumOf { it.chapters }.coerceAtLeast(1189)
+
+            // Overdue chapter anchors grouped by book
+            val dueChaptersMap = chapterProgress
+                .filter { it.attempts > 0 && it.nextDueDate <= now }
+                .groupBy { it.bookId }
+                .mapValues { it.value.size }
+
+            // Theme progress rollups
+            val secureThemes = themeProgress.values.count { it.repetition >= 6 }
+            val dueThemes = themeProgress.values.count { it.attempts > 0 && it.nextDueDate <= now }
 
             _uiState.update {
                 it.copy(
@@ -81,6 +109,12 @@ class TodayViewModel(
                     memorizedCount = memorized,
                     learningCount = learning,
                     dueCount = due,
+                    masteryByBook = masteryMap,
+                    totalSecureChapters = totalSecure,
+                    totalBibleChapters = totalChapters,
+                    dueChaptersByBook = dueChaptersMap,
+                    secureThemesCount = secureThemes,
+                    dueThemesCount = dueThemes,
                     isLoading = false
                 )
             }

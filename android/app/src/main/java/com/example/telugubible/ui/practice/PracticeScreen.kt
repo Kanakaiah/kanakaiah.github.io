@@ -37,9 +37,10 @@ enum class PracticeSubject {
 fun PracticeScreen(
     viewModel: PracticeViewModel,
     onNavigateToBible: () -> Unit,
+    initialSubject: PracticeSubject = PracticeSubject.SESSION,
     modifier: Modifier = Modifier
 ) {
-    var activeSubject by remember { mutableStateOf(PracticeSubject.SESSION) }
+    var activeSubject by remember(initialSubject) { mutableStateOf(initialSubject) }
 
     if (activeSubject == PracticeSubject.SESSION) {
         val sessionViewModel: DailySessionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()

@@ -35,6 +35,7 @@ import com.example.telugubible.ui.bible.BookGuideViewModel
 import com.example.telugubible.ui.lookup.LookupScreen
 import com.example.telugubible.ui.lookup.LookupViewModel
 import com.example.telugubible.ui.practice.PracticeScreen
+import com.example.telugubible.ui.practice.PracticeSubject
 import com.example.telugubible.ui.practice.PracticeViewModel
 import com.example.telugubible.ui.reader.ChapterReaderScreen
 import com.example.telugubible.ui.reader.ReaderViewModel
@@ -65,6 +66,7 @@ fun MainScaffold(
     readerViewModel: ReaderViewModel = viewModel()
 ) {
     var selectedTab by remember { mutableStateOf(RemoraTab.TODAY) }
+    var practiceSubject by remember { mutableStateOf(PracticeSubject.SESSION) }
     var activeGuideBookId by remember { mutableStateOf<Int?>(null) }
     var isInReaderMode by remember { mutableStateOf(false) }
     var isInSettingsMode by remember { mutableStateOf(false) }
@@ -260,9 +262,20 @@ fun MainScaffold(
                     when (tab) {
                         RemoraTab.TODAY -> TodayScreen(
                             viewModel = todayViewModel,
-                            onNavigateToPractice = { selectedTab = RemoraTab.PRACTICE },
+                            onNavigateToPractice = {
+                                practiceSubject = PracticeSubject.SESSION
+                                selectedTab = RemoraTab.PRACTICE
+                            },
                             onNavigateToReader = openReader,
-                            onNavigateToRetention = { isInRetentionMode = true }
+                            onNavigateToRetention = { isInRetentionMode = true },
+                            onNavigateToGuide = { bookId -> activeGuideBookId = bookId },
+                            onNavigateToThemes = {
+                                practiceSubject = PracticeSubject.THEMES
+                                selectedTab = RemoraTab.PRACTICE
+                            },
+                            onFocusBookPractice = { bookId ->
+                                activeGuideBookId = bookId
+                            }
                         )
                         RemoraTab.LOOKUP -> LookupScreen(
                             viewModel = lookupViewModel,
@@ -270,7 +283,8 @@ fun MainScaffold(
                         )
                         RemoraTab.PRACTICE -> PracticeScreen(
                             viewModel = practiceViewModel,
-                            onNavigateToBible = { selectedTab = RemoraTab.BIBLE }
+                            onNavigateToBible = { selectedTab = RemoraTab.BIBLE },
+                            initialSubject = practiceSubject
                         )
                         RemoraTab.BIBLE -> BibleBrowserScreen(
                             viewModel = bibleBrowserViewModel,

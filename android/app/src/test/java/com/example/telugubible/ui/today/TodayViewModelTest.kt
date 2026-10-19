@@ -124,4 +124,29 @@ class TodayViewModelTest {
         assertNull("Detail modal should be closed upon deleting the verse", viewModel.uiState.value.selectedVerseForDetail)
         assertTrue(viewModel.uiState.value.verses.isEmpty())
     }
+
+    @Test
+    fun testShapeMeterAndDueAnchorsComputation() = runTest(testDispatcher) {
+        val now = System.currentTimeMillis()
+        // Grade Genesis ch 1 to secure (score 5 multiple times or direct db update)
+        repository.gradeChapterAnchor(bookId = 1, chapter = 1, score = 5)
+        // Force rep 6 and nextDueDate in the past
+        val db = userDbHelper.writableDatabase
+        db.execSQL("UPDATE chapter_progress SET repetition = 6, attempts = 2, next_due_date = ${now - 5000} WHERE book_id = 1 AND chapter = 1")
+
+        // Seed due theme progress for Matthew (bookId 40)
+        repository.gradeThemeProgress(bookId = 40, score = 4)
+        db.execSQL("UPDATE theme_progress SET attempts = 1, next_due_date = ${now - 5000} WHERE book_id = 40")
+        advanceUntilIdle()
+
+        val viewModel = TodayViewModel(application, repository)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(1, state.totalSecureChapters)
+        assertEquals(1, state.masteryByBook[1]?.secure)
+        assertEquals(1, state.dueChaptersByBook[1])
+        assertEquals(1, state.dueThemesCount)
+    }
 }
+

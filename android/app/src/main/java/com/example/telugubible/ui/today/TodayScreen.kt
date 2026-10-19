@@ -37,6 +37,9 @@ fun TodayScreen(
     onNavigateToPractice: () -> Unit,
     onNavigateToReader: (Int, Int) -> Unit,
     onNavigateToRetention: () -> Unit = {},
+    onNavigateToGuide: (Int) -> Unit = {},
+    onNavigateToThemes: () -> Unit = {},
+    onFocusBookPractice: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -68,7 +71,32 @@ fun TodayScreen(
                     )
                 }
 
-                // 2. Curated Collections Banners (Top 100 & 75 Well-Known)
+                // 2. Book Recall (Overdue chapter anchors & 66-card Book Themes)
+                item {
+                    BookRecallSection(
+                        books = state.books,
+                        dueChaptersByBook = state.dueChaptersByBook,
+                        secureThemesCount = state.secureThemesCount,
+                        dueThemesCount = state.dueThemesCount,
+                        onBookClick = onNavigateToGuide,
+                        onFocusBookPractice = onFocusBookPractice,
+                        onThemesClick = onNavigateToThemes
+                    )
+                }
+
+                // 3. Your Shape — 66-Book Canon Mastery Meter
+                item {
+                    ShapeMeter(
+                        books = state.books,
+                        masteryByBook = state.masteryByBook,
+                        totalSecure = state.totalSecureChapters,
+                        totalChapters = state.totalBibleChapters,
+                        onBookClick = onNavigateToGuide,
+                        onRetentionClick = onNavigateToRetention
+                    )
+                }
+
+                // 4. Curated Collections Banners (Top 100 & 75 Well-Known)
                 item {
                     CuratedCollectionsSection(
                         onAddTop100 = { viewModel.addCollection("top_100") },
@@ -76,57 +104,13 @@ fun TodayScreen(
                     )
                 }
 
-                // 3. Spaced Repetition Stats Row
+                // 5. Spaced Repetition Stats Row
                 item {
                     SpacedRepetitionSummaryRow(
                         memorizedCount = state.memorizedCount,
                         learningCount = state.learningCount,
                         dueCount = state.dueCount
                     )
-                }
-
-                // Retention & Memory Diagnostic Shortcut
-                item {
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = RemoraCardBg,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onNavigateToRetention() }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 14.dp, vertical = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "What would you still recall?",
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = RemoraTextPrimary
-                            )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                Text(
-                                    text = "Retention",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = RemoraAccent
-                                )
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = null,
-                                    tint = RemoraAccent,
-                                    modifier = Modifier.size(14.dp)
-                                )
-                            }
-                        }
-                    }
                 }
 
                 // 4. Translation Language Selector (BSB English vs IRV Telugu)
