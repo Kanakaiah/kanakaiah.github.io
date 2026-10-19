@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.theme.*
 
@@ -61,6 +62,7 @@ fun TodayScreen(
                     RemoraHeroDailyPractice(
                         heroVerse = state.heroVerse,
                         dueCount = state.dueCount,
+                        displayLanguage = state.displayLanguage,
                         onStartSession = onNavigateToPractice
                     )
                 }
@@ -82,7 +84,15 @@ fun TodayScreen(
                     )
                 }
 
-                // 4. Search Filter Input
+                // 4. Translation Language Selector (BSB English vs IRV Telugu)
+                item {
+                    LanguageSelectorRow(
+                        currentLanguage = state.displayLanguage,
+                        onSelectLanguage = { viewModel.setDisplayLanguage(it) }
+                    )
+                }
+
+                // 5. Search Filter Input
                 item {
                     OutlinedTextField(
                         value = state.searchQuery,
@@ -110,7 +120,7 @@ fun TodayScreen(
                     )
                 }
 
-                // 5. Filter Chips Row
+                // 6. Filter Chips Row
                 item {
                     FilterTabs(
                         currentFilter = state.filter,
@@ -122,7 +132,7 @@ fun TodayScreen(
                     )
                 }
 
-                // 6. Memory Verse Cards List
+                // 7. Memory Verse Cards List
                 if (state.filteredVerses.isEmpty()) {
                     item {
                         EmptyVerseState(
@@ -136,6 +146,7 @@ fun TodayScreen(
                     items(state.filteredVerses, key = { it.id }) { verse ->
                         RemoraVerseCard(
                             verse = verse,
+                            displayLanguage = state.displayLanguage,
                             onPractice = onNavigateToPractice,
                             onRead = { onNavigateToReader(verse.bookId, verse.chapter) },
                             onDelete = { viewModel.removeVerse(verse.id) }
@@ -198,6 +209,7 @@ fun TodayScreen(
 private fun RemoraHeroDailyPractice(
     heroVerse: UserMemoryVerse?,
     dueCount: Int,
+    displayLanguage: DisplayLanguage,
     onStartSession: () -> Unit
 ) {
     Surface(
@@ -207,28 +219,54 @@ private fun RemoraHeroDailyPractice(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.LocalFireDepartment,
-                    contentDescription = null,
-                    tint = RemoraAccent,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "DAILY PRACTICE",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.5.sp,
-                    color = RemoraAccent
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.LocalFireDepartment,
+                        contentDescription = null,
+                        tint = RemoraAccent,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "DAILY PRACTICE",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.5.sp,
+                        color = RemoraAccent
+                    )
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(4.dp),
+                    color = RemoraCardBgElevated,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                ) {
+                    Text(
+                        text = if (displayLanguage == DisplayLanguage.ENGLISH) "BSB" else "IRV",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RemoraAccentLight,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             if (heroVerse != null && dueCount > 0) {
+                val isEnglish = displayLanguage == DisplayLanguage.ENGLISH
+                val heroRef = if (isEnglish) "${heroVerse.bookNameEn} ${heroVerse.chapter}:${heroVerse.verse}"
+                              else "${heroVerse.bookNameTe} ${heroVerse.chapter}:${heroVerse.verse}"
+                val targetText = (if (isEnglish) heroVerse.textEn else heroVerse.textTe)
+                    ?: heroVerse.textEn ?: heroVerse.textTe ?: ""
+
                 Text(
-                    text = "${heroVerse.bookNameEn} · ${heroVerse.bookNameTe} ${heroVerse.chapter}:${heroVerse.verse}",
+                    text = heroRef,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = RemoraTextPrimary
@@ -237,7 +275,7 @@ private fun RemoraHeroDailyPractice(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // First Letter Memory Cue
-                val cue = buildFirstLetterCue(heroVerse.textEn ?: heroVerse.textTe ?: "")
+                val cue = buildFirstLetterCue(targetText)
                 if (cue.isNotBlank()) {
                     Text(
                         text = cue,
@@ -468,8 +506,96 @@ private fun FilterTabs(
 }
 
 @Composable
+private fun LanguageSelectorRow(
+    currentLanguage: DisplayLanguage,
+    onSelectLanguage: (DisplayLanguage) -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(10.dp),
+        color = RemoraCardBg,
+        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+        ) {
+            val isEnglish = currentLanguage == DisplayLanguage.ENGLISH
+            Surface(
+                onClick = { onSelectLanguage(DisplayLanguage.ENGLISH) },
+                shape = RoundedCornerShape(8.dp),
+                color = if (isEnglish) RemoraAccent else Color.Transparent,
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "English",
+                        fontSize = 13.sp,
+                        fontWeight = if (isEnglish) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isEnglish) Color.White else RemoraTextSecondary
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = if (isEnglish) Color.White.copy(alpha = 0.2f) else RemoraCardBgElevated
+                    ) {
+                        Text(
+                            text = "BSB",
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isEnglish) Color.White else RemoraTextMuted,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                        )
+                    }
+                }
+            }
+
+            val isTelugu = currentLanguage == DisplayLanguage.TELUGU
+            Surface(
+                onClick = { onSelectLanguage(DisplayLanguage.TELUGU) },
+                shape = RoundedCornerShape(8.dp),
+                color = if (isTelugu) RemoraAccent else Color.Transparent,
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "తెలుగు",
+                        fontSize = 13.sp,
+                        fontWeight = if (isTelugu) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isTelugu) Color.White else RemoraTextSecondary
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = if (isTelugu) Color.White.copy(alpha = 0.2f) else RemoraCardBgElevated
+                    ) {
+                        Text(
+                            text = "IRV",
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isTelugu) Color.White else RemoraTextMuted,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun RemoraVerseCard(
     verse: UserMemoryVerse,
+    displayLanguage: DisplayLanguage,
     onPractice: () -> Unit,
     onRead: () -> Unit,
     onDelete: () -> Unit
@@ -477,6 +603,14 @@ private fun RemoraVerseCard(
     val isDue = verse.nextDueDate <= System.currentTimeMillis()
     val isMemorized = verse.status == "memorized"
     val indicatorColor = if (isDue || isMemorized) RemoraGold else RemoraAccent
+
+    var cardLanguage by remember(displayLanguage) { mutableStateOf(displayLanguage) }
+    val isEnglish = cardLanguage == DisplayLanguage.ENGLISH
+    val refText = if (isEnglish) "${verse.bookNameEn} ${verse.chapter}:${verse.verse}"
+                  else "${verse.bookNameTe} ${verse.chapter}:${verse.verse}"
+    val badgeText = if (isEnglish) "BSB" else "IRV"
+    val currentVerseText = (if (isEnglish) verse.textEn else verse.textTe)
+        ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
 
     Surface(
         shape = RoundedCornerShape(12.dp),
@@ -502,24 +636,38 @@ private fun RemoraVerseCard(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "${verse.bookNameEn} · ${verse.bookNameTe} ${verse.chapter}:${verse.verse}",
+                            text = refText,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = RemoraTextPrimary
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        // Interactive translation badge: tapping it toggles translation for this card
                         Surface(
+                            onClick = {
+                                cardLanguage = if (isEnglish) DisplayLanguage.TELUGU else DisplayLanguage.ENGLISH
+                            },
                             shape = RoundedCornerShape(4.dp),
                             color = RemoraCardBgElevated,
                             border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
                         ) {
-                            Text(
-                                text = "BSB · IRV",
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextMuted,
-                                modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    text = badgeText,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = RemoraAccentLight
+                                )
+                                Spacer(modifier = Modifier.width(3.dp))
+                                Text(
+                                    text = "⇄",
+                                    fontSize = 9.sp,
+                                    color = RemoraTextMuted
+                                )
+                            }
                         }
                     }
 
@@ -541,24 +689,13 @@ private fun RemoraVerseCard(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Telugu Text
-                if (!verse.textTe.isNullOrBlank()) {
+                // Single-Translation Text Block (NO stacked duplicate languages)
+                if (currentVerseText.isNotBlank()) {
                     Text(
-                        text = verse.textTe,
-                        fontSize = 16.sp,
-                        lineHeight = 24.sp,
+                        text = currentVerseText,
+                        fontSize = if (isEnglish) 14.sp else 16.sp,
+                        lineHeight = if (isEnglish) 21.sp else 25.sp,
                         color = RemoraTextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                }
-
-                // English Text
-                if (!verse.textEn.isNullOrBlank()) {
-                    Text(
-                        text = verse.textEn,
-                        fontSize = 13.sp,
-                        lineHeight = 19.sp,
-                        color = RemoraTextSecondary
                     )
                 }
 

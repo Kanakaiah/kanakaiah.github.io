@@ -12,6 +12,7 @@ import com.example.telugubible.data.repository.BibleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.example.telugubible.data.model.DisplayLanguage
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ data class TodayUiState(
     val heroVerse: UserMemoryVerse? = null,
     val searchQuery: String = "",
     val filter: VerseFilter = VerseFilter.ALL,
+    val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH,
     val streak: Int = 14,
     val memorizedCount: Int = 0,
     val learningCount: Int = 0,
@@ -92,6 +94,10 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         val now = System.currentTimeMillis()
         val filtered = filterAndSearchList(_uiState.value.verses, _uiState.value.filter, query, now)
         _uiState.update { it.copy(searchQuery = query, filteredVerses = filtered) }
+    }
+
+    fun setDisplayLanguage(lang: DisplayLanguage) {
+        _uiState.update { it.copy(displayLanguage = lang) }
     }
 
     private fun filterAndSearchList(

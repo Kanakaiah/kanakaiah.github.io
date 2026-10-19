@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.theme.*
 
 @Composable
@@ -108,21 +109,58 @@ fun PracticeScreen(
                                     .padding(20.dp),
                                 verticalArrangement = Arrangement.SpaceBetween
                             ) {
-                                // Card Top: Reference
-                                Column {
-                                    Text(
-                                        text = "${verse.bookNameEn} · ${verse.bookNameTe}",
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = RemoraAccentLight
-                                    )
-                                    Spacer(modifier = Modifier.height(2.dp))
-                                    Text(
-                                        text = "Chapter ${verse.chapter}:${verse.verse}",
-                                        fontSize = 22.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = RemoraTextPrimary
-                                    )
+                                // Card Top: Reference + Translation Toggle Badge
+                                val isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH
+                                val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
+                                val badgeText = if (isEnglish) "BSB" else "IRV"
+                                val activeText = (if (isEnglish) verse.textEn else verse.textTe)
+                                    ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column {
+                                        Text(
+                                            text = bookName,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = RemoraAccentLight
+                                        )
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        Text(
+                                            text = "Chapter ${verse.chapter}:${verse.verse}",
+                                            fontSize = 22.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = RemoraTextPrimary
+                                        )
+                                    }
+
+                                    Surface(
+                                        onClick = { viewModel.toggleDisplayLanguage() },
+                                        shape = RoundedCornerShape(6.dp),
+                                        color = RemoraCardBgElevated,
+                                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                        ) {
+                                            Text(
+                                                text = badgeText,
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = RemoraAccentLight
+                                            )
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text(
+                                                text = "⇄",
+                                                fontSize = 10.sp,
+                                                color = RemoraTextMuted
+                                            )
+                                        }
+                                    }
                                 }
 
                                 // Card Center: Prompt or Revealed Text
@@ -171,31 +209,16 @@ fun PracticeScreen(
                                             )
                                         }
                                     } else {
-                                        Column(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            verticalArrangement = Arrangement.Center
-                                        ) {
-                                            if (!verse.textTe.isNullOrBlank()) {
-                                                Text(
-                                                    text = verse.textTe,
-                                                    fontSize = 19.sp,
-                                                    lineHeight = 28.sp,
-                                                    fontWeight = FontWeight.Normal,
-                                                    color = RemoraTextPrimary
-                                                )
-                                                Spacer(modifier = Modifier.height(14.dp))
-                                            }
-                                            if (!verse.textEn.isNullOrBlank()) {
-                                                Divider(color = RemoraCardBorder, thickness = 1.dp)
-                                                Spacer(modifier = Modifier.height(12.dp))
-                                                Text(
-                                                    text = verse.textEn,
-                                                    fontSize = 15.sp,
-                                                    lineHeight = 22.sp,
-                                                    color = RemoraTextSecondary
-                                                )
-                                            }
-                                        }
+                                        // Single translation revealed text (clean, no clutter)
+                                        Text(
+                                            text = activeText,
+                                            fontSize = if (isEnglish) 18.sp else 20.sp,
+                                            lineHeight = if (isEnglish) 26.sp else 30.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            color = RemoraTextPrimary,
+                                            textAlign = TextAlign.Start,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
                                     }
                                 }
 

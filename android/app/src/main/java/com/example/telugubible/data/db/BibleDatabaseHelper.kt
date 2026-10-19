@@ -1,6 +1,5 @@
 package com.example.telugubible.data.db
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -12,38 +11,51 @@ import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.model.VerseSearchResult
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.math.max
-import kotlin.math.roundToInt
 
-class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+class BibleDatabaseHelper(val context: Context) :
+    SQLiteOpenHelper(context, STATIC_DB_NAME, null, STATIC_DB_VERSION) {
 
     companion object {
-        const val DB_NAME = "bible.db"
-        const val DB_VERSION = 3
-        private const val PREFS_NAME = "bible_db_prefs"
-        private const val KEY_COPIED_VERSION = "copied_db_version"
+        const val ASSET_NAME = "bible.db"
+        const val STATIC_DB_NAME = "bible_static.db"
+        const val STATIC_DB_VERSION = 4
+        private const val PREFS_NAME = "bible_static_db_prefs"
+        private const val KEY_COPIED_VERSION = "copied_static_db_version"
+
+        @Volatile
+        private var instance: BibleDatabaseHelper? = null
+
+        fun getInstance(context: Context): BibleDatabaseHelper =
+            instance ?: synchronized(this) {
+                instance ?: BibleDatabaseHelper(context.applicationContext).also { instance = it }
+            }
     }
 
     private val dbPath: File
-        get() = context.getDatabasePath(DB_NAME)
+        get() = context.getDatabasePath(STATIC_DB_NAME)
+
+    @Volatile
+    private var cachedBooksMap: Map<Int, Book>? = null
 
     init {
         copyDatabaseIfNeeded()
     }
 
+    @Synchronized
     private fun copyDatabaseIfNeeded() {
         val dbFile = dbPath
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val copiedVersion = prefs.getInt(KEY_COPIED_VERSION, 0)
 
-        if (!dbFile.exists() || dbFile.length() == 0L || copiedVersion < DB_VERSION) {
+        if (!dbFile.exists() || dbFile.length() == 0L || copiedVersion < STATIC_DB_VERSION) {
             dbFile.parentFile?.mkdirs()
-            context.assets.open(DB_NAME).use { input ->
+            context.assets.open(ASSET_NAME).use { input ->
                 FileOutputStream(dbFile).use { output ->
                     input.copyTo(output)
                 }
             }
-            prefs.edit().putInt(KEY_COPIED_VERSION, DB_VERSION).apply()
+            prefs.edit().putInt(KEY_COPIED_VERSION, STATIC_DB_VERSION).apply()
+            cachedBooksMap = null
         }
     }
 
@@ -52,7 +64,7 @@ class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(conte
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        // Handled by copying fresh asset in copyDatabaseIfNeeded
+        // Static database is updated by copying fresh asset in copyDatabaseIfNeeded
     }
 
     fun getAllBooks(): List<Book> {
@@ -84,7 +96,19 @@ class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(conte
         return list
     }
 
+    fun getBooksMap(): Map<Int, Book> {
+        val cached = cachedBooksMap
+        if (cached != null) return cached
+        val map = getAllBooks().associateBy { it.id }
+        cachedBooksMap = map
+        return map
+    }
+
     fun getBook(bookId: Int): Book? {
+        val cached = cachedBooksMap
+        if (cached != null) {
+            return cached[bookId]
+        }
         val db = readableDatabase
         val cursor = db.rawQuery(
             "SELECT id, book_key, name_en, name_te, name_ta, testament, section, chapters, theme_word, key_word, subtitle FROM books WHERE id = ?",
@@ -133,6 +157,32 @@ class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(conte
             }
         }
         return list
+    }
+
+    fun getVerseTexts(keys: List<Triple<Int, Int, Int>>): Map<Triple<Int, Int, Int>, Pair<String?, String?>> {
+        if (keys.isEmpty()) return emptyMap()
+        val result = mutableMapOf<Triple<Int, Int, Int>, Pair<String?, String?>>()
+        val db = readableDatabase
+
+        keys.chunked(100).forEach { batch ->
+            val placeholders = batch.joinToString(" OR ") { "(book_id = ? AND chapter = ? AND verse = ?)" }
+            val args = batch.flatMap { listOf(it.first.toString(), it.second.toString(), it.third.toString()) }.toTypedArray()
+            val cursor = db.rawQuery(
+                "SELECT book_id, chapter, verse, text_te, text_en FROM verses WHERE $placeholders",
+                args
+            )
+            cursor.use {
+                while (it.moveToNext()) {
+                    val bId = it.getInt(0)
+                    val ch = it.getInt(1)
+                    val vs = it.getInt(2)
+                    val te = if (it.isNull(3)) null else it.getString(3)
+                    val en = if (it.isNull(4)) null else it.getString(4)
+                    result[Triple(bId, ch, vs)] = Pair(te, en)
+                }
+            }
+        }
+        return result
     }
 
     fun getParagraphBreaks(bookId: Int, chapter: Int): Set<Int> {
@@ -245,130 +295,6 @@ class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(conte
         return list
     }
 
-    fun getUserMemoryVerses(): List<UserMemoryVerse> {
-        val list = mutableListOf<UserMemoryVerse>()
-        val db = readableDatabase
-        val cursor = db.rawQuery(
-            """
-            SELECT uv.id, uv.book_id, b.book_key, b.name_en, b.name_te, uv.chapter, uv.verse, 
-                   v.text_te, v.text_en, uv.status, uv.repetition, uv.interval, uv.efactor, 
-                   uv.next_due_date, uv.created_at
-            FROM user_verses uv
-            JOIN books b ON uv.book_id = b.id
-            LEFT JOIN verses v ON v.book_id = uv.book_id AND v.chapter = uv.chapter AND v.verse = uv.verse
-            ORDER BY uv.next_due_date ASC
-            """.trimIndent(),
-            null
-        )
-        cursor.use {
-            while (it.moveToNext()) {
-                list.add(
-                    UserMemoryVerse(
-                        id = it.getLong(0),
-                        bookId = it.getInt(1),
-                        bookKey = it.getString(2),
-                        bookNameEn = it.getString(3),
-                        bookNameTe = it.getString(4),
-                        chapter = it.getInt(5),
-                        verse = it.getInt(6),
-                        textTe = if (it.isNull(7)) null else it.getString(7),
-                        textEn = if (it.isNull(8)) null else it.getString(8),
-                        status = it.getString(9),
-                        repetition = it.getInt(10),
-                        interval = it.getInt(11),
-                        efactor = it.getDouble(12),
-                        nextDueDate = it.getLong(13),
-                        createdAt = it.getLong(14)
-                    )
-                )
-            }
-        }
-        return list
-    }
-
-    fun addUserVerse(bookId: Int, chapter: Int, verse: Int): Boolean {
-        val db = writableDatabase
-        val now = System.currentTimeMillis()
-        val values = ContentValues().apply {
-            put("book_id", bookId)
-            put("chapter", chapter)
-            put("verse", verse)
-            put("status", "learning")
-            put("repetition", 0)
-            put("interval", 0)
-            put("efactor", 2.5)
-            put("next_due_date", now)
-            put("created_at", now)
-        }
-        val rowId = db.insertWithOnConflict("user_verses", null, values, SQLiteDatabase.CONFLICT_IGNORE)
-        return rowId != -1L
-    }
-
-    fun removeUserVerse(id: Long) {
-        val db = writableDatabase
-        db.delete("user_verses", "id = ?", arrayOf(id.toString()))
-    }
-
-    fun gradeUserVerse(id: Long, score: Int) {
-        val db = writableDatabase
-        val cursor = db.rawQuery(
-            "SELECT repetition, interval, efactor FROM user_verses WHERE id = ?",
-            arrayOf(id.toString())
-        )
-        var rep = 0
-        var interval = 0
-        var efactor = 2.5
-
-        cursor.use {
-            if (it.moveToNext()) {
-                rep = it.getInt(0)
-                interval = it.getInt(1)
-                efactor = it.getDouble(2)
-            } else {
-                return
-            }
-        }
-
-        // Remora SuperMemo-2 (SM-2) algorithm
-        // score: 1 = Blank, 3 = Hard, 4 = Good, 5 = Easy
-        if (score < 3) {
-            rep = 0
-            interval = 1
-        } else {
-            rep += 1
-            interval = when (rep) {
-                1 -> 1
-                2 -> 6
-                else -> max(1, (interval * efactor).roundToInt())
-            }
-        }
-
-        efactor = max(1.3, efactor + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)))
-        val now = System.currentTimeMillis()
-        val nextDueDate = now + (interval.toLong() * 24 * 60 * 60 * 1000L)
-        val status = if (rep >= 5) "memorized" else "learning"
-
-        val values = ContentValues().apply {
-            put("repetition", rep)
-            put("interval", interval)
-            put("efactor", efactor)
-            put("next_due_date", nextDueDate)
-            put("status", status)
-        }
-        db.update("user_verses", values, "id = ?", arrayOf(id.toString()))
-    }
-
-    fun getStreak(): Int {
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT val FROM user_stats WHERE key = 'streak'", null)
-        cursor.use {
-            if (it.moveToNext()) {
-                return it.getString(0)?.toIntOrNull() ?: 14
-            }
-        }
-        return 14
-    }
-
     fun getPresetCollections(): List<PresetCollection> {
         val list = mutableListOf<PresetCollection>()
         val db = readableDatabase
@@ -388,40 +314,71 @@ class BibleDatabaseHelper(private val context: Context) : SQLiteOpenHelper(conte
         return list
     }
 
-    fun addPresetCollection(collectionId: String): Int {
-        val db = writableDatabase
-        val now = System.currentTimeMillis()
+    fun getPresetVerses(collectionId: String): List<Triple<Int, Int, Int>> {
+        val list = mutableListOf<Triple<Int, Int, Int>>()
+        val db = readableDatabase
         val cursor = db.rawQuery(
             "SELECT book_id, chapter, verse FROM preset_verses WHERE collection_id = ?",
             arrayOf(collectionId)
         )
-        var insertedCount = 0
-        db.beginTransaction()
-        try {
-            cursor.use {
-                while (it.moveToNext()) {
-                    val bId = it.getInt(0)
-                    val ch = it.getInt(1)
-                    val vs = it.getInt(2)
-                    val values = ContentValues().apply {
-                        put("book_id", bId)
-                        put("chapter", ch)
-                        put("verse", vs)
-                        put("status", "learning")
-                        put("repetition", 0)
-                        put("interval", 0)
-                        put("efactor", 2.5)
-                        put("next_due_date", now)
-                        put("created_at", now)
-                    }
-                    val rowId = db.insertWithOnConflict("user_verses", null, values, SQLiteDatabase.CONFLICT_IGNORE)
-                    if (rowId != -1L) insertedCount++
-                }
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(Triple(it.getInt(0), it.getInt(1), it.getInt(2)))
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
-        return insertedCount
+        return list
+    }
+
+    // Delegations to UserDatabaseHelper for backward compatibility
+    fun getUserMemoryVerses(): List<UserMemoryVerse> {
+        val userDb = UserDatabaseHelper.getInstance(context)
+        val userVerses = userDb.getUserVerses()
+        if (userVerses.isEmpty()) return emptyList()
+
+        val books = getBooksMap()
+        val verseTexts = getVerseTexts(userVerses.map { Triple(it.bookId, it.chapter, it.verse) })
+
+        return userVerses.map { uv ->
+            val book = books[uv.bookId]
+            val (te, en) = verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Pair(null, null)
+            UserMemoryVerse(
+                id = uv.id,
+                bookId = uv.bookId,
+                bookKey = book?.key ?: "",
+                bookNameEn = book?.nameEn ?: "",
+                bookNameTe = book?.nameTe ?: "",
+                chapter = uv.chapter,
+                verse = uv.verse,
+                textTe = te,
+                textEn = en,
+                status = uv.status,
+                repetition = uv.repetition,
+                interval = uv.interval,
+                efactor = uv.efactor,
+                nextDueDate = uv.nextDueDate,
+                createdAt = uv.createdAt
+            )
+        }
+    }
+
+    fun addUserVerse(bookId: Int, chapter: Int, verse: Int): Boolean {
+        return UserDatabaseHelper.getInstance(context).addUserVerse(bookId, chapter, verse)
+    }
+
+    fun removeUserVerse(id: Long) {
+        UserDatabaseHelper.getInstance(context).removeUserVerse(id)
+    }
+
+    fun gradeUserVerse(id: Long, score: Int) {
+        UserDatabaseHelper.getInstance(context).gradeUserVerse(id, score)
+    }
+
+    fun getStreak(): Int {
+        return UserDatabaseHelper.getInstance(context).getStreak()
+    }
+
+    fun addPresetCollection(collectionId: String): Int {
+        val verses = getPresetVerses(collectionId)
+        return UserDatabaseHelper.getInstance(context).addUserVerses(verses)
     }
 }
