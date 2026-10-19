@@ -23,12 +23,22 @@ data class UserVerseEntity(
     val attempts: Int = 0
 )
 
+data class ChapterProgressEntity(
+    val bookId: Int,
+    val chapter: Int,
+    val status: String,
+    val repetition: Int,
+    val interval: Int,
+    val efactor: Double,
+    val nextDueDate: Long
+)
+
 class UserDatabaseHelper(private val context: Context) :
     SQLiteOpenHelper(context, USER_DB_NAME, null, USER_DB_VERSION) {
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 1
+        const val USER_DB_VERSION = 2
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -96,10 +106,39 @@ class UserDatabaseHelper(private val context: Context) :
             );
             """.trimIndent()
         )
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS chapter_progress (
+                book_id INTEGER NOT NULL,
+                chapter INTEGER NOT NULL,
+                status TEXT NOT NULL DEFAULT 'learning',
+                repetition INTEGER NOT NULL DEFAULT 0,
+                interval INTEGER NOT NULL DEFAULT 0,
+                efactor REAL NOT NULL DEFAULT 2.5,
+                next_due_date INTEGER NOT NULL,
+                PRIMARY KEY (book_id, chapter)
+            );
+            """.trimIndent()
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Safe incremental migrations for user tables will be placed here
+        if (oldVersion < 2) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS chapter_progress (
+                    book_id INTEGER NOT NULL,
+                    chapter INTEGER NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'learning',
+                    repetition INTEGER NOT NULL DEFAULT 0,
+                    interval INTEGER NOT NULL DEFAULT 0,
+                    efactor REAL NOT NULL DEFAULT 2.5,
+                    next_due_date INTEGER NOT NULL,
+                    PRIMARY KEY (book_id, chapter)
+                );
+                """.trimIndent()
+            )
+        }
     }
 
     private fun migrateFromLegacyDbIfNeeded() {
@@ -374,4 +413,77 @@ class UserDatabaseHelper(private val context: Context) :
             db.insertWithOnConflict("session_state", null, values, SQLiteDatabase.CONFLICT_REPLACE)
         }
     }
+
+    fun getChapterProgress(bookId: Int): Map<Int, ChapterProgressEntity> {
+        val map = mutableMapOf<Int, ChapterProgressEntity>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT chapter, status, repetition, interval, efactor, next_due_date FROM chapter_progress WHERE book_id = ?",
+            arrayOf(bookId.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                val ch = it.getInt(0)
+                map[ch] = ChapterProgressEntity(
+                    bookId = bookId,
+                    chapter = ch,
+                    status = it.getString(1),
+                    repetition = it.getInt(2),
+                    interval = it.getInt(3),
+                    efactor = it.getDouble(4),
+                    nextDueDate = it.getLong(5)
+                )
+            }
+        }
+        return map
+    }
+
+    fun gradeChapterAnchor(bookId: Int, chapter: Int, score: Int): ChapterProgressEntity {
+        val existing = getChapterProgress(bookId)[chapter]
+        val rep = existing?.repetition ?: 0
+        val interval = existing?.interval ?: 0
+        val efactor = existing?.efactor ?: 2.5
+
+        val (newRep, newInterval, newEfactor) = if (score >= 3) {
+            val nextRep = rep + 1
+            val nextInterval = when (rep) {
+                0 -> 1
+                1 -> 6
+                else -> max(1, (interval * efactor).roundToInt())
+            }
+            val efactorAdjustment = 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)
+            val nextEfactor = max(1.3, efactor + efactorAdjustment)
+            Triple(nextRep, nextInterval, nextEfactor)
+        } else {
+            Triple(0, 1, max(1.3, efactor - 0.2))
+        }
+
+        val status = if (newRep >= 6) "mastered" else if (newRep > 0) "review" else "learning"
+        val nextDueDate = System.currentTimeMillis() + (newInterval.toLong() * 24L * 60L * 60L * 1000L)
+
+        val entity = ChapterProgressEntity(
+            bookId = bookId,
+            chapter = chapter,
+            status = status,
+            repetition = newRep,
+            interval = newInterval,
+            efactor = newEfactor,
+            nextDueDate = nextDueDate
+        )
+
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("book_id", bookId)
+            put("chapter", chapter)
+            put("status", status)
+            put("repetition", newRep)
+            put("interval", newInterval)
+            put("efactor", newEfactor)
+            put("next_due_date", nextDueDate)
+        }
+        db.insertWithOnConflict("chapter_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+
+        return entity
+    }
 }
+

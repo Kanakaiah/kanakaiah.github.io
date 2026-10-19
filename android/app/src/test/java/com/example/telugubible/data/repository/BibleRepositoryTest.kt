@@ -105,4 +105,62 @@ class BibleRepositoryTest {
         val first = memoryVerses.first()
         assertTrue(first.bookNameEn.isNotEmpty())
     }
+
+    @Test
+    fun testLoadBookGuideAndAnchors() = runTest {
+        // Test Genesis (bookId = 1)
+        val genesisGuide = repository.getBookGuide(1)
+        assertNotNull("Genesis guide should exist in SQLite", genesisGuide)
+        assertEquals("genesis", genesisGuide?.bookKey)
+        assertEquals("Where Everything Began and Everything Broke", genesisGuide?.subtitle)
+        assertEquals("11 → 14 → 11 → 14", genesisGuide?.structureFormula)
+        assertNotNull(genesisGuide?.memorySentence)
+        assertTrue(genesisGuide!!.memorySentence!!.contains("LIGHT"))
+
+        // Blocks
+        assertEquals(4, genesisGuide.blocks.size)
+        assertEquals("PRIMEVAL", genesisGuide.blocks[0].label)
+
+        // Key Verses
+        assertTrue(genesisGuide.keyVerses.isNotEmpty())
+        assertEquals("Genesis 1:1", genesisGuide.keyVerses[0].ref)
+
+        // Anchors
+        assertEquals(50, genesisGuide.anchors.size)
+        val ch1Anchor = genesisGuide.anchors[0]
+        assertEquals(1, ch1Anchor.chapter)
+        assertEquals("LIGHT", ch1Anchor.word)
+        assertNull("First anchor has no previous word", ch1Anchor.prevWord)
+        assertEquals("GARDEN", ch1Anchor.nextWord)
+
+        // Test Matthew (bookId = 40)
+        val matthewGuide = repository.getBookGuide(40)
+        assertNotNull("Matthew guide should exist", matthewGuide)
+        assertEquals("matthew", matthewGuide?.bookKey)
+        assertEquals(28, matthewGuide?.anchors?.size)
+    }
+
+    @Test
+    fun testChapterAnchorProgressAndGrading() = runTest {
+        val initialProgress = repository.getChapterProgress(1)
+        assertTrue("Initially no chapter progress", initialProgress.isEmpty())
+
+        // Grade chapter 1 with score 4 (Good)
+        val graded = repository.gradeChapterAnchor(1, 1, 4)
+        assertEquals(1, graded.bookId)
+        assertEquals(1, graded.chapter)
+        assertEquals(1, graded.repetition)
+        assertEquals(1, graded.interval)
+        assertTrue(graded.nextDueDate > System.currentTimeMillis())
+
+        val fetchedProgress = repository.getChapterProgress(1)
+        assertEquals(1, fetchedProgress.size)
+        assertEquals(1, fetchedProgress[1]?.interval)
+
+        // Grade chapter 1 again with score 5 (Easy) -> repetition becomes 2, interval becomes 6
+        val secondGrade = repository.gradeChapterAnchor(1, 1, 5)
+        assertEquals(2, secondGrade.repetition)
+        assertEquals(6, secondGrade.interval)
+    }
 }
+

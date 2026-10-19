@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { DatabaseSync } from 'node:sqlite';
+import { createServer } from 'vite';
 import { OT_BOOKS } from '../src/data/otBooks.ts';
 import { NT_BOOKS } from '../src/data/ntBooks.ts';
 import { SEED_VERSES } from '../src/data/seed.ts';
@@ -109,6 +110,49 @@ CREATE TABLE preset_verses (
   FOREIGN KEY (collection_id) REFERENCES preset_collections(id),
   FOREIGN KEY (book_id) REFERENCES books(id)
 );
+
+CREATE TABLE book_guides (
+  book_id INTEGER PRIMARY KEY,
+  book_key TEXT NOT NULL UNIQUE,
+  subtitle TEXT,
+  structure_formula TEXT,
+  memory_sentence TEXT,
+  icon TEXT,
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+CREATE TABLE guide_blocks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  block_index INTEGER NOT NULL,
+  chapters TEXT NOT NULL,
+  label TEXT NOT NULL,
+  description TEXT,
+  unit TEXT DEFAULT 'chapter',
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+CREATE INDEX idx_guide_blocks_book ON guide_blocks(book_id);
+
+CREATE TABLE guide_key_verses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  ref TEXT NOT NULL,
+  text TEXT NOT NULL,
+  theme TEXT,
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+CREATE INDEX idx_guide_key_verses_book ON guide_key_verses(book_id);
+
+CREATE TABLE chapter_anchors (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  chapter INTEGER NOT NULL,
+  word TEXT NOT NULL,
+  scene TEXT NOT NULL,
+  UNIQUE(book_id, chapter),
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+CREATE INDEX idx_chapter_anchors_book ON chapter_anchors(book_id);
 `);
 
 console.log('Tables created successfully.');
@@ -424,6 +468,119 @@ for (const t of TOP_100_VERSES) {
 }
 db.exec('COMMIT;');
 console.log(`Inserted preset collections: 75 Well-Known and 100 Top verses.`);
+
+// Insert Book Study Guides, Blocks, Key Verses, and Chapter Anchors
+console.log('Loading OT and NT study guides via Vite SSR...');
+const viteServer = await createServer({ server: { middlewareMode: true } });
+const otModule = await viteServer.ssrLoadModule('./src/data/otGuides/index.ts');
+const ntModule = await viteServer.ssrLoadModule('./src/data/guides.ts');
+const otGuides = otModule.OT_STUDY_GUIDES;
+const ntGuides = ntModule.NT_STUDY_GUIDES.filter(g => g.type === 'book-guide' || g.anchors);
+const allGuides = [...otGuides, ...ntGuides];
+
+const bookKeyToId = new Map(BOOK_LIST.map(b => [b.key.toLowerCase(), b.id]));
+
+db.exec('BEGIN TRANSACTION;');
+const insertGuideStmt = db.prepare(`
+  INSERT INTO book_guides (book_id, book_key, subtitle, structure_formula, memory_sentence, icon)
+  VALUES (?, ?, ?, ?, ?, ?)
+`);
+const insertBlockStmt = db.prepare(`
+  INSERT INTO guide_blocks (book_id, block_index, chapters, label, description, unit)
+  VALUES (?, ?, ?, ?, ?, ?)
+`);
+const insertKeyVerseStmt = db.prepare(`
+  INSERT INTO guide_key_verses (book_id, ref, text, theme)
+  VALUES (?, ?, ?, ?)
+`);
+const insertAnchorStmt = db.prepare(`
+  INSERT INTO chapter_anchors (book_id, chapter, word, scene)
+  VALUES (?, ?, ?, ?)
+`);
+
+let guideCount = 0;
+let blockCount = 0;
+let keyVerseCount = 0;
+let anchorCount = 0;
+
+for (const g of allGuides) {
+  const bookId = bookKeyToId.get(g.id.toLowerCase());
+  if (!bookId) {
+    console.warn(`Warning: No book_id found for guide id: ${g.id}`);
+    continue;
+  }
+  insertGuideStmt.run(
+    bookId,
+    g.id.toLowerCase(),
+    g.subtitle || '',
+    g.structureFormula || '',
+    g.memorySentence || '',
+    g.icon || '📖'
+  );
+  guideCount++;
+
+  let blocks = g.blocks;
+  if (!blocks && g.architecture) {
+    blocks = g.architecture.map(arch => {
+      const start = arch.chapters[0];
+      const end = arch.chapters[1];
+      let label = arch.name;
+      let description = '';
+      const match = arch.name.match(/^(.*?)\s*\((.*?)\)$/);
+      if (match) {
+        label = match[1].trim();
+        description = match[2].trim();
+      }
+      return {
+        chapters: start === end ? `${start}` : `${start}–${end}`,
+        label,
+        description,
+        unit: arch.unit || 'chapter'
+      };
+    });
+  }
+
+  if (blocks && blocks.length > 0) {
+    blocks.forEach((b, idx) => {
+      insertBlockStmt.run(
+        bookId,
+        idx,
+        b.chapters || '',
+        b.label || '',
+        b.description || '',
+        b.unit || 'chapter'
+      );
+      blockCount++;
+    });
+  }
+
+  if (g.keyVerses && g.keyVerses.length > 0) {
+    for (const kv of g.keyVerses) {
+      insertKeyVerseStmt.run(
+        bookId,
+        kv.ref || '',
+        kv.text || '',
+        kv.theme || ''
+      );
+      keyVerseCount++;
+    }
+  }
+
+  if (g.anchors && g.anchors.length > 0) {
+    for (const a of g.anchors) {
+      insertAnchorStmt.run(
+        bookId,
+        Number(a.ch),
+        a.word || '',
+        a.scene || ''
+      );
+      anchorCount++;
+    }
+  }
+}
+db.exec('COMMIT;');
+await viteServer.close();
+console.log(`Inserted ${guideCount} guides, ${blockCount} blocks, ${keyVerseCount} key verses, ${anchorCount} chapter anchors.`);
 
 // Optimize DB
 db.exec('VACUUM;');

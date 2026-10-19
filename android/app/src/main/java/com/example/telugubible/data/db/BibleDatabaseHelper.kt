@@ -4,6 +4,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.BookGuide
+import com.example.telugubible.data.model.ChapterAnchor
+import com.example.telugubible.data.model.GuideBlock
+import com.example.telugubible.data.model.GuideKeyVerse
 import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.UserMemoryVerse
@@ -18,7 +22,7 @@ class BibleDatabaseHelper(val context: Context) :
     companion object {
         const val ASSET_NAME = "bible.db"
         const val STATIC_DB_NAME = "bible_static.db"
-        const val STATIC_DB_VERSION = 4
+        const val STATIC_DB_VERSION = 5
         private const val PREFS_NAME = "bible_static_db_prefs"
         private const val KEY_COPIED_VERSION = "copied_static_db_version"
 
@@ -394,4 +398,113 @@ class BibleDatabaseHelper(val context: Context) :
         val verses = getPresetVerses(collectionId)
         return UserDatabaseHelper.getInstance(context).addUserVerses(verses)
     }
+
+    fun getBookGuide(bookId: Int): BookGuide? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT book_id, book_key, subtitle, structure_formula, memory_sentence, icon FROM book_guides WHERE book_id = ?",
+            arrayOf(bookId.toString())
+        )
+        val guideBase = cursor.use {
+            if (it.moveToNext()) {
+                Triple(
+                    it.getString(1),
+                    it.getString(2),
+                    Triple(it.getString(3), it.getString(4), it.getString(5))
+                )
+            } else null
+        } ?: return null
+
+        val blocks = getGuideBlocks(bookId)
+        val keyVerses = getGuideKeyVerses(bookId)
+        val anchors = getChapterAnchors(bookId)
+
+        return BookGuide(
+            bookId = bookId,
+            bookKey = guideBase.first,
+            subtitle = guideBase.second,
+            structureFormula = guideBase.third.first,
+            memorySentence = guideBase.third.second,
+            icon = guideBase.third.third,
+            blocks = blocks,
+            keyVerses = keyVerses,
+            anchors = anchors
+        )
+    }
+
+    fun getGuideBlocks(bookId: Int): List<GuideBlock> {
+        val list = mutableListOf<GuideBlock>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT id, book_id, block_index, chapters, label, description, unit FROM guide_blocks WHERE book_id = ? ORDER BY block_index ASC",
+            arrayOf(bookId.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(
+                    GuideBlock(
+                        id = it.getLong(0),
+                        bookId = it.getInt(1),
+                        blockIndex = it.getInt(2),
+                        chapters = it.getString(3),
+                        label = it.getString(4),
+                        description = it.getString(5),
+                        unit = it.getString(6)
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    fun getGuideKeyVerses(bookId: Int): List<GuideKeyVerse> {
+        val list = mutableListOf<GuideKeyVerse>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT id, book_id, ref, text, theme FROM guide_key_verses WHERE book_id = ? ORDER BY id ASC",
+            arrayOf(bookId.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(
+                    GuideKeyVerse(
+                        id = it.getLong(0),
+                        bookId = it.getInt(1),
+                        ref = it.getString(2),
+                        text = it.getString(3),
+                        theme = if (it.isNull(4)) null else it.getString(4)
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    fun getChapterAnchors(bookId: Int): List<ChapterAnchor> {
+        val rawList = mutableListOf<ChapterAnchor>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT id, book_id, chapter, word, scene FROM chapter_anchors WHERE book_id = ? ORDER BY chapter ASC",
+            arrayOf(bookId.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                rawList.add(
+                    ChapterAnchor(
+                        id = it.getLong(0),
+                        bookId = it.getInt(1),
+                        chapter = it.getInt(2),
+                        word = it.getString(3),
+                        scene = it.getString(4)
+                    )
+                )
+            }
+        }
+        return rawList.mapIndexed { index, anchor ->
+            val prevWord = if (index > 0) rawList[index - 1].word else null
+            val nextWord = if (index < rawList.size - 1) rawList[index + 1].word else null
+            anchor.copy(prevWord = prevWord, nextWord = nextWord)
+        }
+    }
 }
+

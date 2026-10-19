@@ -22,11 +22,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.activity.compose.BackHandler
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.telugubible.theme.*
 import com.example.telugubible.ui.bible.BibleBrowserScreen
 import com.example.telugubible.ui.bible.BibleBrowserViewModel
+import com.example.telugubible.ui.bible.BookGuideScreen
+import com.example.telugubible.ui.bible.BookGuideViewModel
 import com.example.telugubible.ui.lookup.LookupScreen
 import com.example.telugubible.ui.lookup.LookupViewModel
 import com.example.telugubible.ui.practice.PracticeScreen
@@ -48,11 +51,13 @@ enum class RemoraTab(val title: String, val icon: ImageVector) {
 fun MainScaffold(
     todayViewModel: TodayViewModel = viewModel(),
     bibleBrowserViewModel: BibleBrowserViewModel = viewModel(),
+    bookGuideViewModel: BookGuideViewModel = viewModel(),
     practiceViewModel: PracticeViewModel = viewModel(),
     lookupViewModel: LookupViewModel = viewModel(),
     readerViewModel: ReaderViewModel = viewModel()
 ) {
     var selectedTab by remember { mutableStateOf(RemoraTab.TODAY) }
+    var activeGuideBookId by remember { mutableStateOf<Int?>(null) }
     var isInReaderMode by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
 
@@ -64,10 +69,25 @@ fun MainScaffold(
         isInReaderMode = true
     }
 
+    BackHandler(enabled = isInReaderMode || activeGuideBookId != null) {
+        if (isInReaderMode) {
+            isInReaderMode = false
+        } else if (activeGuideBookId != null) {
+            activeGuideBookId = null
+        }
+    }
+
     if (isInReaderMode) {
         ChapterReaderScreen(
             viewModel = readerViewModel,
             onBack = { isInReaderMode = false }
+        )
+    } else if (activeGuideBookId != null) {
+        BookGuideScreen(
+            viewModel = bookGuideViewModel,
+            bookId = activeGuideBookId!!,
+            onBack = { activeGuideBookId = null },
+            onOpenReader = openReader
         )
     } else {
         Scaffold(
@@ -76,7 +96,7 @@ fun MainScaffold(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                Icons.Default.MenuBook,
+                                Icons.AutoMirrored.Filled.MenuBook,
                                 contentDescription = null,
                                 tint = RemoraAccent,
                                 modifier = Modifier.size(20.dp)
@@ -207,7 +227,7 @@ fun MainScaffold(
                         )
                         RemoraTab.BIBLE -> BibleBrowserScreen(
                             viewModel = bibleBrowserViewModel,
-                            onOpenBook = { bookId -> openReader(bookId, 1) }
+                            onOpenBook = { bookId -> activeGuideBookId = bookId }
                         )
                     }
                 }
@@ -220,7 +240,7 @@ fun MainScaffold(
             onDismissRequest = { showAboutDialog = false },
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.MenuBook, contentDescription = null, tint = RemoraAccent)
+                    Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = RemoraAccent)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Remora Bible", color = RemoraTextPrimary, fontWeight = FontWeight.Bold)
                 }

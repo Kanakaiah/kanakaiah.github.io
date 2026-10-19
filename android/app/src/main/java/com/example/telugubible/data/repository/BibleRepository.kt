@@ -2,8 +2,11 @@ package com.example.telugubible.data.repository
 
 import android.content.Context
 import com.example.telugubible.data.db.BibleDatabaseHelper
+import com.example.telugubible.data.db.ChapterProgressEntity
 import com.example.telugubible.data.db.UserDatabaseHelper
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.BookGuide
+import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.UserMemoryVerse
@@ -126,4 +129,21 @@ class BibleRepository(
         val verses = bibleDbHelper.getPresetVerses(collectionId)
         userDbHelper.addUserVerses(verses)
     }
+
+    suspend fun getBookGuide(bookId: Int): BookGuide? = withContext(ioDispatcher) {
+        bibleDbHelper.getBookGuide(bookId)
+    }
+
+    suspend fun getChapterAnchors(bookId: Int): List<ChapterAnchor> = withContext(ioDispatcher) {
+        bibleDbHelper.getChapterAnchors(bookId)
+    }
+
+    suspend fun getChapterProgress(bookId: Int): Map<Int, ChapterProgressEntity> = withContext(ioDispatcher) {
+        userDbHelper.getChapterProgress(bookId)
+    }
+
+    suspend fun gradeChapterAnchor(bookId: Int, chapter: Int, score: Int): ChapterProgressEntity = withContext(ioDispatcher) {
+        userDbHelper.gradeChapterAnchor(bookId, chapter, score)
+    }
 }
+
