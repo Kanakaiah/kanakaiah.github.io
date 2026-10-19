@@ -18,7 +18,8 @@ enum class PracticeMode(val label: String) {
     TYPING("Type"),
     FIRST_LETTER("Letters"),
     ERASER("Erase"),
-    SCRAMBLE("Order")
+    SCRAMBLE("Order"),
+    SPEECH("Recite")
 }
 
 data class PracticeUiState(
@@ -55,6 +56,15 @@ data class PracticeUiState(
                     acc >= 0.90f -> 5
                     acc >= 0.75f -> 4
                     acc >= 0.50f -> 3
+                    else -> 1
+                }
+            }
+            if (activeMode == PracticeMode.SPEECH) {
+                val acc = modeAccuracy ?: return 5
+                return when {
+                    acc >= 90 -> 5
+                    acc >= 75 -> 4
+                    acc >= 50 -> 3
                     else -> 1
                 }
             }
@@ -249,6 +259,19 @@ class PracticeViewModel(
         }
     }
 
+    fun recordSpeechAttempt(accuracy: Int, committed: String) {
+        _uiState.update {
+            it.copy(
+                modeAccuracy = accuracy,
+                modeCommitted = committed,
+                isRevealed = true
+            )
+        }
+        viewModelScope.launch {
+            repository.setSessionState(KEY_SESSION_REVEALED, "true")
+        }
+    }
+
     fun revealVerse() {
         _uiState.update { it.copy(isRevealed = true) }
         viewModelScope.launch {
@@ -325,6 +348,10 @@ class PracticeViewModel(
                 PracticeMode.SCRAMBLE -> {
                     val acc = state.scrambleAccuracy ?: 1.0f
                     Triple(1, "scramble", acc.toDouble())
+                }
+                PracticeMode.SPEECH -> {
+                    val acc = (state.modeAccuracy ?: 0) / 100.0
+                    Triple(CueLevel.FIRST_LETTERS.levelNumber, "speech", acc)
                 }
             }
 

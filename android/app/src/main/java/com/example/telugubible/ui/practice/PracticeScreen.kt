@@ -356,6 +356,16 @@ fun PracticeScreen(
                                                 modifier = Modifier.fillMaxSize()
                                             )
                                         }
+                                        PracticeMode.SPEECH -> {
+                                            SpeechMode(
+                                                text = activeText,
+                                                languageCode = if (isEnglish) "en-US" else "te-IN",
+                                                onAttempt = { acc, committed ->
+                                                    viewModel.recordSpeechAttempt(acc, committed)
+                                                },
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
                                         else -> {
                                             // FLASHCARD (and default for other drill modes)
                                             if (!state.isRevealed) {
@@ -455,6 +465,7 @@ fun PracticeScreen(
                                     val reason = when (state.activeMode) {
                                         PracticeMode.ERASER -> "Words still visible"
                                         PracticeMode.SCRAMBLE -> "Word order mistakes"
+                                        PracticeMode.SPEECH -> "Recitation accuracy ${state.modeAccuracy ?: 0}%"
                                         else -> "Hint used"
                                     }
                                     Text(

@@ -59,6 +59,15 @@ data class DailySessionUiState(
                     else -> 1
                 }
             }
+            if (activeVerseMode == PracticeMode.SPEECH) {
+                val acc = verseAccuracy ?: return 5
+                return when {
+                    acc >= 90 -> 5
+                    acc >= 75 -> 4
+                    acc >= 50 -> 3
+                    else -> 1
+                }
+            }
             val ratio = hintRevealedRatio ?: return 5
             return when {
                 ratio <= 0.05f -> 5
@@ -189,6 +198,16 @@ class DailySessionViewModel(
         }
     }
 
+    fun recordSpeechAttempt(accuracy: Int, committedText: String) {
+        _uiState.update {
+            it.copy(
+                verseCommitted = committedText,
+                verseAccuracy = accuracy,
+                isRevealed = true
+            )
+        }
+    }
+
     fun setAnchorInput(text: String) {
         _uiState.update { it.copy(anchorInput = text) }
     }
@@ -260,6 +279,10 @@ class DailySessionViewModel(
                         PracticeMode.SCRAMBLE -> {
                             val acc = state.scrambleAccuracy?.toDouble() ?: 1.0
                             Triple(CueLevel.FIRST_LETTERS.levelNumber, "scramble", acc)
+                        }
+                        PracticeMode.SPEECH -> {
+                            val acc = (state.verseAccuracy ?: 0) / 100.0
+                            Triple(CueLevel.FIRST_LETTERS.levelNumber, "speech", acc)
                         }
                     }
                     repository.gradeUserVerse(

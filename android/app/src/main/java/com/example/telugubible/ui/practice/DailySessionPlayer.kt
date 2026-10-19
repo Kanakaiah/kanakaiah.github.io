@@ -3,6 +3,7 @@ package com.example.telugubible.ui.practice
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -728,6 +729,7 @@ private fun VerseCard(
     viewModel: DailySessionViewModel
 ) {
     val activeText = item.textEn.ifBlank { item.textTe }
+    val isEnglish = item.textEn.isNotBlank()
     val cuedText = remember(activeText) {
         CueUtils.cueString(activeText, CueLevel.fromRepetition(item.repetition))
     }
@@ -746,6 +748,37 @@ private fun VerseCard(
                 fontWeight = FontWeight.Bold,
                 color = RemoraTextPrimary
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Mode Selector Pills
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                PracticeMode.entries.forEach { mode ->
+                    val isSelected = state.activeVerseMode == mode
+                    Surface(
+                        onClick = { viewModel.setVerseMode(mode) },
+                        shape = RoundedCornerShape(16.dp),
+                        color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBgElevated,
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            if (isSelected) RemoraAccent else RemoraCardBorder
+                        )
+                    ) {
+                        Text(
+                            text = mode.label,
+                            fontSize = 11.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) RemoraAccentLight else RemoraTextMuted,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -785,6 +818,16 @@ private fun VerseCard(
                         text = activeText,
                         onComplete = { acc ->
                             viewModel.recordScrambleAttempt(acc)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                PracticeMode.SPEECH -> {
+                    SpeechMode(
+                        text = activeText,
+                        languageCode = if (isEnglish) "en-US" else "te-IN",
+                        onAttempt = { acc, committed ->
+                            viewModel.recordSpeechAttempt(acc, committed)
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -831,15 +874,26 @@ private fun VerseCard(
                 Text("Show Answer", fontWeight = FontWeight.Bold, color = RemoraTextPrimary)
             }
         } else if (state.isRevealed) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                val ceiling = state.gradeCeiling
-                GradeBtn(label = "Blank", score = 1, color = GradeBlank, modifier = Modifier.weight(1f), onClick = { viewModel.gradeCurrent(1) })
-                GradeBtn(label = "Hard", score = 3, color = GradeHard, modifier = Modifier.weight(1f), enabled = ceiling >= 3, onClick = { viewModel.gradeCurrent(3) })
-                GradeBtn(label = "Good", score = 4, color = GradeGood, modifier = Modifier.weight(1f), enabled = ceiling >= 4, onClick = { viewModel.gradeCurrent(4) })
-                GradeBtn(label = "Easy", score = 5, color = GradeEasy, modifier = Modifier.weight(1f), enabled = ceiling >= 5, onClick = { viewModel.gradeCurrent(5) })
+            Column(modifier = Modifier.fillMaxWidth()) {
+                if (state.activeVerseMode == PracticeMode.SPEECH && state.verseAccuracy != null) {
+                    val acc = state.verseAccuracy
+                    Text(
+                        text = "Recitation accuracy: $acc%",
+                        fontSize = 12.sp,
+                        color = if (acc >= 75) GradeEasy else RemoraGold,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    val ceiling = state.gradeCeiling
+                    GradeBtn(label = "Blank", score = 1, color = GradeBlank, modifier = Modifier.weight(1f), onClick = { viewModel.gradeCurrent(1) })
+                    GradeBtn(label = "Hard", score = 3, color = GradeHard, modifier = Modifier.weight(1f), enabled = ceiling >= 3, onClick = { viewModel.gradeCurrent(3) })
+                    GradeBtn(label = "Good", score = 4, color = GradeGood, modifier = Modifier.weight(1f), enabled = ceiling >= 4, onClick = { viewModel.gradeCurrent(4) })
+                    GradeBtn(label = "Easy", score = 5, color = GradeEasy, modifier = Modifier.weight(1f), enabled = ceiling >= 5, onClick = { viewModel.gradeCurrent(5) })
+                }
             }
         }
     }

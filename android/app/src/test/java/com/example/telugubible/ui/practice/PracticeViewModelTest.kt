@@ -365,7 +365,71 @@ class PracticeViewModelTest {
         assertEquals(1, log.cueLevel)
         assertEquals(1.0, log.measuredAccuracy!!, 0.001)
     }
+
+    @Test
+    fun testSpeechModeCeilingEnforcement() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.SPEECH)
+        advanceUntilIdle()
+
+        // 60% recitation accuracy -> ceiling is Hard (3)
+        vm.recordSpeechAttempt(accuracy = 60, committed = "In the morning God created")
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(3, vm.uiState.value.gradeCeiling)
+        assertEquals(60, vm.uiState.value.modeAccuracy)
+
+        // Submitting score 5 should be coerced to 3
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("speech", log.mode)
+        assertEquals(3, log.score)
+        assertEquals(3, log.cueLevel)
+        assertEquals(0.60, log.measuredAccuracy!!, 0.001)
+    }
+
+    @Test
+    fun testSpeechModePerfectRecitation() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        advanceUntilIdle()
+
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+
+        vm.setPracticeMode(PracticeMode.SPEECH)
+        advanceUntilIdle()
+
+        // 95% recitation accuracy -> ceiling is Easy (5)
+        vm.recordSpeechAttempt(accuracy = 95, committed = "In the beginning God created the heaven and the earth")
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(5, vm.uiState.value.gradeCeiling)
+        assertEquals(95, vm.uiState.value.modeAccuracy)
+
+        vm.gradeCurrent(score = 5)
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        assertEquals(1, logs.size)
+        val log = logs[0]
+        assertEquals("speech", log.mode)
+        assertEquals(5, log.score)
+        assertEquals(3, log.cueLevel)
+        assertEquals(0.95, log.measuredAccuracy!!, 0.001)
+    }
 }
+
 
 
 

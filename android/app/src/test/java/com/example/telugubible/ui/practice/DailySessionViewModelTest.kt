@@ -135,4 +135,35 @@ class DailySessionViewModelTest {
         assertEquals(1, stats.started)
         assertEquals(1, stats.meanAbandonAt)
     }
+
+    @Test
+    fun testSpeechAttemptInDailySession() = runTest(testDispatcher) {
+        val now = System.currentTimeMillis()
+        repository.addUserVerse(bookId = 1, chapter = 1, verse = 1)
+        val db = userDbHelper.writableDatabase
+        db.execSQL("UPDATE user_verses SET next_due_date = ${now - 10000}")
+
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+
+        // Switch verse mode to SPEECH
+        vm.setVerseMode(PracticeMode.SPEECH)
+        assertEquals(PracticeMode.SPEECH, vm.uiState.value.activeVerseMode)
+
+        // Record speech attempt
+        vm.recordSpeechAttempt(accuracy = 85, committedText = "In the beginning God created")
+        assertTrue(vm.uiState.value.isRevealed)
+        assertEquals(85, vm.uiState.value.verseAccuracy)
+        assertEquals(4, vm.uiState.value.gradeCeiling) // 85% is >= 75% -> ceiling 4
+
+        vm.gradeCurrent(score = 5) // Should be capped to 4
+        advanceUntilIdle()
+
+        val logs = repository.getReviewLog()
+        val speechLog = logs.firstOrNull { it.mode == "speech" }
+        assertNotNull(speechLog)
+        assertEquals(4, speechLog!!.score)
+        assertEquals(0.85, speechLog.measuredAccuracy!!, 0.001)
+    }
 }
+
