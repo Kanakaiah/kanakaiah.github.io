@@ -53,8 +53,8 @@ class PracticeViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        bibleDbHelper.close()
-        userDbHelper.close()
+        if (::bibleDbHelper.isInitialized) bibleDbHelper.close()
+        if (::userDbHelper.isInitialized) userDbHelper.close()
         application.deleteDatabase(UserDatabaseHelper.USER_DB_NAME)
         application.deleteDatabase(BibleDatabaseHelper.STATIC_DB_NAME)
     }

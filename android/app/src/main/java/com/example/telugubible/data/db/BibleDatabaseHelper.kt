@@ -49,7 +49,20 @@ class BibleDatabaseHelper(val context: Context) :
 
         if (!dbFile.exists() || dbFile.length() == 0L || copiedVersion < STATIC_DB_VERSION) {
             dbFile.parentFile?.mkdirs()
-            context.assets.open(ASSET_NAME).use { input ->
+            val inputStream = try {
+                context.assets.open(ASSET_NAME)
+            } catch (e: Exception) {
+                // In local JVM / Robolectric unit test environments, locate asset on disk
+                val testPaths = listOf(
+                    File("src/main/assets", ASSET_NAME),
+                    File("app/src/main/assets", ASSET_NAME),
+                    File("android/app/src/main/assets", ASSET_NAME)
+                )
+                val found = testPaths.firstOrNull { it.exists() }
+                found?.inputStream() ?: throw e
+            }
+
+            inputStream.use { input ->
                 FileOutputStream(dbFile).use { output ->
                     input.copyTo(output)
                 }

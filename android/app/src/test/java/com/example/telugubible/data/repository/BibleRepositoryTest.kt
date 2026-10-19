@@ -40,8 +40,8 @@ class BibleRepositoryTest {
 
     @After
     fun tearDown() {
-        bibleDbHelper.close()
-        userDbHelper.close()
+        if (::bibleDbHelper.isInitialized) bibleDbHelper.close()
+        if (::userDbHelper.isInitialized) userDbHelper.close()
         context.deleteDatabase(UserDatabaseHelper.USER_DB_NAME)
         context.deleteDatabase(BibleDatabaseHelper.STATIC_DB_NAME)
     }
