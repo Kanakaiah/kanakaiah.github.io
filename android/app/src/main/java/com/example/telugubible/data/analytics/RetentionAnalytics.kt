@@ -1,6 +1,7 @@
 package com.example.telugubible.data.analytics
 
 import com.example.telugubible.data.db.ChapterProgressEntity
+import com.example.telugubible.data.db.ThemeProgressEntity
 import com.example.telugubible.data.model.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -144,6 +145,7 @@ object RetentionAnalytics {
         verses: List<UserMemoryVerse>,
         chapterProgress: List<ChapterProgressEntity>,
         booksMap: Map<Int, Book>,
+        themeProgress: List<ThemeProgressEntity> = emptyList(),
         threshold: Int = 3
     ): List<LeechItem> {
         val out = mutableListOf<LeechItem>()
@@ -174,6 +176,22 @@ object RetentionAnalytics {
                         lapses = p.lapses,
                         attempts = p.attempts,
                         interval = p.interval
+                    )
+                )
+            }
+        }
+
+        for (t in themeProgress) {
+            if (t.lapses >= threshold) {
+                val bName = booksMap[t.bookId]?.nameEn ?: "Book ${t.bookId}"
+                out.add(
+                    LeechItem(
+                        key = "theme:${t.bookId}",
+                        kind = "theme",
+                        label = "$bName — theme",
+                        lapses = t.lapses,
+                        attempts = t.attempts,
+                        interval = t.interval
                     )
                 )
             }

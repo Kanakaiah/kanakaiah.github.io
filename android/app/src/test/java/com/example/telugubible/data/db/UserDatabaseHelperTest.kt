@@ -112,19 +112,19 @@ class UserDatabaseHelperTest {
         assertEquals(1, verse.interval)
         assertEquals("learning", verse.status)
 
-        // 2nd successful review (score = 4)
+        // 2nd successful review (score = 4) -> verse profile secondInterval is 4
         userDbHelper.gradeUserVerse(verse.id, score = 4)
         verse = userDbHelper.getUserVerses().first()
         assertEquals(2, verse.repetition)
-        assertEquals(6, verse.interval)
+        assertEquals(4, verse.interval)
 
-        // Lapse / failure review (score = 1)
+        // Lapse / failure review on immature verse (interval 4 <= matureInterval 30)
         userDbHelper.gradeUserVerse(verse.id, score = 1)
         verse = userDbHelper.getUserVerses().first()
         assertEquals("Repetition resets to 0 on lapse", 0, verse.repetition)
         assertEquals("Interval resets to 1 on lapse", 1, verse.interval)
-        assertEquals("Lapses incremented", 1, verse.lapses)
-        assertEquals(6, verse.preLapseInterval)
+        assertEquals("Immature verse has 0 mature lapses", 0, verse.lapses)
+        assertEquals(0, verse.preLapseInterval)
 
         // Subsequent reviews leading to memorized status (rep >= 5)
         for (i in 1..5) {
@@ -133,7 +133,7 @@ class UserDatabaseHelperTest {
         verse = userDbHelper.getUserVerses().first()
         assertEquals(5, verse.repetition)
         assertEquals("memorized", verse.status)
-        assertTrue("Interval should have grown exponentially", verse.interval >= 10)
+        assertTrue("Interval should have grown", verse.interval >= 10)
     }
 
     @Test
@@ -264,18 +264,79 @@ class UserDatabaseHelperTest {
         userDbHelper.addUserVerse(19, 23, 1)
         val verse = userDbHelper.getUserVerses().first()
 
-        // Set scale to 0.70 (30% shorter)
-        userDbHelper.updateIntervalScale(0.70)
-        assertEquals(0.70, userDbHelper.getAppSettings().intervalScale, 0.001)
+        // Set scale to 0.50 (50% shorter)
+        userDbHelper.updateIntervalScale(0.50)
+        assertEquals(0.50, userDbHelper.getAppSettings().intervalScale, 0.001)
 
-        // Rep 1 -> interval 1
-        userDbHelper.gradeUserVerse(verse.id, score = 5)
-        // Rep 2 -> interval 6
-        userDbHelper.gradeUserVerse(verse.id, score = 5)
-        // Rep 3 -> interval = 6 * efactor * 0.70 < 6 * 2.6
-        userDbHelper.gradeUserVerse(verse.id, score = 5)
+        val beforeTime = System.currentTimeMillis()
+        userDbHelper.gradeUserVerse(verse.id, score = 5) // rep 1 -> interval 1
+        userDbHelper.gradeUserVerse(verse.id, score = 5) // rep 2 -> interval 4 (verse profile secondInterval)
 
         val updated = userDbHelper.getUserVerses().first()
-        assertTrue("Interval should be scaled shorter", updated.interval < 16)
+        assertEquals(2, updated.repetition)
+        assertEquals(4, updated.interval) // Uncompounded base interval
+
+        // The nextDueDate should reflect 0.50 scale: (4 ± 1) * 0.50 -> <= 3 days
+        val dueDiffDays = ((updated.nextDueDate - beforeTime) / (24L * 60L * 60L * 1000L)).toInt()
+        assertTrue("Days until due should be scaled shorter (1..3 days)", dueDiffDays in 1..3)
+    }
+
+    @Test
+    fun testPruneReviewLog() {
+        val db = userDbHelper.writableDatabase
+        db.beginTransaction()
+        try {
+            val now = System.currentTimeMillis()
+            for (i in 1..4050) {
+                val cv = ContentValues().apply {
+                    put("verse_id", 1)
+                    put("score", 4)
+                    put("review_date", now + i)
+                    put("prev_interval", 1)
+                    put("new_interval", 4)
+                    put("prev_efactor", 2.5)
+                    put("new_efactor", 2.6)
+                    put("item_kind", "verse")
+                    put("item_id", "1")
+                    put("cue_level", 0)
+                    put("mode", "reveal")
+                }
+                db.insert("review_log", null, cv)
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+
+        // Trigger prune by grading an item
+        userDbHelper.addUserVerse(1, 1, 1)
+        val v = userDbHelper.getUserVerses().first()
+        userDbHelper.gradeUserVerse(v.id, score = 4)
+
+        val log = userDbHelper.getReviewLog()
+        assertTrue("Log should be capped at 4000 items", log.size <= 4000)
+    }
+
+    @Test
+    fun testUpgradedSM2MultiKindAndLapseRecovery() {
+        // Test anchor grading
+        val a1 = userDbHelper.gradeChapterAnchor(bookId = 1, chapter = 1, score = 4)
+        assertEquals(1, a1.repetition)
+        assertEquals(1, a1.interval)
+
+        // Second success on anchor gets secondInterval = 8 (not flat 6)
+        val a2 = userDbHelper.gradeChapterAnchor(bookId = 1, chapter = 1, score = 4)
+        assertEquals(2, a2.repetition)
+        assertEquals(8, a2.interval)
+
+        // Test theme grading: secondInterval = 10
+        val t1 = userDbHelper.gradeThemeProgress(bookId = 1, score = 4)
+        assertEquals(1, t1.repetition)
+        assertEquals(1, t1.interval)
+
+        val t2 = userDbHelper.gradeThemeProgress(bookId = 1, score = 4)
+        assertEquals(2, t2.repetition)
+        assertEquals(10, t2.interval)
     }
 }
+

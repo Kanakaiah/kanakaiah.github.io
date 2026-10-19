@@ -18,6 +18,8 @@ import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.model.VerseSearchResult
+import com.example.telugubible.util.BookMasteryCounts
+import com.example.telugubible.util.MasteryUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -238,6 +240,23 @@ class BibleRepository(
 
     suspend fun getOtQuotesForChapter(bookId: Int, chapter: Int): Set<Int> = withContext(ioDispatcher) {
         bibleDbHelper.getOtQuotesForChapter(bookId, chapter)
+    }
+
+    suspend fun getBookMastery(bookId: Int): BookMasteryCounts = withContext(ioDispatcher) {
+        val book = bibleDbHelper.getBook(bookId)
+        val chapterCount = book?.chapters ?: 0
+        val progress = userDbHelper.getChapterProgress(bookId).values.toList()
+        MasteryUtils.calculateBookMastery(bookId, chapterCount, progress)
+    }
+
+    suspend fun getAllBookMastery(): Map<Int, BookMasteryCounts> = withContext(ioDispatcher) {
+        val books = bibleDbHelper.getAllBooks()
+        val allProgress = userDbHelper.getAllChapterProgress().groupBy { it.bookId }
+        val now = System.currentTimeMillis()
+        books.associate { book ->
+            val progress = allProgress[book.id] ?: emptyList()
+            book.id to MasteryUtils.calculateBookMastery(book.id, book.chapters, progress, now)
+        }
     }
 }
 

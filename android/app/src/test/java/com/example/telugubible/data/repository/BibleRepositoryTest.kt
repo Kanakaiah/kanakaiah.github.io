@@ -157,10 +157,10 @@ class BibleRepositoryTest {
         assertEquals(1, fetchedProgress.size)
         assertEquals(1, fetchedProgress[1]?.interval)
 
-        // Grade chapter 1 again with score 5 (Easy) -> repetition becomes 2, interval becomes 6
+        // Grade chapter 1 again with score 5 (Easy) -> repetition becomes 2, interval becomes 8 (anchor profile)
         val secondGrade = repository.gradeChapterAnchor(1, 1, 5)
         assertEquals(2, secondGrade.repetition)
-        assertEquals(6, secondGrade.interval)
+        assertEquals(8, secondGrade.interval)
     }
 
     @Test
@@ -202,6 +202,32 @@ class BibleRepositoryTest {
         assertTrue(ch2Quotes.contains(18))
         assertTrue(ch2Quotes.contains(23))
     }
+
+    @Test
+    fun testBookMastery() = runTest {
+        // Initially Genesis has 50 chapters, all untouched
+        val initialMastery = repository.getBookMastery(1)
+        assertEquals(1, initialMastery.bookId)
+        assertEquals(50, initialMastery.total)
+        assertEquals(50, initialMastery.untouched)
+        assertEquals(0, initialMastery.seen)
+        assertEquals(0, initialMastery.learning)
+        assertEquals(0, initialMastery.secure)
+        assertEquals(0.0, initialMastery.securePct, 0.001)
+
+        // Grade chapter 1 with score 4 -> learning
+        repository.gradeChapterAnchor(1, 1, 4)
+        val afterGrade1 = repository.getBookMastery(1)
+        assertEquals(49, afterGrade1.untouched)
+        assertEquals(1, afterGrade1.learning)
+
+        // All book mastery map contains 66 books
+        val allMastery = repository.getAllBookMastery()
+        assertEquals(66, allMastery.size)
+        assertTrue(allMastery.containsKey(1))
+        assertTrue(allMastery.containsKey(66))
+    }
 }
+
 
 

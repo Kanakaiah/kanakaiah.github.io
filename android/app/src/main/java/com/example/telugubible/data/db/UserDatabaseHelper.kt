@@ -8,6 +8,8 @@ import com.example.telugubible.data.model.AdherenceStats
 import com.example.telugubible.data.model.AppSettings
 import com.example.telugubible.data.model.ColdCheckResult
 import com.example.telugubible.data.model.ReviewLogEntry
+import com.example.telugubible.util.SM2Engine
+import com.example.telugubible.util.ScheduleKind
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.max
@@ -38,7 +40,8 @@ data class ChapterProgressEntity(
     val efactor: Double,
     val nextDueDate: Long,
     val lapses: Int = 0,
-    val attempts: Int = 0
+    val attempts: Int = 0,
+    val preLapseInterval: Int = 0
 )
 
 data class ThemeProgressEntity(
@@ -50,7 +53,8 @@ data class ThemeProgressEntity(
     val nextDueDate: Long = 0L,
     val lapses: Int = 0,
     val attempts: Int = 0,
-    val lastScore: Int = 0
+    val lastScore: Int = 0,
+    val preLapseInterval: Int = 0
 )
 
 class UserDatabaseHelper(private val context: Context) :
@@ -58,7 +62,7 @@ class UserDatabaseHelper(private val context: Context) :
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 4
+        const val USER_DB_VERSION = 5
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -143,6 +147,7 @@ class UserDatabaseHelper(private val context: Context) :
                 next_due_date INTEGER NOT NULL,
                 lapses INTEGER NOT NULL DEFAULT 0,
                 attempts INTEGER NOT NULL DEFAULT 0,
+                pre_lapse_interval INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY (book_id, chapter)
             );
             """.trimIndent()
@@ -180,7 +185,8 @@ class UserDatabaseHelper(private val context: Context) :
                 next_due_date INTEGER NOT NULL,
                 lapses INTEGER NOT NULL DEFAULT 0,
                 attempts INTEGER NOT NULL DEFAULT 0,
-                last_score INTEGER NOT NULL DEFAULT 0
+                last_score INTEGER NOT NULL DEFAULT 0,
+                pre_lapse_interval INTEGER NOT NULL DEFAULT 0
             );
             """.trimIndent()
         )
@@ -265,6 +271,28 @@ class UserDatabaseHelper(private val context: Context) :
                 );
                 """.trimIndent()
             )
+        }
+        if (oldVersion < 5) {
+            try {
+                db.execSQL("ALTER TABLE chapter_progress ADD COLUMN pre_lapse_interval INTEGER NOT NULL DEFAULT 0;")
+            } catch (e: Exception) {}
+            try {
+                db.execSQL("ALTER TABLE theme_progress ADD COLUMN pre_lapse_interval INTEGER NOT NULL DEFAULT 0;")
+            } catch (e: Exception) {}
+        }
+    }
+
+    private fun pruneReviewLog(db: SQLiteDatabase) {
+        try {
+            db.execSQL(
+                """
+                DELETE FROM review_log WHERE id NOT IN (
+                    SELECT id FROM review_log ORDER BY id DESC LIMIT 4000
+                )
+                """.trimIndent()
+            )
+        } catch (e: Exception) {
+            // Safe fallback
         }
     }
 
@@ -438,7 +466,7 @@ class UserDatabaseHelper(private val context: Context) :
     ) {
         val db = writableDatabase
         val cursor = db.rawQuery(
-            "SELECT repetition, interval, efactor, lapses, attempts FROM user_verses WHERE id = ?",
+            "SELECT repetition, interval, efactor, lapses, attempts, pre_lapse_interval FROM user_verses WHERE id = ?",
             arrayOf(id.toString())
         )
         var rep = 0
@@ -446,6 +474,7 @@ class UserDatabaseHelper(private val context: Context) :
         var efactor = 2.5
         var lapses = 0
         var attempts = 0
+        var preLapseInterval = 0
 
         cursor.use {
             if (it.moveToNext()) {
@@ -454,42 +483,35 @@ class UserDatabaseHelper(private val context: Context) :
                 efactor = it.getDouble(2)
                 lapses = if (it.columnCount > 3) it.getInt(3) else 0
                 attempts = if (it.columnCount > 4) it.getInt(4) else 0
+                preLapseInterval = if (it.columnCount > 5) it.getInt(5) else 0
             } else {
                 return
             }
         }
 
-        val preLapseInterval = interval
         val scale = getAppSettings().intervalScale
-        // Remora SuperMemo-2 (SM-2) algorithm
-        // score: 1 = Blank, 3 = Hard, 4 = Good, 5 = Easy
-        if (score < 3) {
-            rep = 0
-            interval = 1
-            lapses += 1
-        } else {
-            rep += 1
-            interval = when (rep) {
-                1 -> 1
-                2 -> 6
-                else -> max(1, (interval * efactor * scale).roundToInt())
-            }
-        }
-
-        val prevEfactor = efactor
-        efactor = max(1.3, efactor + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)))
         val now = System.currentTimeMillis()
-        val nextDueDate = now + (interval.toLong() * 24 * 60 * 60 * 1000L)
-        val status = if (rep >= 5) "memorized" else "learning"
+        val prevEfactor = efactor
+        val eval = SM2Engine.evaluate(
+            repetition = rep,
+            interval = interval,
+            efactor = efactor,
+            lapses = lapses,
+            preLapseInterval = preLapseInterval,
+            score = score,
+            kind = ScheduleKind.VERSE,
+            intervalScale = scale,
+            now = now
+        )
 
         val values = ContentValues().apply {
-            put("repetition", rep)
-            put("interval", interval)
-            put("efactor", efactor)
-            put("next_due_date", nextDueDate)
-            put("status", status)
-            put("lapses", lapses)
-            put("pre_lapse_interval", preLapseInterval)
+            put("repetition", eval.repetition)
+            put("interval", eval.interval)
+            put("efactor", eval.efactor)
+            put("next_due_date", eval.nextDueDate)
+            put("status", eval.status)
+            put("lapses", eval.lapses)
+            put("pre_lapse_interval", eval.preLapseInterval)
             put("attempts", attempts + 1)
         }
         db.update("user_verses", values, "id = ?", arrayOf(id.toString()))
@@ -499,10 +521,10 @@ class UserDatabaseHelper(private val context: Context) :
             put("verse_id", id)
             put("score", score)
             put("review_date", now)
-            put("prev_interval", preLapseInterval)
-            put("new_interval", interval)
+            put("prev_interval", interval)
+            put("new_interval", eval.interval)
             put("prev_efactor", prevEfactor)
-            put("new_efactor", efactor)
+            put("new_efactor", eval.efactor)
             put("item_kind", "verse")
             put("item_id", id.toString())
             put("cue_level", cueLevel)
@@ -510,6 +532,7 @@ class UserDatabaseHelper(private val context: Context) :
             if (measuredAccuracy != null) put("measured_accuracy", measuredAccuracy)
         }
         db.insert("review_log", null, logValues)
+        pruneReviewLog(db)
     }
 
     fun getStreak(): Int {
@@ -561,7 +584,7 @@ class UserDatabaseHelper(private val context: Context) :
         val map = mutableMapOf<Int, ChapterProgressEntity>()
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts FROM chapter_progress WHERE book_id = ?",
+            "SELECT chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts, pre_lapse_interval FROM chapter_progress WHERE book_id = ?",
             arrayOf(bookId.toString())
         )
         cursor.use {
@@ -576,7 +599,8 @@ class UserDatabaseHelper(private val context: Context) :
                     efactor = it.getDouble(4),
                     nextDueDate = it.getLong(5),
                     lapses = if (it.columnCount > 6) it.getInt(6) else 0,
-                    attempts = if (it.columnCount > 7) it.getInt(7) else 0
+                    attempts = if (it.columnCount > 7) it.getInt(7) else 0,
+                    preLapseInterval = if (it.columnCount > 8) it.getInt(8) else 0
                 )
             }
         }
@@ -587,7 +611,7 @@ class UserDatabaseHelper(private val context: Context) :
         val list = mutableListOf<ChapterProgressEntity>()
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT book_id, chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts FROM chapter_progress",
+            "SELECT book_id, chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts, pre_lapse_interval FROM chapter_progress",
             null
         )
         cursor.use {
@@ -602,7 +626,8 @@ class UserDatabaseHelper(private val context: Context) :
                         efactor = it.getDouble(5),
                         nextDueDate = it.getLong(6),
                         lapses = if (it.columnCount > 7) it.getInt(7) else 0,
-                        attempts = if (it.columnCount > 8) it.getInt(8) else 0
+                        attempts = if (it.columnCount > 8) it.getInt(8) else 0,
+                        preLapseInterval = if (it.columnCount > 9) it.getInt(9) else 0
                     )
                 )
             }
@@ -616,57 +641,49 @@ class UserDatabaseHelper(private val context: Context) :
         val interval = existing?.interval ?: 0
         val efactor = existing?.efactor ?: 2.5
         val lapses = existing?.lapses ?: 0
+        val preLapseInterval = existing?.preLapseInterval ?: 0
         val attempts = (existing?.attempts ?: 0) + 1
 
         val scale = getAppSettings().intervalScale
-        var newRep = 0
-        var newInterval = 1
-        var newEfactor = efactor
-        var newLapses = lapses
-
-        if (score >= 3) {
-            newRep = rep + 1
-            newInterval = when (rep) {
-                0 -> 1
-                1 -> 6
-                else -> max(1, (interval * efactor * scale).roundToInt())
-            }
-            val efactorAdjustment = 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)
-            newEfactor = max(1.3, efactor + efactorAdjustment)
-        } else {
-            newRep = 0
-            newInterval = 1
-            newEfactor = max(1.3, efactor - 0.2)
-            newLapses = lapses + 1
-        }
-
-        val status = if (newRep >= 6) "mastered" else if (newRep > 0) "review" else "learning"
         val now = System.currentTimeMillis()
-        val nextDueDate = now + (newInterval.toLong() * 24L * 60L * 60L * 1000L)
+        val prevEfactor = efactor
+        val eval = SM2Engine.evaluate(
+            repetition = rep,
+            interval = interval,
+            efactor = efactor,
+            lapses = lapses,
+            preLapseInterval = preLapseInterval,
+            score = score,
+            kind = ScheduleKind.ANCHOR,
+            intervalScale = scale,
+            now = now
+        )
 
         val entity = ChapterProgressEntity(
             bookId = bookId,
             chapter = chapter,
-            status = status,
-            repetition = newRep,
-            interval = newInterval,
-            efactor = newEfactor,
-            nextDueDate = nextDueDate,
-            lapses = newLapses,
-            attempts = attempts
+            status = eval.status,
+            repetition = eval.repetition,
+            interval = eval.interval,
+            efactor = eval.efactor,
+            nextDueDate = eval.nextDueDate,
+            lapses = eval.lapses,
+            attempts = attempts,
+            preLapseInterval = eval.preLapseInterval
         )
 
         val db = writableDatabase
         val values = ContentValues().apply {
             put("book_id", bookId)
             put("chapter", chapter)
-            put("status", status)
-            put("repetition", newRep)
-            put("interval", newInterval)
-            put("efactor", newEfactor)
-            put("next_due_date", nextDueDate)
-            put("lapses", newLapses)
+            put("status", eval.status)
+            put("repetition", eval.repetition)
+            put("interval", eval.interval)
+            put("efactor", eval.efactor)
+            put("next_due_date", eval.nextDueDate)
+            put("lapses", eval.lapses)
             put("attempts", attempts)
+            put("pre_lapse_interval", eval.preLapseInterval)
         }
         db.insertWithOnConflict("chapter_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
 
@@ -676,15 +693,16 @@ class UserDatabaseHelper(private val context: Context) :
             put("score", score)
             put("review_date", now)
             put("prev_interval", interval)
-            put("new_interval", newInterval)
-            put("prev_efactor", efactor)
-            put("new_efactor", newEfactor)
+            put("new_interval", eval.interval)
+            put("prev_efactor", prevEfactor)
+            put("new_efactor", eval.efactor)
             put("item_kind", "anchor")
             put("item_id", "$bookId:$chapter")
             put("cue_level", 0)
             put("mode", "reveal")
         }
         db.insert("review_log", null, logValues)
+        pruneReviewLog(db)
 
         return entity
     }
@@ -692,7 +710,7 @@ class UserDatabaseHelper(private val context: Context) :
     fun getThemeProgress(bookId: Int): ThemeProgressEntity? {
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT book_id, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score FROM theme_progress WHERE book_id = ?",
+            "SELECT book_id, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score, pre_lapse_interval FROM theme_progress WHERE book_id = ?",
             arrayOf(bookId.toString())
         )
         cursor.use {
@@ -704,9 +722,10 @@ class UserDatabaseHelper(private val context: Context) :
                     interval = it.getInt(3),
                     efactor = it.getDouble(4),
                     nextDueDate = it.getLong(5),
-                    lapses = it.getInt(6),
-                    attempts = it.getInt(7),
-                    lastScore = it.getInt(8)
+                    lapses = if (it.columnCount > 6) it.getInt(6) else 0,
+                    attempts = if (it.columnCount > 7) it.getInt(7) else 0,
+                    lastScore = if (it.columnCount > 8) it.getInt(8) else 0,
+                    preLapseInterval = if (it.columnCount > 9) it.getInt(9) else 0
                 )
             }
         }
@@ -717,7 +736,7 @@ class UserDatabaseHelper(private val context: Context) :
         val map = mutableMapOf<Int, ThemeProgressEntity>()
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT book_id, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score FROM theme_progress",
+            "SELECT book_id, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score, pre_lapse_interval FROM theme_progress",
             null
         )
         cursor.use {
@@ -730,9 +749,10 @@ class UserDatabaseHelper(private val context: Context) :
                     interval = it.getInt(3),
                     efactor = it.getDouble(4),
                     nextDueDate = it.getLong(5),
-                    lapses = it.getInt(6),
-                    attempts = it.getInt(7),
-                    lastScore = it.getInt(8)
+                    lapses = if (it.columnCount > 6) it.getInt(6) else 0,
+                    attempts = if (it.columnCount > 7) it.getInt(7) else 0,
+                    lastScore = if (it.columnCount > 8) it.getInt(8) else 0,
+                    preLapseInterval = if (it.columnCount > 9) it.getInt(9) else 0
                 )
             }
         }
@@ -745,57 +765,49 @@ class UserDatabaseHelper(private val context: Context) :
         val interval = existing?.interval ?: 0
         val efactor = existing?.efactor ?: 2.5
         val lapses = existing?.lapses ?: 0
+        val preLapseInterval = existing?.preLapseInterval ?: 0
         val attempts = (existing?.attempts ?: 0) + 1
 
         val scale = getAppSettings().intervalScale
-        var newRep = 0
-        var newInterval = 1
-        var newEfactor = efactor
-        var newLapses = lapses
-
-        if (score >= 3) {
-            newRep = rep + 1
-            newInterval = when (rep) {
-                0 -> 1
-                1 -> 6
-                else -> max(1, (interval * efactor * scale).roundToInt())
-            }
-            val efactorAdjustment = 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)
-            newEfactor = max(1.3, efactor + efactorAdjustment)
-        } else {
-            newRep = 0
-            newInterval = 1
-            newEfactor = max(1.3, efactor - 0.2)
-            newLapses = lapses + 1
-        }
-
-        val status = if (newRep >= 6) "mastered" else if (newRep > 0) "review" else "learning"
         val now = System.currentTimeMillis()
-        val nextDueDate = now + (newInterval.toLong() * 24L * 60L * 60L * 1000L)
+        val prevEfactor = efactor
+        val eval = SM2Engine.evaluate(
+            repetition = rep,
+            interval = interval,
+            efactor = efactor,
+            lapses = lapses,
+            preLapseInterval = preLapseInterval,
+            score = score,
+            kind = ScheduleKind.THEME,
+            intervalScale = scale,
+            now = now
+        )
 
         val entity = ThemeProgressEntity(
             bookId = bookId,
-            status = status,
-            repetition = newRep,
-            interval = newInterval,
-            efactor = newEfactor,
-            nextDueDate = nextDueDate,
-            lapses = newLapses,
+            status = eval.status,
+            repetition = eval.repetition,
+            interval = eval.interval,
+            efactor = eval.efactor,
+            nextDueDate = eval.nextDueDate,
+            lapses = eval.lapses,
             attempts = attempts,
-            lastScore = score
+            lastScore = score,
+            preLapseInterval = eval.preLapseInterval
         )
 
         val db = writableDatabase
         val values = ContentValues().apply {
             put("book_id", bookId)
-            put("status", status)
-            put("repetition", newRep)
-            put("interval", newInterval)
-            put("efactor", newEfactor)
-            put("next_due_date", nextDueDate)
-            put("lapses", newLapses)
+            put("status", eval.status)
+            put("repetition", eval.repetition)
+            put("interval", eval.interval)
+            put("efactor", eval.efactor)
+            put("next_due_date", eval.nextDueDate)
+            put("lapses", eval.lapses)
             put("attempts", attempts)
             put("last_score", score)
+            put("pre_lapse_interval", eval.preLapseInterval)
         }
         db.insertWithOnConflict("theme_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
 
@@ -805,15 +817,16 @@ class UserDatabaseHelper(private val context: Context) :
             put("score", score)
             put("review_date", now)
             put("prev_interval", interval)
-            put("new_interval", newInterval)
-            put("prev_efactor", efactor)
-            put("new_efactor", newEfactor)
+            put("new_interval", eval.interval)
+            put("prev_efactor", prevEfactor)
+            put("new_efactor", eval.efactor)
             put("item_kind", "theme")
             put("item_id", bookId.toString())
             put("cue_level", 0)
             put("mode", "reveal")
         }
         db.insert("review_log", null, logValues)
+        pruneReviewLog(db)
 
         return entity
     }
