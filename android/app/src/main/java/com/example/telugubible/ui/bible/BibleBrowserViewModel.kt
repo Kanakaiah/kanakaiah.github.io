@@ -18,7 +18,8 @@ data class BibleBrowserUiState(
     val currentTestament: String = "OT", // "OT" or "NT"
     val currentSection: String = "All",
     val searchQuery: String = "",
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val activeVersion: String = "LSB"
 )
 
 class BibleBrowserViewModel(application: Application) : AndroidViewModel(application) {
@@ -35,10 +36,13 @@ class BibleBrowserViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             val books = repository.getBooks()
+            val settings = repository.getAppSettings()
+            val ver = settings.bibleVersion.ifBlank { "LSB" }
             val filtered = applyFilter(books, "OT", "All", "")
             _uiState.update {
                 it.copy(
                     allBooks = books,
+                    activeVersion = ver,
                     filteredBooks = filtered,
                     isLoading = false
                 )

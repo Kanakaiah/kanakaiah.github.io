@@ -2,6 +2,11 @@ package com.example.telugubible.ui.reader
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
+import com.example.telugubible.R
 
 enum class ReaderTheme(
     val label: String,
@@ -45,7 +50,47 @@ enum class ReaderTheme(
     )
 }
 
-enum class ReaderFontFamily(val label: String, val fontFamily: FontFamily) {
-    SERIF("Serif", FontFamily.Serif),
-    SANS_SERIF("Sans", FontFamily.SansSerif)
+private val googleFontProvider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
+)
+
+private val InterGoogleFont = GoogleFont("Inter")
+private val MerriweatherGoogleFont = GoogleFont("Merriweather")
+private val AtkinsonGoogleFont = GoogleFont("Atkinson Hyperlegible")
+
+val InterFontFamily = FontFamily(
+    Font(googleFont = InterGoogleFont, fontProvider = googleFontProvider),
+    Font(googleFont = InterGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold),
+    Font(googleFont = InterGoogleFont, fontProvider = googleFontProvider, style = FontStyle.Italic)
+)
+
+val MerriweatherFontFamily = FontFamily(
+    Font(googleFont = MerriweatherGoogleFont, fontProvider = googleFontProvider),
+    Font(googleFont = MerriweatherGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold),
+    Font(googleFont = MerriweatherGoogleFont, fontProvider = googleFontProvider, style = FontStyle.Italic)
+)
+
+val AtkinsonFontFamily = FontFamily(
+    Font(googleFont = AtkinsonGoogleFont, fontProvider = googleFontProvider),
+    Font(googleFont = AtkinsonGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold),
+    Font(googleFont = AtkinsonGoogleFont, fontProvider = googleFontProvider, style = FontStyle.Italic)
+)
+
+enum class ReaderFontFamily(val key: String, val label: String, val fontFamily: FontFamily) {
+    INTER("sans", "Inter", InterFontFamily),
+    MERRIWEATHER("serif", "Merriweather", MerriweatherFontFamily),
+    ATKINSON("hyper", "Atkinson", AtkinsonFontFamily);
+
+    companion object {
+        fun fromKey(key: String?): ReaderFontFamily {
+            return when (key?.lowercase()?.trim()) {
+                "sans", "inter" -> INTER
+                "hyper", "atkinson" -> ATKINSON
+                "serif", "merriweather" -> MERRIWEATHER
+                else -> MERRIWEATHER
+            }
+        }
+    }
 }

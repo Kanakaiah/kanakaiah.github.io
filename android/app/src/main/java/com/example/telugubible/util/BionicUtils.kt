@@ -14,16 +14,17 @@ object BionicUtils {
      * of each word if [isBionic] is enabled.
      */
     fun formatBionic(text: String, isBionic: Boolean): AnnotatedString {
-        if (!isBionic || text.isBlank()) {
-            return AnnotatedString(text)
+        val cleanText = text.replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
+        if (!isBionic || cleanText.isBlank()) {
+            return AnnotatedString(cleanText)
         }
         return buildAnnotatedString {
             val wordRegex = Regex("""(\b[\p{L}\p{N}']+\b)""")
             var lastIndex = 0
-            for (match in wordRegex.findAll(text)) {
+            for (match in wordRegex.findAll(cleanText)) {
                 val range = match.range
                 if (range.first > lastIndex) {
-                    append(text.substring(lastIndex, range.first))
+                    append(cleanText.substring(lastIndex, range.first))
                 }
                 val word = match.value
                 val boldLen = ceil(word.length / 2.0).toInt().coerceAtLeast(1)
@@ -35,8 +36,8 @@ object BionicUtils {
                 }
                 lastIndex = range.last + 1
             }
-            if (lastIndex < text.length) {
-                append(text.substring(lastIndex))
+            if (lastIndex < cleanText.length) {
+                append(cleanText.substring(lastIndex))
             }
         }
     }

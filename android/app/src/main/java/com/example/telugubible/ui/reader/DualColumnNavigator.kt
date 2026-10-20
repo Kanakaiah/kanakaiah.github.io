@@ -375,69 +375,81 @@ private fun InlineChapterGrid(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = 320.dp)
+                    .align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "${BookNameUtils.getBookDisplayName(book, activeVersion)} (${book.chapters} Chapters)",
-                    fontSize = 13.sp,
+                    text = "${BookNameUtils.getBookDisplayName(book, activeVersion)} (${book.chapters} CHAPTERS)".uppercase(),
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = RemoraAccentLight
+                    color = RemoraAccentLight,
+                    letterSpacing = 0.5.sp
                 )
                 Text(
-                    text = book.section,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = RemoraTextMuted
+                    text = book.section.uppercase(),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = RemoraTextMuted,
+                    letterSpacing = 0.5.sp
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // 7-Column Chapter Grid
-            val total = book.chapters
-            val rows = (total + 6) / 7
-            for (r in 0 until rows) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    for (c in 0 until 7) {
-                        val ch = r * 7 + c + 1
-                        if (ch <= total) {
-                            val isCurrent = isCurrentBook && ch == currentChapter
-                            Surface(
-                                onClick = { onSelectChapter(ch) },
-                                shape = RoundedCornerShape(8.dp),
-                                color = if (isCurrent) RemoraAccent else RemoraCardBgElevated,
-                                border = androidx.compose.foundation.BorderStroke(
-                                    1.dp,
-                                    if (isCurrent) RemoraAccent else RemoraCardBorderHover
-                                ),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .aspectRatio(1f)
-                            ) {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier.fillMaxSize()
+            // 7-Column Chapter Grid constrained to max 320.dp (matches PWA max-w-xs mx-auto)
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 320.dp)
+                    .align(Alignment.CenterHorizontally),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val total = book.chapters
+                val rows = (total + 6) / 7
+                for (r in 0 until rows) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        for (c in 0 until 7) {
+                            val ch = r * 7 + c + 1
+                            if (ch <= total) {
+                                val isCurrent = isCurrentBook && ch == currentChapter
+                                Surface(
+                                    onClick = { onSelectChapter(ch) },
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = if (isCurrent) RemoraAccent else RemoraCardBgElevated,
+                                    border = androidx.compose.foundation.BorderStroke(
+                                        1.dp,
+                                        if (isCurrent) RemoraAccent else RemoraCardBorderHover
+                                    ),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .aspectRatio(1f)
                                 ) {
-                                    Text(
-                                        text = ch.toString(),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (isCurrent) Color.White else RemoraTextPrimary
-                                    )
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        Text(
+                                            text = ch.toString(),
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (isCurrent) Color.White else RemoraTextPrimary
+                                        )
+                                    }
                                 }
+                            } else {
+                                Spacer(modifier = Modifier.weight(1f))
                             }
-                        } else {
-                            Spacer(modifier = Modifier.weight(1f))
                         }
                     }
-                }
-                if (r < rows - 1) {
-                    Spacer(modifier = Modifier.height(6.dp))
+                    if (r < rows - 1) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                    }
                 }
             }
         }

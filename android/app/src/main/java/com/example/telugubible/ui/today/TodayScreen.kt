@@ -72,6 +72,7 @@ fun TodayScreen(
                         heroVerse = state.heroVerse,
                         dueCount = state.dueCount,
                         displayLanguage = state.displayLanguage,
+                        activeVersion = state.activeVersion,
                         onStartSession = onNavigateToPractice
                     )
                 }
@@ -256,6 +257,7 @@ fun TodayScreen(
                 collections = state.presetCollections,
                 searchResults = state.searchResults,
                 isSearching = state.isSearchingInDialog,
+                activeVersion = state.activeVersion,
                 onDismiss = { viewModel.toggleAddDialog(false) },
                 onAddSingleVerse = { bookId, ch, vs -> viewModel.addVerse(bookId, ch, vs) },
                 onAddCollection = { collId -> viewModel.addCollection(collId) },
@@ -299,6 +301,7 @@ private fun RemoraHeroDailyPractice(
     heroVerse: UserMemoryVerse?,
     dueCount: Int,
     displayLanguage: DisplayLanguage,
+    activeVersion: String = "LSB",
     onStartSession: () -> Unit
 ) {
     Surface(
@@ -336,7 +339,7 @@ private fun RemoraHeroDailyPractice(
                     border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
                 ) {
                     Text(
-                        text = if (displayLanguage == DisplayLanguage.ENGLISH) "BSB" else "IRV",
+                        text = if (displayLanguage == DisplayLanguage.ENGLISH) activeVersion.uppercase() else "IRV",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         color = RemoraAccentLight,
@@ -351,8 +354,8 @@ private fun RemoraHeroDailyPractice(
                 val isEnglish = displayLanguage == DisplayLanguage.ENGLISH
                 val heroRef = if (isEnglish) "${heroVerse.bookNameEn} ${heroVerse.chapter}:${heroVerse.verse}"
                               else "${heroVerse.bookNameTe} ${heroVerse.chapter}:${heroVerse.verse}"
-                val targetText = (if (isEnglish) heroVerse.textEn else heroVerse.textTe)
-                    ?: heroVerse.textEn ?: heroVerse.textTe ?: ""
+                val rawTarget = if (isEnglish) heroVerse.textEn else heroVerse.textTe
+                val targetText = ((rawTarget ?: heroVerse.textEn ?: heroVerse.textTe ?: "")).replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
 
                 Text(
                     text = heroRef,
@@ -789,8 +792,9 @@ private fun RemoraVerseCard(
     val isEnglish = cardLanguage == DisplayLanguage.ENGLISH
     val refText = if (isEnglish) "${verse.bookNameEn} ${verse.chapter}:${verse.verse}"
                   else "${verse.bookNameTe} ${verse.chapter}:${verse.verse}"
-    val badgeText = if (isEnglish) "BSB" else "IRV"
-    val currentVerseText = (if (isEnglish) verse.textEn else verse.textTe)
+    val badgeText = if (isEnglish) "LSB" else "IRV"
+    val rawCurrentText = (if (isEnglish) verse.textEn else verse.textTe)
+    val currentVerseText = (rawCurrentText ?: verse.textEn ?: verse.textTe ?: "").replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
         ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
 
     Surface(
@@ -1010,21 +1014,14 @@ private fun EmptyVerseState(
             color = RemoraTextSecondary
         )
         Spacer(modifier = Modifier.height(14.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(
-                onClick = onAddTop100,
-                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text("Add Top 100", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            }
-            OutlinedButton(
-                onClick = onAddWellKnown,
-                shape = RoundedCornerShape(8.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraGold)
-            ) {
-                Text("Add 75 Well-Known", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = RemoraGold)
-            }
+        Button(
+            onClick = onOpenAdd,
+            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.width(6.dp))
+            Text("Add a Verse", fontSize = 12.sp, fontWeight = FontWeight.Bold)
         }
     }
 }

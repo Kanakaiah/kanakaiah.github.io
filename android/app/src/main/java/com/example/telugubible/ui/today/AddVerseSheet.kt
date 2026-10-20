@@ -30,6 +30,7 @@ import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.VerseSearchResult
 import com.example.telugubible.theme.*
+import com.example.telugubible.util.BookNameUtils
 
 enum class AddVerseTab {
     COLLECTIONS, SEARCH, MANUAL
@@ -42,6 +43,7 @@ fun AddVerseSheet(
     collections: List<PresetCollection>,
     searchResults: List<VerseSearchResult>,
     isSearching: Boolean,
+    activeVersion: String = "LSB",
     onDismiss: () -> Unit,
     onAddSingleVerse: (Int, Int, Int) -> Unit,
     onAddCollection: (String) -> Unit,
@@ -128,6 +130,7 @@ fun AddVerseSheet(
                 AddVerseTab.MANUAL -> {
                     ManualTabContent(
                         books = books,
+                        activeVersion = activeVersion,
                         onAdd = onAddSingleVerse
                     )
                 }
@@ -395,6 +398,7 @@ private fun SearchTabContent(
 @Composable
 private fun ManualTabContent(
     books: List<Book>,
+    activeVersion: String = "LSB",
     onAdd: (Int, Int, Int) -> Unit
 ) {
     var selectedBookIndex by remember { mutableStateOf(0) }
@@ -415,7 +419,7 @@ private fun ManualTabContent(
             onExpandedChange = { isExpanded = !isExpanded }
         ) {
             OutlinedTextField(
-                value = "${currentBook?.nameEn ?: ""} (${currentBook?.nameTe ?: ""})",
+                value = currentBook?.let { BookNameUtils.getBookDisplayName(it, activeVersion) } ?: "",
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
@@ -436,7 +440,7 @@ private fun ManualTabContent(
             ) {
                 books.forEachIndexed { index, b ->
                     DropdownMenuItem(
-                        text = { Text("${b.nameEn} (${b.nameTe})", color = RemoraTextPrimary) },
+                        text = { Text(BookNameUtils.getBookDisplayName(b, activeVersion), color = RemoraTextPrimary) },
                         onClick = {
                             selectedBookIndex = index
                             isExpanded = false

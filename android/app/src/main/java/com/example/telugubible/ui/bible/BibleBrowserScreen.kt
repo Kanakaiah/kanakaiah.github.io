@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.theme.*
+import com.example.telugubible.util.BookNameUtils
 import com.example.telugubible.ui.common.BookCoverImage
 
 @Composable
@@ -205,6 +206,7 @@ fun BibleBrowserScreen(
                 items(state.filteredBooks, key = { it.id }) { book ->
                     RemoraBookCard(
                         book = book,
+                        activeVersion = state.activeVersion,
                         onClick = { onOpenBook(book.id) }
                     )
                 }
@@ -255,6 +257,7 @@ private fun TestamentTabButton(
 @Composable
 private fun RemoraBookCard(
     book: Book,
+    activeVersion: String = "LSB",
     onClick: () -> Unit
 ) {
     Surface(
@@ -299,17 +302,10 @@ private fun RemoraBookCard(
 
                 // Title: English & Telugu Name
                 Text(
-                    text = book.nameEn,
+                    text = BookNameUtils.getBookDisplayName(book, activeVersion),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = RemoraTextPrimary,
-                    maxLines = 1
-                )
-                Text(
-                    text = book.nameTe,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = RemoraTextSecondary,
                     maxLines = 1
                 )
 

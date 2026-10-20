@@ -217,7 +217,7 @@ private fun VerseResultCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "${result.bookNameEn} (${result.bookNameTe}) ${result.chapter}:${result.verse}",
+                    text = "${result.bookNameEn} ${result.chapter}:${result.verse}",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = RemoraAccentLight

@@ -56,16 +56,17 @@ class BollsBibleService(
                 val verseNum = obj.optInt("verse", i + 1)
                 val rawText = obj.optString("text", "")
 
-                // Clean HTML tags like <b>...</b>, <br/>, or <i>...</i>
+                // Clean HTML tags like <br/>, <S>...</S>, but preserve <b> (headings) and <i> (translator italics)
                 val cleanText = rawText
-                    .replace(Regex("<b[^>]*>.*?</b>", RegexOption.DOT_MATCHES_ALL), "")
-                    .replace(Regex("<[^>]*>"), "")
                     .replace("&nbsp;", " ")
                     .replace("&amp;", "&")
                     .replace("&lt;", "<")
                     .replace("&gt;", ">")
                     .replace("&quot;", "\"")
                     .replace("&#39;", "'")
+                    .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+                    .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+                    .replace(Regex("<(?!/?(b|i)\\b)[^>]*>"), "")
                     .trim()
 
                 val verseId = (bookId * 1_000_000L) + (chapter * 1_000L) + verseNum

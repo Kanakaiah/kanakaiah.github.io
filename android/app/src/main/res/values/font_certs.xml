@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="com_google_android_gms_fonts_certs">
+        <item>@array/com_google_android_gms_fonts_certs_dev</item>
+        <item>@array/com_google_android_gms_fonts_certs_prod</item>
+    </array>
+    <string-array name="com_google_android_gms_fonts_certs_dev">
+        <item>
+            MIIEqDCCA5CgAwIBAgIJANWFuGx90071MA0GCSqGSIb3DQEBBAUAMIGUMQswCQYDVQQGEwJVUzET
+            MBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEQMA4GA1UEChMHR29v
+            Z2xlMRAwDgYDVQQLEwdBbmRyb2lkMRAwDgYDVQQDEwdBbmRyb2lkMScwJQYJKoZIhvcNAQkBFkho
+            ZWxwbWVAZ29vZ2xlLmNvbTAeFw0wODEyMDEwMTExMDFaFw0zNTEyMTgwMTExMDFaMIGUMQswCQYD
+            VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEQMA4G
+            A1UEChMHR29vZ2xlMRAwDgYDVQQLEwdBbmRyb2lkMRAwDgYDVQQDEwdBbmRyb2lkMScwJQYJKoZI
+            hvcNAQkBFkhoZWxwbWVAZ29vZ2xlLmNvbTCCAS8wDQYJKoZIhvcNAQEBBQADggENADCCAQgCggEB
+            ANwSbBibYYzqDPL07mNBMdSoPUfZ0Ks882UddW59vmYZxwkjGKISkmpxrfNWngBIWamAz2iV1W8A
+            Sg2L0FQzCSST+asGQ52dt88nm8qCXWAWh5nhQwVCnXFs97vn34WU++Ubtq/OGZ0NMQ9G44Lz6R+h
+            pe+2Am2AK1l57JyGod87xKnL5/6KgqGQ74Ti62x2AG7R2448aEuNW/W2985/h9f99y349h/3A++E
+            E0B+5+9z9iX+t4n+7/2A958/2p9r7/5mN/28v3s8
+        </item>
+    </string-array>
+    <string-array name="com_google_android_gms_fonts_certs_prod">
+        <item>
+            MIIEQzCCAyugAwIBAgIJAMLuv0VQoZBlMA0GCSqGSIb3DQEBBAUAMHQxCzAJBgNVBAYTAlVTMRMw
+            EQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29n
+            bGUgSW5jLjEQMA4GA1UECxMHQW5kcm9pZDEQMA4GA1UEAxMHQW5kcm9pZDAeFw0wODA4MjEyMzEz
+            MzRaFw0zNTEyMDcyMzEzMzRaMHQxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYw
+            FAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29nbGUgSW5jLjEQMA4GA1UECxMHQW5k
+            cm9pZDEQMA4GA1UEAxMHQW5kcm9pZDCCASAwDQYJKoZIhvcNAQEBBQADggENADCCAQgCggEBAKtW
+            Lay7ox4WUxTuehjA253CQ++FceubJMrzPtu80ZsGOaabeWAWBUt5P1379oZ427QZ605cxZZ71L5d
+            N69T5ifN9/1E2Uq/yT0h5F2Yd4ohqtzuvNW88upkwIb7N8jU8nW8/X/52eM9/6H984Y7n/2g9/1n
+            9/79+8p639N/355/9+
+        </item>
+    </string-array>
+</resources>

@@ -129,7 +129,7 @@ fun ParagraphView(
 
                     var text = rawVerseText
                     // Strip <b> tags that were processed for headings
-                    text = text.replace(Regex("<b[^>]*>.*?</b>", RegexOption.IGNORE_CASE), "")
+                    text = text.replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
                     // Clean HTML line breaks and footnotes
                     text = text.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
                     text = text.replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
@@ -290,8 +290,8 @@ private fun AnnotatedString.Builder.appendFormattedVerseText(
     bionicReading: Boolean,
     defaultColor: Color
 ) {
-    // Process translator supplied words inside <i>...</i>
-    val iRegex = Regex("<i>(.*?)</i>", RegexOption.IGNORE_CASE)
+    // Process translator supplied words inside <i ...>...</i>
+    val iRegex = Regex("<i\\b[^>]*>([\\s\\S]*?)</i>", RegexOption.IGNORE_CASE)
     var cursor = 0
 
     val matches = iRegex.findAll(rawText).toList()
@@ -326,11 +326,15 @@ private fun AnnotatedString.Builder.appendVerseStringSegment(
     isItalicTranslator: Boolean,
     defaultColor: Color
 ) {
+    // Strip any lingering HTML tags so raw tags like <i>, </i>, <S>, etc. never leak into UI
+    val clean = segment.replace(Regex("<[^>]+>"), "")
+    if (clean.isEmpty()) return
+
     val textToRender = if (isOtQuote) {
         // Uppercase text inside quotes or OT citation
-        segment.uppercase()
+        clean.uppercase()
     } else {
-        segment
+        clean
     }
 
     val baseStyle = if (isItalicTranslator) {

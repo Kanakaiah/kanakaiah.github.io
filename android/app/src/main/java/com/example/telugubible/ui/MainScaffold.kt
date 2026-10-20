@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.TrackChanges
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
@@ -67,13 +68,13 @@ fun MainScaffold(
     lookupViewModel: LookupViewModel = viewModel(),
     readerViewModel: ReaderViewModel = viewModel()
 ) {
-    var selectedTab by remember { mutableStateOf(RemoraTab.TODAY) }
-    var practiceSubject by remember { mutableStateOf(PracticeSubject.SESSION) }
-    var activeGuideBookId by remember { mutableStateOf<Int?>(null) }
-    var isInReaderMode by remember { mutableStateOf(false) }
-    var isInSettingsMode by remember { mutableStateOf(false) }
-    var isInRetentionMode by remember { mutableStateOf(false) }
-    var showAboutDialog by remember { mutableStateOf(false) }
+    var selectedTab by rememberSaveable { mutableStateOf(RemoraTab.TODAY) }
+    var practiceSubject by rememberSaveable { mutableStateOf(PracticeSubject.SESSION) }
+    var activeGuideBookId by rememberSaveable { mutableStateOf<Int?>(null) }
+    var isInReaderMode by rememberSaveable { mutableStateOf(false) }
+    var isInSettingsMode by rememberSaveable { mutableStateOf(false) }
+    var isInRetentionMode by rememberSaveable { mutableStateOf(false) }
+    var showAboutDialog by rememberSaveable { mutableStateOf(false) }
 
     val todayState by todayViewModel.uiState.collectAsState()
 
@@ -90,6 +91,8 @@ fun MainScaffold(
             activeGuideBookId = null
         } else if (isInSettingsMode) {
             isInSettingsMode = false
+            todayViewModel.loadData()
+            retentionViewModel.loadAnalytics()
         } else if (isInRetentionMode) {
             isInRetentionMode = false
         }
@@ -121,7 +124,15 @@ fun MainScaffold(
     } else if (isInSettingsMode) {
         SettingsScreen(
             viewModel = settingsViewModel,
-            onBack = { isInSettingsMode = false }
+            onBack = {
+                isInSettingsMode = false
+                todayViewModel.loadData()
+                retentionViewModel.loadAnalytics()
+            },
+            onDataCleared = {
+                todayViewModel.loadData()
+                retentionViewModel.loadAnalytics()
+            }
         )
     } else if (isInRetentionMode) {
         RetentionScreen(

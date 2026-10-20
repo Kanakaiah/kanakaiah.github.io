@@ -23,6 +23,7 @@ data class BookGuideUiState(
     val blockProgress: Map<Int, BlockProgressEntity> = emptyMap(),
     val revealedAnchors: Set<Int> = emptySet(),
     val showAllAnchors: Boolean = false,
+    val activeVersion: String = "LSB",
     val collapsedBlocks: Set<Int> = emptySet(),
     val gradedAnchorsOnThisPass: Map<Int, Int> = emptyMap(), // chapter -> interval in days
     val userVerseKeys: Set<Triple<Int, Int, Int>> = emptySet(), // (bookId, chapter, verse)
@@ -47,6 +48,7 @@ class BookGuideViewModel @JvmOverloads constructor(
             val blocks = repository.getBlockProgress(bookId)
             val userVerses = repository.getUserMemoryVerses()
             val verseKeys = userVerses.map { Triple(it.bookId, it.chapter, it.verse) }.toSet()
+            val settings = repository.getAppSettings()
 
             _uiState.update {
                 it.copy(
@@ -57,7 +59,8 @@ class BookGuideViewModel @JvmOverloads constructor(
                     blockProgress = blocks,
                     userVerseKeys = verseKeys,
                     revealedAnchors = emptySet(),
-                    showAllAnchors = false,
+                    showAllAnchors = settings.anchorReveal == "always",
+                    activeVersion = settings.bibleVersion.ifBlank { "LSB" },
                     collapsedBlocks = emptySet(),
                     gradedAnchorsOnThisPass = emptyMap(),
                     isLoading = false

@@ -24,7 +24,7 @@ fun SettingsSheet(
     fontSizeScale: FontSizeScale,
     language: BibleLanguage,
     readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
-    readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF,
+    readerFontFamily: ReaderFontFamily = ReaderFontFamily.MERRIWEATHER,
     onIncreaseFontSize: () -> Unit,
     onDecreaseFontSize: () -> Unit,
     onResetFontSize: () -> Unit,
@@ -110,18 +110,24 @@ fun SettingsSheet(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     FilterChip(
-                        selected = readerFontFamily == ReaderFontFamily.SERIF,
-                        onClick = { onFontFamilyChange(ReaderFontFamily.SERIF) },
-                        label = { Text("Serif (Classic)") },
+                        selected = readerFontFamily == ReaderFontFamily.INTER,
+                        onClick = { onFontFamilyChange(ReaderFontFamily.INTER) },
+                        label = { Text("Inter") },
                         modifier = Modifier.weight(1f)
                     )
                     FilterChip(
-                        selected = readerFontFamily == ReaderFontFamily.SANS_SERIF,
-                        onClick = { onFontFamilyChange(ReaderFontFamily.SANS_SERIF) },
-                        label = { Text("Sans (Modern)") },
+                        selected = readerFontFamily == ReaderFontFamily.MERRIWEATHER,
+                        onClick = { onFontFamilyChange(ReaderFontFamily.MERRIWEATHER) },
+                        label = { Text("Merriweather") },
+                        modifier = Modifier.weight(1f)
+                    )
+                    FilterChip(
+                        selected = readerFontFamily == ReaderFontFamily.ATKINSON,
+                        onClick = { onFontFamilyChange(ReaderFontFamily.ATKINSON) },
+                        label = { Text("Atkinson") },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -216,7 +222,7 @@ fun SettingsSheetPreview() {
             fontSizeScale = FontSizeScale.M,
             language = BibleLanguage.TELUGU,
             readerTheme = ReaderTheme.OBSIDIAN,
-            readerFontFamily = ReaderFontFamily.SERIF,
+            readerFontFamily = ReaderFontFamily.MERRIWEATHER,
             onIncreaseFontSize = {},
             onDecreaseFontSize = {},
             onResetFontSize = {},

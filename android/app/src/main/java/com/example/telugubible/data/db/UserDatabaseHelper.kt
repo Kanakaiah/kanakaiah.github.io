@@ -614,6 +614,31 @@ class UserDatabaseHelper(private val context: Context) :
         }
     }
 
+    fun getCachedVerseTexts(version: String, keys: List<Triple<Int, Int, Int>>): Map<Triple<Int, Int, Int>, String> {
+        if (keys.isEmpty()) return emptyMap()
+        val result = mutableMapOf<Triple<Int, Int, Int>, String>()
+        val db = readableDatabase
+        val ver = version.uppercase().trim()
+        keys.chunked(100).forEach { batch ->
+            val placeholders = batch.joinToString(" OR ") { "(book_id = ? AND chapter = ? AND verse = ?)" }
+            val args = (listOf(ver) + batch.flatMap { listOf(it.first.toString(), it.second.toString(), it.third.toString()) }).toTypedArray()
+            val cursor = db.rawQuery(
+                "SELECT book_id, chapter, verse, text FROM remote_verse_cache WHERE version = ? AND ($placeholders)",
+                args
+            )
+            cursor.use {
+                while (it.moveToNext()) {
+                    val bId = it.getInt(0)
+                    val ch = it.getInt(1)
+                    val vs = it.getInt(2)
+                    val txt = it.getString(3)
+                    result[Triple(bId, ch, vs)] = txt
+                }
+            }
+        }
+        return result
+    }
+
     fun gradeUserVerse(
         id: Long,
         score: Int,

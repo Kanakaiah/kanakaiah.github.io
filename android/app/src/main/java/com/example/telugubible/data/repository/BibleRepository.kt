@@ -119,9 +119,16 @@ class BibleRepository(
         val verseTexts = bibleDbHelper.getVerseTexts(verseKeys)
         val topicMappings = userDbHelper.getAllVerseTopicMappings()
 
+        val settings = userDbHelper.getAppSettings()
+        val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
+        val cachedActive = if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
+            userDbHelper.getCachedVerseTexts(activeVersion, verseKeys)
+        } else emptyMap()
+
         userVerses.map { uv ->
             val book = booksMap[uv.bookId]
-            val (textTe, textEn) = verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Pair(null, null)
+            val (textTe, localEn) = verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Pair(null, null)
+            val textEn = cachedActive[Triple(uv.bookId, uv.chapter, uv.verse)] ?: localEn
             UserMemoryVerse(
                 id = uv.id,
                 bookId = uv.bookId,
@@ -217,6 +224,25 @@ class BibleRepository(
         val topic = userDbHelper.getOrCreateTopic(topicName)
         val insertedCount = userDbHelper.addUserVerses(verses)
         userDbHelper.tagVersesWithTopic(verses, topic.id)
+
+        // Prefetch active translation (LSB default) for collection chapters
+        try {
+            val settings = userDbHelper.getAppSettings()
+            val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
+            if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
+                val distinctChapters = verses.map { Pair(it.first, it.second) }.distinct()
+                for ((bId, ch) in distinctChapters) {
+                    val cached = userDbHelper.getCachedVerses(activeVersion, bId, ch)
+                    if (cached.isEmpty()) {
+                        val remote = bollsBibleService.fetchChapter(activeVersion, bId, ch)
+                        if (!remote.isNullOrEmpty()) {
+                            userDbHelper.saveCachedVerses(activeVersion, bId, ch, remote)
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {}
+
         insertedCount
     }
 

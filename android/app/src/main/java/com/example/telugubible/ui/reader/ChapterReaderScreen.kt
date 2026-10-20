@@ -322,7 +322,7 @@ fun ChapterReaderScreen(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = "$bookDisplayName $currentChapter",
+                                text = "$bookDisplayName $currentChapter".uppercase(),
                                 style = MaterialTheme.typography.titleLarge.copy(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp,
@@ -337,7 +337,7 @@ fun ChapterReaderScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                // Translation Badge
+                                // Translation Badge (All Caps)
                                 Surface(
                                     shape = RoundedCornerShape(12.dp),
                                     color = if (state.alphaMode) RemoraGold.copy(alpha = 0.2f) else state.readerTheme.accentColor.copy(alpha = 0.12f),
@@ -345,7 +345,7 @@ fun ChapterReaderScreen(
                                     modifier = Modifier.clickable { viewModel.toggleBookSelector(true) }
                                 ) {
                                     Text(
-                                        text = if (state.alphaMode) "KJV + Original Words" else "${BibleTranslation.getLabel(state.activeVersion)} Translation",
+                                        text = if (state.alphaMode) "KJV + ORIGINAL WORDS" else "${BibleTranslation.getLabel(state.activeVersion).uppercase()} TRANSLATION",
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = if (state.alphaMode) RemoraGold else state.readerTheme.accentColor,
@@ -353,10 +353,10 @@ fun ChapterReaderScreen(
                                     )
                                 }
 
-                                // Interactive Memory Anchor Chip
+                                // Interactive Memory Anchor Chip (All Caps)
                                 if (state.currentAnchor != null && state.anchorReveal != "never") {
                                     val isRevealed = state.anchorReveal == "always" || state.anchorWordRevealed
-                                    val chipText = if (isRevealed) state.currentAnchor!!.word.uppercase() else "Tap for anchor"
+                                    val chipText = if (isRevealed) state.currentAnchor!!.word.uppercase() else "TAP FOR ANCHOR"
 
                                     Surface(
                                         shape = RoundedCornerShape(12.dp),
@@ -498,16 +498,21 @@ fun ChapterReaderScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text("Font", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = state.readerTheme.textColor)
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                 FilterChip(
-                                    selected = state.readerFontFamily == ReaderFontFamily.SERIF,
-                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.SERIF) },
-                                    label = { Text("Serif", fontSize = 11.sp) }
+                                    selected = state.readerFontFamily == ReaderFontFamily.INTER,
+                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.INTER) },
+                                    label = { Text("Inter", fontSize = 11.sp) }
                                 )
                                 FilterChip(
-                                    selected = state.readerFontFamily == ReaderFontFamily.SANS_SERIF,
-                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.SANS_SERIF) },
-                                    label = { Text("Sans", fontSize = 11.sp) }
+                                    selected = state.readerFontFamily == ReaderFontFamily.MERRIWEATHER,
+                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.MERRIWEATHER) },
+                                    label = { Text("Merriweather", fontSize = 11.sp) }
+                                )
+                                FilterChip(
+                                    selected = state.readerFontFamily == ReaderFontFamily.ATKINSON,
+                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.ATKINSON) },
+                                    label = { Text("Atkinson", fontSize = 11.sp) }
                                 )
                             }
                         }
@@ -623,14 +628,15 @@ fun ChapterReaderScreen(
                         Icon(Icons.Default.ChevronLeft, contentDescription = "Previous", modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = prevLabel ?: "Start",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = if (prevLabel != null) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.4f)
+                            text = prevLabel?.uppercase() ?: "START",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (prevLabel != null) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.4f),
+                            letterSpacing = 0.5.sp
                         )
                     }
 
-                    // Center Navigator Pill (Ch N ▾)
+                    // Center Navigator Pill (CH N ▾)
                     Surface(
                         shape = RoundedCornerShape(8.dp),
                         color = state.readerTheme.cardColor,
@@ -642,10 +648,11 @@ fun ChapterReaderScreen(
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = "Ch $currentChapter",
+                                text = "CH $currentChapter",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = state.readerTheme.textColor
+                                color = state.readerTheme.textColor,
+                                letterSpacing = 0.5.sp
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
@@ -664,10 +671,11 @@ fun ChapterReaderScreen(
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text = nextLabel ?: "End",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = if (nextLabel != null) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.4f)
+                            text = nextLabel?.uppercase() ?: "END",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (nextLabel != null) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.4f),
+                            letterSpacing = 0.5.sp
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(Icons.Default.ChevronRight, contentDescription = "Next", modifier = Modifier.size(18.dp))

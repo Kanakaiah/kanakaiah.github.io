@@ -69,6 +69,7 @@ private val FONT_SIZE_OPTIONS = listOf(
 fun SettingsScreen(
     viewModel: SettingsViewModel,
     onBack: () -> Unit,
+    onDataCleared: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -672,6 +673,7 @@ fun SettingsScreen(
                         viewModel.clearAllData {
                             showClearDataConfirm = false
                             Toast.makeText(context, "All user data deleted", Toast.LENGTH_SHORT).show()
+                            onDataCleared()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = RemoraDanger)

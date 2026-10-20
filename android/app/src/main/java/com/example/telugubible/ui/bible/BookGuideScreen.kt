@@ -52,6 +52,8 @@ import com.example.telugubible.data.model.GuideBlock
 import com.example.telugubible.data.model.GuideKeyVerse
 import com.example.telugubible.theme.*
 import com.example.telugubible.ui.common.BookCoverImage
+import com.example.telugubible.ui.common.ChapterPlateImage
+import com.example.telugubible.util.BookNameUtils
 import com.example.telugubible.ui.practice.ChainDrill
 
 // Distribution palette cycled across blocks
@@ -98,7 +100,7 @@ fun BookGuideScreen(
                     Column {
                         state.book?.let { b ->
                             Text(
-                                text = "${b.nameTe} · ${b.nameEn}",
+                                text = BookNameUtils.getBookDisplayName(b, state.activeVersion),
                                 fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraTextPrimary,
@@ -177,6 +179,7 @@ fun BookGuideScreen(
                         HeroHeaderSection(
                             book = book,
                             guide = guide,
+                            activeVersion = state.activeVersion,
                             onReadChapter1 = { onOpenReader(book.id, 1) }
                         )
                     }
@@ -197,7 +200,7 @@ fun BookGuideScreen(
                         item {
                             MemorySentenceCard(
                                 memorySentence = memorySentence,
-                                bookName = book.nameEn,
+                                bookName = BookNameUtils.getBookDisplayName(book, state.activeVersion),
                                 onCopy = {
                                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("Memory Sentence", memorySentence.replace("**", ""))
@@ -517,6 +520,7 @@ private fun CommentariesGuideSection(
 private fun HeroHeaderSection(
     book: Book,
     guide: BookGuide,
+    activeVersion: String = "LSB",
     onReadChapter1: () -> Unit
 ) {
     Surface(
@@ -542,19 +546,12 @@ private fun HeroHeaderSection(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Book Titles
+            // Book Title based on active translation
             Text(
-                text = book.nameTe,
-                fontSize = 22.sp,
+                text = BookNameUtils.getBookDisplayName(book, activeVersion),
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = RemoraTextPrimary,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = book.nameEn,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = RemoraTextSecondary,
                 textAlign = TextAlign.Center
             )
 
@@ -1079,6 +1076,17 @@ private fun ChapterAnchorCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
+            // Chapter Artwork Plate (Remora PWA feature)
+            ChapterPlateImage(
+                bookKey = bookKey,
+                chapter = anchor.chapter,
+                contentDescription = "Chapter ${anchor.chapter} Anchor: ${anchor.word}",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .clickable { onReadChapter() }
+            )
+
             // Clickable card top: reveals anchor or opens reader
             Column(
                 modifier = Modifier
@@ -1088,43 +1096,20 @@ private fun ChapterAnchorCard(
                     }
                     .padding(14.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
-                ) {
-                    // Chapter number badge
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .background(RemoraCardBgElevated, CircleShape)
-                            .border(1.dp, RemoraCardBorder, CircleShape),
-                        contentAlignment = Alignment.Center
+                if (isRevealed) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "${anchor.chapter}",
-                            fontSize = 13.sp,
+                            text = anchor.word.uppercase(),
+                            fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
-                            color = RemoraAccentLight
+                            letterSpacing = 1.sp,
+                            color = RemoraAccent
                         )
-                    }
 
-                    if (!isRevealed) {
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = RemoraCardBgElevated,
-                            border = BorderStroke(1.dp, RemoraCardBorder)
-                        ) {
-                            Text(
-                                text = "TAP TO REVEAL",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.sp,
-                                color = RemoraAccentLight,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                    } else {
                         Button(
                             onClick = onReadChapter,
                             colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
@@ -1136,18 +1121,7 @@ private fun ChapterAnchorCard(
                             Text("Read Chapter", fontSize = 10.sp, color = RemoraTextSecondary)
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                if (isRevealed) {
-                    Text(
-                        text = anchor.word,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = RemoraAccent
-                    )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = anchor.scene,
@@ -1197,6 +1171,34 @@ private fun ChapterAnchorCard(
                         }
                     }
                 } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "CHAPTER ${anchor.chapter}",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp,
+                            color = RemoraTextSecondary
+                        )
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = RemoraCardBgElevated,
+                            border = BorderStroke(1.dp, RemoraCardBorder)
+                        ) {
+                            Text(
+                                text = "TAP TO REVEAL",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
+                                color = RemoraAccentLight,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "What anchors chapter ${anchor.chapter}?",
                         fontSize = 13.sp,

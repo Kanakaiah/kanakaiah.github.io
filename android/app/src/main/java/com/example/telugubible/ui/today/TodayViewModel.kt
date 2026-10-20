@@ -52,7 +52,8 @@ data class TodayUiState(
     val selectedTopicId: String? = null,
     val showManageTopicsSheet: Boolean = false,
     val bionicReading: Boolean = false,
-    val recallMasking: Boolean = false
+    val recallMasking: Boolean = false,
+    val activeVersion: String = "LSB"
 )
 
 class TodayViewModel @JvmOverloads constructor(
@@ -128,6 +129,7 @@ class TodayViewModel @JvmOverloads constructor(
                     totalSecureChapters = totalSecure,
                     totalBibleChapters = totalChapters,
                     dueChaptersByBook = dueChaptersMap,
+                    activeVersion = settings.bibleVersion.ifBlank { "LSB" },
                     secureThemesCount = secureThemes,
                     dueThemesCount = dueThemes,
                     bionicReading = settings.bionicReading,

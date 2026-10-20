@@ -66,7 +66,7 @@ data class ReaderUiState(
     val occurrencesError: String? = null,
     val kjvChapterVerses: Map<Int, String> = emptyMap(),
     val readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
-    val readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF,
+    val readerFontFamily: ReaderFontFamily = ReaderFontFamily.MERRIWEATHER,
     val currentAnchor: ChapterAnchor? = null,
     val chapterProgress: ChapterProgressEntity? = null,
     val isAnchorDismissed: Boolean = false,
@@ -121,7 +121,8 @@ class ReaderViewModel @JvmOverloads constructor(
             val lang = if (activeVer == "TELIRV") BibleLanguage.TELUGU else BibleLanguage.ENGLISH
 
             if (firstBook != null) {
-                val verses = repository.getChapterVerses(firstBook.id, 1, activeVer)
+                val rawVerses = repository.getChapterVerses(firstBook.id, 1, activeVer)
+                val verses = attachHeadingsIfNeeded(firstBook.id, 1, activeVer, rawVerses)
                 val breaks = repository.getParagraphBreaks(firstBook.id, 1)
                 val crossRefCounts = repository.getCrossReferenceCountsForChapter(firstBook.id, 1)
                 val otQuotes = repository.getOtQuotesForChapter(firstBook.id, 1)
@@ -137,7 +138,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     settings.fontSize <= 1.30f -> FontSizeScale.L
                     else -> FontSizeScale.XL
                 }
-                val fontFam = if (settings.fontFamily == "sans") ReaderFontFamily.SANS_SERIF else ReaderFontFamily.SERIF
+                val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
                 val theme = when (settings.theme.lowercase()) {
                     "dark", "walnut" -> ReaderTheme.DARK
                     "sepia" -> ReaderTheme.SEPIA
@@ -198,7 +199,8 @@ class ReaderViewModel @JvmOverloads constructor(
                     originalWordsList = emptyList()
                 )
             }
-            val verses = repository.getChapterVerses(book.id, chapter, _uiState.value.activeVersion)
+            val rawVerses = repository.getChapterVerses(book.id, chapter, _uiState.value.activeVersion)
+            val verses = attachHeadingsIfNeeded(book.id, chapter, _uiState.value.activeVersion, rawVerses)
             val breaks = repository.getParagraphBreaks(book.id, chapter)
             val crossRefCounts = repository.getCrossReferenceCountsForChapter(book.id, chapter)
             val otQuotes = repository.getOtQuotesForChapter(book.id, chapter)
@@ -229,6 +231,30 @@ class ReaderViewModel @JvmOverloads constructor(
                     kjvChapterVerses = kjvMap,
                     isLoading = false
                 )
+            }
+        }
+    }
+
+    private suspend fun attachHeadingsIfNeeded(bookId: Int, chapter: Int, activeVersion: String, verses: List<Verse>): List<Verse> {
+        val hasHeadings = verses.any { (it.textEn ?: "").contains("<b", ignoreCase = true) }
+        if (hasHeadings || activeVersion == "LSB") return verses
+        val lsbVerses = repository.getChapterVerses(bookId, chapter, "LSB")
+        val lsbHeadings = mutableMapOf<Int, String>()
+        lsbVerses.forEach { lv ->
+            val text = lv.textEn ?: ""
+            val m = Regex("<b[^>]*>([\\s\\S]*?)</b>", RegexOption.IGNORE_CASE).find(text)
+            if (m != null) {
+                lsbHeadings[lv.verse] = m.value
+            }
+        }
+        if (lsbHeadings.isEmpty()) return verses
+        return verses.map { v ->
+            val h = lsbHeadings[v.verse]
+            if (h != null) {
+                val currentText = v.textEn ?: v.textTe ?: ""
+                v.copy(textEn = "$h $currentText")
+            } else {
+                v
             }
         }
     }

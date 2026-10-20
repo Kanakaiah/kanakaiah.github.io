@@ -17,12 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.util.BookNameUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookSelectorSheet(
     books: List<Book>,
     currentBook: Book?,
+    activeVersion: String = "LSB",
     onDismiss: () -> Unit,
     onSelect: (Book, Int) -> Unit
 ) {
@@ -46,7 +48,7 @@ fun BookSelectorSheet(
         ) {
             // Header
             Text(
-                text = if (viewingBook == null) "Select Book" else "${viewingBook?.nameTe} (${viewingBook?.nameEn})",
+                text = if (viewingBook == null) "Select Book" else BookNameUtils.getBookDisplayName(viewingBook!!, activeVersion),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -93,7 +95,7 @@ fun BookSelectorSheet(
                         ) {
                             Column {
                                 Text(
-                                    text = book.nameTe,
+                                    text = BookNameUtils.getBookDisplayName(book, activeVersion),
                                     fontSize = 17.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface

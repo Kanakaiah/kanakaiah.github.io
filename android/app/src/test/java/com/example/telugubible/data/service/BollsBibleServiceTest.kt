@@ -33,12 +33,12 @@ class BollsBibleServiceTest {
         val verses = service.parseVersesJson(sampleJson, bookId = 1, chapter = 1)
         assertEquals(2, verses.size)
 
-        // Verse 1: HTML heading stripped, text preserved
+        // Verse 1: HTML heading tags preserved for section detection, text preserved
         val v1 = verses[0]
         assertEquals(1, v1.bookId)
         assertEquals(1, v1.chapter)
         assertEquals(1, v1.verse)
-        assertEquals("In the beginning God created the heavens and the earth.", v1.textEn)
+        assertEquals("<b>The Creation</b> In the beginning God created the heavens and the earth.", v1.textEn)
 
         // Verse 2: HTML entities decoded
         val v2 = verses[1]
