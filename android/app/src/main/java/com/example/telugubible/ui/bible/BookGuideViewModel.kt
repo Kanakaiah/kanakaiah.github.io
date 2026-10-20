@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 data class BookGuideUiState(
     val bookId: Int = 1,
     val book: Book? = null,
+    val books: List<Book> = emptyList(),
     val guide: BookGuide? = null,
     val chapterProgress: Map<Int, ChapterProgressEntity> = emptyMap(),
     val blockProgress: Map<Int, BlockProgressEntity> = emptyMap(),
@@ -42,7 +43,8 @@ class BookGuideViewModel @JvmOverloads constructor(
     fun loadBookGuide(bookId: Int) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, bookId = bookId) }
-            val book = repository.getBook(bookId)
+            val books = if (_uiState.value.books.isEmpty()) repository.getBooks() else _uiState.value.books
+            val book = books.firstOrNull { it.id == bookId } ?: repository.getBook(bookId)
             val guide = repository.getBookGuide(bookId)
             val progress = repository.getChapterProgress(bookId)
             val blocks = repository.getBlockProgress(bookId)
@@ -54,6 +56,7 @@ class BookGuideViewModel @JvmOverloads constructor(
                 it.copy(
                     bookId = bookId,
                     book = book,
+                    books = books,
                     guide = guide,
                     chapterProgress = progress,
                     blockProgress = blocks,

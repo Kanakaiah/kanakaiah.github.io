@@ -122,6 +122,7 @@ fun MainScaffold(
             viewModel = bookGuideViewModel,
             bookId = activeGuideBookId!!,
             onBack = { activeGuideBookId = null },
+            onSelectBook = { activeGuideBookId = it },
             onOpenReader = openReader
         )
     } else if (isInSettingsMode) {
