@@ -195,6 +195,7 @@ fun TodayScreen(
                             topics = state.topics,
                             bionicReading = state.bionicReading,
                             recallMasking = state.recallMasking,
+                            fontSizeMultiplier = state.fontSizeMultiplier,
                             onClick = { viewModel.selectVerseForDetail(verse) },
                             onPractice = onNavigateToPractice,
                             onRead = { onNavigateToReader(verse.bookId, verse.chapter) },
@@ -778,6 +779,7 @@ private fun RemoraVerseCard(
     topics: List<Topic> = emptyList(),
     bionicReading: Boolean = false,
     recallMasking: Boolean = false,
+    fontSizeMultiplier: Float = 1.0f,
     onClick: () -> Unit = {},
     onPractice: () -> Unit,
     onRead: () -> Unit,
@@ -882,10 +884,14 @@ private fun RemoraVerseCard(
                     }
                     val isMasked = recallMasking && !isMaskRevealed
 
+                    val cardBaseSize = if (isEnglish) 14.5f else 16.5f
+                    val cardScaledSize = (cardBaseSize * fontSizeMultiplier.coerceIn(0.82f, 1.55f)).sp
+                    val cardLineHeight = (cardScaledSize.value * 1.55f).sp
+
                     Text(
                         text = formattedText,
-                        fontSize = if (isEnglish) 14.sp else 16.sp,
-                        lineHeight = if (isEnglish) 21.sp else 25.sp,
+                        fontSize = cardScaledSize,
+                        lineHeight = cardLineHeight,
                         color = RemoraTextPrimary,
                         modifier = Modifier
                             .fillMaxWidth()

@@ -51,8 +51,8 @@ fun ParagraphView(
     onEmptySpaceClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val baseFontSize = 18.sp * fontSizeScale.multiplier
-    val baseLineHeight = baseFontSize * 1.65f
+    val baseFontSize = fontSizeScale.spSize.sp
+    val baseLineHeight = fontSizeScale.lineHeightSp.sp
     val verseNumSize = (baseFontSize.value * 0.58f).sp
     val xrefNumSize = (baseFontSize.value * 0.55f).sp
 
@@ -64,6 +64,7 @@ fun ParagraphView(
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = (baseFontSize.value * 1.15f).sp,
+                    lineHeight = (baseFontSize.value * 1.35f).sp,
                     fontFamily = readerFontFamily.fontFamily,
                     letterSpacing = (-0.01).sp
                 ),
@@ -88,6 +89,7 @@ fun ParagraphView(
                     fontStyle = FontStyle.Italic,
                     fontFamily = readerFontFamily.fontFamily,
                     fontSize = (baseFontSize.value * 0.88f).sp,
+                    lineHeight = (baseFontSize.value * 1.25f).sp,
                     letterSpacing = 0.4.sp
                 ),
                 color = readerTheme.secondaryTextColor,
@@ -110,6 +112,7 @@ fun ParagraphView(
             showCrossRefMarkers,
             crossRefCounts,
             bionicReading,
+            fontSizeScale,
             readerTheme,
             readerFontFamily,
             language

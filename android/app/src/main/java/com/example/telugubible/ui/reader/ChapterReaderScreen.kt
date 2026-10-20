@@ -465,11 +465,16 @@ fun ChapterReaderScreen(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 OutlinedButton(
                                     onClick = { viewModel.decreaseFontSize() },
+                                    enabled = state.fontSizeScale != FontSizeScale.XS,
                                     shape = RoundedCornerShape(8.dp),
                                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                                     modifier = Modifier.height(28.dp)
                                 ) {
-                                    Text("-", fontWeight = FontWeight.Bold, color = state.readerTheme.textColor)
+                                    Text(
+                                        "-",
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (state.fontSizeScale != FontSizeScale.XS) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.35f)
+                                    )
                                 }
                                 Text(
                                     text = state.fontSizeScale.label,
@@ -480,11 +485,16 @@ fun ChapterReaderScreen(
                                 )
                                 OutlinedButton(
                                     onClick = { viewModel.increaseFontSize() },
+                                    enabled = state.fontSizeScale != FontSizeScale.XL,
                                     shape = RoundedCornerShape(8.dp),
                                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                                     modifier = Modifier.height(28.dp)
                                 ) {
-                                    Text("+", fontWeight = FontWeight.Bold, color = state.readerTheme.textColor)
+                                    Text(
+                                        "+",
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (state.fontSizeScale != FontSizeScale.XL) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.35f)
+                                    )
                                 }
                             }
                         }

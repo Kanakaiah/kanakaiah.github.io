@@ -53,6 +53,7 @@ data class TodayUiState(
     val showManageTopicsSheet: Boolean = false,
     val bionicReading: Boolean = false,
     val recallMasking: Boolean = false,
+    val fontSizeMultiplier: Float = 1.0f,
     val activeVersion: String = "LSB"
 )
 
@@ -134,6 +135,7 @@ class TodayViewModel @JvmOverloads constructor(
                     dueThemesCount = dueThemes,
                     bionicReading = settings.bionicReading,
                     recallMasking = settings.recallMasking,
+                    fontSizeMultiplier = settings.fontSize,
                     isLoading = false
                 )
             }

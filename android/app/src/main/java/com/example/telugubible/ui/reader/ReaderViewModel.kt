@@ -21,12 +21,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-enum class FontSizeScale(val label: String, val multiplier: Float) {
-    XS("XS", 0.85f),
-    S("S", 1.00f),
-    M("M", 1.15f),
-    L("L", 1.30f),
-    XL("XL", 1.45f)
+enum class FontSizeScale(
+    val label: String,
+    val multiplier: Float,
+    val spSize: Float,
+    val lineHeightSp: Float
+) {
+    XS("XS", 0.82f, 15f, 23f),
+    S("S", 1.00f, 18f, 28f),
+    M("M", 1.28f, 23f, 36f),
+    L("L", 1.60f, 29f, 45f),
+    XL("XL", 2.00f, 36f, 56f);
+
+    companion object {
+        fun fromMultiplier(multiplier: Float): FontSizeScale = when {
+            multiplier <= 0.90f -> XS
+            multiplier <= 1.12f -> S
+            multiplier <= 1.42f -> M
+            multiplier <= 1.78f -> L
+            else -> XL
+        }
+    }
 }
 
 enum class BibleLanguage(val code: String, val displayName: String) {
@@ -131,13 +146,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 val chapterProgress = repository.getChapterProgress(firstBook.id)[1]
                 val userVerses = repository.getUserMemoryVerses()
                 val memorized = userVerses.filter { it.bookId == firstBook.id && it.chapter == 1 }.map { it.verse }.toSet()
-                val fontScale = when {
-                    settings.fontSize <= 0.85f -> FontSizeScale.XS
-                    settings.fontSize <= 1.0f -> FontSizeScale.S
-                    settings.fontSize <= 1.15f -> FontSizeScale.M
-                    settings.fontSize <= 1.30f -> FontSizeScale.L
-                    else -> FontSizeScale.XL
-                }
+                val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
                 val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
                 val theme = when (settings.theme.lowercase()) {
                     "dark", "walnut" -> ReaderTheme.DARK
@@ -481,7 +490,9 @@ class ReaderViewModel @JvmOverloads constructor(
         val values = FontSizeScale.entries
         val currentIndex = values.indexOf(_uiState.value.fontSizeScale)
         if (currentIndex < values.size - 1) {
-            _uiState.update { it.copy(fontSizeScale = values[currentIndex + 1]) }
+            val nextScale = values[currentIndex + 1]
+            _uiState.update { it.copy(fontSizeScale = nextScale) }
+            persistFontSize(nextScale)
         }
     }
 
@@ -489,12 +500,27 @@ class ReaderViewModel @JvmOverloads constructor(
         val values = FontSizeScale.entries
         val currentIndex = values.indexOf(_uiState.value.fontSizeScale)
         if (currentIndex > 0) {
-            _uiState.update { it.copy(fontSizeScale = values[currentIndex - 1]) }
+            val prevScale = values[currentIndex - 1]
+            _uiState.update { it.copy(fontSizeScale = prevScale) }
+            persistFontSize(prevScale)
         }
     }
 
     fun resetFontSize() {
         _uiState.update { it.copy(fontSizeScale = FontSizeScale.S) }
+        persistFontSize(FontSizeScale.S)
+    }
+
+    fun setFontSizeScale(scale: FontSizeScale) {
+        _uiState.update { it.copy(fontSizeScale = scale) }
+        persistFontSize(scale)
+    }
+
+    private fun persistFontSize(scale: FontSizeScale) {
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(settings.copy(fontSize = scale.multiplier))
+        }
     }
 
     fun setLanguage(lang: BibleLanguage) {

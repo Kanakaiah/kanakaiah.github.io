@@ -110,10 +110,13 @@ fun MainScaffold(
     TeluguBibleTheme(themeName = settingsState.settings.theme) {
         CompositionLocalProvider(LocalDensity provides customDensity) {
     if (isInReaderMode) {
-        ChapterReaderScreen(
-            viewModel = readerViewModel,
-            onBack = { isInReaderMode = false }
-        )
+        // Reader manages its own typography scaling directly via FontSizeScale (XS-XL)
+        CompositionLocalProvider(LocalDensity provides currentDensity) {
+            ChapterReaderScreen(
+                viewModel = readerViewModel,
+                onBack = { isInReaderMode = false }
+            )
+        }
     } else if (activeGuideBookId != null) {
         BookGuideScreen(
             viewModel = bookGuideViewModel,

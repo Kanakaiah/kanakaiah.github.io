@@ -151,9 +151,52 @@ class ReaderViewModelTest {
         // Font size scaling
         assertEquals(FontSizeScale.S, viewModel.uiState.value.fontSizeScale)
         viewModel.increaseFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.M, viewModel.uiState.value.fontSizeScale)
+        assertEquals(1.28f, repository.getAppSettings().fontSize)
+
+        viewModel.increaseFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.L, viewModel.uiState.value.fontSizeScale)
+        assertEquals(1.60f, repository.getAppSettings().fontSize)
+
+        viewModel.increaseFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.XL, viewModel.uiState.value.fontSizeScale)
+        assertEquals(2.00f, repository.getAppSettings().fontSize)
+        assertEquals(36f, FontSizeScale.XL.spSize)
+
+        // Cannot increase beyond XL
+        viewModel.increaseFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.XL, viewModel.uiState.value.fontSizeScale)
+
+        // Decrease down to XS
+        viewModel.decreaseFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.L, viewModel.uiState.value.fontSizeScale)
+        viewModel.decreaseFontSize()
+        advanceUntilIdle()
         assertEquals(FontSizeScale.M, viewModel.uiState.value.fontSizeScale)
         viewModel.decreaseFontSize()
+        advanceUntilIdle()
         assertEquals(FontSizeScale.S, viewModel.uiState.value.fontSizeScale)
+        viewModel.decreaseFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.XS, viewModel.uiState.value.fontSizeScale)
+        assertEquals(15f, FontSizeScale.XS.spSize)
+        assertEquals(0.82f, repository.getAppSettings().fontSize)
+
+        // Cannot decrease below XS
+        viewModel.decreaseFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.XS, viewModel.uiState.value.fontSizeScale)
+
+        // Reset to S
+        viewModel.resetFontSize()
+        advanceUntilIdle()
+        assertEquals(FontSizeScale.S, viewModel.uiState.value.fontSizeScale)
+        assertEquals(1.00f, repository.getAppSettings().fontSize)
     }
 
     @Test

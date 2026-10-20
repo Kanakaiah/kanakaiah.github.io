@@ -68,7 +68,7 @@ fun ImmersedReader(
     }
 
     var fontScaleIndex by remember { mutableIntStateOf(1) } // 0: XS, 1: S, 2: M, 3: L, 4: XL
-    val scaleMultipliers = floatArrayOf(0.85f, 1.0f, 1.15f, 1.30f, 1.45f)
+    val scaleMultipliers = floatArrayOf(0.82f, 1.00f, 1.28f, 1.60f, 2.00f)
     val scaleLabels = arrayOf("XS", "S", "M", "L", "XL")
     val fontMultiplier = scaleMultipliers[fontScaleIndex.coerceIn(0, 4)]
 

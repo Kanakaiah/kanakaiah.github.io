@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.theme.*
+import com.example.telugubible.ui.reader.FontSizeScale
 
 data class ThemeOption(val id: String, val label: String, val color: Color)
 data class FontSizeOption(val size: Float, val label: String)
@@ -58,10 +59,11 @@ private val THEME_OPTIONS = listOf(
 )
 
 private val FONT_SIZE_OPTIONS = listOf(
-    FontSizeOption(0.85f, "Small"),
-    FontSizeOption(1.0f, "Normal"),
-    FontSizeOption(1.15f, "Large"),
-    FontSizeOption(1.3f, "Extra Large")
+    FontSizeOption(0.82f, "XS"),
+    FontSizeOption(1.00f, "S"),
+    FontSizeOption(1.28f, "M"),
+    FontSizeOption(1.60f, "L"),
+    FontSizeOption(2.00f, "XL")
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -248,7 +250,7 @@ fun SettingsScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             FONT_SIZE_OPTIONS.forEach { opt ->
-                                val isSelected = state.settings.fontSize == opt.size
+                                val isSelected = FontSizeScale.fromMultiplier(state.settings.fontSize) == FontSizeScale.fromMultiplier(opt.size)
                                 Surface(
                                     onClick = { viewModel.setFontSize(opt.size) },
                                     shape = RoundedCornerShape(8.dp),
