@@ -17,10 +17,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
@@ -32,6 +36,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -49,6 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.DisplayLanguage
+import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.theme.RemoraAccent
 import com.example.telugubible.theme.RemoraAccentLight
@@ -79,10 +86,15 @@ fun VerseDetailSheet(
     onDismiss: () -> Unit,
     onPractice: () -> Unit,
     onReadInChapter: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    topics: List<Topic> = emptyList(),
+    onToggleTopic: (String) -> Unit = {},
+    onCreateTopicForVerse: (String) -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var confirmingDelete by remember { mutableStateOf(false) }
+    var isAddingGroup by remember { mutableStateOf(false) }
+    var newGroupName by remember { mutableStateOf("") }
 
     val masteryPct = min(100, ((verse.repetition.toFloat() / 6f) * 100f).roundToInt())
 
@@ -238,6 +250,139 @@ fun VerseDetailSheet(
                     color = RemoraTextPrimary,
                     modifier = Modifier.padding(18.dp)
                 )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 3.5 Groups Section (Matching React's VerseDetailModal)
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = RemoraCardBg,
+                border = BorderStroke(1.dp, RemoraCardBorder),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text(
+                        text = "GROUPS",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.2.sp,
+                        color = RemoraTextMuted
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    @OptIn(ExperimentalLayoutApi::class)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        for (topic in topics) {
+                            val isActive = topic.id in verse.topicIds
+                            Surface(
+                                shape = RoundedCornerShape(16.dp),
+                                color = if (isActive) RemoraAccent.copy(alpha = 0.15f) else Color.Transparent,
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (isActive) RemoraAccent.copy(alpha = 0.5f) else RemoraCardBorder
+                                ),
+                                modifier = Modifier.clickable { onToggleTopic(topic.id) }
+                            ) {
+                                Text(
+                                    text = topic.name,
+                                    fontSize = 12.sp,
+                                    fontWeight = if (isActive) FontWeight.Bold else FontWeight.Medium,
+                                    color = if (isActive) RemoraAccentLight else RemoraTextSecondary,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                )
+                            }
+                        }
+
+                        if (isAddingGroup) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                OutlinedTextField(
+                                    value = newGroupName,
+                                    onValueChange = { newGroupName = it },
+                                    placeholder = { Text("New group...", fontSize = 11.sp, color = RemoraTextMuted) },
+                                    singleLine = true,
+                                    shape = RoundedCornerShape(14.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedContainerColor = RemoraCardBgElevated,
+                                        unfocusedContainerColor = RemoraCardBgElevated,
+                                        focusedTextColor = RemoraTextPrimary,
+                                        unfocusedTextColor = RemoraTextPrimary,
+                                        focusedBorderColor = RemoraAccent,
+                                        unfocusedBorderColor = RemoraCardBorder
+                                    ),
+                                    modifier = Modifier.width(130.dp)
+                                )
+
+                                IconButton(
+                                    onClick = {
+                                        val trimmed = newGroupName.trim()
+                                        if (trimmed.isNotEmpty()) {
+                                            onCreateTopicForVerse(trimmed)
+                                            newGroupName = ""
+                                            isAddingGroup = false
+                                        }
+                                    },
+                                    modifier = Modifier.size(28.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = "Save group",
+                                        tint = RemoraAccentLight,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+
+                                IconButton(
+                                    onClick = {
+                                        newGroupName = ""
+                                        isAddingGroup = false
+                                    },
+                                    modifier = Modifier.size(28.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Cancel",
+                                        tint = RemoraTextMuted,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            }
+                        } else {
+                            Surface(
+                                shape = RoundedCornerShape(16.dp),
+                                color = Color.Transparent,
+                                border = BorderStroke(1.dp, RemoraCardBorder),
+                                modifier = Modifier.clickable { isAddingGroup = true }
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Add,
+                                        contentDescription = null,
+                                        tint = RemoraTextSecondary,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "New Group",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = RemoraTextSecondary
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))

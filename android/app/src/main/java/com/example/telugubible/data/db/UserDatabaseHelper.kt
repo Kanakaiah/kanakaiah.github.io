@@ -8,10 +8,12 @@ import com.example.telugubible.data.model.AdherenceStats
 import com.example.telugubible.data.model.AppSettings
 import com.example.telugubible.data.model.ColdCheckResult
 import com.example.telugubible.data.model.ReviewLogEntry
+import com.example.telugubible.data.model.Topic
 import com.example.telugubible.util.SM2Engine
 import com.example.telugubible.util.ScheduleKind
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.UUID
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -62,7 +64,7 @@ class UserDatabaseHelper(private val context: Context) :
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 5
+        const val USER_DB_VERSION = 6
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -190,6 +192,24 @@ class UserDatabaseHelper(private val context: Context) :
             );
             """.trimIndent()
         )
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS topics (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                created_at INTEGER NOT NULL
+            );
+            """.trimIndent()
+        )
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS verse_topics (
+                verse_id INTEGER NOT NULL,
+                topic_id TEXT NOT NULL,
+                PRIMARY KEY (verse_id, topic_id)
+            );
+            """.trimIndent()
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -279,6 +299,26 @@ class UserDatabaseHelper(private val context: Context) :
             try {
                 db.execSQL("ALTER TABLE theme_progress ADD COLUMN pre_lapse_interval INTEGER NOT NULL DEFAULT 0;")
             } catch (e: Exception) {}
+        }
+        if (oldVersion < 6) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS topics (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    created_at INTEGER NOT NULL
+                );
+                """.trimIndent()
+            )
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS verse_topics (
+                    verse_id INTEGER NOT NULL,
+                    topic_id TEXT NOT NULL,
+                    PRIMARY KEY (verse_id, topic_id)
+                );
+                """.trimIndent()
+            )
         }
     }
 
@@ -454,7 +494,14 @@ class UserDatabaseHelper(private val context: Context) :
 
     fun removeUserVerse(id: Long) {
         val db = writableDatabase
-        db.delete("user_verses", "id = ?", arrayOf(id.toString()))
+        db.beginTransaction()
+        try {
+            db.delete("verse_topics", "verse_id = ?", arrayOf(id.toString()))
+            db.delete("user_verses", "id = ?", arrayOf(id.toString()))
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun gradeUserVerse(
@@ -553,6 +600,208 @@ class UserDatabaseHelper(private val context: Context) :
             put("val", streak.toString())
         }
         db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+    }
+
+    // ==========================================
+    // TOPICS & GROUPS MANAGEMENT
+    // ==========================================
+
+    fun getAllTopics(): List<Topic> {
+        val db = readableDatabase
+        val list = mutableListOf<Topic>()
+        val cursor = db.rawQuery("SELECT id, name, created_at FROM topics ORDER BY created_at ASC", null)
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(
+                    Topic(
+                        id = it.getString(0),
+                        name = it.getString(1),
+                        createdAt = it.getLong(2)
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    fun getOrCreateTopic(name: String): Topic {
+        val trimmedName = name.trim()
+        val db = writableDatabase
+        val cursor = db.rawQuery("SELECT id, name, created_at FROM topics WHERE LOWER(name) = LOWER(?) LIMIT 1", arrayOf(trimmedName))
+        cursor.use {
+            if (it.moveToNext()) {
+                return Topic(
+                    id = it.getString(0),
+                    name = it.getString(1),
+                    createdAt = it.getLong(2)
+                )
+            }
+        }
+        val newId = "topic-${System.currentTimeMillis()}-${UUID.randomUUID().toString().take(8)}"
+        val now = System.currentTimeMillis()
+        val values = ContentValues().apply {
+            put("id", newId)
+            put("name", trimmedName)
+            put("created_at", now)
+        }
+        db.insertWithOnConflict("topics", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+        return Topic(newId, trimmedName, now)
+    }
+
+    fun insertTopic(topic: Topic): Boolean {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("id", topic.id)
+            put("name", topic.name.trim())
+            put("created_at", topic.createdAt)
+        }
+        val res = db.insertWithOnConflict("topics", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+        return res != -1L
+    }
+
+    fun renameTopic(id: String, newName: String): Boolean {
+        val trimmed = newName.trim()
+        if (trimmed.isEmpty()) return false
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("name", trimmed)
+        }
+        val updated = db.update("topics", values, "id = ?", arrayOf(id))
+        return updated > 0
+    }
+
+    fun deleteTopic(id: String): Boolean {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // Find all verses assigned to this topic
+            val verseIds = mutableListOf<Long>()
+            val c = db.rawQuery("SELECT verse_id FROM verse_topics WHERE topic_id = ?", arrayOf(id))
+            c.use {
+                while (it.moveToNext()) {
+                    verseIds.add(it.getLong(0))
+                }
+            }
+
+            // For each verse assigned to this topic:
+            // If it belongs exclusively to this topic (i.e. total topics <= 1), delete the verse!
+            for (vId in verseIds) {
+                val countCursor = db.rawQuery("SELECT COUNT(*) FROM verse_topics WHERE verse_id = ?", arrayOf(vId.toString()))
+                var topicCount = 0
+                countCursor.use {
+                    if (it.moveToNext()) topicCount = it.getInt(0)
+                }
+                if (topicCount <= 1) {
+                    db.delete("user_verses", "id = ?", arrayOf(vId.toString()))
+                }
+            }
+
+            // Remove mapping entries for this topic
+            db.delete("verse_topics", "topic_id = ?", arrayOf(id))
+            // Remove topic itself
+            val rows = db.delete("topics", "id = ?", arrayOf(id))
+            db.setTransactionSuccessful()
+            return rows > 0
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    fun toggleVerseTopic(verseId: Long, topicId: String): Boolean {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val cursor = db.rawQuery(
+                "SELECT 1 FROM verse_topics WHERE verse_id = ? AND topic_id = ?",
+                arrayOf(verseId.toString(), topicId)
+            )
+            val exists = cursor.use { it.moveToNext() }
+            val nowActive: Boolean
+            if (exists) {
+                db.delete("verse_topics", "verse_id = ? AND topic_id = ?", arrayOf(verseId.toString(), topicId))
+                nowActive = false
+            } else {
+                val values = ContentValues().apply {
+                    put("verse_id", verseId)
+                    put("topic_id", topicId)
+                }
+                db.insertWithOnConflict("verse_topics", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                nowActive = true
+            }
+            db.setTransactionSuccessful()
+            return nowActive
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    fun tagVerse(verseId: Long, topicId: String) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("verse_id", verseId)
+            put("topic_id", topicId)
+        }
+        db.insertWithOnConflict("verse_topics", null, values, SQLiteDatabase.CONFLICT_IGNORE)
+    }
+
+    fun untagVerse(verseId: Long, topicId: String) {
+        val db = writableDatabase
+        db.delete("verse_topics", "verse_id = ? AND topic_id = ?", arrayOf(verseId.toString(), topicId))
+    }
+
+    fun tagVersesWithTopic(verses: List<Triple<Int, Int, Int>>, topicId: String) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            for ((bId, ch, vs) in verses) {
+                val cursor = db.rawQuery(
+                    "SELECT id FROM user_verses WHERE book_id = ? AND chapter = ? AND verse = ?",
+                    arrayOf(bId.toString(), ch.toString(), vs.toString())
+                )
+                var verseId: Long? = null
+                cursor.use {
+                    if (it.moveToNext()) {
+                        verseId = it.getLong(0)
+                    }
+                }
+                if (verseId != null) {
+                    val values = ContentValues().apply {
+                        put("verse_id", verseId)
+                        put("topic_id", topicId)
+                    }
+                    db.insertWithOnConflict("verse_topics", null, values, SQLiteDatabase.CONFLICT_IGNORE)
+                }
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    fun getTopicIdsForVerse(verseId: Long): List<String> {
+        val db = readableDatabase
+        val result = mutableListOf<String>()
+        val cursor = db.rawQuery("SELECT topic_id FROM verse_topics WHERE verse_id = ?", arrayOf(verseId.toString()))
+        cursor.use {
+            while (it.moveToNext()) {
+                result.add(it.getString(0))
+            }
+        }
+        return result
+    }
+
+    fun getAllVerseTopicMappings(): Map<Long, List<String>> {
+        val db = readableDatabase
+        val map = mutableMapOf<Long, MutableList<String>>()
+        val cursor = db.rawQuery("SELECT verse_id, topic_id FROM verse_topics", null)
+        cursor.use {
+            while (it.moveToNext()) {
+                val vId = it.getLong(0)
+                val tId = it.getString(1)
+                map.getOrPut(vId) { mutableListOf() }.add(tId)
+            }
+        }
+        return map
     }
 
     // Session State persistence (Survives process death)
@@ -1092,6 +1341,35 @@ class UserDatabaseHelper(private val context: Context) :
         }
         root.put("stats", statsObj)
 
+        // Topics
+        val topicsArray = JSONArray()
+        val topicsCursor = db.rawQuery("SELECT id, name, created_at FROM topics", null)
+        topicsCursor.use {
+            while (it.moveToNext()) {
+                val item = JSONObject().apply {
+                    put("id", it.getString(0))
+                    put("name", it.getString(1))
+                    put("createdAt", it.getLong(2))
+                }
+                topicsArray.put(item)
+            }
+        }
+        root.put("topics", topicsArray)
+
+        // Verse topics
+        val verseTopicsArray = JSONArray()
+        val vtCursor = db.rawQuery("SELECT verse_id, topic_id FROM verse_topics", null)
+        vtCursor.use {
+            while (it.moveToNext()) {
+                val item = JSONObject().apply {
+                    put("verseId", it.getLong(0))
+                    put("topicId", it.getString(1))
+                }
+                verseTopicsArray.put(item)
+            }
+        }
+        root.put("verseTopics", verseTopicsArray)
+
         return root.toString(2)
     }
 
@@ -1106,6 +1384,9 @@ class UserDatabaseHelper(private val context: Context) :
                     for (i in 0 until arr.length()) {
                         val item = arr.getJSONObject(i)
                         val values = ContentValues().apply {
+                            if (item.has("id")) {
+                                put("id", item.getLong("id"))
+                            }
                             put("book_id", item.optInt("book_id", item.optInt("bookId", 1)))
                             put("chapter", item.optInt("chapter", 1))
                             put("verse", item.optInt("verse", 1))
@@ -1195,6 +1476,32 @@ class UserDatabaseHelper(private val context: Context) :
                         db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE)
                     }
                 }
+
+                if (root.has("topics")) {
+                    val arr = root.getJSONArray("topics")
+                    for (i in 0 until arr.length()) {
+                        val item = arr.getJSONObject(i)
+                        val values = ContentValues().apply {
+                            put("id", item.getString("id"))
+                            put("name", item.getString("name"))
+                            put("created_at", item.optLong("createdAt", item.optLong("created_at", System.currentTimeMillis())))
+                        }
+                        db.insertWithOnConflict("topics", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                    }
+                }
+
+                if (root.has("verseTopics")) {
+                    val arr = root.getJSONArray("verseTopics")
+                    for (i in 0 until arr.length()) {
+                        val item = arr.getJSONObject(i)
+                        val values = ContentValues().apply {
+                            put("verse_id", item.optLong("verseId", item.optLong("verse_id", 0L)))
+                            put("topic_id", item.optString("topicId", item.optString("topic_id", "")))
+                        }
+                        db.insertWithOnConflict("verse_topics", null, values, SQLiteDatabase.CONFLICT_IGNORE)
+                    }
+                }
+
                 db.setTransactionSuccessful()
                 true
             } finally {
@@ -1216,6 +1523,8 @@ class UserDatabaseHelper(private val context: Context) :
             db.delete("cold_checks", null, null)
             db.delete("session_adherence", null, null)
             db.delete("user_stats", null, null)
+            db.delete("topics", null, null)
+            db.delete("verse_topics", null, null)
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()

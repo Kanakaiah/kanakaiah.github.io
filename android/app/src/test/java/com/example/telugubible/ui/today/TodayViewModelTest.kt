@@ -148,5 +148,60 @@ class TodayViewModelTest {
         assertEquals(1, state.dueChaptersByBook[1])
         assertEquals(1, state.dueThemesCount)
     }
+
+    @Test
+    fun testTopicsManagementAndFiltering() = runTest(testDispatcher) {
+        // Create topic
+        val topic = repository.createTopic("Faith")
+        repository.addUserVerse(1, 1, 1) // Genesis 1:1
+        repository.addUserVerse(1, 1, 2) // Genesis 1:2
+        advanceUntilIdle()
+
+        val allVerses = repository.getUserMemoryVerses()
+        val v1 = allVerses.first { it.verse == 1 }
+        val v2 = allVerses.first { it.verse == 2 }
+
+        // Tag v1 with Faith
+        repository.toggleVerseTopic(v1.id, topic.id)
+        advanceUntilIdle()
+
+        val viewModel = TodayViewModel(application, repository)
+        advanceUntilIdle()
+
+        assertEquals(1, viewModel.uiState.value.topics.size)
+        assertEquals("Faith", viewModel.uiState.value.topics[0].name)
+        assertEquals(2, viewModel.uiState.value.filteredVerses.size)
+
+        // Filter by topic "Faith"
+        viewModel.selectTopic(topic.id)
+        advanceUntilIdle()
+
+        val filteredByTopic = viewModel.uiState.value.filteredVerses
+        assertEquals(1, filteredByTopic.size)
+        assertEquals(1, filteredByTopic[0].verse)
+        assertEquals(listOf(topic.id), filteredByTopic[0].topicIds)
+
+        // Reset topic filter
+        viewModel.selectTopic(null)
+        advanceUntilIdle()
+        assertEquals(2, viewModel.uiState.value.filteredVerses.size)
+
+        // Rename topic
+        viewModel.renameTopic(topic.id, "Trust & Faith")
+        advanceUntilIdle()
+        assertEquals("Trust & Faith", viewModel.uiState.value.topics[0].name)
+
+        // Select topic, then delete it
+        viewModel.selectTopic(topic.id)
+        advanceUntilIdle()
+        assertEquals(topic.id, viewModel.uiState.value.selectedTopicId)
+
+        viewModel.deleteTopic(topic.id)
+        advanceUntilIdle()
+
+        // Topic should be gone and selectedTopicId cleared
+        assertTrue(viewModel.uiState.value.topics.isEmpty())
+        assertNull(viewModel.uiState.value.selectedTopicId)
+    }
 }
 

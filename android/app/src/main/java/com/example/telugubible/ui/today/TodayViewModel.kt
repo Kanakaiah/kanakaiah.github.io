@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.telugubible.data.db.BibleDatabaseHelper
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.PresetCollection
+import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.VerseSearchResult
 import com.example.telugubible.data.repository.BibleRepository
@@ -46,7 +47,10 @@ data class TodayUiState(
     val totalBibleChapters: Int = 1189,
     val dueChaptersByBook: Map<Int, Int> = emptyMap(),
     val dueThemesCount: Int = 0,
-    val secureThemesCount: Int = 0
+    val secureThemesCount: Int = 0,
+    val topics: List<Topic> = emptyList(),
+    val selectedTopicId: String? = null,
+    val showManageTopicsSheet: Boolean = false
 )
 
 class TodayViewModel @JvmOverloads constructor(
@@ -68,6 +72,7 @@ class TodayViewModel @JvmOverloads constructor(
             val verses = repository.getUserMemoryVerses()
             val streak = repository.getStreak()
             val collections = repository.getPresetCollections()
+            val topics = repository.getTopics()
             val chapterProgress = repository.getAllChapterProgress()
             val themeProgress = repository.getAllThemeProgress()
 
@@ -78,7 +83,13 @@ class TodayViewModel @JvmOverloads constructor(
             val due = dueList.size
             val hero = dueList.firstOrNull() ?: verses.firstOrNull()
 
-            val filtered = filterAndSearchList(verses, _uiState.value.filter, _uiState.value.searchQuery, now)
+            val filtered = filterAndSearchList(
+                list = verses,
+                filter = _uiState.value.filter,
+                query = _uiState.value.searchQuery,
+                selectedTopicId = _uiState.value.selectedTopicId,
+                now = now
+            )
 
             // Calculate Book Mastery for all 66 books
             val masteryMap = books.associate { book ->
@@ -104,6 +115,7 @@ class TodayViewModel @JvmOverloads constructor(
                     filteredVerses = filtered,
                     books = books,
                     presetCollections = collections,
+                    topics = topics,
                     heroVerse = hero,
                     streak = streak,
                     memorizedCount = memorized,
@@ -123,13 +135,13 @@ class TodayViewModel @JvmOverloads constructor(
 
     fun setFilter(filter: VerseFilter) {
         val now = System.currentTimeMillis()
-        val filtered = filterAndSearchList(_uiState.value.verses, filter, _uiState.value.searchQuery, now)
+        val filtered = filterAndSearchList(_uiState.value.verses, filter, _uiState.value.searchQuery, _uiState.value.selectedTopicId, now)
         _uiState.update { it.copy(filter = filter, filteredVerses = filtered) }
     }
 
     fun setSearchQuery(query: String) {
         val now = System.currentTimeMillis()
-        val filtered = filterAndSearchList(_uiState.value.verses, _uiState.value.filter, query, now)
+        val filtered = filterAndSearchList(_uiState.value.verses, _uiState.value.filter, query, _uiState.value.selectedTopicId, now)
         _uiState.update { it.copy(searchQuery = query, filteredVerses = filtered) }
     }
 
@@ -146,18 +158,100 @@ class TodayViewModel @JvmOverloads constructor(
         setDisplayLanguage(newLang)
     }
 
+    fun selectTopic(topicId: String?) {
+        val now = System.currentTimeMillis()
+        val filtered = filterAndSearchList(
+            list = _uiState.value.verses,
+            filter = _uiState.value.filter,
+            query = _uiState.value.searchQuery,
+            selectedTopicId = topicId,
+            now = now
+        )
+        _uiState.update { it.copy(selectedTopicId = topicId, filteredVerses = filtered) }
+    }
+
+    fun toggleManageTopicsSheet(show: Boolean) {
+        _uiState.update { it.copy(showManageTopicsSheet = show) }
+    }
+
+    fun createTopic(name: String) {
+        viewModelScope.launch {
+            repository.createTopic(name)
+            loadData()
+        }
+    }
+
+    fun renameTopic(id: String, newName: String) {
+        viewModelScope.launch {
+            repository.renameTopic(id, newName)
+            loadData()
+        }
+    }
+
+    fun deleteTopic(id: String) {
+        viewModelScope.launch {
+            repository.deleteTopic(id)
+            if (_uiState.value.selectedTopicId == id) {
+                _uiState.update { it.copy(selectedTopicId = null) }
+            }
+            loadData()
+        }
+    }
+
+    fun toggleVerseTopic(verseId: Long, topicId: String) {
+        viewModelScope.launch {
+            repository.toggleVerseTopic(verseId, topicId)
+            val verses = repository.getUserMemoryVerses()
+            val topics = repository.getTopics()
+            val now = System.currentTimeMillis()
+            val filtered = filterAndSearchList(
+                list = verses,
+                filter = _uiState.value.filter,
+                query = _uiState.value.searchQuery,
+                selectedTopicId = _uiState.value.selectedTopicId,
+                now = now
+            )
+            val updatedSelected = verses.firstOrNull { it.id == _uiState.value.selectedVerseForDetail?.id }
+            _uiState.update {
+                it.copy(
+                    verses = verses,
+                    topics = topics,
+                    filteredVerses = filtered,
+                    selectedVerseForDetail = updatedSelected ?: it.selectedVerseForDetail
+                )
+            }
+        }
+    }
+
+    fun createTopicForVerse(verseId: Long, name: String) {
+        viewModelScope.launch {
+            val topic = repository.createTopic(name)
+            repository.toggleVerseTopic(verseId, topic.id)
+            loadData()
+            val verses = repository.getUserMemoryVerses()
+            val updatedSelected = verses.firstOrNull { it.id == verseId }
+            _uiState.update { it.copy(selectedVerseForDetail = updatedSelected ?: it.selectedVerseForDetail) }
+        }
+    }
+
     private fun filterAndSearchList(
         list: List<UserMemoryVerse>,
         filter: VerseFilter,
         query: String,
+        selectedTopicId: String?,
         now: Long
     ): List<UserMemoryVerse> {
+        val topicFiltered = if (selectedTopicId != null) {
+            list.filter { selectedTopicId in it.topicIds }
+        } else {
+            list
+        }
         val q = query.trim().lowercase()
         val filteredByStatus = when (filter) {
-            VerseFilter.ALL -> list
-            VerseFilter.DUE -> list.filter { it.nextDueDate <= now }
-            VerseFilter.LEARNING -> list.filter { it.status == "learning" }
-            VerseFilter.MEMORIZED -> list.filter { it.status == "memorized" }
+            VerseFilter.ALL -> topicFiltered
+            VerseFilter.DUE -> topicFiltered.filter { it.nextDueDate <= now }
+            VerseFilter.LEARNING -> topicFiltered.filter { it.status == "learning" }
+            VerseFilter.MEMORIZED -> topicFiltered.filter { it.status == "memorized" }
         }
 
         if (q.isEmpty()) return filteredByStatus

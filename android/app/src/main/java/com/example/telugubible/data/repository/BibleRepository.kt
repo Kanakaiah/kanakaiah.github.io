@@ -15,6 +15,7 @@ import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.ReviewLogEntry
 import com.example.telugubible.data.model.StrongsEntry
+import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.model.VerseSearchResult
@@ -77,6 +78,7 @@ class BibleRepository(
         val booksMap = bibleDbHelper.getBooksMap()
         val verseKeys = userVerses.map { Triple(it.bookId, it.chapter, it.verse) }
         val verseTexts = bibleDbHelper.getVerseTexts(verseKeys)
+        val topicMappings = userDbHelper.getAllVerseTopicMappings()
 
         userVerses.map { uv ->
             val book = booksMap[uv.bookId]
@@ -98,7 +100,8 @@ class BibleRepository(
                 nextDueDate = uv.nextDueDate,
                 createdAt = uv.createdAt,
                 lapses = uv.lapses,
-                attempts = uv.attempts
+                attempts = uv.attempts,
+                topicIds = topicMappings[uv.id] ?: emptyList()
             )
         }
     }
@@ -137,13 +140,45 @@ class BibleRepository(
         userDbHelper.setSessionState(key, value)
     }
 
+    // ==========================================
+    // TOPICS & GROUPS
+    // ==========================================
+
+    suspend fun getTopics(): List<Topic> = withContext(ioDispatcher) {
+        userDbHelper.getAllTopics()
+    }
+
+    suspend fun createTopic(name: String): Topic = withContext(ioDispatcher) {
+        userDbHelper.getOrCreateTopic(name)
+    }
+
+    suspend fun renameTopic(id: String, newName: String): Boolean = withContext(ioDispatcher) {
+        userDbHelper.renameTopic(id, newName)
+    }
+
+    suspend fun deleteTopic(id: String): Boolean = withContext(ioDispatcher) {
+        userDbHelper.deleteTopic(id)
+    }
+
+    suspend fun toggleVerseTopic(verseId: Long, topicId: String): Boolean = withContext(ioDispatcher) {
+        userDbHelper.toggleVerseTopic(verseId, topicId)
+    }
+
     suspend fun getPresetCollections(): List<PresetCollection> = withContext(ioDispatcher) {
         bibleDbHelper.getPresetCollections()
     }
 
     suspend fun addPresetCollection(collectionId: String): Int = withContext(ioDispatcher) {
         val verses = bibleDbHelper.getPresetVerses(collectionId)
-        userDbHelper.addUserVerses(verses)
+        val topicName = when (collectionId) {
+            "top_100" -> "Top 100"
+            "well_known" -> "Well-Known"
+            else -> collectionId.replace('_', ' ').replaceFirstChar { it.uppercase() }
+        }
+        val topic = userDbHelper.getOrCreateTopic(topicName)
+        val insertedCount = userDbHelper.addUserVerses(verses)
+        userDbHelper.tagVersesWithTopic(verses, topic.id)
+        insertedCount
     }
 
     suspend fun getBookGuide(bookId: Int): BookGuide? = withContext(ioDispatcher) {

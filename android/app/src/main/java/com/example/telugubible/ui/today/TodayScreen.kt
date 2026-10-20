@@ -15,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.DisplayLanguage
+import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.theme.*
 
@@ -161,6 +163,16 @@ fun TodayScreen(
                     )
                 }
 
+                // 6.5 Topic / Groups Filter Row
+                item {
+                    TopicFilterRow(
+                        topics = state.topics,
+                        selectedTopicId = state.selectedTopicId,
+                        onSelectTopic = { viewModel.selectTopic(it) },
+                        onOpenManageTopics = { viewModel.toggleManageTopicsSheet(true) }
+                    )
+                }
+
                 // 7. Memory Verse Cards List
                 if (state.filteredVerses.isEmpty()) {
                     item {
@@ -176,6 +188,7 @@ fun TodayScreen(
                         RemoraVerseCard(
                             verse = verse,
                             displayLanguage = state.displayLanguage,
+                            topics = state.topics,
                             onClick = { viewModel.selectVerseForDetail(verse) },
                             onPractice = onNavigateToPractice,
                             onRead = { onNavigateToReader(verse.bookId, verse.chapter) },
@@ -209,7 +222,10 @@ fun TodayScreen(
                 },
                 onDelete = {
                     viewModel.removeVerse(detailVerse.id)
-                }
+                },
+                topics = state.topics,
+                onToggleTopic = { topicId -> viewModel.toggleVerseTopic(detailVerse.id, topicId) },
+                onCreateTopicForVerse = { name -> viewModel.createTopicForVerse(detailVerse.id, name) }
             )
         }
 
@@ -239,6 +255,17 @@ fun TodayScreen(
                 onAddSingleVerse = { bookId, ch, vs -> viewModel.addVerse(bookId, ch, vs) },
                 onAddCollection = { collId -> viewModel.addCollection(collId) },
                 onSearchVerses = { q -> viewModel.searchVersesForDialog(q) }
+            )
+        }
+
+        // Manage Topics Sheet (Modal Bottom Sheet)
+        if (state.showManageTopicsSheet) {
+            ManageTopicsSheet(
+                topics = state.topics,
+                onDismiss = { viewModel.toggleManageTopicsSheet(false) },
+                onCreateTopic = { viewModel.createTopic(it) },
+                onRenameTopic = { id, name -> viewModel.renameTopic(id, name) },
+                onDeleteTopic = { viewModel.deleteTopic(it) }
             )
         }
 
@@ -563,6 +590,93 @@ private fun FilterTabs(
 }
 
 @Composable
+private fun TopicFilterRow(
+    topics: List<Topic>,
+    selectedTopicId: String?,
+    onSelectTopic: (String?) -> Unit,
+    onOpenManageTopics: () -> Unit
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // "All Groups" Chip
+        item {
+            val isSelected = selectedTopicId == null
+            Surface(
+                onClick = { onSelectTopic(null) },
+                shape = RoundedCornerShape(8.dp),
+                color = if (isSelected) RemoraAccentLight.copy(alpha = 0.2f) else RemoraCardBg,
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (isSelected) RemoraAccentLight else RemoraCardBorder
+                )
+            ) {
+                Text(
+                    text = "All Groups",
+                    fontSize = 12.sp,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                    color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
+            }
+        }
+
+        // Individual Topic Chips
+        items(topics, key = { it.id }) { topic ->
+            val isSelected = selectedTopicId == topic.id
+            Surface(
+                onClick = { onSelectTopic(topic.id) },
+                shape = RoundedCornerShape(8.dp),
+                color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (isSelected) RemoraAccent else RemoraCardBorder
+                )
+            ) {
+                Text(
+                    text = topic.name,
+                    fontSize = 12.sp,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                    color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
+            }
+        }
+
+        // "Manage Groups" button
+        item {
+            Surface(
+                onClick = onOpenManageTopics,
+                shape = RoundedCornerShape(8.dp),
+                color = Color.Transparent,
+                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = null,
+                        tint = RemoraTextMuted,
+                        modifier = Modifier.size(13.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Manage Groups",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = RemoraTextMuted
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun LanguageSelectorRow(
     currentLanguage: DisplayLanguage,
     onSelectLanguage: (DisplayLanguage) -> Unit
@@ -653,6 +767,7 @@ private fun LanguageSelectorRow(
 private fun RemoraVerseCard(
     verse: UserMemoryVerse,
     displayLanguage: DisplayLanguage,
+    topics: List<Topic> = emptyList(),
     onClick: () -> Unit = {},
     onPractice: () -> Unit,
     onRead: () -> Unit,
@@ -756,6 +871,41 @@ private fun RemoraVerseCard(
                         lineHeight = if (isEnglish) 21.sp else 25.sp,
                         color = RemoraTextPrimary
                     )
+                }
+
+                // Topic Pills on Card
+                if (verse.topicIds.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val verseTopicNames = verse.topicIds.mapNotNull { tId ->
+                            topics.firstOrNull { it.id == tId }?.name
+                        }
+                        for (name in verseTopicNames.take(3)) {
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = RemoraAccent.copy(alpha = 0.12f),
+                                border = androidx.compose.foundation.BorderStroke(0.5.dp, RemoraAccent.copy(alpha = 0.3f))
+                            ) {
+                                Text(
+                                    text = name,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = RemoraAccentLight,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                        if (verseTopicNames.size > 3) {
+                            Text(
+                                text = "+${verseTopicNames.size - 3}",
+                                fontSize = 10.sp,
+                                color = RemoraTextMuted
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

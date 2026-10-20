@@ -17,5 +17,6 @@ data class UserMemoryVerse(
     val nextDueDate: Long,
     val createdAt: Long,
     val lapses: Int = 0,
-    val attempts: Int = 0
+    val attempts: Int = 0,
+    val topicIds: List<String> = emptyList()
 )

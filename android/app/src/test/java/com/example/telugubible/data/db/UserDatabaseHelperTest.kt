@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import androidx.test.core.app.ApplicationProvider
+import com.example.telugubible.data.model.Topic
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -337,6 +338,116 @@ class UserDatabaseHelperTest {
         val t2 = userDbHelper.gradeThemeProgress(bookId = 1, score = 4)
         assertEquals(2, t2.repetition)
         assertEquals(10, t2.interval)
+    }
+
+    @Test
+    fun testCreateAndRenameTopic() {
+        val topic = userDbHelper.getOrCreateTopic("Anxiety")
+        assertNotNull(topic.id)
+        assertEquals("Anxiety", topic.name)
+
+        // Calling getOrCreateTopic again with different casing returns existing
+        val sameTopic = userDbHelper.getOrCreateTopic("anxiety")
+        assertEquals(topic.id, sameTopic.id)
+
+        // Rename
+        val renamed = userDbHelper.renameTopic(topic.id, "Peace & Calm")
+        assertTrue(renamed)
+
+        val allTopics = userDbHelper.getAllTopics()
+        assertEquals(1, allTopics.size)
+        assertEquals("Peace & Calm", allTopics[0].name)
+    }
+
+    @Test
+    fun testToggleVerseTopicAndExclusiveDeletion() {
+        val topic1 = userDbHelper.getOrCreateTopic("Peace")
+        val topic2 = userDbHelper.getOrCreateTopic("Faith")
+
+        // Add verse 1 and verse 2
+        userDbHelper.addUserVerse(1, 1, 1) // Genesis 1:1
+        userDbHelper.addUserVerse(1, 1, 2) // Genesis 1:2
+        val verses = userDbHelper.getUserVerses()
+        val v1 = verses.first { it.verse == 1 }
+        val v2 = verses.first { it.verse == 2 }
+
+        // Tag v1 with topic1 only
+        val v1Tagged = userDbHelper.toggleVerseTopic(v1.id, topic1.id)
+        assertTrue("v1 should now be tagged with topic1", v1Tagged)
+
+        // Tag v2 with topic1 AND topic2
+        userDbHelper.toggleVerseTopic(v2.id, topic1.id)
+        userDbHelper.toggleVerseTopic(v2.id, topic2.id)
+
+        // Verify initial mappings
+        val mappingBefore = userDbHelper.getAllVerseTopicMappings()
+        assertEquals(listOf(topic1.id), mappingBefore[v1.id])
+        assertTrue(mappingBefore[v2.id]?.contains(topic1.id) == true)
+        assertTrue(mappingBefore[v2.id]?.contains(topic2.id) == true)
+
+        // Delete topic1 ("Peace")
+        // Rule: v1 belongs EXCLUSIVELY to topic1 -> v1 must be deleted from user_verses!
+        // v2 has topic2 as well -> v2 is KEPT, but topic1 is removed from it.
+        val deleted = userDbHelper.deleteTopic(topic1.id)
+        assertTrue(deleted)
+
+        val versesAfter = userDbHelper.getUserVerses()
+        assertEquals("Only v2 should remain in library", 1, versesAfter.size)
+        assertEquals(v2.id, versesAfter[0].id)
+
+        val mappingAfter = userDbHelper.getAllVerseTopicMappings()
+        assertEquals(listOf(topic2.id), mappingAfter[v2.id])
+        assertNull(mappingAfter[v1.id])
+    }
+
+    @Test
+    fun testTagVersesWithTopic() {
+        val topic = userDbHelper.getOrCreateTopic("Top 100")
+        val verses = listOf(
+            Triple(1, 1, 1),
+            Triple(1, 1, 2),
+            Triple(1, 1, 3)
+        )
+        userDbHelper.addUserVerses(verses)
+        userDbHelper.tagVersesWithTopic(verses, topic.id)
+
+        val allVerses = userDbHelper.getUserVerses()
+        assertEquals(3, allVerses.size)
+        for (v in allVerses) {
+            val tIds = userDbHelper.getTopicIdsForVerse(v.id)
+            assertTrue("Verse ${v.verse} should have topic id", tIds.contains(topic.id))
+        }
+    }
+
+    @Test
+    fun testJsonExportAndRestoreIncludesTopics() {
+        val topic = userDbHelper.getOrCreateTopic("Promises")
+        userDbHelper.addUserVerse(1, 1, 1)
+        val v = userDbHelper.getUserVerses().first()
+        userDbHelper.tagVerse(v.id, topic.id)
+
+        val json = userDbHelper.exportUserDataJson()
+        assertTrue(json.contains("Promises"))
+        assertTrue(json.contains("topics"))
+        assertTrue(json.contains("verseTopics"))
+
+        // Clear everything
+        userDbHelper.clearAllUserData()
+        assertTrue(userDbHelper.getAllTopics().isEmpty())
+        assertTrue(userDbHelper.getUserVerses().isEmpty())
+
+        // Restore
+        val restored = userDbHelper.restoreUserDataJson(json)
+        assertTrue(restored)
+
+        val topicsRestored = userDbHelper.getAllTopics()
+        assertEquals(1, topicsRestored.size)
+        assertEquals("Promises", topicsRestored[0].name)
+
+        val versesRestored = userDbHelper.getUserVerses()
+        assertEquals(1, versesRestored.size)
+        val mappings = userDbHelper.getAllVerseTopicMappings()
+        assertEquals(listOf(topic.id), mappings[versesRestored[0].id])
     }
 }
 
