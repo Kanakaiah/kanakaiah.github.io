@@ -78,7 +78,7 @@ data class DailySessionUiState(
         }
 }
 
-class DailySessionViewModel(
+class DailySessionViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {

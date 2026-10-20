@@ -735,12 +735,10 @@ private fun VerseCard(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             // Verse Reference
             Text(
                 text = "${item.bookName} ${item.chapter}:${item.verse}",

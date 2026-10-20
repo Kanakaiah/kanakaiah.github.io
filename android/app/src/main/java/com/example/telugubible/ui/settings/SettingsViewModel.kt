@@ -18,7 +18,7 @@ data class SettingsUiState(
     val isLoading: Boolean = false
 )
 
-class SettingsViewModel(
+class SettingsViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {

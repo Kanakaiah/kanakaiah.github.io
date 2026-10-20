@@ -61,7 +61,7 @@ data class ReaderUiState(
     val readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF
 )
 
-class ReaderViewModel(
+class ReaderViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application),
     private val kjvService: KjvService = KjvService()

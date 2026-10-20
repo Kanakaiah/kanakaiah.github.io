@@ -44,7 +44,7 @@ data class AnchorDrillUiState(
         get() = queue.getOrNull(currentIndex)
 }
 
-class AnchorDrillViewModel(
+class AnchorDrillViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {

@@ -49,7 +49,7 @@ data class TodayUiState(
     val secureThemesCount: Int = 0
 )
 
-class TodayViewModel(
+class TodayViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {

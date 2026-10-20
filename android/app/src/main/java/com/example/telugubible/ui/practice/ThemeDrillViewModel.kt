@@ -38,7 +38,7 @@ data class ThemeDrillUiState(
         get() = queue.getOrNull(currentIndex)
 }
 
-class ThemeDrillViewModel(
+class ThemeDrillViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {

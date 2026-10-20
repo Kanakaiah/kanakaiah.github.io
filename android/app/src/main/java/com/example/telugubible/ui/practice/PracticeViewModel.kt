@@ -78,7 +78,7 @@ data class PracticeUiState(
         }
 }
 
-class PracticeViewModel(
+class PracticeViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {

@@ -28,7 +28,7 @@ data class BookGuideUiState(
     val toastMessage: String? = null
 )
 
-class BookGuideViewModel(
+class BookGuideViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {
