@@ -7,6 +7,7 @@ import com.example.telugubible.data.db.BibleDatabaseHelper
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.VerseSearchResult
 import com.example.telugubible.data.repository.BibleRepository
+import com.example.telugubible.util.ScriptureRefParser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,6 +55,37 @@ class LookupViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             _uiState.update { it.copy(isSearching = true, hasSearched = true) }
             if (modeToUse == LookupMode.VERSES) {
+                val books = repository.getBooks()
+                val parsedRefs = ScriptureRefParser.parseReferences(q, books)
+                if (parsedRefs.isNotEmpty()) {
+                    val booksMap = books.associateBy { it.id }
+                    val matchedVerses = mutableListOf<VerseSearchResult>()
+                    for (ref in parsedRefs) {
+                        for (vNum in ref.verseStart..ref.verseEnd) {
+                            val verse = repository.getVerse(ref.bookId, ref.chapter, vNum)
+                            val b = booksMap[ref.bookId]
+                            if (verse != null && b != null) {
+                                matchedVerses.add(
+                                    VerseSearchResult(
+                                        id = verse.id,
+                                        bookId = verse.bookId,
+                                        bookKey = b.key,
+                                        bookNameEn = b.nameEn,
+                                        bookNameTe = b.nameTe,
+                                        chapter = verse.chapter,
+                                        verse = verse.verse,
+                                        textTe = verse.textTe,
+                                        textEn = verse.textEn
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    if (matchedVerses.isNotEmpty()) {
+                        _uiState.update { it.copy(verseResults = matchedVerses, isSearching = false) }
+                        return@launch
+                    }
+                }
                 val results = repository.searchVerses(q, limit = 50)
                 _uiState.update { it.copy(verseResults = results, isSearching = false) }
             } else {

@@ -267,4 +267,35 @@ class ReaderViewModelTest {
         assertNull(viewModel.uiState.value.occurrencesStrongs)
         assertTrue(viewModel.uiState.value.occurrencesList.isEmpty())
     }
+
+    @Test
+    fun testChapterRecallGradingAndDismissal() = runTest {
+        advanceUntilIdle()
+
+        // Set book to Genesis (1), Chapter 1
+        viewModel.selectBookAndChapterById(1, 1)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(1, state.currentBook?.id)
+        assertEquals(1, state.currentChapter)
+        assertFalse(state.isAnchorDismissed)
+
+        // Grade chapter recall with score 4 (Good)
+        viewModel.gradeChapterRecall(4)
+        advanceUntilIdle()
+
+        val updatedProgress = userDbHelper.getChapterProgress(1)[1]
+        assertNotNull(updatedProgress)
+        assertEquals(1, updatedProgress?.attempts)
+
+        // Dismiss recall
+        viewModel.dismissChapterRecall()
+        assertTrue(viewModel.uiState.value.isAnchorDismissed)
+
+        // Changing chapter resets dismissed status
+        viewModel.selectBookAndChapterById(1, 2)
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.isAnchorDismissed)
+    }
 }

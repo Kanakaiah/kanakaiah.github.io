@@ -3,6 +3,7 @@ package com.example.telugubible.data.model
 data class AppSettings(
     val theme: String = "black", // "black" (Midnight), "dark" (Walnut), "sepia" (Sepia), "white" (Paper)
     val fontSize: Float = 1.0f,   // 0.85f (Small), 1.0f (Normal), 1.15f (Large), 1.3f (Extra Large)
+    val fontFamily: String = "serif", // "sans", "serif"
     val ttsEnabled: Boolean = true,
     val recallMasking: Boolean = false,
     val bionicReading: Boolean = false,

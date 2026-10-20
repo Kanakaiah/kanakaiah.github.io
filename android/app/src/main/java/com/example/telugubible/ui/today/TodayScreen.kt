@@ -23,6 +23,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +34,7 @@ import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.theme.*
+import com.example.telugubible.util.BionicUtils
 
 @Composable
 fun TodayScreen(
@@ -189,6 +192,8 @@ fun TodayScreen(
                             verse = verse,
                             displayLanguage = state.displayLanguage,
                             topics = state.topics,
+                            bionicReading = state.bionicReading,
+                            recallMasking = state.recallMasking,
                             onClick = { viewModel.selectVerseForDetail(verse) },
                             onPractice = onNavigateToPractice,
                             onRead = { onNavigateToReader(verse.bookId, verse.chapter) },
@@ -768,6 +773,8 @@ private fun RemoraVerseCard(
     verse: UserMemoryVerse,
     displayLanguage: DisplayLanguage,
     topics: List<Topic> = emptyList(),
+    bionicReading: Boolean = false,
+    recallMasking: Boolean = false,
     onClick: () -> Unit = {},
     onPractice: () -> Unit,
     onRead: () -> Unit,
@@ -778,6 +785,7 @@ private fun RemoraVerseCard(
     val indicatorColor = if (isDue || isMemorized) RemoraGold else RemoraAccent
 
     var cardLanguage by remember(displayLanguage) { mutableStateOf(displayLanguage) }
+    var isMaskRevealed by remember(verse.id) { mutableStateOf(false) }
     val isEnglish = cardLanguage == DisplayLanguage.ENGLISH
     val refText = if (isEnglish) "${verse.bookNameEn} ${verse.chapter}:${verse.verse}"
                   else "${verse.bookNameTe} ${verse.chapter}:${verse.verse}"
@@ -865,11 +873,23 @@ private fun RemoraVerseCard(
 
                 // Single-Translation Text Block (NO stacked duplicate languages)
                 if (currentVerseText.isNotBlank()) {
+                    val formattedText = remember(currentVerseText, bionicReading) {
+                        BionicUtils.formatBionic(currentVerseText, bionicReading)
+                    }
+                    val isMasked = recallMasking && !isMaskRevealed
+
                     Text(
-                        text = currentVerseText,
+                        text = formattedText,
                         fontSize = if (isEnglish) 14.sp else 16.sp,
                         lineHeight = if (isEnglish) 21.sp else 25.sp,
-                        color = RemoraTextPrimary
+                        color = RemoraTextPrimary,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .blur(if (isMasked) 6.dp else 0.dp)
+                            .alpha(if (isMasked) 0.5f else 1.0f)
+                            .clickable {
+                                if (isMasked) isMaskRevealed = true
+                            }
                     )
                 }
 

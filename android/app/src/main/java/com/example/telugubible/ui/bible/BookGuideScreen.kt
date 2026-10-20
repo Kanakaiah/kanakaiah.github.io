@@ -52,6 +52,7 @@ import com.example.telugubible.data.model.GuideBlock
 import com.example.telugubible.data.model.GuideKeyVerse
 import com.example.telugubible.theme.*
 import com.example.telugubible.ui.common.BookCoverImage
+import com.example.telugubible.ui.practice.ChainDrill
 
 // Distribution palette cycled across blocks
 private val BlockDistributionColors = listOf(
@@ -77,6 +78,7 @@ fun BookGuideScreen(
     val context = LocalContext.current
     var showCommentarySheet by remember { mutableStateOf(false) }
     var showPreachersSheet by remember { mutableStateOf(false) }
+    var drillBlock by remember { mutableStateOf<Triple<String, List<ChapterAnchor>, Int>?>(null) }
 
     LaunchedEffect(bookId) {
         viewModel.loadBookGuide(bookId)
@@ -300,6 +302,35 @@ fun BookGuideScreen(
                                         }
 
                                         Row(verticalAlignment = Alignment.CenterVertically) {
+                                            if (anchorsInGroup.size > 1) {
+                                                val blockChain = state.blockProgress[colorIndex]
+                                                val chainDue = blockChain?.isDue == true
+                                                val buttonText = when {
+                                                    blockChain == null -> "Drill"
+                                                    chainDue -> "Chain due"
+                                                    else -> "Chain ${Math.round(blockChain.lastAccuracy * 100)}%"
+                                                }
+                                                val buttonBg = if (chainDue) RemoraAccent.copy(alpha = 0.15f) else Color.Transparent
+                                                val buttonBorder = if (chainDue) RemoraAccent.copy(alpha = 0.6f) else RemoraCardBorder
+                                                val buttonTextColor = if (chainDue) RemoraAccent else RemoraTextSecondary
+
+                                                Surface(
+                                                    onClick = { drillBlock = Triple(groupLabel, anchorsInGroup, colorIndex) },
+                                                    color = buttonBg,
+                                                    shape = RoundedCornerShape(6.dp),
+                                                    border = BorderStroke(1.dp, buttonBorder),
+                                                    modifier = Modifier.padding(end = 8.dp)
+                                                ) {
+                                                    Text(
+                                                        text = buttonText,
+                                                        fontSize = 10.sp,
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = buttonTextColor,
+                                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                                    )
+                                                }
+                                            }
+
                                             Text(
                                                 text = "$revealedCount/${anchorsInGroup.size}",
                                                 fontSize = 11.sp,
@@ -367,6 +398,21 @@ fun BookGuideScreen(
     if (showPreachersSheet) {
         PreachersSheet(
             onDismiss = { showPreachersSheet = false }
+        )
+    }
+
+    drillBlock?.let { (label, anchors, blockIndex) ->
+        val existingBlock = state.blockProgress[blockIndex]
+        ChainDrill(
+            bookId = bookId,
+            blockIndex = blockIndex,
+            label = label,
+            anchors = anchors,
+            onClose = { drillBlock = null },
+            onGradeChain = { results ->
+                viewModel.gradeBlockChain(blockIndex, label, results)
+            },
+            nextIntervalDays = existingBlock?.interval
         )
     }
 }

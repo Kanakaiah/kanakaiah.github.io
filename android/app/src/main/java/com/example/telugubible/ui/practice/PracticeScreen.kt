@@ -104,6 +104,24 @@ fun PracticeScreen(
                     val activeText = (if (isEnglish) verse.textEn else verse.textTe)
                         ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
 
+                    if (state.activeMode == PracticeMode.IMMERSED) {
+                        ImmersedReader(
+                            verse = verse,
+                            index = state.currentIndex,
+                            total = state.verses.size,
+                            onPrev = { viewModel.prevVerse() },
+                            onNext = { viewModel.nextVerse() },
+                            onExit = { viewModel.setPracticeMode(PracticeMode.FLASHCARD) },
+                            isAutoPlaying = state.isTtsSpeaking,
+                            onToggleAutoPlay = { viewModel.toggleTts() },
+                            isEnglish = isEnglish,
+                            bionicReading = state.bionicReading,
+                            recallMasking = state.recallMasking,
+                            serifTypography = state.serifTypography
+                        )
+                        return@Box
+                    }
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()

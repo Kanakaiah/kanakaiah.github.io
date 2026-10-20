@@ -50,7 +50,9 @@ data class TodayUiState(
     val secureThemesCount: Int = 0,
     val topics: List<Topic> = emptyList(),
     val selectedTopicId: String? = null,
-    val showManageTopicsSheet: Boolean = false
+    val showManageTopicsSheet: Boolean = false,
+    val bionicReading: Boolean = false,
+    val recallMasking: Boolean = false
 )
 
 class TodayViewModel @JvmOverloads constructor(
@@ -75,6 +77,7 @@ class TodayViewModel @JvmOverloads constructor(
             val topics = repository.getTopics()
             val chapterProgress = repository.getAllChapterProgress()
             val themeProgress = repository.getAllThemeProgress()
+            val settings = repository.getAppSettings()
 
             val now = System.currentTimeMillis()
             val memorized = verses.count { it.status == "memorized" }
@@ -127,6 +130,8 @@ class TodayViewModel @JvmOverloads constructor(
                     dueChaptersByBook = dueChaptersMap,
                     secureThemesCount = secureThemes,
                     dueThemesCount = dueThemes,
+                    bionicReading = settings.bionicReading,
+                    recallMasking = settings.recallMasking,
                     isLoading = false
                 )
             }

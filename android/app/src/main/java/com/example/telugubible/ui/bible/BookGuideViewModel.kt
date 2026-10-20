@@ -3,6 +3,7 @@ package com.example.telugubible.ui.bible
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.telugubible.data.db.BlockProgressEntity
 import com.example.telugubible.data.db.ChapterProgressEntity
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.BookGuide
@@ -19,6 +20,7 @@ data class BookGuideUiState(
     val book: Book? = null,
     val guide: BookGuide? = null,
     val chapterProgress: Map<Int, ChapterProgressEntity> = emptyMap(),
+    val blockProgress: Map<Int, BlockProgressEntity> = emptyMap(),
     val revealedAnchors: Set<Int> = emptySet(),
     val showAllAnchors: Boolean = false,
     val collapsedBlocks: Set<Int> = emptySet(),
@@ -42,6 +44,7 @@ class BookGuideViewModel @JvmOverloads constructor(
             val book = repository.getBook(bookId)
             val guide = repository.getBookGuide(bookId)
             val progress = repository.getChapterProgress(bookId)
+            val blocks = repository.getBlockProgress(bookId)
             val userVerses = repository.getUserMemoryVerses()
             val verseKeys = userVerses.map { Triple(it.bookId, it.chapter, it.verse) }.toSet()
 
@@ -51,6 +54,7 @@ class BookGuideViewModel @JvmOverloads constructor(
                     book = book,
                     guide = guide,
                     chapterProgress = progress,
+                    blockProgress = blocks,
                     userVerseKeys = verseKeys,
                     revealedAnchors = emptySet(),
                     showAllAnchors = false,
@@ -102,6 +106,27 @@ class BookGuideViewModel @JvmOverloads constructor(
                     gradedAnchorsOnThisPass = newGraded
                 )
             }
+        }
+    }
+
+    fun gradeBlockChain(
+        blockIndex: Int,
+        label: String,
+        results: List<Pair<Int, Boolean>>,
+        onFinished: (BlockProgressEntity) -> Unit = {}
+    ) {
+        val bookId = _uiState.value.bookId
+        viewModelScope.launch {
+            val entity = repository.gradeBlockChain(bookId, blockIndex, label, results)
+            val updatedBlocks = repository.getBlockProgress(bookId)
+            val updatedChapters = repository.getChapterProgress(bookId)
+            _uiState.update { state ->
+                state.copy(
+                    blockProgress = updatedBlocks,
+                    chapterProgress = updatedChapters
+                )
+            }
+            onFinished(entity)
         }
     }
 

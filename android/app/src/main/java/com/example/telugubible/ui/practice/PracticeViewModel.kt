@@ -7,6 +7,7 @@ import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.repository.BibleRepository
 import com.example.telugubible.util.CueLevel
+import com.example.telugubible.util.TtsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +20,8 @@ enum class PracticeMode(val label: String) {
     FIRST_LETTER("Letters"),
     ERASER("Erase"),
     SCRAMBLE("Order"),
-    SPEECH("Recite")
+    SPEECH("Recite"),
+    IMMERSED("Immerse")
 }
 
 data class PracticeUiState(
@@ -34,7 +36,11 @@ data class PracticeUiState(
     val modeCommitted: String? = null,
     val hintRevealedRatio: Float? = null,
     val eraserHiddenRatio: Float? = null,
-    val scrambleAccuracy: Float? = null
+    val scrambleAccuracy: Float? = null,
+    val isTtsSpeaking: Boolean = false,
+    val bionicReading: Boolean = false,
+    val recallMasking: Boolean = false,
+    val serifTypography: Boolean = true
 ) {
     val currentVerse: UserMemoryVerse?
         get() = verses.getOrNull(currentIndex)
@@ -83,6 +89,8 @@ class PracticeViewModel @JvmOverloads constructor(
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {
 
+    private val ttsManager = TtsManager(application)
+
     companion object {
         const val KEY_SESSION_VERSE_IDS = "practice_session_verse_ids"
         const val KEY_SESSION_INDEX = "practice_session_current_index"
@@ -105,6 +113,7 @@ class PracticeViewModel @JvmOverloads constructor(
             _uiState.update { it.copy(isLoading = true) }
             val allVerses = repository.getUserMemoryVerses()
             val allVersesMap = allVerses.associateBy { it.id }
+            val settings = repository.getAppSettings()
             val now = System.currentTimeMillis()
 
             var restoredQueue: List<UserMemoryVerse>? = null
@@ -152,7 +161,10 @@ class PracticeViewModel @JvmOverloads constructor(
                         modeCommitted = null,
                         hintRevealedRatio = null,
                         eraserHiddenRatio = null,
-                        scrambleAccuracy = null
+                        scrambleAccuracy = null,
+                        bionicReading = settings.bionicReading,
+                        recallMasking = settings.recallMasking,
+                        serifTypography = (settings.fontFamily == "serif")
                     )
                 }
             } else {
@@ -185,7 +197,10 @@ class PracticeViewModel @JvmOverloads constructor(
                         modeCommitted = null,
                         hintRevealedRatio = null,
                         eraserHiddenRatio = null,
-                        scrambleAccuracy = null
+                        scrambleAccuracy = null,
+                        bionicReading = settings.bionicReading,
+                        recallMasking = settings.recallMasking,
+                        serifTypography = (settings.fontFamily == "serif")
                     )
                 }
             }
@@ -353,6 +368,9 @@ class PracticeViewModel @JvmOverloads constructor(
                     val acc = (state.modeAccuracy ?: 0) / 100.0
                     Triple(CueLevel.FIRST_LETTERS.levelNumber, "speech", acc)
                 }
+                PracticeMode.IMMERSED -> {
+                    Triple(0, "immersed", null)
+                }
             }
 
             repository.gradeUserVerse(
@@ -398,6 +416,78 @@ class PracticeViewModel @JvmOverloads constructor(
 
     fun restart() {
         loadPracticeVerses(forceNewSession = true)
+    }
+
+    fun nextVerse() {
+        val curr = _uiState.value.currentIndex
+        val size = _uiState.value.verses.size
+        if (curr < size - 1) {
+            _uiState.update {
+                it.copy(
+                    currentIndex = curr + 1,
+                    isRevealed = false,
+                    modeAccuracy = null,
+                    modeCommitted = null,
+                    hintRevealedRatio = null,
+                    eraserHiddenRatio = null,
+                    scrambleAccuracy = null
+                )
+            }
+            stopTts()
+            viewModelScope.launch {
+                repository.setSessionState(KEY_SESSION_INDEX, (curr + 1).toString())
+                repository.setSessionState(KEY_SESSION_REVEALED, "false")
+            }
+        }
+    }
+
+    fun prevVerse() {
+        val curr = _uiState.value.currentIndex
+        if (curr > 0) {
+            _uiState.update {
+                it.copy(
+                    currentIndex = curr - 1,
+                    isRevealed = false,
+                    modeAccuracy = null,
+                    modeCommitted = null,
+                    hintRevealedRatio = null,
+                    eraserHiddenRatio = null,
+                    scrambleAccuracy = null
+                )
+            }
+            stopTts()
+            viewModelScope.launch {
+                repository.setSessionState(KEY_SESSION_INDEX, (curr - 1).toString())
+                repository.setSessionState(KEY_SESSION_REVEALED, "false")
+            }
+        }
+    }
+
+    fun toggleTts() {
+        val verse = _uiState.value.currentVerse ?: return
+        val isSpeaking = _uiState.value.isTtsSpeaking
+        if (isSpeaking) {
+            stopTts()
+        } else {
+            val isEnglish = _uiState.value.displayLanguage == DisplayLanguage.ENGLISH
+            val text = (if (isEnglish) verse.textEn else verse.textTe)
+                ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+            val langCode = if (isEnglish) "en" else "te"
+            ttsManager.speak(text, langCode) {
+                _uiState.update { it.copy(isTtsSpeaking = false) }
+            }
+            _uiState.update { it.copy(isTtsSpeaking = true) }
+        }
+    }
+
+    fun stopTts() {
+        ttsManager.stop()
+        _uiState.update { it.copy(isTtsSpeaking = false) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ttsManager.shutdown()
     }
 
     private suspend fun saveSessionState(

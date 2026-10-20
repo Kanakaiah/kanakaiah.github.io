@@ -3,7 +3,9 @@ package com.example.telugubible.ui.reader
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.telugubible.data.db.ChapterProgressEntity
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.OriginalWord
 import com.example.telugubible.data.model.StrongsOccurrence
@@ -63,7 +65,10 @@ data class ReaderUiState(
     val occurrencesError: String? = null,
     val kjvChapterVerses: Map<Int, String> = emptyMap(),
     val readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
-    val readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF
+    val readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF,
+    val currentAnchor: ChapterAnchor? = null,
+    val chapterProgress: ChapterProgressEntity? = null,
+    val isAnchorDismissed: Boolean = false
 )
 
 class ReaderViewModel @JvmOverloads constructor(
@@ -145,6 +150,9 @@ class ReaderViewModel @JvmOverloads constructor(
             val breaks = repository.getParagraphBreaks(book.id, chapter)
             val crossRefCounts = repository.getCrossReferenceCountsForChapter(book.id, chapter)
             val otQuotes = repository.getOtQuotesForChapter(book.id, chapter)
+            val anchors = repository.getChapterAnchors(book.id)
+            val currentAnchor = anchors.find { it.chapter == chapter }
+            val chapterProgress = repository.getChapterProgress(book.id)[chapter]
             val kjvMap = if (_uiState.value.alphaMode) {
                 kjvService.getChapterKjv(book.id, chapter) ?: emptyMap()
             } else {
@@ -158,11 +166,27 @@ class ReaderViewModel @JvmOverloads constructor(
                     paragraphBreaks = breaks,
                     crossRefCounts = crossRefCounts,
                     otQuotes = otQuotes,
+                    currentAnchor = currentAnchor,
+                    chapterProgress = chapterProgress,
+                    isAnchorDismissed = false,
                     kjvChapterVerses = kjvMap,
                     isLoading = false
                 )
             }
         }
+    }
+
+    fun gradeChapterRecall(score: Int) {
+        val b = _uiState.value.currentBook ?: return
+        val ch = _uiState.value.currentChapter
+        viewModelScope.launch {
+            val updated = repository.gradeChapterAnchor(b.id, ch, score)
+            _uiState.update { it.copy(chapterProgress = updated, isAnchorDismissed = true) }
+        }
+    }
+
+    fun dismissChapterRecall() {
+        _uiState.update { it.copy(isAnchorDismissed = true) }
     }
 
     fun nextChapter() {

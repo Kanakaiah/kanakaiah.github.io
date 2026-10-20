@@ -449,5 +449,77 @@ class UserDatabaseHelperTest {
         val mappings = userDbHelper.getAllVerseTopicMappings()
         assertEquals(listOf(topic.id), mappings[versesRestored[0].id])
     }
+
+    @Test
+    fun testBlockProgressAndChainPass() {
+        val bookId = 1
+        val blockIndex = 0
+        val label = "Creation to Flood"
+        val results = listOf(
+            Pair(1, true),
+            Pair(2, true),
+            Pair(3, false),
+            Pair(4, true)
+        )
+
+        // Grade block chain: 3/4 correct = 75% -> score 3
+        val entity = userDbHelper.gradeBlockChain(bookId, blockIndex, label, results)
+        assertEquals(bookId, entity.bookId)
+        assertEquals(blockIndex, entity.blockIndex)
+        assertEquals(label, entity.label)
+        assertEquals(1, entity.attempts)
+        assertEquals(3, entity.lastScore)
+        assertEquals(0.75, entity.lastAccuracy, 0.001)
+
+        val retrieved = userDbHelper.getBlockProgress(bookId)
+        assertEquals(1, retrieved.size)
+        val saved = retrieved[blockIndex]
+        assertNotNull(saved)
+        assertEquals(1, saved?.attempts)
+        assertEquals(3, saved?.lastScore)
+
+        // gradeBlockChain automatically records chain_hits and chain_misses
+        val ch1Prog = userDbHelper.getChapterProgress(bookId)[1]
+        assertNotNull(ch1Prog)
+        assertEquals(1, ch1Prog?.chainHits)
+        assertEquals(0, ch1Prog?.chainMisses)
+
+        val ch3Prog = userDbHelper.getChapterProgress(bookId)[3]
+        assertNotNull(ch3Prog)
+        assertEquals(0, ch3Prog?.chainHits)
+        assertEquals(1, ch3Prog?.chainMisses)
+
+        // Additional chain pass increments hits/misses
+        userDbHelper.recordChainPass(bookId, results)
+        val ch1ProgSecond = userDbHelper.getChapterProgress(bookId)[1]
+        assertEquals(2, ch1ProgSecond?.chainHits)
+    }
+
+    @Test
+    fun testBlockProgressJsonExportAndRestore() {
+        val bookId = 43
+        val blockIndex = 1
+        val label = "Signs & Glory"
+        val results = listOf(Pair(1, true), Pair(2, true))
+        userDbHelper.gradeBlockChain(bookId, blockIndex, label, results)
+
+        val json = userDbHelper.exportUserDataJson()
+        assertTrue(json.contains("blockProgress"))
+        assertTrue(json.contains("Signs & Glory"))
+
+        userDbHelper.clearAllUserData()
+        assertTrue(userDbHelper.getAllBlockProgress().isEmpty())
+
+        val restored = userDbHelper.restoreUserDataJson(json)
+        assertTrue(restored)
+
+        val restoredBlocks = userDbHelper.getBlockProgress(bookId)
+        assertEquals(1, restoredBlocks.size)
+        val block = restoredBlocks[blockIndex]
+        assertNotNull(block)
+        assertEquals("Signs & Glory", block?.label)
+        assertEquals(5, block?.lastScore)
+        assertEquals(1.0, block?.lastAccuracy ?: 0.0, 0.001)
+    }
 }
 

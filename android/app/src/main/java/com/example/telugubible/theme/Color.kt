@@ -135,6 +135,9 @@ val GradeHard = Color(0xFFF97316)   // Orange (Score 3)
 val GradeGood = Color(0xFF3B82F6)   // Blue (Score 4)
 val GradeEasy = Color(0xFF22C55E)   // Green (Score 5)
 
+val RemoraGreen = Color(0xFF22C55E)
+val RemoraRed = Color(0xFFEF4444)
+
 // Pill & Chip Backgrounds
 val RemoraChipBg: Color get() = RemoraThemeState.colors.chipBg
 val RemoraChipBorder: Color get() = RemoraThemeState.colors.chipBorder

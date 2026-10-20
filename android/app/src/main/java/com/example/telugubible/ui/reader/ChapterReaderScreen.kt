@@ -5,6 +5,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -32,17 +34,15 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.ui.input.pointer.pointerInput
-import com.example.telugubible.theme.RemoraAccent
-import com.example.telugubible.theme.RemoraAccentLight
-import com.example.telugubible.theme.RemoraGold
-import com.example.telugubible.theme.RemoraTextPrimary
-import com.example.telugubible.theme.RemoraTextSecondary
+import com.example.telugubible.data.model.ChapterAnchor
+import com.example.telugubible.theme.*
 import com.example.telugubible.ui.bible.CommentarySheet
 import com.example.telugubible.util.StrongsParser
 import androidx.compose.ui.graphics.asImageBitmap
@@ -62,10 +62,12 @@ fun ChapterReaderScreen(
     val scope = rememberCoroutineScope()
     var showCommentarySheet by remember { mutableStateOf(false) }
     var totalDragX by remember { mutableFloatStateOf(0f) }
+    var recallRevealed by remember { mutableStateOf(false) }
 
     // Scroll to top when book or chapter changes
     LaunchedEffect(state.currentBook?.id, state.currentChapter) {
         listState.scrollToItem(0)
+        recallRevealed = false
     }
 
     // Show toast message if present
@@ -540,6 +542,30 @@ fun ChapterReaderScreen(
                         }
                     }
                 }
+
+                // End-of-Chapter Recall Card (Remora Parity)
+                if (state.currentAnchor != null && !state.isAnchorDismissed) {
+                    item(key = "end_of_chapter_recall") {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        EndOfChapterRecallCard(
+                            bookKey = state.currentBook?.key ?: "genesis",
+                            chapter = state.currentChapter,
+                            anchor = state.currentAnchor!!,
+                            revealed = recallRevealed,
+                            onReveal = { recallRevealed = true },
+                            onGrade = { score ->
+                                viewModel.gradeChapterRecall(score)
+                                recallRevealed = false
+                            },
+                            onDismiss = {
+                                viewModel.dismissChapterRecall()
+                                recallRevealed = false
+                            },
+                            theme = state.readerTheme
+                        )
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                }
             }
         }
 
@@ -709,6 +735,175 @@ fun AsyncNativeImage(
                 fontSize = 28.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
             )
+        }
+    }
+}
+
+@Composable
+private fun EndOfChapterRecallCard(
+    bookKey: String,
+    chapter: Int,
+    anchor: ChapterAnchor,
+    revealed: Boolean,
+    onReveal: () -> Unit,
+    onGrade: (Int) -> Unit,
+    onDismiss: () -> Unit,
+    theme: ReaderTheme,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        color = theme.cardColor,
+        border = BorderStroke(1.dp, RemoraCardBorder),
+        tonalElevation = 4.dp,
+        shadowElevation = 8.dp,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Header: "WHAT ANCHORS THIS CHAPTER?" + Close (X)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "WHAT ANCHORS THIS CHAPTER?",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = theme.accentColor,
+                        letterSpacing = 1.2.sp
+                    )
+                )
+                IconButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Dismiss",
+                        tint = theme.secondaryTextColor,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Body: Thumbnail + Content
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                val imageUrl = "https://kanakaiah.github.io/chapters/$bookKey/ch$chapter.jpg"
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(RemoraCardBorder)
+                        .border(1.dp, RemoraCardBorder, RoundedCornerShape(10.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncNativeImage(
+                        url = imageUrl,
+                        contentDescription = "Chapter $chapter",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .blur(if (revealed) 0.dp else 12.dp)
+                    )
+                    if (!revealed) {
+                        Text(
+                            text = "$chapter",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = theme.textColor.copy(alpha = 0.6f)
+                        )
+                    }
+                }
+
+                if (!revealed) {
+                    OutlinedButton(
+                        onClick = onReveal,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, RemoraCardBorder),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = theme.secondaryTextColor
+                        )
+                    ) {
+                        Text(
+                            text = "Tap to reveal",
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp
+                        )
+                    }
+                } else {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = anchor.word,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = theme.accentColor
+                        )
+                        if (anchor.scene.isNotBlank()) {
+                            Text(
+                                text = anchor.scene,
+                                fontSize = 12.sp,
+                                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                                color = theme.secondaryTextColor,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+            }
+
+            // 4 Grading buttons when revealed
+            if (revealed) {
+                Spacer(modifier = Modifier.height(14.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    val grades = listOf(
+                        Triple(1, "Blank", GradeBlank),
+                        Triple(3, "Hard", GradeHard),
+                        Triple(4, "Good", GradeGood),
+                        Triple(5, "Easy", GradeEasy)
+                    )
+                    grades.forEach { (score, label, color) ->
+                        Button(
+                            onClick = { onGrade(score) },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(38.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = color.copy(alpha = 0.14f),
+                                contentColor = color
+                            ),
+                            border = BorderStroke(1.dp, color.copy(alpha = 0.35f)),
+                            contentPadding = PaddingValues(0.dp)
+                        ) {
+                            Text(
+                                text = label,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

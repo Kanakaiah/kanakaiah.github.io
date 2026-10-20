@@ -830,7 +830,7 @@ private fun VerseCard(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                PracticeMode.FLASHCARD -> {
+                PracticeMode.FLASHCARD, PracticeMode.IMMERSED -> {
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = RemoraCardBgElevated,

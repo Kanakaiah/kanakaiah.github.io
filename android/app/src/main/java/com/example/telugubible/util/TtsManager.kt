@@ -59,6 +59,33 @@ class TtsManager(context: Context) : TextToSpeech.OnInitListener {
         speakCurrent()
     }
 
+    fun speak(text: String, langCode: String = "en", onDone: (() -> Unit)? = null) {
+        if (!_state.value.isReady || text.isBlank()) {
+            onDone?.invoke()
+            return
+        }
+        stop()
+        val locale = if (langCode.equals("te", ignoreCase = true)) Locale("te", "IN") else Locale.US
+        tts?.language = locale
+        val utteranceId = "single_utterance_${System.currentTimeMillis()}"
+        tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+            override fun onStart(id: String?) {
+                _state.update { it.copy(isSpeaking = true) }
+            }
+
+            override fun onDone(id: String?) {
+                _state.update { it.copy(isSpeaking = false) }
+                onDone?.invoke()
+            }
+
+            override fun onError(id: String?) {
+                _state.update { it.copy(isSpeaking = false) }
+                onDone?.invoke()
+            }
+        })
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+    }
+
     private fun speakCurrent() {
         if (currentIndex in queuedVerses.indices) {
             val (verseNum, text) = queuedVerses[currentIndex]

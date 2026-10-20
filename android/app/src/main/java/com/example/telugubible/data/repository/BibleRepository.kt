@@ -2,6 +2,7 @@ package com.example.telugubible.data.repository
 
 import android.content.Context
 import com.example.telugubible.data.db.BibleDatabaseHelper
+import com.example.telugubible.data.db.BlockProgressEntity
 import com.example.telugubible.data.db.ChapterProgressEntity
 import com.example.telugubible.data.db.ThemeProgressEntity
 import com.example.telugubible.data.db.UserDatabaseHelper
@@ -267,6 +268,22 @@ class BibleRepository(
 
     suspend fun gradeThemeProgress(bookId: Int, score: Int): ThemeProgressEntity = withContext(ioDispatcher) {
         userDbHelper.gradeThemeProgress(bookId, score)
+    }
+
+    suspend fun getBlockProgress(bookId: Int): Map<Int, BlockProgressEntity> = withContext(ioDispatcher) {
+        userDbHelper.getBlockProgress(bookId)
+    }
+
+    suspend fun getAllBlockProgress(): List<BlockProgressEntity> = withContext(ioDispatcher) {
+        userDbHelper.getAllBlockProgress()
+    }
+
+    suspend fun gradeBlockChain(bookId: Int, blockIndex: Int, label: String, results: List<Pair<Int, Boolean>>): BlockProgressEntity = withContext(ioDispatcher) {
+        userDbHelper.gradeBlockChain(bookId, blockIndex, label, results)
+    }
+
+    suspend fun recordChainPass(bookId: Int, results: List<Pair<Int, Boolean>>) = withContext(ioDispatcher) {
+        userDbHelper.recordChainPass(bookId, results)
     }
 
     suspend fun getCrossReferences(bookId: Int, chapter: Int, verse: Int): List<CrossReference> = withContext(ioDispatcher) {

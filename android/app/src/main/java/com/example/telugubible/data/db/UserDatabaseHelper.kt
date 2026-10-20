@@ -43,8 +43,31 @@ data class ChapterProgressEntity(
     val nextDueDate: Long,
     val lapses: Int = 0,
     val attempts: Int = 0,
-    val preLapseInterval: Int = 0
+    val preLapseInterval: Int = 0,
+    val chainHits: Int = 0,
+    val chainMisses: Int = 0,
+    val lastChainDate: Long = 0L
 )
+
+data class BlockProgressEntity(
+    val bookId: Int,
+    val blockIndex: Int,
+    val label: String,
+    val status: String = "learning",
+    val repetition: Int = 0,
+    val interval: Int = 0,
+    val efactor: Double = 2.5,
+    val nextDueDate: Long = 0L,
+    val lapses: Int = 0,
+    val attempts: Int = 0,
+    val lastScore: Int = 0,
+    val lastAccuracy: Double = 0.0,
+    val lastAttemptDate: Long = 0L,
+    val preLapseInterval: Int = 0
+) {
+    val isDue: Boolean
+        get() = nextDueDate <= System.currentTimeMillis()
+}
 
 data class ThemeProgressEntity(
     val bookId: Int,
@@ -64,7 +87,7 @@ class UserDatabaseHelper(private val context: Context) :
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 6
+        const val USER_DB_VERSION = 7
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -150,7 +173,31 @@ class UserDatabaseHelper(private val context: Context) :
                 lapses INTEGER NOT NULL DEFAULT 0,
                 attempts INTEGER NOT NULL DEFAULT 0,
                 pre_lapse_interval INTEGER NOT NULL DEFAULT 0,
+                chain_hits INTEGER NOT NULL DEFAULT 0,
+                chain_misses INTEGER NOT NULL DEFAULT 0,
+                last_chain_date INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY (book_id, chapter)
+            );
+            """.trimIndent()
+        )
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS block_progress (
+                book_id INTEGER NOT NULL,
+                block_index INTEGER NOT NULL,
+                label TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'learning',
+                repetition INTEGER NOT NULL DEFAULT 0,
+                interval INTEGER NOT NULL DEFAULT 0,
+                efactor REAL NOT NULL DEFAULT 2.5,
+                next_due_date INTEGER NOT NULL,
+                lapses INTEGER NOT NULL DEFAULT 0,
+                attempts INTEGER NOT NULL DEFAULT 0,
+                last_score INTEGER NOT NULL DEFAULT 0,
+                last_accuracy REAL NOT NULL DEFAULT 0.0,
+                last_attempt_date INTEGER NOT NULL DEFAULT 0,
+                pre_lapse_interval INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY (book_id, block_index)
             );
             """.trimIndent()
         )
@@ -319,6 +366,38 @@ class UserDatabaseHelper(private val context: Context) :
                 );
                 """.trimIndent()
             )
+        }
+        if (oldVersion < 7) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS block_progress (
+                    book_id INTEGER NOT NULL,
+                    block_index INTEGER NOT NULL,
+                    label TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'learning',
+                    repetition INTEGER NOT NULL DEFAULT 0,
+                    interval INTEGER NOT NULL DEFAULT 0,
+                    efactor REAL NOT NULL DEFAULT 2.5,
+                    next_due_date INTEGER NOT NULL,
+                    lapses INTEGER NOT NULL DEFAULT 0,
+                    attempts INTEGER NOT NULL DEFAULT 0,
+                    last_score INTEGER NOT NULL DEFAULT 0,
+                    last_accuracy REAL NOT NULL DEFAULT 0.0,
+                    last_attempt_date INTEGER NOT NULL DEFAULT 0,
+                    pre_lapse_interval INTEGER NOT NULL DEFAULT 0,
+                    PRIMARY KEY (book_id, block_index)
+                );
+                """.trimIndent()
+            )
+            try {
+                db.execSQL("ALTER TABLE chapter_progress ADD COLUMN chain_hits INTEGER NOT NULL DEFAULT 0;")
+            } catch (e: Exception) {}
+            try {
+                db.execSQL("ALTER TABLE chapter_progress ADD COLUMN chain_misses INTEGER NOT NULL DEFAULT 0;")
+            } catch (e: Exception) {}
+            try {
+                db.execSQL("ALTER TABLE chapter_progress ADD COLUMN last_chain_date INTEGER NOT NULL DEFAULT 0;")
+            } catch (e: Exception) {}
         }
     }
 
@@ -833,7 +912,7 @@ class UserDatabaseHelper(private val context: Context) :
         val map = mutableMapOf<Int, ChapterProgressEntity>()
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts, pre_lapse_interval FROM chapter_progress WHERE book_id = ?",
+            "SELECT chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts, pre_lapse_interval, chain_hits, chain_misses, last_chain_date FROM chapter_progress WHERE book_id = ?",
             arrayOf(bookId.toString())
         )
         cursor.use {
@@ -849,7 +928,10 @@ class UserDatabaseHelper(private val context: Context) :
                     nextDueDate = it.getLong(5),
                     lapses = if (it.columnCount > 6) it.getInt(6) else 0,
                     attempts = if (it.columnCount > 7) it.getInt(7) else 0,
-                    preLapseInterval = if (it.columnCount > 8) it.getInt(8) else 0
+                    preLapseInterval = if (it.columnCount > 8) it.getInt(8) else 0,
+                    chainHits = if (it.columnCount > 9) it.getInt(9) else 0,
+                    chainMisses = if (it.columnCount > 10) it.getInt(10) else 0,
+                    lastChainDate = if (it.columnCount > 11) it.getLong(11) else 0L
                 )
             }
         }
@@ -860,7 +942,7 @@ class UserDatabaseHelper(private val context: Context) :
         val list = mutableListOf<ChapterProgressEntity>()
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT book_id, chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts, pre_lapse_interval FROM chapter_progress",
+            "SELECT book_id, chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts, pre_lapse_interval, chain_hits, chain_misses, last_chain_date FROM chapter_progress",
             null
         )
         cursor.use {
@@ -876,7 +958,10 @@ class UserDatabaseHelper(private val context: Context) :
                         nextDueDate = it.getLong(6),
                         lapses = if (it.columnCount > 7) it.getInt(7) else 0,
                         attempts = if (it.columnCount > 8) it.getInt(8) else 0,
-                        preLapseInterval = if (it.columnCount > 9) it.getInt(9) else 0
+                        preLapseInterval = if (it.columnCount > 9) it.getInt(9) else 0,
+                        chainHits = if (it.columnCount > 10) it.getInt(10) else 0,
+                        chainMisses = if (it.columnCount > 11) it.getInt(11) else 0,
+                        lastChainDate = if (it.columnCount > 12) it.getLong(12) else 0L
                     )
                 )
             }
@@ -1080,6 +1165,228 @@ class UserDatabaseHelper(private val context: Context) :
         return entity
     }
 
+    fun getBlockProgress(bookId: Int): Map<Int, BlockProgressEntity> {
+        val map = mutableMapOf<Int, BlockProgressEntity>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT block_index, label, status, repetition, interval, efactor,
+                   next_due_date, lapses, attempts, last_score, last_accuracy,
+                   last_attempt_date, pre_lapse_interval
+            FROM block_progress WHERE book_id = ?
+            """.trimIndent(),
+            arrayOf(bookId.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                val bi = it.getInt(0)
+                map[bi] = BlockProgressEntity(
+                    bookId = bookId,
+                    blockIndex = bi,
+                    label = it.getString(1),
+                    status = it.getString(2),
+                    repetition = it.getInt(3),
+                    interval = it.getInt(4),
+                    efactor = it.getDouble(5),
+                    nextDueDate = it.getLong(6),
+                    lapses = if (it.columnCount > 7) it.getInt(7) else 0,
+                    attempts = if (it.columnCount > 8) it.getInt(8) else 0,
+                    lastScore = if (it.columnCount > 9) it.getInt(9) else 0,
+                    lastAccuracy = if (it.columnCount > 10) it.getDouble(10) else 0.0,
+                    lastAttemptDate = if (it.columnCount > 11) it.getLong(11) else 0L,
+                    preLapseInterval = if (it.columnCount > 12) it.getInt(12) else 0
+                )
+            }
+        }
+        return map
+    }
+
+    fun getAllBlockProgress(): List<BlockProgressEntity> {
+        val list = mutableListOf<BlockProgressEntity>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT book_id, block_index, label, status, repetition, interval, efactor,
+                   next_due_date, lapses, attempts, last_score, last_accuracy,
+                   last_attempt_date, pre_lapse_interval
+            FROM block_progress
+            """.trimIndent(),
+            null
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(
+                    BlockProgressEntity(
+                        bookId = it.getInt(0),
+                        blockIndex = it.getInt(1),
+                        label = it.getString(2),
+                        status = it.getString(3),
+                        repetition = it.getInt(4),
+                        interval = it.getInt(5),
+                        efactor = it.getDouble(6),
+                        nextDueDate = it.getLong(7),
+                        lapses = if (it.columnCount > 8) it.getInt(8) else 0,
+                        attempts = if (it.columnCount > 9) it.getInt(9) else 0,
+                        lastScore = if (it.columnCount > 10) it.getInt(10) else 0,
+                        lastAccuracy = if (it.columnCount > 11) it.getDouble(11) else 0.0,
+                        lastAttemptDate = if (it.columnCount > 12) it.getLong(12) else 0L,
+                        preLapseInterval = if (it.columnCount > 13) it.getInt(13) else 0
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    fun gradeBlockChain(
+        bookId: Int,
+        blockIndex: Int,
+        label: String,
+        results: List<Pair<Int, Boolean>> // List of (chapter, isCorrect)
+    ): BlockProgressEntity {
+        val existing = getBlockProgress(bookId)[blockIndex]
+        val rep = existing?.repetition ?: 0
+        val interval = existing?.interval ?: 0
+        val efactor = existing?.efactor ?: 2.5
+        val lapses = existing?.lapses ?: 0
+        val preLapseInterval = existing?.preLapseInterval ?: 0
+        val attempts = (existing?.attempts ?: 0) + 1
+
+        val correctCount = results.count { it.second }
+        val accuracy = if (results.isNotEmpty()) correctCount.toDouble() / results.size else 0.0
+        val score = when {
+            accuracy >= 1.0 -> 5
+            accuracy >= 0.85 -> 4
+            accuracy >= 0.60 -> 3
+            else -> 1
+        }
+
+        val scale = getAppSettings().intervalScale
+        val now = System.currentTimeMillis()
+        val prevEfactor = efactor
+        val eval = SM2Engine.evaluate(
+            repetition = rep,
+            interval = interval,
+            efactor = efactor,
+            lapses = lapses,
+            preLapseInterval = preLapseInterval,
+            score = score,
+            kind = ScheduleKind.CHAIN,
+            intervalScale = scale,
+            now = now
+        )
+
+        val entity = BlockProgressEntity(
+            bookId = bookId,
+            blockIndex = blockIndex,
+            label = label,
+            status = eval.status,
+            repetition = eval.repetition,
+            interval = eval.interval,
+            efactor = eval.efactor,
+            nextDueDate = eval.nextDueDate,
+            lapses = eval.lapses,
+            attempts = attempts,
+            lastScore = score,
+            lastAccuracy = accuracy,
+            lastAttemptDate = now,
+            preLapseInterval = eval.preLapseInterval
+        )
+
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("book_id", bookId)
+            put("block_index", blockIndex)
+            put("label", label)
+            put("status", eval.status)
+            put("repetition", eval.repetition)
+            put("interval", eval.interval)
+            put("efactor", eval.efactor)
+            put("next_due_date", eval.nextDueDate)
+            put("lapses", eval.lapses)
+            put("attempts", attempts)
+            put("last_score", score)
+            put("last_accuracy", accuracy)
+            put("last_attempt_date", now)
+            put("pre_lapse_interval", eval.preLapseInterval)
+        }
+        db.insertWithOnConflict("block_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+
+        // Record in review log
+        val logValues = ContentValues().apply {
+            put("verse_id", 0)
+            put("score", score)
+            put("review_date", now)
+            put("prev_interval", interval)
+            put("new_interval", eval.interval)
+            put("prev_efactor", prevEfactor)
+            put("new_efactor", eval.efactor)
+            put("item_kind", "chain")
+            put("item_id", "$bookId:$blockIndex")
+            put("cue_level", 0)
+            put("mode", "chain")
+        }
+        db.insert("review_log", null, logValues)
+        pruneReviewLog(db)
+
+        // Record chain pass for chapters (chain hits/misses)
+        recordChainPass(bookId, results)
+
+        return entity
+    }
+
+    fun recordChainPass(bookId: Int, results: List<Pair<Int, Boolean>>) {
+        val db = writableDatabase
+        val now = System.currentTimeMillis()
+        db.beginTransaction()
+        try {
+            for ((chapter, isCorrect) in results) {
+                val hitDelta = if (isCorrect) 1 else 0
+                val missDelta = if (isCorrect) 0 else 1
+
+                // First attempt update of existing chapter progress
+                val cursor = db.rawQuery(
+                    "SELECT chain_hits, chain_misses FROM chapter_progress WHERE book_id = ? AND chapter = ?",
+                    arrayOf(bookId.toString(), chapter.toString())
+                )
+                val exists = cursor.use { it.moveToFirst() }
+
+                if (exists) {
+                    db.execSQL(
+                        """
+                        UPDATE chapter_progress
+                        SET chain_hits = chain_hits + ?,
+                            chain_misses = chain_misses + ?,
+                            last_chain_date = ?
+                        WHERE book_id = ? AND chapter = ?
+                        """.trimIndent(),
+                        arrayOf<Any>(hitDelta, missDelta, now, bookId, chapter)
+                    )
+                } else {
+                    val cv = ContentValues().apply {
+                        put("book_id", bookId)
+                        put("chapter", chapter)
+                        put("status", "learning")
+                        put("repetition", 0)
+                        put("interval", 0)
+                        put("efactor", 2.5)
+                        put("next_due_date", now)
+                        put("lapses", 0)
+                        put("attempts", 0)
+                        put("pre_lapse_interval", 0)
+                        put("chain_hits", hitDelta)
+                        put("chain_misses", missDelta)
+                        put("last_chain_date", now)
+                    }
+                    db.insert("chapter_progress", null, cv)
+                }
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
     fun getReviewLog(): List<ReviewLogEntry> {
         val list = mutableListOf<ReviewLogEntry>()
         val db = readableDatabase
@@ -1187,6 +1494,7 @@ class UserDatabaseHelper(private val context: Context) :
         return AppSettings(
             theme = getSetting("setting_theme", "black"),
             fontSize = getSetting("setting_fontSize", "1.0").toFloatOrNull() ?: 1.0f,
+            fontFamily = getSetting("setting_fontFamily", "serif"),
             ttsEnabled = getSetting("setting_ttsEnabled", "true").toBoolean(),
             recallMasking = getSetting("setting_recallMasking", "false").toBoolean(),
             bionicReading = getSetting("setting_bionicReading", "false").toBoolean(),
@@ -1205,6 +1513,7 @@ class UserDatabaseHelper(private val context: Context) :
     fun saveAppSettings(settings: AppSettings) {
         setSetting("setting_theme", settings.theme)
         setSetting("setting_fontSize", settings.fontSize.toString())
+        setSetting("setting_fontFamily", settings.fontFamily)
         setSetting("setting_ttsEnabled", settings.ttsEnabled.toString())
         setSetting("setting_recallMasking", settings.recallMasking.toString())
         setSetting("setting_bionicReading", settings.bionicReading.toString())
@@ -1286,6 +1595,36 @@ class UserDatabaseHelper(private val context: Context) :
             }
         }
         root.put("chapterProgress", progressObj)
+
+        // Block progress
+        val blockObj = JSONObject()
+        val blockCursor = db.rawQuery(
+            "SELECT book_id, block_index, label, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score, last_accuracy, last_attempt_date, pre_lapse_interval FROM block_progress",
+            null
+        )
+        blockCursor.use {
+            while (it.moveToNext()) {
+                val key = "${it.getInt(0)}:${it.getInt(1)}"
+                val item = JSONObject().apply {
+                    put("book_id", it.getInt(0))
+                    put("block_index", it.getInt(1))
+                    put("label", it.getString(2))
+                    put("status", it.getString(3))
+                    put("repetition", it.getInt(4))
+                    put("interval", it.getInt(5))
+                    put("efactor", it.getDouble(6))
+                    put("next_due_date", it.getLong(7))
+                    put("lapses", if (it.columnCount > 8) it.getInt(8) else 0)
+                    put("attempts", if (it.columnCount > 9) it.getInt(9) else 0)
+                    put("last_score", if (it.columnCount > 10) it.getInt(10) else 0)
+                    put("last_accuracy", if (it.columnCount > 11) it.getDouble(11) else 0.0)
+                    put("last_attempt_date", if (it.columnCount > 12) it.getLong(12) else 0L)
+                    put("pre_lapse_interval", if (it.columnCount > 13) it.getInt(13) else 0)
+                }
+                blockObj.put(key, item)
+            }
+        }
+        root.put("blockProgress", blockObj)
 
         // Review log
         val logArray = JSONArray()
@@ -1425,6 +1764,32 @@ class UserDatabaseHelper(private val context: Context) :
                     }
                 }
 
+                if (root.has("blockProgress")) {
+                    val prog = root.getJSONObject("blockProgress")
+                    val keys = prog.keys()
+                    while (keys.hasNext()) {
+                        val k = keys.next()
+                        val item = prog.getJSONObject(k)
+                        val values = ContentValues().apply {
+                            put("book_id", item.optInt("book_id", 1))
+                            put("block_index", item.optInt("block_index", 0))
+                            put("label", item.optString("label", ""))
+                            put("status", item.optString("status", "learning"))
+                            put("repetition", item.optInt("repetition", 0))
+                            put("interval", item.optInt("interval", 0))
+                            put("efactor", item.optDouble("efactor", 2.5))
+                            put("next_due_date", item.optLong("next_due_date", System.currentTimeMillis()))
+                            put("lapses", item.optInt("lapses", 0))
+                            put("attempts", item.optInt("attempts", 0))
+                            put("last_score", item.optInt("last_score", 0))
+                            put("last_accuracy", item.optDouble("last_accuracy", 0.0))
+                            put("last_attempt_date", item.optLong("last_attempt_date", 0L))
+                            put("pre_lapse_interval", item.optInt("pre_lapse_interval", 0))
+                        }
+                        db.insertWithOnConflict("block_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                    }
+                }
+
                 if (root.has("reviewLog")) {
                     val arr = root.getJSONArray("reviewLog")
                     for (i in 0 until arr.length()) {
@@ -1518,6 +1883,7 @@ class UserDatabaseHelper(private val context: Context) :
         try {
             db.delete("user_verses", null, null)
             db.delete("chapter_progress", null, null)
+            db.delete("block_progress", null, null)
             db.delete("session_state", null, null)
             db.delete("review_log", null, null)
             db.delete("cold_checks", null, null)
