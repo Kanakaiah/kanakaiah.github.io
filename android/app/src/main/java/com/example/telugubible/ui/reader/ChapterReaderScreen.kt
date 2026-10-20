@@ -1,6 +1,9 @@
 package com.example.telugubible.ui.reader
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -35,13 +38,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.example.telugubible.data.model.BibleTranslation
 import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.theme.*
@@ -105,19 +113,49 @@ fun ChapterReaderScreen(
         }
     }
 
-    // Reading progress calculation (0f to 1f)
+    var headerHeightPx by remember { mutableIntStateOf(0) }
+    val density = LocalDensity.current
+    val headerHeightDp = with(density) { headerHeightPx.toDp() }
+    val topContentPadding = remember(headerHeightDp) {
+        if (headerHeightDp > 0.dp) headerHeightDp + 16.dp else 165.dp
+    }
+
+    // Precise reading progress calculation (0f to 1f) - tracks scroll progress smoothly
     val scrollProgress by remember {
         derivedStateOf {
-            val total = listState.layoutInfo.totalItemsCount
-            if (total <= 1) 0f
-            else {
-                val visible = listState.firstVisibleItemIndex.toFloat()
-                val offset = listState.firstVisibleItemScrollOffset.toFloat()
-                val frac = (visible + (offset / 1000f)) / (total - 1).toFloat()
-                frac.coerceIn(0f, 1f)
+            val layoutInfo = listState.layoutInfo
+            val total = layoutInfo.totalItemsCount
+            if (total <= 1) return@derivedStateOf 0f
+
+            val visibleItems = layoutInfo.visibleItemsInfo
+            if (visibleItems.isEmpty()) return@derivedStateOf 0f
+
+            val first = visibleItems.first()
+            val last = visibleItems.last()
+
+            // If reached the end of the chapter
+            if (last.index == total - 1) {
+                val endOffset = last.offset + last.size
+                if (endOffset <= layoutInfo.viewportEndOffset) return@derivedStateOf 1f
             }
+
+            // If at the very top of the chapter
+            if (first.index == 0 && listState.firstVisibleItemScrollOffset == 0) {
+                return@derivedStateOf 0f
+            }
+
+            val firstItemSize = if (first.size > 0) first.size.toFloat() else 1f
+            val itemOffsetFraction = (listState.firstVisibleItemScrollOffset.toFloat() / firstItemSize).coerceIn(0f, 1f)
+            val frac = (first.index.toFloat() + itemOffsetFraction) / (total - 1).toFloat()
+            frac.coerceIn(0f, 1f)
         }
     }
+
+    val animatedProgress by animateFloatAsState(
+        targetValue = scrollProgress,
+        animationSpec = tween(durationMillis = 100, easing = LinearOutSlowInEasing),
+        label = "readingProgress"
+    )
 
     // Paragraph grouping
     val isPsalms = state.currentBook?.id == 19
@@ -156,6 +194,24 @@ fun ChapterReaderScreen(
             .fillMaxSize()
             .background(state.readerTheme.backgroundColor)
     ) {
+        // --- 0. Pinned Reading Progress Bar (Always visible while scrolling up and down) ---
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .statusBarsPadding()
+                .height(3.5.dp)
+                .background(state.readerTheme.accentColor.copy(alpha = 0.18f))
+                .zIndex(100f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(fraction = animatedProgress.coerceIn(0f, 1f))
+                    .background(state.readerTheme.accentColor)
+            )
+        }
+
         // --- 1. Main Scripture Text Body ---
         if (state.isLoading) {
             Box(
@@ -187,7 +243,7 @@ fun ChapterReaderScreen(
                         )
                     },
                 contentPadding = PaddingValues(
-                    top = if (chromeVisible) 110.dp else 48.dp,
+                    top = topContentPadding,
                     bottom = if (chromeVisible || state.selectedVerses.isNotEmpty()) 100.dp else 48.dp
                 )
             ) {
@@ -271,160 +327,173 @@ fun ChapterReaderScreen(
             visible = chromeVisible,
             enter = slideInVertically { -it } + fadeIn(),
             exit = slideOutVertically { -it } + fadeOut(),
-            modifier = Modifier.align(Alignment.TopCenter)
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .zIndex(50f)
         ) {
             Surface(
                 color = state.readerTheme.cardColor.copy(alpha = 0.96f),
                 border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.12f)),
                 shadowElevation = 6.dp,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        val h = coordinates.size.height
+                        if (h > 0 && h != headerHeightPx) {
+                            headerHeightPx = h
+                        }
+                    }
             ) {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .statusBarsPadding()
+                        .padding(top = 4.dp, bottom = 12.dp)
                 ) {
-                    // Thin Top Reading Progress Bar (2.5dp)
-                    Box(
+                    // Left: Back button
+                    IconButton(
+                        onClick = { onBack?.invoke() },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(2.5.dp)
-                            .background(state.readerTheme.accentColor.copy(alpha = 0.2f))
+                            .align(Alignment.TopStart)
+                            .padding(start = 4.dp, top = 2.dp)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .fillMaxWidth(fraction = scrollProgress)
-                                .background(state.readerTheme.accentColor)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Go back",
+                            tint = state.readerTheme.textColor
                         )
                     }
 
-                    // Header Main Row
+                    // Right: Alpha Mode & Reading Options Buttons
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .align(Alignment.TopEnd)
+                            .padding(end = 4.dp, top = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Left: Back button
-                        IconButton(onClick = { onBack?.invoke() }) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Go back",
-                                tint = state.readerTheme.textColor
-                            )
-                        }
-
-                        // Center: Title + Subtitle Chips
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.weight(1f)
+                        // Greek Alpha Button
+                        IconButton(
+                            onClick = { viewModel.toggleAlphaMode() },
+                            modifier = Modifier.size(38.dp)
                         ) {
-                            Text(
-                                text = "$bookDisplayName $currentChapter".uppercase(),
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp,
-                                    letterSpacing = (-0.02).sp
-                                ),
-                                color = state.readerTheme.textColor
-                            )
-
-                            Spacer(modifier = Modifier.height(2.dp))
-
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            Surface(
+                                shape = CircleShape,
+                                color = if (state.alphaMode) state.readerTheme.accentColor else Color.Transparent,
+                                modifier = Modifier.size(32.dp)
                             ) {
-                                // Translation Badge (All Caps)
-                                Surface(
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = if (state.alphaMode) RemoraGold.copy(alpha = 0.2f) else state.readerTheme.accentColor.copy(alpha = 0.12f),
-                                    border = BorderStroke(1.dp, if (state.alphaMode) RemoraGold.copy(alpha = 0.5f) else state.readerTheme.accentColor.copy(alpha = 0.3f)),
-                                    modifier = Modifier.clickable { viewModel.toggleBookSelector(true) }
-                                ) {
+                                Box(contentAlignment = Alignment.Center) {
                                     Text(
-                                        text = if (state.alphaMode) "KJV + ORIGINAL WORDS" else "${BibleTranslation.getLabel(state.activeVersion).uppercase()} TRANSLATION",
-                                        fontSize = 10.sp,
+                                        text = "α",
+                                        fontFamily = FontFamily.Serif,
+                                        fontSize = 19.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = if (state.alphaMode) RemoraGold else state.readerTheme.accentColor,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                        color = if (state.alphaMode) Color.White else state.readerTheme.textColor
                                     )
                                 }
-
-                                // Interactive Memory Anchor Chip (All Caps)
-                                if (state.currentAnchor != null && state.anchorReveal != "never") {
-                                    val isRevealed = state.anchorReveal == "always" || state.anchorWordRevealed
-                                    val chipText = if (isRevealed) state.currentAnchor!!.word.uppercase() else "TAP FOR ANCHOR"
-
-                                    Surface(
-                                        shape = RoundedCornerShape(12.dp),
-                                        color = state.readerTheme.cardColor,
-                                        border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.35f)),
-                                        modifier = Modifier.clickable {
-                                            if (!isRevealed) {
-                                                viewModel.revealAnchorWord()
-                                            } else {
-                                                viewModel.toggleAnchorScene()
-                                            }
-                                        }
-                                    ) {
-                                        Text(
-                                            text = chipText,
-                                            fontSize = 10.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = if (isRevealed) state.readerTheme.accentColor else state.readerTheme.secondaryTextColor,
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                                        )
-                                    }
-                                }
-                            }
-
-                            // Expanded Anchor Scene Subtitle
-                            if (state.currentAnchor != null && state.showAnchorScene && (state.anchorReveal != "tap" || state.anchorWordRevealed)) {
-                                Text(
-                                    text = state.currentAnchor!!.scene,
-                                    fontSize = 11.sp,
-                                    fontStyle = FontStyle.Italic,
-                                    color = state.readerTheme.secondaryTextColor,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .padding(top = 4.dp, start = 12.dp, end = 12.dp)
-                                        .widthIn(max = 380.dp)
-                                )
                             }
                         }
 
-                        // Right: Alpha Mode & Reading Options Popover Buttons
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            // Greek Alpha Button
-                            IconButton(onClick = { viewModel.toggleAlphaMode() }) {
-                                Surface(
-                                    shape = CircleShape,
-                                    color = if (state.alphaMode) state.readerTheme.accentColor else Color.Transparent,
-                                    modifier = Modifier.size(34.dp)
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        Text(
-                                            text = "α",
-                                            fontSize = 18.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = if (state.alphaMode) Color.White else state.readerTheme.textColor
-                                        )
-                                    }
-                                }
-                            }
+                        // Reading Options (Type) Button
+                        IconButton(
+                            onClick = { viewModel.toggleReadingOptions() },
+                            modifier = Modifier.size(38.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.TextFields,
+                                contentDescription = "Reading Options",
+                                tint = if (state.showReadingOptions) state.readerTheme.accentColor else state.readerTheme.textColor,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
 
-                            // Reading Options (Type) Button
-                            IconButton(onClick = { viewModel.toggleReadingOptions() }) {
-                                Icon(
-                                    imageVector = Icons.Default.TextFields,
-                                    contentDescription = "Reading Options",
-                                    tint = if (state.showReadingOptions) state.readerTheme.accentColor else state.readerTheme.textColor,
-                                    modifier = Modifier.size(20.dp)
+                    // Center: Big Chapter Title + Subtitle Chips (Matching Remora PWA text-4xl)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 56.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "$bookDisplayName $currentChapter".uppercase(),
+                            style = MaterialTheme.typography.headlineLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 32.sp,
+                                lineHeight = 38.sp,
+                                fontFamily = state.readerFontFamily.fontFamily,
+                                letterSpacing = (-0.02).sp
+                            ),
+                            color = state.readerTheme.textColor,
+                            textAlign = TextAlign.Center,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            // Translation Badge (All Caps)
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = if (state.alphaMode) RemoraGold.copy(alpha = 0.2f) else state.readerTheme.accentColor.copy(alpha = 0.12f),
+                                border = BorderStroke(1.dp, if (state.alphaMode) RemoraGold.copy(alpha = 0.5f) else state.readerTheme.accentColor.copy(alpha = 0.3f)),
+                                modifier = Modifier.clickable { viewModel.toggleBookSelector(true) }
+                            ) {
+                                Text(
+                                    text = if (state.alphaMode) "KJV + ORIGINAL WORDS" else "${BibleTranslation.getLabel(state.activeVersion).uppercase()} TRANSLATION",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (state.alphaMode) RemoraGold else state.readerTheme.accentColor,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.5.dp)
                                 )
                             }
+
+                            // Interactive Memory Anchor Chip (All Caps)
+                            if (state.currentAnchor != null && state.anchorReveal != "never") {
+                                val isRevealed = state.anchorReveal == "always" || state.anchorWordRevealed
+                                val chipText = if (isRevealed) state.currentAnchor!!.word.uppercase() else "TAP FOR ANCHOR"
+
+                                Surface(
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = state.readerTheme.cardColor,
+                                    border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.35f)),
+                                    modifier = Modifier.clickable {
+                                        if (!isRevealed) {
+                                            viewModel.revealAnchorWord()
+                                        } else {
+                                            viewModel.toggleAnchorScene()
+                                        }
+                                    }
+                                ) {
+                                    Text(
+                                        text = chipText,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (isRevealed) state.readerTheme.accentColor else state.readerTheme.secondaryTextColor,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.5.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        // Expanded Anchor Scene Subtitle
+                        if (state.currentAnchor != null && state.showAnchorScene && (state.anchorReveal != "tap" || state.anchorWordRevealed)) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = state.currentAnchor!!.scene,
+                                fontSize = 12.sp,
+                                lineHeight = 16.sp,
+                                fontStyle = FontStyle.Italic,
+                                fontFamily = state.readerFontFamily.fontFamily,
+                                color = state.readerTheme.secondaryTextColor,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .widthIn(max = 380.dp)
+                            )
                         }
                     }
                 }
@@ -445,7 +514,7 @@ fun ChapterReaderScreen(
                     border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.25f)),
                     shadowElevation = 16.dp,
                     modifier = Modifier
-                        .padding(top = 80.dp, end = 16.dp)
+                        .padding(top = if (headerHeightDp > 0.dp) headerHeightDp + 6.dp else 120.dp, end = 16.dp)
                         .width(280.dp)
                         .clickable(enabled = false) {}
                 ) {
