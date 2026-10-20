@@ -107,7 +107,7 @@ fun MainScaffold(
         )
     }
 
-    TeluguBibleTheme(themeName = settingsState.settings.theme) {
+    RemoraTheme(themeName = settingsState.settings.theme) {
         CompositionLocalProvider(LocalDensity provides customDensity) {
     if (isInReaderMode) {
         // Reader manages its own typography scaling directly via FontSizeScale (XS-XL)

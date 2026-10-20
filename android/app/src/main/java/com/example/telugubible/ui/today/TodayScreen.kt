@@ -72,7 +72,6 @@ fun TodayScreen(
                         heroVerse = state.heroVerse,
                         dueCount = state.dueCount,
                         displayLanguage = state.displayLanguage,
-                        activeVersion = state.activeVersion,
                         onStartSession = onNavigateToPractice
                     )
                 }
@@ -116,14 +115,6 @@ fun TodayScreen(
                         memorizedCount = state.memorizedCount,
                         learningCount = state.learningCount,
                         dueCount = state.dueCount
-                    )
-                }
-
-                // 4. Translation Language Selector (BSB English vs IRV Telugu)
-                item {
-                    LanguageSelectorRow(
-                        currentLanguage = state.displayLanguage,
-                        onSelectLanguage = { viewModel.setDisplayLanguage(it) }
                     )
                 }
 
@@ -302,7 +293,6 @@ private fun RemoraHeroDailyPractice(
     heroVerse: UserMemoryVerse?,
     dueCount: Int,
     displayLanguage: DisplayLanguage,
-    activeVersion: String = "LSB",
     onStartSession: () -> Unit
 ) {
     Surface(
@@ -314,7 +304,6 @@ private fun RemoraHeroDailyPractice(
         Column(modifier = Modifier.padding(20.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -331,20 +320,6 @@ private fun RemoraHeroDailyPractice(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.5.sp,
                         color = RemoraAccent
-                    )
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(4.dp),
-                    color = RemoraCardBgElevated,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
-                ) {
-                    Text(
-                        text = if (displayLanguage == DisplayLanguage.ENGLISH) activeVersion.uppercase() else "IRV",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraAccentLight,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }
             }
@@ -679,93 +654,6 @@ private fun TopicFilterRow(
                         fontWeight = FontWeight.Medium,
                         color = RemoraTextMuted
                     )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LanguageSelectorRow(
-    currentLanguage: DisplayLanguage,
-    onSelectLanguage: (DisplayLanguage) -> Unit
-) {
-    Surface(
-        shape = RoundedCornerShape(10.dp),
-        color = RemoraCardBg,
-        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        ) {
-            val isEnglish = currentLanguage == DisplayLanguage.ENGLISH
-            Surface(
-                onClick = { onSelectLanguage(DisplayLanguage.ENGLISH) },
-                shape = RoundedCornerShape(8.dp),
-                color = if (isEnglish) RemoraAccent else Color.Transparent,
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "English",
-                        fontSize = 13.sp,
-                        fontWeight = if (isEnglish) FontWeight.Bold else FontWeight.Medium,
-                        color = if (isEnglish) Color.White else RemoraTextSecondary
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Surface(
-                        shape = RoundedCornerShape(4.dp),
-                        color = if (isEnglish) Color.White.copy(alpha = 0.2f) else RemoraCardBgElevated
-                    ) {
-                        Text(
-                            text = "BSB",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isEnglish) Color.White else RemoraTextMuted,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                        )
-                    }
-                }
-            }
-
-            val isTelugu = currentLanguage == DisplayLanguage.TELUGU
-            Surface(
-                onClick = { onSelectLanguage(DisplayLanguage.TELUGU) },
-                shape = RoundedCornerShape(8.dp),
-                color = if (isTelugu) RemoraAccent else Color.Transparent,
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "తెలుగు",
-                        fontSize = 13.sp,
-                        fontWeight = if (isTelugu) FontWeight.Bold else FontWeight.Medium,
-                        color = if (isTelugu) Color.White else RemoraTextSecondary
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Surface(
-                        shape = RoundedCornerShape(4.dp),
-                        color = if (isTelugu) Color.White.copy(alpha = 0.2f) else RemoraCardBgElevated
-                    ) {
-                        Text(
-                            text = "IRV",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isTelugu) Color.White else RemoraTextMuted,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                        )
-                    }
                 }
             }
         }

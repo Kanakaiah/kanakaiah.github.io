@@ -10,7 +10,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import com.example.telugubible.data.DefaultDataRepository
-import com.example.telugubible.theme.TeluguBibleTheme
+import com.example.telugubible.theme.RemoraTheme
 
 @Composable
 fun MainScreen(
@@ -45,11 +45,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-  TeluguBibleTheme { MainScreen(listOf("Android")) }
+  RemoraTheme { MainScreen(listOf("Android")) }
 }
 
 @Preview(showBackground = true, widthDp = 340)
 @Composable
 fun MainScreenPortraitPreview() {
-  TeluguBibleTheme { MainScreen(listOf("Android")) }
+  RemoraTheme { MainScreen(listOf("Android")) }
 }

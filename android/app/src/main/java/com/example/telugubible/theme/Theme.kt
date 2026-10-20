@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 val LocalRemoraColors = staticCompositionLocalOf { RemoraColors.Midnight }
 
 @Composable
-fun TeluguBibleTheme(
+fun RemoraTheme(
     themeName: String = RemoraThemeState.themeName,
     content: @Composable () -> Unit
 ) {
