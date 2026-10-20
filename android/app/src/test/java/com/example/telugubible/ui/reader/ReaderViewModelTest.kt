@@ -320,4 +320,68 @@ class ReaderViewModelTest {
         assertEquals("ESV", viewModel.uiState.value.activeVersion)
         assertEquals(BibleLanguage.ENGLISH, viewModel.uiState.value.language)
     }
+
+    @Test
+    fun testAnchorRevealAndSceneToggle() = runTest {
+        advanceUntilIdle()
+
+        // Genesis 1 has anchor "LIGHT"
+        assertNotNull(viewModel.uiState.value.currentAnchor)
+        assertEquals("LIGHT", viewModel.uiState.value.currentAnchor?.word)
+
+        // Initially in 'tap' mode, anchor word is hidden
+        assertFalse(viewModel.uiState.value.anchorWordRevealed)
+        assertFalse(viewModel.uiState.value.showAnchorScene)
+
+        // Reveal anchor word
+        viewModel.revealAnchorWord()
+        assertTrue(viewModel.uiState.value.anchorWordRevealed)
+        assertTrue(viewModel.uiState.value.showAnchorScene)
+
+        // Toggle scene off
+        viewModel.toggleAnchorScene()
+        assertTrue(viewModel.uiState.value.anchorWordRevealed)
+        assertFalse(viewModel.uiState.value.showAnchorScene)
+
+        // Toggle scene back on
+        viewModel.toggleAnchorScene()
+        assertTrue(viewModel.uiState.value.showAnchorScene)
+    }
+
+    @Test
+    fun testReadingOptionsToggle() = runTest {
+        advanceUntilIdle()
+
+        // Default settings
+        assertTrue(viewModel.uiState.value.showSectionHeadings)
+        assertFalse(viewModel.uiState.value.bionicReading)
+
+        // Toggle bionic reading
+        viewModel.toggleReadingOption("bionicReading")
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.bionicReading)
+
+        // Toggle section headings
+        viewModel.toggleReadingOption("showSectionHeadings")
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.showSectionHeadings)
+
+        // Toggle options menu visibility
+        viewModel.toggleReadingOptions(true)
+        assertTrue(viewModel.uiState.value.showReadingOptions)
+        viewModel.toggleReadingOptions(false)
+        assertFalse(viewModel.uiState.value.showReadingOptions)
+    }
+
+    @Test
+    fun testFlashVerse() = runTest {
+        advanceUntilIdle()
+        assertNull(viewModel.uiState.value.flashVerse)
+
+        viewModel.setFlashVerse(5)
+        assertEquals(5, viewModel.uiState.value.flashVerse)
+
+        viewModel.setFlashVerse(null)
+        assertNull(viewModel.uiState.value.flashVerse)
+    }
 }

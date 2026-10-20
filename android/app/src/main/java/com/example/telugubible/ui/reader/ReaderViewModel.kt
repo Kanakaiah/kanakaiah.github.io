@@ -69,7 +69,18 @@ data class ReaderUiState(
     val readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF,
     val currentAnchor: ChapterAnchor? = null,
     val chapterProgress: ChapterProgressEntity? = null,
-    val isAnchorDismissed: Boolean = false
+    val isAnchorDismissed: Boolean = false,
+    val anchorWordRevealed: Boolean = false,
+    val showAnchorScene: Boolean = false,
+    val flashVerse: Int? = null,
+    val memorizedVerses: Set<Int> = emptySet(),
+    val bionicReading: Boolean = false,
+    val anchorReveal: String = "tap",
+    val showSectionHeadings: Boolean = true,
+    val showVerseNumbers: Boolean = true,
+    val showParagraphMarks: Boolean = true,
+    val showCrossRefMarkers: Boolean = true,
+    val showReadingOptions: Boolean = false
 )
 
 class ReaderViewModel @JvmOverloads constructor(
@@ -114,6 +125,26 @@ class ReaderViewModel @JvmOverloads constructor(
                 val breaks = repository.getParagraphBreaks(firstBook.id, 1)
                 val crossRefCounts = repository.getCrossReferenceCountsForChapter(firstBook.id, 1)
                 val otQuotes = repository.getOtQuotesForChapter(firstBook.id, 1)
+                val anchors = repository.getChapterAnchors(firstBook.id)
+                val currentAnchor = anchors.find { it.chapter == 1 }
+                val chapterProgress = repository.getChapterProgress(firstBook.id)[1]
+                val userVerses = repository.getUserMemoryVerses()
+                val memorized = userVerses.filter { it.bookId == firstBook.id && it.chapter == 1 }.map { it.verse }.toSet()
+                val fontScale = when {
+                    settings.fontSize <= 0.85f -> FontSizeScale.XS
+                    settings.fontSize <= 1.0f -> FontSizeScale.S
+                    settings.fontSize <= 1.15f -> FontSizeScale.M
+                    settings.fontSize <= 1.30f -> FontSizeScale.L
+                    else -> FontSizeScale.XL
+                }
+                val fontFam = if (settings.fontFamily == "sans") ReaderFontFamily.SANS_SERIF else ReaderFontFamily.SERIF
+                val theme = when (settings.theme.lowercase()) {
+                    "dark", "walnut" -> ReaderTheme.DARK
+                    "sepia" -> ReaderTheme.SEPIA
+                    "white", "paper" -> ReaderTheme.PAPER
+                    else -> ReaderTheme.OBSIDIAN
+                }
+
                 _uiState.update {
                     it.copy(
                         books = books,
@@ -125,6 +156,20 @@ class ReaderViewModel @JvmOverloads constructor(
                         paragraphBreaks = breaks,
                         crossRefCounts = crossRefCounts,
                         otQuotes = otQuotes,
+                        currentAnchor = currentAnchor,
+                        chapterProgress = chapterProgress,
+                        memorizedVerses = memorized,
+                        fontSizeScale = fontScale,
+                        readerFontFamily = fontFam,
+                        readerTheme = theme,
+                        bionicReading = settings.bionicReading,
+                        anchorReveal = settings.anchorReveal,
+                        showSectionHeadings = settings.showSectionHeadings,
+                        showVerseNumbers = settings.showVerseNumbers,
+                        showParagraphMarks = settings.showParagraphMarks,
+                        showCrossRefMarkers = settings.showCrossRefMarkers,
+                        anchorWordRevealed = settings.anchorReveal == "always",
+                        showAnchorScene = false,
                         isLoading = false
                     )
                 }
@@ -160,6 +205,8 @@ class ReaderViewModel @JvmOverloads constructor(
             val anchors = repository.getChapterAnchors(book.id)
             val currentAnchor = anchors.find { it.chapter == chapter }
             val chapterProgress = repository.getChapterProgress(book.id)[chapter]
+            val userVerses = repository.getUserMemoryVerses()
+            val memorized = userVerses.filter { it.bookId == book.id && it.chapter == chapter }.map { it.verse }.toSet()
             val kjvMap = if (_uiState.value.alphaMode) {
                 kjvService.getChapterKjv(book.id, chapter) ?: emptyMap()
             } else {
@@ -175,6 +222,9 @@ class ReaderViewModel @JvmOverloads constructor(
                     otQuotes = otQuotes,
                     currentAnchor = currentAnchor,
                     chapterProgress = chapterProgress,
+                    memorizedVerses = memorized,
+                    anchorWordRevealed = it.anchorReveal == "always",
+                    showAnchorScene = false,
                     isAnchorDismissed = false,
                     kjvChapterVerses = kjvMap,
                     isLoading = false
@@ -194,6 +244,46 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun dismissChapterRecall() {
         _uiState.update { it.copy(isAnchorDismissed = true) }
+    }
+
+    fun revealAnchorWord() {
+        _uiState.update { it.copy(anchorWordRevealed = true, showAnchorScene = true) }
+    }
+
+    fun toggleAnchorScene() {
+        _uiState.update { it.copy(showAnchorScene = !it.showAnchorScene) }
+    }
+
+    fun setFlashVerse(verse: Int?) {
+        _uiState.update { it.copy(flashVerse = verse) }
+    }
+
+    fun toggleReadingOptions(show: Boolean? = null) {
+        _uiState.update { it.copy(showReadingOptions = show ?: !it.showReadingOptions) }
+    }
+
+    fun toggleReadingOption(key: String) {
+        viewModelScope.launch {
+            val current = repository.getAppSettings()
+            val updated = when (key) {
+                "bionicReading" -> current.copy(bionicReading = !current.bionicReading)
+                "showSectionHeadings" -> current.copy(showSectionHeadings = !current.showSectionHeadings)
+                "showVerseNumbers" -> current.copy(showVerseNumbers = !current.showVerseNumbers)
+                "showParagraphMarks" -> current.copy(showParagraphMarks = !current.showParagraphMarks)
+                "showCrossRefMarkers" -> current.copy(showCrossRefMarkers = !current.showCrossRefMarkers)
+                else -> current
+            }
+            repository.saveAppSettings(updated)
+            _uiState.update {
+                it.copy(
+                    bionicReading = updated.bionicReading,
+                    showSectionHeadings = updated.showSectionHeadings,
+                    showVerseNumbers = updated.showVerseNumbers,
+                    showParagraphMarks = updated.showParagraphMarks,
+                    showCrossRefMarkers = updated.showCrossRefMarkers
+                )
+            }
+        }
     }
 
     fun setBibleVersion(version: String) {
