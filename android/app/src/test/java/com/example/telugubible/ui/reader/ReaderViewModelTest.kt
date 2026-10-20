@@ -298,4 +298,26 @@ class ReaderViewModelTest {
         advanceUntilIdle()
         assertFalse(viewModel.uiState.value.isAnchorDismissed)
     }
+
+    @Test
+    fun testBibleVersionSwitching() = runTest {
+        advanceUntilIdle()
+
+        // Default or initial version
+        assertEquals("LSB", viewModel.uiState.value.activeVersion)
+
+        // Switch to TELIRV (Telugu)
+        viewModel.setBibleVersion("TELIRV")
+        advanceUntilIdle()
+
+        assertEquals("TELIRV", viewModel.uiState.value.activeVersion)
+        assertEquals(BibleLanguage.TELUGU, viewModel.uiState.value.language)
+
+        // Switch to ESV
+        viewModel.setBibleVersion("ESV")
+        advanceUntilIdle()
+
+        assertEquals("ESV", viewModel.uiState.value.activeVersion)
+        assertEquals(BibleLanguage.ENGLISH, viewModel.uiState.value.language)
+    }
 }

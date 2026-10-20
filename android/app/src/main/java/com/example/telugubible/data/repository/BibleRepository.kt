@@ -17,6 +17,7 @@ import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.ReviewLogEntry
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.StrongsOccurrence
+import com.example.telugubible.data.service.BollsBibleService
 import com.example.telugubible.data.service.KjvService
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
@@ -32,7 +33,8 @@ class BibleRepository(
     private val bibleDbHelper: BibleDatabaseHelper,
     private val userDbHelper: UserDatabaseHelper,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val kjvService: KjvService = KjvService(ioDispatcher)
+    private val kjvService: KjvService = KjvService(ioDispatcher),
+    private val bollsBibleService: BollsBibleService = BollsBibleService(ioDispatcher)
 ) {
 
     constructor(context: Context) : this(
@@ -46,6 +48,30 @@ class BibleRepository(
         UserDatabaseHelper.getInstance(bibleDbHelper.context),
         Dispatchers.IO
     )
+
+    suspend fun getChapterVerses(bookId: Int, chapter: Int, version: String): List<Verse> = withContext(ioDispatcher) {
+        val v = version.uppercase()
+        when (v) {
+            "BSB" -> bibleDbHelper.getVerses(bookId, chapter)
+            "TELIRV" -> bibleDbHelper.getVerses(bookId, chapter)
+            "TBSI" -> bibleDbHelper.getVerses(bookId, chapter)
+            else -> {
+                // Check persistent cache
+                val cached = userDbHelper.getCachedVerses(v, bookId, chapter)
+                if (cached.isNotEmpty()) {
+                    return@withContext cached
+                }
+                // Try remote Bolls Life API
+                val remote = bollsBibleService.fetchChapter(v, bookId, chapter)
+                if (!remote.isNullOrEmpty()) {
+                    userDbHelper.saveCachedVerses(v, bookId, chapter, remote)
+                    return@withContext remote
+                }
+                // Fallback to local BSB
+                bibleDbHelper.getVerses(bookId, chapter)
+            }
+        }
+    }
 
     suspend fun getBooks(): List<Book> = withContext(ioDispatcher) {
         bibleDbHelper.getAllBooks()

@@ -7,7 +7,7 @@ data class AppSettings(
     val ttsEnabled: Boolean = true,
     val recallMasking: Boolean = false,
     val bionicReading: Boolean = false,
-    val bibleVersion: String = "BSB", // "BSB", "IRV-TE", "IRV-TA"
+    val bibleVersion: String = "LSB", // "LSB", "NASB95", "ESV", "BSB", "TELIRV", etc.
     val anchorReveal: String = "tap",  // "tap", "always", "never"
     val dailyChapterTarget: Int = 3,
     val streakIncludesChapters: Boolean = true,

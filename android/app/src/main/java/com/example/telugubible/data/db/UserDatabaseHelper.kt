@@ -9,6 +9,7 @@ import com.example.telugubible.data.model.AppSettings
 import com.example.telugubible.data.model.ColdCheckResult
 import com.example.telugubible.data.model.ReviewLogEntry
 import com.example.telugubible.data.model.Topic
+import com.example.telugubible.data.model.Verse
 import com.example.telugubible.util.SM2Engine
 import com.example.telugubible.util.ScheduleKind
 import org.json.JSONArray
@@ -87,7 +88,7 @@ class UserDatabaseHelper(private val context: Context) :
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 7
+        const val USER_DB_VERSION = 8
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -257,6 +258,19 @@ class UserDatabaseHelper(private val context: Context) :
             );
             """.trimIndent()
         )
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS remote_verse_cache (
+                version TEXT NOT NULL,
+                book_id INTEGER NOT NULL,
+                chapter INTEGER NOT NULL,
+                verse INTEGER NOT NULL,
+                text TEXT NOT NULL,
+                PRIMARY KEY (version, book_id, chapter, verse)
+            );
+            """.trimIndent()
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS idx_remote_verse_cache ON remote_verse_cache (version, book_id, chapter);")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -397,6 +411,23 @@ class UserDatabaseHelper(private val context: Context) :
             } catch (e: Exception) {}
             try {
                 db.execSQL("ALTER TABLE chapter_progress ADD COLUMN last_chain_date INTEGER NOT NULL DEFAULT 0;")
+            } catch (e: Exception) {}
+        }
+        if (oldVersion < 8) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS remote_verse_cache (
+                    version TEXT NOT NULL,
+                    book_id INTEGER NOT NULL,
+                    chapter INTEGER NOT NULL,
+                    verse INTEGER NOT NULL,
+                    text TEXT NOT NULL,
+                    PRIMARY KEY (version, book_id, chapter, verse)
+                );
+                """.trimIndent()
+            )
+            try {
+                db.execSQL("CREATE INDEX IF NOT EXISTS idx_remote_verse_cache ON remote_verse_cache (version, book_id, chapter);")
             } catch (e: Exception) {}
         }
     }
@@ -1387,6 +1418,54 @@ class UserDatabaseHelper(private val context: Context) :
         }
     }
 
+    fun getCachedVerses(version: String, bookId: Int, chapter: Int): List<Verse> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT verse, text FROM remote_verse_cache WHERE version = ? AND book_id = ? AND chapter = ? ORDER BY verse ASC",
+            arrayOf(version.uppercase(), bookId.toString(), chapter.toString())
+        )
+        val list = mutableListOf<Verse>()
+        cursor.use {
+            while (it.moveToNext()) {
+                val vNum = it.getInt(0)
+                val text = it.getString(1)
+                list.add(
+                    Verse(
+                        id = (bookId * 1_000_000L) + (chapter * 1_000L) + vNum,
+                        bookId = bookId,
+                        chapter = chapter,
+                        verse = vNum,
+                        textTe = null,
+                        textEn = text,
+                        textTa = null
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    fun saveCachedVerses(version: String, bookId: Int, chapter: Int, verses: List<Verse>) {
+        if (verses.isEmpty()) return
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            for (v in verses) {
+                val cv = ContentValues().apply {
+                    put("version", version.uppercase())
+                    put("book_id", bookId)
+                    put("chapter", chapter)
+                    put("verse", v.verse)
+                    put("text", v.textEn ?: v.textTe ?: "")
+                }
+                db.insertWithOnConflict("remote_verse_cache", null, cv, SQLiteDatabase.CONFLICT_REPLACE)
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
     fun getReviewLog(): List<ReviewLogEntry> {
         val list = mutableListOf<ReviewLogEntry>()
         val db = readableDatabase
@@ -1498,7 +1577,7 @@ class UserDatabaseHelper(private val context: Context) :
             ttsEnabled = getSetting("setting_ttsEnabled", "true").toBoolean(),
             recallMasking = getSetting("setting_recallMasking", "false").toBoolean(),
             bionicReading = getSetting("setting_bionicReading", "false").toBoolean(),
-            bibleVersion = getSetting("setting_bibleVersion", "BSB"),
+            bibleVersion = getSetting("setting_bibleVersion", "LSB"),
             anchorReveal = getSetting("setting_anchorReveal", "tap"),
             dailyChapterTarget = getSetting("setting_dailyChapterTarget", "3").toIntOrNull() ?: 3,
             streakIncludesChapters = getSetting("setting_streakIncludesChapters", "true").toBoolean(),
@@ -1891,6 +1970,7 @@ class UserDatabaseHelper(private val context: Context) :
             db.delete("user_stats", null, null)
             db.delete("topics", null, null)
             db.delete("verse_topics", null, null)
+            db.delete("remote_verse_cache", null, null)
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()

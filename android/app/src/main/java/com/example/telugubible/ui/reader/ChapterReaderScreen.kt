@@ -41,9 +41,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.ui.input.pointer.pointerInput
+import com.example.telugubible.data.model.BibleTranslation
 import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.theme.*
 import com.example.telugubible.ui.bible.CommentarySheet
+import com.example.telugubible.util.BookNameUtils
 import com.example.telugubible.util.StrongsParser
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.launch
@@ -95,32 +97,54 @@ fun ChapterReaderScreen(
                     }
                 },
                 title = {
-                    val bookTitle = if (state.language == BibleLanguage.TELUGU) {
-                        state.currentBook?.nameTe ?: ""
-                    } else {
-                        state.currentBook?.nameEn ?: ""
-                    }
+                    val bookTitle = state.currentBook?.let { BookNameUtils.getBookDisplayName(it, state.activeVersion) } ?: ""
                     Surface(
                         onClick = { viewModel.toggleBookSelector(true) },
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(10.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                         ) {
-                            Text(
-                                text = "$bookTitle ${state.currentChapter}",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = state.readerTheme.textColor
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "▼", fontSize = 11.sp, color = state.readerTheme.accentColor)
+                            Column(horizontalAlignment = Alignment.Start) {
+                                Text(
+                                    text = "$bookTitle ${state.currentChapter}",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = state.readerTheme.textColor
+                                )
+                                Text(
+                                    text = if (state.alphaMode) "KJV + Original Words" else "${BibleTranslation.getLabel(state.activeVersion)} Translation",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = state.readerTheme.accentColor
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(text = "▼", fontSize = 10.sp, color = state.readerTheme.accentColor)
                         }
                     }
                 },
                 actions = {
+                    // Quick Version Selector Button
+                    Surface(
+                        onClick = { viewModel.toggleBookSelector(true) },
+                        shape = RoundedCornerShape(8.dp),
+                        color = state.readerTheme.accentColor.copy(alpha = 0.15f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.35f)),
+                        modifier = Modifier.height(34.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 8.dp)) {
+                            Text(
+                                text = BibleTranslation.getLabel(state.activeVersion),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = state.readerTheme.accentColor
+                            )
+                        }
+                    }
+
                     // Alpha Study Mode Button
                     IconButton(onClick = { viewModel.toggleAlphaMode() }) {
                         Surface(
@@ -588,15 +612,18 @@ fun ChapterReaderScreen(
             )
         }
 
-        // Book and Chapter selector sheet
+        // Book and Chapter selector navigator ("Go to...")
         if (state.showBookSelector) {
-            BookSelectorSheet(
+            DualColumnNavigator(
                 books = state.books,
                 currentBook = state.currentBook,
-                onDismiss = { viewModel.toggleBookSelector(false) },
+                currentChapter = state.currentChapter,
+                activeVersion = state.activeVersion,
+                onVersionChange = { v -> viewModel.setBibleVersion(v) },
                 onSelect = { book, chapter ->
                     viewModel.selectBookAndChapter(book, chapter)
-                }
+                },
+                onDismiss = { viewModel.toggleBookSelector(false) }
             )
         }
 

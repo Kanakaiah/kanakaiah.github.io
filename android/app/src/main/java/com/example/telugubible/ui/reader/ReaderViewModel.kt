@@ -48,7 +48,8 @@ data class ReaderUiState(
     val isTtsSpeaking: Boolean = false,
     val activeTtsVerse: Int? = null,
     val fontSizeScale: FontSizeScale = FontSizeScale.S,
-    val language: BibleLanguage = BibleLanguage.TELUGU,
+    val activeVersion: String = "LSB",
+    val language: BibleLanguage = BibleLanguage.ENGLISH,
     val showBookSelector: Boolean = false,
     val showSettings: Boolean = false,
     val selectedStrongs: StrongsEntry? = null,
@@ -104,8 +105,12 @@ class ReaderViewModel @JvmOverloads constructor(
         viewModelScope.launch {
             val books = repository.getBooks()
             val firstBook = books.firstOrNull { it.id == 1 } ?: books.firstOrNull()
+            val settings = repository.getAppSettings()
+            val activeVer = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
+            val lang = if (activeVer == "TELIRV") BibleLanguage.TELUGU else BibleLanguage.ENGLISH
+
             if (firstBook != null) {
-                val verses = repository.getVerses(firstBook.id, 1)
+                val verses = repository.getChapterVerses(firstBook.id, 1, activeVer)
                 val breaks = repository.getParagraphBreaks(firstBook.id, 1)
                 val crossRefCounts = repository.getCrossReferenceCountsForChapter(firstBook.id, 1)
                 val otQuotes = repository.getOtQuotesForChapter(firstBook.id, 1)
@@ -114,6 +119,8 @@ class ReaderViewModel @JvmOverloads constructor(
                         books = books,
                         currentBook = firstBook,
                         currentChapter = 1,
+                        activeVersion = activeVer,
+                        language = lang,
                         verses = verses,
                         paragraphBreaks = breaks,
                         crossRefCounts = crossRefCounts,
@@ -146,7 +153,7 @@ class ReaderViewModel @JvmOverloads constructor(
                     originalWordsList = emptyList()
                 )
             }
-            val verses = repository.getVerses(book.id, chapter)
+            val verses = repository.getChapterVerses(book.id, chapter, _uiState.value.activeVersion)
             val breaks = repository.getParagraphBreaks(book.id, chapter)
             val crossRefCounts = repository.getCrossReferenceCountsForChapter(book.id, chapter)
             val otQuotes = repository.getOtQuotesForChapter(book.id, chapter)
@@ -187,6 +194,20 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun dismissChapterRecall() {
         _uiState.update { it.copy(isAnchorDismissed = true) }
+    }
+
+    fun setBibleVersion(version: String) {
+        val v = version.uppercase()
+        val lang = if (v == "TELIRV") BibleLanguage.TELUGU else BibleLanguage.ENGLISH
+        _uiState.update { it.copy(activeVersion = v, language = lang, isLoading = true) }
+        viewModelScope.launch {
+            val currentSettings = repository.getAppSettings()
+            repository.saveAppSettings(currentSettings.copy(bibleVersion = v))
+            val book = _uiState.value.currentBook ?: return@launch
+            val ch = _uiState.value.currentChapter
+            val verses = repository.getChapterVerses(book.id, ch, v)
+            _uiState.update { it.copy(verses = verses, isLoading = false) }
+        }
     }
 
     fun nextChapter() {

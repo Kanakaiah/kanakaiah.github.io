@@ -521,5 +521,48 @@ class UserDatabaseHelperTest {
         assertEquals(5, block?.lastScore)
         assertEquals(1.0, block?.lastAccuracy ?: 0.0, 0.001)
     }
+
+    @Test
+    fun testRemoteVerseCache() {
+        val version = "LSB"
+        val bookId = 1
+        val chapter = 1
+        val verses = listOf(
+            com.example.telugubible.data.model.Verse(
+                id = 1001001L,
+                bookId = 1,
+                chapter = 1,
+                verse = 1,
+                textTe = null,
+                textEn = "In the beginning God created the heavens and the earth.",
+                textTa = null
+            ),
+            com.example.telugubible.data.model.Verse(
+                id = 1001002L,
+                bookId = 1,
+                chapter = 1,
+                verse = 2,
+                textTe = null,
+                textEn = "The earth was formless and void...",
+                textTa = null
+            )
+        )
+
+        // Initially cache should be empty
+        assertTrue(userDbHelper.getCachedVerses(version, bookId, chapter).isEmpty())
+
+        // Save into cache
+        userDbHelper.saveCachedVerses(version, bookId, chapter, verses)
+
+        // Retrieve from cache
+        val cached = userDbHelper.getCachedVerses(version, bookId, chapter)
+        assertEquals(2, cached.size)
+        assertEquals(1, cached[0].verse)
+        assertEquals("In the beginning God created the heavens and the earth.", cached[0].textEn)
+
+        // Clear all user data clears cache
+        userDbHelper.clearAllUserData()
+        assertTrue(userDbHelper.getCachedVerses(version, bookId, chapter).isEmpty())
+    }
 }
 
