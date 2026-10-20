@@ -587,6 +587,12 @@ fun ChapterReaderScreen(
                 onSelectStrongs = { entry ->
                     viewModel.lookupStrongs(entry.id)
                 },
+                onViewOccurrences = { strongsId ->
+                    viewModel.openOccurrences(strongsId)
+                },
+                onRefClick = { refId ->
+                    viewModel.lookupStrongs(refId)
+                },
                 onDismiss = { viewModel.dismissOriginalWords() }
             )
         }
@@ -612,7 +618,36 @@ fun ChapterReaderScreen(
         state.selectedStrongs?.let { entry ->
             StrongsDialog(
                 entry = entry,
+                onViewOccurrences = { strongsId ->
+                    viewModel.openOccurrences(strongsId)
+                },
+                onRefClick = { refId ->
+                    viewModel.lookupStrongs(refId)
+                },
                 onDismiss = { viewModel.dismissStrongs() }
+            )
+        }
+
+        // Strong's Occurrences Sheet
+        state.occurrencesStrongs?.let { entry ->
+            StrongsOccurrencesSheet(
+                strongsEntry = entry,
+                occurrences = state.occurrencesList,
+                isLoading = state.isOccurrencesLoading,
+                errorMessage = state.occurrencesError,
+                onNavigateToVerse = { bookId, chapter, verse ->
+                    viewModel.dismissOccurrences()
+                    viewModel.dismissOriginalWords()
+                    viewModel.dismissStrongs()
+                    viewModel.selectBookAndChapterById(bookId, chapter)
+                    scope.launch {
+                        listState.animateScrollToItem((verse - 1).coerceAtLeast(0))
+                    }
+                },
+                onLookupOfflineVerse = { bookId, chapter, verse ->
+                    viewModel.getOfflineVerse(bookId, chapter, verse)
+                },
+                onDismiss = { viewModel.dismissOccurrences() }
             )
         }
 

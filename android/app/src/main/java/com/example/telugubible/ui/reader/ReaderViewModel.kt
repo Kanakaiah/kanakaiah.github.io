@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.OriginalWord
+import com.example.telugubible.data.model.StrongsOccurrence
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.repository.BibleRepository
@@ -56,6 +57,10 @@ data class ReaderUiState(
     val originalWordsVerse: Int? = null,
     val originalWordsList: List<OriginalWord> = emptyList(),
     val isOriginalWordsLoading: Boolean = false,
+    val occurrencesStrongs: StrongsEntry? = null,
+    val occurrencesList: List<StrongsOccurrence> = emptyList(),
+    val isOccurrencesLoading: Boolean = false,
+    val occurrencesError: String? = null,
     val kjvChapterVerses: Map<Int, String> = emptyMap(),
     val readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
     val readerFontFamily: ReaderFontFamily = ReaderFontFamily.SERIF
@@ -441,6 +446,69 @@ class ReaderViewModel @JvmOverloads constructor(
                 isOriginalWordsLoading = false
             )
         }
+    }
+
+    // Strong's Occurrences Sheet
+    fun openOccurrences(strongsId: String) {
+        viewModelScope.launch {
+            val normalized = StrongsParser.normalizeStrongsRef(strongsId)
+            val entry = repository.getStrongs(normalized) ?: StrongsEntry(
+                id = normalized,
+                lang = if (StrongsParser.isHebrewStrongs(normalized)) "H" else "G",
+                lemma = null,
+                xlit = null,
+                pron = null,
+                derivation = null,
+                strongsDef = null,
+                kjvDef = null,
+                pos = null
+            )
+            openOccurrencesForEntry(entry)
+        }
+    }
+
+    fun openOccurrencesForEntry(entry: StrongsEntry) {
+        _uiState.update {
+            it.copy(
+                occurrencesStrongs = entry,
+                isOccurrencesLoading = true,
+                occurrencesError = null,
+                occurrencesList = emptyList()
+            )
+        }
+        viewModelScope.launch {
+            try {
+                val list = repository.getStrongsOccurrences(entry.id)
+                _uiState.update {
+                    it.copy(
+                        occurrencesList = list,
+                        isOccurrencesLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        isOccurrencesLoading = false,
+                        occurrencesError = e.message ?: "Failed to search occurrences"
+                    )
+                }
+            }
+        }
+    }
+
+    fun dismissOccurrences() {
+        _uiState.update {
+            it.copy(
+                occurrencesStrongs = null,
+                occurrencesList = emptyList(),
+                isOccurrencesLoading = false,
+                occurrencesError = null
+            )
+        }
+    }
+
+    suspend fun getOfflineVerse(bookId: Int, chapter: Int, verse: Int): Verse? {
+        return repository.getVerse(bookId, chapter, verse)
     }
 
     override fun onCleared() {

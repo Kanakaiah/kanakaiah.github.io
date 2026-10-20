@@ -15,6 +15,8 @@ import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.ReviewLogEntry
 import com.example.telugubible.data.model.StrongsEntry
+import com.example.telugubible.data.model.StrongsOccurrence
+import com.example.telugubible.data.service.KjvService
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
@@ -28,7 +30,8 @@ import kotlinx.coroutines.withContext
 class BibleRepository(
     private val bibleDbHelper: BibleDatabaseHelper,
     private val userDbHelper: UserDatabaseHelper,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val kjvService: KjvService = KjvService(ioDispatcher)
 ) {
 
     constructor(context: Context) : this(
@@ -53,6 +56,15 @@ class BibleRepository(
 
     suspend fun getVerses(bookId: Int, chapter: Int): List<Verse> = withContext(ioDispatcher) {
         bibleDbHelper.getVerses(bookId, chapter)
+    }
+
+    suspend fun getVerse(bookId: Int, chapter: Int, verse: Int): Verse? = withContext(ioDispatcher) {
+        bibleDbHelper.getVerse(bookId, chapter, verse)
+    }
+
+    suspend fun getStrongsOccurrences(strongsId: String): List<StrongsOccurrence> {
+        val booksMap = bibleDbHelper.getBooksMap()
+        return kjvService.searchOccurrences(strongsId, booksMap)
     }
 
     suspend fun getParagraphBreaks(bookId: Int, chapter: Int): Set<Int> = withContext(ioDispatcher) {

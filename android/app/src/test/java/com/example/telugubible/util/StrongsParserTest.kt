@@ -1,6 +1,7 @@
 package com.example.telugubible.util
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -51,5 +52,52 @@ class StrongsParserTest {
         assertEquals("G1", StrongsParser.normalizeStrongsRef("G0001"))
         assertEquals("H7225", StrongsParser.normalizeStrongsRef("H7225"))
         assertEquals("G2424", StrongsParser.normalizeStrongsRef("g2424"))
+    }
+
+    @Test
+    fun testStrongsNumberPartAndIsHebrew() {
+        assertEquals("7225", StrongsParser.strongsNumberPart("H7225"))
+        assertEquals("2584", StrongsParser.strongsNumberPart("h02584"))
+        assertEquals("1", StrongsParser.strongsNumberPart("G0001"))
+        assertEquals("3056", StrongsParser.strongsNumberPart("g3056"))
+
+        assertTrue(StrongsParser.isHebrewStrongs("H7225"))
+        assertTrue(StrongsParser.isHebrewStrongs("h02584"))
+        assertFalse(StrongsParser.isHebrewStrongs("G3056"))
+        assertFalse(StrongsParser.isHebrewStrongs("g1"))
+    }
+
+    @Test
+    fun testCleanOccurrenceHtmlWithMarkTags() {
+        val raw = "In the beginning<S><mark>746</mark></S> was<S>2258</S> the Word<S>3056</S>"
+        val processed = StrongsParser.cleanOccurrenceHtml(raw, "746")
+
+        assertEquals("In the beginning was the Word", processed.cleanText)
+        assertEquals(listOf("beginning"), processed.highlightedWords)
+        assertEquals(1, processed.highlightRanges.size)
+        val range = processed.highlightRanges[0]
+        assertEquals("beginning", processed.cleanText.substring(range.first, range.last + 1))
+    }
+
+    @Test
+    fun testCleanOccurrenceHtmlWithoutMarkTagsFallback() {
+        val raw = "In the beginning<S>7225</S> God<S>430</S> created<S>1254</S>"
+        val processed = StrongsParser.cleanOccurrenceHtml(raw, "7225")
+
+        assertEquals("In the beginning God created", processed.cleanText)
+        assertEquals(listOf("beginning"), processed.highlightedWords)
+        val range = processed.highlightRanges[0]
+        assertEquals("beginning", processed.cleanText.substring(range.first, range.last + 1))
+    }
+
+    @Test
+    fun testCleanOccurrenceHtmlWithPunctuationAndSuperScript() {
+        val raw = "In the beginning,<sup>[a]</sup><S><mark>746</mark></S> was the Word"
+        val processed = StrongsParser.cleanOccurrenceHtml(raw, "746")
+
+        assertEquals("In the beginning, was the Word", processed.cleanText)
+        assertEquals(listOf("beginning"), processed.highlightedWords)
+        val range = processed.highlightRanges[0]
+        assertEquals("beginning", processed.cleanText.substring(range.first, range.last + 1))
     }
 }

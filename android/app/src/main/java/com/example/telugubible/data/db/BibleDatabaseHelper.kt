@@ -177,6 +177,28 @@ class BibleDatabaseHelper(val context: Context) :
         return list
     }
 
+    fun getVerse(bookId: Int, chapter: Int, verse: Int): Verse? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT id, book_id, chapter, verse, text_te, text_en, text_ta FROM verses WHERE book_id = ? AND chapter = ? AND verse = ?",
+            arrayOf(bookId.toString(), chapter.toString(), verse.toString())
+        )
+        cursor.use {
+            if (it.moveToNext()) {
+                return Verse(
+                    id = it.getLong(0),
+                    bookId = it.getInt(1),
+                    chapter = it.getInt(2),
+                    verse = it.getInt(3),
+                    textTe = if (it.isNull(4)) null else it.getString(4),
+                    textEn = if (it.isNull(5)) null else it.getString(5),
+                    textTa = if (it.isNull(6)) null else it.getString(6)
+                )
+            }
+        }
+        return null
+    }
+
     fun getVerseTexts(keys: List<Triple<Int, Int, Int>>): Map<Triple<Int, Int, Int>, Pair<String?, String?>> {
         if (keys.isEmpty()) return emptyMap()
         val result = mutableMapOf<Triple<Int, Int, Int>, Pair<String?, String?>>()

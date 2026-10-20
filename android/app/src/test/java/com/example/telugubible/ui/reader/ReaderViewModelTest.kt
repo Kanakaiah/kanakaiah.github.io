@@ -49,8 +49,8 @@ class ReaderViewModelTest {
 
         bibleDbHelper = BibleDatabaseHelper(application)
         userDbHelper = UserDatabaseHelper(application)
-        repository = BibleRepository(bibleDbHelper, userDbHelper, testDispatcher)
         kjvService = com.example.telugubible.data.service.KjvService(testDispatcher)
+        repository = BibleRepository(bibleDbHelper, userDbHelper, testDispatcher, kjvService)
         viewModel = ReaderViewModel(application, repository, kjvService)
     }
 
@@ -220,5 +220,51 @@ class ReaderViewModelTest {
         assertTrue(viewModel.uiState.value.alphaMode)
         viewModel.toggleAlphaMode()
         assertFalse(viewModel.uiState.value.alphaMode)
+    }
+
+    @Test
+    fun testOccurrencesLookupAndOfflineVerse() = runTest {
+        advanceUntilIdle()
+
+        // Seed KjvService occurrences
+        val occurrences = listOf(
+            com.example.telugubible.data.model.StrongsOccurrence(
+                bookId = 1,
+                bookName = "Genesis",
+                chapter = 1,
+                verse = 1,
+                rawText = "In the beginning<S><mark>7225</mark></S> God created",
+                cleanText = "In the beginning God created",
+                highlightedWords = listOf("beginning"),
+                highlightRanges = listOf(7..15)
+            )
+        )
+        kjvService.seedOccurrencesCache("H7225", occurrences)
+
+        // Open occurrences for H7225
+        viewModel.openOccurrences("H7225")
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.isOccurrencesLoading)
+        assertNotNull(state.occurrencesStrongs)
+        assertEquals("H7225", state.occurrencesStrongs?.id)
+        assertEquals(1, state.occurrencesList.size)
+        assertEquals("Genesis", state.occurrencesList[0].bookName)
+        assertEquals("beginning", state.occurrencesList[0].highlightedWords[0])
+
+        // Verify offline verse retrieval
+        val verse = viewModel.getOfflineVerse(1, 1, 1)
+        assertNotNull(verse)
+        assertEquals(1, verse?.bookId)
+        assertEquals(1, verse?.chapter)
+        assertEquals(1, verse?.verse)
+        assertNotNull(verse?.textTe)
+        assertNotNull(verse?.textEn)
+
+        // Dismiss occurrences
+        viewModel.dismissOccurrences()
+        assertNull(viewModel.uiState.value.occurrencesStrongs)
+        assertTrue(viewModel.uiState.value.occurrencesList.isEmpty())
     }
 }
