@@ -54,7 +54,8 @@ data class TodayUiState(
     val bionicReading: Boolean = false,
     val recallMasking: Boolean = false,
     val fontSizeMultiplier: Float = 1.0f,
-    val activeVersion: String = "LSB"
+    val activeVersion: String = "LSB",
+    val isTtsSpeaking: Boolean = false
 )
 
 class TodayViewModel @JvmOverloads constructor(
@@ -62,6 +63,7 @@ class TodayViewModel @JvmOverloads constructor(
     private val repository: BibleRepository = BibleRepository(application)
 ) : AndroidViewModel(application) {
 
+    private val ttsManager = com.example.telugubible.util.TtsManager(application)
     private val _uiState = MutableStateFlow(TodayUiState())
     val uiState: StateFlow<TodayUiState> = _uiState.asStateFlow()
 
@@ -343,6 +345,31 @@ class TodayViewModel @JvmOverloads constructor(
             val results = repository.searchVerses(query, limit = 25)
             _uiState.update { it.copy(searchResults = results, isSearchingInDialog = false) }
         }
+    }
+
+    fun toggleTts(verse: UserMemoryVerse?) {
+        if (_uiState.value.isTtsSpeaking) {
+            ttsManager.stop()
+            _uiState.update { it.copy(isTtsSpeaking = false) }
+        } else if (verse != null) {
+            val isEn = _uiState.value.displayLanguage == DisplayLanguage.ENGLISH
+            val text = (if (isEn) verse.textEn else verse.textTe)
+                ?: (if (isEn) verse.textTe else verse.textEn) ?: ""
+            ttsManager.speak(text, langCode = if (isEn) "en" else "te", onDone = {
+                _uiState.update { it.copy(isTtsSpeaking = false) }
+            })
+            _uiState.update { it.copy(isTtsSpeaking = true) }
+        }
+    }
+
+    fun stopTts() {
+        ttsManager.stop()
+        _uiState.update { it.copy(isTtsSpeaking = false) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ttsManager.shutdown()
     }
 
     fun dismissMessage() {

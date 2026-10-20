@@ -1,5 +1,6 @@
 package com.example.telugubible.ui.bible
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,6 +12,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -19,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,176 +40,256 @@ fun BibleBrowserScreen(
     val state by viewModel.uiState.collectAsState()
     var showCommentarySheet by remember { mutableStateOf(false) }
     var showPreachersSheet by remember { mutableStateOf(false) }
+    var showIndexModal by remember { mutableStateOf(false) }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(RemoraBackground)
-            .padding(horizontal = 16.dp)
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(12.dp))
 
-        // Search Bar
-        OutlinedTextField(
-            value = state.searchQuery,
-            onValueChange = { viewModel.setSearchQuery(it) },
-            placeholder = { Text("Search books, themes, keywords...", color = RemoraTextMuted, fontSize = 14.sp) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = RemoraTextMuted) },
-            trailingIcon = {
-                if (state.searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { viewModel.setSearchQuery("") }) {
-                        Icon(Icons.Default.Close, contentDescription = "Clear", tint = RemoraTextMuted)
+            // Search Bar
+            OutlinedTextField(
+                value = state.searchQuery,
+                onValueChange = { viewModel.setSearchQuery(it) },
+                placeholder = { Text("Search books, themes, keywords...", color = RemoraTextMuted, fontSize = 14.sp) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = RemoraTextMuted) },
+                trailingIcon = {
+                    if (state.searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { viewModel.setSearchQuery("") }) {
+                            Icon(Icons.Default.Close, contentDescription = "Clear", tint = RemoraTextMuted)
+                        }
                     }
-                }
-            },
-            singleLine = true,
-            shape = RoundedCornerShape(10.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = RemoraCardBg,
-                unfocusedContainerColor = RemoraCardBg,
-                focusedTextColor = RemoraTextPrimary,
-                unfocusedTextColor = RemoraTextPrimary,
-                focusedBorderColor = RemoraAccent,
-                unfocusedBorderColor = RemoraCardBorder
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Quick Study & Testament Switcher - only shown when not actively searching
-        if (state.searchQuery.isBlank()) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Surface(
-                    onClick = { showCommentarySheet = true },
-                    shape = RoundedCornerShape(10.dp),
-                    color = RemoraCardBg,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text("📜", fontSize = 13.sp)
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Commentaries",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = RemoraTextPrimary
-                        )
-                    }
-                }
-
-                Surface(
-                    onClick = { showPreachersSheet = true },
-                    shape = RoundedCornerShape(10.dp),
-                    color = RemoraCardBg,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text("⛪", fontSize = 13.sp)
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Theologians",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = RemoraTextPrimary
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(RemoraCardBg, shape = RoundedCornerShape(10.dp))
-                    .border(1.dp, RemoraCardBorder, shape = RoundedCornerShape(10.dp))
-                    .padding(4.dp)
-            ) {
-                TestamentTabButton(
-                    label = "Old Testament (39)",
-                    isSelected = state.currentTestament == "OT",
-                    onClick = { viewModel.setTestament("OT") },
-                    modifier = Modifier.weight(1f)
-                )
-                TestamentTabButton(
-                    label = "New Testament (27)",
-                    isSelected = state.currentTestament == "NT",
-                    onClick = { viewModel.setTestament("NT") },
-                    modifier = Modifier.weight(1f)
-                )
-            }
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = RemoraCardBg,
+                    unfocusedContainerColor = RemoraCardBg,
+                    focusedTextColor = RemoraTextPrimary,
+                    unfocusedTextColor = RemoraTextPrimary,
+                    focusedBorderColor = RemoraAccent,
+                    unfocusedBorderColor = RemoraCardBorder
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Section Filter Chips
-            val sections = if (state.currentTestament == "OT") {
-                listOf("All", "Pentateuch", "Historical", "Poetry", "Major Prophets", "Minor Prophets")
-            } else {
-                listOf("All", "Gospels", "History", "Pauline Epistles", "General Epistles", "Apocalyptic")
+            // Quick Study & Testament Switcher - only shown when not actively searching
+            if (state.searchQuery.isBlank()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Surface(
+                        onClick = { showCommentarySheet = true },
+                        shape = RoundedCornerShape(10.dp),
+                        color = RemoraCardBg,
+                        border = BorderStroke(1.dp, RemoraCardBorder),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text("📜", fontSize = 13.sp)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "Commentaries",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = RemoraTextPrimary
+                            )
+                        }
+                    }
+
+                    Surface(
+                        onClick = { showPreachersSheet = true },
+                        shape = RoundedCornerShape(10.dp),
+                        color = RemoraCardBg,
+                        border = BorderStroke(1.dp, RemoraCardBorder),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text("⛪", fontSize = 13.sp)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "Theologians",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = RemoraTextPrimary
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(RemoraCardBg, shape = RoundedCornerShape(10.dp))
+                        .border(1.dp, RemoraCardBorder, shape = RoundedCornerShape(10.dp))
+                        .padding(4.dp)
+                ) {
+                    TestamentTabButton(
+                        label = "Old Testament (39)",
+                        isSelected = state.currentTestament == "OT",
+                        onClick = { viewModel.setTestament("OT") },
+                        modifier = Modifier.weight(1f)
+                    )
+                    TestamentTabButton(
+                        label = "New Testament (27)",
+                        isSelected = state.currentTestament == "NT",
+                        onClick = { viewModel.setTestament("NT") },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Section Filter Chips
+                val sections = if (state.currentTestament == "OT") {
+                    listOf("All", "Pentateuch", "Historical", "Poetry", "Major Prophets", "Minor Prophets")
+                } else {
+                    listOf("All", "Gospels", "History", "Pauline Epistles", "General Epistles", "Apocalyptic")
+                }
+
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(sections) { sec ->
+                        val isSelected = state.currentSection == sec
+                        Surface(
+                            onClick = { viewModel.setSection(sec) },
+                            shape = RoundedCornerShape(18.dp),
+                            color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
+                            border = BorderStroke(
+                                1.dp,
+                                if (isSelected) RemoraAccent else RemoraCardBorder
+                            )
+                        ) {
+                            Text(
+                                text = sec,
+                                fontSize = 12.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
             }
 
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(sections) { sec ->
-                    val isSelected = state.currentSection == sec
-                    Surface(
-                        onClick = { viewModel.setSection(sec) },
-                        shape = RoundedCornerShape(18.dp),
-                        color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            if (isSelected) RemoraAccent else RemoraCardBorder
-                        )
-                    ) {
-                        Text(
-                            text = sec,
-                            fontSize = 12.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+            // Books Grid
+            if (state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = RemoraAccent)
+                }
+            } else if (state.filteredBooks.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No books found matching \"${state.searchQuery}\"", color = RemoraTextSecondary)
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(bottom = 80.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(state.filteredBooks, key = { it.id }) { book ->
+                        RemoraBookCard(
+                            book = book,
+                            activeVersion = state.activeVersion,
+                            onClick = { onOpenBook(book.id) }
                         )
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(14.dp))
         }
 
-        // Books Grid
-        if (state.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = RemoraAccent)
-            }
-        } else if (state.filteredBooks.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No books found matching \"${state.searchQuery}\"", color = RemoraTextSecondary)
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(bottom = 96.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
+        // Bottom Navigation Bar matching Remora PWA Guides.tsx lines 1004-1052
+        Surface(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
+            color = RemoraCardBg,
+            border = BorderStroke(1.dp, RemoraCardBorder)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items(state.filteredBooks, key = { it.id }) { book ->
-                    RemoraBookCard(
-                        book = book,
-                        activeVersion = state.activeVersion,
-                        onClick = { onOpenBook(book.id) }
+                // OT Button
+                TextButton(
+                    onClick = { viewModel.setTestament("OT") },
+                    enabled = state.currentTestament != "OT"
+                ) {
+                    Icon(
+                        Icons.Default.ChevronLeft,
+                        contentDescription = "Old Testament",
+                        tint = if (state.currentTestament != "OT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f),
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Old Testament",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = if (state.currentTestament != "OT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f)
+                    )
+                }
+
+                // INDEX Button
+                OutlinedButton(
+                    onClick = { showIndexModal = true },
+                    shape = RoundedCornerShape(6.dp),
+                    border = BorderStroke(1.dp, RemoraCardBorder),
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 4.dp),
+                    modifier = Modifier.height(30.dp)
+                ) {
+                    Text(
+                        text = "INDEX",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp,
+                        color = RemoraTextMuted
+                    )
+                }
+
+                // NT Button
+                TextButton(
+                    onClick = { viewModel.setTestament("NT") },
+                    enabled = state.currentTestament != "NT"
+                ) {
+                    Text(
+                        text = "New Testament",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = if (state.currentTestament != "NT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        Icons.Default.ChevronRight,
+                        contentDescription = "New Testament",
+                        tint = if (state.currentTestament != "NT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f),
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }
@@ -223,6 +305,20 @@ fun BibleBrowserScreen(
     if (showPreachersSheet) {
         PreachersSheet(
             onDismiss = { showPreachersSheet = false }
+        )
+    }
+
+    if (showIndexModal) {
+        BibleIndexModal(
+            isOpen = showIndexModal,
+            selectedBookId = null,
+            books = state.allBooks,
+            activeVersion = state.activeVersion,
+            onSelectBook = { bookId ->
+                showIndexModal = false
+                onOpenBook(bookId)
+            },
+            onDismiss = { showIndexModal = false }
         )
     }
 }
@@ -264,7 +360,7 @@ private fun RemoraBookCard(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         color = RemoraCardBg,
-        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+        border = BorderStroke(1.dp, RemoraCardBorder),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {

@@ -89,6 +89,7 @@ fun BookGuideScreen(
     val coroutineScope = rememberCoroutineScope()
     var showCommentarySheet by remember { mutableStateOf(false) }
     var showPreachersSheet by remember { mutableStateOf(false) }
+    var showIndexModal by remember { mutableStateOf(false) }
     var drillBlock by remember { mutableStateOf<Triple<String, List<ChapterAnchor>, Int>?>(null) }
 
     LaunchedEffect(bookId) {
@@ -200,7 +201,7 @@ fun BookGuideScreen(
 
                         // INDEX button
                         OutlinedButton(
-                            onClick = onBack,
+                            onClick = { showIndexModal = true },
                             shape = RoundedCornerShape(6.dp),
                             border = BorderStroke(1.dp, RemoraCardBorder),
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
@@ -625,6 +626,20 @@ fun BookGuideScreen(
     if (showPreachersSheet) {
         PreachersSheet(
             onDismiss = { showPreachersSheet = false }
+        )
+    }
+
+    if (showIndexModal) {
+        BibleIndexModal(
+            isOpen = showIndexModal,
+            selectedBookId = state.book?.id ?: bookId,
+            books = state.books,
+            activeVersion = state.activeVersion,
+            onSelectBook = { newBookId ->
+                showIndexModal = false
+                onSelectBook(newBookId)
+            },
+            onDismiss = { showIndexModal = false }
         )
     }
 

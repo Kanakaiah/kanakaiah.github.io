@@ -34,7 +34,8 @@ data class DailySessionUiState(
     val verseCommitted: String? = null,
     val hintRevealedRatio: Float? = null,
     val eraserHiddenRatio: Float? = null,
-    val scrambleAccuracy: Float? = null
+    val scrambleAccuracy: Float? = null,
+    val isTtsSpeaking: Boolean = false
 ) {
     val currentItem: SessionItem?
         get() = plan?.items?.getOrNull(currentIndex)
@@ -88,6 +89,7 @@ class DailySessionViewModel @JvmOverloads constructor(
         const val KEY_DAILY_SESSION_STARTED = "daily_session_started_at"
     }
 
+    private val ttsManager = com.example.telugubible.util.TtsManager(application)
     private val _uiState = MutableStateFlow(DailySessionUiState())
     val uiState: StateFlow<DailySessionUiState> = _uiState.asStateFlow()
 
@@ -353,6 +355,63 @@ class DailySessionViewModel @JvmOverloads constructor(
 
     fun keepGoing() {
         loadSession(forceNew = true)
+    }
+
+    fun nextStep() {
+        val state = _uiState.value
+        val itemsCount = state.plan?.items?.size ?: 0
+        if (state.currentIndex + 1 < itemsCount) {
+            _uiState.update {
+                it.copy(
+                    currentIndex = it.currentIndex + 1,
+                    isRevealed = false,
+                    anchorInput = "",
+                    anchorJudgement = null
+                )
+            }
+        }
+    }
+
+    fun prevStep() {
+        val state = _uiState.value
+        if (state.currentIndex > 0) {
+            _uiState.update {
+                it.copy(
+                    currentIndex = it.currentIndex - 1,
+                    isRevealed = false,
+                    anchorInput = "",
+                    anchorJudgement = null
+                )
+            }
+        }
+    }
+
+    fun toggleTts() {
+        val isSpeaking = _uiState.value.isTtsSpeaking
+        if (isSpeaking) {
+            ttsManager.stop()
+            _uiState.update { it.copy(isTtsSpeaking = false) }
+        } else {
+            val item = _uiState.value.currentItem as? SessionItem.Verse
+            if (item != null) {
+                val text = item.textEn.ifBlank { item.textTe }
+                val isEn = item.textEn.isNotBlank()
+                ttsManager.speak(text, langCode = if (isEn) "en" else "te", onDone = {
+                    _uiState.update { it.copy(isTtsSpeaking = false) }
+                })
+                _uiState.update { it.copy(isTtsSpeaking = true) }
+            }
+        }
+    }
+
+    fun stopTts() {
+        ttsManager.stop()
+        _uiState.update { it.copy(isTtsSpeaking = false) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ttsManager.shutdown()
     }
 
     fun abandonSession() {

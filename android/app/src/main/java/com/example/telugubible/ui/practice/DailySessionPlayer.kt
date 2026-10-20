@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -164,6 +165,32 @@ fun DailySessionPlayer(
                 val plan = state.plan!!
                 val item = state.currentItem
                 if (item != null) {
+                    if (state.activeVerseMode == PracticeMode.IMMERSED && item is SessionItem.Verse) {
+                        val userVerse = com.example.telugubible.data.model.UserMemoryVerse(
+                            id = item.verseId,
+                            bookId = item.bookId,
+                            chapter = item.chapter,
+                            verse = item.verse,
+                            textEn = item.textEn,
+                            textTe = item.textTe,
+                            bookNameEn = item.bookName,
+                            bookNameTe = item.bookName,
+                            repetition = item.repetition
+                        )
+                        ImmersedReader(
+                            verse = userVerse,
+                            index = state.currentIndex,
+                            total = plan.items.size,
+                            onPrev = { viewModel.prevStep() },
+                            onNext = { viewModel.nextStep() },
+                            onExit = { viewModel.setVerseMode(PracticeMode.FLASHCARD) },
+                            isAutoPlaying = state.isTtsSpeaking,
+                            onToggleAutoPlay = { viewModel.toggleTts() },
+                            isEnglish = item.textEn.isNotBlank()
+                        )
+                        return@Box
+                    }
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -848,19 +875,36 @@ private fun VerseCard(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Box(modifier = Modifier.padding(18.dp)) {
+                            // Maximize to Immerse button
+                            IconButton(
+                                onClick = { viewModel.setVerseMode(PracticeMode.IMMERSED) },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(32.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Fullscreen,
+                                    contentDescription = "Immerse Reading",
+                                    tint = RemoraAccent,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+
                             if (state.isRevealed) {
                                 Text(
                                     text = activeText,
                                     fontSize = 16.sp,
                                     lineHeight = 24.sp,
-                                    color = RemoraTextPrimary
+                                    color = RemoraTextPrimary,
+                                    modifier = Modifier.padding(end = 36.dp)
                                 )
                             } else {
                                 Text(
                                     text = cuedText,
                                     fontSize = 16.sp,
                                     lineHeight = 24.sp,
-                                    color = RemoraTextMuted
+                                    color = RemoraTextMuted,
+                                    modifier = Modifier.padding(end = 36.dp)
                                 )
                             }
                         }

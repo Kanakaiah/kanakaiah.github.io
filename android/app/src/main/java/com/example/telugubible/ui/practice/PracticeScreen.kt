@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.*
@@ -314,12 +315,28 @@ fun PracticeScreen(
                                         )
                                     }
 
-                                    Surface(
-                                        onClick = { viewModel.toggleDisplayLanguage() },
-                                        shape = RoundedCornerShape(6.dp),
-                                        color = RemoraCardBgElevated,
-                                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                                     ) {
+                                        IconButton(
+                                            onClick = { viewModel.setPracticeMode(PracticeMode.IMMERSED) },
+                                            modifier = Modifier.size(32.dp)
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Fullscreen,
+                                                contentDescription = "Immerse Reading",
+                                                tint = RemoraAccent,
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                        }
+
+                                        Surface(
+                                            onClick = { viewModel.toggleDisplayLanguage() },
+                                            shape = RoundedCornerShape(6.dp),
+                                            color = RemoraCardBgElevated,
+                                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                                        ) {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
                                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -339,8 +356,9 @@ fun PracticeScreen(
                                         }
                                     }
                                 }
+                            }
 
-                                // Card Center: Active Drill Mode
+                            // Card Center: Active Drill Mode
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()

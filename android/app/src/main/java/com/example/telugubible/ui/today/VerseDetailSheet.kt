@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Button
@@ -85,6 +86,7 @@ fun VerseDetailSheet(
     onToggleLanguage: () -> Unit,
     onDismiss: () -> Unit,
     onPractice: () -> Unit,
+    onImmerse: () -> Unit = {},
     onReadInChapter: () -> Unit,
     onDelete: () -> Unit,
     topics: List<Topic> = emptyList(),
@@ -561,6 +563,26 @@ fun VerseDetailSheet(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text("Context", color = RemoraTextPrimary, fontSize = 13.sp)
+                    }
+
+                    // Immerse button
+                    OutlinedButton(
+                        onClick = {
+                            onDismiss()
+                            onImmerse()
+                        },
+                        modifier = Modifier.weight(1.1f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, RemoraCardBorder)
+                    ) {
+                        Icon(
+                            Icons.Default.Fullscreen,
+                            contentDescription = null,
+                            tint = RemoraAccent,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Immerse", color = RemoraTextPrimary, fontSize = 13.sp)
                     }
 
                     // Practice button

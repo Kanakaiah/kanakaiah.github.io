@@ -25,11 +25,13 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import com.example.telugubible.ui.practice.ImmersedReader
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -187,6 +189,45 @@ fun ChapterReaderScreen(
             "${BookNameUtils.getBookShortName(nextBook, state.activeVersion)} 1"
         }
         else -> null
+    }
+
+    var immersedVerseIndex by remember { mutableStateOf<Int?>(null) }
+
+    if (immersedVerseIndex != null && state.verses.isNotEmpty()) {
+        val safeIndex = (immersedVerseIndex ?: 0).coerceIn(0, state.verses.size - 1)
+        val v = state.verses[safeIndex]
+        val userVerse = com.example.telugubible.data.model.UserMemoryVerse(
+            id = v.id,
+            bookId = v.bookId,
+            chapter = v.chapter,
+            verse = v.verse,
+            textEn = v.textEn,
+            textTe = v.textTe,
+            bookNameEn = currentBook?.nameEn ?: "Book",
+            bookNameTe = currentBook?.nameTe ?: "Book"
+        )
+        ImmersedReader(
+            verse = userVerse,
+            index = safeIndex,
+            total = state.verses.size,
+            onPrev = {
+                if (safeIndex > 0) immersedVerseIndex = safeIndex - 1
+            },
+            onNext = {
+                if (safeIndex < state.verses.size - 1) immersedVerseIndex = safeIndex + 1
+            },
+            onExit = {
+                viewModel.stopTts()
+                immersedVerseIndex = null
+            },
+            isAutoPlaying = state.isTtsSpeaking,
+            onToggleAutoPlay = { viewModel.toggleTts() },
+            isEnglish = state.language == BibleLanguage.ENGLISH,
+            bionicReading = state.bionicReading,
+            recallMasking = false,
+            serifTypography = state.readerFontFamily == ReaderFontFamily.MERRIWEATHER
+        )
+        return
     }
 
     Box(
@@ -402,6 +443,19 @@ fun ChapterReaderScreen(
                                 imageVector = Icons.Default.TextFields,
                                 contentDescription = "Reading Options",
                                 tint = if (state.showReadingOptions) state.readerTheme.accentColor else state.readerTheme.textColor,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+
+                        // Immerse Reader Button
+                        IconButton(
+                            onClick = { immersedVerseIndex = 0 },
+                            modifier = Modifier.size(38.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Fullscreen,
+                                contentDescription = "Immerse Reading",
+                                tint = state.readerTheme.textColor,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -849,6 +903,22 @@ fun ChapterReaderScreen(
                             Icon(Icons.Default.ContentCopy, contentDescription = "Copy", modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
                             Text("Copy", fontSize = 12.sp)
+                        }
+
+                        // Immerse Button
+                        FilledTonalButton(
+                            onClick = {
+                                val firstSelected = state.selectedVerses.minOrNull() ?: 1
+                                val index = state.verses.indexOfFirst { it.verse == firstSelected }.coerceAtLeast(0)
+                                immersedVerseIndex = index
+                                viewModel.clearVerseSelection()
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                        ) {
+                            Icon(Icons.Default.Fullscreen, contentDescription = "Immerse", modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("Immerse", fontSize = 12.sp)
                         }
 
                         // Refs Button
