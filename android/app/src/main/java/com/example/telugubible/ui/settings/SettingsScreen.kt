@@ -5,6 +5,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -77,6 +79,46 @@ fun SettingsScreen(
     var restoreInputText by remember { mutableStateOf("") }
     var showBackupDialog by remember { mutableStateOf(false) }
     var exportedBackupText by remember { mutableStateOf("") }
+
+    val createDocumentLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        if (uri != null) {
+            viewModel.generateBackup { json ->
+                try {
+                    context.contentResolver.openOutputStream(uri)?.use { os ->
+                        os.write(json.toByteArray(Charsets.UTF_8))
+                    }
+                    Toast.makeText(context, "Backup saved to device storage!", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Failed to save backup: " + e.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    val openDocumentLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            try {
+                val jsonString = context.contentResolver.openInputStream(uri)?.use { isStream ->
+                    isStream.bufferedReader().readText()
+                }
+                if (!jsonString.isNullOrBlank()) {
+                    viewModel.restoreBackup(jsonString) { success ->
+                        if (success) {
+                            Toast.makeText(context, "Data restored successfully!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Failed to restore: Invalid backup file format", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error reading backup file: " + e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     LaunchedEffect(state.toastMessage) {
         state.toastMessage?.let { msg ->
@@ -462,74 +504,101 @@ fun SettingsScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                         // Backup
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Backup User Data",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = RemoraTextPrimary
-                                )
-                                Text(
-                                    text = "Export verses, progress, and streaks to JSON",
-                                    fontSize = 12.sp,
-                                    color = RemoraTextSecondary
-                                )
-                            }
-                            Button(
-                                onClick = {
-                                    viewModel.generateBackup { json ->
-                                        exportedBackupText = json
-                                        showBackupDialog = true
-                                    }
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
-                                border = BorderStroke(1.dp, RemoraCardBorder),
-                                shape = RoundedCornerShape(8.dp)
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "Backup User Data",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraTextPrimary
+                            )
+                            Text(
+                                text = "Export memory verses, chapter progress, and streak to JSON",
+                                fontSize = 12.sp,
+                                color = RemoraTextSecondary
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(16.dp), tint = RemoraAccent)
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text("Backup", color = RemoraAccent, fontSize = 12.sp)
+                                Button(
+                                    onClick = {
+                                        val dateStr = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+                                        createDocumentLauncher.launch("remora_backup_$dateStr.json")
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Save File", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
+                                Button(
+                                    onClick = {
+                                        viewModel.generateBackup { json ->
+                                            exportedBackupText = json
+                                            showBackupDialog = true
+                                        }
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
+                                    border = BorderStroke(1.dp, RemoraCardBorder),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(14.dp), tint = RemoraTextSecondary)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Copy / Share", color = RemoraTextSecondary, fontSize = 12.sp)
+                                }
                             }
                         }
 
                         HorizontalDivider(color = RemoraCardBorder)
 
                         // Restore
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Restore User Data",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = RemoraTextPrimary
-                                )
-                                Text(
-                                    text = "Import a JSON backup to restore progress",
-                                    fontSize = 12.sp,
-                                    color = RemoraTextSecondary
-                                )
-                            }
-                            Button(
-                                onClick = {
-                                    restoreInputText = ""
-                                    showRestoreDialog = true
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
-                                border = BorderStroke(1.dp, RemoraCardBorder),
-                                shape = RoundedCornerShape(8.dp)
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "Restore User Data",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraTextPrimary
+                            )
+                            Text(
+                                text = "Load a previously exported JSON backup file",
+                                fontSize = 12.sp,
+                                color = RemoraTextSecondary
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Icon(Icons.Default.Upload, contentDescription = null, modifier = Modifier.size(16.dp), tint = RemoraAccent)
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text("Restore", color = RemoraAccent, fontSize = 12.sp)
+                                Button(
+                                    onClick = {
+                                        openDocumentLauncher.launch(arrayOf("application/json", "text/*", "*/*"))
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Icon(Icons.Default.Upload, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Pick File", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
+                                Button(
+                                    onClick = {
+                                        restoreInputText = ""
+                                        showRestoreDialog = true
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
+                                    border = BorderStroke(1.dp, RemoraCardBorder),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Icon(Icons.Default.ContentCopy, contentDescription = null, modifier = Modifier.size(14.dp), tint = RemoraTextSecondary)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Paste Text", color = RemoraTextSecondary, fontSize = 12.sp)
+                                }
                             }
                         }
 

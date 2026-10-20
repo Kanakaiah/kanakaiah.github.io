@@ -19,6 +19,8 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -93,6 +95,17 @@ fun MainScaffold(
         }
     }
 
+    val settingsState by settingsViewModel.uiState.collectAsState()
+    val currentDensity = LocalDensity.current
+    val customDensity = remember(currentDensity, settingsState.settings.fontSize) {
+        Density(
+            density = currentDensity.density,
+            fontScale = currentDensity.fontScale * settingsState.settings.fontSize
+        )
+    }
+
+    TeluguBibleTheme(themeName = settingsState.settings.theme) {
+        CompositionLocalProvider(LocalDensity provides customDensity) {
     if (isInReaderMode) {
         ChapterReaderScreen(
             viewModel = readerViewModel,
@@ -345,5 +358,7 @@ fun MainScaffold(
                 }
             }
         )
+    }
+        }
     }
 }

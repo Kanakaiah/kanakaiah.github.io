@@ -2,32 +2,69 @@ package com.example.telugubible.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
-private val RemoraColorScheme = darkColorScheme(
-    primary = RemoraAccent,
-    onPrimary = RemoraTextPrimary,
-    primaryContainer = RemoraCardBgElevated,
-    onPrimaryContainer = RemoraTextPrimary,
-    secondary = RemoraGold,
-    onSecondary = RemoraBackground,
-    background = RemoraBackground,
-    onBackground = RemoraTextPrimary,
-    surface = RemoraCardBg,
-    onSurface = RemoraTextPrimary,
-    surfaceVariant = RemoraCardBgElevated,
-    onSurfaceVariant = RemoraTextSecondary,
-    outline = RemoraCardBorder,
-    outlineVariant = RemoraCardBorderHover
-)
+val LocalRemoraColors = staticCompositionLocalOf { RemoraColors.Midnight }
 
 @Composable
 fun TeluguBibleTheme(
+    themeName: String = RemoraThemeState.themeName,
     content: @Composable () -> Unit
 ) {
-    MaterialTheme(
-        colorScheme = RemoraColorScheme,
-        typography = Typography,
-        content = content
-    )
+    SideEffect {
+        if (RemoraThemeState.themeName != themeName) {
+            RemoraThemeState.themeName = themeName
+        }
+    }
+
+    val colors = RemoraColors.forTheme(themeName)
+
+    val colorScheme = if (colors.isDark) {
+        darkColorScheme(
+            primary = colors.accent,
+            onPrimary = colors.textPrimary,
+            primaryContainer = colors.cardBgElevated,
+            onPrimaryContainer = colors.textPrimary,
+            secondary = colors.gold,
+            onSecondary = colors.background,
+            background = colors.background,
+            onBackground = colors.textPrimary,
+            surface = colors.cardBg,
+            onSurface = colors.textPrimary,
+            surfaceVariant = colors.cardBgElevated,
+            onSurfaceVariant = colors.textSecondary,
+            outline = colors.cardBorder,
+            outlineVariant = colors.cardBorderHover
+        )
+    } else {
+        lightColorScheme(
+            primary = colors.accent,
+            onPrimary = Color.White,
+            primaryContainer = colors.cardBgElevated,
+            onPrimaryContainer = colors.textPrimary,
+            secondary = colors.gold,
+            onSecondary = Color.White,
+            background = colors.background,
+            onBackground = colors.textPrimary,
+            surface = colors.cardBg,
+            onSurface = colors.textPrimary,
+            surfaceVariant = colors.cardBgElevated,
+            onSurfaceVariant = colors.textSecondary,
+            outline = colors.cardBorder,
+            outlineVariant = colors.cardBorderHover
+        )
+    }
+
+    CompositionLocalProvider(LocalRemoraColors provides colors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }
