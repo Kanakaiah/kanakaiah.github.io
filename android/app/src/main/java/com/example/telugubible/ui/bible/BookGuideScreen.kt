@@ -981,8 +981,20 @@ private fun KeyVersesSection(
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
+                        val cleanKvText = remember(kv.text) {
+                            kv.text
+                                .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+                                .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+                                .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+                                .replace(Regex("<[^>]+>"), "")
+                                .replace("&nbsp;", " ")
+                                .replace("&amp;", "&")
+                                .replace("&quot;", "\"")
+                                .replace("&#39;", "'")
+                                .trim()
+                        }
                         Text(
-                            text = "\"${kv.text}\"",
+                            text = "\"$cleanKvText\"",
                             fontSize = 14.sp,
                             fontStyle = FontStyle.Italic,
                             fontFamily = FontFamily.Serif,

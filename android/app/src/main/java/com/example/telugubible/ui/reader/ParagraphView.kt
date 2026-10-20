@@ -64,6 +64,7 @@ fun ParagraphView(
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = (baseFontSize.value * 1.15f).sp,
+                    fontFamily = readerFontFamily.fontFamily,
                     letterSpacing = (-0.01).sp
                 ),
                 color = readerTheme.accentColor,
@@ -85,6 +86,7 @@ fun ParagraphView(
                 text = paragraph.psalmTitle,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontStyle = FontStyle.Italic,
+                    fontFamily = readerFontFamily.fontFamily,
                     fontSize = (baseFontSize.value * 0.88f).sp,
                     letterSpacing = 0.4.sp
                 ),
@@ -109,6 +111,7 @@ fun ParagraphView(
             crossRefCounts,
             bionicReading,
             readerTheme,
+            readerFontFamily,
             language
         ) {
             buildAnnotatedString {

@@ -230,11 +230,21 @@ fun VerseDetailSheet(
             Spacer(modifier = Modifier.height(18.dp))
 
             // 3. Scripture Text
-            val displayText = if (displayLanguage == DisplayLanguage.TELUGU) {
+            val rawText = if (displayLanguage == DisplayLanguage.TELUGU) {
                 verse.textTe ?: verse.textEn ?: "వచన పాఠం అందుబాటులో లేదు"
             } else {
                 verse.textEn ?: verse.textTe ?: "Scripture text unavailable"
             }
+            val displayText = rawText
+                .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+                .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+                .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+                .replace(Regex("<[^>]+>"), "")
+                .replace("&nbsp;", " ")
+                .replace("&amp;", "&")
+                .replace("&quot;", "\"")
+                .replace("&#39;", "'")
+                .trim()
 
             Surface(
                 shape = RoundedCornerShape(12.dp),

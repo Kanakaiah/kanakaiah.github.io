@@ -108,28 +108,39 @@ fun SettingsSheet(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                 ) {
-                    FilterChip(
-                        selected = readerFontFamily == ReaderFontFamily.INTER,
-                        onClick = { onFontFamilyChange(ReaderFontFamily.INTER) },
-                        label = { Text("Inter") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    FilterChip(
-                        selected = readerFontFamily == ReaderFontFamily.MERRIWEATHER,
-                        onClick = { onFontFamilyChange(ReaderFontFamily.MERRIWEATHER) },
-                        label = { Text("Merriweather") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    FilterChip(
-                        selected = readerFontFamily == ReaderFontFamily.ATKINSON,
-                        onClick = { onFontFamilyChange(ReaderFontFamily.ATKINSON) },
-                        label = { Text("Atkinson") },
-                        modifier = Modifier.weight(1f)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(3.dp),
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ReaderFontFamily.values().forEach { font ->
+                            val isSelected = readerFontFamily == font
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(if (isSelected) readerTheme.accentColor else Color.Transparent)
+                                    .clickable { onFontFamilyChange(font) }
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = font.label,
+                                    fontSize = 12.sp,
+                                    fontFamily = font.fontFamily,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                    color = if (isSelected) Color.White else readerTheme.secondaryTextColor
+                                )
+                            }
+                        }
+                    }
                 }
             }
 

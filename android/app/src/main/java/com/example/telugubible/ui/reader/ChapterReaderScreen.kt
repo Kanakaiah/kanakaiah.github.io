@@ -498,22 +498,36 @@ fun ChapterReaderScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text("Font", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = state.readerTheme.textColor)
-                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                FilterChip(
-                                    selected = state.readerFontFamily == ReaderFontFamily.INTER,
-                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.INTER) },
-                                    label = { Text("Inter", fontSize = 11.sp) }
-                                )
-                                FilterChip(
-                                    selected = state.readerFontFamily == ReaderFontFamily.MERRIWEATHER,
-                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.MERRIWEATHER) },
-                                    label = { Text("Merriweather", fontSize = 11.sp) }
-                                )
-                                FilterChip(
-                                    selected = state.readerFontFamily == ReaderFontFamily.ATKINSON,
-                                    onClick = { viewModel.setReaderFontFamily(ReaderFontFamily.ATKINSON) },
-                                    label = { Text("Atkinson", fontSize = 11.sp) }
-                                )
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = state.readerTheme.cardColor,
+                                border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.25f))
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(2.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    ReaderFontFamily.values().forEach { font ->
+                                        val isSelected = state.readerFontFamily == font
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(6.dp))
+                                                .background(if (isSelected) state.readerTheme.accentColor else Color.Transparent)
+                                                .clickable { viewModel.setReaderFontFamily(font) }
+                                                .padding(horizontal = 8.dp, vertical = 5.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                text = font.label,
+                                                fontSize = 11.sp,
+                                                fontFamily = font.fontFamily,
+                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                                color = if (isSelected) Color.White else state.readerTheme.secondaryTextColor
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
 

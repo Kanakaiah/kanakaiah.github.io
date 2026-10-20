@@ -253,8 +253,20 @@ private fun VerseResultCard(
             }
 
             if (!result.textEn.isNullOrBlank()) {
+                val cleanLookupText = remember(result.textEn) {
+                    result.textEn
+                        .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+                        .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+                        .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+                        .replace(Regex("<[^>]+>"), "")
+                        .replace("&nbsp;", " ")
+                        .replace("&amp;", "&")
+                        .replace("&quot;", "\"")
+                        .replace("&#39;", "'")
+                        .trim()
+                }
                 Text(
-                    text = result.textEn,
+                    text = cleanLookupText,
                     fontSize = 13.sp,
                     lineHeight = 18.sp,
                     color = RemoraTextSecondary

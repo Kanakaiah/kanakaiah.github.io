@@ -728,7 +728,17 @@ private fun VerseCard(
     state: DailySessionUiState,
     viewModel: DailySessionViewModel
 ) {
-    val activeText = item.textEn.ifBlank { item.textTe }
+    val rawActive = item.textEn.ifBlank { item.textTe }
+    val activeText = rawActive
+        .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+        .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+        .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+        .replace(Regex("<[^>]+>"), "")
+        .replace("&nbsp;", " ")
+        .replace("&amp;", "&")
+        .replace("&quot;", "\"")
+        .replace("&#39;", "'")
+        .trim()
     val isEnglish = item.textEn.isNotBlank()
     val cuedText = remember(activeText) {
         CueUtils.cueString(activeText, CueLevel.fromRepetition(item.repetition))

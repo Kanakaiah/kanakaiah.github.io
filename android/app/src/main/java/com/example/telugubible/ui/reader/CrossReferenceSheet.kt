@@ -11,11 +11,17 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.CrossReference
@@ -104,11 +110,12 @@ fun CrossReferenceSheet(
                     contentPadding = PaddingValues(bottom = 24.dp)
                 ) {
                     items(crossReferences, key = { it.id }) { ref ->
-                        val targetText = if (language == BibleLanguage.TELUGU) {
+                        val rawText = if (language == BibleLanguage.TELUGU) {
                             ref.targetTextTe ?: ref.targetTextEn ?: ""
                         } else {
                             ref.targetTextEn ?: ref.targetTextTe ?: ""
                         }
+                        val annotatedText = remember(rawText) { parseScriptureText(rawText) }
 
                         Surface(
                             shape = RoundedCornerShape(12.dp),
@@ -141,10 +148,10 @@ fun CrossReferenceSheet(
                                         color = RemoraGold
                                     )
 
-                                    if (targetText.isNotBlank()) {
+                                    if (annotatedText.isNotBlank()) {
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Text(
-                                            text = targetText,
+                                            text = annotatedText,
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = RemoraTextPrimary,
                                             maxLines = 3
@@ -177,6 +184,39 @@ fun CrossReferenceSheet(
                     }
                 }
             }
+        }
+    }
+}
+
+private fun parseScriptureText(raw: String): AnnotatedString {
+    val clean = raw
+        .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+        .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+        .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+        .replace(Regex("<sup\\b[^>]*>.*?</sup>", RegexOption.IGNORE_CASE), "")
+        .replace("&nbsp;", " ")
+        .replace("&amp;", "&")
+        .replace("&quot;", "\"")
+        .replace("&#39;", "'")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .trim()
+
+    val italicRegex = Regex("<i\\b[^>]*>([\\s\\S]*?)</i>", RegexOption.IGNORE_CASE)
+    return buildAnnotatedString {
+        var lastIdx = 0
+        for (m in italicRegex.findAll(clean)) {
+            val normal = clean.substring(lastIdx, m.range.first).replace(Regex("<[^>]+>"), "")
+            append(normal)
+            withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+                val italicText = m.groupValues[1].replace(Regex("<[^>]+>"), "")
+                append(italicText)
+            }
+            lastIdx = m.range.last + 1
+        }
+        if (lastIdx < clean.length) {
+            val remaining = clean.substring(lastIdx).replace(Regex("<[^>]+>"), "")
+            append(remaining)
         }
     }
 }

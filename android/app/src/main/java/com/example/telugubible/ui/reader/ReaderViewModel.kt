@@ -531,6 +531,10 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun setReaderFontFamily(fontFamily: ReaderFontFamily) {
         _uiState.update { it.copy(readerFontFamily = fontFamily) }
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(settings.copy(fontFamily = fontFamily.key))
+        }
     }
 
     // Alpha / Study Mode

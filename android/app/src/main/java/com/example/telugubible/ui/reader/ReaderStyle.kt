@@ -1,11 +1,9 @@
 package com.example.telugubible.ui.reader
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.example.telugubible.R
 
 enum class ReaderTheme(
@@ -50,32 +48,19 @@ enum class ReaderTheme(
     )
 }
 
-private val googleFontProvider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
-
-private val InterGoogleFont = GoogleFont("Inter")
-private val MerriweatherGoogleFont = GoogleFont("Merriweather")
-private val AtkinsonGoogleFont = GoogleFont("Atkinson Hyperlegible")
-
 val InterFontFamily = FontFamily(
-    Font(googleFont = InterGoogleFont, fontProvider = googleFontProvider),
-    Font(googleFont = InterGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold),
-    Font(googleFont = InterGoogleFont, fontProvider = googleFontProvider, style = FontStyle.Italic)
+    Font(R.font.inter_regular, FontWeight.Normal),
+    Font(R.font.inter_bold, FontWeight.Bold)
 )
 
 val MerriweatherFontFamily = FontFamily(
-    Font(googleFont = MerriweatherGoogleFont, fontProvider = googleFontProvider),
-    Font(googleFont = MerriweatherGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold),
-    Font(googleFont = MerriweatherGoogleFont, fontProvider = googleFontProvider, style = FontStyle.Italic)
+    Font(R.font.merriweather_regular, FontWeight.Normal),
+    Font(R.font.merriweather_bold, FontWeight.Bold)
 )
 
 val AtkinsonFontFamily = FontFamily(
-    Font(googleFont = AtkinsonGoogleFont, fontProvider = googleFontProvider),
-    Font(googleFont = AtkinsonGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold),
-    Font(googleFont = AtkinsonGoogleFont, fontProvider = googleFontProvider, style = FontStyle.Italic)
+    Font(R.font.atkinson_regular, FontWeight.Normal),
+    Font(R.font.atkinson_bold, FontWeight.Bold)
 )
 
 enum class ReaderFontFamily(val key: String, val label: String, val fontFamily: FontFamily) {

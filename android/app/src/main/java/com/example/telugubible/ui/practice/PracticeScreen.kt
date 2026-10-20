@@ -101,8 +101,18 @@ fun PracticeScreen(
                     val isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH
                     val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
                     val badgeText = if (isEnglish) "BSB" else "IRV"
-                    val activeText = (if (isEnglish) verse.textEn else verse.textTe)
+                    val rawText = (if (isEnglish) verse.textEn else verse.textTe)
                         ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+                    val activeText = rawText
+                        .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+                        .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+                        .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+                        .replace(Regex("<[^>]+>"), "")
+                        .replace("&nbsp;", " ")
+                        .replace("&amp;", "&")
+                        .replace("&quot;", "\"")
+                        .replace("&#39;", "'")
+                        .trim()
 
                     if (state.activeMode == PracticeMode.IMMERSED) {
                         ImmersedReader(

@@ -891,9 +891,6 @@ private fun RemoraVerseCard(
                             .fillMaxWidth()
                             .blur(if (isMasked) 6.dp else 0.dp)
                             .alpha(if (isMasked) 0.5f else 1.0f)
-                            .clickable {
-                                if (isMasked) isMaskRevealed = true
-                            }
                     )
                 }
 

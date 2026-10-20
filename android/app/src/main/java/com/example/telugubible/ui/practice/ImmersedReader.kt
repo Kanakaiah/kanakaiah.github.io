@@ -92,8 +92,17 @@ fun ImmersedReader(
 
     var totalDragX by remember { mutableFloatStateOf(0f) }
 
-    val rawText = (if (isEnglish) verse.textEn else verse.textTe)
-        ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+    val rawText = ((if (isEnglish) verse.textEn else verse.textTe)
+        ?: (if (isEnglish) verse.textTe else verse.textEn) ?: "")
+        .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+        .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+        .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+        .replace(Regex("<[^>]+>"), "")
+        .replace("&nbsp;", " ")
+        .replace("&amp;", "&")
+        .replace("&quot;", "\"")
+        .replace("&#39;", "'")
+        .trim()
     val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
     val badgeText = if (isEnglish) "BSB" else "IRV"
 
