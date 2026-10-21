@@ -185,11 +185,7 @@ fun VerseDetailSheet(
             ) {
                 Column {
                     Text(
-                        text = if (displayLanguage == DisplayLanguage.TELUGU) {
-                            "${verse.bookNameTe} ${verse.chapter}:${verse.verse}"
-                        } else {
-                            "${verse.bookNameEn} ${verse.chapter}:${verse.verse}"
-                        },
+                        text = verse.fullRef(displayLanguage == DisplayLanguage.ENGLISH),
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = RemoraTextPrimary

@@ -3,6 +3,7 @@ package com.example.telugubible.ui.today
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -360,6 +361,83 @@ fun TodayScreen(
                 Text(msg)
             }
         }
+
+        // Blocking Loading Overlay while adding preset collections (75 / 100 verses)
+        state.addingProgress?.let { progress ->
+            androidx.compose.ui.window.Dialog(
+                onDismissRequest = { /* Block dismissal while loading */ },
+                properties = androidx.compose.ui.window.DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                    usePlatformDefaultWidth = false
+                )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.75f))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {} // Intercepts all clicks
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = RemoraCardBgElevated,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
+                            .padding(24.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                color = RemoraAccent,
+                                modifier = Modifier.size(44.dp),
+                                strokeWidth = 4.dp
+                            )
+                            Text(
+                                text = "Adding ${progress.collectionName}",
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraTextPrimary,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                            Text(
+                                text = "${progress.current} of ${progress.total} loaded...",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = RemoraAccentLight,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                            val fraction = if (progress.total > 0) {
+                                (progress.current.toFloat() / progress.total).coerceIn(0f, 1f)
+                            } else 0f
+                            LinearProgressIndicator(
+                                progress = { fraction },
+                                color = RemoraAccent,
+                                trackColor = RemoraCardBorder,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(6.dp)
+                                    .clip(RoundedCornerShape(3.dp))
+                            )
+                            Text(
+                                text = "Please wait while passages are prepared...",
+                                fontSize = 12.sp,
+                                color = RemoraTextMuted,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -403,8 +481,7 @@ private fun RemoraHeroDailyPractice(
 
             if (heroVerse != null && dueCount > 0) {
                 val isEnglish = displayLanguage == DisplayLanguage.ENGLISH
-                val heroRef = if (isEnglish) "${heroVerse.bookNameEn} ${heroVerse.chapter}:${heroVerse.verse}"
-                              else "${heroVerse.bookNameTe} ${heroVerse.chapter}:${heroVerse.verse}"
+                val heroRef = heroVerse.fullRef(isEnglish)
                 val rawTarget = if (isEnglish) heroVerse.textEn else heroVerse.textTe
                 val targetText = ((rawTarget ?: heroVerse.textEn ?: heroVerse.textTe ?: "")).replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
 
@@ -755,12 +832,10 @@ private fun RemoraVerseCard(
     var cardLanguage by remember(displayLanguage) { mutableStateOf(displayLanguage) }
     var isMaskRevealed by remember(verse.id) { mutableStateOf(false) }
     val isEnglish = cardLanguage == DisplayLanguage.ENGLISH
-    val refText = if (isEnglish) "${verse.bookNameEn} ${verse.chapter}:${verse.verse}"
-                  else "${verse.bookNameTe} ${verse.chapter}:${verse.verse}"
+    val refText = verse.fullRef(isEnglish)
     val badgeText = if (isEnglish) "LSB" else "IRV"
     val rawCurrentText = (if (isEnglish) verse.textEn else verse.textTe)
-    val currentVerseText = (rawCurrentText ?: verse.textEn ?: verse.textTe ?: "").replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
-        ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+    val currentVerseText = (rawCurrentText ?: (if (isEnglish) verse.textTe else verse.textEn) ?: "").replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
 
     Surface(
         onClick = onClick,

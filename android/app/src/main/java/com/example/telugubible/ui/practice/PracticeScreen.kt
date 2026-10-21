@@ -103,7 +103,7 @@ fun PracticeScreen(
                 if (verse != null) {
                     val isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH
                     val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
-                    val badgeText = if (isEnglish) "BSB" else "IRV"
+                    val badgeText = if (isEnglish) "LSB" else "IRV"
                     val rawText = (if (isEnglish) verse.textEn else verse.textTe)
                         ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
                     val activeText = rawText
@@ -310,7 +310,7 @@ fun PracticeScreen(
                                         )
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Text(
-                                            text = "Chapter ${verse.chapter}:${verse.verse}",
+                                            text = "Chapter ${verse.verseRef}",
                                             fontSize = 22.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = RemoraTextPrimary

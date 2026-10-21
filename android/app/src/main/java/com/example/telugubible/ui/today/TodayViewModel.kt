@@ -23,6 +23,12 @@ enum class VerseFilter {
     ALL, DUE, LEARNING, MEMORIZED
 }
 
+data class AddingProgress(
+    val collectionName: String,
+    val current: Int,
+    val total: Int
+)
+
 data class TodayUiState(
     val verses: List<UserMemoryVerse> = emptyList(),
     val filteredVerses: List<UserMemoryVerse> = emptyList(),
@@ -37,6 +43,7 @@ data class TodayUiState(
     val learningCount: Int = 0,
     val dueCount: Int = 0,
     val isLoading: Boolean = true,
+    val addingProgress: AddingProgress? = null,
     val showAddDialog: Boolean = false,
     val selectedVerseForDetail: UserMemoryVerse? = null,
     val searchResults: List<VerseSearchResult> = emptyList(),
@@ -317,12 +324,22 @@ class TodayViewModel @JvmOverloads constructor(
     }
 
     fun addCollection(collectionId: String) {
+        val name = if (collectionId == "well_known") "75 Well-Known Verses" else "Top 100 Verses"
+        val estimatedTotal = if (collectionId == "well_known") 75 else 100
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            val count = repository.addPresetCollection(collectionId)
-            val name = if (collectionId == "well_known") "75 Well-Known Verses" else "Top 100 Verses"
             _uiState.update {
                 it.copy(
+                    addingProgress = AddingProgress(name, 0, estimatedTotal)
+                )
+            }
+            val count = repository.addPresetCollection(collectionId) { current, total ->
+                _uiState.update {
+                    it.copy(addingProgress = AddingProgress(name, current, total))
+                }
+            }
+            _uiState.update {
+                it.copy(
+                    addingProgress = null,
                     showAddDialog = false,
                     messageBanner = "Added $name ($count passages) to your library!"
                 )

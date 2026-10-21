@@ -17,6 +17,14 @@ import com.example.telugubible.data.model.VerseSearchResult
 import java.io.File
 import java.io.FileOutputStream
 
+data class PresetVerseEntry(
+    val bookId: Int,
+    val chapter: Int,
+    val startVerse: Int,
+    val endVerse: Int? = null,
+    val reference: String = ""
+)
+
 class BibleDatabaseHelper(val context: Context) :
     SQLiteOpenHelper(context, STATIC_DB_NAME, null, STATIC_DB_VERSION) {
 
@@ -354,6 +362,69 @@ class BibleDatabaseHelper(val context: Context) :
         return list
     }
 
+    fun getRangeVerseText(bookId: Int, chapter: Int, startVerse: Int, endVerse: Int): Pair<String?, String?> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT text_te, text_en FROM verses WHERE book_id = ? AND chapter = ? AND verse BETWEEN ? AND ? ORDER BY verse ASC",
+            arrayOf(bookId.toString(), chapter.toString(), startVerse.toString(), endVerse.toString())
+        )
+        val teList = mutableListOf<String>()
+        val enList = mutableListOf<String>()
+        cursor.use {
+            while (it.moveToNext()) {
+                if (!it.isNull(0)) teList.add(it.getString(0))
+                if (!it.isNull(1)) enList.add(it.getString(1))
+            }
+        }
+        val te = if (teList.isNotEmpty()) teList.joinToString(" ") else null
+        val en = if (enList.isNotEmpty()) enList.joinToString(" ") else null
+        return Pair(te, en)
+    }
+
+    fun getPresetRangesMap(): Map<Triple<Int, Int, Int>, Int> {
+        val map = mutableMapOf<Triple<Int, Int, Int>, Int>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT book_id, chapter, verse, reference FROM preset_verses WHERE reference LIKE '%-%'",
+            null
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                val bId = it.getInt(0)
+                val ch = it.getInt(1)
+                val vs = it.getInt(2)
+                val ref = it.getString(3) ?: ""
+                val endVerse = ref.substringAfterLast(':', "").split('-').getOrNull(1)?.trim()?.toIntOrNull()
+                if (endVerse != null && endVerse > vs) {
+                    map[Triple(bId, ch, vs)] = endVerse
+                }
+            }
+        }
+        return map
+    }
+
+    fun getPresetVerseEntries(collectionId: String): List<PresetVerseEntry> {
+        val list = mutableListOf<PresetVerseEntry>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT book_id, chapter, verse, reference FROM preset_verses WHERE collection_id = ?",
+            arrayOf(collectionId)
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                val bId = it.getInt(0)
+                val ch = it.getInt(1)
+                val vs = it.getInt(2)
+                val ref = it.getString(3) ?: ""
+                val endVerse = if (ref.contains('-')) {
+                    ref.substringAfterLast(':', "").split('-').getOrNull(1)?.trim()?.toIntOrNull()
+                } else null
+                list.add(PresetVerseEntry(bId, ch, vs, endVerse, ref))
+            }
+        }
+        return list
+    }
+
     fun getPresetVerses(collectionId: String): List<Triple<Int, Int, Int>> {
         val list = mutableListOf<Triple<Int, Int, Int>>()
         val db = readableDatabase
@@ -376,11 +447,17 @@ class BibleDatabaseHelper(val context: Context) :
         if (userVerses.isEmpty()) return emptyList()
 
         val books = getBooksMap()
+        val presetRanges = getPresetRangesMap()
         val verseTexts = getVerseTexts(userVerses.map { Triple(it.bookId, it.chapter, it.verse) })
 
         return userVerses.map { uv ->
             val book = books[uv.bookId]
-            val (te, en) = verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Pair(null, null)
+            val effectiveEndVerse = uv.endVerse ?: presetRanges[Triple(uv.bookId, uv.chapter, uv.verse)]
+            val (te, en) = if (effectiveEndVerse != null && effectiveEndVerse > uv.verse) {
+                getRangeVerseText(uv.bookId, uv.chapter, uv.verse, effectiveEndVerse)
+            } else {
+                verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Pair(null, null)
+            }
             UserMemoryVerse(
                 id = uv.id,
                 bookId = uv.bookId,
@@ -389,6 +466,7 @@ class BibleDatabaseHelper(val context: Context) :
                 bookNameTe = book?.nameTe ?: "",
                 chapter = uv.chapter,
                 verse = uv.verse,
+                endVerse = effectiveEndVerse,
                 textTe = te,
                 textEn = en,
                 status = uv.status,

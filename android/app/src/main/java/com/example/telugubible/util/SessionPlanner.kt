@@ -18,11 +18,15 @@ sealed class SessionItem(
         val bookName: String,
         val chapter: Int,
         val verse: Int,
+        val endVerse: Int? = null,
         val textEn: String,
         val textTe: String,
         val repetition: Int,
         override val dueAt: Long
-    ) : SessionItem("verse:$verseId", "verse", dueAt)
+    ) : SessionItem("verse:$verseId", "verse", dueAt) {
+        val displayRef: String
+            get() = if (endVerse != null && endVerse > verse) "$chapter:$verse-$endVerse" else "$chapter:$verse"
+    }
 
     data class Anchor(
         val bookId: Int,
@@ -127,6 +131,7 @@ object SessionPlanner {
                     bookName = book?.nameEn ?: "Book ${v.bookId}",
                     chapter = v.chapter,
                     verse = v.verse,
+                    endVerse = v.endVerse,
                     textEn = v.textEn ?: "",
                     textTe = v.textTe ?: "",
                     repetition = v.repetition,

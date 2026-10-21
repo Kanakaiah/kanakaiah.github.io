@@ -23,6 +23,7 @@ data class UserVerseEntity(
     val bookId: Int,
     val chapter: Int,
     val verse: Int,
+    val endVerse: Int? = null,
     val status: String,
     val repetition: Int,
     val interval: Int,
@@ -88,7 +89,7 @@ class UserDatabaseHelper(private val context: Context) :
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 8
+        const val USER_DB_VERSION = 9
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -113,6 +114,7 @@ class UserDatabaseHelper(private val context: Context) :
                 book_id INTEGER NOT NULL,
                 chapter INTEGER NOT NULL,
                 verse INTEGER NOT NULL,
+                end_verse INTEGER,
                 status TEXT NOT NULL DEFAULT 'learning',
                 repetition INTEGER NOT NULL DEFAULT 0,
                 interval INTEGER NOT NULL DEFAULT 0,
@@ -430,6 +432,11 @@ class UserDatabaseHelper(private val context: Context) :
                 db.execSQL("CREATE INDEX IF NOT EXISTS idx_remote_verse_cache ON remote_verse_cache (version, book_id, chapter);")
             } catch (e: Exception) {}
         }
+        if (oldVersion < 9) {
+            try {
+                db.execSQL("ALTER TABLE user_verses ADD COLUMN end_verse INTEGER;")
+            } catch (e: Exception) {}
+        }
     }
 
     private fun pruneReviewLog(db: SQLiteDatabase) {
@@ -520,7 +527,7 @@ class UserDatabaseHelper(private val context: Context) :
         val cursor = db.rawQuery(
             """
             SELECT id, book_id, chapter, verse, status, repetition, interval, efactor, 
-                   next_due_date, created_at, lapses, pre_lapse_interval, attempts
+                   next_due_date, created_at, lapses, pre_lapse_interval, attempts, end_verse
             FROM user_verses
             ORDER BY next_due_date ASC
             """.trimIndent(),
@@ -534,6 +541,10 @@ class UserDatabaseHelper(private val context: Context) :
                         bookId = it.getInt(1),
                         chapter = it.getInt(2),
                         verse = it.getInt(3),
+                        endVerse = if (it.columnCount > 13 && !it.isNull(13)) {
+                            val ev = it.getInt(13)
+                            if (ev > 0) ev else null
+                        } else null,
                         status = it.getString(4),
                         repetition = it.getInt(5),
                         interval = it.getInt(6),
@@ -550,13 +561,16 @@ class UserDatabaseHelper(private val context: Context) :
         return list
     }
 
-    fun addUserVerse(bookId: Int, chapter: Int, verse: Int): Boolean {
+    fun addUserVerse(bookId: Int, chapter: Int, verse: Int, endVerse: Int? = null): Boolean {
         val db = writableDatabase
         val now = System.currentTimeMillis()
         val values = ContentValues().apply {
             put("book_id", bookId)
             put("chapter", chapter)
             put("verse", verse)
+            if (endVerse != null && endVerse > verse) {
+                put("end_verse", endVerse)
+            }
             put("status", "learning")
             put("repetition", 0)
             put("interval", 0)

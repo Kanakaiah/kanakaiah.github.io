@@ -171,6 +171,7 @@ fun DailySessionPlayer(
                             bookId = item.bookId,
                             chapter = item.chapter,
                             verse = item.verse,
+                            endVerse = item.endVerse,
                             textEn = item.textEn,
                             textTe = item.textTe,
                             bookNameEn = item.bookName,
@@ -778,7 +779,7 @@ private fun VerseCard(
         Column(modifier = Modifier.weight(1f)) {
             // Verse Reference
             Text(
-                text = "${item.bookName} ${item.chapter}:${item.verse}",
+                text = "${item.bookName} ${item.displayRef}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = RemoraTextPrimary

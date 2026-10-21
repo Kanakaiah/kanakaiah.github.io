@@ -8,6 +8,7 @@ data class UserMemoryVerse(
     val bookNameTe: String = "",
     val chapter: Int,
     val verse: Int,
+    val endVerse: Int? = null,
     val textTe: String? = null,
     val textEn: String? = null,
     val status: String = "learning", // "learning" or "memorized"
@@ -19,4 +20,12 @@ data class UserMemoryVerse(
     val lapses: Int = 0,
     val attempts: Int = 0,
     val topicIds: List<String> = emptyList()
-)
+) {
+    val verseRef: String
+        get() = if (endVerse != null && endVerse > verse) "$chapter:$verse-$endVerse" else "$chapter:$verse"
+
+    fun fullRef(isEnglish: Boolean): String {
+        val name = if (isEnglish) bookNameEn else bookNameTe
+        return "$name $verseRef"
+    }
+}

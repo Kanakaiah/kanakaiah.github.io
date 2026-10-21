@@ -17,6 +17,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -34,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.theme.*
 import com.example.telugubible.util.BionicUtils
@@ -106,23 +111,30 @@ fun ImmersedReader(
         .replace("&#39;", "'")
         .trim()
     val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
-    val badgeText = if (isEnglish) "BSB" else "IRV"
+    val badgeText = if (isEnglish) "LSB" else "IRV"
 
     val sentences = remember(rawText) {
         BionicUtils.splitSentences(rawText)
     }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(RemoraBackground)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                chromeVisible = !chromeVisible
-                triggerInteraction()
-            }
+    Dialog(
+        onDismissRequest = onExit,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(RemoraBackground)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    chromeVisible = !chromeVisible
+                    triggerInteraction()
+                }
             .pointerInput(verse.id) {
                 detectHorizontalDragGestures(
                     onDragStart = { totalDragX = 0f },
@@ -282,7 +294,7 @@ fun ImmersedReader(
                         modifier = Modifier.size(36.dp)
                     ) {
                         Icon(
-                            imageVector = if (isAutoPlaying) Icons.Default.Stop else Icons.Default.VolumeUp,
+                            imageVector = if (isAutoPlaying) Icons.Default.Stop else Icons.AutoMirrored.Filled.VolumeUp,
                             contentDescription = if (isAutoPlaying) "Stop reading aloud" else "Read aloud",
                             tint = if (isAutoPlaying) RemoraAccent else RemoraTextSecondary,
                             modifier = Modifier.size(20.dp)
@@ -303,34 +315,43 @@ fun ImmersedReader(
         ) {
             Spacer(modifier = Modifier.height(64.dp))
 
-            // Reference Header
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+            // Reference Header matching PWA ImmersedReader.tsx
+            val refText = verse.fullRef(isEnglish).uppercase()
+            val transText = if (isEnglish) "LSB" else "IRV"
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp)
             ) {
-                Text(
-                    text = "$bookName ${verse.chapter}:${verse.verse}",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextSecondary,
-                        fontSize = (16.sp * fontMultiplier)
-                    )
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Surface(
-                    shape = RoundedCornerShape(6.dp),
-                    color = RemoraAccent.copy(alpha = 0.14f),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraAccent.copy(alpha = 0.35f))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
-                        text = badgeText,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
+                        text = refText,
                         color = RemoraAccent,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        fontSize = (17.sp * fontMultiplier),
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp
+                    )
+                    Text(
+                        text = transText,
+                        color = RemoraTextMuted,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp
                     )
                 }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(RemoraCardBorder)
+                )
             }
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -403,7 +424,7 @@ fun ImmersedReader(
                     enabled = index > 0,
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
                     Text("Previous")
                 }
@@ -418,7 +439,7 @@ fun ImmersedReader(
                 ) {
                     Text("Next")
                     Spacer(modifier = Modifier.width(6.dp))
-                    Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
                 }
             }
         }
@@ -460,5 +481,6 @@ fun ImmersedReader(
                 }
             }
         }
+    }
     }
 }

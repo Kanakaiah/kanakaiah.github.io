@@ -214,35 +214,28 @@ class BibleRepository(
         bibleDbHelper.getPresetCollections()
     }
 
-    suspend fun addPresetCollection(collectionId: String): Int = withContext(ioDispatcher) {
-        val verses = bibleDbHelper.getPresetVerses(collectionId)
+    suspend fun addPresetCollection(
+        collectionId: String,
+        onProgress: ((current: Int, total: Int) -> Unit)? = null
+    ): Int = withContext(ioDispatcher) {
+        val presetEntries = bibleDbHelper.getPresetVerseEntries(collectionId)
         val topicName = when (collectionId) {
             "top_100" -> "Top 100"
-            "well_known" -> "Well-Known"
+            "well_known" -> "75 Well-Known"
             else -> collectionId.replace('_', ' ').replaceFirstChar { it.uppercase() }
         }
         val topic = userDbHelper.getOrCreateTopic(topicName)
-        val insertedCount = userDbHelper.addUserVerses(verses)
-        userDbHelper.tagVersesWithTopic(verses, topic.id)
+        val total = presetEntries.size
+        var insertedCount = 0
 
-        // Prefetch active translation (LSB default) for collection chapters
-        try {
-            val settings = userDbHelper.getAppSettings()
-            val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
-            if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
-                val distinctChapters = verses.map { Pair(it.first, it.second) }.distinct()
-                for ((bId, ch) in distinctChapters) {
-                    val cached = userDbHelper.getCachedVerses(activeVersion, bId, ch)
-                    if (cached.isEmpty()) {
-                        val remote = bollsBibleService.fetchChapter(activeVersion, bId, ch)
-                        if (!remote.isNullOrEmpty()) {
-                            userDbHelper.saveCachedVerses(activeVersion, bId, ch, remote)
-                        }
-                    }
-                }
-            }
-        } catch (e: Exception) {}
-
+        val legacyVerses = mutableListOf<Triple<Int, Int, Int>>()
+        for ((idx, entry) in presetEntries.withIndex()) {
+            val inserted = userDbHelper.addUserVerse(entry.bookId, entry.chapter, entry.startVerse, entry.endVerse)
+            if (inserted) insertedCount++
+            legacyVerses.add(Triple(entry.bookId, entry.chapter, entry.startVerse))
+            onProgress?.invoke(idx + 1, total)
+        }
+        userDbHelper.tagVersesWithTopic(legacyVerses, topic.id)
         insertedCount
     }
 
