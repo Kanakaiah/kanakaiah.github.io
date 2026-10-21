@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Fullscreen
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -122,7 +124,7 @@ fun PracticeScreen(
                             total = state.verses.size,
                             onPrev = { viewModel.prevVerse() },
                             onNext = { viewModel.nextVerse() },
-                            onExit = { viewModel.setPracticeMode(PracticeMode.FLASHCARD) },
+                            onExit = { viewModel.setPracticeMode(PracticeMode.READ) },
                             isAutoPlaying = state.isTtsSpeaking,
                             onToggleAutoPlay = { viewModel.toggleTts() },
                             isEnglish = isEnglish,
@@ -247,14 +249,14 @@ fun PracticeScreen(
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            // Mode Selector Pills
+                            // Mode Selector Pills (Read, Erase, Letters, Order, Type, Recite)
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .horizontalScroll(rememberScrollState()),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                PracticeMode.entries.forEach { mode ->
+                                PracticeMode.MENU_MODES.forEach { mode ->
                                     val isSelected = state.activeMode == mode
                                     Surface(
                                         onClick = { viewModel.setPracticeMode(mode) },
@@ -319,16 +321,18 @@ fun PracticeScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                                     ) {
-                                        IconButton(
-                                            onClick = { viewModel.setPracticeMode(PracticeMode.IMMERSED) },
-                                            modifier = Modifier.size(32.dp)
-                                        ) {
-                                            Icon(
-                                                Icons.Default.Fullscreen,
-                                                contentDescription = "Immerse Reading",
-                                                tint = RemoraAccent,
-                                                modifier = Modifier.size(20.dp)
-                                            )
+                                        if (state.activeMode == PracticeMode.READ) {
+                                            IconButton(
+                                                onClick = { viewModel.setPracticeMode(PracticeMode.IMMERSED) },
+                                                modifier = Modifier.size(32.dp)
+                                            ) {
+                                                Icon(
+                                                    Icons.Default.Fullscreen,
+                                                    contentDescription = "Immerse Reading",
+                                                    tint = RemoraAccent,
+                                                    modifier = Modifier.size(22.dp)
+                                                )
+                                            }
                                         }
 
                                         Surface(
@@ -413,56 +417,19 @@ fun PracticeScreen(
                                                 modifier = Modifier.fillMaxSize()
                                             )
                                         }
-                                        else -> {
-                                            // FLASHCARD (and default for other drill modes)
-                                            if (!state.isRevealed) {
-                                                Column(
-                                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                                    verticalArrangement = Arrangement.Center,
-                                                    modifier = Modifier
-                                                        .clip(RoundedCornerShape(12.dp))
-                                                        .clickable { viewModel.revealVerse() }
-                                                        .padding(24.dp)
-                                                ) {
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .size(54.dp)
-                                                            .clip(CircleShape)
-                                                            .background(RemoraAccent.copy(alpha = 0.15f)),
-                                                        contentAlignment = Alignment.Center
-                                                    ) {
-                                                        Icon(
-                                                            Icons.Default.Visibility,
-                                                            contentDescription = "Reveal",
-                                                            tint = RemoraAccent,
-                                                            modifier = Modifier.size(28.dp)
-                                                        )
-                                                    }
-                                                    Spacer(modifier = Modifier.height(14.dp))
-                                                    Text(
-                                                        text = "Recall in your heart",
-                                                        fontSize = 17.sp,
-                                                        fontWeight = FontWeight.SemiBold,
-                                                        color = RemoraTextPrimary
-                                                    )
-                                                    Spacer(modifier = Modifier.height(4.dp))
-                                                    Text(
-                                                        text = "Tap here to check your recall",
-                                                        fontSize = 13.sp,
-                                                        color = RemoraTextSecondary
-                                                    )
-                                                }
-                                            } else {
-                                                Text(
-                                                    text = activeText,
-                                                    fontSize = if (isEnglish) 18.sp else 20.sp,
-                                                    lineHeight = if (isEnglish) 26.sp else 30.sp,
-                                                    fontWeight = FontWeight.Normal,
-                                                    color = RemoraTextPrimary,
-                                                    textAlign = TextAlign.Start,
-                                                    modifier = Modifier.fillMaxWidth()
-                                                )
-                                            }
+                                        PracticeMode.READ, PracticeMode.IMMERSED -> {
+                                            Text(
+                                                text = activeText,
+                                                fontSize = if (isEnglish) 18.sp else 20.sp,
+                                                lineHeight = if (isEnglish) 28.sp else 32.sp,
+                                                fontFamily = FontFamily.Serif,
+                                                fontWeight = FontWeight.Normal,
+                                                color = RemoraTextPrimary,
+                                                textAlign = TextAlign.Start,
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .verticalScroll(rememberScrollState())
+                                            )
                                         }
                                     }
                                 }
@@ -476,8 +443,8 @@ fun PracticeScreen(
                             }
                         }
 
-                        // Bottom Scoring Bar: 4 Remora Grading Buttons
-                        if (state.isRevealed) {
+                        // Bottom Scoring Bar: 4 Remora Grading Buttons (Hidden in Read mode)
+                        if (state.activeMode != PracticeMode.READ && state.isRevealed) {
                             val suggested = state.modeAccuracy?.let { CueUtils.suggestedScore(it) }
                             val suggestedLabel = suggested?.let { CueUtils.suggestedLabel(it) }
 

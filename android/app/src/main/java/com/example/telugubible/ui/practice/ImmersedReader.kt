@@ -1,10 +1,12 @@
 package com.example.telugubible.ui.practice
 
 import android.app.Activity
+import android.os.Build
 import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -357,8 +359,14 @@ fun ImmersedReader(
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .blur(if (isMasked) 8.dp else 0.dp)
-                            .alpha(if (isMasked) 0.45f else 1.0f)
+                            .then(
+                                if (isMasked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    Modifier.blur(8.dp)
+                                } else {
+                                    Modifier
+                                }
+                            )
+                            .alpha(if (isMasked) 0.35f else 1.0f)
                             .clickable {
                                 if (isMasked) {
                                     unmaskedIndices = unmaskedIndices + sIdx
@@ -411,6 +419,44 @@ fun ImmersedReader(
                     Text("Next")
                     Spacer(modifier = Modifier.width(6.dp))
                     Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+                }
+            }
+        }
+
+        // Persistent "Stop reading aloud" pill when TTS is active
+        if (isAutoPlaying) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp)
+                    .align(Alignment.BottomCenter),
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
+                    onClick = onToggleAutoPlay,
+                    shape = RoundedCornerShape(24.dp),
+                    color = RemoraCardBgElevated,
+                    border = BorderStroke(1.dp, RemoraAccent),
+                    shadowElevation = 6.dp
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Stop,
+                            contentDescription = "Stop",
+                            tint = RemoraAccent,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = "Stop reading aloud",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = RemoraTextPrimary
+                        )
+                    }
                 }
             }
         }

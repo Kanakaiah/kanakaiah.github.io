@@ -3,6 +3,8 @@ package com.example.telugubible.util
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -23,86 +25,98 @@ class SpeechRecognizerHelper(
 ) {
     private var speechRecognizer: SpeechRecognizer? = null
 
+    private val isAvail = try {
+        SpeechRecognizer.isRecognitionAvailable(context)
+    } catch (_: Throwable) {
+        false
+    }
+
     private val _state = MutableStateFlow(
-        SpeechRecognizerState(isAvailable = SpeechRecognizer.isRecognitionAvailable(context))
+        SpeechRecognizerState(isAvailable = isAvail)
     )
     val state: StateFlow<SpeechRecognizerState> = _state.asStateFlow()
 
     fun startListening(languageCode: String = "en-US") {
-        if (!SpeechRecognizer.isRecognitionAvailable(context)) {
+        val available = try {
+            SpeechRecognizer.isRecognitionAvailable(context)
+        } catch (_: Throwable) {
+            false
+        }
+
+        if (!available) {
             _state.value = _state.value.copy(
-                error = "Speech recognition not available on this device",
-                isAvailable = false
+                error = "Speech recognition is not available on this device",
+                isAvailable = false,
+                isListening = false
             )
             return
         }
 
         stopListening()
 
-        try {
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context).apply {
-                setRecognitionListener(object : RecognitionListener {
-                    override fun onReadyForSpeech(params: Bundle?) {
-                        _state.value = _state.value.copy(isListening = true, error = null)
-                    }
-
-                    override fun onBeginningOfSpeech() {
-                        _state.value = _state.value.copy(isListening = true)
-                    }
-
-                    override fun onRmsChanged(rmsdB: Float) {}
-                    override fun onBufferReceived(buffer: ByteArray?) {}
-
-                    override fun onEndOfSpeech() {
-                        _state.value = _state.value.copy(isListening = false)
-                    }
-
-                    override fun onError(error: Int) {
-                        val message = when (error) {
-                            SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
-                            SpeechRecognizer.ERROR_CLIENT -> "Client error"
-                            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Microphone permission required"
-                            SpeechRecognizer.ERROR_NETWORK -> "Network error"
-                            SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-                            SpeechRecognizer.ERROR_NO_MATCH -> "No speech recognized. Try again."
-                            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognition service busy"
-                            SpeechRecognizer.ERROR_SERVER -> "Server error"
-                            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech detected"
-                            else -> "Recognition error ($error)"
+        // Ensure creation and execution on main looper
+        Handler(Looper.getMainLooper()).post {
+            try {
+                speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context).apply {
+                    setRecognitionListener(object : RecognitionListener {
+                        override fun onReadyForSpeech(params: Bundle?) {
+                            _state.value = _state.value.copy(isListening = true, error = null)
                         }
-                        _state.value = _state.value.copy(isListening = false, error = message)
-                    }
 
-                    override fun onResults(results: Bundle?) {
-                        val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                        val text = matches?.firstOrNull() ?: ""
-                        _state.value = _state.value.copy(isListening = false, transcript = text)
-                        onResultReceived?.invoke(text)
-                    }
+                        override fun onBeginningOfSpeech() {
+                            _state.value = _state.value.copy(isListening = true)
+                        }
 
-                    override fun onPartialResults(partialResults: Bundle?) {
-                        val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                        val text = matches?.firstOrNull()
-                        if (!text.isNullOrBlank()) {
-                            _state.value = _state.value.copy(transcript = text)
+                        override fun onRmsChanged(rmsdB: Float) {}
+                        override fun onBufferReceived(buffer: ByteArray?) {}
+
+                        override fun onEndOfSpeech() {
+                            _state.value = _state.value.copy(isListening = false)
+                        }
+
+                        override fun onError(error: Int) {
+                            val msg = when (error) {
+                                SpeechRecognizer.ERROR_NO_MATCH -> "No speech recognized"
+                                SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timed out"
+                                SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Microphone permission required"
+                                SpeechRecognizer.ERROR_NETWORK -> "Network required for speech"
+                                SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timed out"
+                                else -> "Speech recognition paused"
+                            }
+                            _state.value = _state.value.copy(isListening = false, error = msg)
+                        }
+
+                        override fun onResults(results: Bundle?) {
+                            val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                            val text = matches?.firstOrNull().orEmpty()
+                            _state.value = _state.value.copy(isListening = false, transcript = text, error = null)
                             onResultReceived?.invoke(text)
                         }
-                    }
 
-                    override fun onEvent(eventType: Int, params: Bundle?) {}
-                })
+                        override fun onPartialResults(partialResults: Bundle?) {
+                            val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                            val text = matches?.firstOrNull()
+                            if (!text.isNullOrBlank()) {
+                                _state.value = _state.value.copy(transcript = text)
+                                onResultReceived?.invoke(text)
+                            }
+                        }
+
+                        override fun onEvent(eventType: Int, params: Bundle?) {}
+                    })
+                }
+
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode)
+                }
+
+                speechRecognizer?.startListening(intent)
+                _state.value = _state.value.copy(isListening = true, transcript = "", error = null)
+            } catch (e: Throwable) {
+                _state.value = _state.value.copy(isListening = false, error = e.localizedMessage ?: "Failed to start listening")
             }
-
-            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode)
-            }
-
-            speechRecognizer?.startListening(intent)
-            _state.value = _state.value.copy(isListening = true, transcript = "", error = null)
-        } catch (e: Exception) {
-            _state.value = _state.value.copy(isListening = false, error = e.localizedMessage ?: "Failed to start listening")
         }
     }
 
@@ -110,14 +124,11 @@ class SpeechRecognizerHelper(
         try {
             speechRecognizer?.stopListening()
             speechRecognizer?.destroy()
-        } catch (_: Exception) {}
+        } catch (_: Throwable) {}
         speechRecognizer = null
         _state.value = _state.value.copy(isListening = false)
     }
 
-    /**
-     * For manual input / testing without speech hardware
-     */
     fun simulateTranscript(simulated: String) {
         _state.value = _state.value.copy(isListening = false, transcript = simulated)
         onResultReceived?.invoke(simulated)

@@ -43,11 +43,37 @@ object BionicUtils {
     }
 
     /**
-     * Splits verse text into sentence phrases for Recall Masking.
+     * Splits verse text into sentence phrases for Recall Masking and Immersed Reading.
+     * Avoids unbounded look-behind regex which fails on Android's native ICU regex engine.
      */
     fun splitSentences(text: String): List<String> {
-        val tokens = text.split(Regex("""(?<=[.?!;:,]["']?\s+)"""))
-        val result = tokens.map { it.trim() }.filter { it.isNotBlank() }
-        return if (result.isEmpty() && text.isNotBlank()) listOf(text.trim()) else result
+        if (text.isBlank()) return emptyList()
+        val result = mutableListOf<String>()
+        val current = StringBuilder()
+        var i = 0
+        while (i < text.length) {
+            val c = text[i]
+            current.append(c)
+            if (c == '.' || c == '?' || c == '!' || c == ';' || c == ':' || c == ',') {
+                var j = i + 1
+                while (j < text.length && (text[j] == '"' || text[j] == '\'' || text[j] == '”' || text[j] == '’')) {
+                    current.append(text[j])
+                    j++
+                }
+                if (j < text.length && text[j].isWhitespace()) {
+                    result.add(current.toString().trim())
+                    current.clear()
+                    while (j < text.length && text[j].isWhitespace()) {
+                        j++
+                    }
+                    i = j - 1
+                }
+            }
+            i++
+        }
+        if (current.isNotBlank()) {
+            result.add(current.toString().trim())
+        }
+        return if (result.isEmpty() && text.isNotBlank()) listOf(text.trim()) else result.filter { it.isNotBlank() }
     }
 }

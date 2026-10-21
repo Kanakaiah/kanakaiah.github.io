@@ -183,7 +183,7 @@ fun DailySessionPlayer(
                             total = plan.items.size,
                             onPrev = { viewModel.prevStep() },
                             onNext = { viewModel.nextStep() },
-                            onExit = { viewModel.setVerseMode(PracticeMode.FLASHCARD) },
+                            onExit = { viewModel.setVerseMode(PracticeMode.READ) },
                             isAutoPlaying = state.isTtsSpeaking,
                             onToggleAutoPlay = { viewModel.toggleTts() },
                             isEnglish = item.textEn.isNotBlank()
@@ -793,7 +793,7 @@ private fun VerseCard(
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                PracticeMode.entries.forEach { mode ->
+                PracticeMode.MENU_MODES.forEach { mode ->
                     val isSelected = state.activeVerseMode == mode
                     Surface(
                         onClick = { viewModel.setVerseMode(mode) },
@@ -867,7 +867,7 @@ private fun VerseCard(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                PracticeMode.FLASHCARD, PracticeMode.IMMERSED -> {
+                PracticeMode.READ, PracticeMode.IMMERSED -> {
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = RemoraCardBgElevated,
@@ -915,7 +915,7 @@ private fun VerseCard(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (!state.isRevealed && state.activeVerseMode == PracticeMode.FLASHCARD) {
+        if (!state.isRevealed && state.activeVerseMode == PracticeMode.READ) {
             Button(
                 onClick = { viewModel.revealAnswer() },
                 modifier = Modifier.fillMaxWidth().height(48.dp),

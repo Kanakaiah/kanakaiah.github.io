@@ -258,7 +258,7 @@ class DailySessionViewModel @JvmOverloads constructor(
                             "typing",
                             state.verseAccuracy?.let { it / 100.0 }
                         )
-                        PracticeMode.FLASHCARD -> Triple(0, "reveal", null)
+                        PracticeMode.READ -> Triple(0, "reveal", null)
                         PracticeMode.FIRST_LETTER -> {
                             val ratio = state.hintRevealedRatio ?: 0f
                             val cue = when {

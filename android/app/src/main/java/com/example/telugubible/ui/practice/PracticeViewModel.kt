@@ -15,13 +15,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class PracticeMode(val label: String) {
-    FLASHCARD("Flashcard"),
-    TYPING("Type"),
-    FIRST_LETTER("Letters"),
+    READ("Read"),
     ERASER("Erase"),
+    FIRST_LETTER("Letters"),
     SCRAMBLE("Order"),
+    TYPING("Type"),
     SPEECH("Recite"),
-    IMMERSED("Immerse")
+    IMMERSED("Immerse");
+
+    companion object {
+        val FLASHCARD = READ
+        val MENU_MODES = listOf(READ, ERASER, FIRST_LETTER, SCRAMBLE, TYPING, SPEECH)
+    }
 }
 
 data class PracticeUiState(
@@ -335,9 +340,9 @@ class PracticeViewModel @JvmOverloads constructor(
                     "typing",
                     state.modeAccuracy?.let { it / 100.0 }
                 )
-                PracticeMode.FLASHCARD -> Triple(
+                PracticeMode.READ -> Triple(
                     0,
-                    "reveal",
+                    "read",
                     null
                 )
                 PracticeMode.FIRST_LETTER -> {

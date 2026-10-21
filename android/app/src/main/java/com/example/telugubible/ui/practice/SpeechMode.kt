@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.example.telugubible.theme.*
+import com.example.telugubible.util.CueLevel
+import com.example.telugubible.util.CueUtils
 import com.example.telugubible.util.SpeechAccuracyEvaluator
 import com.example.telugubible.util.SpeechRecognizerHelper
 import com.example.telugubible.util.WordMatchStatus
@@ -101,7 +103,7 @@ fun SpeechMode(
 
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -127,9 +129,20 @@ fun SpeechMode(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
-                    FirstLetterMode(
-                        text = text,
-                        onComplete = { /* passive display */ }
+                    val cuedText = remember(text) {
+                        CueUtils.cueString(text, CueLevel.FIRST_LETTERS)
+                    }
+                    Text(
+                        text = cuedText,
+                        fontSize = 18.sp,
+                        lineHeight = 28.sp,
+                        fontFamily = FontFamily.Serif,
+                        fontWeight = FontWeight.Medium,
+                        color = RemoraTextPrimary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
                     )
                 } else {
                     // Recitation Word-Level Diff View
