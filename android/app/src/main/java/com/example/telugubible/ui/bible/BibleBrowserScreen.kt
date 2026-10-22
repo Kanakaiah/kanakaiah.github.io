@@ -5,10 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -159,10 +157,8 @@ fun BibleBrowserScreen(
                     Text("No books found matching \"${state.searchQuery}\"", color = RemoraTextSecondary)
                 }
             } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
+                LazyColumn(
                     contentPadding = PaddingValues(bottom = 80.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -296,16 +292,16 @@ private fun RemoraBookCard(
             }
 
             // Caption Section
-            Column(modifier = Modifier.padding(12.dp)) {
+            Column(modifier = Modifier.padding(14.dp)) {
                 // Meta Line: KEYWORD · THEMEWORD · CHAPTERS
                 val meta = buildString {
                     if (book.keyWord.isNotBlank()) append("${book.keyWord} · ")
                     if (book.themeWord.isNotBlank()) append("${book.themeWord} · ")
-                    append("${book.chapters} chs")
+                    append("${book.chapters} chapters")
                 }
                 Text(
                     text = meta.uppercase(),
-                    fontSize = 10.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.8.sp,
                     color = RemoraAccentLight
@@ -316,7 +312,7 @@ private fun RemoraBookCard(
                 // Title: English & Telugu Name
                 Text(
                     text = BookNameUtils.getBookDisplayName(book, activeVersion),
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = RemoraTextPrimary,
                     maxLines = 1
@@ -326,9 +322,9 @@ private fun RemoraBookCard(
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = book.subtitle,
-                        fontSize = 11.sp,
+                        fontSize = 13.sp,
                         fontStyle = FontStyle.Italic,
-                        lineHeight = 15.sp,
+                        lineHeight = 18.sp,
                         color = RemoraTextSecondary,
                         maxLines = 2
                     )
