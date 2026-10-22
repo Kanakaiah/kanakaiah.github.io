@@ -621,14 +621,21 @@ private fun AnchorCard(
 
         if (isRevealed) {
             Column(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Button(
+                    onClick = {
+                        val score = when (judgement?.verdict) {
+                            AnchorVerdict.CORRECT -> 5
+                            AnchorVerdict.NEAR -> 4
+                            AnchorVerdict.WRONG -> 2
+                            null -> 4
+                        }
+                        onGrade(score)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth().height(46.dp)
                 ) {
-                    GradeBtn(label = "Blank", score = 1, color = GradeBlank, modifier = Modifier.weight(1f), onClick = { onGrade(1) })
-                    GradeBtn(label = "Hard", score = 3, color = GradeHard, modifier = Modifier.weight(1f), onClick = { onGrade(3) })
-                    GradeBtn(label = "Good", score = 4, color = GradeGood, modifier = Modifier.weight(1f), onClick = { onGrade(4) })
-                    GradeBtn(label = "Easy", score = 5, color = GradeEasy, modifier = Modifier.weight(1f), onClick = { onGrade(5) })
+                    Text("Continue", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -737,14 +744,13 @@ private fun ThemeCard(
                 Text("Tap to reveal", fontWeight = FontWeight.SemiBold, color = RemoraTextSecondary)
             }
         } else {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Button(
+                onClick = { onGrade(4) },
+                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.fillMaxWidth().height(46.dp)
             ) {
-                GradeBtn(label = "Blank", score = 1, color = GradeBlank, modifier = Modifier.weight(1f), onClick = { onGrade(1) })
-                GradeBtn(label = "Hard", score = 3, color = GradeHard, modifier = Modifier.weight(1f), onClick = { onGrade(3) })
-                GradeBtn(label = "Good", score = 4, color = GradeGood, modifier = Modifier.weight(1f), onClick = { onGrade(4) })
-                GradeBtn(label = "Easy", score = 5, color = GradeEasy, modifier = Modifier.weight(1f), onClick = { onGrade(5) })
+                Text("Continue", fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -941,46 +947,19 @@ private fun VerseCard(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Button(
+                    onClick = { viewModel.gradeCurrent(4) },
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth().height(46.dp)
                 ) {
-                    val ceiling = state.gradeCeiling
-                    GradeBtn(label = "Blank", score = 1, color = GradeBlank, modifier = Modifier.weight(1f), onClick = { viewModel.gradeCurrent(1) })
-                    GradeBtn(label = "Hard", score = 3, color = GradeHard, modifier = Modifier.weight(1f), enabled = ceiling >= 3, onClick = { viewModel.gradeCurrent(3) })
-                    GradeBtn(label = "Good", score = 4, color = GradeGood, modifier = Modifier.weight(1f), enabled = ceiling >= 4, onClick = { viewModel.gradeCurrent(4) })
-                    GradeBtn(label = "Easy", score = 5, color = GradeEasy, modifier = Modifier.weight(1f), enabled = ceiling >= 5, onClick = { viewModel.gradeCurrent(5) })
+                    Text(
+                        text = if (state.currentIndex >= (state.plan?.items?.size ?: 0) - 1) "Complete Session" else "Next Question",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun GradeBtn(
-    label: String,
-    score: Int,
-    color: Color,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    onClick: () -> Unit
-) {
-    val opacity = if (enabled) 1.0f else 0.35f
-    Surface(
-        onClick = { if (enabled) onClick() },
-        enabled = enabled,
-        modifier = modifier.height(48.dp),
-        shape = RoundedCornerShape(8.dp),
-        color = color.copy(alpha = 0.12f * opacity),
-        border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.35f * opacity))
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = label,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                color = color.copy(alpha = opacity)
-            )
         }
     }
 }

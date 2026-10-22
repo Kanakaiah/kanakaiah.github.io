@@ -23,6 +23,13 @@ enum class VerseFilter {
     ALL, DUE, LEARNING, MEMORIZED
 }
 
+enum class VerseSortOrder(val label: String, val shortLabel: String) {
+    SMART("Default (Smart)", "Smart Sort"),
+    BIBLE_ASC("Bible (Gen → Rev)", "A → Z"),
+    BIBLE_DESC("Bible (Rev → Gen)", "Z → A"),
+    RANDOM("Shuffle", "Shuffle")
+}
+
 data class AddingProgress(
     val collectionName: String,
     val current: Int,
@@ -37,6 +44,7 @@ data class TodayUiState(
     val heroVerse: UserMemoryVerse? = null,
     val searchQuery: String = "",
     val filter: VerseFilter = VerseFilter.ALL,
+    val sortOrder: VerseSortOrder = VerseSortOrder.SMART,
     val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH,
     val streak: Int = 14,
     val memorizedCount: Int = 0,
@@ -102,6 +110,7 @@ class TodayViewModel @JvmOverloads constructor(
                 filter = _uiState.value.filter,
                 query = _uiState.value.searchQuery,
                 selectedTopicId = _uiState.value.selectedTopicId,
+                sortOrder = _uiState.value.sortOrder,
                 now = now
             )
 
@@ -153,13 +162,29 @@ class TodayViewModel @JvmOverloads constructor(
 
     fun setFilter(filter: VerseFilter) {
         val now = System.currentTimeMillis()
-        val filtered = filterAndSearchList(_uiState.value.verses, filter, _uiState.value.searchQuery, _uiState.value.selectedTopicId, now)
+        val filtered = filterAndSearchList(_uiState.value.verses, filter, _uiState.value.searchQuery, _uiState.value.selectedTopicId, _uiState.value.sortOrder, now)
         _uiState.update { it.copy(filter = filter, filteredVerses = filtered) }
+    }
+
+    fun setSortOrder(order: VerseSortOrder) {
+        val now = System.currentTimeMillis()
+        if (order == VerseSortOrder.RANDOM) {
+            randomSortKeys = _uiState.value.verses.associate { it.id to kotlin.random.Random.nextFloat() }
+        }
+        val filtered = filterAndSearchList(
+            list = _uiState.value.verses,
+            filter = _uiState.value.filter,
+            query = _uiState.value.searchQuery,
+            selectedTopicId = _uiState.value.selectedTopicId,
+            sortOrder = order,
+            now = now
+        )
+        _uiState.update { it.copy(sortOrder = order, filteredVerses = filtered) }
     }
 
     fun setSearchQuery(query: String) {
         val now = System.currentTimeMillis()
-        val filtered = filterAndSearchList(_uiState.value.verses, _uiState.value.filter, query, _uiState.value.selectedTopicId, now)
+        val filtered = filterAndSearchList(_uiState.value.verses, _uiState.value.filter, query, _uiState.value.selectedTopicId, _uiState.value.sortOrder, now)
         _uiState.update { it.copy(searchQuery = query, filteredVerses = filtered) }
     }
 
@@ -183,6 +208,7 @@ class TodayViewModel @JvmOverloads constructor(
             filter = _uiState.value.filter,
             query = _uiState.value.searchQuery,
             selectedTopicId = topicId,
+            sortOrder = _uiState.value.sortOrder,
             now = now
         )
         _uiState.update { it.copy(selectedTopicId = topicId, filteredVerses = filtered) }
@@ -227,6 +253,7 @@ class TodayViewModel @JvmOverloads constructor(
                 filter = _uiState.value.filter,
                 query = _uiState.value.searchQuery,
                 selectedTopicId = _uiState.value.selectedTopicId,
+                sortOrder = _uiState.value.sortOrder,
                 now = now
             )
             val updatedSelected = verses.firstOrNull { it.id == _uiState.value.selectedVerseForDetail?.id }
@@ -252,11 +279,14 @@ class TodayViewModel @JvmOverloads constructor(
         }
     }
 
+    private var randomSortKeys: Map<Long, Float> = emptyMap()
+
     private fun filterAndSearchList(
         list: List<UserMemoryVerse>,
         filter: VerseFilter,
         query: String,
         selectedTopicId: String?,
+        sortOrder: VerseSortOrder,
         now: Long
     ): List<UserMemoryVerse> {
         val topicFiltered = if (selectedTopicId != null) {
@@ -272,15 +302,56 @@ class TodayViewModel @JvmOverloads constructor(
             VerseFilter.MEMORIZED -> topicFiltered.filter { it.status == "memorized" }
         }
 
-        if (q.isEmpty()) return filteredByStatus
-
-        return filteredByStatus.filter { v ->
-            v.bookNameEn.lowercase().contains(q) ||
-            v.bookNameTe.lowercase().contains(q) ||
-            (v.textEn?.lowercase()?.contains(q) == true) ||
-            (v.textTe?.lowercase()?.contains(q) == true) ||
-            "${v.chapter}:${v.verse}".contains(q)
+        val searched = if (q.isEmpty()) {
+            filteredByStatus
+        } else {
+            filteredByStatus.filter { v ->
+                v.bookNameEn.lowercase().contains(q) ||
+                v.bookNameTe.lowercase().contains(q) ||
+                (v.textEn?.lowercase()?.contains(q) == true) ||
+                (v.textTe?.lowercase()?.contains(q) == true) ||
+                "${v.chapter}:${v.verse}".contains(q)
+            }
         }
+
+        val result = searched.toMutableList()
+        when (sortOrder) {
+            VerseSortOrder.SMART -> {
+                result.sortWith { a, b ->
+                    val isADue = a.nextDueDate <= now
+                    val isBDue = b.nextDueDate <= now
+                    if (isADue && !isBDue) return@sortWith -1
+                    if (!isADue && isBDue) return@sortWith 1
+                    a.repetition.compareTo(b.repetition)
+                }
+            }
+            VerseSortOrder.BIBLE_ASC -> {
+                result.sortWith { a, b ->
+                    val bDiff = a.bookId.compareTo(b.bookId)
+                    if (bDiff != 0) return@sortWith bDiff
+                    val chDiff = a.chapter.compareTo(b.chapter)
+                    if (chDiff != 0) return@sortWith chDiff
+                    a.verse.compareTo(b.verse)
+                }
+            }
+            VerseSortOrder.BIBLE_DESC -> {
+                result.sortWith { a, b ->
+                    val bDiff = b.bookId.compareTo(a.bookId)
+                    if (bDiff != 0) return@sortWith bDiff
+                    val chDiff = b.chapter.compareTo(a.chapter)
+                    if (chDiff != 0) return@sortWith chDiff
+                    b.verse.compareTo(a.verse)
+                }
+            }
+            VerseSortOrder.RANDOM -> {
+                result.sortWith { a, b ->
+                    val keyA = randomSortKeys[a.id] ?: 0f
+                    val keyB = randomSortKeys[b.id] ?: 0f
+                    keyA.compareTo(keyB)
+                }
+            }
+        }
+        return result
     }
 
     fun selectVerseForDetail(verse: UserMemoryVerse?) {
@@ -315,15 +386,36 @@ class TodayViewModel @JvmOverloads constructor(
         }
     }
 
-    fun addVerse(bookId: Int, chapter: Int, verse: Int) {
+    fun addVerse(bookId: Int, chapter: Int, verse: Int, topicIds: List<String> = emptyList()) {
         viewModelScope.launch {
-            repository.addUserVerse(bookId, chapter, verse)
-            _uiState.update { it.copy(showAddDialog = false, messageBanner = "Verse added to Today") }
+            val added = repository.addUserVerse(bookId, chapter, verse)
+            if (added && topicIds.isNotEmpty()) {
+                val allVerses = repository.getUserMemoryVerses()
+                val target = allVerses.find { it.bookId == bookId && it.chapter == chapter && it.verse == verse }
+                if (target != null) {
+                    topicIds.forEach { tid ->
+                        repository.addTopicToVerse(target.id, tid)
+                    }
+                }
+            }
+            _uiState.update { it.copy(showAddDialog = false, messageBanner = "Verse added to library!") }
             loadData()
         }
     }
 
-    fun addCollection(collectionId: String) {
+    fun addManualVerse(refStr: String, text: String, translation: String, topicIds: List<String> = emptyList()) {
+        viewModelScope.launch {
+            val parsedRefs = com.example.telugubible.util.ScriptureRefParser.parseReferences(refStr, _uiState.value.books)
+            if (parsedRefs.isNotEmpty()) {
+                val parsed = parsedRefs.first()
+                addVerse(parsed.bookId, parsed.chapter, parsed.verseStart, topicIds)
+            } else {
+                _uiState.update { it.copy(messageBanner = "Could not parse reference: $refStr") }
+            }
+        }
+    }
+
+    fun addCollection(collectionId: String, extraTopicIds: List<String> = emptyList()) {
         val name = if (collectionId == "well_known") "75 Well-Known Verses" else "Top 100 Verses"
         val estimatedTotal = if (collectionId == "well_known") 75 else 100
         viewModelScope.launch {
@@ -332,11 +424,26 @@ class TodayViewModel @JvmOverloads constructor(
                     addingProgress = AddingProgress(name, 0, estimatedTotal)
                 )
             }
+            // Ensure group exists matching PWD
+            val groupName = if (collectionId == "well_known") "Well-Known" else "Top 100"
+            val existingTopic = _uiState.value.topics.find { it.name.equals(groupName, ignoreCase = true) }
+            val groupTopicId = existingTopic?.id ?: repository.createTopic(groupName).id
+
             val count = repository.addPresetCollection(collectionId) { current, total ->
                 _uiState.update {
                     it.copy(addingProgress = AddingProgress(name, current, total))
                 }
             }
+
+            // Associate with topics
+            val allVerses = repository.getUserMemoryVerses()
+            val allTopicsToAdd = (listOfNotNull(groupTopicId) + extraTopicIds).distinct()
+            allVerses.takeLast(count).forEach { v ->
+                allTopicsToAdd.forEach { tid ->
+                    repository.addTopicToVerse(v.id, tid)
+                }
+            }
+
             _uiState.update {
                 it.copy(
                     addingProgress = null,

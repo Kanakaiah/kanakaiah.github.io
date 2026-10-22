@@ -1415,48 +1415,6 @@ private fun ChapterAnchorCard(
                     )
                 }
             }
-
-            // SM-2 Grade Strip (only when revealed and not yet graded on this pass)
-            if (isRevealed) {
-                HorizontalDivider(color = RemoraCardBorder.copy(alpha = 0.6f))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 6.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    GradeButton(label = "Blank", score = 1, color = GradeBlank, onClick = { onGrade(1) }, modifier = Modifier.weight(1f))
-                    GradeButton(label = "Hard", score = 3, color = GradeHard, onClick = { onGrade(3) }, modifier = Modifier.weight(1f))
-                    GradeButton(label = "Good", score = 4, color = GradeGood, onClick = { onGrade(4) }, modifier = Modifier.weight(1f))
-                    GradeButton(label = "Easy", score = 5, color = GradeEasy, onClick = { onGrade(5) }, modifier = Modifier.weight(1f))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun GradeButton(
-    label: String,
-    score: Int,
-    color: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(6.dp),
-        color = color.copy(alpha = 0.12f),
-        border = BorderStroke(1.dp, color.copy(alpha = 0.35f)),
-        modifier = modifier.height(30.dp)
-    ) {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-            Text(
-                text = label,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
         }
     }
 }

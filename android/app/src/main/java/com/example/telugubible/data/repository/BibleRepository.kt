@@ -210,6 +210,10 @@ class BibleRepository(
         userDbHelper.toggleVerseTopic(verseId, topicId)
     }
 
+    suspend fun addTopicToVerse(verseId: Long, topicId: String) = withContext(ioDispatcher) {
+        userDbHelper.tagVerse(verseId, topicId)
+    }
+
     suspend fun getPresetCollections(): List<PresetCollection> = withContext(ioDispatcher) {
         bibleDbHelper.getPresetCollections()
     }

@@ -74,37 +74,13 @@ fun ChapterReaderScreen(
     var totalDragX by remember { mutableFloatStateOf(0f) }
     var recallRevealed by remember { mutableStateOf(false) }
 
-    // Auto-hiding chrome state
-    var chromeVisible by remember { mutableStateOf(true) }
-    var lastFirstVisibleItem by remember { mutableIntStateOf(0) }
-    var lastFirstVisibleOffset by remember { mutableIntStateOf(0) }
+    // Header and bottom bar stay visible matching book page (no auto-hide)
+    val chromeVisible = true
 
-    // Scroll delta tracking for collapsing/expanding chrome
-    LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
-        val currentIndex = listState.firstVisibleItemIndex
-        val currentOffset = listState.firstVisibleItemScrollOffset
-        val delta = (currentIndex - lastFirstVisibleItem) * 500 + (currentOffset - lastFirstVisibleOffset)
-        if (delta > 20) {
-            if (chromeVisible) chromeVisible = false
-        } else if (delta < -20) {
-            if (!chromeVisible) chromeVisible = true
-        }
-        lastFirstVisibleItem = currentIndex
-        lastFirstVisibleOffset = currentOffset
-    }
-
-    // Scroll to top and reset chrome when book or chapter changes
+    // Scroll to top and reset recall when book or chapter changes
     LaunchedEffect(state.currentBook?.id, state.currentChapter) {
-        chromeVisible = true
         listState.scrollToItem(0)
         recallRevealed = false
-    }
-
-    // Keep chrome visible when verses are selected
-    LaunchedEffect(state.selectedVerses.size) {
-        if (state.selectedVerses.isNotEmpty()) {
-            chromeVisible = true
-        }
     }
 
     // Show toast message if present
@@ -332,7 +308,7 @@ fun ChapterReaderScreen(
                                     viewModel.openCrossReferences(listOf(vNum))
                                 },
                                 onEmptySpaceClick = {
-                                    chromeVisible = !chromeVisible
+                                    // Sticky chrome matching book page — do not auto-hide
                                 }
                             )
                         }
@@ -1258,62 +1234,17 @@ private fun EndOfChapterRecallCard(
 
             if (revealed) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Button(
+                    onClick = { onGrade(4) },
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
                 ) {
-                    GradeButton(
-                        label = "Blank",
-                        color = Color(0xFFEF5350),
-                        onClick = { onGrade(1) },
-                        modifier = Modifier.weight(1f)
-                    )
-                    GradeButton(
-                        label = "Hard",
-                        color = Color(0xFFFFA726),
-                        onClick = { onGrade(3) },
-                        modifier = Modifier.weight(1f)
-                    )
-                    GradeButton(
-                        label = "Good",
-                        color = Color(0xFF42A5F5),
-                        onClick = { onGrade(4) },
-                        modifier = Modifier.weight(1f)
-                    )
-                    GradeButton(
-                        label = "Easy",
-                        color = Color(0xFF66BB6A),
-                        onClick = { onGrade(5) },
-                        modifier = Modifier.weight(1f)
-                    )
+                    Text("Got It", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun GradeButton(
-    label: String,
-    color: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        shape = RoundedCornerShape(8.dp),
-        color = color.copy(alpha = 0.15f),
-        border = BorderStroke(1.dp, color.copy(alpha = 0.35f)),
-        modifier = modifier
-            .height(38.dp)
-            .clickable(onClick = onClick)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = label,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
         }
     }
 }

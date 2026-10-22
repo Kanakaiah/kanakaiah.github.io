@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -104,15 +105,7 @@ fun TodayScreen(
                     )
                 }
 
-                // 4. Curated Collections Banners (Top 100 & 75 Well-Known)
-                item {
-                    CuratedCollectionsSection(
-                        onAddTop100 = { viewModel.addCollection("top_100") },
-                        onAddWellKnown = { viewModel.addCollection("well_known") }
-                    )
-                }
-
-                // 5. Spaced Repetition Stats Row
+                // 4. Spaced Repetition Stats Row
                 item {
                     SpacedRepetitionSummaryRow(
                         memorizedCount = state.memorizedCount,
@@ -149,15 +142,17 @@ fun TodayScreen(
                     )
                 }
 
-                // 6. Filter Chips Row
+                // 6. Filter Chips & Sort Controls Row (Matching PWD Dashboard.tsx)
                 item {
                     FilterTabs(
                         currentFilter = state.filter,
+                        currentSort = state.sortOrder,
                         allCount = state.verses.size,
                         dueCount = state.dueCount,
                         learningCount = state.learningCount,
                         memorizedCount = state.memorizedCount,
-                        onSelectFilter = { viewModel.setFilter(it) }
+                        onSelectFilter = { viewModel.setFilter(it) },
+                        onSelectSort = { viewModel.setSortOrder(it) }
                     )
                 }
 
@@ -176,6 +171,7 @@ fun TodayScreen(
                     item {
                         EmptyVerseState(
                             filter = state.filter,
+                            isTotalLibraryEmpty = state.verses.isEmpty(),
                             onAddTop100 = { viewModel.addCollection("top_100") },
                             onAddWellKnown = { viewModel.addCollection("well_known") },
                             onOpenAdd = { viewModel.toggleAddDialog(true) }
@@ -262,18 +258,24 @@ fun TodayScreen(
             Icon(Icons.Default.Add, contentDescription = "Add Verse", modifier = Modifier.size(26.dp))
         }
 
-        // Add Verse Sheet (Modal Bottom Sheet with 3 Tabs)
+        // Add Verse Sheet (Modal Bottom Sheet with 3 Tabs matching PWD)
         if (state.showAddDialog) {
             AddVerseSheet(
                 books = state.books,
-                collections = state.presetCollections,
+                topics = state.topics,
                 searchResults = state.searchResults,
                 isSearching = state.isSearchingInDialog,
                 activeVersion = state.activeVersion,
                 onDismiss = { viewModel.toggleAddDialog(false) },
-                onAddSingleVerse = { bookId, ch, vs -> viewModel.addVerse(bookId, ch, vs) },
-                onAddCollection = { collId -> viewModel.addCollection(collId) },
-                onSearchVerses = { q -> viewModel.searchVersesForDialog(q) }
+                onAddSingleVerse = { bookId, ch, vs, topicIds -> viewModel.addVerse(bookId, ch, vs, topicIds) },
+                onAddManualVerse = { ref, text, trans, topicIds -> viewModel.addManualVerse(ref, text, trans, topicIds) },
+                onAddCollection = { collId, topicIds -> viewModel.addCollection(collId, topicIds) },
+                onSearchVerses = { q -> viewModel.searchVersesForDialog(q) },
+                onCreateTopic = { viewModel.createTopic(it) },
+                onNavigateToGuides = {
+                    viewModel.toggleAddDialog(false)
+                    onNavigateToGuide(1)
+                }
             )
         }
 
@@ -489,98 +491,7 @@ private fun RemoraHeroDailyPractice(
     }
 }
 
-@Composable
-private fun CuratedCollectionsSection(
-    onAddTop100: () -> Unit,
-    onAddWellKnown: () -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(
-            text = "CURATED COLLECTIONS",
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.2.sp,
-            color = RemoraTextMuted
-        )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            // Top 100 Card
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBg,
-                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.weight(1f)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "Top 100 Verses",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Most popular global passages.",
-                        fontSize = 11.sp,
-                        color = RemoraTextSecondary,
-                        lineHeight = 15.sp
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Button(
-                        onClick = onAddTop100,
-                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                        shape = RoundedCornerShape(6.dp),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add Top 100", fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
-                }
-            }
-
-            // 75 Well-Known Card
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBg,
-                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.weight(1f)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "75 Well-Known",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Essential & encouraging verses.",
-                        fontSize = 11.sp,
-                        color = RemoraTextSecondary,
-                        lineHeight = 15.sp
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    OutlinedButton(
-                        onClick = onAddWellKnown,
-                        shape = RoundedCornerShape(6.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraGold),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = RemoraGold, modifier = Modifier.size(14.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add 75 Verses", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = RemoraGold)
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 private fun SpacedRepetitionSummaryRow(
@@ -633,37 +544,103 @@ private fun MetricPill(
 @Composable
 private fun FilterTabs(
     currentFilter: VerseFilter,
+    currentSort: VerseSortOrder,
     allCount: Int,
     dueCount: Int,
     learningCount: Int,
     memorizedCount: Int,
-    onSelectFilter: (VerseFilter) -> Unit
+    onSelectFilter: (VerseFilter) -> Unit,
+    onSelectSort: (VerseSortOrder) -> Unit
 ) {
-    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        val items = listOf(
-            Triple(VerseFilter.ALL, "All verses", allCount),
-            Triple(VerseFilter.DUE, "Review due", dueCount),
-            Triple(VerseFilter.LEARNING, "Learning", learningCount),
-            Triple(VerseFilter.MEMORIZED, "Memorized", memorizedCount)
-        )
-        items(items) { (filter, label, count) ->
-            val isSelected = currentFilter == filter
+    var isSortMenuOpen by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.weight(1f).padding(end = 8.dp)
+        ) {
+            val items = listOf(
+                Triple(VerseFilter.ALL, "All verses", allCount),
+                Triple(VerseFilter.DUE, "Review due", dueCount),
+                Triple(VerseFilter.LEARNING, "Learning", learningCount),
+                Triple(VerseFilter.MEMORIZED, "Memorized", memorizedCount)
+            )
+            items(items) { (filter, label, count) ->
+                val isSelected = currentFilter == filter
+                Surface(
+                    onClick = { onSelectFilter(filter) },
+                    shape = RoundedCornerShape(8.dp),
+                    color = if (isSelected) RemoraAccent else RemoraCardBg,
+                    border = androidx.compose.foundation.BorderStroke(
+                        1.dp,
+                        if (isSelected) RemoraAccent else RemoraCardBorder
+                    )
+                ) {
+                    Text(
+                        text = "$label ($count)",
+                        fontSize = 12.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isSelected) Color.White else RemoraTextSecondary,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+            }
+        }
+
+        // Sort Dropdown Button matching PWD Dashboard.tsx
+        Box {
             Surface(
-                onClick = { onSelectFilter(filter) },
+                onClick = { isSortMenuOpen = true },
                 shape = RoundedCornerShape(8.dp),
-                color = if (isSelected) RemoraAccent else RemoraCardBg,
-                border = androidx.compose.foundation.BorderStroke(
-                    1.dp,
-                    if (isSelected) RemoraAccent else RemoraCardBorder
-                )
+                color = RemoraCardBg,
+                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                modifier = Modifier.height(34.dp)
             ) {
-                Text(
-                    text = "$label ($count)",
-                    fontSize = 12.sp,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                    color = if (isSelected) Color.White else RemoraTextSecondary,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SwapVert,
+                        contentDescription = "Sort",
+                        tint = RemoraTextMuted,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = currentSort.shortLabel,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = RemoraTextPrimary
+                    )
+                }
+            }
+
+            DropdownMenu(
+                expanded = isSortMenuOpen,
+                onDismissRequest = { isSortMenuOpen = false },
+                modifier = Modifier.background(RemoraCardBgElevated)
+            ) {
+                VerseSortOrder.entries.forEach { sort ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = sort.label,
+                                fontSize = 13.sp,
+                                fontWeight = if (currentSort == sort) FontWeight.Bold else FontWeight.Normal,
+                                color = if (currentSort == sort) RemoraAccent else RemoraTextPrimary
+                            )
+                        },
+                        onClick = {
+                            onSelectSort(sort)
+                            isSortMenuOpen = false
+                        }
+                    )
+                }
             }
         }
     }
@@ -976,6 +953,7 @@ private fun RemoraVerseCard(
 @Composable
 private fun EmptyVerseState(
     filter: VerseFilter,
+    isTotalLibraryEmpty: Boolean,
     onAddTop100: () -> Unit,
     onAddWellKnown: () -> Unit,
     onOpenAdd: () -> Unit
@@ -1006,7 +984,36 @@ private fun EmptyVerseState(
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(6.dp))
-            Text("Add a Verse", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Text(if (isTotalLibraryEmpty) "Add Your First Verse" else "Add a Verse", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+        }
+
+        if (isTotalLibraryEmpty) {
+            Spacer(modifier = Modifier.height(14.dp))
+            Text(
+                text = "Verses you add are scheduled for review using spaced repetition. You'll see them frequently at first, then at increasing intervals as you secure them in memory.",
+                fontSize = 12.sp,
+                color = RemoraTextMuted,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                lineHeight = 18.sp,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            TextButton(onClick = onAddWellKnown) {
+                Text(
+                    text = "Or start with 75 well-known passages",
+                    color = RemoraAccent,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            TextButton(onClick = onAddTop100) {
+                Text(
+                    text = "Or start with the Top 100 most popular verses",
+                    color = RemoraAccent,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
     }
 }

@@ -286,38 +286,15 @@ fun ThemeDrill(
                                     )
                                 }
                             } else {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                Button(
+                                    onClick = { viewModel.gradeCurrent(4) },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(48.dp)
                                 ) {
-                                    ThemeGradeButton(
-                                        label = "Blank",
-                                        score = 1,
-                                        color = GradeBlank,
-                                        modifier = Modifier.weight(1f),
-                                        onClick = { viewModel.gradeCurrent(1) }
-                                    )
-                                    ThemeGradeButton(
-                                        label = "Hard",
-                                        score = 3,
-                                        color = GradeHard,
-                                        modifier = Modifier.weight(1f),
-                                        onClick = { viewModel.gradeCurrent(3) }
-                                    )
-                                    ThemeGradeButton(
-                                        label = "Good",
-                                        score = 4,
-                                        color = GradeGood,
-                                        modifier = Modifier.weight(1f),
-                                        onClick = { viewModel.gradeCurrent(4) }
-                                    )
-                                    ThemeGradeButton(
-                                        label = "Easy",
-                                        score = 5,
-                                        color = GradeEasy,
-                                        modifier = Modifier.weight(1f),
-                                        onClick = { viewModel.gradeCurrent(5) }
-                                    )
+                                    Text("Next", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
 
@@ -369,31 +346,5 @@ private fun ScopePill(
             color = if (selected) Color.White else RemoraTextMuted,
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
         )
-    }
-}
-
-@Composable
-private fun ThemeGradeButton(
-    label: String,
-    score: Int,
-    color: Color,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier.height(48.dp),
-        shape = RoundedCornerShape(8.dp),
-        color = color.copy(alpha = 0.12f),
-        border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.35f))
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = label,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-        }
     }
 }

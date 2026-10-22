@@ -445,66 +445,16 @@ fun AnchorDrill(
                             val suggested = state.judgement?.score
 
                             Column {
-                                Row(
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(
+                                    onClick = { viewModel.gradeCurrent(4) },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(10.dp),
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(bottom = 6.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
+                                        .height(48.dp)
                                 ) {
-                                    Text(
-                                        text = "HOW WAS YOUR RECALL?",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.sp,
-                                        color = RemoraTextMuted
-                                    )
-                                    if (suggested != null) {
-                                        Text(
-                                            text = "Suggested: ${if (suggested >= 4) "Good" else if (suggested == 3) "Hard" else "Blank"}",
-                                            fontSize = 11.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = RemoraAccentLight
-                                        )
-                                    }
-                                }
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    GradeButton(
-                                        label = "Blank",
-                                        score = 1,
-                                        color = GradeBlank,
-                                        isSuggested = suggested == 1,
-                                        onClick = { viewModel.gradeCurrent(1) },
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    GradeButton(
-                                        label = "Hard",
-                                        score = 3,
-                                        color = GradeHard,
-                                        isSuggested = suggested == 3,
-                                        onClick = { viewModel.gradeCurrent(3) },
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    GradeButton(
-                                        label = "Good",
-                                        score = 4,
-                                        color = GradeGood,
-                                        isSuggested = suggested == 4,
-                                        onClick = { viewModel.gradeCurrent(4) },
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    GradeButton(
-                                        label = "Easy",
-                                        score = 5,
-                                        color = GradeEasy,
-                                        isSuggested = suggested == 5,
-                                        onClick = { viewModel.gradeCurrent(5) },
-                                        modifier = Modifier.weight(1f)
-                                    )
+                                    Text("Next", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -516,33 +466,3 @@ fun AnchorDrill(
 }
 
 private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
-
-@Composable
-private fun GradeButton(
-    label: String,
-    score: Int,
-    color: Color,
-    isSuggested: Boolean = false,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(8.dp),
-        color = if (isSuggested) color.copy(alpha = 0.28f) else color.copy(alpha = 0.15f),
-        border = androidx.compose.foundation.BorderStroke(
-            if (isSuggested) 2.dp else 1.dp,
-            if (isSuggested) color else color.copy(alpha = 0.4f)
-        ),
-        modifier = modifier.height(48.dp)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = label,
-                fontSize = 13.sp,
-                fontWeight = if (isSuggested) FontWeight.ExtraBold else FontWeight.Bold,
-                color = color
-            )
-        }
-    }
-}

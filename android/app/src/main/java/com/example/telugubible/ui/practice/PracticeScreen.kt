@@ -447,102 +447,31 @@ fun PracticeScreen(
                             }
                         }
 
-                        // Bottom Scoring Bar: 4 Remora Grading Buttons (Hidden in Read mode)
+                        // Bottom Continue Bar (Hidden in Read mode)
                         if (state.activeMode != PracticeMode.READ && state.isRevealed) {
-                            val suggested = state.modeAccuracy?.let { CueUtils.suggestedScore(it) }
-                            val suggestedLabel = suggested?.let { CueUtils.suggestedLabel(it) }
-
                             Column {
-                                if (state.modeAccuracy != null && suggestedLabel != null) {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(bottom = 6.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = "${state.modeAccuracy}% of words matched",
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = RemoraTextSecondary
-                                        )
-                                        Text(
-                                            text = "Suggested: $suggestedLabel",
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = RemoraAccentLight
-                                        )
-                                    }
-                                } else if (state.gradeCeiling < 5) {
-                                    val ceilingName = when (state.gradeCeiling) {
-                                        4 -> "Good"
-                                        3 -> "Hard"
-                                        else -> "Blank"
-                                    }
-                                    val reason = when (state.activeMode) {
-                                        PracticeMode.ERASER -> "Words still visible"
-                                        PracticeMode.SCRAMBLE -> "Word order mistakes"
-                                        PracticeMode.SPEECH -> "Recitation accuracy ${state.modeAccuracy ?: 0}%"
-                                        else -> "Hint used"
-                                    }
+                                if (state.modeAccuracy != null) {
                                     Text(
-                                        text = "$reason — best available grade is $ceilingName.",
-                                        fontSize = 11.sp,
+                                        text = "${state.modeAccuracy}% of words matched",
+                                        fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = GradeHard,
+                                        color = RemoraTextSecondary,
                                         modifier = Modifier.padding(bottom = 6.dp)
-                                    )
-                                } else {
-                                    Text(
-                                        text = "HOW WAS YOUR RECALL?",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.sp,
-                                        color = RemoraTextMuted,
-                                        modifier = Modifier.padding(bottom = 8.dp)
                                     )
                                 }
 
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                Button(
+                                    onClick = { viewModel.gradeCurrent(4) },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(48.dp)
                                 ) {
-                                    GradeButton(
-                                        label = "Blank",
-                                        score = 1,
-                                        color = GradeBlank,
-                                        isSuggested = suggested == 1,
-                                        enabled = 1 <= state.gradeCeiling,
-                                        onClick = { viewModel.gradeCurrent(1) },
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    GradeButton(
-                                        label = "Hard",
-                                        score = 3,
-                                        color = GradeHard,
-                                        isSuggested = suggested == 3,
-                                        enabled = 3 <= state.gradeCeiling,
-                                        onClick = { viewModel.gradeCurrent(3) },
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    GradeButton(
-                                        label = "Good",
-                                        score = 4,
-                                        color = GradeGood,
-                                        isSuggested = suggested == 4,
-                                        enabled = 4 <= state.gradeCeiling,
-                                        onClick = { viewModel.gradeCurrent(4) },
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    GradeButton(
-                                        label = "Easy",
-                                        score = 5,
-                                        color = GradeEasy,
-                                        isSuggested = suggested == 5,
-                                        enabled = 5 <= state.gradeCeiling,
-                                        onClick = { viewModel.gradeCurrent(5) },
-                                        modifier = Modifier.weight(1f)
+                                    Text(
+                                        text = if (state.currentIndex >= state.verses.size - 1) "Finish Practice" else "Next Verse",
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold
                                     )
                                 }
                             }
@@ -563,40 +492,6 @@ fun PracticeScreen(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun GradeButton(
-    label: String,
-    score: Int,
-    color: Color,
-    isSuggested: Boolean = false,
-    enabled: Boolean = true,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val opacity = if (enabled) 1.0f else 0.25f
-
-    Surface(
-        onClick = { if (enabled) onClick() },
-        enabled = enabled,
-        shape = RoundedCornerShape(8.dp),
-        color = if (isSuggested) color.copy(alpha = 0.28f * opacity) else color.copy(alpha = 0.15f * opacity),
-        border = androidx.compose.foundation.BorderStroke(
-            if (isSuggested) 2.dp else 1.dp,
-            if (isSuggested) color.copy(alpha = opacity) else color.copy(alpha = 0.4f * opacity)
-        ),
-        modifier = modifier.height(48.dp)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = label,
-                fontSize = 13.sp,
-                fontWeight = if (isSuggested) FontWeight.ExtraBold else FontWeight.Bold,
-                color = color.copy(alpha = opacity)
-            )
         }
     }
 }
