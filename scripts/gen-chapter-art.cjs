@@ -22,7 +22,7 @@ for (const book of fs.readdirSync(CHAPTERS_DIR)) {
   // than to promise a plate that isn't there.
   const present = new Set(
     fs.readdirSync(dir)
-      .map(f => /^ch(\d+)\.png$/.exec(f))
+      .map(f => /^ch(\d+)\.(png|jpg)$/i.exec(f))
       .filter(Boolean)
       .map(m => Number(m[1]))
   );
