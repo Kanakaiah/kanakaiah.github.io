@@ -80,22 +80,9 @@ fun ImmersedReader(
     val fontMultiplier = scaleMultipliers[fontScaleIndex.coerceIn(0, 4)]
 
     var chromeVisible by remember { mutableStateOf(true) }
-    var userInteractedTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
 
     // Sentences mask state (reset whenever verse changes)
     var unmaskedIndices by remember(verse.id) { mutableStateOf(setOf<Int>()) }
-
-    // Auto-hide chrome timer after 4 seconds of stillness
-    LaunchedEffect(chromeVisible, userInteractedTime) {
-        if (chromeVisible) {
-            delay(4000L)
-            chromeVisible = false
-        }
-    }
-
-    fun triggerInteraction() {
-        userInteractedTime = System.currentTimeMillis()
-    }
 
     var totalDragX by remember { mutableFloatStateOf(0f) }
 
@@ -133,7 +120,6 @@ fun ImmersedReader(
                     indication = null
                 ) {
                     chromeVisible = !chromeVisible
-                    triggerInteraction()
                 }
             .pointerInput(verse.id) {
                 detectHorizontalDragGestures(
@@ -145,7 +131,6 @@ fun ImmersedReader(
                             onPrev()
                         }
                         totalDragX = 0f
-                        triggerInteraction()
                     },
                     onDragCancel = { totalDragX = 0f },
                     onHorizontalDrag = { _, dragAmount ->
@@ -155,26 +140,7 @@ fun ImmersedReader(
             }
             .systemBarsPadding()
     ) {
-        // Ambient Top Progress Line (Always visible)
-        if (total > 1) {
-            val progressFraction = (index + 1).toFloat() / total
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(3.dp)
-                    .background(RemoraCardBorder)
-                    .align(Alignment.TopCenter)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(progressFraction)
-                        .background(RemoraAccent)
-                )
-            }
-        }
-
-        // Ambient Position Indicator (Always visible)
+        // Ambient Position Indicator (Always visible at top center)
         if (total > 1) {
             Box(
                 modifier = Modifier
@@ -207,6 +173,10 @@ fun ImmersedReader(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {}
                     .padding(horizontal = 16.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -230,7 +200,6 @@ fun ImmersedReader(
                     IconButton(
                         onClick = {
                             if (fontScaleIndex > 0) fontScaleIndex--
-                            triggerInteraction()
                         },
                         enabled = fontScaleIndex > 0,
                         modifier = Modifier.size(34.dp)
@@ -247,7 +216,6 @@ fun ImmersedReader(
                     TextButton(
                         onClick = {
                             fontScaleIndex = 1
-                            triggerInteraction()
                         },
                         contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp),
                         modifier = Modifier.height(32.dp)
@@ -264,7 +232,6 @@ fun ImmersedReader(
                     IconButton(
                         onClick = {
                             if (fontScaleIndex < scaleMultipliers.size - 1) fontScaleIndex++
-                            triggerInteraction()
                         },
                         enabled = fontScaleIndex < scaleMultipliers.size - 1,
                         modifier = Modifier.size(34.dp)
@@ -287,10 +254,7 @@ fun ImmersedReader(
 
                     // TTS Read Aloud Button
                     IconButton(
-                        onClick = {
-                            onToggleAutoPlay()
-                            triggerInteraction()
-                        },
+                        onClick = onToggleAutoPlay,
                         modifier = Modifier.size(36.dp)
                     ) {
                         Icon(
@@ -304,13 +268,13 @@ fun ImmersedReader(
             }
         }
 
-        // Center Verse Content
+        // Center Verse Content (Left aligned matching PWD)
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 28.dp)
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.height(64.dp))
@@ -356,13 +320,13 @@ fun ImmersedReader(
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            // Sentences Body with optional Recall Masking and Bionic Reading
+            // Sentences Body with optional Recall Masking and Bionic Reading (Left aligned)
             val baseFontSize = 24.sp * fontMultiplier
             val lineHeight = (baseFontSize.value * 1.55f).sp
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 sentences.forEachIndexed { sIdx, sentence ->
@@ -377,7 +341,7 @@ fun ImmersedReader(
                         lineHeight = lineHeight,
                         fontFamily = if (serifTypography) FontFamily.Serif else FontFamily.Default,
                         color = RemoraTextPrimary,
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Start,
                         modifier = Modifier
                             .fillMaxWidth()
                             .then(
@@ -391,14 +355,13 @@ fun ImmersedReader(
                             .clickable {
                                 if (isMasked) {
                                     unmaskedIndices = unmaskedIndices + sIdx
-                                    triggerInteraction()
                                 }
                             }
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(64.dp))
+            Spacer(modifier = Modifier.height(96.dp))
         }
 
         // Bottom Navigation Bar (Fades in/out)
@@ -408,19 +371,21 @@ fun ImmersedReader(
             exit = fadeOut(animationSpec = tween(250)),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 18.dp)
+                .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 14.dp)
                 .align(Alignment.BottomCenter)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {},
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FilledTonalButton(
-                    onClick = {
-                        onPrev()
-                        triggerInteraction()
-                    },
+                    onClick = onPrev,
                     enabled = index > 0,
                     shape = RoundedCornerShape(12.dp)
                 ) {
@@ -430,10 +395,7 @@ fun ImmersedReader(
                 }
 
                 FilledTonalButton(
-                    onClick = {
-                        onNext()
-                        triggerInteraction()
-                    },
+                    onClick = onNext,
                     enabled = index < total - 1,
                     shape = RoundedCornerShape(12.dp)
                 ) {
@@ -449,7 +411,7 @@ fun ImmersedReader(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 20.dp)
+                    .padding(bottom = if (chromeVisible && total > 1) 68.dp else 20.dp)
                     .align(Alignment.BottomCenter),
                 contentAlignment = Alignment.Center
             ) {
@@ -479,6 +441,25 @@ fun ImmersedReader(
                         )
                     }
                 }
+            }
+        }
+
+        // Ambient Bottom Progress Line (Always visible at the bottom of the screen)
+        if (total > 1) {
+            val progressFraction = (index + 1).toFloat() / total
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(3.dp)
+                    .background(RemoraCardBorder)
+                    .align(Alignment.BottomCenter)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(progressFraction)
+                        .background(RemoraAccent)
+                )
             }
         }
     }

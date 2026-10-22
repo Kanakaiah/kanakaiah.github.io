@@ -547,7 +547,7 @@ fun VerseDetailSheet(
                             onDismiss()
                             onReadInChapter()
                         },
-                        modifier = Modifier.weight(1.1f),
+                        modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(10.dp),
                         border = BorderStroke(1.dp, RemoraCardBorder)
                     ) {
@@ -561,33 +561,13 @@ fun VerseDetailSheet(
                         Text("Context", color = RemoraTextPrimary, fontSize = 13.sp)
                     }
 
-                    // Immerse button
-                    OutlinedButton(
-                        onClick = {
-                            onDismiss()
-                            onImmerse()
-                        },
-                        modifier = Modifier.weight(1.1f),
-                        shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(1.dp, RemoraCardBorder)
-                    ) {
-                        Icon(
-                            Icons.Default.Fullscreen,
-                            contentDescription = null,
-                            tint = RemoraAccent,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Immerse", color = RemoraTextPrimary, fontSize = 13.sp)
-                    }
-
                     // Practice button
                     Button(
                         onClick = {
                             onDismiss()
                             onPractice()
                         },
-                        modifier = Modifier.weight(1.4f),
+                        modifier = Modifier.weight(1.8f),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent)
                     ) {

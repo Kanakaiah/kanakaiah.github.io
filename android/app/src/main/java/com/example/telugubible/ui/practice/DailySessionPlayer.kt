@@ -877,18 +877,22 @@ private fun VerseCard(
                     ) {
                         Box(modifier = Modifier.padding(18.dp)) {
                             // Maximize to Immerse button
-                            IconButton(
+                            Surface(
                                 onClick = { viewModel.setVerseMode(PracticeMode.IMMERSED) },
+                                shape = CircleShape,
+                                color = RemoraAccent.copy(alpha = 0.15f),
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
-                                    .size(32.dp)
+                                    .size(36.dp)
                             ) {
-                                Icon(
-                                    Icons.Default.Fullscreen,
-                                    contentDescription = "Immerse Reading",
-                                    tint = RemoraAccent,
-                                    modifier = Modifier.size(20.dp)
-                                )
+                                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                                    Icon(
+                                        Icons.Default.Fullscreen,
+                                        contentDescription = "Immerse Reading",
+                                        tint = RemoraAccent,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
                             }
 
                             if (state.isRevealed) {

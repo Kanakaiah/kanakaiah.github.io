@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
-import com.example.telugubible.ui.practice.ImmersedReader
 import com.example.telugubible.theme.*
 import com.example.telugubible.util.BionicUtils
 
@@ -51,38 +50,6 @@ fun TodayScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
-    var immersedVerseIndex by remember { mutableStateOf<Int?>(null) }
-
-    val currentVerseList = remember(state.filteredVerses, state.verses) {
-        state.filteredVerses.ifEmpty { state.verses }
-    }
-
-    if (immersedVerseIndex != null && currentVerseList.isNotEmpty()) {
-        val safeIndex = (immersedVerseIndex ?: 0).coerceIn(0, currentVerseList.size - 1)
-        val currentVerse = currentVerseList[safeIndex]
-        ImmersedReader(
-            verse = currentVerse,
-            index = safeIndex,
-            total = currentVerseList.size,
-            onPrev = {
-                if (safeIndex > 0) immersedVerseIndex = safeIndex - 1
-            },
-            onNext = {
-                if (safeIndex < currentVerseList.size - 1) immersedVerseIndex = safeIndex + 1
-            },
-            onExit = {
-                viewModel.stopTts()
-                immersedVerseIndex = null
-            },
-            isAutoPlaying = state.isTtsSpeaking,
-            onToggleAutoPlay = { viewModel.toggleTts(currentVerse) },
-            isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH,
-            bionicReading = state.bionicReading,
-            recallMasking = state.recallMasking,
-            serifTypography = true
-        )
-        return
-    }
 
     Box(
         modifier = modifier
@@ -215,12 +182,11 @@ fun TodayScreen(
                     }
                 } else {
                     item {
-                        Row(
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            contentAlignment = Alignment.CenterStart
                         ) {
                             Text(
                                 text = "MEMORY VERSES (${state.filteredVerses.size})",
@@ -229,25 +195,6 @@ fun TodayScreen(
                                 letterSpacing = 1.sp,
                                 color = RemoraTextMuted
                             )
-
-                            TextButton(
-                                onClick = { immersedVerseIndex = 0 },
-                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
-                            ) {
-                                Icon(
-                                    Icons.Default.Fullscreen,
-                                    contentDescription = null,
-                                    tint = RemoraAccent,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    text = "Immerse All",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = RemoraAccent
-                                )
-                            }
                         }
                     }
 
@@ -285,10 +232,6 @@ fun TodayScreen(
                 onPractice = {
                     viewModel.selectVerseForDetail(null)
                     onNavigateToPractice()
-                },
-                onImmerse = {
-                    viewModel.selectVerseForDetail(null)
-                    immersedVerseIndex = if (currentIndex >= 0) currentIndex else 0
                 },
                 onReadInChapter = {
                     viewModel.selectVerseForDetail(null)

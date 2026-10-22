@@ -322,16 +322,20 @@ fun PracticeScreen(
                                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                                     ) {
                                         if (state.activeMode == PracticeMode.READ) {
-                                            IconButton(
+                                            Surface(
                                                 onClick = { viewModel.setPracticeMode(PracticeMode.IMMERSED) },
-                                                modifier = Modifier.size(32.dp)
+                                                shape = CircleShape,
+                                                color = RemoraAccent.copy(alpha = 0.15f),
+                                                modifier = Modifier.size(36.dp)
                                             ) {
-                                                Icon(
-                                                    Icons.Default.Fullscreen,
-                                                    contentDescription = "Immerse Reading",
-                                                    tint = RemoraAccent,
-                                                    modifier = Modifier.size(22.dp)
-                                                )
+                                                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                                                    Icon(
+                                                        Icons.Default.Fullscreen,
+                                                        contentDescription = "Immerse Reading",
+                                                        tint = RemoraAccent,
+                                                        modifier = Modifier.size(20.dp)
+                                                    )
+                                                }
                                             }
                                         }
 
