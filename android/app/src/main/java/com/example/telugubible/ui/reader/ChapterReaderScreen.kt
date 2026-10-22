@@ -771,7 +771,7 @@ fun ChapterReaderScreen(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = prevLabel?.uppercase() ?: "START",
-                            fontSize = 12.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (prevLabel != null) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.4f),
                             letterSpacing = 0.5.sp
@@ -791,7 +791,7 @@ fun ChapterReaderScreen(
                         ) {
                             Text(
                                 text = "CH $currentChapter",
-                                fontSize = 12.sp,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = state.readerTheme.textColor,
                                 letterSpacing = 0.5.sp
@@ -814,7 +814,7 @@ fun ChapterReaderScreen(
                     ) {
                         Text(
                             text = nextLabel?.uppercase() ?: "END",
-                            fontSize = 12.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (nextLabel != null) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.4f),
                             letterSpacing = 0.5.sp
@@ -878,7 +878,7 @@ fun ChapterReaderScreen(
                                 shape = RoundedCornerShape(10.dp),
                                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
                             ) {
-                                Text("α Words", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                Text("α Words", fontSize = 13.sp, fontWeight = FontWeight.Bold)
                             }
                         }
 
@@ -897,7 +897,7 @@ fun ChapterReaderScreen(
                         ) {
                             Icon(Icons.Default.ContentCopy, contentDescription = "Copy", modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Copy", fontSize = 12.sp)
+                            Text("Copy", fontSize = 13.sp)
                         }
 
                         // Immerse Button
@@ -913,7 +913,7 @@ fun ChapterReaderScreen(
                         ) {
                             Icon(Icons.Default.Fullscreen, contentDescription = "Immerse", modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Immerse", fontSize = 12.sp)
+                            Text("Immerse", fontSize = 13.sp)
                         }
 
                         // Refs Button
@@ -926,7 +926,7 @@ fun ChapterReaderScreen(
                         ) {
                             Icon(Icons.Default.MenuBook, contentDescription = "Refs", modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Refs", fontSize = 12.sp)
+                            Text("Refs", fontSize = 13.sp)
                         }
 
                         // Memorize Button
@@ -940,7 +940,7 @@ fun ChapterReaderScreen(
                         ) {
                             Icon(Icons.Default.Add, contentDescription = "Add to Memory", modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Memorize", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Text("Memorize", fontSize = 13.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -1018,7 +1018,7 @@ fun ChapterReaderScreen(
                                 label = {
                                     Text(
                                         text = topic.name,
-                                        fontSize = 12.sp,
+                                        fontSize = 13.sp,
                                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                         color = if (isSelected) RemoraAccentLight else RemoraTextSecondary
                                     )
@@ -1050,7 +1050,7 @@ fun ChapterReaderScreen(
                                     singleLine = true,
                                     textStyle = androidx.compose.ui.text.TextStyle(
                                         color = RemoraTextPrimary,
-                                        fontSize = 12.sp
+                                        fontSize = 13.sp
                                     ),
                                     modifier = Modifier.width(90.dp)
                                 )
@@ -1082,7 +1082,7 @@ fun ChapterReaderScreen(
                                 ) {
                                     Icon(Icons.Default.Add, contentDescription = null, tint = RemoraTextMuted, modifier = Modifier.size(14.dp))
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Text("New Group", fontSize = 12.sp, color = RemoraTextSecondary)
+                                    Text("New Group", fontSize = 13.sp, color = RemoraTextSecondary)
                                 }
                             }
                         }
@@ -1109,7 +1109,7 @@ fun ChapterReaderScreen(
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                             ) {
                                 Text("Combine Consecutive", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                                Text("e.g. 1:3-5 and 1:7", fontSize = 11.sp, color = Color.White.copy(alpha = 0.7f))
+                                Text("e.g. 1:3-5 and 1:7", fontSize = 12.sp, color = Color.White.copy(alpha = 0.7f))
                             }
                         }
 
@@ -1132,7 +1132,7 @@ fun ChapterReaderScreen(
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                             ) {
                                 Text("Individual Verses", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = RemoraTextPrimary)
-                                Text("Add ${state.selectedVerses.size} separate entries", fontSize = 11.sp, color = RemoraTextSecondary)
+                                Text("Add ${state.selectedVerses.size} separate entries", fontSize = 12.sp, color = RemoraTextSecondary)
                             }
                         }
                     } else {

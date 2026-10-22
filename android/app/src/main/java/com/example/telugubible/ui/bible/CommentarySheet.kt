@@ -71,13 +71,13 @@ fun CommentarySheet(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "${currentSeries.icon} ${currentSeries.title}",
-                        fontSize = 17.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = RemoraTextPrimary
                     )
                     Text(
                         text = if (filterToBook && bookNameEn != null) "Scholarly guides for $bookNameEn" else currentSeries.subtitle,
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         color = RemoraTextSecondary
                     )
                 }
@@ -113,10 +113,10 @@ fun CommentarySheet(
                     ) {
                         Text(
                             text = "${s.icon} ${s.title.substringBefore(" Commentary").substringBefore(" /")}",
-                            fontSize = 11.sp,
+                            fontSize = 13.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                             color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
                         )
                     }
                 }
@@ -131,7 +131,7 @@ fun CommentarySheet(
                 ) {
                     Text(
                         text = if (filterToBook) "Filtered to $bookNameEn" else "Showing full series",
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         color = RemoraTextMuted
                     )
                     TextButton(
@@ -140,7 +140,7 @@ fun CommentarySheet(
                     ) {
                         Text(
                             text = if (filterToBook) "Show whole series" else "Filter to $bookNameEn",
-                            fontSize = 11.sp,
+                            fontSize = 13.sp,
                             color = RemoraAccent
                         )
                     }
@@ -190,16 +190,16 @@ fun CommentarySectionView(
         // Section Header
         Text(
             text = section.heading.uppercase(),
-            fontSize = 11.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.2.sp,
+            letterSpacing = 1.sp,
             color = RemoraAccent
         )
 
         if (section.description.isNotBlank()) {
             Text(
                 text = section.description,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 color = RemoraTextMuted
             )
         }
@@ -220,16 +220,16 @@ fun CommentarySectionView(
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
                         text = "STRATEGY NOTE",
-                        fontSize = 9.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
+                        letterSpacing = 0.5.sp,
                         color = RemoraGold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = section.note,
-                        fontSize = 12.sp,
-                        lineHeight = 18.sp,
+                        fontSize = 13.sp,
+                        lineHeight = 19.sp,
                         color = RemoraTextSecondary
                     )
                 }
@@ -281,10 +281,10 @@ fun CommentaryEntryCard(
                     ) {
                         Text(
                             text = entry.rank,
-                            fontSize = 10.sp,
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = badgeColor,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
                         )
                     }
                 }
@@ -292,7 +292,7 @@ fun CommentaryEntryCard(
                 if (entry.reference.isNotBlank()) {
                     Text(
                         text = entry.reference,
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = RemoraTextMuted
                     )
@@ -302,7 +302,7 @@ fun CommentaryEntryCard(
             // Author and Title
             Text(
                 text = entry.person,
-                fontSize = 14.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = RemoraTextPrimary
             )
@@ -310,9 +310,9 @@ fun CommentaryEntryCard(
             // Quote / Appraisal
             Text(
                 text = "\"${entry.quote}\"",
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontStyle = FontStyle.Italic,
-                lineHeight = 18.sp,
+                lineHeight = 20.sp,
                 color = RemoraTextSecondary
             )
 
@@ -320,8 +320,8 @@ fun CommentaryEntryCard(
             if (entry.note.isNotBlank()) {
                 Text(
                     text = entry.note,
-                    fontSize = 12.sp,
-                    lineHeight = 17.sp,
+                    fontSize = 13.sp,
+                    lineHeight = 19.sp,
                     color = RemoraTextMuted
                 )
             }

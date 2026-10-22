@@ -88,9 +88,9 @@ fun StrongsDialog(
                         Text(
                             text = "STRONG'S DEFINITION",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp,
+                            fontSize = 12.sp,
                             color = RemoraAccent,
-                            letterSpacing = 1.sp
+                            letterSpacing = 0.8.sp
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         StrongsRefText(
@@ -108,16 +108,16 @@ fun StrongsDialog(
                         Text(
                             text = "KJV USAGE",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp,
+                            fontSize = 12.sp,
                             color = RemoraAccent,
-                            letterSpacing = 1.sp
+                            letterSpacing = 0.8.sp
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = entry.kjvDef.trim(),
-                            fontSize = 13.sp,
+                            fontSize = 14.sp,
                             fontStyle = FontStyle.Italic,
-                            lineHeight = 19.sp,
+                            lineHeight = 20.sp,
                             color = RemoraTextSecondary
                         )
                     }
@@ -128,16 +128,16 @@ fun StrongsDialog(
                         Text(
                             text = "ORIGIN / DERIVATION",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp,
+                            fontSize = 12.sp,
                             color = RemoraAccent,
-                            letterSpacing = 1.sp
+                            letterSpacing = 0.8.sp
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         StrongsRefText(
                             text = entry.derivation.trim(),
                             onRefClick = onRefClick,
-                            fontSize = 13.sp,
-                            lineHeight = 19.sp,
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
                             color = RemoraTextSecondary
                         )
                     }
@@ -160,7 +160,7 @@ fun StrongsDialog(
                     ) {
                         Text(
                             text = "View all occurrences",
-                            fontSize = 13.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(6.dp))

@@ -729,7 +729,7 @@ private fun CommentariesGuideSection(
                     ) {
                         Text(
                             text = "Browse Commentaries",
-                            fontSize = 12.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -745,7 +745,7 @@ private fun CommentariesGuideSection(
                     ) {
                         Text(
                             text = "⛪ Theologians",
-                            fontSize = 11.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -1322,11 +1322,11 @@ private fun ChapterAnchorCard(
                             onClick = onReadChapter,
                             colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
                             border = BorderStroke(1.dp, RemoraCardBorder),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
                             shape = RoundedCornerShape(6.dp),
-                            modifier = Modifier.height(26.dp)
+                            modifier = Modifier.height(28.dp)
                         ) {
-                            Text("Read Chapter", fontSize = 10.sp, color = RemoraTextSecondary)
+                            Text("Read Chapter", fontSize = 12.sp, color = RemoraTextSecondary)
                         }
                     }
 
@@ -1398,9 +1398,9 @@ private fun ChapterAnchorCard(
                         ) {
                             Text(
                                 text = "TAP TO REVEAL",
-                                fontSize = 10.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.sp,
+                                letterSpacing = 0.5.sp,
                                 color = RemoraAccentLight,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                             )

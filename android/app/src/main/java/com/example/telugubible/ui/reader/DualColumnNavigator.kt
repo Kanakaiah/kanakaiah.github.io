@@ -133,7 +133,7 @@ fun DualColumnNavigator(
                                         ) {
                                             Text(
                                                 text = translation.fullLabel,
-                                                fontSize = 13.sp,
+                                                fontSize = 14.sp,
                                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                                 color = if (isSelected) RemoraAccentLight else RemoraTextPrimary
                                             )

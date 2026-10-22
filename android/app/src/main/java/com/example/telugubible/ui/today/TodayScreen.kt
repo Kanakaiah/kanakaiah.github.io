@@ -119,7 +119,7 @@ fun TodayScreen(
                     OutlinedTextField(
                         value = state.searchQuery,
                         onValueChange = { viewModel.setSearchQuery(it) },
-                        placeholder = { Text("Search verses...", color = RemoraTextMuted, fontSize = 13.sp) },
+                        placeholder = { Text("Search verses...", color = RemoraTextMuted, fontSize = 14.sp) },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = RemoraTextMuted) },
                         trailingIcon = {
                             if (state.searchQuery.isNotEmpty()) {
@@ -187,9 +187,9 @@ fun TodayScreen(
                         ) {
                             Text(
                                 text = "MEMORY VERSES (${state.filteredVerses.size})",
-                                fontSize = 11.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.sp,
+                                letterSpacing = 0.8.sp,
                                 color = RemoraTextMuted
                             )
                         }
@@ -416,9 +416,9 @@ private fun RemoraHeroDailyPractice(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "DAILY PRACTICE",
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.5.sp,
+                        letterSpacing = 1.sp,
                         color = RemoraAccent
                     )
                 }
@@ -614,7 +614,7 @@ private fun FilterTabs(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = currentSort.shortLabel,
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = RemoraTextPrimary
                     )
@@ -631,7 +631,7 @@ private fun FilterTabs(
                         text = {
                             Text(
                                 text = sort.label,
-                                fontSize = 13.sp,
+                                fontSize = 14.sp,
                                 fontWeight = if (currentSort == sort) FontWeight.Bold else FontWeight.Normal,
                                 color = if (currentSort == sort) RemoraAccent else RemoraTextPrimary
                             )
@@ -673,7 +673,7 @@ private fun TopicFilterRow(
             ) {
                 Text(
                     text = "All Groups",
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                     color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
@@ -695,7 +695,7 @@ private fun TopicFilterRow(
             ) {
                 Text(
                     text = topic.name,
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                     color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
@@ -825,7 +825,7 @@ private fun RemoraVerseCard(
                             isMemorized -> "MEMORIZED"
                             else -> "LEARNING"
                         },
-                        fontSize = 10.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = when {
                             isDue -> RemoraGold
@@ -878,7 +878,7 @@ private fun RemoraVerseCard(
                             ) {
                                 Text(
                                     text = name,
-                                    fontSize = 10.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = RemoraAccentLight,
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -888,7 +888,7 @@ private fun RemoraVerseCard(
                         if (verseTopicNames.size > 3) {
                             Text(
                                 text = "+${verseTopicNames.size - 3}",
-                                fontSize = 10.sp,
+                                fontSize = 11.sp,
                                 color = RemoraTextMuted
                             )
                         }
@@ -912,7 +912,7 @@ private fun RemoraVerseCard(
                             for (i in 0 until 5) {
                                 Text(
                                     text = if (i < score) "●" else "○",
-                                    fontSize = 11.sp,
+                                    fontSize = 12.sp,
                                     color = if (i < score) RemoraAccent else RemoraTextMuted.copy(alpha = 0.4f)
                                 )
                             }
@@ -920,7 +920,7 @@ private fun RemoraVerseCard(
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "Mastery: $score/5",
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             color = RemoraTextMuted
                         )
                     }
@@ -930,12 +930,12 @@ private fun RemoraVerseCard(
                         OutlinedButton(
                             onClick = onRead,
                             shape = RoundedCornerShape(6.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                             border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
                         ) {
-                            Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = RemoraTextSecondary, modifier = Modifier.size(13.dp))
+                            Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = RemoraTextSecondary, modifier = Modifier.size(14.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Read", fontSize = 11.sp, color = RemoraTextSecondary)
+                            Text("Read", fontSize = 12.sp, color = RemoraTextSecondary)
                         }
 
                         IconButton(
@@ -985,17 +985,17 @@ private fun EmptyVerseState(
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(6.dp))
-            Text(if (isTotalLibraryEmpty) "Add Your First Verse" else "Add a Verse", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+            Text(if (isTotalLibraryEmpty) "Add Your First Verse" else "Add a Verse", fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }
 
         if (isTotalLibraryEmpty) {
             Spacer(modifier = Modifier.height(14.dp))
             Text(
                 text = "Verses you add are scheduled for review using spaced repetition. You'll see them frequently at first, then at increasing intervals as you secure them in memory.",
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 color = RemoraTextMuted,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                lineHeight = 18.sp,
+                lineHeight = 19.sp,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -1003,7 +1003,7 @@ private fun EmptyVerseState(
                 Text(
                     text = "Or start with 75 well-known passages",
                     color = RemoraAccent,
-                    fontSize = 13.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -1011,7 +1011,7 @@ private fun EmptyVerseState(
                 Text(
                     text = "Or start with the Top 100 most popular verses",
                     color = RemoraAccent,
-                    fontSize = 13.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }

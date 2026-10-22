@@ -96,9 +96,9 @@ fun AddVerseSheet(
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "ASSIGN TO GROUPS (OPTIONAL)",
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
+                    letterSpacing = 0.8.sp,
                     color = RemoraTextMuted
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -127,7 +127,7 @@ fun AddVerseSheet(
                         ) {
                             Text(
                                 text = topic.name,
-                                fontSize = 12.sp,
+                                fontSize = 13.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                 color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
@@ -144,7 +144,7 @@ fun AddVerseSheet(
                                 OutlinedTextField(
                                     value = newGroupName,
                                     onValueChange = { newGroupName = it },
-                                    placeholder = { Text("New group...", fontSize = 12.sp) },
+                                    placeholder = { Text("New group...", fontSize = 13.sp) },
                                     singleLine = true,
                                     modifier = Modifier.width(130.dp).height(46.dp),
                                     colors = OutlinedTextFieldDefaults.colors(
@@ -180,7 +180,7 @@ fun AddVerseSheet(
                                 ) {
                                     Icon(Icons.Default.Add, contentDescription = null, tint = RemoraTextSecondary, modifier = Modifier.size(14.dp))
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Text("New Group", fontSize = 12.sp, color = RemoraTextSecondary, fontWeight = FontWeight.Medium)
+                                    Text("New Group", fontSize = 13.sp, color = RemoraTextSecondary, fontWeight = FontWeight.Medium)
                                 }
                             }
                         }
@@ -297,7 +297,7 @@ private fun ModeTabButton(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = label,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (isSelected) Color.White else RemoraTextSecondary
             )
@@ -595,7 +595,7 @@ private fun SearchTabContent(
                         ) {
                             Text(
                                 text = selectedTranslation,
-                                fontSize = 12.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraAccentLight
                             )
@@ -609,7 +609,7 @@ private fun SearchTabContent(
                     ) {
                         translationOptions.forEach { opt ->
                             DropdownMenuItem(
-                                text = { Text(opt, fontWeight = if (opt == selectedTranslation) FontWeight.Bold else FontWeight.Normal) },
+                                text = { Text(opt, fontSize = 14.sp, fontWeight = if (opt == selectedTranslation) FontWeight.Bold else FontWeight.Normal) },
                                 onClick = {
                                     selectedTranslation = opt
                                     translationExpanded = false
@@ -845,7 +845,7 @@ private fun CollectionsTabContent(
                         ) {
                             Text(
                                 text = "100 PASSAGES",
-                                fontSize = 10.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraAccentLight,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
@@ -904,7 +904,7 @@ private fun CollectionsTabContent(
                         ) {
                             Text(
                                 text = "75 PASSAGES",
-                                fontSize = 10.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraGold,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)

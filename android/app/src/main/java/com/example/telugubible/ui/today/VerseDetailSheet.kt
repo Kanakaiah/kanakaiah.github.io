@@ -272,9 +272,9 @@ fun VerseDetailSheet(
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
                         text = "GROUPS",
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.2.sp,
+                        letterSpacing = 1.sp,
                         color = RemoraTextMuted
                     )
                     Spacer(modifier = Modifier.height(10.dp))
@@ -298,7 +298,7 @@ fun VerseDetailSheet(
                             ) {
                                 Text(
                                     text = topic.name,
-                                    fontSize = 12.sp,
+                                    fontSize = 13.sp,
                                     fontWeight = if (isActive) FontWeight.Bold else FontWeight.Medium,
                                     color = if (isActive) RemoraAccentLight else RemoraTextSecondary,
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
@@ -314,7 +314,7 @@ fun VerseDetailSheet(
                                 OutlinedTextField(
                                     value = newGroupName,
                                     onValueChange = { newGroupName = it },
-                                    placeholder = { Text("New group...", fontSize = 11.sp, color = RemoraTextMuted) },
+                                    placeholder = { Text("New group...", fontSize = 12.sp, color = RemoraTextMuted) },
                                     singleLine = true,
                                     shape = RoundedCornerShape(14.dp),
                                     colors = OutlinedTextFieldDefaults.colors(
@@ -423,7 +423,7 @@ fun VerseDetailSheet(
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Mastery",
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             color = RemoraTextMuted,
                             fontWeight = FontWeight.Medium
                         )
@@ -450,7 +450,7 @@ fun VerseDetailSheet(
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "${verse.interval}d interval",
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             color = RemoraTextMuted,
                             fontWeight = FontWeight.Medium
                         )
@@ -478,7 +478,7 @@ fun VerseDetailSheet(
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Review",
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             color = RemoraTextMuted,
                             fontWeight = FontWeight.Medium
                         )
@@ -558,7 +558,7 @@ fun VerseDetailSheet(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Context", color = RemoraTextPrimary, fontSize = 13.sp)
+                        Text("Context", color = RemoraTextPrimary, fontSize = 14.sp)
                     }
 
                     // Practice button
@@ -578,7 +578,7 @@ fun VerseDetailSheet(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Practice", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        Text("Practice", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     }
 
                     // Trash icon button

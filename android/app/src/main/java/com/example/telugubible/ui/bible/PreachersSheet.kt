@@ -60,13 +60,13 @@ fun PreachersSheet(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "⛪ Preachers & Theologians",
-                        fontSize = 17.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = RemoraTextPrimary
                     )
                     Text(
                         text = "Major figures across church history",
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         color = RemoraTextSecondary
                     )
                 }
@@ -102,10 +102,10 @@ fun PreachersSheet(
                     ) {
                         Text(
                             text = era.heading,
-                            fontSize = 12.sp,
+                            fontSize = 13.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                             color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
                         )
                     }
                 }
@@ -116,7 +116,7 @@ fun PreachersSheet(
             // Era Description
             Text(
                 text = currentEra.description,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
                 color = RemoraTextMuted,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -166,7 +166,7 @@ fun PreacherCard(
             ) {
                 Text(
                     text = entry.person,
-                    fontSize = 15.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = RemoraTextPrimary
                 )
@@ -178,25 +178,25 @@ fun PreacherCard(
                 ) {
                     Text(
                         text = entry.rank,
-                        fontSize = 10.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = RemoraTextMuted,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
                     )
                 }
             }
 
             Text(
                 text = entry.reference,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
                 color = RemoraGold
             )
 
             Text(
                 text = entry.quote,
-                fontSize = 12.sp,
-                lineHeight = 18.sp,
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
                 color = RemoraTextSecondary
             )
 
@@ -217,19 +217,19 @@ fun PreacherCard(
                             border = BorderStroke(1.dp, RemoraCardBorderHover)
                         ) {
                             Row(
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.MenuBook,
                                     contentDescription = null,
                                     tint = RemoraAccentLight,
-                                    modifier = Modifier.size(11.dp)
+                                    modifier = Modifier.size(13.dp)
                                 )
                                 Text(
                                     text = res.title,
-                                    fontSize = 10.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = RemoraTextPrimary
                                 )
@@ -237,7 +237,7 @@ fun PreacherCard(
                                     imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                                     contentDescription = null,
                                     tint = RemoraTextMuted,
-                                    modifier = Modifier.size(10.dp)
+                                    modifier = Modifier.size(12.dp)
                                 )
                             }
                         }

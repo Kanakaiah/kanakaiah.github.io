@@ -96,15 +96,15 @@ fun BibleBrowserScreen(
                         modifier = Modifier.weight(1f)
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text("📜", fontSize = 13.sp)
+                            Text("📜", fontSize = 15.sp)
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Commentaries",
-                                fontSize = 12.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = RemoraTextPrimary
                             )
@@ -119,15 +119,15 @@ fun BibleBrowserScreen(
                         modifier = Modifier.weight(1f)
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text("⛪", fontSize = 13.sp)
+                            Text("⛪", fontSize = 15.sp)
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Theologians",
-                                fontSize = 12.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = RemoraTextPrimary
                             )
@@ -181,7 +181,7 @@ fun BibleBrowserScreen(
                         ) {
                             Text(
                                 text = sec,
-                                fontSize = 12.sp,
+                                fontSize = 13.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                 color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
                                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
@@ -342,7 +342,7 @@ private fun TestamentTabButton(
         ) {
             Text(
                 text = label,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                 color = if (isSelected) Color.White else RemoraTextSecondary
             )
