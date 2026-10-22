@@ -212,6 +212,32 @@ class PracticeViewModel @JvmOverloads constructor(
         }
     }
 
+    fun focusVerse(verseId: Long) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val allVerses = repository.getUserMemoryVerses()
+            val targetIdx = allVerses.indexOfFirst { it.id == verseId }
+            if (targetIdx >= 0) {
+                _uiState.update {
+                    it.copy(
+                        verses = allVerses,
+                        currentIndex = targetIdx,
+                        isRevealed = false,
+                        isFinished = false,
+                        isLoading = false,
+                        modeAccuracy = null,
+                        modeCommitted = null,
+                        hintRevealedRatio = null,
+                        eraserHiddenRatio = null,
+                        scrambleAccuracy = null
+                    )
+                }
+            } else {
+                loadPracticeVerses()
+            }
+        }
+    }
+
     fun setPracticeMode(mode: PracticeMode) {
         _uiState.update {
             it.copy(

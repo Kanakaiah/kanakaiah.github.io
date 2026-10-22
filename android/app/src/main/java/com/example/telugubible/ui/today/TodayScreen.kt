@@ -41,7 +41,8 @@ import com.example.telugubible.util.BionicUtils
 @Composable
 fun TodayScreen(
     viewModel: TodayViewModel,
-    onNavigateToPractice: () -> Unit,
+    onStartSession: () -> Unit,
+    onNavigateToPractice: (Long?) -> Unit,
     onNavigateToReader: (Int, Int) -> Unit,
     onNavigateToRetention: () -> Unit = {},
     onNavigateToGuide: (Int) -> Unit = {},
@@ -68,13 +69,13 @@ fun TodayScreen(
                 contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 1. Remora Hero: Daily Practice
+                // 1. Remora Hero: Daily Practice (Starts 20-item adaptive session)
                 item {
                     RemoraHeroDailyPractice(
                         heroVerse = state.heroVerse,
                         dueCount = state.dueCount,
                         displayLanguage = state.displayLanguage,
-                        onStartSession = onNavigateToPractice
+                        onStartSession = onStartSession
                     )
                 }
 
@@ -207,7 +208,7 @@ fun TodayScreen(
                             recallMasking = state.recallMasking,
                             fontSizeMultiplier = state.fontSizeMultiplier,
                             onClick = { viewModel.selectVerseForDetail(verse) },
-                            onPractice = onNavigateToPractice,
+                            onPractice = { onNavigateToPractice(verse.id) },
                             onRead = { onNavigateToReader(verse.bookId, verse.chapter) },
                             onDelete = { viewModel.removeVerse(verse.id) }
                         )
@@ -231,7 +232,7 @@ fun TodayScreen(
                 onDismiss = { viewModel.selectVerseForDetail(null) },
                 onPractice = {
                     viewModel.selectVerseForDetail(null)
-                    onNavigateToPractice()
+                    onNavigateToPractice(detailVerse.id)
                 },
                 onReadInChapter = {
                     viewModel.selectVerseForDetail(null)

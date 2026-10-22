@@ -40,7 +40,7 @@ enum class PracticeSubject {
 fun PracticeScreen(
     viewModel: PracticeViewModel,
     onNavigateToBible: () -> Unit,
-    initialSubject: PracticeSubject = PracticeSubject.SESSION,
+    initialSubject: PracticeSubject = PracticeSubject.VERSES,
     modifier: Modifier = Modifier
 ) {
     var activeSubject by remember(initialSubject) { mutableStateOf(initialSubject) }

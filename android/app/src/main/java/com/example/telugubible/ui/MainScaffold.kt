@@ -69,7 +69,7 @@ fun MainScaffold(
     readerViewModel: ReaderViewModel = viewModel()
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(RemoraTab.TODAY) }
-    var practiceSubject by rememberSaveable { mutableStateOf(PracticeSubject.SESSION) }
+    var practiceSubject by rememberSaveable { mutableStateOf(PracticeSubject.VERSES) }
     var activeGuideBookId by rememberSaveable { mutableStateOf<Int?>(null) }
     var isInReaderMode by rememberSaveable { mutableStateOf(false) }
     var isInSettingsMode by rememberSaveable { mutableStateOf(false) }
@@ -251,7 +251,10 @@ fun MainScaffold(
                                 onClick = {
                                     selectedTab = tab
                                     if (tab == RemoraTab.TODAY) todayViewModel.loadData()
-                                    if (tab == RemoraTab.PRACTICE) practiceViewModel.loadPracticeVerses()
+                                    if (tab == RemoraTab.PRACTICE) {
+                                        practiceSubject = PracticeSubject.VERSES
+                                        practiceViewModel.loadPracticeVerses()
+                                    }
                                 },
                                 icon = {
                                     Icon(
@@ -290,9 +293,18 @@ fun MainScaffold(
                     when (tab) {
                         RemoraTab.TODAY -> TodayScreen(
                             viewModel = todayViewModel,
-                            onNavigateToPractice = {
+                            onStartSession = {
                                 practiceSubject = PracticeSubject.SESSION
                                 selectedTab = RemoraTab.PRACTICE
+                            },
+                            onNavigateToPractice = { verseId ->
+                                practiceSubject = PracticeSubject.VERSES
+                                selectedTab = RemoraTab.PRACTICE
+                                if (verseId != null) {
+                                    practiceViewModel.focusVerse(verseId)
+                                } else {
+                                    practiceViewModel.loadPracticeVerses()
+                                }
                             },
                             onNavigateToReader = openReader,
                             onNavigateToRetention = { isInRetentionMode = true },
