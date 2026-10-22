@@ -369,6 +369,9 @@ class DailySessionViewModel @JvmOverloads constructor(
                     anchorJudgement = null
                 )
             }
+            if (_uiState.value.isTtsSpeaking) {
+                playCurrentItemTts()
+            }
         }
     }
 
@@ -383,28 +386,74 @@ class DailySessionViewModel @JvmOverloads constructor(
                     anchorJudgement = null
                 )
             }
-        }
-    }
-
-    fun toggleTts() {
-        val isSpeaking = _uiState.value.isTtsSpeaking
-        if (isSpeaking) {
-            ttsManager.stop()
-            _uiState.update { it.copy(isTtsSpeaking = false) }
-        } else {
-            val item = _uiState.value.currentItem as? SessionItem.Verse
-            if (item != null) {
-                val text = item.textEn.ifBlank { item.textTe }
-                val isEn = item.textEn.isNotBlank()
-                ttsManager.speak(text, langCode = if (isEn) "en" else "te", onDone = {
-                    _uiState.update { it.copy(isTtsSpeaking = false) }
-                })
-                _uiState.update { it.copy(isTtsSpeaking = true) }
+            if (_uiState.value.isTtsSpeaking) {
+                playCurrentItemTts()
             }
         }
     }
 
+    private var ttsJob: kotlinx.coroutines.Job? = null
+
+    fun toggleTts() {
+        val isSpeaking = _uiState.value.isTtsSpeaking
+        if (isSpeaking) {
+            stopTts()
+        } else {
+            _uiState.update { it.copy(isTtsSpeaking = true) }
+            playCurrentItemTts()
+        }
+    }
+
+    private fun playCurrentItemTts() {
+        ttsJob?.cancel()
+        val item = _uiState.value.currentItem as? SessionItem.Verse
+        if (item == null || !_uiState.value.isTtsSpeaking) {
+            stopTts()
+            return
+        }
+
+        val rawText = item.textEn.ifBlank { item.textTe }
+        val cleanText = rawText
+            .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+            .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<[^>]+>"), "")
+            .replace("&nbsp;", " ")
+            .replace("&amp;", "&")
+            .replace("&quot;", "\"")
+            .replace("&#39;", "'")
+            .trim()
+        val ref = "${item.bookName} ${item.displayRef}"
+        val textToSpeak = "$ref. $cleanText"
+        val isEn = item.textEn.isNotBlank()
+
+        ttsManager.speak(textToSpeak, langCode = if (isEn) "en" else "te", onDone = {
+            ttsJob = viewModelScope.launch {
+                if (!_uiState.value.isTtsSpeaking) return@launch
+                val nextIdx = _uiState.value.currentIndex + 1
+                val totalItems = _uiState.value.plan?.items?.size ?: 0
+                if (nextIdx < totalItems) {
+                    kotlinx.coroutines.delay(800)
+                    if (!_uiState.value.isTtsSpeaking) return@launch
+                    _uiState.update {
+                        it.copy(
+                            currentIndex = nextIdx,
+                            isRevealed = false,
+                            anchorInput = "",
+                            anchorJudgement = null
+                        )
+                    }
+                    playCurrentItemTts()
+                } else {
+                    _uiState.update { it.copy(isTtsSpeaking = false) }
+                }
+            }
+        })
+    }
+
     fun stopTts() {
+        ttsJob?.cancel()
+        ttsJob = null
         ttsManager.stop()
         _uiState.update { it.copy(isTtsSpeaking = false) }
     }

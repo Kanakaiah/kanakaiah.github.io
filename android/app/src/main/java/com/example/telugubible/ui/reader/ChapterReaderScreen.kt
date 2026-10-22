@@ -195,6 +195,17 @@ fun ChapterReaderScreen(
 
     if (immersedVerseIndex != null && state.verses.isNotEmpty()) {
         val safeIndex = (immersedVerseIndex ?: 0).coerceIn(0, state.verses.size - 1)
+
+        LaunchedEffect(state.activeTtsVerse) {
+            val activeVerse = state.activeTtsVerse
+            if (activeVerse != null) {
+                val targetIdx = state.verses.indexOfFirst { it.verse == activeVerse }
+                if (targetIdx >= 0) {
+                    immersedVerseIndex = targetIdx
+                }
+            }
+        }
+
         val v = state.verses[safeIndex]
         val userVerse = com.example.telugubible.data.model.UserMemoryVerse(
             id = v.id,

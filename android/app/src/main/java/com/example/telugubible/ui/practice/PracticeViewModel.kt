@@ -427,9 +427,10 @@ class PracticeViewModel @JvmOverloads constructor(
         val curr = _uiState.value.currentIndex
         val size = _uiState.value.verses.size
         if (curr < size - 1) {
+            val nextIdx = curr + 1
             _uiState.update {
                 it.copy(
-                    currentIndex = curr + 1,
+                    currentIndex = nextIdx,
                     isRevealed = false,
                     modeAccuracy = null,
                     modeCommitted = null,
@@ -438,10 +439,14 @@ class PracticeViewModel @JvmOverloads constructor(
                     scrambleAccuracy = null
                 )
             }
-            stopTts()
             viewModelScope.launch {
-                repository.setSessionState(KEY_SESSION_INDEX, (curr + 1).toString())
+                repository.setSessionState(KEY_SESSION_INDEX, nextIdx.toString())
                 repository.setSessionState(KEY_SESSION_REVEALED, "false")
+            }
+            if (_uiState.value.isTtsSpeaking) {
+                playCurrentVerseTts()
+            } else {
+                stopTts()
             }
         }
     }
@@ -449,9 +454,10 @@ class PracticeViewModel @JvmOverloads constructor(
     fun prevVerse() {
         val curr = _uiState.value.currentIndex
         if (curr > 0) {
+            val prevIdx = curr - 1
             _uiState.update {
                 it.copy(
-                    currentIndex = curr - 1,
+                    currentIndex = prevIdx,
                     isRevealed = false,
                     modeAccuracy = null,
                     modeCommitted = null,
@@ -460,32 +466,86 @@ class PracticeViewModel @JvmOverloads constructor(
                     scrambleAccuracy = null
                 )
             }
-            stopTts()
             viewModelScope.launch {
-                repository.setSessionState(KEY_SESSION_INDEX, (curr - 1).toString())
+                repository.setSessionState(KEY_SESSION_INDEX, prevIdx.toString())
                 repository.setSessionState(KEY_SESSION_REVEALED, "false")
+            }
+            if (_uiState.value.isTtsSpeaking) {
+                playCurrentVerseTts()
+            } else {
+                stopTts()
             }
         }
     }
 
+    private var ttsJob: kotlinx.coroutines.Job? = null
+
     fun toggleTts() {
-        val verse = _uiState.value.currentVerse ?: return
-        val isSpeaking = _uiState.value.isTtsSpeaking
-        if (isSpeaking) {
+        if (_uiState.value.isTtsSpeaking) {
             stopTts()
         } else {
-            val isEnglish = _uiState.value.displayLanguage == DisplayLanguage.ENGLISH
-            val text = (if (isEnglish) verse.textEn else verse.textTe)
-                ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
-            val langCode = if (isEnglish) "en" else "te"
-            ttsManager.speak(text, langCode) {
-                _uiState.update { it.copy(isTtsSpeaking = false) }
-            }
             _uiState.update { it.copy(isTtsSpeaking = true) }
+            playCurrentVerseTts()
+        }
+    }
+
+    private fun playCurrentVerseTts() {
+        ttsJob?.cancel()
+        val verse = _uiState.value.currentVerse
+        if (verse == null || !_uiState.value.isTtsSpeaking) {
+            stopTts()
+            return
+        }
+
+        val isEnglish = _uiState.value.displayLanguage == DisplayLanguage.ENGLISH
+        val rawText = (if (isEnglish) verse.textEn else verse.textTe)
+            ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+        val cleanText = rawText
+            .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+            .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<[^>]+>"), "")
+            .replace("&nbsp;", " ")
+            .replace("&amp;", "&")
+            .replace("&quot;", "\"")
+            .replace("&#39;", "'")
+            .trim()
+
+        val ref = verse.fullRef(isEnglish)
+        val textToSpeak = "$ref. $cleanText"
+        val langCode = if (isEnglish) "en" else "te"
+
+        ttsManager.speak(textToSpeak, langCode) {
+            ttsJob = viewModelScope.launch {
+                if (!_uiState.value.isTtsSpeaking) return@launch
+                val nextIndex = _uiState.value.currentIndex + 1
+                if (nextIndex < _uiState.value.verses.size) {
+                    kotlinx.coroutines.delay(800)
+                    if (!_uiState.value.isTtsSpeaking) return@launch
+                    _uiState.update {
+                        it.copy(
+                            currentIndex = nextIndex,
+                            isRevealed = false,
+                            modeAccuracy = null,
+                            modeCommitted = null,
+                            hintRevealedRatio = null,
+                            eraserHiddenRatio = null,
+                            scrambleAccuracy = null
+                        )
+                    }
+                    repository.setSessionState(KEY_SESSION_INDEX, nextIndex.toString())
+                    repository.setSessionState(KEY_SESSION_REVEALED, "false")
+                    playCurrentVerseTts()
+                } else {
+                    _uiState.update { it.copy(isTtsSpeaking = false) }
+                }
+            }
         }
     }
 
     fun stopTts() {
+        ttsJob?.cancel()
+        ttsJob = null
         ttsManager.stop()
         _uiState.update { it.copy(isTtsSpeaking = false) }
     }
