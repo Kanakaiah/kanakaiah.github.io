@@ -1,6 +1,11 @@
 package com.example.telugubible.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -75,6 +80,11 @@ fun MainScaffold(
     var isInSettingsMode by rememberSaveable { mutableStateOf(false) }
     var isInRetentionMode by rememberSaveable { mutableStateOf(false) }
     var showAboutDialog by rememberSaveable { mutableStateOf(false) }
+    var isBibleChromeVisible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(selectedTab) {
+        isBibleChromeVisible = true
+    }
 
     val todayState by todayViewModel.uiState.collectAsState()
 
@@ -146,138 +156,150 @@ fun MainScaffold(
     } else {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.MenuBook,
-                                contentDescription = null,
-                                tint = RemoraAccent,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = if (selectedTab == RemoraTab.BIBLE) "Bible" else "Remora",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary,
-                                letterSpacing = (-0.5).sp
-                            )
-                        }
-                    },
-                    actions = {
-                        // Streak Pill (Click to open Retention)
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = RemoraCardBgElevated,
-                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                            modifier = Modifier
-                                .padding(end = 6.dp)
-                                .clickable { isInRetentionMode = true }
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
-                            ) {
+                AnimatedVisibility(
+                    visible = selectedTab != RemoraTab.BIBLE || isBibleChromeVisible,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    TopAppBar(
+                        title = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
-                                    Icons.Default.LocalFireDepartment,
+                                    Icons.AutoMirrored.Filled.MenuBook,
                                     contentDescription = null,
-                                    tint = RemoraGold,
-                                    modifier = Modifier.size(16.dp)
+                                    tint = RemoraAccent,
+                                    modifier = Modifier.size(20.dp)
                                 )
-                                Spacer(modifier = Modifier.width(4.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "${todayState.streak}",
-                                    fontSize = 13.sp,
+                                    text = if (selectedTab == RemoraTab.BIBLE) "Bible" else "Remora",
+                                    fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = RemoraTextPrimary
+                                    color = RemoraTextPrimary,
+                                    letterSpacing = (-0.5).sp
                                 )
                             }
-                        }
+                        },
+                        actions = {
+                            // Streak Pill (Click to open Retention)
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = RemoraCardBgElevated,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                                modifier = Modifier
+                                    .padding(end = 6.dp)
+                                    .clickable { isInRetentionMode = true }
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.LocalFireDepartment,
+                                        contentDescription = null,
+                                        tint = RemoraGold,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "${todayState.streak}",
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = RemoraTextPrimary
+                                    )
+                                }
+                            }
 
-                        // Retention / Insights button
-                        IconButton(onClick = { isInRetentionMode = true }) {
-                            Icon(
-                                Icons.Default.Insights,
-                                contentDescription = "Retention Analytics",
-                                tint = RemoraTextSecondary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                            // Retention / Insights button
+                            IconButton(onClick = { isInRetentionMode = true }) {
+                                Icon(
+                                    Icons.Default.Insights,
+                                    contentDescription = "Retention Analytics",
+                                    tint = RemoraTextSecondary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
 
-                        // Settings button
-                        IconButton(onClick = { isInSettingsMode = true }) {
-                            Icon(
-                                Icons.Default.Settings,
-                                contentDescription = "Settings",
-                                tint = RemoraTextSecondary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                            // Settings button
+                            IconButton(onClick = { isInSettingsMode = true }) {
+                                Icon(
+                                    Icons.Default.Settings,
+                                    contentDescription = "Settings",
+                                    tint = RemoraTextSecondary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
 
-                        // Info / About button
-                        IconButton(onClick = { showAboutDialog = true }) {
-                            Icon(
-                                Icons.Outlined.Info,
-                                contentDescription = "About",
-                                tint = RemoraTextSecondary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = RemoraBackground
+                            // Info / About button
+                            IconButton(onClick = { showAboutDialog = true }) {
+                                Icon(
+                                    Icons.Outlined.Info,
+                                    contentDescription = "About",
+                                    tint = RemoraTextSecondary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = RemoraBackground
+                        )
                     )
-                )
+                }
             },
             bottomBar = {
-                Surface(
-                    color = RemoraCardBg,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.fillMaxWidth()
+                AnimatedVisibility(
+                    visible = selectedTab != RemoraTab.BIBLE || isBibleChromeVisible,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
                 ) {
-                    NavigationBar(
-                        containerColor = RemoraCardBg,
-                        tonalElevation = 0.dp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .navigationBarsPadding()
-                            .height(64.dp)
+                    Surface(
+                        color = RemoraCardBg,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        RemoraTab.entries.forEach { tab ->
-                            val isSelected = selectedTab == tab
-                            NavigationBarItem(
-                                selected = isSelected,
-                                onClick = {
-                                    selectedTab = tab
-                                    if (tab == RemoraTab.TODAY) todayViewModel.loadData()
-                                    if (tab == RemoraTab.PRACTICE) {
-                                        practiceSubject = PracticeSubject.VERSES
-                                        practiceViewModel.loadPracticeVerses()
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        tab.icon,
-                                        contentDescription = tab.title,
-                                        modifier = Modifier.size(22.dp)
+                        NavigationBar(
+                            containerColor = RemoraCardBg,
+                            tonalElevation = 0.dp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .navigationBarsPadding()
+                                .height(64.dp)
+                        ) {
+                            RemoraTab.entries.forEach { tab ->
+                                val isSelected = selectedTab == tab
+                                NavigationBarItem(
+                                    selected = isSelected,
+                                    onClick = {
+                                        selectedTab = tab
+                                        if (tab == RemoraTab.TODAY) todayViewModel.loadData()
+                                        if (tab == RemoraTab.PRACTICE) {
+                                            practiceSubject = PracticeSubject.VERSES
+                                            practiceViewModel.loadPracticeVerses()
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            tab.icon,
+                                            contentDescription = tab.title,
+                                            modifier = Modifier.size(22.dp)
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            text = tab.title,
+                                            fontSize = 11.sp,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                        )
+                                    },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = RemoraAccent,
+                                        selectedTextColor = RemoraAccent,
+                                        unselectedIconColor = RemoraTextMuted,
+                                        unselectedTextColor = RemoraTextMuted,
+                                        indicatorColor = RemoraAccent.copy(alpha = 0.15f)
                                     )
-                                },
-                                label = {
-                                    Text(
-                                        text = tab.title,
-                                        fontSize = 11.sp,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                                    )
-                                },
-                                colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = RemoraAccent,
-                                    selectedTextColor = RemoraAccent,
-                                    unselectedIconColor = RemoraTextMuted,
-                                    unselectedTextColor = RemoraTextMuted,
-                                    indicatorColor = RemoraAccent.copy(alpha = 0.15f)
                                 )
-                            )
+                            }
                         }
                     }
                 }
@@ -328,7 +350,8 @@ fun MainScaffold(
                         )
                         RemoraTab.BIBLE -> BibleBrowserScreen(
                             viewModel = bibleBrowserViewModel,
-                            onOpenBook = { bookId -> activeGuideBookId = bookId }
+                            onOpenBook = { bookId -> activeGuideBookId = bookId },
+                            onChromeVisibilityChange = { visible -> isBibleChromeVisible = visible }
                         )
                     }
                 }
