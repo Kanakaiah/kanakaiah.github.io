@@ -9,7 +9,7 @@
 // asked — so a book with no art silently answering the easy question while logging the
 // hard one made that field untrue for a quarter of the canon.
 //
-// 66 books, 1188 plates.
+// 66 books, 1189 plates.
 export const CHAPTER_ART: Record<string, number> = {
   '1chronicles': 29,
   '1corinthians': 16,
@@ -33,7 +33,7 @@ export const CHAPTER_ART: Record<string, number> = {
   colossians: 4,
   daniel: 12,
   deuteronomy: 34,
-  ecclesiastes: 11,
+  ecclesiastes: 12,
   ephesians: 6,
   esther: 10,
   exodus: 40,
