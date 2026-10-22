@@ -8,6 +8,8 @@ data class VerseSearchResult(
     val bookNameTe: String,
     val chapter: Int,
     val verse: Int,
+    val endVerse: Int? = null,
     val textTe: String?,
-    val textEn: String?
+    val textEn: String?,
+    val individualVerses: List<Pair<Int, String>> = emptyList()
 )

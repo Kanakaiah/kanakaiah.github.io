@@ -267,10 +267,11 @@ fun TodayScreen(
                 isSearching = state.isSearchingInDialog,
                 activeVersion = state.activeVersion,
                 onDismiss = { viewModel.toggleAddDialog(false) },
-                onAddSingleVerse = { bookId, ch, vs, topicIds -> viewModel.addVerse(bookId, ch, vs, topicIds) },
+                onAddSingleVerse = { bookId, ch, vs, endVs, topicIds -> viewModel.addVerse(bookId, ch, vs, endVs, topicIds) },
+                onAddIndividually = { verses, topicIds -> viewModel.addVersesIndividually(verses, topicIds) },
                 onAddManualVerse = { ref, text, trans, topicIds -> viewModel.addManualVerse(ref, text, trans, topicIds) },
                 onAddCollection = { collId, topicIds -> viewModel.addCollection(collId, topicIds) },
-                onSearchVerses = { q -> viewModel.searchVersesForDialog(q) },
+                onSearchVerses = { q, trans -> viewModel.searchVersesForDialog(q, trans) },
                 onCreateTopic = { viewModel.createTopic(it) },
                 onNavigateToGuides = {
                     viewModel.toggleAddDialog(false)

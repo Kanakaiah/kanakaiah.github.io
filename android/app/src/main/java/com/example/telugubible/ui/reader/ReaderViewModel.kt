@@ -10,6 +10,7 @@ import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.OriginalWord
 import com.example.telugubible.data.model.StrongsOccurrence
 import com.example.telugubible.data.model.StrongsEntry
+import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.repository.BibleRepository
 import com.example.telugubible.data.service.KjvService
@@ -90,6 +91,7 @@ data class ReaderUiState(
     val flashVerse: Int? = null,
     val memorizedVerses: Set<Int> = emptySet(),
     val bionicReading: Boolean = false,
+    val topics: List<Topic> = emptyList(),
     val anchorReveal: String = "tap",
     val showSectionHeadings: Boolean = true,
     val showVerseNumbers: Boolean = true,
@@ -130,6 +132,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private fun loadInitialData() {
         viewModelScope.launch {
             val books = repository.getBooks()
+            val topics = repository.getTopics()
             val firstBook = books.firstOrNull { it.id == 1 } ?: books.firstOrNull()
             val settings = repository.getAppSettings()
             val activeVer = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
@@ -158,6 +161,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 _uiState.update {
                     it.copy(
                         books = books,
+                        topics = topics,
                         currentBook = firstBook,
                         currentChapter = 1,
                         activeVersion = activeVer,
@@ -407,22 +411,80 @@ class ReaderViewModel @JvmOverloads constructor(
         return "$header\n${lines.joinToString("\n")}"
     }
 
-    fun addSelectedVersesToMemory(onSuccess: (count: Int) -> Unit = {}) {
+    fun loadTopics() {
+        viewModelScope.launch {
+            val t = repository.getTopics()
+            _uiState.update { it.copy(topics = t) }
+        }
+    }
+
+    fun createTopic(name: String) {
+        viewModelScope.launch {
+            repository.createTopic(name)
+            loadTopics()
+        }
+    }
+
+    fun addSelectedVersesToMemory(
+        combineConsecutive: Boolean = false,
+        topicIds: List<String> = emptyList(),
+        onSuccess: (count: Int) -> Unit = {}
+    ) {
         viewModelScope.launch {
             val book = _uiState.value.currentBook ?: return@launch
             val ch = _uiState.value.currentChapter
-            val selected = _uiState.value.selectedVerses.toList()
+            val selected = _uiState.value.selectedVerses.sorted()
             if (selected.isEmpty()) return@launch
 
             var addedCount = 0
-            for (v in selected) {
-                val success = repository.addUserVerse(book.id, ch, v)
-                if (success) addedCount++
+            if (combineConsecutive && selected.size > 1) {
+                val groups = mutableListOf<MutableList<Int>>()
+                var currentGroup = mutableListOf(selected[0])
+                for (i in 1 until selected.size) {
+                    if (selected[i] == selected[i - 1] + 1) {
+                        currentGroup.add(selected[i])
+                    } else {
+                        groups.add(currentGroup)
+                        currentGroup = mutableListOf(selected[i])
+                    }
+                }
+                groups.add(currentGroup)
+
+                for (grp in groups) {
+                    val start = grp.first()
+                    val end = if (grp.size > 1) grp.last() else null
+                    val success = repository.addUserVerse(book.id, ch, start, end)
+                    if (success) {
+                        addedCount++
+                        if (topicIds.isNotEmpty()) {
+                            val allVerses = repository.getUserMemoryVerses()
+                            val target = allVerses.find { it.bookId == book.id && it.chapter == ch && it.verse == start && it.endVerse == end }
+                            if (target != null) {
+                                topicIds.forEach { tid -> repository.addTopicToVerse(target.id, tid) }
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (v in selected) {
+                    val success = repository.addUserVerse(book.id, ch, v, null)
+                    if (success) {
+                        addedCount++
+                        if (topicIds.isNotEmpty()) {
+                            val allVerses = repository.getUserMemoryVerses()
+                            val target = allVerses.find { it.bookId == book.id && it.chapter == ch && it.verse == v && it.endVerse == null }
+                            if (target != null) {
+                                topicIds.forEach { tid -> repository.addTopicToVerse(target.id, tid) }
+                            }
+                        }
+                    }
+                }
             }
+
             _uiState.update {
                 it.copy(
                     selectedVerses = emptySet(),
-                    toastMessage = "Added $addedCount verse${if (addedCount == 1) "" else "s"} to memory"
+                    toastMessage = "Added $addedCount passage${if (addedCount == 1) "" else "s"} to memory"
                 )
             }
             onSuccess(addedCount)

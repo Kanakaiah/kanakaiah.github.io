@@ -115,20 +115,49 @@ class BibleRepository(
         if (userVerses.isEmpty()) return@withContext emptyList()
 
         val booksMap = bibleDbHelper.getBooksMap()
-        val verseKeys = userVerses.map { Triple(it.bookId, it.chapter, it.verse) }
-        val verseTexts = bibleDbHelper.getVerseTexts(verseKeys)
+        val allKeys = userVerses.flatMap { uv ->
+            val end = uv.endVerse?.takeIf { it > uv.verse } ?: uv.verse
+            (uv.verse..end).map { v -> Triple(uv.bookId, uv.chapter, v) }
+        }.distinct()
+        val verseTexts = bibleDbHelper.getVerseTexts(allKeys)
         val topicMappings = userDbHelper.getAllVerseTopicMappings()
 
         val settings = userDbHelper.getAppSettings()
         val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
-        val cachedActive = if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
-            userDbHelper.getCachedVerseTexts(activeVersion, verseKeys)
+        var cachedActive = if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
+            userDbHelper.getCachedVerseTexts(activeVersion, allKeys)
         } else emptyMap()
+
+        if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
+            val missingKeys = allKeys.filter { !cachedActive.containsKey(it) }
+            if (missingKeys.isNotEmpty()) {
+                val missingChapters = missingKeys.map { Pair(it.first, it.second) }.distinct()
+                for ((bId, ch) in missingChapters) {
+                    try {
+                        val fetched = bollsBibleService.fetchChapter(activeVersion, bId, ch)
+                        if (!fetched.isNullOrEmpty()) {
+                            userDbHelper.saveCachedVerses(activeVersion, bId, ch, fetched)
+                        }
+                    } catch (_: Exception) {}
+                }
+                cachedActive = userDbHelper.getCachedVerseTexts(activeVersion, allKeys)
+            }
+        }
 
         userVerses.map { uv ->
             val book = booksMap[uv.bookId]
-            val (textTe, localEn) = verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Pair(null, null)
-            val textEn = cachedActive[Triple(uv.bookId, uv.chapter, uv.verse)] ?: localEn
+            val end = uv.endVerse?.takeIf { it > uv.verse } ?: uv.verse
+            val range = (uv.verse..end)
+
+            val textTe = range.mapNotNull { v ->
+                verseTexts[Triple(uv.bookId, uv.chapter, v)]?.first
+            }.joinToString(" ").ifBlank { null }
+
+            val textEn = range.mapNotNull { v ->
+                cachedActive[Triple(uv.bookId, uv.chapter, v)]
+                    ?: verseTexts[Triple(uv.bookId, uv.chapter, v)]?.second
+            }.joinToString(" ").ifBlank { null }
+
             UserMemoryVerse(
                 id = uv.id,
                 bookId = uv.bookId,
@@ -137,6 +166,7 @@ class BibleRepository(
                 bookNameTe = book?.nameTe ?: "",
                 chapter = uv.chapter,
                 verse = uv.verse,
+                endVerse = uv.endVerse,
                 textTe = textTe,
                 textEn = textEn,
                 status = uv.status,
@@ -152,8 +182,63 @@ class BibleRepository(
         }
     }
 
-    suspend fun addUserVerse(bookId: Int, chapter: Int, verse: Int): Boolean = withContext(ioDispatcher) {
-        userDbHelper.addUserVerse(bookId, chapter, verse)
+    suspend fun addUserVerse(bookId: Int, chapter: Int, verse: Int, endVerse: Int? = null): Boolean = withContext(ioDispatcher) {
+        val inserted = userDbHelper.addUserVerse(bookId, chapter, verse, endVerse)
+        if (inserted) {
+            val settings = userDbHelper.getAppSettings()
+            val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
+            if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
+                val cached = userDbHelper.getCachedVerses(activeVersion, bookId, chapter)
+                if (cached.isEmpty()) {
+                    try {
+                        val fetched = bollsBibleService.fetchChapter(activeVersion, bookId, chapter)
+                        if (!fetched.isNullOrEmpty()) {
+                            userDbHelper.saveCachedVerses(activeVersion, bookId, chapter, fetched)
+                        }
+                    } catch (_: Exception) {}
+                }
+            }
+        }
+        inserted
+    }
+
+    suspend fun fetchVerseRange(
+        version: String,
+        bookId: Int,
+        chapter: Int,
+        startVerse: Int,
+        endVerse: Int
+    ): List<Pair<Int, String>> = withContext(ioDispatcher) {
+        val ver = version.uppercase().trim()
+        val targetRange = (startVerse..endVerse)
+        val keys = targetRange.map { Triple(bookId, chapter, it) }
+
+        if (ver == "BSB" || ver == "TELIRV" || ver == "TBSI") {
+            val localTexts = bibleDbHelper.getVerseTexts(keys)
+            return@withContext targetRange.mapNotNull { v ->
+                val txt = localTexts[Triple(bookId, chapter, v)]?.second ?: localTexts[Triple(bookId, chapter, v)]?.first
+                if (txt != null) Pair(v, txt.replace(Regex("<[^>]+>"), "").trim()) else null
+            }
+        }
+
+        var cached = userDbHelper.getCachedVerseTexts(ver, keys)
+        if (cached.size < targetRange.count()) {
+            try {
+                val fetched = bollsBibleService.fetchChapter(ver, bookId, chapter)
+                if (!fetched.isNullOrEmpty()) {
+                    userDbHelper.saveCachedVerses(ver, bookId, chapter, fetched)
+                    cached = userDbHelper.getCachedVerseTexts(ver, keys)
+                }
+            } catch (_: Exception) {}
+        }
+
+        val localFallback = bibleDbHelper.getVerseTexts(keys)
+        targetRange.mapNotNull { v ->
+            val txt = cached[Triple(bookId, chapter, v)]
+                ?: localFallback[Triple(bookId, chapter, v)]?.second
+                ?: localFallback[Triple(bookId, chapter, v)]?.first
+            if (txt != null) Pair(v, txt.replace(Regex("<[^>]+>"), "").trim()) else null
+        }
     }
 
     suspend fun removeUserVerse(id: Long) = withContext(ioDispatcher) {

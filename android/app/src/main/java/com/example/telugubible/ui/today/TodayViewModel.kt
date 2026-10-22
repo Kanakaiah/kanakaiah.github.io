@@ -386,12 +386,12 @@ class TodayViewModel @JvmOverloads constructor(
         }
     }
 
-    fun addVerse(bookId: Int, chapter: Int, verse: Int, topicIds: List<String> = emptyList()) {
+    fun addVerse(bookId: Int, chapter: Int, verse: Int, endVerse: Int? = null, topicIds: List<String> = emptyList()) {
         viewModelScope.launch {
-            val added = repository.addUserVerse(bookId, chapter, verse)
+            val added = repository.addUserVerse(bookId, chapter, verse, endVerse)
             if (added && topicIds.isNotEmpty()) {
                 val allVerses = repository.getUserMemoryVerses()
-                val target = allVerses.find { it.bookId == bookId && it.chapter == chapter && it.verse == verse }
+                val target = allVerses.find { it.bookId == bookId && it.chapter == chapter && it.verse == verse && it.endVerse == endVerse }
                 if (target != null) {
                     topicIds.forEach { tid ->
                         repository.addTopicToVerse(target.id, tid)
@@ -403,12 +403,36 @@ class TodayViewModel @JvmOverloads constructor(
         }
     }
 
+    fun addVersesIndividually(verses: List<Triple<Int, Int, Int>>, topicIds: List<String> = emptyList()) {
+        viewModelScope.launch {
+            var count = 0
+            for ((bId, ch, vs) in verses) {
+                val added = repository.addUserVerse(bId, ch, vs, null)
+                if (added) count++
+            }
+            if (topicIds.isNotEmpty()) {
+                val allVerses = repository.getUserMemoryVerses()
+                for ((bId, ch, vs) in verses) {
+                    val target = allVerses.find { it.bookId == bId && it.chapter == ch && it.verse == vs }
+                    if (target != null) {
+                        topicIds.forEach { tid ->
+                            repository.addTopicToVerse(target.id, tid)
+                        }
+                    }
+                }
+            }
+            _uiState.update { it.copy(showAddDialog = false, messageBanner = "Added $count verses to library!") }
+            loadData()
+        }
+    }
+
     fun addManualVerse(refStr: String, text: String, translation: String, topicIds: List<String> = emptyList()) {
         viewModelScope.launch {
             val parsedRefs = com.example.telugubible.util.ScriptureRefParser.parseReferences(refStr, _uiState.value.books)
             if (parsedRefs.isNotEmpty()) {
                 val parsed = parsedRefs.first()
-                addVerse(parsed.bookId, parsed.chapter, parsed.verseStart, topicIds)
+                val endVerse = if (parsed.verseEnd > parsed.verseStart) parsed.verseEnd else null
+                addVerse(parsed.bookId, parsed.chapter, parsed.verseStart, endVerse, topicIds)
             } else {
                 _uiState.update { it.copy(messageBanner = "Could not parse reference: $refStr") }
             }
@@ -459,15 +483,40 @@ class TodayViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(showAddDialog = show, searchResults = emptyList()) }
     }
 
-    fun searchVersesForDialog(query: String) {
+    fun searchVersesForDialog(query: String, translation: String = "LSB") {
         if (query.isBlank()) {
             _uiState.update { it.copy(searchResults = emptyList()) }
             return
         }
         viewModelScope.launch {
             _uiState.update { it.copy(isSearchingInDialog = true) }
-            val results = repository.searchVerses(query, limit = 25)
-            _uiState.update { it.copy(searchResults = results, isSearchingInDialog = false) }
+            val parsedRefs = com.example.telugubible.util.ScriptureRefParser.parseReferences(query, _uiState.value.books)
+            if (parsedRefs.isNotEmpty()) {
+                val results = mutableListOf<com.example.telugubible.data.model.VerseSearchResult>()
+                for (ref in parsedRefs) {
+                    val book = _uiState.value.books.find { it.id == ref.bookId } ?: continue
+                    val rangeVerses = repository.fetchVerseRange(translation, ref.bookId, ref.chapter, ref.verseStart, ref.verseEnd)
+                    val combinedText = rangeVerses.joinToString(" ") { it.second }
+                    val result = com.example.telugubible.data.model.VerseSearchResult(
+                        id = (ref.bookId * 1_000_000L) + (ref.chapter * 1_000L) + ref.verseStart,
+                        bookId = ref.bookId,
+                        bookKey = book.key,
+                        bookNameEn = book.nameEn,
+                        bookNameTe = book.nameTe,
+                        chapter = ref.chapter,
+                        verse = ref.verseStart,
+                        endVerse = if (ref.verseEnd > ref.verseStart) ref.verseEnd else null,
+                        textTe = null,
+                        textEn = combinedText,
+                        individualVerses = rangeVerses
+                    )
+                    results.add(result)
+                }
+                _uiState.update { it.copy(searchResults = results, isSearchingInDialog = false) }
+            } else {
+                val results = repository.searchVerses(query, limit = 25)
+                _uiState.update { it.copy(searchResults = results, isSearchingInDialog = false) }
+            }
         }
     }
 

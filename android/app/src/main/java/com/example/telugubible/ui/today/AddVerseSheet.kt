@@ -39,10 +39,11 @@ fun AddVerseSheet(
     isSearching: Boolean,
     activeVersion: String = "LSB",
     onDismiss: () -> Unit,
-    onAddSingleVerse: (Int, Int, Int, List<String>) -> Unit,
+    onAddSingleVerse: (bookId: Int, chapter: Int, verse: Int, endVerse: Int?, topicIds: List<String>) -> Unit,
+    onAddIndividually: (verses: List<Triple<Int, Int, Int>>, topicIds: List<String>) -> Unit,
     onAddManualVerse: (String, String, String, List<String>) -> Unit,
     onAddCollection: (String, List<String>) -> Unit,
-    onSearchVerses: (String) -> Unit,
+    onSearchVerses: (query: String, translation: String) -> Unit,
     onCreateTopic: (String) -> Unit,
     onNavigateToGuides: () -> Unit
 ) {
@@ -232,7 +233,7 @@ fun AddVerseSheet(
                             onAddManualVerse(ref, text, trans, selectedTopicIds.toList())
                         },
                         onAddByPicker = { bookId, ch, vs ->
-                            onAddSingleVerse(bookId, ch, vs, selectedTopicIds.toList())
+                            onAddSingleVerse(bookId, ch, vs, null, selectedTopicIds.toList())
                         }
                     )
                 }
@@ -242,12 +243,15 @@ fun AddVerseSheet(
                         isSearching = isSearching,
                         activeVersion = activeVersion,
                         onSearch = onSearchVerses,
-                        onAddVerse = { bookId, ch, vs ->
-                            onAddSingleVerse(bookId, ch, vs, selectedTopicIds.toList())
+                        onAddVerse = { bookId, ch, vs, endVs ->
+                            onAddSingleVerse(bookId, ch, vs, endVs, selectedTopicIds.toList())
+                        },
+                        onAddIndividually = { verses ->
+                            onAddIndividually(verses, selectedTopicIds.toList())
                         },
                         onAddAll = { results ->
                             results.forEach { r ->
-                                onAddSingleVerse(r.bookId, r.chapter, r.verse, selectedTopicIds.toList())
+                                onAddSingleVerse(r.bookId, r.chapter, r.verse, r.endVerse, selectedTopicIds.toList())
                             }
                         }
                     )
@@ -518,11 +522,15 @@ private fun SearchTabContent(
     searchResults: List<VerseSearchResult>,
     isSearching: Boolean,
     activeVersion: String = "LSB",
-    onSearch: (String) -> Unit,
-    onAddVerse: (Int, Int, Int) -> Unit,
+    onSearch: (String, String) -> Unit,
+    onAddVerse: (Int, Int, Int, Int?) -> Unit,
+    onAddIndividually: (List<Triple<Int, Int, Int>>) -> Unit,
     onAddAll: (List<VerseSearchResult>) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
+    var selectedTranslation by remember { mutableStateOf(activeVersion.ifBlank { "LSB" }) }
+    var translationExpanded by remember { mutableStateOf(false) }
+    val translationOptions = listOf("LSB", "WEB", "NASB", "ESV", "KJV", "NLT", "BSB")
 
     val curatedCollections = listOf(
         Triple("Peace & Calming", "Verses for anxiety & stress", "Philippians 4:6-7"),
@@ -546,7 +554,7 @@ private fun SearchTabContent(
                     value = query,
                     onValueChange = {
                         query = it
-                        onSearch(it)
+                        onSearch(it, selectedTranslation)
                     },
                     placeholder = { Text("e.g. John 3:16 or Psalm 23:1-3", color = RemoraTextMuted, fontSize = 13.sp) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = RemoraTextMuted) },
@@ -554,7 +562,7 @@ private fun SearchTabContent(
                         if (query.isNotEmpty()) {
                             IconButton(onClick = {
                                 query = ""
-                                onSearch("")
+                                onSearch("", selectedTranslation)
                             }) {
                                 Icon(Icons.Default.Close, contentDescription = "Clear", tint = RemoraTextMuted)
                             }
@@ -573,22 +581,44 @@ private fun SearchTabContent(
                     modifier = Modifier.weight(1f)
                 )
 
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = RemoraCardBgElevated,
-                    border = BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.height(52.dp)
-                ) {
-                    Box(
-                        modifier = Modifier.padding(horizontal = 12.dp),
-                        contentAlignment = Alignment.Center
+                Box {
+                    Surface(
+                        onClick = { translationExpanded = true },
+                        shape = RoundedCornerShape(8.dp),
+                        color = RemoraCardBgElevated,
+                        border = BorderStroke(1.dp, RemoraCardBorder),
+                        modifier = Modifier.height(52.dp)
                     ) {
-                        Text(
-                            text = activeVersion,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraAccentLight
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        ) {
+                            Text(
+                                text = selectedTranslation,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraAccentLight
+                            )
+                            Icon(Icons.Default.ArrowDropDown, contentDescription = null, tint = RemoraTextMuted, modifier = Modifier.size(18.dp))
+                        }
+                    }
+
+                    DropdownMenu(
+                        expanded = translationExpanded,
+                        onDismissRequest = { translationExpanded = false }
+                    ) {
+                        translationOptions.forEach { opt ->
+                            DropdownMenuItem(
+                                text = { Text(opt, fontWeight = if (opt == selectedTranslation) FontWeight.Bold else FontWeight.Normal) },
+                                onClick = {
+                                    selectedTranslation = opt
+                                    translationExpanded = false
+                                    if (query.isNotBlank()) {
+                                        onSearch(query, opt)
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -629,13 +659,20 @@ private fun SearchTabContent(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
+                        val hasMultiple = result.individualVerses.size > 1 || (result.endVerse != null && result.endVerse > result.verse)
+                        val refDisplay = if (result.endVerse != null && result.endVerse > result.verse) {
+                            "${result.bookNameEn} (${result.bookNameTe}) ${result.chapter}:${result.verse}-${result.endVerse}"
+                        } else {
+                            "${result.bookNameEn} (${result.bookNameTe}) ${result.chapter}:${result.verse}"
+                        }
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "${result.bookNameEn} (${result.bookNameTe}) ${result.chapter}:${result.verse}",
+                                text = refDisplay,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraAccentLight
@@ -645,7 +682,7 @@ private fun SearchTabContent(
                                 color = RemoraAccent.copy(alpha = 0.2f)
                             ) {
                                 Text(
-                                    text = activeVersion,
+                                    text = selectedTranslation,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = RemoraAccentLight,
@@ -668,15 +705,42 @@ private fun SearchTabContent(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            Button(
-                                onClick = { onAddVerse(result.bookId, result.chapter, result.verse) },
-                                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                shape = RoundedCornerShape(6.dp),
-                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-                            ) {
-                                Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text("Add to Library", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            if (hasMultiple) {
+                                val versesList = if (result.individualVerses.isNotEmpty()) {
+                                    result.individualVerses.map { Triple(result.bookId, result.chapter, it.first) }
+                                } else {
+                                    (result.verse..(result.endVerse ?: result.verse)).map { Triple(result.bookId, result.chapter, it) }
+                                }
+                                OutlinedButton(
+                                    onClick = { onAddIndividually(versesList) },
+                                    shape = RoundedCornerShape(6.dp),
+                                    border = BorderStroke(1.dp, RemoraCardBorder),
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                                ) {
+                                    Text("Add Individually (${versesList.size})", fontSize = 12.sp, color = RemoraTextPrimary)
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Button(
+                                    onClick = { onAddVerse(result.bookId, result.chapter, result.verse, result.endVerse) },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(6.dp),
+                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("Add Combined (1)", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
+                            } else {
+                                Button(
+                                    onClick = { onAddVerse(result.bookId, result.chapter, result.verse, null) },
+                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                    shape = RoundedCornerShape(6.dp),
+                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("Add to Library", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }
@@ -707,7 +771,7 @@ private fun SearchTabContent(
             Surface(
                 onClick = {
                     query = refQuery
-                    onSearch(refQuery)
+                    onSearch(refQuery, selectedTranslation)
                 },
                 shape = RoundedCornerShape(10.dp),
                 color = RemoraCardBgElevated,
