@@ -38,8 +38,6 @@ fun BibleBrowserScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
-    var showCommentarySheet by remember { mutableStateOf(false) }
-    var showPreachersSheet by remember { mutableStateOf(false) }
     var showIndexModal by remember { mutableStateOf(false) }
 
     Box(
@@ -82,83 +80,41 @@ fun BibleBrowserScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Quick Study & Testament Switcher - only shown when not actively searching
+            // Testament Links & Section Filter - only shown when not actively searching
             if (state.searchQuery.isBlank()) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 2.dp)
                 ) {
-                    Surface(
-                        onClick = { showCommentarySheet = true },
-                        shape = RoundedCornerShape(10.dp),
-                        color = RemoraCardBg,
-                        border = BorderStroke(1.dp, RemoraCardBorder),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text("📜", fontSize = 15.sp)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "Commentaries",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = RemoraTextPrimary
-                            )
-                        }
-                    }
+                    Text(
+                        text = "Old Testament (39)",
+                        fontSize = 14.sp,
+                        fontWeight = if (state.currentTestament == "OT") FontWeight.Bold else FontWeight.Normal,
+                        color = if (state.currentTestament == "OT") RemoraAccentLight else RemoraTextSecondary,
+                        modifier = Modifier
+                            .clickable { viewModel.setTestament("OT") }
+                            .padding(vertical = 4.dp)
+                    )
 
-                    Surface(
-                        onClick = { showPreachersSheet = true },
-                        shape = RoundedCornerShape(10.dp),
-                        color = RemoraCardBg,
-                        border = BorderStroke(1.dp, RemoraCardBorder),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text("⛪", fontSize = 15.sp)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "Theologians",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = RemoraTextPrimary
-                            )
-                        }
-                    }
+                    Text(
+                        text = "•",
+                        color = RemoraCardBorderHover,
+                        fontSize = 12.sp
+                    )
+
+                    Text(
+                        text = "New Testament (27)",
+                        fontSize = 14.sp,
+                        fontWeight = if (state.currentTestament == "NT") FontWeight.Bold else FontWeight.Normal,
+                        color = if (state.currentTestament == "NT") RemoraAccentLight else RemoraTextSecondary,
+                        modifier = Modifier
+                            .clickable { viewModel.setTestament("NT") }
+                            .padding(vertical = 4.dp)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(RemoraCardBg, shape = RoundedCornerShape(10.dp))
-                        .border(1.dp, RemoraCardBorder, shape = RoundedCornerShape(10.dp))
-                        .padding(4.dp)
-                ) {
-                    TestamentTabButton(
-                        label = "Old Testament (39)",
-                        isSelected = state.currentTestament == "OT",
-                        onClick = { viewModel.setTestament("OT") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    TestamentTabButton(
-                        label = "New Testament (27)",
-                        isSelected = state.currentTestament == "NT",
-                        onClick = { viewModel.setTestament("NT") },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
 
                 // Section Filter Chips
                 val sections = if (state.currentTestament == "OT") {
@@ -296,18 +252,6 @@ fun BibleBrowserScreen(
         }
     }
 
-    if (showCommentarySheet) {
-        CommentarySheet(
-            onDismiss = { showCommentarySheet = false }
-        )
-    }
-
-    if (showPreachersSheet) {
-        PreachersSheet(
-            onDismiss = { showPreachersSheet = false }
-        )
-    }
-
     if (showIndexModal) {
         BibleIndexModal(
             isOpen = showIndexModal,
@@ -320,33 +264,6 @@ fun BibleBrowserScreen(
             },
             onDismiss = { showIndexModal = false }
         )
-    }
-}
-
-@Composable
-private fun TestamentTabButton(
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(8.dp),
-        color = if (isSelected) RemoraAccent else Color.Transparent,
-        modifier = modifier
-    ) {
-        Box(
-            modifier = Modifier.padding(vertical = 8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = label,
-                fontSize = 14.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                color = if (isSelected) Color.White else RemoraTextSecondary
-            )
-        }
     }
 }
 
@@ -364,11 +281,11 @@ private fun RemoraBookCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
-            // Book Cover Image Plate (Aspect Ratio 4:3)
+            // Book Cover Image Plate (Aspect Ratio 16:9, matching chapter plate images)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(4f / 3f)
+                    .aspectRatio(16f / 9f)
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
             ) {
                 BookCoverImage(

@@ -1305,30 +1305,13 @@ private fun ChapterAnchorCard(
                     .padding(14.dp)
             ) {
                 if (isRevealed) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = anchor.word.uppercase(),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp,
-                            color = RemoraAccent
-                        )
-
-                        Button(
-                            onClick = onReadChapter,
-                            colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
-                            border = BorderStroke(1.dp, RemoraCardBorder),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
-                            shape = RoundedCornerShape(6.dp),
-                            modifier = Modifier.height(28.dp)
-                        ) {
-                            Text("Read Chapter", fontSize = 12.sp, color = RemoraTextSecondary)
-                        }
-                    }
+                    Text(
+                        text = anchor.word.uppercase(),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp,
+                        color = RemoraAccent
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
