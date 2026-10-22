@@ -5,8 +5,13 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -92,8 +97,33 @@ fun BookGuideScreen(
     var showIndexModal by remember { mutableStateOf(false) }
     var drillBlock by remember { mutableStateOf<Triple<String, List<ChapterAnchor>, Int>?>(null) }
 
+    var isChromeVisible by remember { mutableStateOf(true) }
+
     LaunchedEffect(bookId) {
         viewModel.loadBookGuide(bookId)
+        isChromeVisible = true
+    }
+
+    // Auto-hide when scrolling down, auto-show when scrolling up
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                val delta = available.y
+                if (delta < -12f) {
+                    isChromeVisible = false
+                } else if (delta > 12f) {
+                    isChromeVisible = true
+                }
+                return Offset.Zero
+            }
+        }
+    }
+
+    // Always show chrome when scrolled to top
+    LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
+        if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 15) {
+            isChromeVisible = true
+        }
     }
 
     LaunchedEffect(state.toastMessage) {
@@ -111,50 +141,60 @@ fun BookGuideScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        state.book?.let { b ->
-                            Text(
-                                text = BookNameUtils.getBookDisplayName(b, state.activeVersion).uppercase(),
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary,
-                                textAlign = TextAlign.Center,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+            AnimatedVisibility(
+                visible = isChromeVisible,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                TopAppBar(
+                    title = {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            state.book?.let { b ->
+                                Text(
+                                    text = BookNameUtils.getBookDisplayName(b, state.activeVersion).uppercase(),
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = RemoraTextPrimary,
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            } ?: Text("Study Guide", fontSize = 18.sp, color = RemoraTextPrimary)
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = RemoraTextPrimary
                             )
-                        } ?: Text("Study Guide", fontSize = 18.sp, color = RemoraTextPrimary)
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = RemoraTextPrimary
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { showCommentarySheet = true }) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.MenuBook,
-                            contentDescription = "Commentaries",
-                            tint = RemoraAccentLight
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = RemoraBackground
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { showCommentarySheet = true }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.MenuBook,
+                                contentDescription = "Commentaries",
+                                tint = RemoraAccentLight
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = RemoraBackground
+                    )
                 )
-            )
+            }
         },
         bottomBar = {
-            if (state.book != null) {
+            AnimatedVisibility(
+                visible = isChromeVisible && state.book != null,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
                 Surface(
                     color = RemoraCardBg,
                     border = BorderStroke(1.dp, RemoraCardBorder),
@@ -250,7 +290,9 @@ fun BookGuideScreen(
             }
         },
         containerColor = RemoraBackground,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(nestedScrollConnection)
     ) { paddingValues ->
         if (state.isLoading) {
             Box(
