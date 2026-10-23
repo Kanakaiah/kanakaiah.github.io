@@ -157,7 +157,7 @@ fun MainScaffold(
         Scaffold(
             topBar = {
                 AnimatedVisibility(
-                    visible = selectedTab != RemoraTab.BIBLE || isBibleChromeVisible,
+                    visible = selectedTab != RemoraTab.TODAY && (selectedTab != RemoraTab.BIBLE || isBibleChromeVisible),
                     enter = expandVertically() + fadeIn(),
                     exit = shrinkVertically() + fadeOut()
                 ) {
@@ -315,10 +315,11 @@ fun MainScaffold(
                     when (tab) {
                         RemoraTab.TODAY -> TodayScreen(
                             viewModel = todayViewModel,
-                            onStartSession = {
+                            onStartSession = { collectionId ->
                                 practiceSubject = PracticeSubject.SESSION
                                 selectedTab = RemoraTab.PRACTICE
                             },
+                            onNavigateToSettings = { isInSettingsMode = true },
                             onNavigateToPractice = { verseId ->
                                 practiceSubject = PracticeSubject.VERSES
                                 selectedTab = RemoraTab.PRACTICE

@@ -36,11 +36,22 @@ data class AddingProgress(
     val total: Int
 )
 
+data class CollectionCardItem(
+    val id: String,
+    val name: String,
+    val totalCount: Int,
+    val dueCount: Int,
+    val learnedCount: Int,
+    val isPreset: Boolean = false
+)
+
 data class TodayUiState(
     val verses: List<UserMemoryVerse> = emptyList(),
     val filteredVerses: List<UserMemoryVerse> = emptyList(),
     val books: List<Book> = emptyList(),
     val presetCollections: List<PresetCollection> = emptyList(),
+    val collections: List<CollectionCardItem> = emptyList(),
+    val selectedCollectionId: String? = null,
     val heroVerse: UserMemoryVerse? = null,
     val searchQuery: String = "",
     val filter: VerseFilter = VerseFilter.ALL,
@@ -132,12 +143,56 @@ class TodayViewModel @JvmOverloads constructor(
             val secureThemes = themeProgress.values.count { it.repetition >= 6 }
             val dueThemes = themeProgress.values.count { it.attempts > 0 && it.nextDueDate <= now }
 
+            // Build collection items (Top 100, Topics, Curated sets)
+            val collectionList = mutableListOf<CollectionCardItem>()
+            for (topic in topics) {
+                val versesInTopic = verses.filter { it.topicIds.contains(topic.id) }
+                val isTop100 = topic.name.equals("Top 100", ignoreCase = true)
+                val total = if (isTop100) 100 else versesInTopic.size
+                val dueInTopic = versesInTopic.count { it.nextDueDate <= now }
+                val learnedInTopic = versesInTopic.count { it.status == "memorized" || it.repetition >= 6 }
+
+                collectionList.add(
+                    CollectionCardItem(
+                        id = topic.id,
+                        name = topic.name,
+                        totalCount = total,
+                        dueCount = dueInTopic,
+                        learnedCount = learnedInTopic,
+                        isPreset = isTop100
+                    )
+                )
+            }
+
+            // If user doesn't have curated collections yet, include standard curated templates
+            val curatedPresets = listOf(
+                Triple("Top 100", 100, true),
+                Triple("Anxiety", 8, false),
+                Triple("Peace", 6, false),
+                Triple("Courage", 5, false)
+            )
+            for ((pName, pTotal, pIsPreset) in curatedPresets) {
+                if (collectionList.none { it.name.equals(pName, ignoreCase = true) }) {
+                    collectionList.add(
+                        CollectionCardItem(
+                            id = "preset_${pName.lowercase().replace(" ", "_")}",
+                            name = pName,
+                            totalCount = pTotal,
+                            dueCount = 0,
+                            learnedCount = 0,
+                            isPreset = pIsPreset
+                        )
+                    )
+                }
+            }
+
             _uiState.update {
                 it.copy(
                     verses = verses,
                     filteredVerses = filtered,
                     books = books,
                     presetCollections = collections,
+                    collections = collectionList,
                     topics = topics,
                     heroVerse = hero,
                     streak = streak,
@@ -199,6 +254,10 @@ class TodayViewModel @JvmOverloads constructor(
             DisplayLanguage.ENGLISH
         }
         setDisplayLanguage(newLang)
+    }
+
+    fun selectCollection(collectionId: String?) {
+        _uiState.update { it.copy(selectedCollectionId = collectionId) }
     }
 
     fun selectTopic(topicId: String?) {

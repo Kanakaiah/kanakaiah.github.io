@@ -18,9 +18,11 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,10 +32,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.DisplayLanguage
+import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.theme.*
@@ -42,16 +46,18 @@ import com.example.telugubible.util.BionicUtils
 @Composable
 fun TodayScreen(
     viewModel: TodayViewModel,
-    onStartSession: () -> Unit,
+    onStartSession: (String?) -> Unit,
     onNavigateToPractice: (Long?) -> Unit,
     onNavigateToReader: (Int, Int) -> Unit,
     onNavigateToRetention: () -> Unit = {},
     onNavigateToGuide: (Int) -> Unit = {},
     onNavigateToThemes: () -> Unit = {},
     onFocusBookPractice: (Int) -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showNewCollectionDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -70,13 +76,91 @@ fun TodayScreen(
                 contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 1. Remora Hero: Daily Practice (Starts 20-item adaptive session)
+                // Header Row (Mockup: "Today" title on left, Streak Pill + Settings on right)
                 item {
-                    RemoraHeroDailyPractice(
-                        heroVerse = state.heroVerse,
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Today",
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Serif,
+                            color = RemoraTextPrimary,
+                            letterSpacing = (-0.5).sp
+                        )
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            // Streak Pill
+                            Surface(
+                                shape = RoundedCornerShape(20.dp),
+                                color = RemoraCardBgElevated,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                                modifier = Modifier.clickable { onNavigateToRetention() }
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.LocalFireDepartment,
+                                        contentDescription = null,
+                                        tint = RemoraAccent,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "${state.streak}-day streak",
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = RemoraTextPrimary
+                                    )
+                                }
+                            }
+
+                            // Settings
+                            IconButton(
+                                onClick = onNavigateToSettings,
+                                modifier = Modifier.size(36.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Settings,
+                                    contentDescription = "Settings",
+                                    tint = RemoraTextSecondary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // 1. Review Hero Card (Mockup: "REVIEW", "X verses are due", "About X minutes", Scope Dropdown, "Start review")
+                item {
+                    ReviewHeroCard(
                         dueCount = state.dueCount,
-                        displayLanguage = state.displayLanguage,
+                        collections = state.collections,
+                        selectedCollectionId = state.selectedCollectionId,
+                        onSelectCollection = { viewModel.selectCollection(it) },
                         onStartSession = onStartSession
+                    )
+                }
+
+                // 2. Collections Section (Mockup: "Collections", "New collection", Collection cards with progress and "Review" pill)
+                item {
+                    CollectionsSection(
+                        collections = state.collections,
+                        onNewCollection = { showNewCollectionDialog = true },
+                        onReviewCollection = { collectionId ->
+                            viewModel.selectCollection(collectionId)
+                            onStartSession(collectionId)
+                        }
                     )
                 }
 
@@ -385,16 +469,31 @@ fun TodayScreen(
                 }
             }
         }
+        // New Collection Dialog (Mockup: Add Curated or Custom Collection)
+        if (showNewCollectionDialog) {
+            NewCollectionDialog(
+                presetCollections = state.presetCollections,
+                onDismiss = { showNewCollectionDialog = false },
+                onCreateCustom = { name -> viewModel.createTopic(name) },
+                onAddPreset = { presetId -> viewModel.addCollection(presetId, emptyList()) }
+            )
+        }
     }
 }
 
 @Composable
-private fun RemoraHeroDailyPractice(
-    heroVerse: UserMemoryVerse?,
+private fun ReviewHeroCard(
     dueCount: Int,
-    displayLanguage: DisplayLanguage,
-    onStartSession: () -> Unit
+    collections: List<CollectionCardItem>,
+    selectedCollectionId: String?,
+    onSelectCollection: (String?) -> Unit,
+    onStartSession: (String?) -> Unit
 ) {
+    val selectedCollection = collections.find { it.id == selectedCollectionId }
+    val displayDue = selectedCollection?.dueCount ?: dueCount
+    val minutes = kotlin.math.max(1, kotlin.math.ceil(displayDue * 0.5).toInt())
+    var scopeMenuExpanded by remember { mutableStateOf(false) }
+
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = RemoraCardBg,
@@ -402,94 +501,383 @@ private fun RemoraHeroDailyPractice(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
+            // Label: "REVIEW"
+            Text(
+                text = "REVIEW",
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.5.sp,
+                color = RemoraAccent
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Headline: "12 verses are due"
+            Text(
+                text = if (displayDue > 0) "$displayDue ${if (displayDue == 1) "verse is" else "verses are"} due" else "All caught up",
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                color = RemoraTextPrimary,
+                letterSpacing = (-0.3).sp
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            // Subtitle: "About 6 minutes. Weakest verses come first."
+            Text(
+                text = if (displayDue > 0) {
+                    "About $minutes ${if (minutes == 1) "minute" else "minutes"}. Weakest verses come first."
+                } else {
+                    "Great job! You have reviewed all scheduled verses for today."
+                },
+                fontSize = 14.sp,
+                color = RemoraTextSecondary,
+                lineHeight = 20.sp
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // Scope Dropdown Box: "From: All collections  ▼"
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = RemoraCardBgElevated,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { scopeMenuExpanded = true }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "From: ${selectedCollection?.name ?: "All collections"}",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = RemoraTextPrimary
+                        )
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Select collection",
+                            tint = RemoraTextSecondary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+                DropdownMenu(
+                    expanded = scopeMenuExpanded,
+                    onDismissRequest = { scopeMenuExpanded = false },
+                    modifier = Modifier.background(RemoraCardBgElevated)
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = "All collections",
+                                fontWeight = if (selectedCollectionId == null) FontWeight.Bold else FontWeight.Normal,
+                                color = if (selectedCollectionId == null) RemoraAccent else RemoraTextPrimary
+                            )
+                        },
+                        onClick = {
+                            onSelectCollection(null)
+                            scopeMenuExpanded = false
+                        }
+                    )
+                    collections.forEach { collection ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = collection.name,
+                                    fontWeight = if (selectedCollectionId == collection.id) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (selectedCollectionId == collection.id) RemoraAccent else RemoraTextPrimary
+                                )
+                            },
+                            onClick = {
+                                onSelectCollection(collection.id)
+                                scopeMenuExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Primary Start review button (Solid Gold with dark text)
+            Button(
+                onClick = { onStartSession(selectedCollectionId) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RemoraAccent,
+                    contentColor = Color(0xFF141414)
+                ),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text(
+                    text = "Start review",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = Color(0xFF141414)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CollectionsSection(
+    collections: List<CollectionCardItem>,
+    onNewCollection: () -> Unit,
+    onReviewCollection: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Collections",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                color = RemoraTextPrimary
+            )
+            Text(
+                text = "New collection",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = RemoraAccent,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(4.dp))
+                    .clickable { onNewCollection() }
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+            )
+        }
+
+        if (collections.isEmpty()) {
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = RemoraCardBg,
+                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "No collections yet. Tap 'New collection' to add one.",
+                    fontSize = 13.sp,
+                    color = RemoraTextMuted,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        } else {
+            collections.forEach { item ->
+                CollectionCard(
+                    item = item,
+                    onReview = { onReviewCollection(item.id) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CollectionCard(
+    item: CollectionCardItem,
+    onReview: () -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = RemoraCardBg,
+        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        Icons.Default.LocalFireDepartment,
-                        contentDescription = null,
-                        tint = RemoraAccent,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "DAILY PRACTICE",
-                        fontSize = 12.sp,
+                        text = item.name,
+                        fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
+                        color = RemoraTextPrimary
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    val statsText = if (item.isPreset) {
+                        "${item.dueCount} due · ${item.learnedCount} of ${item.totalCount} learned"
+                    } else {
+                        "${item.dueCount} due · ${item.totalCount} ${if (item.totalCount == 1) "verse" else "verses"}"
+                    }
+                    Text(
+                        text = statsText,
+                        fontSize = 13.sp,
+                        color = RemoraTextMuted
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                OutlinedButton(
+                    onClick = onReview,
+                    shape = RoundedCornerShape(16.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraAccent),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = RemoraAccent
+                    ),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = "Review",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
                         color = RemoraAccent
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            if (heroVerse != null && dueCount > 0) {
-                val isEnglish = displayLanguage == DisplayLanguage.ENGLISH
-                val heroRef = heroVerse.fullRef(isEnglish)
-                val rawTarget = if (isEnglish) heroVerse.textEn else heroVerse.textTe
-                val targetText = ((rawTarget ?: heroVerse.textEn ?: heroVerse.textTe ?: "")).replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
-
-                Text(
-                    text = heroRef,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextPrimary
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // First Letter Memory Cue
-                val cue = buildFirstLetterCue(targetText)
-                if (cue.isNotBlank()) {
-                    Text(
-                        text = cue,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Medium,
-                        letterSpacing = 1.sp,
-                        color = RemoraTextSecondary,
-                        lineHeight = 22.sp
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-
-                Text(
-                    text = if (dueCount == 1) "1 verse due for review" else "$dueCount verses due for review",
-                    fontSize = 13.sp,
-                    color = RemoraTextMuted
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = onStartSession,
-                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                    shape = RoundedCornerShape(8.dp),
-                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+            if (item.totalCount > 0) {
+                Spacer(modifier = Modifier.height(12.dp))
+                val fraction = (item.learnedCount.toFloat() / item.totalCount.coerceAtLeast(1)).coerceIn(0f, 1f)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(1.5.dp))
+                        .background(RemoraCardBorder)
                 ) {
-                    Text("Start Session", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(fraction)
+                            .fillMaxHeight()
+                            .background(RemoraAccent)
+                    )
                 }
-            } else {
-                Text(
-                    text = "All caught up",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextPrimary
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "No verses currently due. Review your memorized verses anytime or add more from the curated collections below.",
-                    fontSize = 13.sp,
-                    color = RemoraTextSecondary,
-                    lineHeight = 18.sp
-                )
             }
         }
     }
+}
+
+@Composable
+private fun NewCollectionDialog(
+    presetCollections: List<PresetCollection>,
+    onDismiss: () -> Unit,
+    onCreateCustom: (String) -> Unit,
+    onAddPreset: (String) -> Unit
+) {
+    var collectionName by remember { mutableStateOf("") }
+    val curatedSuggestions = listOf("Top 100", "Anxiety", "Peace", "Courage", "Faith & Trust", "Salvation")
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = RemoraCardBgElevated,
+        title = {
+            Text(
+                text = "New Collection",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                color = RemoraTextPrimary
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                OutlinedTextField(
+                    value = collectionName,
+                    onValueChange = { collectionName = it },
+                    placeholder = { Text("e.g. Hope, Healing, Romans 8", color = RemoraTextMuted, fontSize = 14.sp) },
+                    label = { Text("Collection Name", color = RemoraAccent) },
+                    singleLine = true,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = RemoraCardBg,
+                        unfocusedContainerColor = RemoraCardBg,
+                        focusedTextColor = RemoraTextPrimary,
+                        unfocusedTextColor = RemoraTextPrimary,
+                        focusedBorderColor = RemoraAccent,
+                        unfocusedBorderColor = RemoraCardBorder
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Text(
+                    text = "Or choose a curated collection:",
+                    fontSize = 12.sp,
+                    color = RemoraTextSecondary,
+                    fontWeight = FontWeight.Medium
+                )
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    curatedSuggestions.forEach { suggestion ->
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = RemoraCardBg,
+                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                            modifier = Modifier.clickable {
+                                val matchedPreset = presetCollections.find { it.title.equals(suggestion, ignoreCase = true) }
+                                if (matchedPreset != null) {
+                                    onAddPreset(matchedPreset.id)
+                                    onDismiss()
+                                } else {
+                                    collectionName = suggestion
+                                }
+                            }
+                        ) {
+                            Text(
+                                text = suggestion,
+                                fontSize = 12.sp,
+                                color = RemoraAccentLight,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    val trimmed = collectionName.trim()
+                    if (trimmed.isNotEmpty()) {
+                        val matchedPreset = presetCollections.find { it.title.equals(trimmed, ignoreCase = true) }
+                        if (matchedPreset != null) {
+                            onAddPreset(matchedPreset.id)
+                        } else {
+                            onCreateCustom(trimmed)
+                        }
+                        onDismiss()
+                    }
+                },
+                enabled = collectionName.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Create", color = Color.Black, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = RemoraTextMuted)
+            }
+        }
+    )
 }
 
 
