@@ -220,7 +220,7 @@ export const AnchorDrill: React.FC<{
   const plateEl = (
     <div className="w-52 aspect-[4/3] rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center flex-shrink-0">
       {!imgErr ? (
-        <img src={imgPath} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover" />
+        <img src={imgPath} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover object-top" />
       ) : (
         <span className="text-5xl font-heading font-bold text-muted/25">{current?.chapter}</span>
       )}

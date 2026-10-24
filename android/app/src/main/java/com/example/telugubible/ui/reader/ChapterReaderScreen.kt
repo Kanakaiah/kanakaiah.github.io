@@ -1283,7 +1283,8 @@ fun AsyncNativeImage(
     url: String,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Crop
+    contentScale: ContentScale = ContentScale.Crop,
+    alignment: androidx.compose.ui.Alignment = androidx.compose.ui.Alignment.TopCenter
 ) {
     var imageBitmap by remember(url) { mutableStateOf<androidx.compose.ui.graphics.ImageBitmap?>(null) }
 
@@ -1313,6 +1314,7 @@ fun AsyncNativeImage(
             bitmap = imageBitmap!!,
             contentDescription = contentDescription,
             contentScale = contentScale,
+            alignment = alignment,
             modifier = modifier
         )
     } else {

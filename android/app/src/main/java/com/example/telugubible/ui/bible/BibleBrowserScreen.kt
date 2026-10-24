@@ -307,11 +307,11 @@ private fun RemoraBookCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
-            // Book Cover Image Plate (Aspect Ratio 16:9, matching chapter plate images)
+            // Book Cover Image Plate (Aspect Ratio 4:3, matching 4:3 artwork)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
+                    .aspectRatio(4f / 3f)
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
             ) {
                 BookCoverImage(

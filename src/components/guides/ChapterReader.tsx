@@ -252,7 +252,7 @@ const RecallCard: React.FC<{
         <div className="flex items-center gap-3">
           <div className="relative w-16 h-16 rounded-md overflow-hidden bg-card-elevated flex-shrink-0 border border-card-border">
             {!imgErr ? (
-              <img src={imgPath} alt="" loading="lazy" onError={() => setImgErr(true)} className={`absolute inset-0 w-full h-full object-cover transition-opacity ${revealed ? 'opacity-100' : 'opacity-100 blur-[6px]'}`} />
+              <img src={imgPath} alt="" loading="lazy" onError={() => setImgErr(true)} className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity ${revealed ? 'opacity-100' : 'opacity-100 blur-[6px]'}`} />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-lg font-heading font-bold text-muted/40">{chapter}</div>
             )}

@@ -65,7 +65,8 @@ fun BookCoverImage(
             bitmap = imageBitmap!!,
             contentDescription = contentDescription,
             modifier = modifier,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.TopCenter
         )
     } else {
         Box(

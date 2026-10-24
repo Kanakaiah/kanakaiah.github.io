@@ -157,7 +157,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
             already has; neither gives the answer away. */}
         <div className="w-52 aspect-[4/3] rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center">
           {!imgErr ? (
-            <img src={current.image} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover" />
+            <img src={current.image} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover object-top" />
           ) : (
             <span className="text-3xl font-heading font-bold text-muted/25">{current.name.slice(0, 3)}</span>
           )}

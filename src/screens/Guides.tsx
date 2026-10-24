@@ -189,7 +189,7 @@ const ChapterAnchorCard = ({
             alt={revealed ? anchor.word : `Chapter ${anchor.ch}`}
             loading="lazy"
             onError={handleImageError}
-            className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-200 ${revealed ? '' : 'blur-[10px] scale-105'}`}
+            className={`absolute inset-0 w-full h-full object-cover object-top transition-[filter] duration-200 ${revealed ? '' : 'blur-[10px] scale-105'}`}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">

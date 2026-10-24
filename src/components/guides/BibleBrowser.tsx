@@ -46,7 +46,7 @@ export const BookCard: React.FC<{
             loading="lazy"
             onLoad={() => setImgLoaded(true)}
             onError={() => { setImgErr(true); setImgLoaded(true); }}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">

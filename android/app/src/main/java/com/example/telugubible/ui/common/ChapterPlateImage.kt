@@ -121,7 +121,8 @@ fun ChapterPlateImage(
                 bitmap = imageBitmap!!,
                 contentDescription = contentDescription,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.TopCenter
             )
         } else {
             // Elegant placeholder numeral plate

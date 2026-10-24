@@ -598,7 +598,7 @@ const Plate: React.FC<{ bookId: string; chapter: number; className?: string }> =
   return (
     <div className={`rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center ${className}`}>
       {!err ? (
-        <img src={`/chapters/${bookId}/ch${chapter}.png`} alt="" onError={() => setErr(true)} className="w-full h-full object-cover" />
+        <img src={`/chapters/${bookId}/ch${chapter}.png`} alt="" onError={() => setErr(true)} className="w-full h-full object-cover object-top" />
       ) : (
         <span className="text-5xl font-heading font-bold text-muted/25">{chapter}</span>
       )}

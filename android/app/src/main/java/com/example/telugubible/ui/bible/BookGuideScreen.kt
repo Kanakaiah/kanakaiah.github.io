@@ -1333,7 +1333,7 @@ private fun ChapterAnchorCard(
                 contentDescription = "Chapter ${anchor.chapter} Anchor: ${anchor.word}",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
+                    .aspectRatio(4f / 3f)
                     .clickable { onReadChapter() }
             )
 
