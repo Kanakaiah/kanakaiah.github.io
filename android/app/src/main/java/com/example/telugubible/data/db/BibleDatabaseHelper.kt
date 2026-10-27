@@ -31,7 +31,7 @@ class BibleDatabaseHelper(val context: Context) :
     companion object {
         const val ASSET_NAME = "bible.db"
         const val STATIC_DB_NAME = "bible_static.db"
-        const val STATIC_DB_VERSION = 6
+        const val STATIC_DB_VERSION = 7
         private const val PREFS_NAME = "bible_static_db_prefs"
         private const val KEY_COPIED_VERSION = "copied_static_db_version"
 
