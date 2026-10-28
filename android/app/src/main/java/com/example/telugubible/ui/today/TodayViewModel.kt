@@ -186,6 +186,13 @@ class TodayViewModel @JvmOverloads constructor(
                 }
             }
 
+            val activeVer = settings.bibleVersion.ifBlank { "LSB" }
+            val globalLang = if (activeVer.equals("TELIRV", ignoreCase = true) || activeVer.equals("IRV-TE", ignoreCase = true)) {
+                DisplayLanguage.TELUGU
+            } else {
+                DisplayLanguage.ENGLISH
+            }
+
             _uiState.update {
                 it.copy(
                     verses = verses,
@@ -203,7 +210,8 @@ class TodayViewModel @JvmOverloads constructor(
                     totalSecureChapters = totalSecure,
                     totalBibleChapters = totalChapters,
                     dueChaptersByBook = dueChaptersMap,
-                    activeVersion = settings.bibleVersion.ifBlank { "LSB" },
+                    displayLanguage = globalLang,
+                    activeVersion = activeVer,
                     secureThemesCount = secureThemes,
                     dueThemesCount = dueThemes,
                     bionicReading = settings.bionicReading,

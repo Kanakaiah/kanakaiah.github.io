@@ -121,10 +121,16 @@ class PracticeViewModel @JvmOverloads constructor(
             val settings = repository.getAppSettings()
             val now = System.currentTimeMillis()
 
+            val globalLang = if (settings.bibleVersion.equals("TELIRV", ignoreCase = true) || settings.bibleVersion.equals("IRV-TE", ignoreCase = true)) {
+                DisplayLanguage.TELUGU
+            } else {
+                DisplayLanguage.ENGLISH
+            }
+
             var restoredQueue: List<UserMemoryVerse>? = null
             var restoredIndex = 0
             var restoredRevealed = false
-            var restoredLang = _uiState.value.displayLanguage
+            var restoredLang = globalLang
             var restoredMode = _uiState.value.activeMode
 
             if (!forceNewSession) {
@@ -140,10 +146,6 @@ class PracticeViewModel @JvmOverloads constructor(
                         restoredQueue = loaded
                         restoredIndex = savedIndex
                         restoredRevealed = repository.getSessionState(KEY_SESSION_REVEALED)?.toBooleanStrictOrNull() ?: false
-                        val savedLang = repository.getSessionState(KEY_SESSION_LANG)
-                        if (savedLang != null) {
-                            restoredLang = try { DisplayLanguage.valueOf(savedLang) } catch (_: Exception) { restoredLang }
-                        }
                         val savedMode = repository.getSessionState(KEY_SESSION_MODE)
                         if (savedMode != null) {
                             restoredMode = try { PracticeMode.valueOf(savedMode) } catch (_: Exception) { restoredMode }

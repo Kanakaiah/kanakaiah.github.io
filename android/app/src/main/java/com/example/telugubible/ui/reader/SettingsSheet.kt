@@ -194,33 +194,6 @@ fun SettingsSheet(
                     }
                 }
             }
-
-            // 4. Translation Switcher
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "Bible Translation",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    FilterChip(
-                        selected = language == BibleLanguage.TELUGU,
-                        onClick = { onLanguageChange(BibleLanguage.TELUGU) },
-                        label = { Text("తెలుగు (IRV)", fontWeight = FontWeight.Bold) },
-                        modifier = Modifier.weight(1f)
-                    )
-                    FilterChip(
-                        selected = language == BibleLanguage.ENGLISH,
-                        onClick = { onLanguageChange(BibleLanguage.ENGLISH) },
-                        label = { Text("English (BSB)", fontWeight = FontWeight.Bold) },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
         }
     }
 }

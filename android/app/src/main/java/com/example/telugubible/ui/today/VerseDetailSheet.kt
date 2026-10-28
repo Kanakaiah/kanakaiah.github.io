@@ -177,7 +177,7 @@ fun VerseDetailSheet(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 2. Title & Translation Toggle Header
+            // 2. Title Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -195,33 +195,6 @@ fun VerseDetailSheet(
                         fontSize = 13.sp,
                         color = RemoraTextSecondary
                     )
-                }
-
-                // Translation Pill with swap icon
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = RemoraCardBgElevated,
-                    border = BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.clickable { onToggleLanguage() }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = if (displayLanguage == DisplayLanguage.ENGLISH) "BSB (EN)" else "IRV (TE)",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraAccentLight
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
-                            Icons.Default.SwapHoriz,
-                            contentDescription = "Switch translation",
-                            tint = RemoraAccent,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
                 }
             }
 

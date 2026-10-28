@@ -93,7 +93,6 @@ fun ImmersedReader(
         .replace("&quot;", "\"")
         .replace("&#39;", "'")
         .trim()
-    val badgeText = if (isEnglish) "LSB" else "IRV"
 
     val sentences = remember(rawText) {
         BionicUtils.splitSentences(rawText)
@@ -210,13 +209,6 @@ fun ImmersedReader(
                                 text = refText,
                                 color = RemoraAccent,
                                 fontSize = (17.sp * fontMultiplier),
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 2.sp
-                            )
-                            Text(
-                                text = badgeText,
-                                color = RemoraTextMuted,
-                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 2.sp
                             )

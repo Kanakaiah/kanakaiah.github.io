@@ -1139,11 +1139,9 @@ private fun RemoraVerseCard(
     val isMemorized = verse.status == "memorized"
     val indicatorColor = if (isDue || isMemorized) RemoraGold else RemoraAccent
 
-    var cardLanguage by remember(displayLanguage) { mutableStateOf(displayLanguage) }
     var isMaskRevealed by remember(verse.id) { mutableStateOf(false) }
-    val isEnglish = cardLanguage == DisplayLanguage.ENGLISH
+    val isEnglish = displayLanguage == DisplayLanguage.ENGLISH
     val refText = verse.fullRef(isEnglish)
-    val badgeText = if (isEnglish) "LSB" else "IRV"
     val rawCurrentText = (if (isEnglish) verse.textEn else verse.textTe)
     val currentVerseText = (rawCurrentText ?: (if (isEnglish) verse.textTe else verse.textEn) ?: "").replace(Regex("<[^>]+>"), "").replace("&nbsp;", " ").trim()
 
@@ -1164,48 +1162,18 @@ private fun RemoraVerseCard(
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
-                // Header: Ref + Translation badge + Status
+                // Header: Ref + Status
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = refText,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        // Interactive translation badge: tapping it toggles translation for this card
-                        Surface(
-                            onClick = {
-                                cardLanguage = if (isEnglish) DisplayLanguage.TELUGU else DisplayLanguage.ENGLISH
-                            },
-                            shape = RoundedCornerShape(4.dp),
-                            color = RemoraCardBgElevated,
-                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = badgeText,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = RemoraAccentLight
-                                )
-                                Spacer(modifier = Modifier.width(3.dp))
-                                Text(
-                                    text = "⇄",
-                                    fontSize = 9.sp,
-                                    color = RemoraTextMuted
-                                )
-                            }
-                        }
-                    }
+                    Text(
+                        text = refText,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RemoraTextPrimary
+                    )
 
                     Text(
                         text = when {

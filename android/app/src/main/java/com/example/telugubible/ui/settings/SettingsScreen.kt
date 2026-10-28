@@ -397,30 +397,37 @@ fun SettingsScreen(
                             )
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                listOf("BSB" to "BSB (English)", "IRV-TE" to "తెలుగు (IRV)", "IRV-TA" to "தமிழ் (IRV)").forEach { (v, name) ->
-                                    val isSelected = state.settings.bibleVersion == v
-                                    Surface(
-                                        onClick = { viewModel.setBibleVersion(v) },
-                                        shape = RoundedCornerShape(8.dp),
-                                        color = if (isSelected) RemoraAccent else RemoraCardBgElevated,
-                                        border = BorderStroke(1.dp, if (isSelected) RemoraAccent else RemoraCardBorder),
-                                        modifier = Modifier.weight(1f)
+                                com.example.telugubible.data.model.BibleTranslation.ALL.chunked(3).forEach { rowTranslations ->
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Box(
-                                            contentAlignment = Alignment.Center,
-                                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
-                                        ) {
-                                            Text(
-                                                text = name,
-                                                fontSize = 11.sp,
-                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                                color = if (isSelected) Color.White else RemoraTextSecondary,
-                                                maxLines = 1
-                                            )
+                                        rowTranslations.forEach { translation ->
+                                            val isSelected = state.settings.bibleVersion.equals(translation.code, ignoreCase = true)
+                                            Surface(
+                                                onClick = { viewModel.setBibleVersion(translation.code) },
+                                                shape = RoundedCornerShape(8.dp),
+                                                color = if (isSelected) RemoraAccent else RemoraCardBgElevated,
+                                                border = BorderStroke(1.dp, if (isSelected) RemoraAccent else RemoraCardBorder),
+                                                modifier = Modifier.weight(1f)
+                                            ) {
+                                                Box(
+                                                    contentAlignment = Alignment.Center,
+                                                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                                                ) {
+                                                    Text(
+                                                        text = translation.shortLabel,
+                                                        fontSize = 11.sp,
+                                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                                        color = if (isSelected) Color.White else RemoraTextSecondary,
+                                                        maxLines = 1
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
                                 }

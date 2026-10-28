@@ -103,7 +103,6 @@ fun PracticeScreen(
                 if (verse != null) {
                     val isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH
                     val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
-                    val badgeText = if (isEnglish) "LSB" else "IRV"
                     val rawText = (if (isEnglish) verse.textEn else verse.textTe)
                         ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
                     val activeText = rawText
@@ -338,33 +337,8 @@ fun PracticeScreen(
                                                 }
                                             }
                                         }
-
-                                        Surface(
-                                            onClick = { viewModel.toggleDisplayLanguage() },
-                                            shape = RoundedCornerShape(6.dp),
-                                            color = RemoraCardBgElevated,
-                                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
-                                        ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                        ) {
-                                            Text(
-                                                text = badgeText,
-                                                fontSize = 11.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = RemoraAccentLight
-                                            )
-                                            Spacer(modifier = Modifier.width(4.dp))
-                                            Text(
-                                                text = "⇄",
-                                                fontSize = 10.sp,
-                                                color = RemoraTextMuted
-                                            )
-                                        }
                                     }
                                 }
-                            }
 
                             // Card Center: Active Drill Mode
                                 Box(

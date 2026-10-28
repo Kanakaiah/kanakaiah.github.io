@@ -131,6 +131,12 @@ class DailySessionViewModel @JvmOverloads constructor(
                 )
             )
 
+            val globalLang = if (appSettings.bibleVersion.equals("TELIRV", ignoreCase = true) || appSettings.bibleVersion.equals("IRV-TE", ignoreCase = true)) {
+                DisplayLanguage.TELUGU
+            } else {
+                DisplayLanguage.ENGLISH
+            }
+
             val now = System.currentTimeMillis()
             _uiState.update {
                 it.copy(
@@ -139,6 +145,7 @@ class DailySessionViewModel @JvmOverloads constructor(
                     isRevealed = false,
                     isFinished = plan.items.isEmpty(),
                     isLoading = false,
+                    displayLanguage = globalLang,
                     startedAtMs = now,
                     outcomes = emptyList(),
                     anchorInput = "",

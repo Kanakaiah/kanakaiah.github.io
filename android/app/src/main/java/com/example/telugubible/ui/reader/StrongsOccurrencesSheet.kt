@@ -254,13 +254,12 @@ private fun OccurrenceCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Version tags & translation toggles
+            // Version tag
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // KJV Badge
                 Surface(
                     shape = RoundedCornerShape(4.dp),
                     color = Color.White.copy(alpha = 0.08f)
@@ -273,109 +272,6 @@ private fun OccurrenceCard(
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }
-
-                // Show in Telugu toggle
-                Text(
-                    text = if (activeTranslation == "te") "Hide Telugu" else "Show in Telugu",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (activeTranslation == "te") RemoraGold else RemoraAccentLight,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(4.dp))
-                        .clickable {
-                            if (activeTranslation == "te") {
-                                activeTranslation = null
-                            } else {
-                                if (cachedVerse == null) {
-                                    scope.launch {
-                                        isLoadingTranslation = true
-                                        cachedVerse = onLookupOfflineVerse(
-                                            occurrence.bookId,
-                                            occurrence.chapter,
-                                            occurrence.verse
-                                        )
-                                        isLoadingTranslation = false
-                                        activeTranslation = "te"
-                                    }
-                                } else {
-                                    activeTranslation = "te"
-                                }
-                            }
-                        }
-                        .padding(horizontal = 4.dp, vertical = 2.dp)
-                )
-
-                // Show in BSB toggle
-                Text(
-                    text = if (activeTranslation == "en") "Hide BSB" else "Show in BSB",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (activeTranslation == "en") RemoraGold else RemoraAccentLight,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(4.dp))
-                        .clickable {
-                            if (activeTranslation == "en") {
-                                activeTranslation = null
-                            } else {
-                                if (cachedVerse == null) {
-                                    scope.launch {
-                                        isLoadingTranslation = true
-                                        cachedVerse = onLookupOfflineVerse(
-                                            occurrence.bookId,
-                                            occurrence.chapter,
-                                            occurrence.verse
-                                        )
-                                        isLoadingTranslation = false
-                                        activeTranslation = "en"
-                                    }
-                                } else {
-                                    activeTranslation = "en"
-                                }
-                            }
-                        }
-                        .padding(horizontal = 4.dp, vertical = 2.dp)
-                )
-
-                if (isLoadingTranslation) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(12.dp),
-                        strokeWidth = 1.5.dp,
-                        color = RemoraAccent
-                    )
-                }
-            }
-
-            // Expanded translated verse section
-            if (activeTranslation != null) {
-                Spacer(modifier = Modifier.height(10.dp))
-                HorizontalDivider(color = RemoraCardBorder, thickness = 1.dp)
-                Spacer(modifier = Modifier.height(10.dp))
-
-                val translationText = when (activeTranslation) {
-                    "te" -> cachedVerse?.textTe ?: "Telugu translation unavailable for this verse."
-                    "en" -> cachedVerse?.textEn ?: "BSB translation unavailable for this verse."
-                    else -> ""
-                }
-                val translationLabel = when (activeTranslation) {
-                    "te" -> "TELUGU (IRV)"
-                    "en" -> "BEREAN STANDARD BIBLE (BSB)"
-                    else -> ""
-                }
-
-                Text(
-                    text = translationText,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily.Serif,
-                    lineHeight = 23.sp,
-                    color = RemoraTextPrimary
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = translationLabel,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextMuted
-                )
             }
         }
     }
