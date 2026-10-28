@@ -230,12 +230,12 @@ fun ChapterReaderScreen(
             .fillMaxSize()
             .background(state.readerTheme.backgroundColor)
     ) {
-        // --- 0. Pinned Reading Progress Bar (Always visible while scrolling up and down) ---
+        // --- 0. Pinned Reading Progress Bar (Always visible at bottom, matching ImmersedReader) ---
         Box(
             modifier = Modifier
-                .align(Alignment.TopCenter)
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .statusBarsPadding()
+                .navigationBarsPadding()
                 .height(3.5.dp)
                 .background(state.readerTheme.accentColor.copy(alpha = 0.18f))
                 .zIndex(100f)
@@ -400,35 +400,13 @@ fun ChapterReaderScreen(
                         )
                     }
 
-                    // Right: Alpha Mode & Reading Options Buttons
+                    // Right: Reading Options & Immerse Reader Buttons
                     Row(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(end = 4.dp, top = 2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Greek Alpha Button
-                        IconButton(
-                            onClick = { viewModel.toggleAlphaMode() },
-                            modifier = Modifier.size(38.dp)
-                        ) {
-                            Surface(
-                                shape = CircleShape,
-                                color = if (state.alphaMode) state.readerTheme.accentColor else Color.Transparent,
-                                modifier = Modifier.size(32.dp)
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Text(
-                                        text = "α",
-                                        fontFamily = FontFamily.Serif,
-                                        fontSize = 19.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (state.alphaMode) Color.White else state.readerTheme.textColor
-                                    )
-                                }
-                            }
-                        }
-
                         // Reading Options (Type) Button
                         IconButton(
                             onClick = { viewModel.toggleReadingOptions() },
@@ -456,93 +434,49 @@ fun ChapterReaderScreen(
                         }
                     }
 
-                    // Center: Big Chapter Title + Subtitle Chips (Matching Remora PWA text-4xl)
+                    // Center: Chapter Title + Translation Badge on the same row
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 56.dp, vertical = 2.dp)
+                            .padding(horizontal = 76.dp, vertical = 2.dp)
                     ) {
-                        Text(
-                            text = "$bookDisplayName $currentChapter".uppercase(),
-                            style = MaterialTheme.typography.headlineLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 32.sp,
-                                lineHeight = 38.sp,
-                                fontFamily = state.readerFontFamily.fontFamily,
-                                letterSpacing = (-0.02).sp
-                            ),
-                            color = state.readerTheme.textColor,
-                            textAlign = TextAlign.Center,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
-                        Spacer(modifier = Modifier.height(6.dp))
-
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            // Translation Badge (All Caps)
+                            Text(
+                                text = "$bookDisplayName $currentChapter".uppercase(),
+                                style = MaterialTheme.typography.headlineLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 26.sp,
+                                    lineHeight = 32.sp,
+                                    fontFamily = state.readerFontFamily.fontFamily,
+                                    letterSpacing = (-0.02).sp
+                                ),
+                                color = state.readerTheme.textColor,
+                                textAlign = TextAlign.Center,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
+                            )
+
+                            // Translation Badge on the same row as the book name
                             Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = if (state.alphaMode) RemoraGold.copy(alpha = 0.2f) else state.readerTheme.accentColor.copy(alpha = 0.12f),
-                                border = BorderStroke(1.dp, if (state.alphaMode) RemoraGold.copy(alpha = 0.5f) else state.readerTheme.accentColor.copy(alpha = 0.3f)),
+                                shape = RoundedCornerShape(10.dp),
+                                color = state.readerTheme.accentColor.copy(alpha = 0.14f),
+                                border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.35f)),
                                 modifier = Modifier.clickable { viewModel.toggleBookSelector(true) }
                             ) {
                                 Text(
-                                    text = if (state.alphaMode) "KJV + ORIGINAL WORDS" else "${BibleTranslation.getLabel(state.activeVersion).uppercase()} TRANSLATION",
-                                    fontSize = 10.sp,
+                                    text = BibleTranslation.getLabel(state.activeVersion).uppercase(),
+                                    fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (state.alphaMode) RemoraGold else state.readerTheme.accentColor,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.5.dp)
+                                    color = state.readerTheme.accentColor,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                                 )
                             }
-
-                            // Interactive Memory Anchor Chip (All Caps)
-                            if (state.currentAnchor != null && state.anchorReveal != "never") {
-                                val isRevealed = state.anchorReveal == "always" || state.anchorWordRevealed
-                                val chipText = if (isRevealed) state.currentAnchor!!.word.uppercase() else "TAP FOR ANCHOR"
-
-                                Surface(
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = state.readerTheme.cardColor,
-                                    border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.35f)),
-                                    modifier = Modifier.clickable {
-                                        if (!isRevealed) {
-                                            viewModel.revealAnchorWord()
-                                        } else {
-                                            viewModel.toggleAnchorScene()
-                                        }
-                                    }
-                                ) {
-                                    Text(
-                                        text = chipText,
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (isRevealed) state.readerTheme.accentColor else state.readerTheme.secondaryTextColor,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.5.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        // Expanded Anchor Scene Subtitle
-                        if (state.currentAnchor != null && state.showAnchorScene && (state.anchorReveal != "tap" || state.anchorWordRevealed)) {
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = state.currentAnchor!!.scene,
-                                fontSize = 12.sp,
-                                lineHeight = 16.sp,
-                                fontStyle = FontStyle.Italic,
-                                fontFamily = state.readerFontFamily.fontFamily,
-                                color = state.readerTheme.secondaryTextColor,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .padding(horizontal = 12.dp)
-                                    .widthIn(max = 380.dp)
-                            )
                         }
                     }
                 }
@@ -613,6 +547,42 @@ fun ChapterReaderScreen(
                                         fontWeight = FontWeight.Bold,
                                         color = if (state.fontSizeScale != FontSizeScale.XL) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.35f)
                                     )
+                                }
+                            }
+                        }
+
+                        HorizontalDivider(color = state.readerTheme.accentColor.copy(alpha = 0.15f))
+
+                        // Theme Palette Selector
+                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text("Theme", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = state.readerTheme.textColor)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                ReaderTheme.entries.forEach { themeOpt ->
+                                    val isSelected = state.readerTheme == themeOpt
+                                    Surface(
+                                        shape = RoundedCornerShape(8.dp),
+                                        color = themeOpt.backgroundColor,
+                                        border = BorderStroke(
+                                            width = if (isSelected) 2.dp else 1.dp,
+                                            color = if (isSelected) themeOpt.accentColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.35f)
+                                        ),
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .height(34.dp)
+                                            .clickable { viewModel.setReaderTheme(themeOpt) }
+                                    ) {
+                                        Box(contentAlignment = Alignment.Center) {
+                                            Text(
+                                                text = themeOpt.label,
+                                                fontSize = 11.sp,
+                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                                color = themeOpt.textColor
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -845,7 +815,7 @@ fun ChapterReaderScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .navigationBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                        .padding(horizontal = 20.dp, vertical = 14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -854,34 +824,22 @@ fun ChapterReaderScreen(
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Clear selection",
-                                tint = state.readerTheme.secondaryTextColor
+                                tint = state.readerTheme.secondaryTextColor,
+                                modifier = Modifier.size(22.dp)
                             )
                         }
                         Text(
                             text = "${state.selectedVerses.size} selected",
-                            style = MaterialTheme.typography.titleSmall,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = state.readerTheme.textColor
                         )
                     }
 
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Original Words Button (if 1 verse selected)
-                        if (state.selectedVerses.size == 1) {
-                            FilledTonalButton(
-                                onClick = {
-                                    viewModel.openOriginalWords(state.selectedVerses.first())
-                                },
-                                shape = RoundedCornerShape(10.dp),
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
-                            ) {
-                                Text("α Words", fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                            }
-                        }
-
                         // Copy Button
                         FilledTonalButton(
                             onClick = {
@@ -892,28 +850,12 @@ fun ChapterReaderScreen(
                                 }
                                 viewModel.clearVerseSelection()
                             },
-                            shape = RoundedCornerShape(10.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
                         ) {
-                            Icon(Icons.Default.ContentCopy, contentDescription = "Copy", modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Copy", fontSize = 13.sp)
-                        }
-
-                        // Immerse Button
-                        FilledTonalButton(
-                            onClick = {
-                                val firstSelected = state.selectedVerses.minOrNull() ?: 1
-                                val index = state.verses.indexOfFirst { it.verse == firstSelected }.coerceAtLeast(0)
-                                immersedVerseIndex = index
-                                viewModel.clearVerseSelection()
-                            },
-                            shape = RoundedCornerShape(10.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
-                        ) {
-                            Icon(Icons.Default.Fullscreen, contentDescription = "Immerse", modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Immerse", fontSize = 13.sp)
+                            Icon(Icons.Default.ContentCopy, contentDescription = "Copy", modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Copy", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                         }
 
                         // Refs Button
@@ -921,12 +863,12 @@ fun ChapterReaderScreen(
                             onClick = {
                                 viewModel.openCrossReferences(state.selectedVerses.sorted())
                             },
-                            shape = RoundedCornerShape(10.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
                         ) {
-                            Icon(Icons.Default.MenuBook, contentDescription = "Refs", modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Refs", fontSize = 13.sp)
+                            Icon(Icons.Default.MenuBook, contentDescription = "Refs", modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Refs", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                         }
 
                         // Memorize Button
@@ -934,13 +876,13 @@ fun ChapterReaderScreen(
                             onClick = {
                                 showMemorizeSheet = true
                             },
-                            shape = RoundedCornerShape(10.dp),
+                            shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = RemoraGold, contentColor = Color.Black),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = "Add to Memory", modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Memorize", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            Icon(Icons.Default.Add, contentDescription = "Add to Memory", modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Memorize", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -1156,22 +1098,35 @@ fun ChapterReaderScreen(
         }
 
         // --- 6. Modal Sheets & Dialogs ---
-        // Cross Reference Modal Sheet
+        // Unified Verse Connections Sheet (→ References, ← Referenced by, Same Hebrew/Greek word)
         if (state.crossRefSheetVerses != null) {
             val bookName = state.currentBook?.nameEn ?: ""
             val ch = state.currentChapter
             val versesStr = state.crossRefSheetVerses!!.joinToString(", ")
             val label = "$bookName $ch:$versesStr"
+            val booksMap = remember(state.books) { state.books.associateBy { it.id } }
 
             CrossReferenceSheet(
                 fromRefLabel = label,
                 crossReferences = state.crossRefsForSheet,
                 language = state.language,
                 onDismiss = { viewModel.dismissCrossReferences() },
-                onNavigateToTarget = { bId, targetCh, _ ->
+                onNavigateToTarget = { bId, targetCh, targetVerse ->
                     viewModel.dismissCrossReferences()
                     viewModel.selectBookAndChapterById(bId, targetCh)
-                }
+                    viewModel.setFlashVerse(targetVerse)
+                },
+                connectionsData = state.connectionsData,
+                minVotes = state.connectionsMinVotes,
+                initialSection = state.connectionsInitialSection,
+                quoteTextEn = state.connectionsQuoteTextEn,
+                quoteTextTe = state.connectionsQuoteTextTe,
+                activeVersion = state.activeVersion,
+                booksMap = booksMap,
+                wordOccurrencesMap = state.stepBibleWordOccurrences,
+                onMinVotesChange = { newMin -> viewModel.setConnectionsMinVotes(newMin) },
+                onSelectVid = { vid -> viewModel.openConnectionsForVid(vid) },
+                onExpandWord = { wordId -> viewModel.loadStepBibleWordOccurrences(wordId) }
             )
         }
 

@@ -11,7 +11,6 @@ import { ChapterReader } from '../components/guides/ChapterReader';
 import { MemorySentence } from '../components/guides/MemorySentence';
 import { KeyVerseCard } from '../components/guides/KeyVerseCard';
 import { RecordCards } from '../components/guides/RecordCards';
-import { OriginalWordModal } from '../components/OriginalWordModal';
 import { ChainDrill, type ChainAnchor } from '../components/practice/ChainDrill';
 import { CustomSelect } from '../components/ui/CustomSelect';
 import { TRANSLATION_OPTIONS } from '../data/bibleMap';
@@ -398,7 +397,6 @@ export const Guides: React.FC = () => {
   const [isOTExpanded, setIsOTExpanded] = useState(true);
   const [isNTExpanded, setIsNTExpanded] = useState(true);
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
-  const [studyOriginalWordRef, setStudyOriginalWordRef] = useState<{ book: number; chapter: number; verse: number } | null>(null);
 
   const toggleSection = (section: string) => {
     setCollapsedSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -925,37 +923,23 @@ export const Guides: React.FC = () => {
   // ── In-App Reader view ─────────────────────────────────────────────────────
   if (readerRef) {
     return (
-      <>
-        {studyOriginalWordRef && (
-          <OriginalWordModal
-            verseRef={studyOriginalWordRef}
-            onClose={() => setStudyOriginalWordRef(null)}
-            onNavigateToVerse={(bookId, chapter, verse) => {
-              setStudyOriginalWordRef(null);
-              const path = readerPath(bookId, chapter, verse);
-              if (path) navigate(path);
-            }}
-          />
-        )}
-        <ChapterReader
-          bookId={readerRef.bookId}
-          chapter={readerRef.chapter}
-          initialVerse={readerRef.verse}
-          bookTitle={ALL_BOOKS.find((b) => b.id === readerRef.bookId)?.name || activeGuide?.title || 'Book'}
-          onStudyOriginalWord={setStudyOriginalWordRef}
-          // Closing lands on the book's own guide page. Previously this dropped the
-          // reader params and kept whatever ?guide= happened to be set, which was
-          // already updated to follow the book being read.
-          onClose={() => {
-            const state = location.state as { returnTo?: string } | null;
-            if (state?.returnTo) {
-              navigate(state.returnTo);
-            } else {
-              navigate(guidePath(readerRef.bookId), { state: { fromReader: true } });
-            }
-          }}
-        />
-      </>
+      <ChapterReader
+        bookId={readerRef.bookId}
+        chapter={readerRef.chapter}
+        initialVerse={readerRef.verse}
+        bookTitle={ALL_BOOKS.find((b) => b.id === readerRef.bookId)?.name || activeGuide?.title || 'Book'}
+        // Closing lands on the book's own guide page. Previously this dropped the
+        // reader params and kept whatever ?guide= happened to be set, which was
+        // already updated to follow the book being read.
+        onClose={() => {
+          const state = location.state as { returnTo?: string } | null;
+          if (state?.returnTo) {
+            navigate(state.returnTo);
+          } else {
+            navigate(guidePath(readerRef.bookId), { state: { fromReader: true } });
+          }
+        }}
+      />
     );
   }
 

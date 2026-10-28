@@ -94,6 +94,15 @@ fun MainScaffold(
         isInReaderMode = true
     }
 
+    val settingsState by settingsViewModel.uiState.collectAsState()
+    val readerState by readerViewModel.uiState.collectAsState()
+    LaunchedEffect(settingsState.settings.theme) {
+        readerViewModel.syncSettings()
+    }
+    LaunchedEffect(readerState.readerTheme) {
+        settingsViewModel.loadSettings()
+    }
+
     BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode || isInRetentionMode) {
         if (isInReaderMode) {
             isInReaderMode = false
@@ -103,12 +112,12 @@ fun MainScaffold(
             isInSettingsMode = false
             todayViewModel.loadData()
             retentionViewModel.loadAnalytics()
+            readerViewModel.syncSettings()
         } else if (isInRetentionMode) {
             isInRetentionMode = false
         }
     }
 
-    val settingsState by settingsViewModel.uiState.collectAsState()
     val currentDensity = LocalDensity.current
     val customDensity = remember(currentDensity, settingsState.settings.fontSize) {
         Density(
@@ -142,10 +151,12 @@ fun MainScaffold(
                 isInSettingsMode = false
                 todayViewModel.loadData()
                 retentionViewModel.loadAnalytics()
+                readerViewModel.syncSettings()
             },
             onDataCleared = {
                 todayViewModel.loadData()
                 retentionViewModel.loadAnalytics()
+                readerViewModel.syncSettings()
             }
         )
     } else if (isInRetentionMode) {

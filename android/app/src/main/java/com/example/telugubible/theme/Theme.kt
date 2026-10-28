@@ -16,10 +16,8 @@ fun RemoraTheme(
     themeName: String = RemoraThemeState.themeName,
     content: @Composable () -> Unit
 ) {
-    SideEffect {
-        if (RemoraThemeState.themeName != themeName) {
-            RemoraThemeState.themeName = themeName
-        }
+    if (RemoraThemeState.themeName != themeName) {
+        RemoraThemeState.themeName = themeName
     }
 
     val colors = RemoraColors.forTheme(themeName)

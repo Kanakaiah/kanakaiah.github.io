@@ -120,18 +120,21 @@ class ReaderViewModelTest {
     fun testCrossReferencesOpenAndDismiss() = runTest {
         advanceUntilIdle()
 
-        // Genesis 1:1 has 25 cross-references
+        // Genesis 1:1 has 61 OpenBible cross-references (>= 4 votes)
         viewModel.openCrossReferences(listOf(1))
         advanceUntilIdle()
 
         var state = viewModel.uiState.value
         assertEquals(listOf(1), state.crossRefSheetVerses)
-        assertEquals(25, state.crossRefsForSheet.size)
+        assertEquals(61, state.crossRefsForSheet.size)
+        org.junit.Assert.assertNotNull(state.connectionsData)
+        assertEquals(61, state.connectionsData?.outgoing?.size)
 
         viewModel.dismissCrossReferences()
         state = viewModel.uiState.value
         assertNull(state.crossRefSheetVerses)
         assertTrue(state.crossRefsForSheet.isEmpty())
+        assertNull(state.connectionsData)
     }
 
     @Test

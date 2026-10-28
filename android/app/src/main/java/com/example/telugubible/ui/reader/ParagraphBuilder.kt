@@ -38,9 +38,13 @@ object ParagraphBuilder {
             val vNum = v.verse
             val text = v.textEn ?: v.textTe ?: ""
 
-            // Check for embedded heading in <b>...</b>
-            val headingMatch = Regex("<b[^>]*>([\\s\\S]*?)</b>", RegexOption.IGNORE_CASE).find(text)
-            val extractedHeading = headingMatch?.groupValues?.get(1)?.trim()
+            // Check for embedded heading(s) in <b>...</b>
+            val headingMatches = Regex("<b\\b[^>]*>([\\s\\S]*?)</b>", RegexOption.IGNORE_CASE).findAll(text).toList()
+            val extractedHeading = headingMatches
+                .map { it.groupValues[1].trim() }
+                .filter { it.isNotEmpty() }
+                .joinToString("\n")
+                .ifEmpty { null }
 
             // Check for Psalm title on verse 1
             var psalmTitle: String? = null

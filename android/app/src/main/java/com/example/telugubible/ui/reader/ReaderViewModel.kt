@@ -8,12 +8,15 @@ import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.OriginalWord
+import com.example.telugubible.data.model.StepBibleWordOccurrence
 import com.example.telugubible.data.model.StrongsOccurrence
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.Verse
+import com.example.telugubible.data.model.VerseConnectionsData
 import com.example.telugubible.data.repository.BibleRepository
 import com.example.telugubible.data.service.KjvService
+import com.example.telugubible.util.KjvVersification
 import com.example.telugubible.util.StrongsParser
 import com.example.telugubible.util.TtsManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,6 +64,12 @@ data class ReaderUiState(
     val selectedVerses: Set<Int> = emptySet(),
     val crossRefSheetVerses: List<Int>? = null,
     val crossRefsForSheet: List<CrossReference> = emptyList(),
+    val connectionsData: VerseConnectionsData? = null,
+    val connectionsMinVotes: Int = 4,
+    val connectionsInitialSection: String? = null,
+    val connectionsQuoteTextEn: String? = null,
+    val connectionsQuoteTextTe: String? = null,
+    val stepBibleWordOccurrences: Map<Int, List<StepBibleWordOccurrence>> = emptyMap(),
     val isTtsSpeaking: Boolean = false,
     val activeTtsVerse: Int? = null,
     val fontSizeScale: FontSizeScale = FontSizeScale.S,
@@ -151,12 +160,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 val memorized = userVerses.filter { it.bookId == firstBook.id && it.chapter == 1 }.map { it.verse }.toSet()
                 val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
                 val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
-                val theme = when (settings.theme.lowercase()) {
-                    "dark", "walnut" -> ReaderTheme.DARK
-                    "sepia" -> ReaderTheme.SEPIA
-                    "white", "paper" -> ReaderTheme.PAPER
-                    else -> ReaderTheme.OBSIDIAN
-                }
+                val theme = ReaderTheme.fromKey(settings.theme)
 
                 _uiState.update {
                     it.copy(
@@ -208,12 +212,17 @@ class ReaderViewModel @JvmOverloads constructor(
                     showBookSelector = false,
                     selectedVerses = emptySet(),
                     crossRefSheetVerses = null,
+                    connectionsData = null,
+                    connectionsInitialSection = null,
                     originalWordsVerse = null,
                     originalWordsList = emptyList()
                 )
             }
-            val rawVerses = repository.getChapterVerses(book.id, chapter, _uiState.value.activeVersion)
-            val verses = attachHeadingsIfNeeded(book.id, chapter, _uiState.value.activeVersion, rawVerses)
+            val settings = repository.getAppSettings()
+            val activeVer = settings.bibleVersion.ifBlank { _uiState.value.activeVersion }.uppercase()
+            val lang = if (activeVer == "TELIRV") BibleLanguage.TELUGU else BibleLanguage.ENGLISH
+            val rawVerses = repository.getChapterVerses(book.id, chapter, activeVer)
+            val verses = attachHeadingsIfNeeded(book.id, chapter, activeVer, rawVerses)
             val breaks = repository.getParagraphBreaks(book.id, chapter)
             val crossRefCounts = repository.getCrossReferenceCountsForChapter(book.id, chapter)
             val otQuotes = repository.getOtQuotesForChapter(book.id, chapter)
@@ -222,6 +231,9 @@ class ReaderViewModel @JvmOverloads constructor(
             val chapterProgress = repository.getChapterProgress(book.id)[chapter]
             val userVerses = repository.getUserMemoryVerses()
             val memorized = userVerses.filter { it.bookId == book.id && it.chapter == chapter }.map { it.verse }.toSet()
+            val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
+            val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
+            val theme = ReaderTheme.fromKey(settings.theme)
             val kjvMap = if (_uiState.value.alphaMode) {
                 kjvService.getChapterKjv(book.id, chapter) ?: emptyMap()
             } else {
@@ -231,6 +243,8 @@ class ReaderViewModel @JvmOverloads constructor(
                 it.copy(
                     currentBook = book,
                     currentChapter = chapter,
+                    activeVersion = activeVer,
+                    language = lang,
                     verses = verses,
                     paragraphBreaks = breaks,
                     crossRefCounts = crossRefCounts,
@@ -238,7 +252,16 @@ class ReaderViewModel @JvmOverloads constructor(
                     currentAnchor = currentAnchor,
                     chapterProgress = chapterProgress,
                     memorizedVerses = memorized,
-                    anchorWordRevealed = it.anchorReveal == "always",
+                    fontSizeScale = fontScale,
+                    readerFontFamily = fontFam,
+                    readerTheme = theme,
+                    bionicReading = settings.bionicReading,
+                    anchorReveal = settings.anchorReveal,
+                    showSectionHeadings = settings.showSectionHeadings,
+                    showVerseNumbers = settings.showVerseNumbers,
+                    showParagraphMarks = settings.showParagraphMarks,
+                    showCrossRefMarkers = settings.showCrossRefMarkers,
+                    anchorWordRevealed = settings.anchorReveal == "always",
                     showAnchorScene = false,
                     isAnchorDismissed = false,
                     kjvChapterVerses = kjvMap,
@@ -249,15 +272,16 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     private suspend fun attachHeadingsIfNeeded(bookId: Int, chapter: Int, activeVersion: String, verses: List<Verse>): List<Verse> {
-        val hasHeadings = verses.any { (it.textEn ?: "").contains("<b", ignoreCase = true) }
-        if (hasHeadings || activeVersion == "LSB") return verses
+        val headingRegex = Regex("<b\\b[^>]*>([\\s\\S]*?)</b>", RegexOption.IGNORE_CASE)
+        val hasHeadings = verses.any { headingRegex.containsMatchIn(it.textEn ?: "") }
+        if (hasHeadings) return verses
         val lsbVerses = repository.getChapterVerses(bookId, chapter, "LSB")
         val lsbHeadings = mutableMapOf<Int, String>()
         lsbVerses.forEach { lv ->
             val text = lv.textEn ?: ""
-            val m = Regex("<b[^>]*>([\\s\\S]*?)</b>", RegexOption.IGNORE_CASE).find(text)
-            if (m != null) {
-                lsbHeadings[lv.verse] = m.value
+            val matches = headingRegex.findAll(text).map { it.value }.toList()
+            if (matches.isNotEmpty()) {
+                lsbHeadings[lv.verse] = matches.joinToString(" ")
             }
         }
         if (lsbHeadings.isEmpty()) return verses
@@ -334,7 +358,8 @@ class ReaderViewModel @JvmOverloads constructor(
             repository.saveAppSettings(currentSettings.copy(bibleVersion = v))
             val book = _uiState.value.currentBook ?: return@launch
             val ch = _uiState.value.currentChapter
-            val verses = repository.getChapterVerses(book.id, ch, v)
+            val rawVerses = repository.getChapterVerses(book.id, ch, v)
+            val verses = attachHeadingsIfNeeded(book.id, ch, v, rawVerses)
             _uiState.update { it.copy(verses = verses, isLoading = false) }
         }
     }
@@ -491,27 +516,85 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
-    // Cross-References
-    fun openCrossReferences(verseNumbers: List<Int>) {
+    // Cross-References & Verse Connections
+    fun openCrossReferences(verseNumbers: List<Int>, initialSection: String? = null) {
         viewModelScope.launch {
             val currentBook = _uiState.value.currentBook ?: return@launch
             val ch = _uiState.value.currentChapter
+            val minVotes = _uiState.value.connectionsMinVotes
+            val firstVerse = verseNumbers.firstOrNull() ?: 1
             val list = mutableListOf<CrossReference>()
             for (v in verseNumbers) {
-                list.addAll(repository.getCrossReferences(currentBook.id, ch, v))
+                list.addAll(repository.getCrossReferences(currentBook.id, ch, v, minVotes))
             }
+            val connData = repository.getVerseConnections(currentBook.id, ch, firstVerse, minVotes)
+            val verseObj = _uiState.value.verses.firstOrNull { it.verse == firstVerse }
+                ?: repository.getVerse(currentBook.id, ch, firstVerse)
             _uiState.update {
                 it.copy(
                     crossRefSheetVerses = verseNumbers,
-                    crossRefsForSheet = list
+                    crossRefsForSheet = list,
+                    connectionsData = connData,
+                    connectionsInitialSection = initialSection,
+                    connectionsQuoteTextEn = verseObj?.textEn,
+                    connectionsQuoteTextTe = verseObj?.textTe
                 )
+            }
+        }
+    }
+
+    fun openConnectionsForVid(vid: Int, initialSection: String? = null) {
+        if (vid !in 0 until KjvVersification.TOTAL_VERSES) return
+        viewModelScope.launch {
+            val coord = KjvVersification.fromVerseIndex(vid)
+            val minVotes = _uiState.value.connectionsMinVotes
+            val connData = repository.getVerseConnections(coord.bookId, coord.chapter, coord.verse, minVotes)
+            val verseObj = repository.getVerse(coord.bookId, coord.chapter, coord.verse)
+            _uiState.update {
+                it.copy(
+                    crossRefSheetVerses = listOf(coord.verse),
+                    crossRefsForSheet = connData.outgoing,
+                    connectionsData = connData,
+                    connectionsInitialSection = initialSection,
+                    connectionsQuoteTextEn = verseObj?.textEn,
+                    connectionsQuoteTextTe = verseObj?.textTe
+                )
+            }
+        }
+    }
+
+    fun setConnectionsMinVotes(minVotes: Int) {
+        _uiState.update { it.copy(connectionsMinVotes = minVotes) }
+        val conn = _uiState.value.connectionsData ?: return
+        viewModelScope.launch {
+            val updated = repository.getVerseConnections(conn.bookId, conn.chapter, conn.verse, minVotes)
+            _uiState.update {
+                it.copy(
+                    connectionsData = updated,
+                    crossRefsForSheet = updated.outgoing
+                )
+            }
+        }
+    }
+
+    fun loadStepBibleWordOccurrences(wordId: Int) {
+        if (_uiState.value.stepBibleWordOccurrences.containsKey(wordId)) return
+        viewModelScope.launch {
+            val list = repository.getOccurrencesForStepBibleWord(wordId)
+            _uiState.update {
+                it.copy(stepBibleWordOccurrences = it.stepBibleWordOccurrences + (wordId to list))
             }
         }
     }
 
     fun dismissCrossReferences() {
         _uiState.update {
-            it.copy(crossRefSheetVerses = null, crossRefsForSheet = emptyList())
+            it.copy(
+                crossRefSheetVerses = null,
+                crossRefsForSheet = emptyList(),
+                connectionsData = null,
+                connectionsInitialSection = null
+            )
         }
     }
 
@@ -615,6 +698,33 @@ class ReaderViewModel @JvmOverloads constructor(
     // Theme & Typography
     fun setReaderTheme(theme: ReaderTheme) {
         _uiState.update { it.copy(readerTheme = theme) }
+        com.example.telugubible.theme.RemoraThemeState.themeName = theme.toSettingKey()
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(settings.copy(theme = theme.toSettingKey()))
+        }
+    }
+
+    fun syncSettings() {
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
+            val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
+            val theme = ReaderTheme.fromKey(settings.theme)
+            _uiState.update {
+                it.copy(
+                    fontSizeScale = fontScale,
+                    readerFontFamily = fontFam,
+                    readerTheme = theme,
+                    bionicReading = settings.bionicReading,
+                    anchorReveal = settings.anchorReveal,
+                    showSectionHeadings = settings.showSectionHeadings,
+                    showVerseNumbers = settings.showVerseNumbers,
+                    showParagraphMarks = settings.showParagraphMarks,
+                    showCrossRefMarkers = settings.showCrossRefMarkers
+                )
+            }
+        }
     }
 
     fun setReaderFontFamily(fontFamily: ReaderFontFamily) {

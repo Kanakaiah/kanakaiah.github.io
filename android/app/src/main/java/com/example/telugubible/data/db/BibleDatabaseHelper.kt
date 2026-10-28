@@ -9,11 +9,16 @@ import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.GuideBlock
 import com.example.telugubible.data.model.GuideKeyVerse
+import com.example.telugubible.data.model.LinkDirection
 import com.example.telugubible.data.model.PresetCollection
+import com.example.telugubible.data.model.StepBibleWord
+import com.example.telugubible.data.model.StepBibleWordOccurrence
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
+import com.example.telugubible.data.model.VerseConnectionsData
 import com.example.telugubible.data.model.VerseSearchResult
+import com.example.telugubible.util.KjvVersification
 import java.io.File
 import java.io.FileOutputStream
 
@@ -31,7 +36,7 @@ class BibleDatabaseHelper(val context: Context) :
     companion object {
         const val ASSET_NAME = "bible.db"
         const val STATIC_DB_NAME = "bible_static.db"
-        const val STATIC_DB_VERSION = 7
+        const val STATIC_DB_VERSION = 8
         private const val PREFS_NAME = "bible_static_db_prefs"
         private const val KEY_COPIED_VERSION = "copied_static_db_version"
 
@@ -608,36 +613,172 @@ class BibleDatabaseHelper(val context: Context) :
         }
     }
 
-    fun getCrossReferences(bookId: Int, chapter: Int, verse: Int): List<CrossReference> {
-        val list = mutableListOf<CrossReference>()
+    fun getCrossReferences(
+        bookId: Int,
+        chapter: Int,
+        verse: Int,
+        minVotes: Int = 4
+    ): List<CrossReference> {
+        val vid = KjvVersification.toVerseIndex(bookId, chapter, verse) ?: return emptyList()
+        val db = readableDatabase
+        val rawLinks = mutableListOf<Triple<Long, Pair<Int, Int>, Int>>()
+        val effectiveMin = if (minVotes <= 0) Int.MIN_VALUE else minVotes
+        val cursor = db.rawQuery(
+            """
+            SELECT id, to_start, to_end, votes
+            FROM cross_references
+            WHERE from_vid = ? AND votes >= ?
+            ORDER BY to_start ASC, to_end ASC, id ASC
+            """.trimIndent(),
+            arrayOf(vid.toString(), effectiveMin.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                rawLinks.add(
+                    Triple(
+                        it.getLong(0),
+                        Pair(it.getInt(1), it.getInt(2)),
+                        it.getInt(3)
+                    )
+                )
+            }
+        }
+        if (rawLinks.isEmpty()) return emptyList()
+
+        // Batch-fetch all verse texts needed for snippets (up to 12 verses per range)
+        val keysNeeded = rawLinks.flatMap { (_, range, _) ->
+            val cappedEnd = minOf(range.second, range.first + 11)
+            (range.first..cappedEnd).map { targetVid ->
+                val c = KjvVersification.fromVerseIndex(targetVid)
+                Triple(c.bookId, c.chapter, c.verse)
+            }
+        }.distinct()
+        val textsMap = getVerseTexts(keysNeeded)
+
+        return rawLinks.map { (id, range, votes) ->
+            val toStart = range.first
+            val toEnd = range.second
+            val startCoord = KjvVersification.fromVerseIndex(toStart)
+            val endCoord = KjvVersification.fromVerseIndex(toEnd)
+            val toRef = KjvVersification.formatVerseIndexRange(toStart, toEnd)
+            val (snippetTe, snippetEn) = buildSnippetFromMap(toStart, toEnd, textsMap)
+
+            CrossReference(
+                id = id,
+                fromBookId = bookId,
+                fromChapter = chapter,
+                fromVerse = verse,
+                toRef = toRef,
+                toBookId = startCoord.bookId,
+                toChapter = startCoord.chapter,
+                toVerse = startCoord.verse,
+                toEndVerse = if (toEnd > toStart && endCoord.bookId == startCoord.bookId && endCoord.chapter == startCoord.chapter) endCoord.verse else null,
+                targetTextEn = snippetEn,
+                targetTextTe = snippetTe,
+                votes = votes,
+                direction = LinkDirection.OUTGOING,
+                otherStartVid = toStart,
+                otherEndVid = toEnd,
+                landingNote = null
+            )
+        }
+    }
+
+    fun getIncomingCrossReferences(
+        bookId: Int,
+        chapter: Int,
+        verse: Int,
+        minVotes: Int = 4
+    ): List<CrossReference> {
+        val vid = KjvVersification.toVerseIndex(bookId, chapter, verse) ?: return emptyList()
+        val minStart = maxOf(0, vid - KjvVersification.MAX_TARGET_SPAN)
+        val db = readableDatabase
+        data class RawIncoming(val id: Long, val fromVid: Int, val toStart: Int, val toEnd: Int, val votes: Int)
+        val rawLinks = mutableListOf<RawIncoming>()
+        val effectiveMin = if (minVotes <= 0) Int.MIN_VALUE else minVotes
+        val cursor = db.rawQuery(
+            """
+            SELECT id, from_vid, to_start, to_end, votes
+            FROM cross_references
+            WHERE to_start BETWEEN ? AND ? AND to_end >= ? AND votes >= ?
+            ORDER BY from_vid ASC, to_start ASC, to_end ASC, id ASC
+            """.trimIndent(),
+            arrayOf(minStart.toString(), vid.toString(), vid.toString(), effectiveMin.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                rawLinks.add(
+                    RawIncoming(
+                        id = it.getLong(0),
+                        fromVid = it.getInt(1),
+                        toStart = it.getInt(2),
+                        toEnd = it.getInt(3),
+                        votes = it.getInt(4)
+                    )
+                )
+            }
+        }
+        if (rawLinks.isEmpty()) return emptyList()
+
+        val keysNeeded = rawLinks.map { raw ->
+            val c = KjvVersification.fromVerseIndex(raw.fromVid)
+            Triple(c.bookId, c.chapter, c.verse)
+        }.distinct()
+        val textsMap = getVerseTexts(keysNeeded)
+
+        return rawLinks.map { raw ->
+            val sourceCoord = KjvVersification.fromVerseIndex(raw.fromVid)
+            val sourceRef = KjvVersification.formatVerseIndexRange(raw.fromVid, raw.fromVid)
+            val pair = textsMap[Triple(sourceCoord.bookId, sourceCoord.chapter, sourceCoord.verse)]
+            val landing = if (raw.toEnd > raw.toStart) {
+                "to ${KjvVersification.formatVerseIndexRange(raw.toStart, raw.toEnd)}"
+            } else null
+
+            CrossReference(
+                id = raw.id,
+                fromBookId = bookId,
+                fromChapter = chapter,
+                fromVerse = verse,
+                toRef = sourceRef,
+                toBookId = sourceCoord.bookId,
+                toChapter = sourceCoord.chapter,
+                toVerse = sourceCoord.verse,
+                toEndVerse = null,
+                targetTextEn = pair?.second,
+                targetTextTe = pair?.first,
+                votes = raw.votes,
+                direction = LinkDirection.INCOMING,
+                otherStartVid = raw.fromVid,
+                otherEndVid = raw.fromVid,
+                landingNote = landing
+            )
+        }
+    }
+
+    fun getOriginalWordsForVerse(bookId: Int, chapter: Int, verse: Int): List<StepBibleWord> {
+        val vid = KjvVersification.toVerseIndex(bookId, chapter, verse) ?: return emptyList()
+        val list = mutableListOf<StepBibleWord>()
         val db = readableDatabase
         val cursor = db.rawQuery(
             """
-            SELECT cr.id, cr.from_book_id, cr.from_chapter, cr.from_verse, cr.to_ref,
-                   cr.to_book_id, cr.to_chapter, cr.to_verse, cr.to_end_verse,
-                   v.text_en, v.text_te
-            FROM cross_references cr
-            LEFT JOIN verses v ON v.book_id = cr.to_book_id AND v.chapter = cr.to_chapter AND v.verse = cr.to_verse
-            WHERE cr.from_book_id = ? AND cr.from_chapter = ? AND cr.from_verse = ?
-            ORDER BY cr.id ASC
+            SELECT w.id, w.strongs, w.lemma, w.transliteration, w.gloss, w.verse_count
+            FROM stepbible_word_verses wv
+            JOIN stepbible_words w ON w.id = wv.word_id
+            WHERE wv.vid = ?
+            ORDER BY w.verse_count ASC, w.id ASC
             """.trimIndent(),
-            arrayOf(bookId.toString(), chapter.toString(), verse.toString())
+            arrayOf(vid.toString())
         )
         cursor.use {
             while (it.moveToNext()) {
                 list.add(
-                    CrossReference(
-                        id = it.getLong(0),
-                        fromBookId = it.getInt(1),
-                        fromChapter = it.getInt(2),
-                        fromVerse = it.getInt(3),
-                        toRef = it.getString(4),
-                        toBookId = if (it.isNull(5)) null else it.getInt(5),
-                        toChapter = if (it.isNull(6)) null else it.getInt(6),
-                        toVerse = if (it.isNull(7)) null else it.getInt(7),
-                        toEndVerse = if (it.isNull(8)) null else it.getInt(8),
-                        targetTextEn = if (it.isNull(9)) null else it.getString(9),
-                        targetTextTe = if (it.isNull(10)) null else it.getString(10)
+                    StepBibleWord(
+                        id = it.getInt(0),
+                        strongs = it.getString(1),
+                        lemma = it.getString(2),
+                        transliteration = it.getString(3),
+                        gloss = it.getString(4),
+                        verseCount = it.getInt(5)
                     )
                 )
             }
@@ -645,11 +786,97 @@ class BibleDatabaseHelper(val context: Context) :
         return list
     }
 
-    fun getCrossReferenceCount(bookId: Int, chapter: Int, verse: Int): Int {
+    fun getOccurrencesForStepBibleWord(wordId: Int): List<StepBibleWordOccurrence> {
+        val vids = mutableListOf<Int>()
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT COUNT(*) FROM cross_references WHERE from_book_id = ? AND from_chapter = ? AND from_verse = ?",
-            arrayOf(bookId.toString(), chapter.toString(), verse.toString())
+            "SELECT vid FROM stepbible_word_verses WHERE word_id = ? ORDER BY vid ASC",
+            arrayOf(wordId.toString())
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                vids.add(it.getInt(0))
+            }
+        }
+        if (vids.isEmpty()) return emptyList()
+
+        val coords = vids.map { KjvVersification.fromVerseIndex(it) }
+        val keys = coords.map { Triple(it.bookId, it.chapter, it.verse) }
+        val textsMap = getVerseTexts(keys)
+
+        return coords.map { c ->
+            val pair = textsMap[Triple(c.bookId, c.chapter, c.verse)]
+            StepBibleWordOccurrence(
+                vid = c.vid,
+                bookId = c.bookId,
+                chapter = c.chapter,
+                verse = c.verse,
+                refLabel = "${c.bookName} ${c.chapter}:${c.verse}",
+                textEn = pair?.second,
+                textTe = pair?.first
+            )
+        }
+    }
+
+    fun getVerseConnections(
+        bookId: Int,
+        chapter: Int,
+        verse: Int,
+        minVotes: Int = 4
+    ): VerseConnectionsData {
+        val vid = KjvVersification.toVerseIndex(bookId, chapter, verse) ?: 0
+        val outgoing = getCrossReferences(bookId, chapter, verse, minVotes)
+        val incoming = getIncomingCrossReferences(bookId, chapter, verse, minVotes)
+        val words = getOriginalWordsForVerse(bookId, chapter, verse)
+        return VerseConnectionsData(
+            vid = vid,
+            bookId = bookId,
+            chapter = chapter,
+            verse = verse,
+            outgoing = outgoing,
+            incoming = incoming,
+            originalWords = words
+        )
+    }
+
+    private fun buildSnippetFromMap(
+        startVid: Int,
+        endVid: Int,
+        textsMap: Map<Triple<Int, Int, Int>, Pair<String?, String?>>,
+        maxVerses: Int = 12
+    ): Pair<String?, String?> {
+        if (startVid == endVid) {
+            val c = KjvVersification.fromVerseIndex(startVid)
+            return textsMap[Triple(c.bookId, c.chapter, c.verse)] ?: Pair(null, null)
+        }
+        val total = endVid - startVid + 1
+        val cappedEnd = minOf(endVid, startVid + maxVerses - 1)
+        val teParts = mutableListOf<String>()
+        val enParts = mutableListOf<String>()
+        for (v in startVid..cappedEnd) {
+            val c = KjvVersification.fromVerseIndex(v)
+            val pair = textsMap[Triple(c.bookId, c.chapter, c.verse)]
+            pair?.first?.takeIf { it.isNotBlank() }?.let { teParts.add("${c.verse} $it") }
+            pair?.second?.takeIf { it.isNotBlank() }?.let { enParts.add("${c.verse} $it") }
+        }
+        val extra = total - maxVerses
+        if (extra > 0) {
+            val suffix = "(+ $extra more ${if (extra == 1) "verse" else "verses"})"
+            if (teParts.isNotEmpty()) teParts.add(suffix)
+            if (enParts.isNotEmpty()) enParts.add(suffix)
+        }
+        return Pair(
+            teParts.takeIf { it.isNotEmpty() }?.joinToString(" "),
+            enParts.takeIf { it.isNotEmpty() }?.joinToString(" ")
+        )
+    }
+
+    fun getCrossReferenceCount(bookId: Int, chapter: Int, verse: Int, minVotes: Int = 4): Int {
+        val vid = KjvVersification.toVerseIndex(bookId, chapter, verse) ?: return 0
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) FROM cross_references WHERE from_vid = ? AND votes >= ?",
+            arrayOf(vid.toString(), minVotes.toString())
         )
         cursor.use {
             if (it.moveToNext()) {
@@ -659,16 +886,42 @@ class BibleDatabaseHelper(val context: Context) :
         return 0
     }
 
-    fun getCrossReferenceCountsForChapter(bookId: Int, chapter: Int): Map<Int, Int> {
+    fun getCrossReferenceCountsForChapter(bookId: Int, chapter: Int, minVotes: Int = 4): Map<Int, Int> {
+        val range = KjvVersification.getChapterVidRange(bookId, chapter) ?: return emptyMap()
+        val startVid = range.first
+        val endVid = range.last
         val map = mutableMapOf<Int, Int>()
         val db = readableDatabase
-        val cursor = db.rawQuery(
-            "SELECT from_verse, COUNT(*) FROM cross_references WHERE from_book_id = ? AND from_chapter = ? GROUP BY from_verse",
-            arrayOf(bookId.toString(), chapter.toString())
+
+        // 1. Outgoing counts for each verse in the chapter
+        val outCursor = db.rawQuery(
+            "SELECT from_vid, COUNT(*) FROM cross_references WHERE from_vid BETWEEN ? AND ? AND votes >= ? GROUP BY from_vid",
+            arrayOf(startVid.toString(), endVid.toString(), minVotes.toString())
         )
-        cursor.use {
+        outCursor.use {
             while (it.moveToNext()) {
-                map[it.getInt(0)] = it.getInt(1)
+                val vid = it.getInt(0)
+                val vNum = vid - startVid + 1
+                map[vNum] = it.getInt(1)
+            }
+        }
+
+        // 2. Also ensure verses that only have incoming links at >= minVotes get a non-zero count for the ✻ marker
+        val minStart = maxOf(0, startVid - KjvVersification.MAX_TARGET_SPAN)
+        val inCursor = db.rawQuery(
+            "SELECT to_start, to_end FROM cross_references WHERE to_start BETWEEN ? AND ? AND to_end >= ? AND votes >= ?",
+            arrayOf(minStart.toString(), endVid.toString(), startVid.toString(), minVotes.toString())
+        )
+        inCursor.use {
+            while (it.moveToNext()) {
+                val s = maxOf(startVid, it.getInt(0))
+                val e = minOf(endVid, it.getInt(1))
+                for (vid in s..e) {
+                    val vNum = vid - startVid + 1
+                    if (!map.containsKey(vNum)) {
+                        map[vNum] = 1
+                    }
+                }
             }
         }
         return map

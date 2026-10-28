@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Loader2, Type, Plus, Minus, X, Copy, Trash2, BookOpen, RotateCw, Check } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Type, Plus, Minus, X, Copy, Trash2, BookOpen, RotateCw, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
-import { CROSS_REFS_URL } from '../../data/crossRefsUrl';
 import { CrossReferenceModal } from './CrossReferenceModal';
 import { getBookName } from '../../utils/localization';
-import { WordPopup } from '../WordPopup';
-import { StrongsOccurrencesModal } from '../StrongsOccurrencesModal';
+import {
+  CrossReferenceIndex,
+  loadCrossReferenceIndex,
+  getCrossReferenceIndexIfLoaded,
+  toVerseIndex,
+} from '../../utils/verseConnections';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 import { useApp } from '../../context/AppContext';
@@ -26,14 +29,12 @@ const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES];
 
 // --- Module-level caching for performance ---
 const otQuotes = otQuotesData as Record<string, Record<string, number[]>>;
-let cachedCrossRefs: Record<string, string[]> | null = null;
 // bookId -> chapter number (as string) -> verse numbers that start a new paragraph.
 // Sourced from NASB95 (via API.Bible), which shares the LSB's paragraph structure closely
 // enough to use directly — verified against Blue Letter Bible's LSB markers for John 3
 // (exact match). Poetic books have no entries here (poetry has no real "paragraph" unit at
 // the USX level) and fall back to the heading/<br/> heuristic below.
 let cachedParagraphBreaks: Record<string, Record<string, number[]>> | null = null;
-const cachedStrongsDicts: Record<string, Record<string, StrongsDefinition>> = {};
 // "version:bollsId:chapter" -> the in-flight or settled chapter request. See fetchChapterText.
 const chapterTextCache = new Map<string, Promise<Verse[]>>();
 // The same chapters once they've resolved, so a revisit can render without awaiting.
@@ -49,20 +50,6 @@ let recallCardDismissCount = 0;
 function formatShortDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
-
-// Common function words that should NOT be underlined in α mode
-const SKIP_WORDS = new Set([
-  'the','a','an','and','or','but','for','nor','so','yet','in','on','at','to','of',
-  'by','is','am','are','was','were','be','been','being','has','had','have','do',
-  'did','does','it','its','he','she','him','her','his','they','them','their','we',
-  'us','our','you','your','i','my','me','if','not','no','that','this','these',
-  'those','with','from','as','into','than','which','who','whom','whose','what',
-  'shall','will','may','can','would','could','should','might','must','up','out',
-  'then','there','here','when','where','how','why','all','also','even','own',
-  'about','after','before','between','both','each','every','more','most','much',
-  'other','over','same','some','such','through','under','upon','very','now',
-  'only','still','just','also','too','again','o','oh','lo','unto'
-]);
 
 // fontSize is a raw multiplier (0.85–1.45); surface it as a size label instead
 // of the internal number so "1.15" doesn't leak into the reading-options UI.
@@ -105,21 +92,6 @@ const READING_MEASURE = 'min(100%, 52ch)';
 // path itself (/bible/HAB.1). Nothing here has to carry unrelated query keys forward
 // any more, so the pruning that guarded against that is gone with them.
 
-interface StrongsDefinition {
-  lemma: string;
-  xlit?: string;
-  pron?: string;
-  strongs_def: string;
-  kjv_def: string;
-  derivation?: string;
-  pos?: string;
-}
-
-interface ParsedStrongsWord {
-  english: string;
-  strongs: string | null;
-}
-
 interface ChapterReaderProps {
   bookId: string;
   chapter: number;
@@ -130,7 +102,7 @@ interface ChapterReaderProps {
   onStudyOriginalWord?: (verseRef: { book: number; chapter: number; verse: number }) => void;
 }
 
-import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS, TRANSLATION_OPTIONS, normalizeCrossRefKey } from '../../data/bibleMap';
+import { BOLLS_BIBLE_MAP, BOOK_SHORT, BIBLE_VERSION_LABELS, TRANSLATION_OPTIONS } from '../../data/bibleMap';
 import { readerPath } from '../../utils/readerRoute';
 import { readingDisplay } from '../../data/readingPresets';
 
@@ -292,7 +264,7 @@ function renderHeading(text: string, _borrowed = false): string {
   return `<div class="${HEADING_CLASSES}">${text}</div>`;
 }
 
-export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClose, onStudyOriginalWord }: ChapterReaderProps) {
+export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClose }: ChapterReaderProps) {
   const [verses, setVerses] = useState<Verse[]>([]);
   // LSB headings for the loaded chapter, kept separate from `verses` so they never leak
   // into copied or memorized text. Null when reading the LSB itself (its own headings
@@ -344,15 +316,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const [newGroupName, setNewGroupName] = useState('');
 
   const [showOptions, setShowOptions] = useState(false);
-  const [showAnchorScene, setShowAnchorScene] = useState(false);
-  // Gates the anchor *word* itself under anchorReveal === 'tap' — separate from
-  // showAnchorScene, which gates the scene line and stays meaningful once the word
-  // is already showing (a second tap on an already-revealed anchor toggles the
-  // scene, it doesn't hide the word again).
-  const [anchorWordRevealed, setAnchorWordRevealed] = useState(false);
   useEffect(() => { 
-    setShowAnchorScene(false); 
-    setAnchorWordRevealed(false); 
     setShowOptions(false);
     setScrollProgress(0);
     if (scrollContainerRef.current) {
@@ -401,7 +365,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     return { prev: find(chapter - 1), next: find(chapter + 1) };
   }, [currentGuide, chapter, state.settings.anchorReveal]);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
-  const [crossRefMap, setCrossRefMap] = useState<Record<string, string[]> | null>(cachedCrossRefs);
+  const [crossRefInitialSection, setCrossRefInitialSection] = useState<'references' | 'referenced-by' | 'same-word' | undefined>(undefined);
+  const [crossRefIndex, setCrossRefIndex] = useState<CrossReferenceIndex | null>(getCrossReferenceIndexIfLoaded);
   const [paragraphBreaks, setParagraphBreaks] = useState<Record<string, Record<string, number[]>> | null>(cachedParagraphBreaks);
 
   // Anchor reveal preference — 'tap' (default) hides the word until the reader taps
@@ -504,18 +469,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // highlight effect can recognize "already handled" without nulling pendingHighlight
   // state (see that effect for why nulling it causes a self-cancellation bug).
   const consumedHighlightRef = useRef<{ book: string; chapter: number; verse: number } | null>(null);
-  const [alphaDiscovered, setAlphaDiscovered] = useState(() => {
-    try { return localStorage.getItem('remora_alpha_discovered') === '1'; } catch { return true; }
-  });
-
-  // Alpha mode state
-  const [alphaMode, setAlphaMode] = useState(false);
-  const [kjvVerses, setKjvVerses] = useState<Verse[]>([]);
-  const [strongsDict, setStrongsDict] = useState<Record<string, StrongsDefinition>>({});
-  const [alphaDictLoaded, setAlphaDictLoaded] = useState(false);
-  const [alphaLoading, setAlphaLoading] = useState(false);
-  const [wordPopup, setWordPopup] = useState<{ word: string; strongsNumber: string; definition: StrongsDefinition } | null>(null);
-  const [viewingOccurrences, setViewingOccurrences] = useState<string | null>(null);
 
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -534,18 +487,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   useEffect(() => {
     if (!chromeVisible) {
       setShowOptions(false);
-      setWordPopup(null);
     }
   }, [chromeVisible]);
 
   const handleContentClick = (e: React.MouseEvent) => {
-    if (showOptions || wordPopup) {
+    if (showOptions) {
       setShowOptions(false);
-      setWordPopup(null);
       return;
     }
     const target = e.target as HTMLElement;
-    const isMeaningfulTap = !!target.closest('.verse-span, .alpha-word, .alpha-verse-span, button, a');
+    const isMeaningfulTap = !!target.closest('.verse-span, button, a');
     if (isMeaningfulTap) {
       revealChrome();
     } else {
@@ -579,7 +530,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (showOptions) setShowOptions(false);
-    if (wordPopup) setWordPopup(null);
 
     const target = e.currentTarget;
     const totalHeight = target.scrollHeight - target.clientHeight;
@@ -709,7 +659,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // Any of these overlays sit on top of the reader as React children, so their
   // touch events bubble up to the swipe handlers below unless explicitly guarded —
   // otherwise swiping inside e.g. the chapter navigator silently changes the chapter underneath it.
-  const isOverlayOpen = showOptions || showNavigator || !!showCrossReferences || showAddOptions || !!wordPopup || !!viewingOccurrences;
+  const isOverlayOpen = showOptions || showNavigator || !!showCrossReferences || showAddOptions;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (isOverlayOpen) return;
@@ -747,22 +697,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   };
 
   useEffect(() => {
-    if (cachedCrossRefs) {
-      setCrossRefMap(cachedCrossRefs);
-      return;
-    }
+    if (crossRefIndex) return;
     let mounted = true;
-    fetch(CROSS_REFS_URL)
-      .then(res => res.json())
-      .then(data => {
-        if (mounted) {
-          cachedCrossRefs = data;
-          setCrossRefMap(data);
-        }
+    loadCrossReferenceIndex()
+      .then(index => {
+        if (mounted) setCrossRefIndex(index);
       })
       .catch(console.error);
     return () => { mounted = false; };
-  }, []);
+  }, [crossRefIndex]);
 
   useEffect(() => {
     if (cachedParagraphBreaks) {
@@ -839,7 +782,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         // the headings — the chapter itself still renders.
         const [data, lsbData] = await Promise.all([
           fetchChapterText(bibleVersion, bollsId, chapter),
-          (bibleVersion === 'LSB' || bibleVersion === 'TBSI' || bibleVersion === 'TELIRV') ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter).catch(() => null),
+          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter).catch(() => null),
         ]);
 
         if (cancelled) return;
@@ -968,6 +911,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       const markerVerse = marker.getAttribute('data-xref-verse');
       if (markerVerse) {
         setCrossRefPeekSource(null);
+        setCrossRefInitialSection(undefined);
         setShowCrossReferences([`${bookTitle.toLowerCase()} ${chapter}:${markerVerse}`]);
         return;
       }
@@ -1357,8 +1301,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       // copy or memorize still works exactly the same on prose-only reading.
       // A verse's cross-references were invisible until you selected it and noticed the
       // "Refs" action, so the only way to find them was to already suspect they existed.
-      // This marks the verses that have any, the way a print Bible does.
-      const hasCrossRefs = !!crossRefMap?.[normalizeCrossRefKey(`${bookTitle} ${chapter}:${v.verse}`)]?.length;
+      // This marks the verses that have any (outgoing OR incoming at default >= 4 votes),
+      // the way a print Bible does.
+      const vid = toVerseIndex(bookId, chapter, v.verse);
+      const hasCrossRefs = vid !== null && !!crossRefIndex?.hasConnections(vid, 4);
       const crossRefMarker = hasCrossRefs && display.showCrossRefMarkers
         ? `<sup class="xref-marker text-[0.5em] text-accent/70 hover:text-accent ml-0.5 cursor-pointer align-super transition-colors" data-xref-verse="${v.verse}" role="button" tabindex="0" aria-label="Cross references for verse ${v.verse}">✻</sup>`
         : '';
@@ -1374,249 +1320,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     return html;
   }, [verses, borrowedHeadings, selectedVerses, memorizedVerses, state.settings.bionicReading,
       state.settings.showSectionHeadings, state.settings.showVerseNumbers, state.settings.showParagraphMarks,
-      state.settings.showCrossRefMarkers, crossRefMap, bookTitle,
+      state.settings.showCrossRefMarkers, crossRefIndex, bookTitle,
       bookId, chapter, paragraphBreaks, flashVerse]);
 
-  // === ALPHA MODE: Fetch KJV + dictionary when toggled ===
-  const isOldTestament = (ALL_BOOKS.findIndex(b => b.id === bookId) + 1) <= 39;
-
-  useEffect(() => {
-    if (!alphaMode) return;
-    let mounted = true;
-
-    const fetchAlphaData = async () => {
-      setAlphaLoading(true);
-      try {
-        const bollsId = BOLLS_BIBLE_MAP[bookId];
-        if (!bollsId) return;
-
-        // Fetch KJV chapter (has Strong's tags)
-        const kjvRes = await fetch(`https://bolls.life/get-text/KJV/${bollsId}/${chapter}/`);
-        if (kjvRes.ok) {
-          const kjvData: Verse[] = await kjvRes.json();
-          if (mounted) setKjvVerses(kjvData);
-        }
-
-        // Load dictionary if not already loaded
-        if (!alphaDictLoaded) {
-          const dictKey = isOldTestament ? 'hebrew' : 'greek';
-          if (cachedStrongsDicts[dictKey]) {
-             if (mounted) {
-               setStrongsDict(cachedStrongsDicts[dictKey]);
-               setAlphaDictLoaded(true);
-             }
-          } else {
-            const dictUrl = isOldTestament ? '/strongs-hebrew.json' : '/strongs-greek.json';
-            const dictRes = await fetch(dictUrl);
-            if (dictRes.ok) {
-              const dictData = await dictRes.json();
-              cachedStrongsDicts[dictKey] = dictData;
-              if (mounted) {
-                setStrongsDict(dictData);
-                setAlphaDictLoaded(true);
-              }
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load alpha mode data:', err);
-      } finally {
-        if (mounted) setAlphaLoading(false);
-      }
-    };
-
-    fetchAlphaData();
-    return () => { mounted = false; };
-  }, [alphaMode, bookId, chapter, isOldTestament, alphaDictLoaded]);
-
-  // Reset dictionary loaded state when switching testaments
-  useEffect(() => {
-    setAlphaDictLoaded(false);
-  }, [isOldTestament]);
-
-  // Parse KJV text with Strong's numbers into word-strongs pairs
-  const parseKjvStrongs = useCallback((html: string): ParsedStrongsWord[] => {
-    const cleanHtml = html.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
-    // `[^<]*` (zero-or-more, not one-or-more) — a verse can open with a <S> tag that has
-    // no preceding English word at all (untranslated connectors like Greek δέ), or carry
-    // back-to-back tags separated only by whitespace. With `+`, the regex couldn't match
-    // zero characters before such a tag and instead slipped into matching the tag's own
-    // "S>1234" / "/S>" delimiters as if they were English text, leaking that literal
-    // garbage into the rendered verse.
-    const regex = /([^<]*)(?:<S>(\d+)<\/S>)?/g;
-    let match;
-    const words: ParsedStrongsWord[] = [];
-
-    while ((match = regex.exec(cleanHtml)) !== null) {
-      // `*` can produce a zero-length match (e.g. at the end of the string), which never
-      // advances lastIndex on its own — exec() would return the same empty match forever.
-      if (match[0].length === 0) {
-        regex.lastIndex++;
-        continue;
-      }
-
-      let englishText = match[1].trim();
-      const strongsNumber = match[2];
-
-      if (!englishText && !strongsNumber) continue;
-
-      // Keep entries with a Strong's number even when there's no attached English word
-      // (e.g. a mild Greek connective like δέ that the KJV translators left implicit) —
-      // otherwise that original-language word simply vanishes with no trace at all.
-      if (englishText || strongsNumber) {
-        const formattedStrongs = strongsNumber ? `${isOldTestament ? 'H' : 'G'}${strongsNumber}` : null;
-        words.push({
-          english: englishText,
-          strongs: formattedStrongs
-        });
-      }
-    }
-
-    return words;
-  }, [isOldTestament]);
-
-  // Build alpha mode HTML with clickable underlined words. Verse-level selection
-  // (for Add/Copy/Refs) stays wired to the same verse numbers as normal mode —
-  // those actions read from the already-loaded `verses` array (in whichever Bible
-  // version is selected) regardless of alpha mode being KJV-based, so selection
-  // works identically in both modes.
-  const alphaHtml = useMemo(() => {
-    if (kjvVerses.length === 0) return '';
-    let html = '';
-
-    kjvVerses.forEach((v) => {
-      const parsed = parseKjvStrongs(v.text);
-      let verseHtml = '';
-
-      parsed.forEach((pw) => {
-        const hasDefinition = pw.strongs && strongsDict[pw.strongs];
-        const isUntranslated = hasDefinition && !pw.english.trim();
-
-        if (isUntranslated) {
-          // Present in the original language but not rendered as its own word in the
-          // KJV (e.g. a mild Greek connective like δέ, left implicit by the
-          // translators). Show a small discoverable marker instead of silently
-          // dropping the word — it's still a real word in the original text.
-          verseHtml += `<span class="alpha-word inline-block w-[0.3em] h-[0.3em] rounded-full bg-accent/50 hover:bg-accent align-middle mx-[3px] cursor-pointer transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2" data-strongs="${pw.strongs}" data-word="" tabindex="0" role="button" aria-label="Untranslated word in the original language — tap to view"></span> `;
-        } else if (hasDefinition) {
-          const tokens = pw.english.split(/(\b[a-zA-Z]+(?:'[a-zA-Z]+)?\b)/);
-
-          tokens.forEach(token => {
-             const wordLower = token.toLowerCase();
-             // Only underline if it's a word and not in the SKIP_WORDS list
-             if (/^[a-z]/.test(wordLower) && !SKIP_WORDS.has(wordLower)) {
-               verseHtml += `<span class="underline decoration-accent/40 decoration-1 underline-offset-4 cursor-pointer hover:text-accent hover:decoration-accent transition-colors alpha-word focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded" data-strongs="${pw.strongs}" data-word="${token}" tabindex="0" role="button" aria-label="Look up ${token}">${token}</span>`;
-             } else {
-               verseHtml += token;
-             }
-          });
-          verseHtml += ' '; // Add space between parsed blocks
-        } else {
-          verseHtml += `${pw.english} `;
-        }
-      });
-
-      const inLibrary = memorizedVerses.has(v.verse);
-      const isSelected = selectedVerses.includes(v.verse);
-      let extraClass = '';
-      if (v.verse === flashVerse) {
-        extraClass = 'bg-green-500/30 rounded px-1 -mx-1 transition-colors duration-1000';
-      } else if (isSelected) {
-        extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
-      } else if (inLibrary) {
-        extraClass = 'bg-gold/25 rounded px-1 -mx-1';
-      }
-      const ariaLabel = `Verse ${v.verse}${isSelected ? ', selected' : ''}${inLibrary ? ', in your library' : ''}`;
-
-      // No role="button" here — this wrapper contains nested interactive word
-      // spans, and a button can't nest other interactive controls. It's still
-      // focusable and Enter/Space-toggleable via handleAlphaKeyDown.
-      html += `<span class="inline alpha-verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" tabindex="0" aria-label="${ariaLabel}"><sup class="text-[0.55em] font-normal text-muted ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup><span class="inline">${verseHtml.trim()}</span> </span>`;
-    });
-
-    return html;
-  }, [kjvVerses, strongsDict, parseKjvStrongs, selectedVerses, memorizedVerses, flashVerse]);
-
-  // Handle clicks on alpha-mode words and verse wrappers
-  const handleAlphaClick = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const wordSpan = target.closest('.alpha-word') as HTMLElement | null;
-    if (wordSpan) {
-      e.stopPropagation();
-      const strongsNumber = wordSpan.getAttribute('data-strongs');
-      // Untranslated-word markers carry an empty data-word (no KJV text to show) —
-      // fall back to the lemma so the popup still has a meaningful title.
-      const rawWord = wordSpan.getAttribute('data-word') || '';
-      if (strongsNumber) {
-        const definition = strongsDict[strongsNumber];
-        const displayWord = rawWord || definition?.lemma || strongsNumber;
-        if (definition) {
-          setWordPopup({ word: displayWord, strongsNumber, definition });
-        } else if (alphaLoading) {
-          // Dictionary still loading — show a transient loading popup
-          setWordPopup({
-            word: displayWord,
-            strongsNumber,
-            definition: {
-              lemma: '…',
-              strongs_def: 'Loading definition…',
-              kjv_def: '',
-            }
-          });
-        }
-        // else: no entry in dict, silent (word has no Strongs number)
-      }
-      return;
-    }
-    const verseSpan = target.closest('.alpha-verse-span');
-    if (verseSpan) {
-      const verseNumStr = verseSpan.getAttribute('data-verse');
-      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
-    }
-  };
-
-  const handleAlphaKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const target = e.target as HTMLElement;
-    const wordSpan = target.closest('.alpha-word') as HTMLElement | null;
-    if (wordSpan) {
-      e.preventDefault();
-      e.stopPropagation();
-      const strongsNumber = wordSpan.getAttribute('data-strongs');
-      const rawWord = wordSpan.getAttribute('data-word') || '';
-      if (strongsNumber) {
-        const definition = strongsDict[strongsNumber];
-        const displayWord = rawWord || definition?.lemma || strongsNumber;
-        if (definition) {
-          setWordPopup({ word: displayWord, strongsNumber, definition });
-        } else if (alphaLoading) {
-          setWordPopup({ word: displayWord, strongsNumber, definition: { lemma: '…', strongs_def: 'Loading definition…', kjv_def: '' } });
-        }
-      }
-      return;
-    }
-    const verseSpan = target.closest('.alpha-verse-span');
-    if (verseSpan) {
-      e.preventDefault();
-      const verseNumStr = verseSpan.getAttribute('data-verse');
-      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
-    }
-  };
-
-  // Jumping to an occurrence: close whatever is open, load that chapter, and flash the
-  // verse. Shared by both places a Strong's occurrence list can be opened from — the
-  // word popup's cross-references and the reader's own "View all occurrences".
-  const navigateToOccurrence = (navBookId: string, ch: number, v: number) => {
-    setViewingOccurrences(null);
-    setWordPopup(null);
-
-    setPendingHighlight({ book: navBookId, chapter: ch, verse: v });
-    goToChapter(navBookId, ch, true);
-  };
-
-  const hasRefs = !crossRefMap || selectedVerses.some(v => {
-    const refs = crossRefMap[normalizeCrossRefKey(`${bookTitle} ${chapter}:${v}`)];
-    return refs && refs.length > 0;
+  const hasRefs = !crossRefIndex || selectedVerses.some(v => {
+    const vid = toVerseIndex(bookId, chapter, v);
+    return vid !== null && crossRefIndex.hasConnections(vid, -Infinity);
   });
 
   return (
@@ -1647,50 +1356,15 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           >
             <ArrowLeft className="w-6 h-6 text-secondary" />
           </button>
-          <div className="flex flex-col items-center justify-center pt-1">
-            <h2 className="text-4xl font-bold tracking-tight text-primary font-heading mb-2">
-              {getBookName(bookId, bookTitle, state.settings.bibleVersion)} {chapter}
-            </h2>
-            <div className="flex items-center gap-1.5">
-              <span className={`text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full transition-colors ${
-                alphaMode
-                  ? 'text-yellow-300 bg-yellow-500/15'
-                  : 'text-accent bg-accent/10'
-              }`}>
-                {alphaMode ? 'KJV + Original Words' : `${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} Translation`}
+          <div className="flex flex-col items-center justify-center pt-1 px-12">
+            <div className="flex items-center justify-center gap-2.5 flex-wrap">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading">
+                {getBookName(bookId, bookTitle, state.settings.bibleVersion)} {chapter}
+              </h2>
+              <span className="text-xs font-bold tracking-widest uppercase px-2.5 py-1 rounded-full transition-colors text-accent bg-accent/10 border border-accent/25">
+                {BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}
               </span>
-              {/* anchorReveal 'always' shows the word straight away and a tap
-                  only toggles the scene, matching the pre-recall behavior.
-                  'tap' (the default) asks first: the chip reads "Tap for
-                  anchor" until tapped, at which point the word and scene both
-                  reveal together — the single highest-leverage change on this
-                  screen, since the chip used to hand over the answer to the
-                  chapter's own memory device before the chapter was read.
-                  'never' drops the chip entirely; the word still surfaces
-                  through the end-of-chapter recall card. */}
-              {chapterAnchor && anchorReveal !== 'never' && (
-                <button
-                  onClick={() => {
-                    if (anchorReveal === 'tap' && !anchorWordRevealed) {
-                      setAnchorWordRevealed(true);
-                      setShowAnchorScene(true);
-                    } else {
-                      setShowAnchorScene(v => !v);
-                    }
-                  }}
-                  className="text-[0.6875rem] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-card-elevated border border-card-border text-secondary hover:text-primary hover:border-card-border-hover transition-colors"
-                  title="This chapter's memory anchor"
-                  aria-expanded={showAnchorScene}
-                >
-                  {anchorReveal === 'tap' && !anchorWordRevealed ? 'Tap for anchor' : chapterAnchor.word}
-                </button>
-              )}
             </div>
-            {chapterAnchor && showAnchorScene && (anchorReveal !== 'tap' || anchorWordRevealed) && (
-              <p className="text-xs text-muted italic text-center px-10 mt-1.5 max-w-sm mx-auto leading-snug">
-                {chapterAnchor.scene}
-              </p>
-            )}
             {chapterRecord && chapterRecord.readCount > 0 && (
               <p className="text-[0.625rem] text-muted mt-1 tabular-nums">
                 Read {chapterRecord.readCount} time{chapterRecord.readCount === 1 ? '' : 's'}
@@ -1700,23 +1374,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           </div>
 
           <div className="absolute right-0 top-1 flex items-center gap-1">
-            <button
-              onClick={() => {
-                setAlphaMode(!alphaMode);
-                if (!alphaDiscovered) {
-                  setAlphaDiscovered(true);
-                  try { localStorage.setItem('remora_alpha_discovered', '1'); } catch { /* private browsing */ }
-                }
-              }}
-              className={`relative p-2 rounded-full transition-colors font-serif text-lg leading-none ${alphaMode ? 'bg-accent text-white' : 'hover:bg-card-hover text-secondary'}`}
-              title={alphaMode ? `Switch to ${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} reading mode` : 'Show original Greek/Hebrew words'}
-              aria-label={alphaMode ? `Switch to ${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion} reading mode` : 'Show original Greek and Hebrew words'}
-            >
-              α
-              {!alphaDiscovered && !alphaMode && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent animate-pulse pointer-events-none" />
-              )}
-            </button>
             <button
               onClick={() => setShowOptions(!showOptions)}
               className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-card-hover text-primary' : 'hover:bg-card-hover text-secondary'}`}
@@ -1750,6 +1407,35 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       >
                         <Plus className="w-4 h-4" />
                       </button>
+                    </div>
+                  </div>
+
+                  <div className="h-[1px] bg-card-border w-full" />
+
+                  <div className="flex flex-col gap-2">
+                    <span className="text-sm font-bold text-primary">Theme</span>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {([
+                        { id: 'black', label: 'Midnight', bg: '#0c0a08', text: '#f3ede2' },
+                        { id: 'dark', label: 'Walnut', bg: '#1a1613', text: '#f5efe3' },
+                        { id: 'sepia', label: 'Sepia', bg: '#f6ecd6', text: '#4a3a2c' },
+                        { id: 'white', label: 'Paper', bg: '#ffffff', text: '#111827' },
+                      ] as const).map(t => {
+                        const isSelected = (state.theme || 'black') === t.id;
+                        return (
+                          <button
+                            key={t.id}
+                            type="button"
+                            onClick={() => dispatch({ type: 'SET_THEME', payload: t.id })}
+                            style={{ backgroundColor: t.bg, color: t.text }}
+                            className={`py-1.5 px-1 rounded-md text-[11px] font-bold transition-all border ${
+                              isSelected ? 'border-accent ring-1 ring-accent' : 'border-card-border'
+                            }`}
+                          >
+                            {t.label}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -1856,127 +1542,80 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             </div>
           </div>
         ) : (
-          alphaMode ? (
-            /* Alpha mode: KJV with clickable underlined words */
+          /* Normal reading mode (selected Bible version) */
+          <div
+            className={`mx-auto pb-32 select-text ${
+              state.settings.fontFamily === 'serif' ? 'font-serif' :
+              state.settings.fontFamily === 'hyper' ? 'font-hyper' :
+              'font-sans'
+            }`}
+            // fontSize lives on this wrapper (not the inner div) so the `ch` unit in
+            // READING_MEASURE resolves against the reader's actual text size.
+            style={{ fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`, maxWidth: READING_MEASURE }}
+            onClick={handleVerseClick}
+            onKeyDown={handleVerseKeyDown}
+          >
             <div
-              className="mx-auto pb-32 select-text"
-              style={{ fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`, maxWidth: READING_MEASURE }}
-              onClick={handleAlphaClick}
-              onKeyDown={handleAlphaKeyDown}
-            >
-              {alphaLoading ? (
-                <div className="flex flex-col items-center justify-center h-[30vh] gap-3 text-secondary">
-                  <Loader2 className="w-6 h-6 animate-spin text-accent" />
-                  <p className="text-sm font-medium">Loading original language data...</p>
-                </div>
-              ) : (
-                <>
-                  <div className="mb-4 px-3 py-2 bg-accent/5 border border-accent/10 rounded-md">
-                    <p className="text-xs text-secondary text-center">Tap any <span className="underline decoration-accent/40 underline-offset-2">underlined word</span> to see its original {isOldTestament ? 'Hebrew' : 'Greek'} meaning</p>
-                  </div>
-                  <div
-                    className={`tracking-[-0.01em] text-primary/95 ${
-                      state.settings.fontFamily === 'serif' ? 'font-serif' :
-                      state.settings.fontFamily === 'hyper' ? 'font-hyper tracking-normal' :
-                      'font-sans'
-                    }`}
-                    style={{
-                      fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
-                      lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem`
-                    }}
-                    dangerouslySetInnerHTML={{ __html: alphaHtml }}
-                  />
-                </>
-              )}
-            </div>
-          ) : (
-            /* Normal reading mode (selected Bible version) */
-            <div
-              className={`mx-auto pb-32 select-text ${
-                state.settings.fontFamily === 'serif' ? 'font-serif' :
-                state.settings.fontFamily === 'hyper' ? 'font-hyper' :
-                'font-sans'
+              className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
+                state.settings.fontFamily === 'hyper' ? 'tracking-normal' : ''
               }`}
-              // fontSize lives on this wrapper (not the inner div) so the `ch` unit in
-              // READING_MEASURE resolves against the reader's actual text size.
-              style={{ fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`, maxWidth: READING_MEASURE }}
-              onClick={handleVerseClick}
-              onKeyDown={handleVerseKeyDown}
-            >
-              <div
-                className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
-                  state.settings.fontFamily === 'hyper' ? 'tracking-normal' : ''
-                }`}
-                style={{ lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem` }}
-                dangerouslySetInnerHTML={{ __html: chapterHtml }}
-              />
-            </div>
-          )
+              style={{ lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem` }}
+              dangerouslySetInnerHTML={{ __html: chapterHtml }}
+            />
+          </div>
         )}
       </div>
 
       {/* Floating Action Bar for Selected Verses */}
       {selectedVerses.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 z-50 animate-[fadeScaleIn_0.2s_ease-out] px-3 pb-3 sm:pb-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
-          <div className="bg-accent text-white rounded-lg shadow-md max-w-md mx-auto overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2.5">
-              <span className="font-bold text-sm">
+          <div className="bg-accent text-white rounded-xl shadow-lg max-w-lg mx-auto overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-3">
+              <span className="font-bold text-base">
                 {selectedVerses.length} {selectedVerses.length === 1 ? 'verse' : 'verses'} selected
               </span>
               <button
                 onClick={() => setSelectedVerses([])}
-                className="p-1 rounded-md hover:bg-white/20 transition-colors"
+                className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
                 title="Cancel Selection"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="flex items-center gap-2 px-4 pb-3 flex-wrap">
+            <div className="flex items-center gap-2.5 px-5 pb-4 flex-wrap">
               <button
                 onClick={handleCopySelected}
-                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
+                className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
               >
-                <Copy className="w-3.5 h-3.5" /> Copy
+                <Copy className="w-4 h-4" /> Copy
               </button>
-
-              {selectedVerses.length === 1 && onStudyOriginalWord && (
-                <button
-                  onClick={() => {
-                    const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
-                    onStudyOriginalWord({ book: bookIndex, chapter, verse: selectedVerses[0] });
-                    setSelectedVerses([]);
-                  }}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
-                >
-                  <BookOpen className="w-3.5 h-3.5" /> Study Words
-                </button>
-              )}
 
               {hasRefs && (
                 <button
                   onClick={() => {
                     const sorted = [...selectedVerses].sort((a, b) => a - b);
                     setCrossRefPeekSource(null); // this is the reader's real position, not a peek
+                    setCrossRefInitialSection(undefined);
                     setShowCrossReferences(sorted.map(v => `${bookTitle.toLowerCase()} ${chapter}:${v}`));
                   }}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
+                  className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
                 >
-                  <BookOpen className="w-3.5 h-3.5" /> Refs
+                  <BookOpen className="w-4 h-4" /> Refs
                 </button>
               )}
               {selectedVerses.every(v => memorizedVerses.has(v)) ? (
                 <button
                   onClick={handleDeleteSelected}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
+                  className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
                 >
-                  <Trash2 className="w-3.5 h-3.5" /> Remove
+                  <Trash2 className="w-4 h-4" /> Remove
                 </button>
               ) : (
                 <button
                   onClick={handleAddClick}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-md font-bold text-sm transition-colors flex items-center gap-1.5"
+                  className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
                 >
-                  <Plus className="w-3.5 h-3.5" /> Add
+                  <Plus className="w-4 h-4" /> Add
                 </button>
               )}
             </div>
@@ -2132,17 +1771,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             <button
               onClick={() => { setNavigatorBook(bookId); setShowNavigator(true); }}
               className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
-              // The header chip above is the one place that shows or hides this
-              // chapter's anchor per anchorReveal — this button used to print the
-              // same word a second time regardless of that setting, which handed
-              // over the answer even when the chip was still hiding it. The
-              // aria-label keeps mentioning it when revealed, since a screen
-              // reader user gets no benefit from the visual hide/reveal game.
-              aria-label={
-                chapterAnchor && (anchorReveal === 'always' || anchorWordRevealed)
-                  ? `Jump to a different book or chapter — this chapter's anchor is ${chapterAnchor.word}`
-                  : 'Jump to a different book or chapter'
-              }
+              aria-label="Jump to a different book or chapter"
             >
               Ch {chapter}
               <ChevronDown className="w-3 h-3" />
@@ -2316,13 +1945,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       {showCrossReferences && (
         <CrossReferenceModal
           verseRefs={showCrossReferences}
-          crossRefMap={crossRefMap}
+          crossRefIndex={crossRefIndex}
+          initialSection={crossRefInitialSection}
           onClose={() => {
             setShowCrossReferences(null);
+            setCrossRefInitialSection(undefined);
             setCrossRefPeekSource(null);
           }}
           onNavigateToVerse={(navBookId, ch, v, fromRef) => {
             setShowCrossReferences(null);
+            setCrossRefInitialSection(undefined);
             setSelectedVerses([]); // Ensure we drop the previous selection so the toast disappears!
 
             // A peek (opened via the return pill's own "Refs") is re-browsing the list
@@ -2430,31 +2062,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           </div>
         );
       })()}
-
-      {wordPopup && (
-        <WordPopup
-          word={wordPopup.word}
-          strongsNumber={wordPopup.strongsNumber}
-          definition={wordPopup.definition}
-          onClose={() => setWordPopup(null)}
-          onViewOccurrences={(strongsNumber) => {
-            setViewingOccurrences(strongsNumber);
-          }}
-          // The popup opens its own occurrences modal for cross-reference clicks, which
-          // needs the same handler as the one below — without it, "Read Chapter" there
-          // silently does nothing.
-          onNavigateToVerse={navigateToOccurrence}
-        />
-      )}
-
-      {viewingOccurrences && strongsDict[viewingOccurrences] && (
-        <StrongsOccurrencesModal
-          strongsNumber={viewingOccurrences}
-          lemma={strongsDict[viewingOccurrences].lemma}
-          onClose={() => setViewingOccurrences(null)}
-          onNavigateToVerse={navigateToOccurrence}
-        />
-      )}
     </div>
   );
 };

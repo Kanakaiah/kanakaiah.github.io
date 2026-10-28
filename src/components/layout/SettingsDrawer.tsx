@@ -13,7 +13,7 @@ const THEME_OPTIONS = [
   { value: 'black', label: 'Midnight', swatch: '#0c0a08' },
   { value: 'dark', label: 'Walnut', swatch: '#1a1613' },
   { value: 'sepia', label: 'Sepia', swatch: '#f6ecd6' },
-  { value: 'white', label: 'Paper', swatch: '#faf6ee' },
+  { value: 'white', label: 'Paper', swatch: '#ffffff' },
 ];
 
 const FONT_SIZE_OPTIONS = [

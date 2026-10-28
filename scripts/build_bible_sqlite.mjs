@@ -155,17 +155,30 @@ CREATE TABLE chapter_anchors (
 CREATE INDEX idx_chapter_anchors_book ON chapter_anchors(book_id);
 
 CREATE TABLE cross_references (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  from_book_id INTEGER NOT NULL,
-  from_chapter INTEGER NOT NULL,
-  from_verse INTEGER NOT NULL,
-  to_ref TEXT NOT NULL,
-  to_book_id INTEGER,
-  to_chapter INTEGER,
-  to_verse INTEGER,
-  to_end_verse INTEGER
+  id INTEGER PRIMARY KEY,
+  from_vid INTEGER NOT NULL,
+  to_start INTEGER NOT NULL,
+  to_end INTEGER NOT NULL,
+  votes INTEGER NOT NULL
 );
-CREATE INDEX idx_cross_refs_from ON cross_references(from_book_id, from_chapter, from_verse);
+CREATE INDEX idx_xref_from ON cross_references(from_vid);
+CREATE INDEX idx_xref_to_start ON cross_references(to_start);
+
+CREATE TABLE stepbible_words (
+  id INTEGER PRIMARY KEY,
+  strongs TEXT NOT NULL,
+  lemma TEXT NOT NULL,
+  transliteration TEXT NOT NULL,
+  gloss TEXT NOT NULL,
+  verse_count INTEGER NOT NULL
+);
+
+CREATE TABLE stepbible_word_verses (
+  vid INTEGER NOT NULL,
+  word_id INTEGER NOT NULL,
+  PRIMARY KEY (vid, word_id)
+) WITHOUT ROWID;
+CREATE INDEX idx_stepbible_word ON stepbible_word_verses(word_id);
 
 CREATE TABLE ot_quotes (
   nt_book_id INTEGER NOT NULL,
@@ -627,75 +640,58 @@ if (fs.existsSync(otQuotesPath)) {
   console.log(`Inserted ${otQuoteCount} OT quote verses.`);
 }
 
-// Insert Cross References
-console.log('Inserting cross references (~457K rows)...');
-const crossRefsPath = path.join(ROOT_DIR, 'public', 'data', 'cross_references.json');
-if (fs.existsSync(crossRefsPath)) {
-  const crossRefsData = JSON.parse(fs.readFileSync(crossRefsPath, 'utf8'));
-  const insertCrossRefStmt = db.prepare(`
-    INSERT INTO cross_references (
-      from_book_id, from_chapter, from_verse, to_ref, to_book_id, to_chapter, to_verse, to_end_verse
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
-  const CROSS_REF_BOOK_KEY_TO_ID = {
-    genesis: 1, exodus: 2, leviticus: 3, numbers: 4, deuteronomy: 5,
-    joshua: 6, judges: 7, ruth: 8, '1samuel': 9, '2samuel': 10,
-    '1kings': 11, '2kings': 12, '1chronicles': 13, '2chronicles': 14,
-    ezra: 15, nehemiah: 16, esther: 17, job: 18, psalms: 19, proverbs: 20,
-    ecclesiastes: 21, songofsolomon: 22, isaiah: 23, jeremiah: 24, lamentations: 25,
-    ezekiel: 26, daniel: 27, hosea: 28, joel: 29, amos: 30, obadiah: 31,
-    jonah: 32, micah: 33, nahum: 34, habakkuk: 35, zephaniah: 36,
-    haggai: 37, zechariah: 38, malachi: 39,
-    matthew: 40, mark: 41, luke: 42, john: 43, acts: 44,
-    romans: 45, '1corinthians': 46, '2corinthians': 47, galatians: 48,
-    ephesians: 49, philippians: 50, colossians: 51, '1thessalonians': 52,
-    '2thessalonians': 53, '1timothy': 54, '2timothy': 55, titus: 56,
-    philemon: 57, hebrews: 58, james: 59, '1peter': 60, '2peter': 61,
-    '1john': 62, '2john': 63, '3john': 64, jude: 65, revelation: 66,
-    psalm: 19,
-    songofsongs: 22
-  };
-
+// Insert Cross References (OpenBible.info CSR) & STEPBible Original Words
+console.log('Inserting OpenBible cross references (~344.8K rows)...');
+const openBiblePath = path.join(ROOT_DIR, 'public', 'data', 'openbible.json');
+if (fs.existsSync(openBiblePath)) {
+  const openbible = JSON.parse(fs.readFileSync(openBiblePath, 'utf8')).links;
+  const insertCrossRefStmt = db.prepare(
+    'INSERT INTO cross_references (id, from_vid, to_start, to_end, votes) VALUES (?, ?, ?, ?, ?)'
+  );
   db.exec('BEGIN TRANSACTION;');
+  const verseCount = openbible.offsets.length - 1;
   let crossRefCount = 0;
-  for (const [key, refs] of Object.entries(crossRefsData)) {
-    const m = key.match(/^(.+?)\s+(\d+):(\d+)$/);
-    if (!m) continue;
-    const rawBook = m[1].toLowerCase().replace(/\s+/g, '');
-    const fromBookId = CROSS_REF_BOOK_KEY_TO_ID[rawBook];
-    if (!fromBookId) continue;
-    const fromChapter = parseInt(m[2], 10);
-    const fromVerse = parseInt(m[3], 10);
-
-    for (const ref of refs) {
-      const rm = ref.match(/^(.+?)\s+(\d+):(\d+)(?:-(\d+))?$/);
-      let toBookId = null;
-      let toChapter = null;
-      let toVerse = null;
-      let toEndVerse = null;
-      if (rm) {
-        const cleanToBook = rm[1].toLowerCase().replace(/\s+/g, '');
-        toBookId = CROSS_REF_BOOK_KEY_TO_ID[cleanToBook] || null;
-        toChapter = parseInt(rm[2], 10);
-        toVerse = parseInt(rm[3], 10);
-        toEndVerse = rm[4] ? parseInt(rm[4], 10) : null;
-      }
-      insertCrossRefStmt.run(
-        fromBookId,
-        fromChapter,
-        fromVerse,
-        ref,
-        toBookId,
-        toChapter,
-        toVerse,
-        toEndVerse
-      );
+  for (let vid = 0; vid < verseCount; vid++) {
+    const start = openbible.offsets[vid];
+    const end = openbible.offsets[vid + 1];
+    for (let i = start; i < end; i++) {
+      insertCrossRefStmt.run(i, vid, openbible.targetStart[i], openbible.targetEnd[i], openbible.votes[i]);
       crossRefCount++;
     }
   }
   db.exec('COMMIT;');
-  console.log(`Inserted ${crossRefCount} cross references.`);
+  console.log(`Inserted ${crossRefCount} OpenBible cross references.`);
+}
+
+console.log('Inserting STEPBible original words (~16.4K words, ~124.8K occurrences)...');
+const stepBiblePath = path.join(ROOT_DIR, 'public', 'data', 'stepbible.json');
+if (fs.existsSync(stepBiblePath)) {
+  const stepbible = JSON.parse(fs.readFileSync(stepBiblePath, 'utf8')).words;
+  const insertWordStmt = db.prepare(
+    'INSERT INTO stepbible_words (id, strongs, lemma, transliteration, gloss, verse_count) VALUES (?, ?, ?, ?, ?, ?)'
+  );
+  const insertWordVerseStmt = db.prepare(
+    'INSERT OR IGNORE INTO stepbible_word_verses (vid, word_id) VALUES (?, ?)'
+  );
+  db.exec('BEGIN TRANSACTION;');
+  const wordCount = stepbible.strongs.length;
+  for (let wid = 0; wid < wordCount; wid++) {
+    const start = stepbible.offsets[wid];
+    const end = stepbible.offsets[wid + 1];
+    insertWordStmt.run(
+      wid,
+      stepbible.strongs[wid],
+      stepbible.lemma[wid],
+      stepbible.transliteration[wid],
+      stepbible.gloss[wid],
+      end - start
+    );
+    for (let j = start; j < end; j++) {
+      insertWordVerseStmt.run(stepbible.verses[j], wid);
+    }
+  }
+  db.exec('COMMIT;');
+  console.log(`Inserted ${wordCount} STEPBible words.`);
 }
 
 // Optimize DB

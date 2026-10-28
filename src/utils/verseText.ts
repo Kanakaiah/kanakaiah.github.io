@@ -1,9 +1,9 @@
 import { BOLLS_BIBLE_MAP } from '../data/bibleMap';
+import { fromVerseIndex } from './verseConnections';
 
 // Shared "quote a verse in the reader's version" helpers, used anywhere the app shows
-// verse text outside the chapter reader itself (guide key verses, Strong's occurrences).
-// Everything resolves against the same bolls.life API the reader uses, through one
-// chapter cache, so the wording on screen always matches the selected version.
+// verse text outside the chapter reader itself (guide key verses, cross-references,
+// original word occurrences).
 
 export interface ParsedVerseRef {
   /** Normalized book key, e.g. "habakkuk" or "1corinthians". */
@@ -18,8 +18,6 @@ interface BollsVerse {
   text: string;
 }
 
-// Guide ids already match BOLLS_BIBLE_MAP's keys, so this only has to cover the book
-// names spelled out inside refs on topical guides ("Psalm 119:18", not "psalms").
 const BOOK_ALIASES: Record<string, string> = {
   psalm: 'psalms',
   song: 'songofsolomon',
@@ -36,14 +34,6 @@ const normalizeBookName = (name: string) => {
 // Guards against a typo like "3:1-999" pulling half a chapter into a key-verse card.
 const MAX_RANGE_LENGTH = 12;
 
-/**
- * Parses a verse reference into something the API can be asked for.
- *
- * Handles both shapes present in the guide data: book-relative ("2:4", "3:17–18" on a
- * book guide) and fully qualified ("Romans 8:28", "John 1:1, 14" on topical guides).
- * Ranges may use a hyphen or an en/em dash, and comma-separated verses are supported.
- * Returns null for anything it cannot resolve — callers fall back to the stored text.
- */
 export function parseVerseRef(ref: string, fallbackBookId?: string): ParsedVerseRef | null {
   if (!ref) return null;
 
@@ -75,11 +65,6 @@ export function parseVerseRef(ref: string, fallbackBookId?: string): ParsedVerse
   return verses.length ? { bookId: bookKey, bollsId, chapter, verses } : null;
 }
 
-/**
- * Formats the verse numbers the way the chapter reader writes them into library
- * refs — "4", "17-18" for a contiguous run, "1,14" otherwise — so a key verse added
- * here collides with the same passage added from the reader instead of duplicating it.
- */
 export function formatVerseNumbers(verses: number[]): string {
   const sorted = [...verses].sort((a, b) => a - b);
   const isContiguous = sorted.every((v, i) => i === 0 || v === sorted[i - 1] + 1);
@@ -88,44 +73,36 @@ export function formatVerseNumbers(verses: number[]): string {
   return sorted.join(',');
 }
 
-// Chapters are cached per version so several cards on one screen (and a return visit)
-// share a single request. Keyed on the promise rather than the result so simultaneous
-// callers don't each fire their own fetch.
+// Book-level cache for static offline JSON files (/bible/{folder}/{bollsId}.json)
+const localBookCache = new Map<string, Promise<Record<string, BollsVerse[]>>>();
+// Chapter-level cache for all translations
 const chapterCache = new Map<string, Promise<BollsVerse[]>>();
 
-function fetchChapter(version: string, bollsId: number, chapter: number, bookId: string): Promise<BollsVerse[]> {
+function fetchChapter(version: string, bollsId: number, chapter: number, _bookId?: string): Promise<BollsVerse[]> {
   const cacheKey = `${version}:${bollsId}:${chapter}`;
   const cached = chapterCache.get(cacheKey);
   if (cached) return cached;
 
   let pending: Promise<BollsVerse[]>;
 
-  if (version === 'TELIRV') {
-    // Bible SuperSearch API needs a string book name. We can format it nicely.
-    // Replace songofsolomon with "song of solomon", otherwise keep bookId as is.
-    const bookName = bookId === 'songofsolomon' ? 'song of solomon' : bookId;
-    const url = `https://api.biblesupersearch.com/api?bible=te_irv&reference=${encodeURIComponent(bookName)}%20${chapter}`;
-    
-    pending = fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch verse text from SuperSearch.');
+  if (version === 'TELIRV' || version === 'TBSI' || version === 'BSB') {
+    const folder = version === 'TELIRV' ? 'telugu_irv' : version === 'TBSI' ? 'tamil_bsi' : 'bsb';
+    const bookKey = `${folder}:${bollsId}`;
+    let bookPromise = localBookCache.get(bookKey);
+    if (!bookPromise) {
+      bookPromise = fetch(`/bible/${folder}/${bollsId}.json`).then(res => {
+        if (!res.ok) throw new Error('Failed to fetch local Bible book.');
         return res.json();
-      })
-      .then(data => {
-        const versesObj = data?.results?.[0]?.verses?.te_irv?.[chapter.toString()];
-        if (!versesObj) throw new Error('Invalid response structure from SuperSearch.');
-        
-        const verses: BollsVerse[] = [];
-        for (const [verseNumStr, verseData] of Object.entries(versesObj)) {
-          verses.push({
-            verse: parseInt(verseNumStr, 10),
-            text: (verseData as any).text
-          });
-        }
-        return verses;
       });
+      bookPromise.catch(() => localBookCache.delete(bookKey));
+      localBookCache.set(bookKey, bookPromise);
+    }
+    pending = bookPromise.then(bookData => {
+      const verses = bookData[String(chapter)];
+      if (!verses) throw new Error('Missing chapter in local Bible file.');
+      return verses;
+    });
   } else {
-    // Default Bolls Life API
     pending = fetch(`https://bolls.life/get-text/${version}/${bollsId}/${chapter}/`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch verse text.');
@@ -133,31 +110,29 @@ function fetchChapter(version: string, bollsId: number, chapter: number, bookId:
       });
   }
 
-  // A rejected promise must not stay cached, or one offline moment would pin the
-  // fallback text in place for the rest of the session.
   pending.catch(() => chapterCache.delete(cacheKey));
   chapterCache.set(cacheKey, pending);
   return pending;
 }
 
-// bolls returns display HTML: section headings in <b>, poetry line breaks as <br/>,
-// and translator-supplied words in <i>. These quotes are plain text, so headings are
-// dropped and everything else is flattened to a single line.
 function toPlainText(html: string): string {
   const stripped = html
     .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
     .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
     .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
+    .replace(/<S>\d+<\/S>/gi, '')
+    .replace(/<sup\b[^>]*>.*?<\/sup>/gi, '')
     .replace(/<br\s*\/?>/gi, ' ')
     .replace(/<\/p>/gi, ' ')
     .replace(/<[^>]*>/g, '');
 
-  // Decode entities the API leaves in the text (&mdash;, &quot;, …) now that no real
-  // markup remains to be re-interpreted.
   const decoder = document.createElement('textarea');
   decoder.innerHTML = stripped;
 
-  return decoder.value.replace(/\s+/g, ' ').trim();
+  return decoder.value
+    .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /** Fetches the referenced verses in `version` and joins them into one quotable line. */
@@ -175,11 +150,67 @@ export async function fetchVerseText(version: string, ref: ParsedVerseRef): Prom
   return text;
 }
 
+export interface PassageSnippetVerse {
+  vid: number;
+  bollsId: number;
+  bookName: string;
+  chapter: number;
+  verse: number;
+  text: string;
+}
+
+export interface PassageSnippetResult {
+  verses: PassageSnippetVerse[];
+  moreCount: number;
+}
+
 /**
- * Strips the quotation marks baked into the stored guide snippets. The card draws its
- * own quotes around the text, and most guide entries are already wrapped in them —
- * which is what produced the doubled ""like this"" quotes on the OT guide pages.
+ * Fetches up to `maxVerses` (default 12, matching `trekhleb/bible-cross-references`)
+ * from an inclusive `startVid..endVid` range so multi-verse passages render with
+ * superscript verse numbers and `+ N more verses` when truncated.
  */
+export async function fetchPassageRangeSnippet(
+  version: string,
+  startVid: number,
+  endVid: number,
+  maxVerses = 12
+): Promise<PassageSnippetResult> {
+  const lastVid = Math.min(endVid, startVid + maxVerses - 1);
+  const moreCount = Math.max(0, endVid - lastVid);
+  const vids: number[] = [];
+  for (let v = startVid; v <= lastVid; v++) {
+    vids.push(v);
+  }
+
+  // Group required chapters so each distinct (bollsId, chapter) is fetched once
+  const chapterMap = new Map<string, Promise<BollsVerse[]>>();
+  for (const vid of vids) {
+    const coord = fromVerseIndex(vid);
+    const key = `${coord.bollsId}:${coord.chapter}`;
+    if (!chapterMap.has(key)) {
+      chapterMap.set(key, fetchChapter(version, coord.bollsId, coord.chapter, coord.bookId));
+    }
+  }
+
+  const verses: PassageSnippetVerse[] = [];
+  for (const vid of vids) {
+    const coord = fromVerseIndex(vid);
+    const key = `${coord.bollsId}:${coord.chapter}`;
+    const chVerses = await chapterMap.get(key)!;
+    const found = chVerses.find(v => v.verse === coord.verse);
+    verses.push({
+      vid,
+      bollsId: coord.bollsId,
+      bookName: coord.bookName,
+      chapter: coord.chapter,
+      verse: coord.verse,
+      text: found ? toPlainText(found.text) : '',
+    });
+  }
+
+  return { verses, moreCount };
+}
+
 export function stripWrappingQuotes(text: string): string {
   return text ? text.trim().replace(/^["“”]+|["“”]+$/g, '').trim() : '';
 }

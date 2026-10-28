@@ -55,7 +55,7 @@ private val THEME_OPTIONS = listOf(
     ThemeOption("black", "Midnight", Color(0xFF0C0A08)),
     ThemeOption("dark", "Walnut", Color(0xFF1A1613)),
     ThemeOption("sepia", "Sepia", Color(0xFFF6ECD6)),
-    ThemeOption("white", "Paper", Color(0xFFFAF6EE))
+    ThemeOption("white", "Paper", Color(0xFFFFFFFF))
 )
 
 private val FONT_SIZE_OPTIONS = listOf(
@@ -343,7 +343,7 @@ fun SettingsScreen(
                                     val isMatch = when (id) {
                                         "study" -> state.settings.showSectionHeadings && state.settings.showVerseNumbers && state.settings.showParagraphMarks && state.settings.showCrossRefMarkers
                                         "reading" -> state.settings.showSectionHeadings && state.settings.showVerseNumbers && !state.settings.showParagraphMarks && !state.settings.showCrossRefMarkers
-                                        "clean" -> !state.settings.showSectionHeadings && !state.settings.showVerseNumbers && !state.settings.showParagraphMarks && !state.settings.showCrossRefMarkers
+                                        "clean" -> state.settings.showSectionHeadings && !state.settings.showVerseNumbers && !state.settings.showParagraphMarks && !state.settings.showCrossRefMarkers
                                         else -> false
                                     }
 

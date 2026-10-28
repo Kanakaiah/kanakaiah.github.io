@@ -33,6 +33,7 @@ class SettingsViewModel @JvmOverloads constructor(
     fun loadSettings() {
         viewModelScope.launch {
             val s = repository.getAppSettings()
+            com.example.telugubible.theme.RemoraThemeState.themeName = s.theme
             _uiState.update { it.copy(settings = s) }
         }
     }
@@ -46,6 +47,7 @@ class SettingsViewModel @JvmOverloads constructor(
     }
 
     fun setTheme(theme: String) {
+        com.example.telugubible.theme.RemoraThemeState.themeName = theme
         updateSettings { it.copy(theme = theme) }
     }
 
@@ -101,7 +103,7 @@ class SettingsViewModel @JvmOverloads constructor(
             }
             "clean" -> updateSettings {
                 it.copy(
-                    showSectionHeadings = false,
+                    showSectionHeadings = true,
                     showVerseNumbers = false,
                     showParagraphMarks = false,
                     showCrossRefMarkers = false

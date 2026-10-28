@@ -15,6 +15,8 @@ import com.example.telugubible.data.model.ColdCheckResult
 import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.PresetCollection
 import com.example.telugubible.data.model.ReviewLogEntry
+import com.example.telugubible.data.model.StepBibleWord
+import com.example.telugubible.data.model.StepBibleWordOccurrence
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.StrongsOccurrence
 import com.example.telugubible.data.service.BollsBibleService
@@ -22,6 +24,7 @@ import com.example.telugubible.data.service.KjvService
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
+import com.example.telugubible.data.model.VerseConnectionsData
 import com.example.telugubible.data.model.VerseSearchResult
 import com.example.telugubible.util.BookMasteryCounts
 import com.example.telugubible.util.MasteryUtils
@@ -58,7 +61,10 @@ class BibleRepository(
             else -> {
                 // Check persistent cache
                 val cached = userDbHelper.getCachedVerses(v, bookId, chapter)
-                if (cached.isNotEmpty()) {
+                val cachedHasHeadings = cached.any {
+                    Regex("<b\\b[^>]*>", RegexOption.IGNORE_CASE).containsMatchIn(it.textEn ?: "")
+                }
+                if (cached.isNotEmpty() && (v != "LSB" || cachedHasHeadings)) {
                     return@withContext cached
                 }
                 // Try remote Bolls Life API
@@ -66,6 +72,9 @@ class BibleRepository(
                 if (!remote.isNullOrEmpty()) {
                     userDbHelper.saveCachedVerses(v, bookId, chapter, remote)
                     return@withContext remote
+                }
+                if (cached.isNotEmpty()) {
+                    return@withContext cached
                 }
                 // Fallback to local BSB
                 bibleDbHelper.getVerses(bookId, chapter)
@@ -420,16 +429,32 @@ class BibleRepository(
         userDbHelper.recordChainPass(bookId, results)
     }
 
-    suspend fun getCrossReferences(bookId: Int, chapter: Int, verse: Int): List<CrossReference> = withContext(ioDispatcher) {
-        bibleDbHelper.getCrossReferences(bookId, chapter, verse)
+    suspend fun getCrossReferences(bookId: Int, chapter: Int, verse: Int, minVotes: Int = 4): List<CrossReference> = withContext(ioDispatcher) {
+        bibleDbHelper.getCrossReferences(bookId, chapter, verse, minVotes)
     }
 
-    suspend fun getCrossReferenceCount(bookId: Int, chapter: Int, verse: Int): Int = withContext(ioDispatcher) {
-        bibleDbHelper.getCrossReferenceCount(bookId, chapter, verse)
+    suspend fun getIncomingCrossReferences(bookId: Int, chapter: Int, verse: Int, minVotes: Int = 4): List<CrossReference> = withContext(ioDispatcher) {
+        bibleDbHelper.getIncomingCrossReferences(bookId, chapter, verse, minVotes)
     }
 
-    suspend fun getCrossReferenceCountsForChapter(bookId: Int, chapter: Int): Map<Int, Int> = withContext(ioDispatcher) {
-        bibleDbHelper.getCrossReferenceCountsForChapter(bookId, chapter)
+    suspend fun getVerseConnections(bookId: Int, chapter: Int, verse: Int, minVotes: Int = 4): VerseConnectionsData = withContext(ioDispatcher) {
+        bibleDbHelper.getVerseConnections(bookId, chapter, verse, minVotes)
+    }
+
+    suspend fun getOriginalWordsForVerse(bookId: Int, chapter: Int, verse: Int): List<StepBibleWord> = withContext(ioDispatcher) {
+        bibleDbHelper.getOriginalWordsForVerse(bookId, chapter, verse)
+    }
+
+    suspend fun getOccurrencesForStepBibleWord(wordId: Int): List<StepBibleWordOccurrence> = withContext(ioDispatcher) {
+        bibleDbHelper.getOccurrencesForStepBibleWord(wordId)
+    }
+
+    suspend fun getCrossReferenceCount(bookId: Int, chapter: Int, verse: Int, minVotes: Int = 4): Int = withContext(ioDispatcher) {
+        bibleDbHelper.getCrossReferenceCount(bookId, chapter, verse, minVotes)
+    }
+
+    suspend fun getCrossReferenceCountsForChapter(bookId: Int, chapter: Int, minVotes: Int = 4): Map<Int, Int> = withContext(ioDispatcher) {
+        bibleDbHelper.getCrossReferenceCountsForChapter(bookId, chapter, minVotes)
     }
 
     suspend fun isOtQuote(bookId: Int, chapter: Int, verse: Int): Boolean = withContext(ioDispatcher) {

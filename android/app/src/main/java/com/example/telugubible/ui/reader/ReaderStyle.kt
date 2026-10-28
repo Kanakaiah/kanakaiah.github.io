@@ -40,12 +40,28 @@ enum class ReaderTheme(
     ),
     PAPER(
         label = "Paper",
-        backgroundColor = Color(0xFFFAF6EE),
-        cardColor = Color(0xFFFFFFFF),
-        textColor = Color(0xFF211C14),
-        secondaryTextColor = Color(0xFF5C5346),
+        backgroundColor = Color(0xFFFFFFFF),
+        cardColor = Color(0xFFF8FAFC),
+        textColor = Color(0xFF111827),
+        secondaryTextColor = Color(0xFF4B5563),
         accentColor = Color(0xFFB8552F)
-    )
+    );
+
+    fun toSettingKey(): String = when (this) {
+        OBSIDIAN -> "black"
+        DARK -> "dark"
+        SEPIA -> "sepia"
+        PAPER -> "white"
+    }
+
+    companion object {
+        fun fromKey(key: String?): ReaderTheme = when (key?.lowercase()?.trim()) {
+            "dark", "walnut", "umber" -> DARK
+            "sepia" -> SEPIA
+            "white", "paper" -> PAPER
+            else -> OBSIDIAN
+        }
+    }
 }
 
 val InterFontFamily = FontFamily(

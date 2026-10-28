@@ -89,7 +89,7 @@ class UserDatabaseHelper(private val context: Context) :
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 9
+        const val USER_DB_VERSION = 10
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -435,6 +435,16 @@ class UserDatabaseHelper(private val context: Context) :
         if (oldVersion < 9) {
             try {
                 db.execSQL("ALTER TABLE user_verses ADD COLUMN end_verse INTEGER;")
+            } catch (e: Exception) {}
+        }
+        if (oldVersion < 10) {
+            // Clear stale remote_verse_cache entries that were cached before <b> section headings were preserved,
+            // and ensure showSectionHeadings is enabled by default.
+            try {
+                db.execSQL("DELETE FROM remote_verse_cache;")
+            } catch (e: Exception) {}
+            try {
+                db.execSQL("INSERT OR REPLACE INTO user_stats (key, val) VALUES ('setting_showSectionHeadings', 'true');")
             } catch (e: Exception) {}
         }
     }

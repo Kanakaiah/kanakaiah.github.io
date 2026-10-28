@@ -165,19 +165,19 @@ class BibleRepositoryTest {
 
     @Test
     fun testCrossReferencesQuerying() = runTest {
-        // Query cross-references for Genesis 1:1 (bookId = 1, chapter = 1, verse = 1)
+        // Query OpenBible cross-references for Genesis 1:1 (bookId = 1, chapter = 1, verse = 1, minVotes = 4)
         val crossRefs = repository.getCrossReferences(1, 1, 1)
         assertTrue("Genesis 1:1 should have cross-references", crossRefs.isNotEmpty())
-        assertEquals(25, crossRefs.size)
+        assertEquals(61, crossRefs.size)
 
         val first = crossRefs[0]
         assertEquals(1, first.fromBookId)
         assertEquals(1, first.fromChapter)
         assertEquals(1, first.fromVerse)
-        assertEquals("Jeremiah 32:17", first.toRef)
-        assertEquals(24, first.toBookId) // Jeremiah is book 24
-        assertEquals(32, first.toChapter)
-        assertEquals(17, first.toVerse)
+        assertEquals("Exodus 20:11", first.toRef)
+        assertEquals(2, first.toBookId) // Exodus is book 2
+        assertEquals(20, first.toChapter)
+        assertEquals(11, first.toVerse)
         assertNotNull("Target verse text in English should be populated", first.targetTextEn)
 
         val count = repository.getCrossReferenceCount(1, 1, 1)
@@ -185,7 +185,21 @@ class BibleRepositoryTest {
 
         val chapterCounts = repository.getCrossReferenceCountsForChapter(1, 1)
         assertTrue("Chapter counts should have entry for verse 1", chapterCounts.containsKey(1))
-        assertEquals(25, chapterCounts[1])
+        assertEquals(61, chapterCounts[1])
+
+        // Verify Exodus 35:30 bidirectional connections + STEPBible original words
+        val exod35_30 = repository.getVerseConnections(2, 35, 30, minVotes = 4)
+        assertEquals(1, exod35_30.outgoing.size)
+        assertEquals(4, exod35_30.incoming.size)
+        assertEquals(4, exod35_30.originalWords.size)
+        assertEquals("אוּרִי", exod35_30.originalWords[0].lemma)
+        assertEquals("H1212G", exod35_30.originalWords[1].strongs)
+        assertEquals("Bezalel", exod35_30.originalWords[1].gloss)
+
+        val exod35_30AllVotes = repository.getVerseConnections(2, 35, 30, minVotes = 0)
+        assertEquals(7, exod35_30AllVotes.outgoing.size)
+        assertEquals(9, exod35_30AllVotes.incoming.size)
+        assertTrue(exod35_30AllVotes.incoming.any { it.landingNote == "to Exodus 35:30–35" })
     }
 
     @Test

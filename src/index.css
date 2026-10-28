@@ -31,10 +31,10 @@
 
   [data-theme="white"] {
     color-scheme: light;
-    --bg-color: #faf6ee;
-    --text-primary: #211c14;
-    --text-secondary: #5c5346;
-    --text-muted: #948a78;
+    --bg-color: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
 
     --accent: #b8552f;
     --accent-hover: #96431f;
@@ -44,16 +44,16 @@
 
     --gold: #a97a1f;
 
-    --glass-bg: rgba(33, 28, 20, 0.03);
-    --glass-bg-hover: rgba(33, 28, 20, 0.06);
-    --glass-border: rgba(33, 28, 20, 0.09);
-    --glass-border-hover: rgba(33, 28, 20, 0.16);
+    --glass-bg: rgba(17, 24, 39, 0.03);
+    --glass-bg-hover: rgba(17, 24, 39, 0.06);
+    --glass-border: rgba(17, 24, 39, 0.09);
+    --glass-border-hover: rgba(17, 24, 39, 0.16);
 
-    --card-bg: #ffffff;
-    --card-bg-elevated: #fdfbf6;
-    --card-border: #e8e0d0;
-    --card-border-hover: #d9cdb4;
-    --card-hover: #f5f0e4;
+    --card-bg: #f8fafc;
+    --card-bg-elevated: #ffffff;
+    --card-border: #e5e7eb;
+    --card-border-hover: #d1d5db;
+    --card-hover: #f3f4f6;
   }
 
   [data-theme="dark"] {
@@ -218,7 +218,7 @@ select option {
 /* Reading progress bar */
 .reading-progress {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   height: 4px;
   background: var(--accent);
