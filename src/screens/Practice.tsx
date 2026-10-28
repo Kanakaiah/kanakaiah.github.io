@@ -156,8 +156,11 @@ export const Practice: React.FC = () => {
 
   // The workshop works against the whole library or a filtered topic, sorted by user preference
   const verses = React.useMemo(() => {
+    const generalTopic = (state.topics || []).find(t => t.name.toLowerCase() === 'general');
     const base = activeTopicFilter
-      ? state.verses.filter(v => v.topicIds?.includes(activeTopicFilter))
+      ? activeTopicFilter === '__general__' || (generalTopic && activeTopicFilter === generalTopic.id)
+        ? state.verses.filter(v => !v.topicIds || v.topicIds.length === 0 || (generalTopic && v.topicIds.includes(generalTopic.id)))
+        : state.verses.filter(v => v.topicIds?.includes(activeTopicFilter))
       : [...state.verses];
 
     const now = new Date();

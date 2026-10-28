@@ -202,12 +202,23 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
     setIsLoading(false);
   };
 
+  const getEffectiveTopicIds = (): string[] => {
+    if (selectedTopicIds.length > 0) return selectedTopicIds;
+    const existingGeneral = (state.topics || []).find(t => t.name.toLowerCase() === 'general');
+    if (existingGeneral) return [existingGeneral.id];
+    const generalId = 'topic-general';
+    dispatch({ type: 'ADD_TOPIC', payload: { id: generalId, name: 'General' } });
+    return [generalId];
+  };
+
   const addVerseToLibrary = (ref: string, text: string, translation: string, skipNavigate = false) => {
     // Check if exists
     if (state.verses.some(v => v.ref.toLowerCase() === ref.toLowerCase() && v.translation.toLowerCase() === translation.toLowerCase())) {
       showToast(`'${ref} (${translation})' is already in your library!`, 'error');
       return;
     }
+
+    const effectiveTopicIds = getEffectiveTopicIds();
 
     const newVerse: Verse = {
       id: "v_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9),
@@ -224,7 +235,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       },
       streak: 0,
       attempts: 0,
-      ...(selectedTopicIds.length > 0 ? { topicIds: selectedTopicIds } : {})
+      topicIds: effectiveTopicIds
     };
 
     dispatch({ type: 'ADD_VERSE', payload: newVerse });

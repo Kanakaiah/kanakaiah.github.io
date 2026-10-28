@@ -1,491 +1,347 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, ArrowUpDown, BookOpen, ArrowRight, Flame, Tags } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronDown, Search, Trash2, X, BookOpen, Plus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getBookName } from '../utils/localization';
-import { VerseCard } from '../components/dashboard/VerseCard';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { parseReference } from '../utils/bible';
 import { isDue } from '../utils/sm2';
 import { useNow } from '../utils/useNow';
 import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
-import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
 import { useToast } from '../context/ToastContext';
 import type { Verse } from '../types/models';
 import { OT_BOOKS } from '../data/otBooks';
 import { NT_BOOKS } from '../data/ntBooks';
-import { guidePath } from '../utils/readerRoute';
 import { useMastery } from '../utils/mastery';
-import { ShapeMeter } from '../components/dashboard/ShapeMeter';
-import { FirstLetterMode } from '../components/practice/FirstLetterMode';
 import { SEED_VERSES } from '../data/seed';
 import { TOP_100_VERSES } from '../data/top100';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
-type FilterType = 'all' | 'review' | 'learning' | 'memorized';
+const DEFAULT_GENERAL_COLLECTION_ID = '__general__';
+
+type ReviewOrderKey = 'weakest' | 'due-date' | 'canonical' | 'random';
+
+const REVIEW_ORDERS: { key: ReviewOrderKey; label: string; hint: string; sortPayload: 'smart' | 'bible-asc' | 'random' }[] = [
+  { key: 'weakest', label: 'Weakest', hint: 'Weakest verses come first.', sortPayload: 'smart' },
+  { key: 'due-date', label: 'Due date', hint: 'Oldest due verses come first.', sortPayload: 'smart' },
+  { key: 'canonical', label: 'Canonical', hint: 'Ordered from Genesis to Revelation.', sortPayload: 'bible-asc' },
+  { key: 'random', label: 'Random', hint: 'Shuffled in random order.', sortPayload: 'random' },
+];
+
+interface CollectionItem {
+  id: string;
+  name: string;
+  totalCount: number;
+  dueCount: number;
+  learnedCount: number;
+  isPreset: boolean;
+}
 
 export const Dashboard: React.FC = () => {
   const { state, dispatch } = useApp();
   const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
-  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
-  const [activeTopicFilter, setActiveTopicFilter] = useState<string | null>(null);
-  const [isManageTopicsOpen, setIsManageTopicsOpen] = useState(false);
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const { showToast } = useToast();
-  // The clock as state, so every due-check below is a pure function of its inputs and
-  // recomputes when time actually moves — including overnight. See useNow.
   const now = useNow();
 
-  // Stats calculation
-  const stats = useMemo(() => {
-    let memorized = 0;
-    let learning = 0;
-    let highScores = 0;
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+  const [reviewOrder, setReviewOrder] = useState<ReviewOrderKey>('weakest');
+  const [isFromOpen, setIsFromOpen] = useState(false);
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
 
-    state.verses.forEach(v => {
-      const masteryPct = Math.min(100, Math.round((v.sm2.repetition / 6) * 100));
-      if (masteryPct >= 100) memorized++;
-      else if (v.status === 'learning') learning++;
+  const [inspectingCollectionId, setInspectingCollectionId] = useState<string | null>(null);
+  const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
+  const [isNewCollectionOpen, setIsNewCollectionOpen] = useState(false);
+  const [newCollectionName, setNewCollectionName] = useState('');
 
-      if (v.sm2 && v.sm2.repetition > 1) {
-        highScores++;
-      }
-    });
+  const [isChapterThemePickerOpen, setIsChapterThemePickerOpen] = useState(false);
+  const [bookSearchQuery, setBookSearchQuery] = useState('');
+  const [testamentFilter, setTestamentFilter] = useState<'ALL' | 'OT' | 'NT'>('ALL');
 
-    const dueForReview = state.verses.filter(v => isDue(v.sm2, now));
-
-    return { memorized, learning, dueForReview, reviewed: highScores };
-  }, [state.verses, now]);
-
-  // Book Recall — structural memory (chapter anchors and the Memory Sentence) for
-  // the reader's library of books, the counterpart to dueForReview above for
-  // verses. Unlike the old version (only ever visible when something was overdue,
-  // and only ever a bare book name), this stays on screen with real counts and
-  // falls back to "next up" — the most-advanced-but-incomplete books — when
-  // nothing is due, so the chapter side of the app doesn't disappear from Today
-  // the moment a reader is caught up.
   const mastery = useMastery(ALL_BOOKS);
-  const bookRecallRows = useMemo(() => {
-    const dueChapterCounts = new Map<string, number>();
-    Object.values(state.chapterProgress).forEach(p => {
+
+  // Build dynamic verse collections (Top 100 only exists when added with verses; ungrouped verses go under General)
+  const collections = useMemo<CollectionItem[]>(() => {
+    const list: CollectionItem[] = [];
+    const topics = state.topics || [];
+    const generalTopic = topics.find(t => t.name.toLowerCase() === 'general');
+    const ungroupedVerses = state.verses.filter(v => !v.topicIds || v.topicIds.length === 0);
+
+    for (const topic of topics) {
+      const isGeneral = generalTopic && topic.id === generalTopic.id;
+      const versesInTopic = isGeneral
+        ? Array.from(
+            new Map(
+              [...state.verses.filter(v => v.topicIds?.includes(topic.id)), ...ungroupedVerses].map(v => [v.id, v])
+            ).values()
+          )
+        : state.verses.filter(v => v.topicIds?.includes(topic.id));
+
+      const isTop100 = topic.name.toLowerCase() === 'top 100';
+      const isWellKnown = topic.name.toLowerCase() === 'well-known';
+
+      // Top 100 / Well-Known only exist when added with verses
+      if ((isTop100 || isWellKnown) && versesInTopic.length === 0) continue;
+
+      const totalCount = isTop100
+        ? Math.max(100, versesInTopic.length)
+        : isWellKnown
+        ? Math.max(75, versesInTopic.length)
+        : versesInTopic.length;
+      const dueCount = versesInTopic.filter(v => isDue(v.sm2, now)).length;
+      const learnedCount = versesInTopic.filter(v => (v.sm2?.repetition || 0) >= 6).length;
+
+      list.push({
+        id: topic.id,
+        name: topic.name,
+        totalCount,
+        dueCount,
+        learnedCount,
+        isPreset: isTop100 || isWellKnown,
+      });
+    }
+
+    if (!generalTopic && ungroupedVerses.length > 0) {
+      const dueInGeneral = ungroupedVerses.filter(v => isDue(v.sm2, now)).length;
+      const learnedInGeneral = ungroupedVerses.filter(v => (v.sm2?.repetition || 0) >= 6).length;
+      list.unshift({
+        id: DEFAULT_GENERAL_COLLECTION_ID,
+        name: 'General',
+        totalCount: ungroupedVerses.length,
+        dueCount: dueInGeneral,
+        learnedCount: learnedInGeneral,
+        isPreset: false,
+      });
+    }
+
+    return list;
+  }, [state.topics, state.verses, now]);
+
+  const totalDueVerses = useMemo(
+    () => state.verses.filter(v => isDue(v.sm2, now)).length,
+    [state.verses, now]
+  );
+
+  // Book Themes stats
+  const bookThemeStats = useMemo(() => {
+    const themes = Object.values(state.themeProgress || {});
+    const secure = themes.filter(p => p.sm2.repetition >= 6).length;
+    const due = themes.filter(p => p.attempts > 0 && isDue(p.sm2, now)).length;
+    return { secure, due, total: 66 };
+  }, [state.themeProgress, now]);
+
+  // Chapter Themes stats
+  const chapterThemeStats = useMemo(() => {
+    let totalSecure = 0;
+    let totalChapters = 0;
+    ALL_BOOKS.forEach(b => {
+      const m = mastery[b.id];
+      totalSecure += m?.secure ?? 0;
+      totalChapters += m?.total ?? b.chapters;
+    });
+    const dueByBook = new Map<string, number>();
+    let totalDue = 0;
+    Object.values(state.chapterProgress || {}).forEach(p => {
       if (p.attempts > 0 && new Date(p.sm2.nextDueDate) <= now) {
-        dueChapterCounts.set(p.bookId, (dueChapterCounts.get(p.bookId) || 0) + 1);
+        dueByBook.set(p.bookId, (dueByBook.get(p.bookId) || 0) + 1);
+        totalDue += 1;
       }
     });
-    const dueSentenceIds = new Set(
-      Object.values(state.memorySentenceProgress)
-        .filter(p => new Date(p.sm2.nextDueDate) <= now)
-        .map(p => p.guideId)
-    );
-
-    const buildRow = (bookId: string) => {
-      const book = ALL_BOOKS.find(b => b.id === bookId);
-      if (!book) return null;
-      return {
-        book,
-        mastery: mastery[bookId],
-        dueChapterCount: dueChapterCounts.get(bookId) || 0,
-        sentenceDue: dueSentenceIds.has(bookId),
-      };
+    return {
+      secure: totalSecure,
+      due: totalDue,
+      total: Math.max(1189, totalChapters),
+      dueByBook,
     };
+  }, [mastery, state.chapterProgress, now]);
 
-    const dueBookIds = new Set([...dueChapterCounts.keys(), ...dueSentenceIds]);
-    if (dueBookIds.size > 0) {
-      return [...dueBookIds]
-        .map(buildRow)
-        .filter((r): r is NonNullable<typeof r> => !!r)
-        .sort((a, b) => (b.dueChapterCount + (b.sentenceDue ? 1 : 0)) - (a.dueChapterCount + (a.sentenceDue ? 1 : 0)))
-        .slice(0, 5);
+  const selectedCollection = collections.find(c => c.id === selectedCollectionId) || null;
+  const displayDue = selectedCollection ? selectedCollection.dueCount : totalDueVerses;
+  const estimatedMinutes = Math.max(1, Math.ceil(displayDue * 0.5));
+  const currentOrderMeta = REVIEW_ORDERS.find(o => o.key === reviewOrder) || REVIEW_ORDERS[0];
+
+  const handleStartReview = (collectionId: string | null) => {
+    dispatch({ type: 'SET_SORT_ORDER', payload: currentOrderMeta.sortPayload });
+    if (collectionId) {
+      navigate(`/practice?mode=free&topic=${encodeURIComponent(collectionId)}`);
+    } else {
+      navigate('/practice?mode=free');
     }
-
-    // Nothing due — surface books already underway, most chapters secure first, so
-    // "next up" continues real momentum rather than defaulting to Genesis.
-    return ALL_BOOKS
-      .filter(b => {
-        const m = mastery[b.id];
-        return m && m.secure < m.total && (m.secure > 0 || m.learning > 0 || m.seen > 0);
-      })
-      .sort((a, b) => (mastery[b.id]?.secure || 0) - (mastery[a.id]?.secure || 0))
-      .slice(0, 3)
-      .map(b => buildRow(b.id))
-      .filter((r): r is NonNullable<typeof r> => !!r);
-  }, [state.chapterProgress, state.memorySentenceProgress, mastery, now]);
-
-  const [shuffleTrigger, setShuffleTrigger] = useState(0);
-
-  // Stable random sort keys to prevent re-shuffling on every render
-  const randomSortKeys = useMemo(() => {
-    const keys = new Map<string, number>();
-    state.verses.forEach(v => keys.set(v.id, Math.random()));
-    return keys;
-  }, [state.verses, state.sortOrder === 'random', shuffleTrigger]);
-
-  // We want a stable random verse for the hero section so it doesn't flicker on re-renders,
-  // but changes when the app is opened (i.e. component mounts).
-  const [heroRandomValue] = useState(() => Math.random());
-  
-  const heroVerse = useMemo(() => {
-    if (stats.dueForReview.length === 0) return null;
-    const index = Math.floor(heroRandomValue * stats.dueForReview.length);
-    return stats.dueForReview[index];
-  }, [stats.dueForReview, heroRandomValue]);
-
-  // Filtering and Sorting
-  const filteredAndSortedVerses = useMemo(() => {
-    let result = state.verses.filter(v => {
-      // Search
-      if (searchQuery && !v.ref.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-
-      // Filter
-      const masteryPct = Math.min(100, Math.round((v.sm2.repetition / 6) * 100));
-      if (activeFilter === 'review' && !isDue(v.sm2, now)) return false;
-      if (activeFilter === 'learning' && (v.status !== 'learning' || masteryPct >= 100)) return false;
-      if (activeFilter === 'memorized' && masteryPct < 100) return false;
-      
-      // Topic filter
-      if (activeTopicFilter && (!v.topicIds || !v.topicIds.includes(activeTopicFilter))) return false;
-
-      return true;
-    });
-
-    // Sort
-    result.sort((a, b) => {
-      if (state.sortOrder === 'smart') {
-        const isADue = isDue(a.sm2, now);
-        const isBDue = isDue(b.sm2, now);
-        if (isADue && !isBDue) return -1;
-        if (!isADue && isBDue) return 1;
-        return (a.sm2.repetition || 0) - (b.sm2.repetition || 0);
-      }
-      if (state.sortOrder === 'bible-asc' || state.sortOrder === 'bible-desc') {
-        const aParsed = parseReference(a.ref);
-        const bParsed = parseReference(b.ref);
-        let diff = aParsed.bookIndex - bParsed.bookIndex;
-        if (diff === 0) diff = aParsed.chapter - bParsed.chapter;
-        if (diff === 0) diff = aParsed.verse - bParsed.verse;
-        return state.sortOrder === 'bible-asc' ? diff : -diff;
-      }
-      if (state.sortOrder === 'random') {
-        const valA = randomSortKeys.get(a.id) || 0;
-        const valB = randomSortKeys.get(b.id) || 0;
-        return valA - valB;
-      }
-      return 0;
-    });
-
-    return result;
-  }, [state.verses, searchQuery, activeFilter, activeTopicFilter, state.sortOrder, randomSortKeys, now]);
-
-  const handleSortChange = (sort: any) => {
-    dispatch({ type: 'SET_SORT_ORDER', payload: sort });
-    if (sort === 'random') {
-      setShuffleTrigger(prev => prev + 1);
-    }
-    setIsSortOpen(false);
   };
 
+  const handleAddPresetCollection = (presetKey: 'top_100' | 'well_known') => {
+    const groupName = presetKey === 'top_100' ? 'Top 100' : 'Well-Known';
+    const sourceVerses = presetKey === 'top_100' ? TOP_100_VERSES : SEED_VERSES;
+    const existingTopic = (state.topics || []).find(t => t.name.toLowerCase() === groupName.toLowerCase());
+    const topicId = existingTopic ? existingTopic.id : `topic-${Date.now()}`;
+    if (!existingTopic) {
+      dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: groupName } });
+    }
+    const versesWithTopic = sourceVerses.map(v => ({ ...v, topicIds: [topicId] }));
+    dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
+    showToast(`Added ${sourceVerses.length} passages to '${groupName}'.`, 'success');
+    setIsNewCollectionOpen(false);
+    setNewCollectionName('');
+  };
+
+  const handleCreateCollection = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    const trimmed = newCollectionName.trim();
+    if (!trimmed) return;
+    if (trimmed.toLowerCase() === 'top 100') {
+      handleAddPresetCollection('top_100');
+      return;
+    }
+    if (trimmed.toLowerCase() === 'well-known' || trimmed.toLowerCase() === '75 well-known') {
+      handleAddPresetCollection('well_known');
+      return;
+    }
+    const newId = `topic-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    dispatch({ type: 'ADD_TOPIC', payload: { id: newId, name: trimmed } });
+    showToast(`Created collection '${trimmed}'.`, 'success');
+    setNewCollectionName('');
+    setIsNewCollectionOpen(false);
+  };
+
+  // Verses inside currently inspected collection
+  const inspectedCollection = collections.find(c => c.id === inspectingCollectionId) || null;
+  const inspectedVerses = useMemo(() => {
+    if (!inspectingCollectionId) return [];
+    const generalTopic = (state.topics || []).find(t => t.name.toLowerCase() === 'general');
+    if (inspectingCollectionId === DEFAULT_GENERAL_COLLECTION_ID || (generalTopic && inspectingCollectionId === generalTopic.id)) {
+      return state.verses.filter(
+        v => !v.topicIds || v.topicIds.length === 0 || (generalTopic && v.topicIds.includes(generalTopic.id))
+      );
+    }
+    return state.verses.filter(v => v.topicIds?.includes(inspectingCollectionId));
+  }, [inspectingCollectionId, state.verses, state.topics]);
+
+  const filteredBooks = useMemo(() => {
+    const q = bookSearchQuery.trim().toLowerCase();
+    return ALL_BOOKS.filter(book => {
+      if (testamentFilter === 'OT' && !OT_BOOKS.some(b => b.id === book.id)) return false;
+      if (testamentFilter === 'NT' && !NT_BOOKS.some(b => b.id === book.id)) return false;
+      if (!q) return true;
+      const localized = getBookName(book.id, book.name, state.settings.bibleVersion).toLowerCase();
+      return book.name.toLowerCase().includes(q) || localized.includes(q);
+    });
+  }, [bookSearchQuery, testamentFilter, state.settings.bibleVersion]);
+
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
-      {/* Header (Desktop Only) */}
-      <div className="hidden lg:flex items-center justify-between mb-2 mt-2">
-        <div className="flex items-center gap-2">
-          <h1 className="text-3xl font-heading font-semibold text-primary">Today</h1>
-        </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-card-border">
-          <Flame className="w-4 h-4 text-gold" />
-          <span className="text-sm font-bold text-primary">{state.streak || 0}</span>
-        </div>
-      </div>
-
-      {/* Hero: Today's Practice */}
-      <div className="border-b border-card-border pb-8">
-        <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase mb-5 flex items-center gap-2">
-          <Flame className="w-3.5 h-3.5" /> Daily Practice
-        </h2>
-
-        {heroVerse ? (
-          <div>
-            {/* The reference leads; the text does not appear.
-                This block used to print the whole verse in 3xl serif directly above a
-                button that opens a session on that exact verse — so the app's first act
-                each day was to show you the answer to its own first question. Re-reading
-                immediately before a retrieval attempt produces a large but illusory
-                fluency gain and measurably *lowers* long-term retention, and the inflated
-                performance then gets self-graded into a longer interval.
-                First-letters keep a real cue on screen — enough to place the verse and
-                start recall — without handing over the words. FirstLetterMode already
-                takes a bare string, which is how the memory sentence reuses it too. */}
-            <h3 className="text-3xl md:text-4xl font-heading font-semibold text-primary leading-tight mb-4">
-              {heroVerse.ref}
-            </h3>
-            <div className="mb-5 text-primary/90 max-w-2xl">
-              <FirstLetterMode text={heroVerse.text} />
-            </div>
-            <div className="flex items-baseline gap-3 mb-8">
-              <span className="text-sm text-muted">
-                {stats.dueForReview.length === 1
-                  ? '1 verse due'
-                  : `${stats.dueForReview.length} verses due`}
-              </span>
-            </div>
-
-            <button
-              onClick={() => navigate('/practice?mode=alldue')}
-              className="border border-card-border hover:border-accent hover:text-accent text-primary font-semibold py-3 px-6 rounded-md flex items-center gap-2 transition-colors duration-150"
-            >
-              Start Session <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <div>
-            <h3 className="text-2xl md:text-3xl font-heading font-semibold text-primary leading-tight mb-3">
-              All caught up
-            </h3>
-            <p className="text-base text-secondary mb-8 max-w-md leading-relaxed">
-              {bookRecallRows.length > 0 && bookRecallRows.some(r => r.dueChapterCount > 0 || r.sentenceDue)
-                ? 'No verses due — but a chapter or two is. Keep the streak going below.'
-                : 'You have no verses due for review right now. Add some new verses or review your memorized ones.'}
-            </p>
-            <button
-              onClick={() => {
-                const dueRow = bookRecallRows.find(r => r.dueChapterCount > 0 || r.sentenceDue);
-                if (dueRow) navigate(guidePath(dueRow.book.id), { state: { scrollToMemorySentence: dueRow.sentenceDue } });
-                else navigate('/guides');
-              }}
-              className="border border-card-border hover:border-accent hover:text-accent text-primary font-semibold py-3 px-6 rounded-md flex items-center gap-2 transition-colors duration-150"
-            >
-              {bookRecallRows.some(r => r.dueChapterCount > 0 || r.sentenceDue) ? 'Drill Chapter Anchors' : 'Explore Bible'} <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Book Recall — structural memory (chapter anchors / memory sentence) for the
-          reader's books, alongside the verse review above rather than buried on
-          each book's guide page. Unlike before, this stays on screen even when
-          nothing is due — falling back to "next up" — so the chapter side of the
-          app doesn't vanish from Today the moment verse review is caught up. */}
-      {bookRecallRows.length > 0 && (
-        <div className="flex flex-col gap-3 border-b border-card-border pb-6">
-          <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase flex items-center gap-2">
-            <BookOpen className="w-3.5 h-3.5" /> Book Recall
-          </h2>
-          <div className="flex flex-col gap-2">
-            {bookRecallRows.map(row => {
-              // Named to not shadow the imported isDue() — this is "does this row have
-              // anything owed", not "is this SM-2 record due".
-              const rowHasWork = row.dueChapterCount > 0 || row.sentenceDue;
-              const secure = row.mastery?.secure ?? 0;
-              const total = row.mastery?.total ?? row.book.chapters;
-              return (
-                <button
-                  key={row.book.id}
-                  onClick={() => navigate(guidePath(row.book.id), { state: { scrollToMemorySentence: row.sentenceDue } })}
-                  className="flex items-center justify-between gap-4 p-4 rounded-md border border-card-border hover:border-accent/40 transition-colors text-left"
-                >
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-heading font-bold text-primary text-base truncate">{getBookName(row.book.id, row.book.name, state.settings.bibleVersion)}</span>
-                    <span className="text-xs text-secondary tabular-nums">
-                      {secure} of {total} anchors secure
-                      {rowHasWork ? (
-                        <> &middot; <span className="text-accent font-semibold">
-                          {row.dueChapterCount > 0 ? `${row.dueChapterCount} due today` : 'Memory Sentence due'}
-                        </span></>
-                      ) : ' · continue'}
-                    </span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
-                </button>
-              );
-            })}
-          </div>
-          {/* "Just Genesis this week."
-              A backlog spread across the canon produces a session of twenty items from
-              twenty different places — maximum context switching, and no sense of having
-              finished anything. Naming one book turns an undifferentiated wall into a
-              piece of work with an end. Offered only when there is genuinely a choice to
-              make, which is when more than one book is owed. */}
-          {bookRecallRows.filter(r => r.dueChapterCount > 0 || r.sentenceDue).length > 1 && (
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              <span className="text-[0.625rem] uppercase tracking-widest text-muted">Focus on one</span>
-              {bookRecallRows
-                .filter(r => r.dueChapterCount > 0 || r.sentenceDue)
-                .map(row => (
-                  <button
-                    key={row.book.id}
-                    onClick={() => navigate('/practice', { state: { focusBookId: row.book.id } })}
-                    className="px-2.5 py-1 rounded-md border border-card-border text-[0.6875rem] font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
-                  >
-                    {getBookName(row.book.id, row.book.name, state.settings.bibleVersion)}
-                  </button>
-                ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Theme — the third layer, and the one with no route to it from here. It existed
-          only behind the Practice screen's segmented control, so a reader who never
-          opened Practice and pressed "Theme" would not learn the deck was there at all.
-          Shows progress when there is some and an invitation when there isn't. */}
-      {(() => {
-        const themes = Object.values(state.themeProgress || {});
-        const secure = themes.filter(p => p.sm2.repetition >= 6).length;
-        const due = themes.filter(p => p.attempts > 0 && isDue(p.sm2, now)).length;
-        return (
-          <button
-            onClick={() => navigate('/practice', { state: { subject: 'theme' } })}
-            className="flex items-center justify-between gap-4 p-4 rounded-md border border-card-border hover:border-accent/40 transition-colors text-left"
-          >
-            <div className="flex flex-col min-w-0">
-              <span className="font-heading font-bold text-primary text-base">Book Themes</span>
-              <span className="text-xs text-secondary tabular-nums">
-                {themes.length === 0
-                  ? 'One word per book — start the 66-card deck'
-                  : <>{secure} of 66 secure{due > 0 ? <> &middot; <span className="text-accent font-semibold">{due} due</span></> : ''}</>}
-              </span>
-            </div>
-            <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
-          </button>
-        );
-      })()}
-
-      {/* Your Shape — the Bible-wide mastery meter, one cell per book.
-          Paired with a route into Retention, because everything in this block counts
-          activity: "secure" is repetition >= 6, a tally of consecutive successful
-          self-grades. It is a fair picture of ground covered and a poor one of what is
-          actually still held, and the honest version of that question now has a home. */}
-      <div className="flex flex-col gap-3 border-b border-card-border pb-6">
-        <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase flex items-center gap-2">
-          <BookOpen className="w-3.5 h-3.5" /> Your Shape
-        </h2>
-        <ShapeMeter />
+    <div className="flex flex-col gap-6 max-w-xl mx-auto w-full pb-16">
+      {/* Header Row: "Today" on left, "X-day streak" pill on right */}
+      <div className="flex items-center justify-between pt-2">
+        <h1 className="text-4xl font-heading font-bold text-primary tracking-tight">Today</h1>
         <button
           onClick={() => navigate('/retention')}
-          className="self-start flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-hover transition-colors pt-1"
+          className="px-4 py-1.5 rounded-full bg-card border border-card-border text-sm font-medium text-primary hover:border-accent/50 transition-colors"
         >
-          What would you still recall? <ArrowRight className="w-3.5 h-3.5" />
+          {state.streak || 0}-day streak
         </button>
       </div>
 
-      {/* Stats Row */}
-      <div className="flex items-stretch border-b border-card-border pb-6">
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-2xl font-bold font-heading text-primary">{stats.memorized}</span>
-          <span className="text-xs text-muted font-medium mt-1 uppercase tracking-wider">Memorized</span>
-        </div>
-        <div className="w-px bg-card-border" />
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-2xl font-bold font-heading text-primary">{stats.learning}</span>
-          <span className="text-xs text-muted font-medium mt-1 uppercase tracking-wider">Learning</span>
-        </div>
-        <div className="w-px bg-card-border" />
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-2xl font-bold font-heading text-primary">{stats.reviewed}</span>
-          <span className="text-xs text-muted font-medium mt-1 uppercase tracking-wider">Reviewed</span>
-        </div>
-      </div>
+      {/* 1. Hero REVIEW Card */}
+      <div className="rounded-2xl bg-card border border-card-border p-5 flex flex-col">
+        <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-accent">
+          REVIEW
+        </span>
 
-      {/* Library Section */}
-      <div className="flex flex-col gap-6 mt-2">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-heading font-semibold text-primary tracking-tight">Your Library</h2>
-          <button
-            onClick={() => setIsManageTopicsOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
-          >
-            <Tags className="w-3.5 h-3.5" /> Manage Groups
-          </button>
-        </div>
+        <h2 className="text-3xl font-heading font-bold text-primary mt-2.5 tracking-tight">
+          {displayDue > 0
+            ? `${displayDue} ${displayDue === 1 ? 'verse is' : 'verses are'} due`
+            : state.verses.length === 0
+            ? '0 verses are due'
+            : 'All caught up'}
+        </h2>
 
-        <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted transition-colors group-focus-within:text-accent" />
-          <Input
-            className="pl-12"
-            placeholder="Search verses by reference or keyword..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        <p className="text-sm text-secondary mt-1.5">
+          {displayDue > 0
+            ? `About ${estimatedMinutes} ${estimatedMinutes === 1 ? 'minute' : 'minutes'}. ${currentOrderMeta.hint}`
+            : state.verses.length === 0
+            ? 'Add verses or a collection below to start memorizing.'
+            : `No verses due right now. ${currentOrderMeta.hint}`}
+        </p>
 
-        {/* Topic Filters */}
-        {state.topics && state.topics.length > 0 && (
-          <div className="flex overflow-x-auto pb-2 -mb-4 scrollbar-hide gap-2 snap-x">
+        {/* Two Side-by-Side Dropdowns: From & Order */}
+        <div className="grid grid-cols-2 gap-2.5 mt-5">
+          {/* From Dropdown */}
+          <div className="relative">
             <button
-              onClick={() => setActiveTopicFilter(null)}
-              className={`flex items-center px-3 py-1.5 rounded-full border text-[0.8125rem] font-medium transition-colors snap-center whitespace-nowrap ${
-                activeTopicFilter === null
-                  ? 'bg-accent/15 border-accent/30 text-accent'
-                  : 'bg-transparent border-card-border text-secondary hover:border-card-border-hover hover:text-primary'
-              }`}
+              type="button"
+              onClick={() => {
+                setIsFromOpen(v => !v);
+                setIsOrderOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-3.5 py-3 rounded-[10px] bg-card-elevated border border-card-border text-sm font-medium text-primary hover:border-card-border-hover transition-colors"
             >
-              All Topics
-            </button>
-            {state.topics.map(topic => (
-              <button
-                key={topic.id}
-                onClick={() => setActiveTopicFilter(topic.id)}
-                className={`flex items-center px-3 py-1.5 rounded-full border text-[0.8125rem] font-medium transition-colors snap-center whitespace-nowrap ${
-                  activeTopicFilter === topic.id
-                    ? 'bg-accent/15 border-accent/30 text-accent'
-                    : 'bg-transparent border-card-border text-secondary hover:border-card-border-hover hover:text-primary'
-                }`}
-              >
-                {topic.name}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 relative">
-          <div className="flex overflow-x-auto pb-2 -mb-2 scrollbar-hide gap-2 flex-1 snap-x">
-            {(['all', 'review', 'learning', 'memorized'] as FilterType[]).map(filter => (
-              <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md border text-sm font-semibold transition-colors snap-center whitespace-nowrap ${
-                activeFilter === filter
-                  ? 'border-accent text-accent'
-                  : 'border-card-border text-muted hover:border-card-border-hover hover:text-primary'
-              }`}>
-                {filter === 'all' ? 'All verses' : filter === 'review' ? 'Review due' : filter === 'learning' ? 'Learning' : 'Memorized'}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative shrink-0">
-            <button
-              onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-2 px-4 py-2 rounded-md border border-card-border text-sm font-semibold text-primary hover:border-card-border-hover transition-colors whitespace-nowrap"
-            >
-              <ArrowUpDown className="w-4 h-4 text-muted" />
-              <span>
-                {state.sortOrder === 'smart' ? 'Smart Sort' : state.sortOrder === 'bible-asc' ? 'A → Z' : state.sortOrder === 'bible-desc' ? 'Z → A' : 'Shuffle'}
-              </span>
+              <span className="truncate">From: {selectedCollection ? selectedCollection.name : 'All'}</span>
+              <ChevronDown className="w-4 h-4 text-secondary shrink-0 ml-1" />
             </button>
 
-            {isSortOpen && (
+            {isFromOpen && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsSortOpen(false)} />
-                <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-card-border rounded-md shadow-md z-50 overflow-hidden">
-                  {[
-                    { id: 'smart', label: 'Default (Smart)' },
-                    { id: 'bible-asc', label: 'Bible (Gen → Rev)' },
-                    { id: 'bible-desc', label: 'Bible (Rev → Gen)' },
-                    { id: 'random', label: 'Shuffle' }
-                  ].map(sort => (
+                <div className="fixed inset-0 z-40" onClick={() => setIsFromOpen(false)} />
+                <div className="absolute left-0 right-0 top-full mt-1.5 bg-card-elevated border border-card-border rounded-[10px] shadow-lg z-50 overflow-hidden max-h-60 overflow-y-auto">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCollectionId(null);
+                      setIsFromOpen(false);
+                    }}
+                    className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover ${
+                      selectedCollectionId === null ? 'text-accent font-semibold' : 'text-primary'
+                    }`}
+                  >
+                    All
+                  </button>
+                  {collections.map(col => (
                     <button
-                      key={sort.id}
-                      onClick={() => handleSortChange(sort.id)}
-                      className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-card-hover
-                        ${state.sortOrder === sort.id ? 'text-primary font-medium' : 'text-muted'}`}
+                      key={col.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCollectionId(col.id);
+                        setIsFromOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover truncate ${
+                        selectedCollectionId === col.id ? 'text-accent font-semibold' : 'text-primary'
+                      }`}
                     >
-                      {sort.label}
+                      {col.name}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Order Dropdown */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => {
+                setIsOrderOpen(v => !v);
+                setIsFromOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-3.5 py-3 rounded-[10px] bg-card-elevated border border-card-border text-sm font-medium text-primary hover:border-card-border-hover transition-colors"
+            >
+              <span className="truncate">Order: {currentOrderMeta.label}</span>
+              <ChevronDown className="w-4 h-4 text-secondary shrink-0 ml-1" />
+            </button>
+
+            {isOrderOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setIsOrderOpen(false)} />
+                <div className="absolute left-0 right-0 top-full mt-1.5 bg-card-elevated border border-card-border rounded-[10px] shadow-lg z-50 overflow-hidden">
+                  {REVIEW_ORDERS.map(orderOpt => (
+                    <button
+                      key={orderOpt.key}
+                      type="button"
+                      onClick={() => {
+                        setReviewOrder(orderOpt.key);
+                        setIsOrderOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover ${
+                        reviewOrder === orderOpt.key ? 'text-accent font-semibold' : 'text-primary'
+                      }`}
+                    >
+                      {orderOpt.label}
                     </button>
                   ))}
                 </div>
@@ -494,91 +350,429 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Verse List */}
-        <div className="flex flex-col gap-3 pb-8">
-          {filteredAndSortedVerses.length > 0 ? (
-            filteredAndSortedVerses.map(verse => (
-              <VerseCard
-                key={verse.id}
-                verse={verse}
-                onClick={() => setSelectedVerse(verse)}
-              />
-            ))
-          ) : (
-            <div className="py-12 flex flex-col items-center text-center">
-              <BookOpen className="w-12 h-12 text-muted mb-4 opacity-50" />
-              <p className="text-secondary font-medium mb-4">No verses found.</p>
-              {state.verses.length === 0 && (
-                <div className="flex flex-col items-center gap-3">
-                  <Button onClick={() => navigate('?add=true')}>Add Your First Verse</Button>
-                  <p className="text-[0.8125rem] text-muted max-w-xs leading-relaxed mt-2 px-4">
-                    Verses you add are scheduled for review using spaced repetition. You'll see them frequently at first, then at increasing intervals as you secure them in memory.
-                  </p>
-                  {/* The curated set, offered rather than imposed. It used to be loaded
-                      into every new library automatically, so a reader's first sight of
-                      the app was seventy-five passages they had not chosen, already due.
-                      Beginning a memorization practice with someone else's backlog is a
-                      poor start for something that depends on wanting the material. */}
-                  <div className="flex flex-col gap-3 mt-2">
-                    <button
-                      onClick={() => {
-                        const existingTopic = (state.topics || []).find(t => t.name === 'Well-Known');
-                        const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
-                        if (!existingTopic) {
-                          dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
-                        }
-                        const versesWithTopic = SEED_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
-                        dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
-                        showToast(`Added ${SEED_VERSES.length} passages to 'Well-Known' group.`, 'success');
-                      }}
-                      className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
-                    >
-                      Or start with {SEED_VERSES.length} well-known passages
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        const existingTopic = (state.topics || []).find(t => t.name === 'Top 100');
-                        const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
-                        if (!existingTopic) {
-                          dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
-                        }
-                        // TOP_100_VERSES is imported at the top
-                        const versesWithTopic = TOP_100_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
-                        dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
-                        showToast(`Added 100 passages to 'Top 100' group.`, 'success');
-                      }}
-                      className="text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
-                    >
-                      Or start with the Top 100 most popular verses
-                    </button>
-                  </div>
+        {/* Start review solid gold CTA */}
+        <button
+          type="button"
+          onClick={() => handleStartReview(selectedCollectionId)}
+          className="mt-3.5 w-full h-12 rounded-[10px] bg-accent hover:opacity-95 text-[#141414] font-bold text-[15px] transition-opacity flex items-center justify-center"
+        >
+          Start review
+        </button>
+      </div>
+
+      {/* 2. Collections Section (No individual verse cards on Today) */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[22px] font-heading font-bold text-primary">Collections</h2>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => navigate('?add=true')}
+              className="text-sm font-semibold text-accent hover:opacity-85 transition-opacity"
+            >
+              Add verses
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsNewCollectionOpen(true)}
+              className="text-sm font-semibold text-accent hover:opacity-85 transition-opacity"
+            >
+              New
+            </button>
+          </div>
+        </div>
+
+        {/* Dynamic User Verse Collections */}
+        {collections.map(item => {
+          const subtitle = item.isPreset
+            ? `${item.dueCount} due · ${item.learnedCount} of ${item.totalCount} learned`
+            : `${item.dueCount} due · ${item.totalCount} ${item.totalCount === 1 ? 'verse' : 'verses'}`;
+          const learnedRatio = item.totalCount > 0 ? item.learnedCount / item.totalCount : 0;
+          const fallbackRatio = item.totalCount > 0 ? item.dueCount / item.totalCount : 0;
+          const progressPct = Math.min(100, Math.max(0, (learnedRatio > 0 ? learnedRatio : fallbackRatio) * 100));
+
+          return (
+            <div
+              key={item.id}
+              onClick={() => setInspectingCollectionId(item.id)}
+              className="rounded-[14px] bg-card border border-card-border px-4.5 py-4 flex items-center justify-between gap-4 cursor-pointer hover:border-card-border-hover transition-colors"
+            >
+              <div className="flex-1 min-w-0 pr-2">
+                <h3 className="text-[18px] font-heading font-bold text-primary truncate">{item.name}</h3>
+                <p className="text-[13.5px] text-secondary mt-0.5">{subtitle}</p>
+                <div className="w-full h-[3px] rounded-full bg-card-border mt-2.5 overflow-hidden">
+                  <div
+                    className="h-full bg-accent rounded-full transition-all"
+                    style={{ width: `${progressPct}%` }}
+                  />
                 </div>
-              )}
+              </div>
+
+              <button
+                type="button"
+                onClick={e => {
+                  e.stopPropagation();
+                  handleStartReview(item.id);
+                }}
+                className="shrink-0 px-5 py-2 rounded-[22px] border border-accent/65 text-accent text-sm font-semibold hover:bg-accent/10 transition-colors"
+              >
+                Review
+              </button>
             </div>
-          )}
+          );
+        })}
+
+        {/* Book Themes Collection Card */}
+        <div
+          onClick={() => navigate('/practice', { state: { subject: 'theme' } })}
+          className="rounded-[14px] bg-card border border-card-border px-4.5 py-4 flex items-center justify-between gap-4 cursor-pointer hover:border-card-border-hover transition-colors"
+        >
+          <div className="flex-1 min-w-0 pr-2">
+            <h3 className="text-[18px] font-heading font-bold text-primary truncate">Book Themes</h3>
+            <p className="text-[13.5px] text-secondary mt-0.5">
+              {bookThemeStats.due} due · {bookThemeStats.secure} of {bookThemeStats.total} learned
+            </p>
+            <div className="w-full h-[3px] rounded-full bg-card-border mt-2.5 overflow-hidden">
+              <div
+                className="h-full bg-accent rounded-full transition-all"
+                style={{ width: `${Math.min(100, (bookThemeStats.secure / bookThemeStats.total) * 100)}%` }}
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={e => {
+              e.stopPropagation();
+              navigate('/practice', { state: { subject: 'theme' } });
+            }}
+            className="shrink-0 px-5 py-2 rounded-[22px] border border-accent/65 text-accent text-sm font-semibold hover:bg-accent/10 transition-colors"
+          >
+            Review
+          </button>
+        </div>
+
+        {/* Chapter Themes Collection Card (Opens 66-Book Selector -> Chapter Theme Memorization) */}
+        <div
+          onClick={() => setIsChapterThemePickerOpen(true)}
+          className="rounded-[14px] bg-card border border-card-border px-4.5 py-4 flex items-center justify-between gap-4 cursor-pointer hover:border-card-border-hover transition-colors"
+        >
+          <div className="flex-1 min-w-0 pr-2">
+            <h3 className="text-[18px] font-heading font-bold text-primary truncate">Chapter Themes</h3>
+            <p className="text-[13.5px] text-secondary mt-0.5">
+              {chapterThemeStats.due} due · {chapterThemeStats.secure} of {chapterThemeStats.total} learned
+            </p>
+            <div className="w-full h-[3px] rounded-full bg-card-border mt-2.5 overflow-hidden">
+              <div
+                className="h-full bg-accent rounded-full transition-all"
+                style={{ width: `${Math.min(100, (chapterThemeStats.secure / chapterThemeStats.total) * 100)}%` }}
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={e => {
+              e.stopPropagation();
+              setIsChapterThemePickerOpen(true);
+            }}
+            className="shrink-0 px-5 py-2 rounded-[22px] border border-accent/65 text-accent text-sm font-semibold hover:bg-accent/10 transition-colors"
+          >
+            Review
+          </button>
         </div>
       </div>
 
-      {/* Verse Detail Modal */}
+      {/* Modal 1: Inspect Verses Inside a Collection */}
+      {inspectedCollection && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="w-full max-w-lg max-h-[85vh] bg-card border border-card-border rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
+              <div>
+                <h3 className="text-xl font-heading font-bold text-primary">{inspectedCollection.name}</h3>
+                <p className="text-xs text-secondary mt-0.5">
+                  {inspectedVerses.length} {inspectedVerses.length === 1 ? 'verse' : 'verses'} · {inspectedCollection.dueCount} due
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {inspectedCollection.id !== DEFAULT_GENERAL_COLLECTION_ID && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      dispatch({ type: 'DELETE_TOPIC', payload: inspectedCollection.id });
+                      setInspectingCollectionId(null);
+                      showToast(`Deleted collection '${inspectedCollection.name}'.`, 'info');
+                    }}
+                    className="p-2 text-muted hover:text-primary transition-colors"
+                    title="Delete collection"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const id = inspectedCollection.id;
+                    setInspectingCollectionId(null);
+                    handleStartReview(id);
+                  }}
+                  className="px-4 py-1.5 rounded-[22px] border border-accent/65 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
+                >
+                  Review
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInspectingCollectionId(null)}
+                  className="p-1.5 text-secondary hover:text-primary transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5">
+              {inspectedVerses.length === 0 ? (
+                <div className="py-12 flex flex-col items-center text-center gap-3">
+                  <BookOpen className="w-10 h-10 text-muted opacity-60" />
+                  <p className="text-sm text-secondary">No verses in {inspectedCollection.name} yet.</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setInspectingCollectionId(null);
+                      navigate('?add=true');
+                    }}
+                    className="px-4 py-2 rounded-[10px] bg-accent text-[#141414] font-bold text-sm flex items-center gap-1.5"
+                  >
+                    <Plus className="w-4 h-4" /> Add verses
+                  </button>
+                </div>
+              ) : (
+                inspectedVerses.map(verse => (
+                  <div
+                    key={verse.id}
+                    onClick={() => setSelectedVerse(verse)}
+                    className="rounded-xl bg-card-elevated border border-card-border px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:border-card-border-hover transition-colors"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-primary">{verse.ref}</p>
+                      <p className="text-xs text-secondary line-clamp-2 mt-1">{verse.text}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={e => {
+                        e.stopPropagation();
+                        dispatch({ type: 'DELETE_VERSE', payload: verse.id });
+                        showToast('Verse removed', 'info');
+                      }}
+                      className="p-1.5 text-muted hover:text-primary shrink-0"
+                      title="Remove verse"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 2: 66-Book Selector for Chapter Themes Memorization */}
+      {isChapterThemePickerOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="w-full max-w-lg max-h-[88vh] bg-card border border-card-border rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
+              <div>
+                <h3 className="text-xl font-heading font-bold text-primary">Chapter Themes</h3>
+                <p className="text-xs text-secondary mt-0.5">
+                  Select a book from the 66 books to memorize its chapter themes
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsChapterThemePickerOpen(false)}
+                className="p-1.5 text-secondary hover:text-primary transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-4 pt-3 pb-2 flex flex-col gap-2.5 border-b border-card-border">
+              <div className="relative">
+                <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={bookSearchQuery}
+                  onChange={e => setBookSearchQuery(e.target.value)}
+                  placeholder="Search 66 books..."
+                  className="w-full pl-9 pr-8 py-2 rounded-[10px] bg-card-elevated border border-card-border text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent"
+                />
+                {bookSearchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setBookSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                {([
+                  { key: 'ALL', label: 'All (66)' },
+                  { key: 'OT', label: 'Old Testament (39)' },
+                  { key: 'NT', label: 'New Testament (27)' },
+                ] as const).map(tab => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setTestamentFilter(tab.key)}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
+                      testamentFilter === tab.key
+                        ? 'bg-accent border-accent text-[#141414]'
+                        : 'bg-card-elevated border-card-border text-secondary hover:text-primary'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5">
+              {filteredBooks.map(book => {
+                const m = mastery[book.id];
+                const secure = m?.secure ?? 0;
+                const total = m?.total ?? book.chapters;
+                const due = chapterThemeStats.dueByBook.get(book.id) || 0;
+                const pct = Math.min(100, (secure / Math.max(1, total)) * 100);
+                const localizedName = getBookName(book.id, book.name, state.settings.bibleVersion);
+
+                return (
+                  <div
+                    key={book.id}
+                    onClick={() => {
+                      setIsChapterThemePickerOpen(false);
+                      navigate('/practice', { state: { subject: 'anchor', sweepBookIds: [book.id] } });
+                    }}
+                    className="rounded-xl bg-card-elevated border border-card-border px-4 py-3.5 flex items-center justify-between gap-3 cursor-pointer hover:border-card-border-hover transition-colors"
+                  >
+                    <div className="flex-1 min-w-0 pr-2">
+                      <h4 className="text-base font-heading font-bold text-primary truncate">{localizedName}</h4>
+                      <p className="text-xs text-secondary mt-0.5">
+                        {due} due · {secure} of {total} chapters learned
+                      </p>
+                      <div className="w-full h-[3px] rounded-full bg-card-border mt-2 overflow-hidden">
+                        <div className="h-full bg-accent rounded-full" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setIsChapterThemePickerOpen(false);
+                        navigate('/practice', { state: { subject: 'anchor', sweepBookIds: [book.id] } });
+                      }}
+                      className="shrink-0 px-4 py-1.5 rounded-[22px] border border-accent/65 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
+                    >
+                      Review
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 3: New Collection Dialog */}
+      {isNewCollectionOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-card-elevated border border-card-border rounded-2xl p-5 flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-heading font-bold text-primary">New Collection</h3>
+              <button
+                type="button"
+                onClick={() => setIsNewCollectionOpen(false)}
+                className="p-1 text-secondary hover:text-primary"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateCollection} className="flex flex-col gap-3">
+              <input
+                type="text"
+                value={newCollectionName}
+                onChange={e => setNewCollectionName(e.target.value)}
+                placeholder="e.g. Anxiety, Peace, Courage"
+                className="w-full px-3.5 py-2.5 rounded-[10px] bg-card border border-card-border text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent"
+                autoFocus
+              />
+
+              <p className="text-xs text-secondary font-medium">Or choose a curated collection:</p>
+              <div className="flex flex-wrap gap-2">
+                {['Top 100', 'Well-Known', 'Anxiety', 'Peace', 'Courage', 'Faith & Trust'].map(suggestion => (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    onClick={() => {
+                      if (suggestion === 'Top 100') {
+                        handleAddPresetCollection('top_100');
+                      } else if (suggestion === 'Well-Known') {
+                        handleAddPresetCollection('well_known');
+                      } else {
+                        setNewCollectionName(suggestion);
+                      }
+                    }}
+                    className="px-3 py-1.5 rounded-full bg-card border border-card-border text-xs font-medium text-accent hover:border-accent transition-colors"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsNewCollectionOpen(false)}
+                  className="px-4 py-2 text-sm text-muted hover:text-primary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={!newCollectionName.trim()}
+                  className="px-5 py-2 rounded-[10px] bg-accent text-[#141414] font-bold text-sm disabled:opacity-40"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Verse Detail Modal (When clicking a verse inside the Collection inspection modal) */}
       {selectedVerse && (() => {
         const liveVerse = state.verses.find(v => v.id === selectedVerse.id) || selectedVerse;
-        const currentIndex = filteredAndSortedVerses.findIndex(v => v.id === selectedVerse.id);
-        const hasNext = currentIndex >= 0 && currentIndex < filteredAndSortedVerses.length - 1;
+        const currentIndex = inspectedVerses.findIndex(v => v.id === selectedVerse.id);
+        const hasNext = currentIndex >= 0 && currentIndex < inspectedVerses.length - 1;
         const hasPrev = currentIndex > 0;
-        
+
         return (
           <VerseDetailModal
             verse={liveVerse}
             isOpen={true}
             onClose={() => setSelectedVerse(null)}
-            onNext={hasNext ? () => setSelectedVerse(filteredAndSortedVerses[currentIndex + 1]) : undefined}
-            onPrev={hasPrev ? () => setSelectedVerse(filteredAndSortedVerses[currentIndex - 1]) : undefined}
+            onNext={hasNext ? () => setSelectedVerse(inspectedVerses[currentIndex + 1]) : undefined}
+            onPrev={hasPrev ? () => setSelectedVerse(inspectedVerses[currentIndex - 1]) : undefined}
             onPractice={() => {
               setSelectedVerse(null);
-              let url = '/practice?id=' + selectedVerse.id;
-              if (activeTopicFilter) url += '&topic=' + activeTopicFilter;
-              navigate(url, { state: { randomSortKeys: Array.from(randomSortKeys.entries()) } });
+              setInspectingCollectionId(null);
+              navigate(`/practice?id=${encodeURIComponent(selectedVerse.id)}`);
             }}
             onDelete={() => {
               dispatch({ type: 'DELETE_VERSE', payload: selectedVerse.id });
@@ -588,11 +782,6 @@ export const Dashboard: React.FC = () => {
           />
         );
       })()}
-
-      {/* Manage Topics Modal */}
-      {isManageTopicsOpen && (
-        <ManageTopicsModal onClose={() => setIsManageTopicsOpen(false)} />
-      )}
     </div>
   );
 };

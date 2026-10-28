@@ -41,9 +41,10 @@ fun PracticeScreen(
     viewModel: PracticeViewModel,
     onNavigateToBible: () -> Unit,
     initialSubject: PracticeSubject = PracticeSubject.VERSES,
+    initialAnchorBookId: Int? = null,
     modifier: Modifier = Modifier
 ) {
-    var activeSubject by remember(initialSubject) { mutableStateOf(initialSubject) }
+    var activeSubject by remember(initialSubject, initialAnchorBookId) { mutableStateOf(initialSubject) }
 
     if (activeSubject == PracticeSubject.SESSION) {
         val sessionViewModel: DailySessionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
@@ -57,6 +58,11 @@ fun PracticeScreen(
 
     if (activeSubject == PracticeSubject.ANCHORS) {
         val anchorViewModel: AnchorDrillViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+        LaunchedEffect(initialAnchorBookId) {
+            if (initialAnchorBookId != null) {
+                anchorViewModel.loadData(initialAnchorBookId)
+            }
+        }
         AnchorDrill(
             viewModel = anchorViewModel,
             onExit = { activeSubject = PracticeSubject.VERSES },

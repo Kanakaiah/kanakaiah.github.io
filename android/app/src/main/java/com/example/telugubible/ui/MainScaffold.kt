@@ -75,6 +75,7 @@ fun MainScaffold(
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(RemoraTab.TODAY) }
     var practiceSubject by rememberSaveable { mutableStateOf(PracticeSubject.VERSES) }
+    var selectedAnchorBookId by rememberSaveable { mutableStateOf<Int?>(null) }
     var activeGuideBookId by rememberSaveable { mutableStateOf<Int?>(null) }
     var isInReaderMode by rememberSaveable { mutableStateOf(false) }
     var isInSettingsMode by rememberSaveable { mutableStateOf(false) }
@@ -327,7 +328,8 @@ fun MainScaffold(
                         RemoraTab.TODAY -> TodayScreen(
                             viewModel = todayViewModel,
                             onStartSession = { collectionId ->
-                                practiceSubject = PracticeSubject.SESSION
+                                practiceViewModel.startCollectionReview(collectionId, todayState.reviewOrder)
+                                practiceSubject = PracticeSubject.VERSES
                                 selectedTab = RemoraTab.PRACTICE
                             },
                             onNavigateToSettings = { isInSettingsMode = true },
@@ -348,7 +350,9 @@ fun MainScaffold(
                                 selectedTab = RemoraTab.PRACTICE
                             },
                             onFocusBookPractice = { bookId ->
-                                activeGuideBookId = bookId
+                                selectedAnchorBookId = bookId
+                                practiceSubject = PracticeSubject.ANCHORS
+                                selectedTab = RemoraTab.PRACTICE
                             }
                         )
                         RemoraTab.LOOKUP -> LookupScreen(
@@ -358,7 +362,8 @@ fun MainScaffold(
                         RemoraTab.PRACTICE -> PracticeScreen(
                             viewModel = practiceViewModel,
                             onNavigateToBible = { selectedTab = RemoraTab.BIBLE },
-                            initialSubject = practiceSubject
+                            initialSubject = practiceSubject,
+                            initialAnchorBookId = selectedAnchorBookId
                         )
                         RemoraTab.BIBLE -> BibleBrowserScreen(
                             viewModel = bibleBrowserViewModel,

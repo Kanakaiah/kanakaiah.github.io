@@ -30,6 +30,15 @@ enum class VerseSortOrder(val label: String, val shortLabel: String) {
     RANDOM("Shuffle", "Shuffle")
 }
 
+enum class ReviewOrder(val label: String, val subtitleHint: String) {
+    WEAKEST("Weakest", "Weakest verses come first."),
+    DUE_DATE("Due date", "Oldest due verses come first."),
+    CANONICAL("Canonical", "Ordered from Genesis to Revelation."),
+    RANDOM("Random", "Shuffled in random order.")
+}
+
+const val DEFAULT_GENERAL_COLLECTION_ID = "__general__"
+
 data class AddingProgress(
     val collectionName: String,
     val current: Int,
@@ -52,6 +61,9 @@ data class TodayUiState(
     val presetCollections: List<PresetCollection> = emptyList(),
     val collections: List<CollectionCardItem> = emptyList(),
     val selectedCollectionId: String? = null,
+    val reviewOrder: ReviewOrder = ReviewOrder.WEAKEST,
+    val inspectingCollectionId: String? = null,
+    val showChapterThemeBookPicker: Boolean = false,
     val heroVerse: UserMemoryVerse? = null,
     val searchQuery: String = "",
     val filter: VerseFilter = VerseFilter.ALL,
@@ -143,12 +155,29 @@ class TodayViewModel @JvmOverloads constructor(
             val secureThemes = themeProgress.values.count { it.repetition >= 6 }
             val dueThemes = themeProgress.values.count { it.attempts > 0 && it.nextDueDate <= now }
 
-            // Build collection items (Top 100, Topics, Curated sets)
+            // Build collection items dynamically from user groups & ungrouped verses (NO pre-populated Top 100)
             val collectionList = mutableListOf<CollectionCardItem>()
+            val generalTopic = topics.find { it.name.equals("General", ignoreCase = true) }
+            val ungroupedVerses = verses.filter { it.topicIds.isEmpty() }
+
             for (topic in topics) {
-                val versesInTopic = verses.filter { it.topicIds.contains(topic.id) }
+                val isGeneralTopic = generalTopic != null && topic.id == generalTopic.id
+                val versesInTopic = if (isGeneralTopic) {
+                    (verses.filter { it.topicIds.contains(topic.id) } + ungroupedVerses).distinctBy { it.id }
+                } else {
+                    verses.filter { it.topicIds.contains(topic.id) }
+                }
                 val isTop100 = topic.name.equals("Top 100", ignoreCase = true)
-                val total = if (isTop100) 100 else versesInTopic.size
+                val isWellKnown = topic.name.equals("Well-Known", ignoreCase = true) || topic.name.equals("75 Well-Known Verses", ignoreCase = true)
+
+                // Top 100 / Well-Known only exist when added with verses
+                if ((isTop100 || isWellKnown) && versesInTopic.isEmpty()) continue
+
+                val total = when {
+                    isTop100 -> kotlin.math.max(100, versesInTopic.size)
+                    isWellKnown -> kotlin.math.max(75, versesInTopic.size)
+                    else -> versesInTopic.size
+                }
                 val dueInTopic = versesInTopic.count { it.nextDueDate <= now }
                 val learnedInTopic = versesInTopic.count { it.status == "memorized" || it.repetition >= 6 }
 
@@ -159,31 +188,26 @@ class TodayViewModel @JvmOverloads constructor(
                         totalCount = total,
                         dueCount = dueInTopic,
                         learnedCount = learnedInTopic,
-                        isPreset = isTop100
+                        isPreset = isTop100 || isWellKnown
                     )
                 )
             }
 
-            // If user doesn't have curated collections yet, include standard curated templates
-            val curatedPresets = listOf(
-                Triple("Top 100", 100, true),
-                Triple("Anxiety", 8, false),
-                Triple("Peace", 6, false),
-                Triple("Courage", 5, false)
-            )
-            for ((pName, pTotal, pIsPreset) in curatedPresets) {
-                if (collectionList.none { it.name.equals(pName, ignoreCase = true) }) {
-                    collectionList.add(
-                        CollectionCardItem(
-                            id = "preset_${pName.lowercase().replace(" ", "_")}",
-                            name = pName,
-                            totalCount = pTotal,
-                            dueCount = 0,
-                            learnedCount = 0,
-                            isPreset = pIsPreset
-                        )
+            // Default category ("General") for verses added without a group
+            if (generalTopic == null && ungroupedVerses.isNotEmpty()) {
+                val dueInGeneral = ungroupedVerses.count { it.nextDueDate <= now }
+                val learnedInGeneral = ungroupedVerses.count { it.status == "memorized" || it.repetition >= 6 }
+                collectionList.add(
+                    0,
+                    CollectionCardItem(
+                        id = DEFAULT_GENERAL_COLLECTION_ID,
+                        name = "General",
+                        totalCount = ungroupedVerses.size,
+                        dueCount = dueInGeneral,
+                        learnedCount = learnedInGeneral,
+                        isPreset = false
                     )
-                }
+                )
             }
 
             val activeVer = settings.bibleVersion.ifBlank { "LSB" }
@@ -266,6 +290,18 @@ class TodayViewModel @JvmOverloads constructor(
 
     fun selectCollection(collectionId: String?) {
         _uiState.update { it.copy(selectedCollectionId = collectionId) }
+    }
+
+    fun setReviewOrder(order: ReviewOrder) {
+        _uiState.update { it.copy(reviewOrder = order) }
+    }
+
+    fun setInspectingCollection(collectionId: String?) {
+        _uiState.update { it.copy(inspectingCollectionId = collectionId) }
+    }
+
+    fun setShowChapterThemeBookPicker(show: Boolean) {
+        _uiState.update { it.copy(showChapterThemeBookPicker = show) }
     }
 
     fun selectTopic(topicId: String?) {
@@ -456,16 +492,21 @@ class TodayViewModel @JvmOverloads constructor(
     fun addVerse(bookId: Int, chapter: Int, verse: Int, endVerse: Int? = null, topicIds: List<String> = emptyList()) {
         viewModelScope.launch {
             val added = repository.addUserVerse(bookId, chapter, verse, endVerse)
-            if (added && topicIds.isNotEmpty()) {
-                val allVerses = repository.getUserMemoryVerses()
-                val target = allVerses.find { it.bookId == bookId && it.chapter == chapter && it.verse == verse && it.endVerse == endVerse }
-                if (target != null) {
-                    topicIds.forEach { tid ->
-                        repository.addTopicToVerse(target.id, tid)
-                    }
+            val effectiveTopicIds = if (topicIds.isNotEmpty()) {
+                topicIds
+            } else {
+                val general = repository.getTopics().find { it.name.equals("General", ignoreCase = true) }
+                    ?: repository.createTopic("General")
+                listOf(general.id)
+            }
+            val allVerses = repository.getUserMemoryVerses()
+            val target = allVerses.find { it.bookId == bookId && it.chapter == chapter && it.verse == verse && it.endVerse == endVerse }
+            if (target != null) {
+                effectiveTopicIds.forEach { tid ->
+                    repository.addTopicToVerse(target.id, tid)
                 }
             }
-            _uiState.update { it.copy(showAddDialog = false, messageBanner = "Verse added to library!") }
+            _uiState.update { it.copy(showAddDialog = false, messageBanner = if (added) "Verse added to library!" else "Verse updated in library!") }
             loadData()
         }
     }
@@ -477,14 +518,19 @@ class TodayViewModel @JvmOverloads constructor(
                 val added = repository.addUserVerse(bId, ch, vs, null)
                 if (added) count++
             }
-            if (topicIds.isNotEmpty()) {
-                val allVerses = repository.getUserMemoryVerses()
-                for ((bId, ch, vs) in verses) {
-                    val target = allVerses.find { it.bookId == bId && it.chapter == ch && it.verse == vs }
-                    if (target != null) {
-                        topicIds.forEach { tid ->
-                            repository.addTopicToVerse(target.id, tid)
-                        }
+            val effectiveTopicIds = if (topicIds.isNotEmpty()) {
+                topicIds
+            } else {
+                val general = repository.getTopics().find { it.name.equals("General", ignoreCase = true) }
+                    ?: repository.createTopic("General")
+                listOf(general.id)
+            }
+            val allVerses = repository.getUserMemoryVerses()
+            for ((bId, ch, vs) in verses) {
+                val target = allVerses.find { it.bookId == bId && it.chapter == ch && it.verse == vs }
+                if (target != null) {
+                    effectiveTopicIds.forEach { tid ->
+                        repository.addTopicToVerse(target.id, tid)
                     }
                 }
             }

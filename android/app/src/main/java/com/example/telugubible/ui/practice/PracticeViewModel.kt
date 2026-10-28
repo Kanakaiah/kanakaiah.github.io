@@ -214,6 +214,91 @@ class PracticeViewModel @JvmOverloads constructor(
         }
     }
 
+    fun startCollectionReview(
+        collectionId: String?,
+        order: com.example.telugubible.ui.today.ReviewOrder = com.example.telugubible.ui.today.ReviewOrder.WEAKEST
+    ) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val allVerses = repository.getUserMemoryVerses()
+            val topics = repository.getTopics()
+            val generalTopicId = topics.find { it.name.equals("General", ignoreCase = true) }?.id
+            val settings = repository.getAppSettings()
+            val now = System.currentTimeMillis()
+            val globalLang = if (settings.bibleVersion.equals("TELIRV", ignoreCase = true) || settings.bibleVersion.equals("IRV-TE", ignoreCase = true)) {
+                DisplayLanguage.TELUGU
+            } else {
+                DisplayLanguage.ENGLISH
+            }
+
+            val scopedVerses = when {
+                collectionId == null -> allVerses
+                collectionId == com.example.telugubible.ui.today.DEFAULT_GENERAL_COLLECTION_ID || collectionId == generalTopicId -> {
+                    allVerses.filter { it.topicIds.isEmpty() || (generalTopicId != null && it.topicIds.contains(generalTopicId)) }
+                }
+                else -> allVerses.filter { it.topicIds.contains(collectionId) }
+            }
+
+            val dueInScope = scopedVerses.filter { it.nextDueDate <= now }
+            val baseQueue = if (dueInScope.isNotEmpty()) dueInScope else scopedVerses
+
+            val sortedQueue = when (order) {
+                com.example.telugubible.ui.today.ReviewOrder.WEAKEST -> {
+                    baseQueue.sortedWith(
+                        compareBy<UserMemoryVerse> { it.nextDueDate > now }
+                            .thenBy { it.repetition }
+                            .thenBy { it.interval }
+                    )
+                }
+                com.example.telugubible.ui.today.ReviewOrder.DUE_DATE -> {
+                    baseQueue.sortedBy { it.nextDueDate }
+                }
+                com.example.telugubible.ui.today.ReviewOrder.CANONICAL -> {
+                    baseQueue.sortedWith(
+                        compareBy<UserMemoryVerse> { it.bookId }
+                            .thenBy { it.chapter }
+                            .thenBy { it.verse }
+                    )
+                }
+                com.example.telugubible.ui.today.ReviewOrder.RANDOM -> {
+                    baseQueue.shuffled()
+                }
+            }
+
+            val mode = _uiState.value.activeMode
+            if (sortedQueue.isNotEmpty()) {
+                saveSessionState(
+                    verseIds = sortedQueue.map { it.id },
+                    index = 0,
+                    isRevealed = false,
+                    lang = globalLang,
+                    mode = mode
+                )
+            } else {
+                clearSessionState()
+            }
+
+            _uiState.update {
+                it.copy(
+                    verses = sortedQueue,
+                    currentIndex = 0,
+                    isRevealed = false,
+                    isFinished = sortedQueue.isEmpty(),
+                    isLoading = false,
+                    displayLanguage = globalLang,
+                    modeAccuracy = null,
+                    modeCommitted = null,
+                    hintRevealedRatio = null,
+                    eraserHiddenRatio = null,
+                    scrambleAccuracy = null,
+                    bionicReading = settings.bionicReading,
+                    recallMasking = settings.recallMasking,
+                    serifTypography = (settings.fontFamily == "serif")
+                )
+            }
+        }
+    }
+
     fun focusVerse(verseId: Long) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
