@@ -11,9 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.theme.*
-import com.example.telugubible.util.CueUtils
 
 enum class PracticeSubject {
     SESSION,
@@ -40,6 +39,7 @@ enum class PracticeSubject {
 fun PracticeScreen(
     viewModel: PracticeViewModel,
     onNavigateToBible: () -> Unit,
+    onExitToToday: () -> Unit = {},
     initialSubject: PracticeSubject = PracticeSubject.VERSES,
     initialAnchorBookId: Int? = null,
     modifier: Modifier = Modifier
@@ -87,7 +87,7 @@ fun PracticeScreen(
         modifier = modifier
             .fillMaxSize()
             .background(RemoraBackground)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         when {
             state.isLoading -> {
@@ -122,6 +122,8 @@ fun PracticeScreen(
                         .replace("&#39;", "'")
                         .trim()
 
+                    val verseRef = "$bookName ${verse.chapter}:${verse.verse}"
+
                     if (state.activeMode == PracticeMode.IMMERSED) {
                         ImmersedReader(
                             verse = verse,
@@ -143,118 +145,91 @@ fun PracticeScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 72.dp),
+                            .padding(bottom = 60.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Top Header: Progress Indicator & Mode Switcher
-                        Column {
-                            // Subject Switcher (Verses vs Chapter Anchors)
+                        // Top Header (✕, Reference, Subtitle, Segmented Dashes, Mode Pills)
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            // Row with Close ✕ | Centered Title & Subtitle | Language Switcher
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 12.dp),
-                                horizontalArrangement = Arrangement.Center
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Surface(
-                                    shape = RoundedCornerShape(20.dp),
-                                    color = RemoraCardBgElevated,
-                                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                                IconButton(
+                                    onClick = onExitToToday,
+                                    modifier = Modifier.size(36.dp)
                                 ) {
-                                    Row(
-                                        modifier = Modifier
-                                            .horizontalScroll(rememberScrollState())
-                                            .padding(3.dp)
-                                    ) {
-                                        Surface(
-                                            onClick = { activeSubject = PracticeSubject.SESSION },
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = Color.Transparent
-                                        ) {
-                                            Text(
-                                                text = "Daily Session 🔥",
-                                                fontSize = 11.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = RemoraGold,
-                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
-                                            )
-                                        }
-                                        Surface(
-                                            onClick = { /* already in verses */ },
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = RemoraAccent
-                                        ) {
-                                            Text(
-                                                text = "Memory Verses",
-                                                fontSize = 11.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = Color.White,
-                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
-                                            )
-                                        }
-                                        Surface(
-                                            onClick = { activeSubject = PracticeSubject.ANCHORS },
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = Color.Transparent
-                                        ) {
-                                            Text(
-                                                text = "Chapter Anchors",
-                                                fontSize = 11.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = RemoraTextSecondary,
-                                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 5.dp)
-                                            )
-                                        }
-                                        Surface(
-                                            onClick = { activeSubject = PracticeSubject.THEMES },
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = Color.Transparent
-                                        ) {
-                                            Text(
-                                                text = "Book Themes",
-                                                fontSize = 11.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = RemoraTextSecondary,
-                                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 5.dp)
-                                            )
-                                        }
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Exit to Today",
+                                        tint = RemoraTextPrimary,
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                }
+
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = verseRef,
+                                        fontSize = 19.sp,
+                                        fontFamily = FontFamily.Serif,
+                                        fontWeight = FontWeight.Bold,
+                                        color = RemoraTextPrimary,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(
+                                        text = "${state.currentCollectionTitle} · ${state.currentIndex + 1} of ${state.verses.size} · ${viewModel.getRetentionStage(verse)}",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = RemoraTextSecondary,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+
+                                Surface(
+                                    onClick = { viewModel.toggleDisplayLanguage() },
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = Color(0xFF221F1B),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
+                                ) {
+                                    Text(
+                                        text = if (isEnglish) "EN" else "TE",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = RemoraAccent,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    )
+                                }
+                            }
+
+                            // Segmented Dash Progress Bar
+                            if (state.verses.isNotEmpty()) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 2.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    state.verses.indices.forEach { idx ->
+                                        val isFilled = idx <= state.currentIndex
+                                        Box(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .height(4.dp)
+                                                .clip(RoundedCornerShape(2.dp))
+                                                .background(if (isFilled) RemoraAccent else Color(0xFF2C2720))
+                                        )
                                     }
                                 }
                             }
 
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "PRACTICE DRILL",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 1.sp,
-                                    color = RemoraAccent
-                                )
-                                Text(
-                                    text = "${state.currentIndex + 1} of ${state.verses.size}",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = RemoraTextSecondary
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            val progress = (state.currentIndex.toFloat() / state.verses.size.coerceAtLeast(1))
-                            LinearProgressIndicator(
-                                progress = { progress },
-                                color = RemoraAccent,
-                                trackColor = RemoraCardBorder,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(4.dp)
-                                    .clip(RoundedCornerShape(2.dp))
-                            )
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            // Mode Selector Pills (Read, Erase, Letters, Order, Type, Recite)
+                            // Horizontal Mode Selector Pills
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -265,207 +240,179 @@ fun PracticeScreen(
                                     val isSelected = state.activeMode == mode
                                     Surface(
                                         onClick = { viewModel.setPracticeMode(mode) },
-                                        shape = RoundedCornerShape(16.dp),
-                                        color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBgElevated,
+                                        shape = RoundedCornerShape(20.dp),
+                                        color = if (isSelected) RemoraAccent else Color(0xFF1E1B17),
                                         border = androidx.compose.foundation.BorderStroke(
                                             1.dp,
-                                            if (isSelected) RemoraAccent else RemoraCardBorder
+                                            if (isSelected) RemoraAccent else Color(0xFF332D24)
                                         )
                                     ) {
                                         Text(
                                             text = mode.label,
-                                            fontSize = 11.sp,
+                                            fontSize = 12.sp,
                                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) RemoraAccentLight else RemoraTextMuted,
-                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                            color = if (isSelected) Color(0xFF14120E) else RemoraTextSecondary,
+                                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
                                         )
                                     }
                                 }
                             }
                         }
 
-                        // Center Memory Content
-                        Surface(
-                            shape = RoundedCornerShape(16.dp),
-                            color = RemoraCardBg,
-                            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                        // Drill / Working Area
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
-                                .padding(vertical = 12.dp)
+                                .padding(vertical = 10.dp)
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(20.dp),
-                                verticalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                // Card Top: Reference + Translation Toggle Badge
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = bookName,
-                                            fontSize = 14.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = RemoraAccentLight
-                                        )
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = "Chapter ${verse.verseRef}",
-                                            fontSize = 22.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = RemoraTextPrimary
-                                        )
-                                    }
-
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            when (state.activeMode) {
+                                PracticeMode.SCRAMBLE -> {
+                                    ScrambleMode(
+                                        text = activeText,
+                                        onComplete = { acc ->
+                                            viewModel.recordScrambleAttempt(acc)
+                                            viewModel.gradeCurrent(4)
+                                        },
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                PracticeMode.LISTEN -> {
+                                    ListenMode(
+                                        verseText = activeText,
+                                        isEnglish = isEnglish,
+                                        speed = state.audioSpeed,
+                                        repeatCount = state.audioRepeatCount,
+                                        hideText = state.hideTextInAudio,
+                                        autoAdvance = state.autoAdvanceAudio,
+                                        onSpeedChange = { viewModel.setAudioSpeed(it) },
+                                        onRepeatChange = { viewModel.setAudioRepeatCount(it) },
+                                        onHideTextToggle = { viewModel.setHideTextInAudio(it) },
+                                        onAutoAdvanceToggle = { viewModel.setAutoAdvanceAudio(it) },
+                                        onPrev = { viewModel.prevVerse() },
+                                        onNext = { viewModel.nextVerse() },
+                                        onComplete = { viewModel.gradeCurrent(4) },
+                                        ttsManager = viewModel.getTtsManager(),
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                PracticeMode.TYPING -> {
+                                    TypingMode(
+                                        text = activeText,
+                                        onAttempt = { accuracy, committed ->
+                                            viewModel.recordAttempt(accuracy, committed)
+                                        },
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                PracticeMode.FIRST_LETTER -> {
+                                    FirstLetterMode(
+                                        text = activeText,
+                                        onComplete = { ratio ->
+                                            viewModel.recordFirstLetterAttempt(ratio)
+                                        },
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                PracticeMode.ERASER -> {
+                                    EraserMode(
+                                        text = activeText,
+                                        onComplete = { ratio ->
+                                            viewModel.recordEraserAttempt(ratio)
+                                        },
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                PracticeMode.SPEECH -> {
+                                    SpeechMode(
+                                        text = activeText,
+                                        languageCode = if (isEnglish) "en-US" else "te-IN",
+                                        onAttempt = { acc, committed ->
+                                            viewModel.recordSpeechAttempt(acc, committed)
+                                        },
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                PracticeMode.READ, PracticeMode.IMMERSED -> {
+                                    Surface(
+                                        shape = RoundedCornerShape(16.dp),
+                                        color = RemoraCardBgElevated,
+                                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+                                        modifier = Modifier.fillMaxSize()
                                     ) {
-                                        if (state.activeMode == PracticeMode.READ) {
-                                            Surface(
-                                                onClick = { viewModel.setPracticeMode(PracticeMode.IMMERSED) },
-                                                shape = CircleShape,
-                                                color = RemoraAccent.copy(alpha = 0.15f),
-                                                modifier = Modifier.size(36.dp)
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(20.dp),
+                                            verticalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                text = activeText,
+                                                fontSize = if (isEnglish) 20.sp else 22.sp,
+                                                lineHeight = if (isEnglish) 30.sp else 34.sp,
+                                                fontFamily = FontFamily.Serif,
+                                                color = RemoraTextPrimary,
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .verticalScroll(rememberScrollState())
+                                            )
+
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                                                    Icon(
-                                                        Icons.Default.Fullscreen,
-                                                        contentDescription = "Immerse Reading",
-                                                        tint = RemoraAccent,
-                                                        modifier = Modifier.size(20.dp)
-                                                    )
+                                                OutlinedButton(
+                                                    onClick = { viewModel.prevVerse() },
+                                                    shape = RoundedCornerShape(8.dp),
+                                                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
+                                                ) {
+                                                    Text("Previous", color = RemoraTextSecondary)
+                                                }
+
+                                                Button(
+                                                    onClick = { viewModel.nextVerse() },
+                                                    shape = RoundedCornerShape(8.dp),
+                                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent)
+                                                ) {
+                                                    Text("Next", color = Color(0xFF14120E), fontWeight = FontWeight.Bold)
                                                 }
                                             }
                                         }
                                     }
                                 }
-
-                            // Card Center: Active Drill Mode
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .weight(1f)
-                                        .padding(vertical = 12.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    when (state.activeMode) {
-                                        PracticeMode.TYPING -> {
-                                            TypingMode(
-                                                text = activeText,
-                                                onAttempt = { accuracy, committed ->
-                                                    viewModel.recordAttempt(accuracy, committed)
-                                                },
-                                                modifier = Modifier.fillMaxSize()
-                                            )
-                                        }
-                                        PracticeMode.FIRST_LETTER -> {
-                                            FirstLetterMode(
-                                                text = activeText,
-                                                onComplete = { ratio ->
-                                                    viewModel.recordFirstLetterAttempt(ratio)
-                                                },
-                                                modifier = Modifier.fillMaxSize()
-                                            )
-                                        }
-                                        PracticeMode.ERASER -> {
-                                            EraserMode(
-                                                text = activeText,
-                                                onComplete = { ratio ->
-                                                    viewModel.recordEraserAttempt(ratio)
-                                                },
-                                                modifier = Modifier.fillMaxSize()
-                                            )
-                                        }
-                                        PracticeMode.SCRAMBLE -> {
-                                            ScrambleMode(
-                                                text = activeText,
-                                                onComplete = { acc ->
-                                                    viewModel.recordScrambleAttempt(acc)
-                                                },
-                                                modifier = Modifier.fillMaxSize()
-                                            )
-                                        }
-                                        PracticeMode.SPEECH -> {
-                                            SpeechMode(
-                                                text = activeText,
-                                                languageCode = if (isEnglish) "en-US" else "te-IN",
-                                                onAttempt = { acc, committed ->
-                                                    viewModel.recordSpeechAttempt(acc, committed)
-                                                },
-                                                modifier = Modifier.fillMaxSize()
-                                            )
-                                        }
-                                        PracticeMode.READ, PracticeMode.IMMERSED -> {
-                                            Text(
-                                                text = activeText,
-                                                fontSize = if (isEnglish) 18.sp else 20.sp,
-                                                lineHeight = if (isEnglish) 28.sp else 32.sp,
-                                                fontFamily = FontFamily.Serif,
-                                                fontWeight = FontWeight.Normal,
-                                                color = RemoraTextPrimary,
-                                                textAlign = TextAlign.Start,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .verticalScroll(rememberScrollState())
-                                            )
-                                        }
-                                    }
-                                }
-
-                                // Card Bottom: Stage indicator
-                                Text(
-                                    text = "Stage ${verse.repetition} · Interval ${verse.interval}d",
-                                    fontSize = 12.sp,
-                                    color = RemoraTextMuted
-                                )
                             }
                         }
 
-                        // Bottom Continue Bar (Hidden in Read mode)
-                        if (state.activeMode != PracticeMode.READ && state.isRevealed) {
-                            Column {
-                                if (state.modeAccuracy != null) {
-                                    Text(
-                                        text = "${state.modeAccuracy}% of words matched",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = RemoraTextSecondary,
-                                        modifier = Modifier.padding(bottom = 6.dp)
-                                    )
-                                }
+                        // Bottom Continue Bar (For Typing, First Letters, Blanks, Speech when completed)
+                        if (state.activeMode != PracticeMode.LISTEN && state.activeMode != PracticeMode.SCRAMBLE && state.activeMode != PracticeMode.READ) {
+                            if (state.isRevealed) {
+                                Column(modifier = Modifier.fillMaxWidth()) {
+                                    if (state.modeAccuracy != null) {
+                                        Text(
+                                            text = "${state.modeAccuracy}% accuracy",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = RemoraTextSecondary,
+                                            modifier = Modifier.padding(bottom = 6.dp)
+                                        )
+                                    }
 
-                                Button(
-                                    onClick = { viewModel.gradeCurrent(4) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                    shape = RoundedCornerShape(10.dp),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(48.dp)
-                                ) {
-                                    Text(
-                                        text = if (state.currentIndex >= state.verses.size - 1) "Finish Practice" else "Next Verse",
-                                        fontSize = 15.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-                        } else {
-                            if (state.activeMode == PracticeMode.FLASHCARD) {
-                                Button(
-                                    onClick = { viewModel.revealVerse() },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                    shape = RoundedCornerShape(10.dp),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(48.dp)
-                                ) {
-                                    Text("Reveal Verse", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                    Button(
+                                        onClick = { viewModel.gradeCurrent(4) },
+                                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
+                                        shape = RoundedCornerShape(10.dp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(48.dp)
+                                    ) {
+                                        Text(
+                                            text = if (state.currentIndex >= state.verses.size - 1) "Finish Practice" else "Next Verse",
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF14120E)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -522,7 +469,7 @@ private fun FinishedState(
             text = if (isEmpty)
                 "Add memory verses from the Today tab or the Chapter Reader to begin practicing."
             else
-                "You've reviewed all scheduled verses for today! The Word of God is firmly rooted in your heart.",
+                "You've reviewed all scheduled verses! The Word of God is firmly rooted in your heart.",
             fontSize = 14.sp,
             color = RemoraTextSecondary,
             textAlign = TextAlign.Center,
@@ -565,7 +512,7 @@ private fun FinishedState(
             ) {
                 Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Practice Again", fontWeight = FontWeight.Bold)
+                Text("Practice Again", fontWeight = FontWeight.Bold, color = Color(0xFF14120E))
             }
 
             Spacer(modifier = Modifier.height(10.dp))

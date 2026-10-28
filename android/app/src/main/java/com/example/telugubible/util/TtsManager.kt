@@ -59,7 +59,11 @@ class TtsManager(context: Context) : TextToSpeech.OnInitListener {
         speakCurrent()
     }
 
-    fun speak(text: String, langCode: String = "en", onDone: (() -> Unit)? = null) {
+    fun setSpeechRate(rate: Float) {
+        tts?.setSpeechRate(rate.coerceIn(0.5f, 2.0f))
+    }
+
+    fun speak(text: String, langCode: String = "en", rate: Float = 1.0f, onDone: (() -> Unit)? = null) {
         if (!_state.value.isReady || text.isBlank()) {
             onDone?.invoke()
             return
@@ -67,6 +71,7 @@ class TtsManager(context: Context) : TextToSpeech.OnInitListener {
         stop()
         val locale = if (langCode.equals("te", ignoreCase = true)) Locale("te", "IN") else Locale.US
         tts?.language = locale
+        tts?.setSpeechRate(rate.coerceIn(0.5f, 2.0f))
         val utteranceId = "single_utterance_${System.currentTimeMillis()}"
         tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
             override fun onStart(id: String?) {

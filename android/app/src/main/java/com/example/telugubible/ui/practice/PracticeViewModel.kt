@@ -15,17 +15,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class PracticeMode(val label: String) {
-    READ("Read"),
-    ERASER("Erase"),
-    FIRST_LETTER("Letters"),
-    SCRAMBLE("Order"),
+    FIRST_LETTER("First letters"),
+    ERASER("Blanks"),
+    SCRAMBLE("Puzzle"),
     TYPING("Type"),
     SPEECH("Recite"),
+    LISTEN("Listen"),
+    READ("Read"),
     IMMERSED("Immerse");
 
     companion object {
         val FLASHCARD = READ
-        val MENU_MODES = listOf(READ, ERASER, FIRST_LETTER, SCRAMBLE, TYPING, SPEECH)
+        val MENU_MODES = listOf(FIRST_LETTER, ERASER, SCRAMBLE, TYPING, SPEECH, LISTEN)
     }
 }
 
@@ -36,13 +37,18 @@ data class PracticeUiState(
     val isFinished: Boolean = false,
     val isLoading: Boolean = true,
     val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH,
-    val activeMode: PracticeMode = PracticeMode.TYPING,
+    val activeMode: PracticeMode = PracticeMode.SCRAMBLE,
+    val currentCollectionTitle: String = "All",
     val modeAccuracy: Int? = null,
     val modeCommitted: String? = null,
     val hintRevealedRatio: Float? = null,
     val eraserHiddenRatio: Float? = null,
     val scrambleAccuracy: Float? = null,
     val isTtsSpeaking: Boolean = false,
+    val audioSpeed: Float = 1.0f,
+    val audioRepeatCount: Int = 3,
+    val hideTextInAudio: Boolean = false,
+    val autoAdvanceAudio: Boolean = true,
     val bionicReading: Boolean = false,
     val recallMasking: Boolean = false,
     val serifTypography: Boolean = true
@@ -79,6 +85,9 @@ data class PracticeUiState(
                     else -> 1
                 }
             }
+            if (activeMode == PracticeMode.LISTEN) {
+                return 5
+            }
             val ratio = hintRevealedRatio ?: return 5
             return when {
                 ratio <= 0.05f -> 5
@@ -95,6 +104,8 @@ class PracticeViewModel @JvmOverloads constructor(
 ) : AndroidViewModel(application) {
 
     private val ttsManager = TtsManager(application)
+
+    fun getTtsManager(): TtsManager = ttsManager
 
     companion object {
         const val KEY_SESSION_VERSE_IDS = "practice_session_verse_ids"
@@ -231,6 +242,17 @@ class PracticeViewModel @JvmOverloads constructor(
                 DisplayLanguage.ENGLISH
             }
 
+            val collectionTitle = when {
+                collectionId == null -> "All"
+                collectionId == com.example.telugubible.ui.today.DEFAULT_GENERAL_COLLECTION_ID || collectionId == generalTopicId -> "General"
+                else -> {
+                    val topic = topics.find { it.id == collectionId }
+                    if (topic != null) {
+                        if (topic.name.equals("well_known", ignoreCase = true) || topic.name.equals("75 well-known", ignoreCase = true)) "Well-Known" else topic.name
+                    } else "Collection"
+                }
+            }
+
             val scopedVerses = when {
                 collectionId == null -> allVerses
                 collectionId == com.example.telugubible.ui.today.DEFAULT_GENERAL_COLLECTION_ID || collectionId == generalTopicId -> {
@@ -286,6 +308,7 @@ class PracticeViewModel @JvmOverloads constructor(
                     isFinished = sortedQueue.isEmpty(),
                     isLoading = false,
                     displayLanguage = globalLang,
+                    currentCollectionTitle = collectionTitle,
                     modeAccuracy = null,
                     modeCommitted = null,
                     hintRevealedRatio = null,
@@ -305,6 +328,15 @@ class PracticeViewModel @JvmOverloads constructor(
             val allVerses = repository.getUserMemoryVerses()
             val targetIdx = allVerses.indexOfFirst { it.id == verseId }
             if (targetIdx >= 0) {
+                val verse = allVerses[targetIdx]
+                val topics = repository.getTopics()
+                val topicId = verse.topicIds.firstOrNull()
+                val topic = if (topicId != null) topics.find { it.id == topicId } else null
+                val collectionTitle = when {
+                    topic != null -> if (topic.name.equals("well_known", ignoreCase = true) || topic.name.equals("75 well-known", ignoreCase = true)) "Well-Known" else topic.name
+                    else -> "General"
+                }
+
                 _uiState.update {
                     it.copy(
                         verses = allVerses,
@@ -312,6 +344,7 @@ class PracticeViewModel @JvmOverloads constructor(
                         isRevealed = false,
                         isFinished = false,
                         isLoading = false,
+                        currentCollectionTitle = collectionTitle,
                         modeAccuracy = null,
                         modeCommitted = null,
                         hintRevealedRatio = null,
@@ -322,6 +355,32 @@ class PracticeViewModel @JvmOverloads constructor(
             } else {
                 loadPracticeVerses()
             }
+        }
+    }
+
+    fun setAudioSpeed(speed: Float) {
+        _uiState.update { it.copy(audioSpeed = speed) }
+        ttsManager.setSpeechRate(speed)
+    }
+
+    fun setAudioRepeatCount(count: Int) {
+        _uiState.update { it.copy(audioRepeatCount = count) }
+    }
+
+    fun setHideTextInAudio(hide: Boolean) {
+        _uiState.update { it.copy(hideTextInAudio = hide) }
+    }
+
+    fun setAutoAdvanceAudio(autoAdvance: Boolean) {
+        _uiState.update { it.copy(autoAdvanceAudio = autoAdvance) }
+    }
+
+    fun getRetentionStage(verse: UserMemoryVerse?): String {
+        if (verse == null) return "Learning"
+        return when {
+            verse.interval >= 30 || verse.repetition >= 6 -> "Forever"
+            verse.repetition >= 2 || verse.interval >= 6 -> "Review"
+            else -> "Learning"
         }
     }
 
@@ -485,6 +544,9 @@ class PracticeViewModel @JvmOverloads constructor(
                 PracticeMode.SPEECH -> {
                     val acc = (state.modeAccuracy ?: 0) / 100.0
                     Triple(CueLevel.FIRST_LETTERS.levelNumber, "speech", acc)
+                }
+                PracticeMode.LISTEN -> {
+                    Triple(0, "listen", 1.0)
                 }
                 PracticeMode.IMMERSED -> {
                     Triple(0, "immersed", null)

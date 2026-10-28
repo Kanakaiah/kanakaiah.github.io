@@ -1,35 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { RotateCcw } from 'lucide-react';
 
 interface ScrambleModeProps {
   text: string;
+  onComplete?: (accuracy: number) => void;
 }
 
-export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
+export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text, onComplete }) => {
   const [chunks, setChunks] = useState<string[][]>([]);
   const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
-  
-  const [pool, setPool] = useState<{ id: string, word: string, selected: boolean }[]>([]);
-  const [assembledCount, setAssembledCount] = useState(0);
-  const [errorId, setErrorId] = useState<string | null>(null);
-  const [shake, setShake] = useState(false);
-  const timeoutRefs = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const [placedWords, setPlacedWords] = useState<{ id: string; word: string }[]>([]);
+  const [bankWords, setBankWords] = useState<{ id: string; word: string }[]>([]);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [mistakes, setMistakes] = useState(0);
 
   useEffect(() => {
-    return () => {
-      timeoutRefs.current.forEach(clearTimeout);
-    };
-  }, []);
-
-  useEffect(() => {
-    // 1. Clean words (mirroring legacy regex to strip punctuation)
     const cleanWordList = text
       .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
       .split(/\s+/)
       .filter(w => w.trim().length > 0);
 
-    // 2. Chunking for long verses
     let newChunks: string[][] = [];
-    if (cleanWordList.length > 15) {
+    if (cleanWordList.length > 14) {
       const CHUNK_SIZE = 10;
       for (let i = 0; i < cleanWordList.length; i += CHUNK_SIZE) {
         newChunks.push(cleanWordList.slice(i, i + CHUNK_SIZE));
@@ -37,140 +31,180 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text }) => {
     } else {
       newChunks = [cleanWordList];
     }
-    
+
     setChunks(newChunks);
     setCurrentChunkIndex(0);
+    setMistakes(0);
   }, [text]);
 
   useEffect(() => {
     if (chunks.length === 0) return;
-    
-    const targetWords = chunks[currentChunkIndex];
+
+    const targetWords = chunks[currentChunkIndex] || [];
     const poolData = targetWords.map((word, idx) => ({
-      id: `scramble-${currentChunkIndex}-${idx}`,
-      word,
-      selected: false
+      id: `scramble-${currentChunkIndex}-${idx}-${word}`,
+      word
     }));
-    
-    // Shuffle the pool
-    setPool(poolData.sort(() => Math.random() - 0.5));
-    setAssembledCount(0);
+
+    // Shuffle pool
+    setBankWords([...poolData].sort(() => Math.random() - 0.5));
+    setPlacedWords([]);
+    setFeedback(null);
+    setIsSuccess(false);
   }, [chunks, currentChunkIndex]);
 
   const targetWords = chunks[currentChunkIndex] || [];
-  const isChunkComplete = assembledCount === targetWords.length && targetWords.length > 0;
-  const isAllComplete = isChunkComplete && currentChunkIndex === chunks.length - 1;
 
-  const handleChipClick = (item: { id: string, word: string, selected: boolean }) => {
-    if (item.selected || isChunkComplete) return;
+  const handlePlaceWord = (item: { id: string; word: string }) => {
+    if (isSuccess) return;
+    setBankWords(prev => prev.filter(w => w.id !== item.id));
+    setPlacedWords(prev => [...prev, item]);
+    setFeedback(null);
+  };
 
-    const nextWordToMatch = targetWords[assembledCount];
-    
-    // Case-insensitive match check
-    if (item.word.toLowerCase() === nextWordToMatch.toLowerCase()) {
-      // Match!
-      setPool(prev => prev.map(p => p.id === item.id ? { ...p, selected: true } : p));
-      setAssembledCount(prev => prev + 1);
-      setErrorId(null);
-      
-      // If chunk is complete, advance after delay
-      if (assembledCount + 1 === targetWords.length) {
+  const handleRemoveWord = (item: { id: string; word: string }) => {
+    if (isSuccess) return;
+    setPlacedWords(prev => prev.filter(w => w.id !== item.id));
+    setBankWords(prev => [...prev, item]);
+    setFeedback(null);
+  };
+
+  const handleReset = () => {
+    setBankWords(prev => [...prev, ...placedWords]);
+    setPlacedWords([]);
+    setFeedback(null);
+  };
+
+  const handleCheckOrder = () => {
+    if (placedWords.length < targetWords.length) {
+      setFeedback("Place all words into the slots before checking order.");
+      return;
+    }
+
+    const isCorrect = placedWords.every(
+      (item, idx) => item.word.toLowerCase() === targetWords[idx].toLowerCase()
+    );
+
+    if (isCorrect) {
+      setIsSuccess(true);
+      setFeedback(
+        currentChunkIndex < chunks.length - 1
+          ? "Correct! Moving to next section..."
+          : "Excellent! You put all the words in order."
+      );
+
+      setTimeout(() => {
         if (currentChunkIndex < chunks.length - 1) {
-          const t1 = setTimeout(() => {
-            setCurrentChunkIndex(prev => prev + 1);
-          }, 800);
-          timeoutRefs.current.push(t1);
+          setCurrentChunkIndex(prev => prev + 1);
+        } else if (onComplete) {
+          const totalWords = chunks.flat().length;
+          const acc = totalWords + mistakes > 0 ? totalWords / (totalWords + mistakes) : 1;
+          onComplete(Math.min(1, Math.max(0, acc)));
         }
-      }
+      }, 750);
     } else {
-      // Mismatch!
-      setErrorId(item.id);
-      setShake(true);
-      const t2 = setTimeout(() => setShake(false), 300);
-      const t3 = setTimeout(() => setErrorId(null), 600);
-      timeoutRefs.current.push(t2, t3);
+      setMistakes(prev => prev + 1);
+      setFeedback("The order is not quite right. Tap words to return them to the bank.");
     }
   };
 
   if (chunks.length === 0) return null;
 
+  const remainingSlots = Math.max(0, targetWords.length - placedWords.length);
+
   return (
-    <div className="flex flex-col gap-6 w-full items-center">
-      
-      {/* Status Text */}
-      <div className="text-center min-h-[24px]">
-        {isAllComplete ? (
-          <span className="text-green-500 font-bold">Success! You completed the sequence.</span>
-        ) : isChunkComplete ? (
-          <span className="text-green-500 font-medium">Part {currentChunkIndex + 1} done! Loading next...</span>
-        ) : chunks.length > 1 ? (
-          <span className="text-muted text-sm italic">
-            Part {currentChunkIndex + 1} of {chunks.length} — Tap words in correct order
-          </span>
-        ) : (
-          <span className="text-muted text-sm italic">
-            Reconstruct the verse by tapping words in order
-          </span>
+    <div className="flex flex-col gap-5 w-full items-center select-none py-1">
+      {/* Instruction & Reset Row */}
+      <div className="flex items-center justify-between w-full">
+        <span className="text-xs text-[#A89F91] font-medium">
+          {chunks.length > 1
+            ? `Put the words in order. (Part ${currentChunkIndex + 1} of ${chunks.length})`
+            : 'Put the words in order.'}
+        </span>
+
+        {placedWords.length > 0 && !isSuccess && (
+          <button
+            type="button"
+            onClick={handleReset}
+            className="flex items-center gap-1 text-[11px] text-[#8C8273] hover:text-[#D4A359] transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Reset
+          </button>
         )}
       </div>
 
-      {/* Slots Container */}
-      <div 
-        className={`flex flex-wrap gap-2 justify-center transition-transform ${shake ? 'animate-shake' : ''}`}
-        style={{ animation: shake ? 'shake 0.3s cubic-bezier(.36,.07,.19,.97) both' : 'none' }}
+      {/* Target Word Slot Board */}
+      <div
+        className={`w-full min-h-[120px] p-4 rounded-2xl bg-[#1A1815] border flex flex-wrap gap-2.5 items-center transition-colors ${
+          isSuccess ? 'border-[#D4A359]' : 'border-[#2C2720]'
+        }`}
       >
-        {targetWords.map((_, idx) => {
-          const isFilled = idx < assembledCount;
-          return (
-            <div 
-              key={idx}
-              className={`min-w-[50px] h-10 px-3 flex items-center justify-center font-medium text-sm transition-colors duration-200
-                ${isFilled
-                  ? 'text-primary border-b-2 border-transparent'
-                  : 'text-accent-light border-b-2 border-card-border'
-                }`}
-            >
-              {isFilled ? targetWords[idx] : ''}
-            </div>
-          );
-        })}
+        {placedWords.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => handleRemoveWord(item)}
+            className="px-3 py-1.5 rounded-lg bg-[#D4A359] text-[#14120E] text-sm font-bold shadow hover:brightness-105 active:scale-95 transition-all"
+            title="Tap to return to bank"
+          >
+            {item.word}
+          </button>
+        ))}
+
+        {Array.from({ length: remainingSlots }).map((_, i) => (
+          <div
+            key={`empty-slot-${i}`}
+            className="h-9 w-14 rounded-lg border border-dashed border-[#38322A] flex items-center justify-center text-[#4A4237] text-sm"
+          >
+            ·
+          </div>
+        ))}
       </div>
 
-      {/* Pool Container */}
-      <div className="flex flex-wrap gap-3 justify-center mt-6">
-        {pool.map(item => {
-          if (item.selected) return null;
-          
-          const isError = errorId === item.id;
-          
-          return (
-            <button
-              key={item.id}
-              onClick={() => handleChipClick(item)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200
-                ${isError
-                  ? 'bg-red-500/10 text-red-500 border-red-500 border'
-                  : 'bg-card border border-card-border text-primary hover:border-accent hover:text-accent'
-                }`}
-            >
-              {item.word}
-            </button>
-          );
-        })}
-      </div>
+      {/* Feedback Banner */}
+      {feedback && (
+        <div
+          className={`w-full px-4 py-2.5 rounded-xl text-xs font-semibold text-center border ${
+            isSuccess
+              ? 'bg-[#D4A359]/15 border-[#D4A359] text-[#D4A359]'
+              : 'bg-red-500/15 border-red-500/50 text-red-400'
+          }`}
+        >
+          {feedback}
+        </div>
+      )}
 
-      {/* Injecting Shake Animation Keyframes */}
-      <style>{`
-        @keyframes shake {
-          10%, 90% { transform: translate3d(-2px, 0, 0); }
-          20%, 80% { transform: translate3d(4px, 0, 0); }
-          30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-          40%, 60% { transform: translate3d(6px, 0, 0); }
-        }
-        .animate-shake {
-          animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
-        }
-      `}</style>
+      {/* Word Bank Pool */}
+      {bankWords.length > 0 && (
+        <div className="flex flex-col gap-2 w-full mt-2">
+          <span className="text-[10px] font-bold tracking-wider text-[#8C8273] uppercase">
+            Word Bank
+          </span>
+          <div className="flex flex-wrap gap-2.5">
+            {bankWords.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handlePlaceWord(item)}
+                className="px-3.5 py-2 rounded-lg bg-[#221F1B] border border-[#38322A] text-sm font-medium text-[#F5F2EB] hover:border-[#D4A359] active:scale-95 transition-all shadow-sm"
+              >
+                {item.word}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Check order Button */}
+      <button
+        type="button"
+        onClick={handleCheckOrder}
+        disabled={placedWords.length === 0 || isSuccess}
+        className="w-full h-12 mt-4 rounded-xl bg-[#D4A359] text-[#14120E] text-sm font-bold shadow-lg hover:brightness-105 active:scale-98 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+      >
+        {isSuccess ? "Correct!" : "Check order"}
+      </button>
     </div>
   );
 };

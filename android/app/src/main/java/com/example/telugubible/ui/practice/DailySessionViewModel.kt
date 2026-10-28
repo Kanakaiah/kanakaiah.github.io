@@ -293,6 +293,9 @@ class DailySessionViewModel @JvmOverloads constructor(
                             val acc = (state.verseAccuracy ?: 0) / 100.0
                             Triple(CueLevel.FIRST_LETTERS.levelNumber, "speech", acc)
                         }
+                        PracticeMode.LISTEN -> {
+                            Triple(0, "listen", 1.0)
+                        }
                         PracticeMode.IMMERSED -> {
                             Triple(0, "immersed", null)
                         }

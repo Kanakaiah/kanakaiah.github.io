@@ -168,11 +168,17 @@ class TodayViewModel @JvmOverloads constructor(
                     verses.filter { it.topicIds.contains(topic.id) }
                 }
                 val isTop100 = topic.name.equals("Top 100", ignoreCase = true)
-                val isWellKnown = topic.name.equals("Well-Known", ignoreCase = true) || topic.name.equals("75 Well-Known Verses", ignoreCase = true)
+                val isWellKnown = topic.name.equals("Well-Known", ignoreCase = true) ||
+                    topic.name.equals("75 Well-Known", ignoreCase = true) ||
+                    topic.name.equals("75 Well-Known Verses", ignoreCase = true)
 
                 // Top 100 / Well-Known only exist when added with verses
                 if ((isTop100 || isWellKnown) && versesInTopic.isEmpty()) continue
 
+                // Avoid duplicate card if Well-Known is already present
+                if (isWellKnown && collectionList.any { it.name.equals("Well-Known", ignoreCase = true) }) continue
+
+                val displayName = if (isWellKnown) "Well-Known" else topic.name
                 val total = when {
                     isTop100 -> kotlin.math.max(100, versesInTopic.size)
                     isWellKnown -> kotlin.math.max(75, versesInTopic.size)
@@ -184,7 +190,7 @@ class TodayViewModel @JvmOverloads constructor(
                 collectionList.add(
                     CollectionCardItem(
                         id = topic.id,
-                        name = topic.name,
+                        name = displayName,
                         totalCount = total,
                         dueCount = dueInTopic,
                         learnedCount = learnedInTopic,
@@ -553,7 +559,7 @@ class TodayViewModel @JvmOverloads constructor(
     }
 
     fun addCollection(collectionId: String, extraTopicIds: List<String> = emptyList()) {
-        val name = if (collectionId == "well_known") "75 Well-Known Verses" else "Top 100 Verses"
+        val name = if (collectionId == "well_known") "Well-Known" else "Top 100 Verses"
         val estimatedTotal = if (collectionId == "well_known") 75 else 100
         viewModelScope.launch {
             _uiState.update {
@@ -561,10 +567,6 @@ class TodayViewModel @JvmOverloads constructor(
                     addingProgress = AddingProgress(name, 0, estimatedTotal)
                 )
             }
-            // Ensure group exists matching PWD
-            val groupName = if (collectionId == "well_known") "Well-Known" else "Top 100"
-            val existingTopic = _uiState.value.topics.find { it.name.equals(groupName, ignoreCase = true) }
-            val groupTopicId = existingTopic?.id ?: repository.createTopic(groupName).id
 
             val count = repository.addPresetCollection(collectionId) { current, total ->
                 _uiState.update {
@@ -572,12 +574,13 @@ class TodayViewModel @JvmOverloads constructor(
                 }
             }
 
-            // Associate with topics
-            val allVerses = repository.getUserMemoryVerses()
-            val allTopicsToAdd = (listOfNotNull(groupTopicId) + extraTopicIds).distinct()
-            allVerses.takeLast(count).forEach { v ->
-                allTopicsToAdd.forEach { tid ->
-                    repository.addTopicToVerse(v.id, tid)
+            // Associate with extra topics if provided
+            if (extraTopicIds.isNotEmpty()) {
+                val allVerses = repository.getUserMemoryVerses()
+                allVerses.takeLast(count).forEach { v ->
+                    extraTopicIds.forEach { tid ->
+                        repository.addTopicToVerse(v.id, tid)
+                    }
                 }
             }
 

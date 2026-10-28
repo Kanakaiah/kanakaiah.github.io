@@ -319,7 +319,7 @@ class BibleRepository(
         val presetEntries = bibleDbHelper.getPresetVerseEntries(collectionId)
         val topicName = when (collectionId) {
             "top_100" -> "Top 100"
-            "well_known" -> "75 Well-Known"
+            "well_known" -> "Well-Known"
             else -> collectionId.replace('_', ' ').replaceFirstChar { it.uppercase() }
         }
         val topic = userDbHelper.getOrCreateTopic(topicName)

@@ -3,16 +3,19 @@ package com.example.telugubible.ui.practice
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,8 +27,7 @@ import kotlinx.coroutines.delay
 
 data class ScrambleChip(
     val id: String,
-    val word: String,
-    val isSelected: Boolean = false
+    val word: String
 )
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -47,7 +49,7 @@ fun ScrambleMode(
 
     // Chunking into manageable groups (10 words per chunk for long verses)
     val chunks = remember(cleanWords) {
-        if (cleanWords.size > 15) {
+        if (cleanWords.size > 14) {
             cleanWords.chunked(10)
         } else {
             listOf(cleanWords)
@@ -55,45 +57,42 @@ fun ScrambleMode(
     }
 
     var currentChunkIndex by remember(text) { mutableIntStateOf(0) }
-    var assembledCount by remember(text, currentChunkIndex) { mutableIntStateOf(0) }
     var mistakeCount by remember(text) { mutableIntStateOf(0) }
-    var errorChipId by remember { mutableStateOf<String?>(null) }
+    var feedbackMessage by remember { mutableStateOf<String?>(null) }
+    var isCheckingSuccess by remember { mutableStateOf(false) }
 
     val currentTargetWords = remember(chunks, currentChunkIndex) {
         chunks.getOrNull(currentChunkIndex) ?: emptyList()
     }
 
-    // Shuffled pool of words for the current chunk
-    var pool by remember(chunks, currentChunkIndex) {
-        val list = currentTargetWords.mapIndexed { idx, word ->
-            ScrambleChip(id = "chip_${currentChunkIndex}_${idx}", word = word)
+    // Target placed chips
+    val placedChips = remember(chunks, currentChunkIndex) {
+        mutableStateListOf<ScrambleChip>()
+    }
+
+    // Bank pool of available chips
+    val bankChips = remember(chunks, currentChunkIndex) {
+        val initialList = currentTargetWords.mapIndexed { idx, word ->
+            ScrambleChip(id = "chip_${currentChunkIndex}_${idx}_$word", word = word)
         }.shuffled()
-        mutableStateOf(list)
+        mutableStateListOf<ScrambleChip>().apply { addAll(initialList) }
     }
 
-    val isChunkComplete = assembledCount == currentTargetWords.size && currentTargetWords.isNotEmpty()
-    val isAllComplete = isChunkComplete && currentChunkIndex == chunks.size - 1
-
-    // Clear error chip highlight after brief delay
-    LaunchedEffect(errorChipId) {
-        if (errorChipId != null) {
-            delay(500)
-            errorChipId = null
-        }
-    }
-
-    // Auto-advance chunk
-    LaunchedEffect(isChunkComplete, currentChunkIndex, isAllComplete) {
-        if (isChunkComplete && !isAllComplete) {
-            delay(650)
-            currentChunkIndex++
-            assembledCount = 0
-        } else if (isAllComplete) {
-            val totalWords = cleanWords.size
-            val acc = if (totalWords + mistakeCount > 0) {
-                (totalWords.toFloat() / (totalWords + mistakeCount)).coerceIn(0f, 1f)
-            } else 1f
-            onComplete(acc)
+    // Handle chunk progression or finish
+    LaunchedEffect(isCheckingSuccess) {
+        if (isCheckingSuccess) {
+            delay(700)
+            if (currentChunkIndex < chunks.size - 1) {
+                currentChunkIndex++
+                isCheckingSuccess = false
+                feedbackMessage = null
+            } else {
+                val totalWords = cleanWords.size
+                val acc = if (totalWords + mistakeCount > 0) {
+                    (totalWords.toFloat() / (totalWords + mistakeCount)).coerceIn(0f, 1f)
+                } else 1f
+                onComplete(acc)
+            }
         }
     }
 
@@ -104,63 +103,59 @@ fun ScrambleMode(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Status Card
-        Surface(
-            shape = RoundedCornerShape(10.dp),
-            color = RemoraCardBgElevated,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth()
+        // Instruction Subtitle
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (isAllComplete) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = GradeEasy,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Sequence Complete! All words assembled.",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = GradeEasy
-                        )
-                    }
-                } else if (isChunkComplete) {
-                    Text(
-                        text = "Part ${currentChunkIndex + 1} done! Loading next part...",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = RemoraAccentLight
-                    )
-                } else if (chunks.size > 1) {
-                    Text(
-                        text = "Part ${currentChunkIndex + 1} of ${chunks.size} — Tap words in correct order",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = RemoraTextSecondary
-                    )
+            Text(
+                text = if (chunks.size > 1) {
+                    "Put the words in order. (Part ${currentChunkIndex + 1} of ${chunks.size})"
                 } else {
+                    "Put the words in order."
+                },
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = RemoraTextSecondary
+            )
+
+            if (placedChips.isNotEmpty()) {
+                TextButton(
+                    onClick = {
+                        bankChips.addAll(placedChips)
+                        placedChips.clear()
+                        feedbackMessage = null
+                    },
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = "Reset",
+                        tint = RemoraTextMuted,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "Tap words in correct order to reconstruct the verse",
-                        fontSize = 12.sp,
-                        color = RemoraTextSecondary
+                        text = "Reset",
+                        fontSize = 11.sp,
+                        color = RemoraTextMuted
                     )
                 }
             }
         }
 
-        // Assembled Slots Container
+        // Target Word Slot Board (Rounded Card)
         Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = RemoraCardBg,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth()
+            shape = RoundedCornerShape(16.dp),
+            color = Color(0xFF1A1815),
+            border = androidx.compose.foundation.BorderStroke(
+                1.dp,
+                if (isCheckingSuccess) RemoraAccent else Color(0xFF2C2720)
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 120.dp)
         ) {
             FlowRow(
                 modifier = Modifier
@@ -169,81 +164,116 @@ fun ScrambleMode(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                currentTargetWords.forEachIndexed { idx, word ->
-                    val isFilled = idx < assembledCount
+                // Placed chips (Solid Gold Pill Buttons)
+                placedChips.forEachIndexed { index, chip ->
                     Surface(
-                        shape = RoundedCornerShape(6.dp),
-                        color = if (isFilled) RemoraCardBgElevated else Color.Transparent,
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            if (isFilled) RemoraAccent.copy(alpha = 0.5f) else RemoraCardBorder
-                        )
+                        onClick = {
+                            if (!isCheckingSuccess) {
+                                placedChips.removeAt(index)
+                                bankChips.add(chip)
+                                feedbackMessage = null
+                            }
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        color = RemoraAccent,
+                        shadowElevation = 2.dp
                     ) {
                         Text(
-                            text = if (isFilled) word else "_____",
+                            text = chip.word,
                             fontSize = 15.sp,
-                            fontWeight = if (isFilled) FontWeight.SemiBold else FontWeight.Normal,
-                            color = if (isFilled) RemoraTextPrimary else RemoraTextMuted,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF14120E),
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+
+                // Empty Placeholder Slots
+                val remainingSlots = (currentTargetWords.size - placedChips.size).coerceAtLeast(0)
+                repeat(remainingSlots) {
+                    Box(
+                        modifier = Modifier
+                            .height(34.dp)
+                            .width(52.dp)
+                            .border(
+                                width = 1.dp,
+                                color = Color(0xFF38322A),
+                                shape = RoundedCornerShape(8.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "·",
+                            fontSize = 18.sp,
+                            color = Color(0xFF4A4237),
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
             }
         }
 
-        // Shuffled Pool Chips
-        if (!isChunkComplete) {
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+        // Feedback / Status Banner
+        if (feedbackMessage != null) {
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = if (isCheckingSuccess) RemoraAccent.copy(alpha = 0.15f) else Color(0xFFEF4444).copy(alpha = 0.15f),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (isCheckingSuccess) RemoraAccent else Color(0xFFEF4444)
+                ),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                pool.forEach { chip ->
-                    if (!chip.isSelected) {
-                        val isError = errorChipId == chip.id
+                Text(
+                    text = feedbackMessage ?: "",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (isCheckingSuccess) RemoraAccent else Color(0xFFF87171),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
 
-                        val chipBg by animateColorAsState(
-                            targetValue = if (isError) Color(0xFFEF4444).copy(alpha = 0.2f) else RemoraCardBgElevated,
-                            label = "scramble_bg"
-                        )
-                        val chipBorder by animateColorAsState(
-                            targetValue = if (isError) Color(0xFFEF4444) else RemoraCardBorder,
-                            label = "scramble_border"
-                        )
-                        val chipTextColor by animateColorAsState(
-                            targetValue = if (isError) Color(0xFFEF4444) else RemoraTextPrimary,
-                            label = "scramble_text"
-                        )
+        // Word Bank Pool (Tappable Chips)
+        if (bankChips.isNotEmpty()) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "WORD BANK",
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp,
+                    color = RemoraTextMuted
+                )
 
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    bankChips.forEach { chip ->
                         Surface(
                             onClick = {
-                                val expected = currentTargetWords.getOrNull(assembledCount)
-                                if (expected != null && CueUtils.normalizeWord(chip.word) == CueUtils.normalizeWord(expected)) {
-                                    // Match!
-                                    pool = pool.map {
-                                        if (it.id == chip.id) it.copy(isSelected = true) else it
-                                    }
-                                    assembledCount++
-                                    errorChipId = null
-                                } else {
-                                    // Mismatch!
-                                    errorChipId = chip.id
-                                    mistakeCount++
+                                if (!isCheckingSuccess) {
+                                    bankChips.remove(chip)
+                                    placedChips.add(chip)
+                                    feedbackMessage = null
                                 }
                             },
                             shape = RoundedCornerShape(8.dp),
-                            color = chipBg,
-                            border = androidx.compose.foundation.BorderStroke(1.dp, chipBorder),
+                            color = Color(0xFF221F1B),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A)),
                             shadowElevation = 1.dp
                         ) {
                             Text(
                                 text = chip.word,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = chipTextColor,
-                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                                color = RemoraTextPrimary,
+                                modifier = Modifier.padding(horizontal = 13.dp, vertical = 7.dp)
                             )
                         }
                     }
@@ -251,29 +281,48 @@ fun ScrambleMode(
             }
         }
 
-        // Completion Action
-        if (isAllComplete) {
-            Button(
-                onClick = {
-                    val totalWords = cleanWords.size
-                    val acc = if (totalWords + mistakeCount > 0) {
-                        (totalWords.toFloat() / (totalWords + mistakeCount)).coerceIn(0f, 1f)
-                    } else 1f
-                    onComplete(acc)
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            ) {
-                Text(
-                    text = "Done — Rate My Recall",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Check Order CTA Button (Full Width, Matching Mockup 2)
+        Button(
+            onClick = {
+                if (placedChips.size < currentTargetWords.size) {
+                    feedbackMessage = "Place all words before checking order."
+                    return@Button
+                }
+
+                val isCorrect = placedChips.indices.all { idx ->
+                    CueUtils.normalizeWord(placedChips[idx].word) == CueUtils.normalizeWord(currentTargetWords[idx])
+                }
+
+                if (isCorrect) {
+                    isCheckingSuccess = true
+                    feedbackMessage = if (currentChunkIndex < chunks.size - 1) {
+                        "Correct! Moving to next part..."
+                    } else {
+                        "Excellent! You reconstructed the entire verse."
+                    }
+                } else {
+                    mistakeCount++
+                    feedbackMessage = "The order isn't quite right. Tap a word to return it to the bank."
+                }
+            },
+            enabled = placedChips.isNotEmpty() && !isCheckingSuccess,
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = RemoraAccent,
+                disabledContainerColor = RemoraAccent.copy(alpha = 0.35f)
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
+        ) {
+            Text(
+                text = if (isCheckingSuccess) "Correct!" else "Check order",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF14120E)
+            )
         }
     }
 }

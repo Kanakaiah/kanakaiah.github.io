@@ -89,7 +89,7 @@ class UserDatabaseHelper(private val context: Context) :
 
     companion object {
         const val USER_DB_NAME = "user_data.db"
-        const val USER_DB_VERSION = 10
+        const val USER_DB_VERSION = 11
         private const val PREFS_NAME = "user_db_prefs"
         private const val KEY_LEGACY_MIGRATED = "legacy_migrated_v1"
 
@@ -104,6 +104,9 @@ class UserDatabaseHelper(private val context: Context) :
 
     init {
         migrateFromLegacyDbIfNeeded()
+        try {
+            mergeWellKnownTopics(writableDatabase)
+        } catch (_: Exception) {}
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -447,6 +450,48 @@ class UserDatabaseHelper(private val context: Context) :
                 db.execSQL("INSERT OR REPLACE INTO user_stats (key, val) VALUES ('setting_showSectionHeadings', 'true');")
             } catch (e: Exception) {}
         }
+        if (oldVersion < 11) {
+            mergeWellKnownTopics(db)
+        }
+    }
+
+    fun mergeWellKnownTopics(db: SQLiteDatabase) {
+        try {
+            var canonicalId: String? = null
+            val cursor = db.rawQuery("SELECT id FROM topics WHERE LOWER(name) = 'well-known' LIMIT 1", null)
+            cursor.use {
+                if (it.moveToNext()) {
+                    canonicalId = it.getString(0)
+                }
+            }
+            val dupCursor = db.rawQuery("SELECT id FROM topics WHERE LOWER(name) IN ('75 well-known', '75 well-known verses')", null)
+            val dupIds = mutableListOf<String>()
+            dupCursor.use {
+                while (it.moveToNext()) {
+                    val id = it.getString(0)
+                    if (id != canonicalId) {
+                        dupIds.add(id)
+                    }
+                }
+            }
+
+            if (canonicalId == null && dupIds.isNotEmpty()) {
+                val primaryId = dupIds.removeAt(0)
+                db.execSQL("UPDATE topics SET name = 'Well-Known' WHERE id = ?", arrayOf(primaryId))
+                canonicalId = primaryId
+            }
+
+            if (canonicalId != null && dupIds.isNotEmpty()) {
+                for (dupId in dupIds) {
+                    db.execSQL(
+                        "INSERT OR IGNORE INTO verse_topics (verse_id, topic_id) SELECT verse_id, ? FROM verse_topics WHERE topic_id = ?",
+                        arrayOf(canonicalId, dupId)
+                    )
+                    db.execSQL("DELETE FROM verse_topics WHERE topic_id = ?", arrayOf(dupId))
+                    db.execSQL("DELETE FROM topics WHERE id = ?", arrayOf(dupId))
+                }
+            }
+        } catch (_: Exception) {}
     }
 
     private fun pruneReviewLog(db: SQLiteDatabase) {

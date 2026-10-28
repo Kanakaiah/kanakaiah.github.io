@@ -931,7 +931,7 @@ private fun CollectionsTabContent(
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null, tint = RemoraGold, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Add 75 Well-Known", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = RemoraGold)
+                        Text("Add Well-Known", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = RemoraGold)
                     }
                 }
             }

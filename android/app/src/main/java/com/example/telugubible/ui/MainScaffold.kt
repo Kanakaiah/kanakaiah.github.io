@@ -362,6 +362,7 @@ fun MainScaffold(
                         RemoraTab.PRACTICE -> PracticeScreen(
                             viewModel = practiceViewModel,
                             onNavigateToBible = { selectedTab = RemoraTab.BIBLE },
+                            onExitToToday = { selectedTab = RemoraTab.TODAY },
                             initialSubject = practiceSubject,
                             initialAnchorBookId = selectedAnchorBookId
                         )

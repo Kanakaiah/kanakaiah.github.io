@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { BookOpen, ArrowLeft, ArrowRight, Check, Play, Square, HelpCircle, Maximize } from 'lucide-react';
+import { BookOpen, ArrowLeft, ArrowRight, Check, Play, Square, HelpCircle, Maximize, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2, formatInterval, suggestedScore, isDue } from '../utils/sm2';
@@ -16,6 +16,7 @@ import { FirstLetterMode } from '../components/practice/FirstLetterMode';
 import { ScrambleMode } from '../components/practice/ScrambleMode';
 import { TypingMode } from '../components/practice/TypingMode';
 import { SpeechMode } from '../components/practice/SpeechMode';
+import { ListenMode } from '../components/practice/ListenMode';
 import { ImmersedReader } from '../components/practice/ImmersedReader';
 import { AnchorDrill } from '../components/practice/AnchorDrill';
 import { ThemeDrill } from '../components/practice/ThemeDrill';
@@ -24,7 +25,7 @@ import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { useWakeLock } from '../hooks/useWakeLock';
 
-type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'immersed';
+type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'listen' | 'immersed';
 
 /** The app's three stated goals, and now its top-level control. This used to be a
  * two-way 'verses' | 'chapters' switch rendered as 10px text below the workspace,
@@ -43,6 +44,7 @@ const MODE_TO_LOG: Partial<Record<PracticeMode, ReviewEvent['mode']>> = {
   scramble: 'scramble',
   eraser: 'erase',
   'first-letter': 'reveal',
+  listen: 'reveal',
 };
 
 /**
@@ -414,7 +416,24 @@ export const Practice: React.FC = () => {
       case 'first-letter':
         return <FirstLetterMode key={currentVerse.id} text={currentVerse.text} />;
       case 'scramble':
-        return <ScrambleMode key={currentVerse.id} text={currentVerse.text} />;
+        return (
+          <ScrambleMode
+            key={currentVerse.id}
+            text={currentVerse.text}
+            onComplete={() => handleScore(4)}
+          />
+        );
+      case 'listen':
+        return (
+          <ListenMode
+            key={currentVerse.id}
+            text={currentVerse.text}
+            isEnglish={true}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onComplete={() => handleScore(4)}
+          />
+        );
       case 'typing':
         return <TypingMode key={currentVerse.id} text={currentVerse.text} onAttempt={handleAttempt} />;
       case 'speech':
@@ -576,6 +595,27 @@ export const Practice: React.FC = () => {
     );
   }
 
+  const collectionTitle = React.useMemo(() => {
+    if (!activeTopicFilter) return 'All';
+    if (activeTopicFilter === '__general__') return 'General';
+    const topic = state.topics?.find(t => t.id === activeTopicFilter);
+    if (topic) {
+      return topic.name.toLowerCase() === 'well_known' || topic.name.toLowerCase() === '75 well-known'
+        ? 'Well-Known'
+        : topic.name;
+    }
+    return 'Review';
+  }, [activeTopicFilter, state.topics]);
+
+  const retentionStage = React.useMemo(() => {
+    if (!currentVerse) return 'Learning';
+    const interval = currentVerse.sm2?.interval || 0;
+    const repetition = currentVerse.sm2?.repetition || 0;
+    if (interval >= 30 || repetition >= 6) return 'Forever';
+    if (repetition >= 2 || interval >= 6) return 'Review';
+    return 'Learning';
+  }, [currentVerse]);
+
   return (
       <div
         className="relative flex flex-col h-full w-full pb-6 lg:pb-8"
@@ -583,51 +623,86 @@ export const Practice: React.FC = () => {
         onClick={handlePracticeContentClick}
       >
 
-      {/* Session progress — the same fixed top rule the reader uses for reading
-          progress, rather than a separate absolutely-positioned track. */}
-      {verses.length > 1 && (
-        <div
-          className="reading-progress"
-          style={{ width: `${((activeVerseIndex + 1) / verses.length) * 100}%` }}
-        />
-      )}
-
-      {/* Fixed header — back arrow, centred verse reference, audio toggle on the
-          right, matching the chapter reader and the guide pages. Replaces the two
-          free-floating round buttons and the verse reference that used to scroll
-          away with the content. */}
+      {/* Fixed Header matching Mockup 2 & 3 */}
       <div
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        className={`fixed top-0 left-0 right-0 z-40 bg-[#14120E] border-b border-[#2C2720] transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
       >
-        <div className="max-w-4xl mx-auto w-full px-5 sm:px-8 pb-3 relative">
-          <button
-            onClick={() => navigate('/')}
-            className="absolute left-5 sm:left-8 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
-            title="Exit practice"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="w-6 h-6 text-secondary" />
-          </button>
+        <div className="max-w-4xl mx-auto w-full px-4 sm:px-8 pb-3 flex flex-col gap-2.5">
+          {/* Top Bar Row: Close ✕ | Centered Title & Subtitle | Right Spacer */}
+          <div className="flex items-center justify-between relative">
+            <button
+              onClick={() => navigate('/')}
+              className="p-2 -ml-2 rounded-full hover:bg-white/5 text-[#A89F91] hover:text-[#F5F2EB] transition-colors"
+              title="Exit review"
+              aria-label="Close"
+            >
+              <X className="w-6 h-6" />
+            </button>
 
-          <button
-            onClick={handleToggleTTS}
-            className="absolute right-5 sm:right-8 top-1 p-2 -mr-2 rounded-full hover:bg-card-hover transition-colors z-10"
-            title="Play Audio"
-            aria-label={isAutoPlaying ? 'Stop audio' : 'Play audio'}
-          >
-            {isAutoPlaying ? (
-              <Square className="w-5 h-5 text-accent fill-accent" />
-            ) : (
-              <Play className="w-5 h-5 text-secondary ml-0.5" />
-            )}
-          </button>
+            <div className="flex flex-col items-center justify-center text-center">
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#F5F2EB] leading-tight">
+                {currentVerse.ref}
+              </h2>
+              <span className="text-xs text-[#A89F91] font-medium mt-0.5">
+                {collectionTitle} · {safeVerseIndex + 1} of {verses.length} · {retentionStage}
+              </span>
+            </div>
 
-          <div className="flex flex-col items-center justify-center pt-1">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2">
-              {currentVerse.ref}
-            </h2>
+            <button
+              onClick={handleToggleTTS}
+              className="p-2 -mr-2 rounded-full hover:bg-white/5 text-[#A89F91] hover:text-[#D4A359] transition-colors"
+              title="Play Audio"
+              aria-label={isAutoPlaying ? 'Stop audio' : 'Play audio'}
+            >
+              {isAutoPlaying ? (
+                <Square className="w-5 h-5 text-accent fill-accent" />
+              ) : (
+                <Play className="w-5 h-5 ml-0.5" />
+              )}
+            </button>
+          </div>
+
+          {/* Segmented Dash Progress Bar */}
+          {verses.length > 0 && (
+            <div className="flex items-center gap-1.5 w-full">
+              {verses.map((_, idx) => (
+                <div
+                  key={`dash-${idx}`}
+                  className={`h-1 flex-1 rounded-full transition-colors ${
+                    idx <= safeVerseIndex ? 'bg-[#D4A359]' : 'bg-[#2C2720]'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Mode Selector Horizontal Scrollable Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+            {[
+              { id: 'first-letter', label: 'First letters' },
+              { id: 'eraser', label: 'Blanks' },
+              { id: 'scramble', label: 'Puzzle' },
+              { id: 'typing', label: 'Type' },
+              { id: 'speech', label: 'Recite' },
+              { id: 'listen', label: 'Listen' },
+            ].map((mode) => {
+              const isSelected = activeMode === mode.id;
+              return (
+                <button
+                  key={mode.id}
+                  onClick={() => setActiveMode(mode.id as PracticeMode)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                    isSelected
+                      ? 'bg-[#D4A359] text-[#14120E] shadow-sm'
+                      : 'bg-[#1E1B17] border border-[#332D24] text-[#A89F91] hover:text-[#F5F2EB]'
+                  }`}
+                >
+                  {mode.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -723,45 +798,7 @@ export const Practice: React.FC = () => {
           </div>
         )}
 
-        {/* One row of modes, and nothing else.
-
-            This was three stacked control groups wrapped around a card holding up to a
-            hundred and nine words to be held in mind: a three-way Theme/Anchor/Verse
-            switch, four mode tabs, and a second "More" row — nine controls, alongside a
-            hint button, a TTS toggle, tap-to-toggle chrome, swipe and arrow-key
-            navigation. Each one is a decision competing for the working memory the
-            passage itself needs, which in a memorization product is the most expensive
-            kind of clutter there is and the easiest to stop noticing.
-
-            The subject switch is gone entirely. The Practice tab now opens the day's
-            work, and the theme and anchor decks are reached from Today and from the book
-            guides; inside the workshop the subject is already settled — it is this verse.
-            The two mode rows became one, ordered from most help to least. */}
-        <div className="flex flex-col gap-4 pb-24 lg:pb-24">
-            <div className="grid grid-cols-6 border-b border-card-border">
-              {[
-                { id: 'read', label: 'Read' },
-                { id: 'eraser', label: 'Erase' },
-                { id: 'first-letter', label: 'Letters' },
-                { id: 'scramble', label: 'Order' },
-                { id: 'typing', label: 'Type' },
-                { id: 'speech', label: 'Recite' },
-              ].map(mode => (
-                <button
-                  key={mode.id}
-                  onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  aria-pressed={activeMode === mode.id}
-                  className={`py-3 px-1 border-b-2 -mb-px text-xs font-bold transition-colors duration-150 ${
-                    activeMode === mode.id
-                      ? 'border-accent text-accent'
-                      : 'border-transparent text-secondary hover:text-primary'
-                  }`}
-                >
-                  {mode.label}
-                </button>
-              ))}
-            </div>
-        </div>
+        <div className="pb-24 lg:pb-24" />
       </div>
 
       {/* Bottom verse navigation — this level's equivalent of the reader's prev/next
