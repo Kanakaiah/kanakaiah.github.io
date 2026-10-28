@@ -308,7 +308,7 @@ fun ScrambleMode(
                 }
             },
             enabled = placedChips.isNotEmpty() && !isCheckingSuccess,
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(18.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = RemoraAccent,
                 disabledContainerColor = RemoraAccent.copy(alpha = 0.35f)

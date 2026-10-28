@@ -470,7 +470,7 @@ private fun ReviewHeroCard(
                 // Left Dropdown: From
                 Box(modifier = Modifier.weight(1f)) {
                     Surface(
-                        shape = RoundedCornerShape(10.dp),
+                        shape = RoundedCornerShape(18.dp),
                         color = RemoraCardBgElevated,
                         border = BorderStroke(1.dp, RemoraCardBorder),
                         modifier = Modifier
@@ -539,7 +539,7 @@ private fun ReviewHeroCard(
                 // Right Dropdown: Order
                 Box(modifier = Modifier.weight(1f)) {
                     Surface(
-                        shape = RoundedCornerShape(10.dp),
+                        shape = RoundedCornerShape(18.dp),
                         color = RemoraCardBgElevated,
                         border = BorderStroke(1.dp, RemoraCardBorder),
                         modifier = Modifier
@@ -602,7 +602,7 @@ private fun ReviewHeroCard(
                     containerColor = RemoraAccent,
                     contentColor = Color(0xFF141414)
                 ),
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(18.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
@@ -1057,7 +1057,7 @@ private fun ChapterThemeBookPickerSheet(
                     }
                 },
                 singleLine = true,
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(18.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = RemoraCardBgElevated,
                     unfocusedContainerColor = RemoraCardBgElevated,

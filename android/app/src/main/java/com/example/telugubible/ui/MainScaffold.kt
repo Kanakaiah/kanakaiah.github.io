@@ -169,7 +169,7 @@ fun MainScaffold(
         Scaffold(
             topBar = {
                 AnimatedVisibility(
-                    visible = selectedTab != RemoraTab.TODAY && (selectedTab != RemoraTab.BIBLE || isBibleChromeVisible),
+                    visible = selectedTab != RemoraTab.TODAY && selectedTab != RemoraTab.PRACTICE && (selectedTab != RemoraTab.BIBLE || isBibleChromeVisible),
                     enter = expandVertically() + fadeIn(),
                     exit = shrinkVertically() + fadeOut()
                 ) {
@@ -260,7 +260,7 @@ fun MainScaffold(
             },
             bottomBar = {
                 AnimatedVisibility(
-                    visible = selectedTab != RemoraTab.BIBLE || isBibleChromeVisible,
+                    visible = selectedTab != RemoraTab.PRACTICE && (selectedTab != RemoraTab.BIBLE || isBibleChromeVisible),
                     enter = expandVertically() + fadeIn(),
                     exit = shrinkVertically() + fadeOut()
                 ) {

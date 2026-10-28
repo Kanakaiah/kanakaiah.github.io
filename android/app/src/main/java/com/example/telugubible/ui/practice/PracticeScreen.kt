@@ -131,7 +131,7 @@ fun PracticeScreen(
                             total = state.verses.size,
                             onPrev = { viewModel.prevVerse() },
                             onNext = { viewModel.nextVerse() },
-                            onExit = { viewModel.setPracticeMode(PracticeMode.READ) },
+                            onExit = { viewModel.setPracticeMode(PracticeMode.SCRAMBLE) },
                             isAutoPlaying = state.isTtsSpeaking,
                             onToggleAutoPlay = { viewModel.toggleTts() },
                             isEnglish = isEnglish,
@@ -192,20 +192,7 @@ fun PracticeScreen(
                                     )
                                 }
 
-                                Surface(
-                                    onClick = { viewModel.toggleDisplayLanguage() },
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = Color(0xFF221F1B),
-                                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
-                                ) {
-                                    Text(
-                                        text = if (isEnglish) "EN" else "TE",
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = RemoraAccent,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                    )
-                                }
+                                Spacer(modifier = Modifier.size(36.dp))
                             }
 
                             // Segmented Dash Progress Bar

@@ -201,7 +201,7 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text, onComplete }) 
         type="button"
         onClick={handleCheckOrder}
         disabled={placedWords.length === 0 || isSuccess}
-        className="w-full h-12 mt-4 rounded-xl bg-[#D4A359] text-[#14120E] text-sm font-bold shadow-lg hover:brightness-105 active:scale-98 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+        className="w-full h-12 mt-4 rounded-2xl bg-[#D4A359] text-[#14120E] text-sm font-bold shadow-lg hover:brightness-105 active:scale-98 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
       >
         {isSuccess ? "Correct!" : "Check order"}
       </button>

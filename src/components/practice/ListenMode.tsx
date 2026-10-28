@@ -6,7 +6,6 @@ interface ListenModeProps {
   isEnglish: boolean;
   onPrev: () => void;
   onNext: () => void;
-  onComplete: () => void;
 }
 
 export const ListenMode: React.FC<ListenModeProps> = ({
@@ -14,7 +13,6 @@ export const ListenMode: React.FC<ListenModeProps> = ({
   isEnglish,
   onPrev,
   onNext,
-  onComplete,
 }) => {
   const words = React.useMemo(() => {
     return text.trim().split(/\s+/).filter(w => w.length > 0);
@@ -34,6 +32,43 @@ export const ListenMode: React.FC<ListenModeProps> = ({
   const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // When text changes (e.g. navigated or auto-advanced to new verse):
+  useEffect(() => {
+    setElapsedSeconds(0);
+    setCurrentWordIndex(0);
+    setCurrentIteration(1);
+    if (isPlaying && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = speed;
+      utterance.lang = isEnglish ? 'en-US' : 'te-IN';
+
+      utterance.onend = () => {
+        if (currentIteration < repeatCount) {
+          setCurrentIteration(prev => prev + 1);
+          setElapsedSeconds(0);
+        } else {
+          if (autoAdvance) {
+            setCurrentIteration(1);
+            setElapsedSeconds(0);
+            setCurrentWordIndex(0);
+            onNext();
+          } else {
+            setIsPlaying(false);
+            setElapsedSeconds(totalSeconds);
+            setCurrentWordIndex(words.length - 1);
+          }
+        }
+      };
+
+      utterance.onerror = () => {
+        setIsPlaying(false);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+  }, [text]);
 
   // Synchronize highlight
   useEffect(() => {
@@ -64,11 +99,15 @@ export const ListenMode: React.FC<ListenModeProps> = ({
           setCurrentIteration(prev => prev + 1);
           setElapsedSeconds(0);
         } else {
-          setIsPlaying(false);
-          setElapsedSeconds(totalSeconds);
-          setCurrentWordIndex(words.length - 1);
           if (autoAdvance) {
-            onComplete();
+            setCurrentIteration(1);
+            setElapsedSeconds(0);
+            setCurrentWordIndex(0);
+            onNext();
+          } else {
+            setIsPlaying(false);
+            setElapsedSeconds(totalSeconds);
+            setCurrentWordIndex(words.length - 1);
           }
         }
       };
@@ -95,7 +134,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
         window.speechSynthesis.cancel();
       }
     };
-  }, [isPlaying, currentIteration, speed, repeatCount, text, isEnglish, totalSeconds, autoAdvance, onComplete, words.length]);
+  }, [isPlaying, currentIteration, speed, repeatCount, text, isEnglish, totalSeconds, autoAdvance, onNext, words.length]);
 
   const formatTime = (sec: number) => {
     const s = Math.floor(sec);
@@ -155,8 +194,8 @@ export const ListenMode: React.FC<ListenModeProps> = ({
         )}
       </div>
 
-      {/* Audio Controller Card */}
-      <div className="bg-[#1A1815] border border-[#2C2720] rounded-2xl p-4 flex flex-col gap-4 mt-6 shadow-xl">
+      {/* Audio Controller Card (Rounded 3xl matching Mockup 3 & 4) */}
+      <div className="bg-[#1A1815] border border-[#2C2720] rounded-3xl p-5 flex flex-col gap-4 mt-6 shadow-xl">
         {/* Scrubber slider */}
         <div className="flex flex-col gap-1.5 w-full">
           <input
@@ -179,7 +218,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
           </div>
         </div>
 
-        {/* Playback Controls Row */}
+        {/* Playback Controls Row: Prev | Play/Pause | Next */}
         <div className="flex items-center justify-center gap-6">
           <button
             type="button"
@@ -188,10 +227,10 @@ export const ListenMode: React.FC<ListenModeProps> = ({
               setCurrentWordIndex(0);
               onPrev();
             }}
-            className="p-2 text-[#DDD5C7] hover:text-[#D4A359] active:scale-95 transition-transform"
+            className="w-11 h-11 rounded-full bg-[#221F1B] border border-[#38322A] flex items-center justify-center text-[#DDD5C7] hover:text-[#D4A359] hover:border-[#D4A359] active:scale-95 transition-all shadow-sm"
             aria-label="Previous verse"
           >
-            <SkipBack className="w-6 h-6" />
+            <SkipBack className="w-5 h-5" />
           </button>
 
           <button
@@ -214,19 +253,19 @@ export const ListenMode: React.FC<ListenModeProps> = ({
               setCurrentWordIndex(0);
               onNext();
             }}
-            className="p-2 text-[#DDD5C7] hover:text-[#D4A359] active:scale-95 transition-transform"
+            className="w-11 h-11 rounded-full bg-[#221F1B] border border-[#38322A] flex items-center justify-center text-[#DDD5C7] hover:text-[#D4A359] hover:border-[#D4A359] active:scale-95 transition-all shadow-sm"
             aria-label="Next verse"
           >
-            <SkipForward className="w-6 h-6" />
+            <SkipForward className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Option Pills: Speed | Repeat | Hide text */}
-        <div className="flex items-center justify-around gap-2 pt-1 border-t border-[#26221B]">
+        {/* Option Pills: Speed | Repeat | Hide text (Rounded-full stadium pills) */}
+        <div className="flex items-center justify-around gap-2 pt-2 border-t border-[#26221B]">
           <button
             type="button"
             onClick={cycleSpeed}
-            className="px-3 py-1.5 rounded-full bg-[#221F1B] border border-[#38322A] text-xs font-medium text-[#DDD5C7] hover:border-[#D4A359] transition-colors"
+            className="px-4 py-1.5 rounded-full bg-[#221F1B] border border-[#38322A] text-xs font-medium text-[#DDD5C7] hover:border-[#D4A359] transition-colors"
           >
             Speed {speed}x
           </button>
@@ -234,7 +273,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
           <button
             type="button"
             onClick={cycleRepeat}
-            className="px-3 py-1.5 rounded-full bg-[#221F1B] border border-[#38322A] text-xs font-medium text-[#DDD5C7] hover:border-[#D4A359] transition-colors"
+            className="px-4 py-1.5 rounded-full bg-[#221F1B] border border-[#38322A] text-xs font-medium text-[#DDD5C7] hover:border-[#D4A359] transition-colors"
           >
             Repeat {repeatCount > 10 ? '∞' : `${repeatCount}x`}
           </button>
@@ -242,7 +281,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
           <button
             type="button"
             onClick={() => setHideText(!hideText)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-colors ${
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-medium transition-colors ${
               hideText
                 ? 'bg-[#D4A359]/20 border-[#D4A359] text-[#D4A359]'
                 : 'bg-[#221F1B] border-[#38322A] text-[#DDD5C7] hover:border-[#D4A359]'
@@ -253,16 +292,21 @@ export const ListenMode: React.FC<ListenModeProps> = ({
           </button>
         </div>
 
-        {/* Auto-advance checkbox */}
-        <label className="flex items-center gap-2.5 pt-2 border-t border-[#26221B] cursor-pointer text-xs font-medium text-[#DDD5C7]">
+        {/* Auto-advance Checkbox Row: Text on Left, Checkbox on Right matching Mockup 3 */}
+        <div
+          onClick={() => setAutoAdvance(!autoAdvance)}
+          className="flex items-center justify-between pt-2 border-t border-[#26221B] cursor-pointer"
+        >
+          <span className="text-xs font-medium text-[#DDD5C7]">
+            Auto-advance to next verse
+          </span>
           <input
             type="checkbox"
             checked={autoAdvance}
             onChange={(e) => setAutoAdvance(e.target.checked)}
             className="w-4 h-4 rounded border-[#38322A] accent-[#D4A359] cursor-pointer"
           />
-          Auto-advance to next verse
-        </label>
+        </div>
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ enum class PracticeMode(val label: String) {
 
     companion object {
         val FLASHCARD = READ
-        val MENU_MODES = listOf(FIRST_LETTER, ERASER, SCRAMBLE, TYPING, SPEECH, LISTEN)
+        val MENU_MODES = listOf(FIRST_LETTER, ERASER, SCRAMBLE, TYPING, SPEECH, LISTEN, IMMERSED)
     }
 }
 

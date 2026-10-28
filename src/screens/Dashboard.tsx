@@ -354,7 +354,7 @@ export const Dashboard: React.FC = () => {
         <button
           type="button"
           onClick={() => handleStartReview(selectedCollectionId)}
-          className="mt-3.5 w-full h-12 rounded-[10px] bg-accent hover:opacity-95 text-[#141414] font-bold text-[15px] transition-opacity flex items-center justify-center"
+          className="mt-3.5 w-full h-12 rounded-[18px] bg-accent hover:opacity-95 text-[#141414] font-bold text-[15px] transition-opacity flex items-center justify-center shadow-sm"
         >
           Start review
         </button>

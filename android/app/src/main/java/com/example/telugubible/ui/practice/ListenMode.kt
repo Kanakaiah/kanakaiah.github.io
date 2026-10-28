@@ -58,17 +58,43 @@ fun ListenMode(
     }
 
     // Estimated duration in seconds based on word count & speed
-    // Average speech rate is ~140 words per minute -> ~2.3 words/sec
     val wordsPerSecond = 2.4f * speed
     val totalSeconds = remember(words.size, speed) {
-        val sec = (words.size / wordsPerSecond).toInt().coerceAtLeast(3)
-        sec
+        (words.size / wordsPerSecond).toInt().coerceAtLeast(3)
     }
 
     var isPlaying by remember { mutableStateOf(false) }
     var elapsedSeconds by remember { mutableFloatStateOf(0f) }
     var currentWordIndex by remember { mutableIntStateOf(-1) }
     var currentIteration by remember { mutableIntStateOf(1) }
+
+    // When verseText changes (e.g. advanced to next verse):
+    // If was playing, restart elapsed seconds & word index so playback flows immediately
+    LaunchedEffect(verseText) {
+        elapsedSeconds = 0f
+        currentWordIndex = 0
+        currentIteration = 1
+        if (isPlaying) {
+            val langCode = if (isEnglish) "en" else "te"
+            ttsManager.speak(verseText, langCode = langCode, rate = speed) {
+                if (currentIteration < repeatCount) {
+                    currentIteration++
+                    elapsedSeconds = 0f
+                } else {
+                    if (autoAdvance) {
+                        currentIteration = 1
+                        elapsedSeconds = 0f
+                        currentWordIndex = 0
+                        onNext()
+                    } else {
+                        isPlaying = false
+                        elapsedSeconds = totalSeconds.toFloat()
+                        currentWordIndex = words.size - 1
+                    }
+                }
+            }
+        }
+    }
 
     // Synchronize highlight with elapsed time
     LaunchedEffect(isPlaying, elapsedSeconds, words.size, totalSeconds) {
@@ -88,11 +114,15 @@ fun ListenMode(
                     currentIteration++
                     elapsedSeconds = 0f
                 } else {
-                    isPlaying = false
-                    elapsedSeconds = totalSeconds.toFloat()
-                    currentWordIndex = words.size - 1
                     if (autoAdvance) {
-                        onComplete()
+                        currentIteration = 1
+                        elapsedSeconds = 0f
+                        currentWordIndex = 0
+                        onNext()
+                    } else {
+                        isPlaying = false
+                        elapsedSeconds = totalSeconds.toFloat()
+                        currentWordIndex = words.size - 1
                     }
                 }
             }
@@ -142,7 +172,7 @@ fun ListenMode(
             // Text Flow with Karaoke Synchronized Highlight
             if (hideText) {
                 Surface(
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(16.dp),
                     color = Color(0xFF191714),
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF2C2720)),
                     modifier = Modifier
@@ -218,9 +248,9 @@ fun ListenMode(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Audio Player Controller Card (Bottom Docked Container)
+        // Audio Player Controller Card (Bottom Docked Container matching Mockup 3 & 4)
         Surface(
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(24.dp),
             color = Color(0xFF1A1815),
             border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF2C2720)),
             modifier = Modifier.fillMaxWidth()
@@ -228,7 +258,7 @@ fun ListenMode(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(18.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Scrubber Slider Row
@@ -275,20 +305,25 @@ fun ListenMode(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(
+                    Surface(
                         onClick = {
                             elapsedSeconds = 0f
                             currentWordIndex = 0
                             onPrev()
                         },
+                        shape = CircleShape,
+                        color = Color(0xFF221F1B),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A)),
                         modifier = Modifier.size(44.dp)
                     ) {
-                        Icon(
-                            Icons.Default.SkipPrevious,
-                            contentDescription = "Previous Verse",
-                            tint = RemoraTextPrimary,
-                            modifier = Modifier.size(28.dp)
-                        )
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.Default.SkipPrevious,
+                                contentDescription = "Previous Verse",
+                                tint = RemoraTextPrimary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.width(20.dp))
@@ -313,24 +348,29 @@ fun ListenMode(
 
                     Spacer(modifier = Modifier.width(20.dp))
 
-                    IconButton(
+                    Surface(
                         onClick = {
                             elapsedSeconds = 0f
                             currentWordIndex = 0
                             onNext()
                         },
+                        shape = CircleShape,
+                        color = Color(0xFF221F1B),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A)),
                         modifier = Modifier.size(44.dp)
                     ) {
-                        Icon(
-                            Icons.Default.SkipNext,
-                            contentDescription = "Next Verse",
-                            tint = RemoraTextPrimary,
-                            modifier = Modifier.size(28.dp)
-                        )
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.Default.SkipNext,
+                                contentDescription = "Next Verse",
+                                tint = RemoraTextPrimary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 }
 
-                // Playback Option Chips Row: Speed | Repeat | Hide text
+                // Playback Option Chips Row: Speed | Repeat | Hide text (Rounded-full stadium pills)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -347,7 +387,7 @@ fun ListenMode(
                             }
                             onSpeedChange(nextSpeed)
                         },
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(22.dp),
                         color = Color(0xFF221F1B),
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
                     ) {
@@ -356,7 +396,7 @@ fun ListenMode(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             color = RemoraTextPrimary,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
                         )
                     }
 
@@ -371,7 +411,7 @@ fun ListenMode(
                             }
                             onRepeatChange(nextRepeat)
                         },
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(22.dp),
                         color = Color(0xFF221F1B),
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
                     ) {
@@ -381,14 +421,14 @@ fun ListenMode(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             color = RemoraTextPrimary,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
                         )
                     }
 
                     // Hide text Chip
                     Surface(
                         onClick = { onHideTextToggle(!hideText) },
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(22.dp),
                         color = if (hideText) RemoraAccent.copy(alpha = 0.18f) else Color(0xFF221F1B),
                         border = androidx.compose.foundation.BorderStroke(
                             1.dp,
@@ -397,7 +437,7 @@ fun ListenMode(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
                         ) {
                             Icon(
                                 imageVector = if (hideText) Icons.Default.VisibilityOff else Icons.Default.Visibility,
@@ -418,28 +458,29 @@ fun ListenMode(
 
                 HorizontalDivider(color = Color(0xFF28241E), thickness = 1.dp)
 
-                // Auto-advance Checkbox Row
+                // Auto-advance Checkbox Row (Text on Left, Custom Gold Checkbox on Right matching Mockup 3)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onAutoAdvanceToggle(!autoAdvance) },
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Checkbox(
-                        checked = autoAdvance,
-                        onCheckedChange = { onAutoAdvanceToggle(it) },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = RemoraAccent,
-                            uncheckedColor = RemoraTextMuted,
-                            checkmarkColor = Color(0xFF14120E)
-                        )
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "Auto-advance to next verse",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
                         color = RemoraTextPrimary
+                    )
+
+                    Checkbox(
+                        checked = autoAdvance,
+                        onCheckedChange = { isChecked -> onAutoAdvanceToggle(isChecked) },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = RemoraAccent,
+                            uncheckedColor = RemoraTextMuted,
+                            checkmarkColor = Color(0xFF14120E)
+                        )
                     )
                 }
             }

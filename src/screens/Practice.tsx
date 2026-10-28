@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { BookOpen, ArrowLeft, ArrowRight, Check, Play, Square, HelpCircle, Maximize, X } from 'lucide-react';
+import { BookOpen, Check, HelpCircle, Maximize, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { evaluateSM2, formatInterval, suggestedScore, isDue } from '../utils/sm2';
@@ -431,7 +431,6 @@ export const Practice: React.FC = () => {
             isEnglish={true}
             onPrev={handlePrev}
             onNext={handleNext}
-            onComplete={() => handleScore(4)}
           />
         );
       case 'typing':
@@ -650,18 +649,7 @@ export const Practice: React.FC = () => {
               </span>
             </div>
 
-            <button
-              onClick={handleToggleTTS}
-              className="p-2 -mr-2 rounded-full hover:bg-white/5 text-[#A89F91] hover:text-[#D4A359] transition-colors"
-              title="Play Audio"
-              aria-label={isAutoPlaying ? 'Stop audio' : 'Play audio'}
-            >
-              {isAutoPlaying ? (
-                <Square className="w-5 h-5 text-accent fill-accent" />
-              ) : (
-                <Play className="w-5 h-5 ml-0.5" />
-              )}
-            </button>
+            <div className="w-8" />
           </div>
 
           {/* Segmented Dash Progress Bar */}
@@ -687,6 +675,7 @@ export const Practice: React.FC = () => {
               { id: 'typing', label: 'Type' },
               { id: 'speech', label: 'Recite' },
               { id: 'listen', label: 'Listen' },
+              { id: 'immersed', label: 'Immerse' },
             ].map((mode) => {
               const isSelected = activeMode === mode.id;
               return (
@@ -798,53 +787,7 @@ export const Practice: React.FC = () => {
           </div>
         )}
 
-        <div className="pb-24 lg:pb-24" />
-      </div>
-
-      {/* Bottom verse navigation — this level's equivalent of the reader's prev/next
-          chapter and the book page's prev/next book, disabling each end the same way.
-          The position readout sits in the centre slot where those bars put "CH 1" and
-          "INDEX". Previously this lived inline above the workspace and scrolled away. */}
-      <div className={`
-        fixed bottom-0 left-0 right-0
-        bg-card border-t border-card-border
-        z-40 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
-        ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}
-      `}>
-        <div className="max-w-4xl mx-auto flex items-center justify-between px-5 sm:px-8 py-3 pb-safe">
-          <button
-            onClick={handlePrev}
-            disabled={activeVerseIndex === 0}
-            className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
-            aria-label="Previous verse"
-          >
-            <ArrowLeft className="w-4 h-4 flex-shrink-0" />
-            <span className="hidden sm:block">Previous</span>
-            <span className="sm:hidden">Prev</span>
-          </button>
-
-          <button
-            onClick={() => setIsNavigatorOpen(true)}
-            className="flex flex-col items-center justify-center text-[0.6875rem] font-bold text-muted uppercase tracking-widest bg-card-elevated hover:bg-card-hover border border-card-border rounded-md px-4 py-1.5 transition-colors text-center min-w-[5rem]"
-          >
-            <span>{verses.length > 0 ? `${safeVerseIndex + 1} OF ${verses.length}` : '0 OF 0'}</span>
-            {activeTopicFilter && state.topics?.some(t => t.id === activeTopicFilter) && (
-              <span className="block text-[9px] text-accent truncate max-w-[100px] opacity-90 mt-[1px] leading-none">
-                {state.topics?.find(t => t.id === activeTopicFilter)?.name}
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={handleNext}
-            disabled={activeVerseIndex === verses.length - 1}
-            className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
-            aria-label="Next verse"
-          >
-            <span>Next</span>
-            <ArrowRight className="w-4 h-4 flex-shrink-0" />
-          </button>
-        </div>
+        <div className="pb-8" />
       </div>
 
       <Modal isOpen={isNavigatorOpen} onClose={() => setIsNavigatorOpen(false)} title="Filter by Group">
