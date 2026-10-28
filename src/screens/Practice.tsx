@@ -652,20 +652,6 @@ export const Practice: React.FC = () => {
             <div className="w-8" />
           </div>
 
-          {/* Segmented Dash Progress Bar */}
-          {verses.length > 0 && (
-            <div className="flex items-center gap-1.5 w-full">
-              {verses.map((_, idx) => (
-                <div
-                  key={`dash-${idx}`}
-                  className={`h-1 flex-1 rounded-full transition-colors ${
-                    idx <= safeVerseIndex ? 'bg-[#D4A359]' : 'bg-[#2C2720]'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-
           {/* Mode Selector Horizontal Scrollable Pills */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
             {[
@@ -693,54 +679,68 @@ export const Practice: React.FC = () => {
               );
             })}
           </div>
+
+          {/* Segmented Dash Progress Bar (directly under mode pills) */}
+          {verses.length > 0 && (
+            <div className="flex items-center gap-1.5 w-full pt-1">
+              {verses.map((_, idx) => (
+                <div
+                  key={`dash-${idx}`}
+                  className={`h-1 flex-1 rounded-full transition-colors ${
+                    idx <= safeVerseIndex ? 'bg-[#D4A359]' : 'bg-[#2C2720]'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
 
-        {/* Display Board (Workspace) */}
-        <div className="bg-card border border-card-border rounded-lg p-6 lg:p-10 relative flex-1 flex flex-col shadow-sm mb-8">
+        {/* Free-Flow Display Workspace (Unboxed canvas) */}
+        <div className={`relative flex-1 flex flex-col ${activeMode === 'listen' ? '' : 'p-4 sm:p-6 mb-6'}`}>
           <div className="flex-1 flex flex-col">
             {activeMode === 'read' && (
               <button 
                 onClick={() => setActiveMode('immersed')} 
-                className="absolute top-4 right-4 lg:top-6 lg:right-6 w-11 h-11 rounded-full flex items-center justify-center bg-accent/10 text-accent hover:bg-accent hover:text-white transition-all shadow-sm active:scale-95"
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 rounded-full flex items-center justify-center bg-[#D4A359]/10 text-[#D4A359] hover:bg-[#D4A359] hover:text-[#14120E] transition-all shadow-sm active:scale-95"
                 title="Immerse Reading"
               >
                 <Maximize className="w-5 h-5" />
               </button>
             )}
 
-            {activeMode !== 'read' && (
+            {activeMode !== 'read' && activeMode !== 'listen' && (
               <button
                 onClick={handleHintClick}
-                className={`absolute top-4 right-4 lg:top-6 lg:right-6 w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-sm active:scale-95
-                  ${hintLevel > 0 ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-card border border-card-border text-muted hover:text-primary hover:bg-card-hover'}`}
+                className={`absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm active:scale-95
+                  ${hintLevel > 0 ? 'bg-[#D4A359] text-[#14120E]' : 'bg-[#1E1B17] border border-[#332D24] text-[#A89F91] hover:text-[#F5F2EB]'}`}
                 title={hintLevel === 0 ? 'Show Hint' : hintLevel < 4 ? 'More Hint' : 'Hide Hint'}
               >
                 <HelpCircle className="w-5 h-5" />
               </button>
             )}
 
-            <div className="mt-4">
-              {activeMode !== 'read' && renderProgressiveHint()}
+            <div className="mt-2">
+              {activeMode !== 'read' && activeMode !== 'listen' && renderProgressiveHint()}
             </div>
 
-            <div key={activeMode} className="flex-1 animate-[fadeScaleIn_0.2s_ease-out] flex flex-col justify-start mt-8 lg:mt-6">
+            <div key={activeMode} className="flex-1 animate-[fadeScaleIn_0.2s_ease-out] flex flex-col justify-start mt-4">
               {renderWorkspace()}
             </div>
           </div>
         </div>
 
-        {/* Inline Scoring Block (hidden in Read mode) */}
-        {activeMode !== 'read' && (
-          <div className="w-full flex justify-center mb-8">
+        {/* Inline Scoring Block (Docked, hidden in Read / Listen mode) */}
+        {activeMode !== 'read' && activeMode !== 'listen' && (
+          <div className="w-full flex justify-center mb-6">
             {!isEvaluationOpen ? (
               <button
                 onClick={() => setIsEvaluationOpen(true)}
-                className="flex items-center gap-2 px-8 py-3.5 rounded-md bg-accent text-white font-bold text-lg hover:bg-accent-hover transition-colors active:scale-95"
+                className="flex items-center justify-center gap-2 w-full max-w-md py-3.5 rounded-[18px] bg-[#D4A359] text-[#14120E] font-bold text-base hover:bg-[#E2B773] transition-all active:scale-95 shadow-md"
               >
-                <Check className="w-5 h-5" /> Score My Recall
+                <Check className="w-5 h-5" /> Done Reciting — Check Recall
               </button>
             ) : (
               <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-lg p-5 flex flex-col gap-4 animate-[fadeScaleIn_0.2s_ease-out] shadow-sm">

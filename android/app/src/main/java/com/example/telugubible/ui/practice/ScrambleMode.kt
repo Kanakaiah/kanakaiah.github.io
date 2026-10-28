@@ -97,18 +97,24 @@ fun ScrambleMode(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Instruction Subtitle
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Instruction Subtitle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
             Text(
                 text = if (chunks.size > 1) {
                     "Put the words in order. (Part ${currentChunkIndex + 1} of ${chunks.size})"
@@ -280,10 +286,11 @@ fun ScrambleMode(
                 }
             }
         }
+        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        // Check Order CTA Button (Full Width, Matching Mockup 2)
+        // Check Order CTA Button (Docked at Bottom, Matching Mockup)
         Button(
             onClick = {
                 if (placedChips.size < currentTargetWords.size) {

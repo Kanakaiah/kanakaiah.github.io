@@ -413,7 +413,7 @@ private fun ReviewHeroCard(
     var orderMenuExpanded by remember { mutableStateOf(false) }
 
     Surface(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(18.dp),
         color = RemoraCardBg,
         border = BorderStroke(1.dp, RemoraCardBorder),
         modifier = Modifier.fillMaxWidth()
@@ -735,7 +735,7 @@ private fun CollectionCard(
 ) {
     Surface(
         onClick = onCardClick,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(18.dp),
         color = RemoraCardBg,
         border = BorderStroke(1.dp, RemoraCardBorder),
         modifier = Modifier.fillMaxWidth()

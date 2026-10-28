@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -66,21 +67,19 @@ fun EraserMode(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         // Slider Control Surface
         Surface(
-            shape = RoundedCornerShape(10.dp),
-            color = RemoraCardBgElevated,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
+            shape = RoundedCornerShape(12.dp),
+            color = Color(0xFF1E1B17),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF332D24)),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
-                modifier = Modifier.padding(14.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -88,15 +87,15 @@ fun EraserMode(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "HIDE WORDS",
+                        text = "BLANKS",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp,
-                        color = RemoraTextMuted
+                        color = RemoraAccent
                     )
                     Text(
-                        text = "${sliderValue.roundToInt()}% (${totalHiddenCount}/${rawWords.size})",
-                        fontSize = 13.sp,
+                        text = "${sliderValue.roundToInt()}% (${totalHiddenCount}/${rawWords.size} hidden)",
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = RemoraAccentLight
                     )
@@ -139,19 +138,19 @@ fun EraserMode(
             }
         }
 
-        // Passage Display with Masked / Unmasked Words
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = RemoraCardBg,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth()
+        // Free-Flow Passage Display (Unconstrained canvas, full screen space like Immerse mode)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(scrollState)
+                .padding(vertical = 12.dp),
+            contentAlignment = Alignment.TopStart
         ) {
             FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 rawWords.forEachIndexed { index, word ->
                     val hidden = isWordHidden(index)
@@ -160,48 +159,61 @@ fun EraserMode(
                         onClick = {
                             manuallyToggled[index] = !hidden
                         },
-                        shape = RoundedCornerShape(4.dp),
-                        color = if (hidden) RemoraCardBorder.copy(alpha = 0.8f) else Color.Transparent,
-                        border = if (!hidden) null else androidx.compose.foundation.BorderStroke(
+                        shape = RoundedCornerShape(6.dp),
+                        color = if (hidden) Color(0xFF2C2720) else Color.Transparent,
+                        border = if (hidden) androidx.compose.foundation.BorderStroke(
                             1.dp,
-                            RemoraCardBorder
-                        )
+                            Color(0xFF453E33)
+                        ) else null
                     ) {
                         Text(
-                            text = word,
-                            fontSize = 17.sp,
-                            lineHeight = 24.sp,
+                            text = if (hidden) "•".repeat(word.length.coerceAtLeast(3)) else word,
+                            fontSize = 20.sp,
+                            lineHeight = 32.sp,
+                            fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Medium,
-                            color = if (hidden) Color.Transparent else RemoraTextPrimary,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            letterSpacing = if (hidden) 2.sp else 0.sp,
+                            color = if (hidden) Color(0xFF6E6455) else RemoraTextPrimary,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                         )
                     }
                 }
             }
         }
 
-        Text(
-            text = "Recite the verse filling in the erased gaps from memory",
-            fontSize = 11.sp,
-            color = RemoraTextMuted,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Button(
-            onClick = { onComplete(hiddenRatio) },
-            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-            shape = RoundedCornerShape(8.dp),
+        // Docked Bottom Action Area (Always visible without scrolling)
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .padding(top = 8.dp, bottom = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = "Done — Check Recall",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+                text = "Recite the verse filling in the erased gaps from memory",
+                fontSize = 11.sp,
+                color = RemoraTextMuted,
+                textAlign = TextAlign.Center
             )
+
+            Button(
+                onClick = { onComplete(hiddenRatio) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RemoraAccent,
+                    contentColor = Color(0xFF141414)
+                ),
+                shape = RoundedCornerShape(18.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text(
+                    text = "Done Reciting — Check Recall",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF141414)
+                )
+            }
         }
     }
 }

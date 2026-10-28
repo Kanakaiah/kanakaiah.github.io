@@ -145,10 +145,11 @@ fun PracticeScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 60.dp),
+                            .navigationBarsPadding()
+                            .padding(bottom = 8.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Top Header (✕, Reference, Subtitle, Segmented Dashes, Mode Pills)
+                        // Top Header (✕, Reference, Subtitle, Mode Pills, Segmented Dash)
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -195,27 +196,6 @@ fun PracticeScreen(
                                 Spacer(modifier = Modifier.size(36.dp))
                             }
 
-                            // Segmented Dash Progress Bar
-                            if (state.verses.isNotEmpty()) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 2.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    state.verses.indices.forEach { idx ->
-                                        val isFilled = idx <= state.currentIndex
-                                        Box(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .height(4.dp)
-                                                .clip(RoundedCornerShape(2.dp))
-                                                .background(if (isFilled) RemoraAccent else Color(0xFF2C2720))
-                                        )
-                                    }
-                                }
-                            }
-
                             // Horizontal Mode Selector Pills
                             Row(
                                 modifier = Modifier
@@ -240,6 +220,27 @@ fun PracticeScreen(
                                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                             color = if (isSelected) Color(0xFF14120E) else RemoraTextSecondary,
                                             modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Segmented Dash Progress Bar (positioned directly under mode pills)
+                            if (state.verses.isNotEmpty()) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 2.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    state.verses.indices.forEach { idx ->
+                                        val isFilled = idx <= state.currentIndex
+                                        Box(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .height(4.dp)
+                                                .clip(RoundedCornerShape(2.dp))
+                                                .background(if (isFilled) RemoraAccent else Color(0xFF2C2720))
                                         )
                                     }
                                 }

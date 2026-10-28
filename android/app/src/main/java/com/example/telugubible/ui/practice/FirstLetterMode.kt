@@ -7,15 +7,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -66,91 +65,90 @@ fun FirstLetterMode(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // Controls Row: Progressive Hint Button + Reset + Ceiling Info
-        Surface(
-            shape = RoundedCornerShape(10.dp),
-            color = RemoraCardBgElevated,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth()
+        // Top Controls Row: Lightweight Hint Pill + Ceiling Info
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Surface(
+                onClick = {
+                    hintLevel = if (hintLevel >= 4) 0 else hintLevel + 1
+                },
+                shape = RoundedCornerShape(16.dp),
+                color = if (hintLevel > 0) RemoraAccent.copy(alpha = 0.25f) else Color(0xFF1E1B17),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (hintLevel > 0) RemoraAccent else Color(0xFF332D24)
+                )
             ) {
-                // Hint Cycler Button
-                Surface(
-                    onClick = {
-                        hintLevel = if (hintLevel >= 4) 0 else hintLevel + 1
-                    },
-                    shape = RoundedCornerShape(8.dp),
-                    color = if (hintLevel > 0) RemoraAccent.copy(alpha = 0.25f) else RemoraCardBg,
-                    border = androidx.compose.foundation.BorderStroke(
-                        1.dp,
-                        if (hintLevel > 0) RemoraAccent else RemoraCardBorder
-                    )
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.Lightbulb,
-                            contentDescription = "Hint",
-                            tint = if (hintLevel > 0) RemoraAccentLight else RemoraTextMuted,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = if (hintLevel == 0) "Hint" else if (hintLevel < 4) "Hint $hintLevel/4" else "Full",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (hintLevel > 0) RemoraAccentLight else RemoraTextSecondary
-                        )
-                    }
-                }
-
-                // Hint usage & Ceiling indicator
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = if (totalRevealedCount == 0) "Recite from first letters"
-                        else "$totalRevealedCount of ${rawWords.size} words revealed",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = RemoraTextSecondary
+                    Icon(
+                        Icons.Default.Lightbulb,
+                        contentDescription = "Hint",
+                        tint = if (hintLevel > 0) RemoraAccentLight else RemoraTextMuted,
+                        modifier = Modifier.size(15.dp)
                     )
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Max Grade: $gradeCeilingLabel",
-                        fontSize = 10.sp,
+                        text = if (hintLevel == 0) "Hint" else if (hintLevel < 4) "Hint $hintLevel/4" else "Full",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (hintLevel > 0) RemoraAccentLight else RemoraTextSecondary
+                    )
+                }
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = if (totalRevealedCount == 0) "Recite from first letters"
+                    else "$totalRevealedCount of ${rawWords.size} revealed",
+                    fontSize = 11.5.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = RemoraTextSecondary
+                )
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFF1E1B17),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF332D24))
+                ) {
+                    Text(
+                        text = gradeCeilingLabel,
+                        fontSize = 10.5.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (revealedRatio > 0.75f) GradeBlank
                         else if (revealedRatio > 0.25f) GradeHard
-                        else RemoraAccentLight
+                        else RemoraAccentLight,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                     )
                 }
             }
         }
 
-        // Passage Display with Interactive First-Letter / Word Chips
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = RemoraCardBg,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth()
+        // Free-Flow Passage Display (Unconstrained canvas, full screen space like Immerse mode)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(scrollState)
+                .padding(vertical = 12.dp),
+            contentAlignment = Alignment.TopStart
         ) {
             FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 rawWords.forEachIndexed { index, word ->
                     val revealed = isWordRevealed(index)
@@ -166,17 +164,18 @@ fun FirstLetterMode(
                                 manuallyRevealed.add(index)
                             }
                         },
-                        shape = RoundedCornerShape(4.dp),
-                        color = if (revealed) RemoraAccent.copy(alpha = 0.15f) else Color.Transparent,
+                        shape = RoundedCornerShape(6.dp),
+                        color = if (revealed) RemoraAccent.copy(alpha = 0.18f) else Color.Transparent,
                         border = if (revealed) androidx.compose.foundation.BorderStroke(
                             1.dp,
-                            RemoraAccent.copy(alpha = 0.4f)
+                            RemoraAccent.copy(alpha = 0.5f)
                         ) else null
                     ) {
                         Text(
                             text = if (revealed) word else cuedWord,
-                            fontSize = 17.sp,
-                            lineHeight = 24.sp,
+                            fontSize = 20.sp,
+                            lineHeight = 32.sp,
+                            fontFamily = FontFamily.Serif,
                             fontWeight = if (revealed) FontWeight.SemiBold else FontWeight.Medium,
                             letterSpacing = if (revealed) 0.sp else 0.5.sp,
                             color = if (revealed) RemoraTextPrimary else RemoraTextSecondary,
@@ -187,29 +186,39 @@ fun FirstLetterMode(
             }
         }
 
-        Text(
-            text = "Tap any word to peek if you get stuck during recitation",
-            fontSize = 11.sp,
-            color = RemoraTextMuted,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // Ready / Rate Recall button
-        Button(
-            onClick = { onComplete(revealedRatio) },
-            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-            shape = RoundedCornerShape(8.dp),
+        // Docked Bottom Action Area (Always visible without scrolling)
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .padding(top = 8.dp, bottom = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = "Done Reciting — Check Recall",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+                text = "Tap any word to peek if you get stuck during recitation",
+                fontSize = 11.sp,
+                color = RemoraTextMuted,
+                textAlign = TextAlign.Center
             )
+
+            Button(
+                onClick = { onComplete(revealedRatio) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RemoraAccent,
+                    contentColor = Color(0xFF141414)
+                ),
+                shape = RoundedCornerShape(18.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text(
+                    text = "Done Reciting — Check Recall",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF141414)
+                )
+            }
         }
     }
 }
