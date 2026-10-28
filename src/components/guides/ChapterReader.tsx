@@ -452,6 +452,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   };
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
   const [showAddOptions, setShowAddOptions] = useState(false);
+  const [asOnePassage, setAsOnePassage] = useState(true);
+  const [memoryHookText, setMemoryHookText] = useState('');
+  const [startLearningNow, setStartLearningNow] = useState(true);
   const [showNavigator, setShowNavigator] = useState(false);
   const [showVersionPicker, setShowVersionPicker] = useState(false);
   const [navigatorBook, setNavigatorBook] = useState(bookId);
@@ -936,12 +939,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   };
 
   const handleAddClick = () => {
+    setAsOnePassage(true);
+    setMemoryHookText('');
+    setStartLearningNow(true);
     setShowAddOptions(true);
   };
 
   const executeAdd = (mode: 'individual' | 'combined') => {
     let addedCount = 0;
     let skippedCount = 0;
+    const nextDue = startLearningNow ? new Date().toISOString() : new Date(Date.now() + 86400000).toISOString();
+    const hookKeyword = memoryHookText.trim() || undefined;
     
     if (mode === 'individual') {
       selectedVerses.forEach(verseNum => {
@@ -970,10 +978,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               translation: bibleVersion,
               addedDate: new Date().toISOString(),
               status: 'learning',
-              sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+              sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: nextDue },
               streak: 0,
               attempts: 0,
-              topicIds: selectedTopicIds.length > 0 ? selectedTopicIds : undefined
+              topicIds: selectedTopicIds.length > 0 ? selectedTopicIds : undefined,
+              keyword: hookKeyword
             }
           });
           addedCount++;
@@ -1032,10 +1041,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             translation: bibleVersion,
             addedDate: new Date().toISOString(),
             status: 'learning',
-            sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() },
+            sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: nextDue },
             streak: 0,
             attempts: 0,
-            topicIds: selectedTopicIds.length > 0 ? selectedTopicIds : undefined
+            topicIds: selectedTopicIds.length > 0 ? selectedTopicIds : undefined,
+            keyword: hookKeyword
           }
         });
         addedCount++;
@@ -1623,38 +1633,75 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         </div>
       )}
 
-      {/* Add Options Modal */}
+      {/* Add to memory Modal matching Mockup */}
       {showAddOptions && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
-          <div className="bg-card-elevated border border-card-border rounded-lg shadow-md p-6 w-full max-w-sm">
-            <h3 className="text-xl font-bold text-primary mb-2">Add to Library</h3>
-            <p className="text-sm text-secondary mb-5">
-              {selectedVerses.length > 1 
-                ? `You have selected ${selectedVerses.length} verses.`
-                : 'Save this verse to your memory library.'}
-            </p>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
+          <div className="bg-[#14120E] border border-[#2C2720] rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4 text-[#F5F2EB]">
+            {/* Header */}
+            <div>
+              <h3 className="text-2xl font-serif font-bold text-[#F5F2EB] leading-tight">Add to memory</h3>
+              <p className="text-sm font-medium text-[#A89F91] mt-1">
+                {selectedVerses.length > 1 
+                  ? `${bookTitle} ${chapter}:${[...selectedVerses].sort((a, b) => a - b)[0]}–${[...selectedVerses].sort((a, b) => a - b).slice(-1)[0]}`
+                  : `${bookTitle} ${chapter}:${selectedVerses[0] || ''}`}
+              </p>
+            </div>
 
-            {/* Group Selector */}
-            <div className="mb-6">
-              <span className="text-[0.6875rem] font-bold text-muted uppercase tracking-wider block mb-2">Assign to Groups (Optional)</span>
-              <div className="flex flex-wrap items-center gap-2">
+            {/* Segmented Mode Selector (When > 1 verse) */}
+            {selectedVerses.length > 1 && (
+              <div className="flex bg-[#1E1B17] border border-[#332D24] rounded-full p-1 h-12">
+                <button
+                  type="button"
+                  onClick={() => setAsOnePassage(true)}
+                  className={`flex-1 rounded-full text-sm font-bold transition-all ${
+                    asOnePassage
+                      ? 'bg-[#D4A359] text-[#14120E] shadow-sm'
+                      : 'text-[#A89F91] hover:text-[#F5F2EB]'
+                  }`}
+                >
+                  As one passage
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAsOnePassage(false)}
+                  className={`flex-1 rounded-full text-sm font-bold transition-all ${
+                    !asOnePassage
+                      ? 'bg-[#D4A359] text-[#14120E] shadow-sm'
+                      : 'text-[#A89F91] hover:text-[#F5F2EB]'
+                  }`}
+                >
+                  As {selectedVerses.length} verses
+                </button>
+              </div>
+            )}
+
+            {/* Collections */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[0.6875rem] font-bold text-[#A89F91] uppercase tracking-wider">Collections</span>
+              <div className="flex flex-wrap items-center gap-2 max-h-36 overflow-y-auto no-scrollbar">
                 {state.topics?.map(topic => {
                   const isActive = selectedTopicIds.includes(topic.id);
                   return (
                     <button
+                      type="button"
                       key={topic.id}
                       onClick={() => {
                         setSelectedTopicIds(prev => 
                           isActive ? prev.filter(id => id !== topic.id) : [...prev, topic.id]
                         );
                       }}
-                      className={`text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border ${
+                      className={`text-xs px-3.5 py-2 rounded-full font-medium transition-all border flex items-center gap-2 ${
                         isActive 
-                          ? 'bg-accent/15 text-accent border-accent/30' 
-                          : 'bg-transparent text-secondary border-card-border hover:border-card-border-hover hover:text-primary'
+                          ? 'bg-[#1E1B17] text-[#F5F2EB] border-[#D4A359]' 
+                          : 'bg-[#1E1B17] text-[#A89F91] border-[#332D24] hover:border-[#4A4237]'
                       }`}
                     >
-                      {topic.name}
+                      <span className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] ${
+                        isActive ? 'bg-[#D4A359] border-[#D4A359] text-[#14120E]' : 'border-[#6E6455]'
+                      }`}>
+                        {isActive && '✓'}
+                      </span>
+                      <span>{topic.name}</span>
                     </button>
                   );
                 })}
@@ -1665,8 +1712,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       type="text"
                       value={newGroupName}
                       onChange={(e) => setNewGroupName(e.target.value)}
-                      placeholder="New group..."
-                      className="text-[0.8125rem] px-3 py-1.5 rounded-full bg-card border border-accent text-primary focus:outline-none w-28"
+                      placeholder="New collection..."
+                      className="text-xs px-3 py-1.5 rounded-full bg-[#181512] border border-[#D4A359] text-[#F5F2EB] focus:outline-none w-28"
                       autoFocus
                       onKeyDown={(e) => {
                         if (e.key === 'Escape') setIsAddingGroup(false);
@@ -1678,54 +1725,79 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     <button
                       type="submit"
                       disabled={!newGroupName.trim()}
-                      className="p-1.5 rounded-full text-accent hover:bg-accent/10 disabled:opacity-50 transition-colors"
-                      aria-label="Save group"
+                      className="p-1.5 rounded-full text-[#D4A359] hover:bg-[#D4A359]/10 disabled:opacity-50 transition-colors"
+                      aria-label="Save collection"
                     >
                       <Check className="w-4 h-4" />
                     </button>
                   </form>
                 ) : (
                   <button
+                    type="button"
                     onClick={() => setIsAddingGroup(true)}
-                    className="text-[0.8125rem] px-3 py-1.5 rounded-full font-medium transition-colors border bg-transparent text-secondary border-card-border border-dashed hover:border-solid hover:border-accent hover:text-accent flex items-center gap-1"
+                    className="text-xs px-3.5 py-2 rounded-full font-semibold transition-colors border border-dashed border-[#5A4D3B] text-[#D4A359] hover:border-solid hover:border-[#D4A359]"
                   >
-                    <Plus className="w-3.5 h-3.5" /> New Group
+                    New collection
                   </button>
                 )}
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              {selectedVerses.length > 1 ? (
-                <>
-                  <button
-                    onClick={() => executeAdd('combined')}
-                    className="w-full py-3 px-4 bg-accent text-white font-bold rounded-md hover:bg-accent-hover transition-colors flex flex-col items-start"
-                  >
-                    <span>Combine Consecutive</span>
-                    <span className="text-xs font-normal text-white/70 mt-0.5">e.g. 1:3-5 and 1:7</span>
-                  </button>
+            {/* Keyword (Your Memory Hook) */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[0.6875rem] font-bold text-[#A89F91] uppercase tracking-wider">Keyword (Your Memory Hook)</span>
+              <input
+                type="text"
+                value={memoryHookText}
+                onChange={(e) => setMemoryHookText(e.target.value)}
+                placeholder="Forever"
+                className="w-full px-4 py-3 rounded-xl bg-[#181512] border border-[#332D24] text-sm text-[#F5F2EB] placeholder:text-[#A89F91]/50 focus:outline-none focus:border-[#D4A359]"
+              />
+            </div>
 
-                  <button
-                    onClick={() => executeAdd('individual')}
-                    className="w-full py-3 px-4 bg-card border border-card-border text-primary font-bold rounded-md hover:bg-card-hover transition-colors flex flex-col items-start"
-                  >
-                    <span>Individual Verses</span>
-                    <span className="text-xs font-normal text-secondary mt-0.5">Add {selectedVerses.length} separate entries</span>
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => executeAdd('individual')}
-                  className="w-full py-3 px-4 bg-accent text-white font-bold rounded-md hover:bg-accent-hover transition-colors flex justify-center"
-                >
-                  Save to Library
-                </button>
-              )}
-              
+            {/* Radio Options */}
+            <div className="flex flex-col gap-2.5 pt-1">
+              <label className="flex items-center gap-3 cursor-pointer text-sm text-[#F5F2EB]">
+                <input
+                  type="radio"
+                  name="scheduleChoice"
+                  checked={startLearningNow}
+                  onChange={() => setStartLearningNow(true)}
+                  className="accent-[#D4A359] w-4 h-4"
+                />
+                <span>Start learning now</span>
+              </label>
+
+              <label className="flex items-center gap-3 cursor-pointer text-sm text-[#F5F2EB]">
+                <input
+                  type="radio"
+                  name="scheduleChoice"
+                  checked={!startLearningNow}
+                  onChange={() => setStartLearningNow(false)}
+                  className="accent-[#D4A359] w-4 h-4"
+                />
+                <span>First review tomorrow</span>
+              </label>
+            </div>
+
+            {/* Action CTA Button */}
+            <div className="flex flex-col gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => executeAdd(selectedVerses.length > 1 && asOnePassage ? 'combined' : 'individual')}
+                className="w-full py-3.5 rounded-[18px] bg-[#D4A359] text-[#14120E] font-bold text-base hover:bg-[#E2B773] transition-all shadow-md active:scale-95 flex items-center justify-center"
+              >
+                {selectedVerses.length <= 1
+                  ? 'Add verse'
+                  : asOnePassage
+                  ? 'Add passage'
+                  : `Add ${selectedVerses.length} verses`}
+              </button>
+
               <button 
+                type="button"
                 onClick={() => setShowAddOptions(false)}
-                className="w-full py-2 mt-2 text-sm font-bold text-secondary hover:text-primary transition-colors"
+                className="w-full py-1 text-xs font-semibold text-[#A89F91] hover:text-[#F5F2EB] transition-colors"
               >
                 Cancel
               </button>

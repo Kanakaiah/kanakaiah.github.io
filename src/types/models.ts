@@ -37,6 +37,7 @@ export interface Verse {
   streak: number;
   attempts: number;
   topicIds?: string[];
+  keyword?: string;
 }
 
 export type BibleVersion = 'LSB' | 'NASB' | 'NLT' | 'ESV' | 'WEB' | 'KJV' | 'BSB' | 'TBSI' | 'TELIRV';

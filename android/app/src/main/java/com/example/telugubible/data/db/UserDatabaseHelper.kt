@@ -32,7 +32,8 @@ data class UserVerseEntity(
     val createdAt: Long,
     val lapses: Int = 0,
     val preLapseInterval: Int = 0,
-    val attempts: Int = 0
+    val attempts: Int = 0,
+    val keyword: String? = null
 )
 
 data class ChapterProgressEntity(
@@ -106,6 +107,9 @@ class UserDatabaseHelper(private val context: Context) :
         migrateFromLegacyDbIfNeeded()
         try {
             mergeWellKnownTopics(writableDatabase)
+        } catch (_: Exception) {}
+        try {
+            writableDatabase.execSQL("ALTER TABLE user_verses ADD COLUMN keyword TEXT;")
         } catch (_: Exception) {}
     }
 
@@ -582,13 +586,14 @@ class UserDatabaseHelper(private val context: Context) :
         val cursor = db.rawQuery(
             """
             SELECT id, book_id, chapter, verse, status, repetition, interval, efactor, 
-                   next_due_date, created_at, lapses, pre_lapse_interval, attempts, end_verse
+                   next_due_date, created_at, lapses, pre_lapse_interval, attempts, end_verse, keyword
             FROM user_verses
             ORDER BY next_due_date ASC
             """.trimIndent(),
             null
         )
         cursor.use {
+            val kwIdx = it.getColumnIndex("keyword")
             while (it.moveToNext()) {
                 list.add(
                     UserVerseEntity(
@@ -608,7 +613,8 @@ class UserDatabaseHelper(private val context: Context) :
                         createdAt = it.getLong(9),
                         lapses = if (it.columnCount > 10) it.getInt(10) else 0,
                         preLapseInterval = if (it.columnCount > 11) it.getInt(11) else 0,
-                        attempts = if (it.columnCount > 12) it.getInt(12) else 0
+                        attempts = if (it.columnCount > 12) it.getInt(12) else 0,
+                        keyword = if (kwIdx != -1 && !it.isNull(kwIdx)) it.getString(kwIdx) else null
                     )
                 )
             }
@@ -616,7 +622,14 @@ class UserDatabaseHelper(private val context: Context) :
         return list
     }
 
-    fun addUserVerse(bookId: Int, chapter: Int, verse: Int, endVerse: Int? = null): Boolean {
+    fun addUserVerse(
+        bookId: Int,
+        chapter: Int,
+        verse: Int,
+        endVerse: Int? = null,
+        nextDueDate: Long? = null,
+        keyword: String? = null
+    ): Boolean {
         val db = writableDatabase
         val now = System.currentTimeMillis()
         val values = ContentValues().apply {
@@ -630,11 +643,14 @@ class UserDatabaseHelper(private val context: Context) :
             put("repetition", 0)
             put("interval", 0)
             put("efactor", 2.5)
-            put("next_due_date", now)
+            put("next_due_date", nextDueDate ?: now)
             put("created_at", now)
             put("lapses", 0)
             put("pre_lapse_interval", 0)
             put("attempts", 0)
+            if (!keyword.isNullOrBlank()) {
+                put("keyword", keyword.trim())
+            }
         }
         val rowId = db.insertWithOnConflict("user_verses", null, values, SQLiteDatabase.CONFLICT_IGNORE)
         return rowId != -1L

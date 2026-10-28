@@ -81,6 +81,9 @@ fun ChapterReaderScreen(
     var selectedTopicIds by remember { mutableStateOf(setOf<String>()) }
     var isAddingGroup by remember { mutableStateOf(false) }
     var newGroupName by remember { mutableStateOf("") }
+    var asOnePassage by remember { mutableStateOf(true) }
+    var memoryHookText by remember { mutableStateOf("") }
+    var startLearningNow by remember { mutableStateOf(true) }
 
     // Header and bottom bar stay visible matching book page (no auto-hide)
     val chromeVisible = true
@@ -897,8 +900,18 @@ fun ChapterReaderScreen(
                 .padding(bottom = 80.dp)
         )
 
-        // Memorize Verses Modal Sheet (Matching PWD ChapterReader.tsx)
+        // Memorize Verses Modal Sheet (Matching Mockup: Add to memory)
         if (showMemorizeSheet && state.selectedVerses.isNotEmpty()) {
+            val sortedSelected = remember(state.selectedVerses) { state.selectedVerses.sorted() }
+            val bookTitle = state.currentBook?.let { BookNameUtils.getBookDisplayName(it, state.activeVersion) } ?: ""
+            val formattedRef = remember(sortedSelected, bookTitle, state.currentChapter) {
+                if (sortedSelected.size > 1) {
+                    "$bookTitle ${state.currentChapter}:${sortedSelected.first()}–${sortedSelected.last()}"
+                } else if (sortedSelected.isNotEmpty()) {
+                    "$bookTitle ${state.currentChapter}:${sortedSelected.first()}"
+                } else ""
+            }
+
             ModalBottomSheet(
                 onDismissRequest = {
                     showMemorizeSheet = false
@@ -906,192 +919,359 @@ fun ChapterReaderScreen(
                     newGroupName = ""
                 },
                 sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-                containerColor = RemoraCardBg,
-                tonalElevation = 6.dp
+                containerColor = Color(0xFF14120E),
+                tonalElevation = 8.dp
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .padding(bottom = 32.dp)
+                        .padding(horizontal = 22.dp)
+                        .padding(top = 4.dp, bottom = 36.dp),
+                    verticalArrangement = Arrangement.spacedBy(18.dp)
                 ) {
-                    Text(
-                        text = "Add to Library",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    val bookTitle = state.currentBook?.let { BookNameUtils.getBookDisplayName(it, state.activeVersion) } ?: ""
-                    Text(
-                        text = "$bookTitle ${state.currentChapter} · ${state.selectedVerses.size} verse(s) selected",
-                        fontSize = 13.sp,
-                        color = RemoraTextSecondary
-                    )
+                    // Header: "Add to memory" + Reference
+                    Column {
+                        Text(
+                            text = "Add to memory",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Serif,
+                            color = RemoraTextPrimary,
+                            letterSpacing = (-0.3).sp
+                        )
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(
+                            text = formattedRef,
+                            fontSize = 14.5.sp,
+                            color = RemoraTextSecondary,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Assign to Groups (Optional)
-                    Text(
-                        text = "ASSIGN TO GROUPS (OPTIONAL)",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = RemoraTextMuted
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        state.topics.forEach { topic ->
-                            val isSelected = selectedTopicIds.contains(topic.id)
-                            FilterChip(
-                                selected = isSelected,
-                                onClick = {
-                                    selectedTopicIds = if (isSelected) {
-                                        selectedTopicIds - topic.id
-                                    } else {
-                                        selectedTopicIds + topic.id
+                    // Segmented Mode Selector: As one passage vs As N verses
+                    if (sortedSelected.size > 1) {
+                        Surface(
+                            shape = RoundedCornerShape(26.dp),
+                            color = Color(0xFF1E1B17),
+                            border = BorderStroke(1.dp, Color(0xFF332D24)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)
+                        ) {
+                            Row(modifier = Modifier.fillMaxSize()) {
+                                Surface(
+                                    onClick = { asOnePassage = true },
+                                    shape = RoundedCornerShape(26.dp),
+                                    color = if (asOnePassage) RemoraAccent else Color.Transparent,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxHeight()
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Text(
+                                            text = "As one passage",
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (asOnePassage) Color(0xFF14120E) else RemoraTextSecondary
+                                        )
                                     }
-                                },
-                                label = {
-                                    Text(
-                                        text = topic.name,
-                                        fontSize = 13.sp,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                        color = if (isSelected) RemoraAccentLight else RemoraTextSecondary
-                                    )
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = RemoraAccent.copy(alpha = 0.2f),
-                                    containerColor = Color.Transparent
-                                ),
-                                border = BorderStroke(
-                                    1.dp,
-                                    if (isSelected) RemoraAccent.copy(alpha = 0.6f) else RemoraCardBorder
-                                ),
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                        }
-
-                        if (isAddingGroup) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .height(32.dp)
-                                    .background(RemoraCardBgElevated, RoundedCornerShape(16.dp))
-                                    .border(1.dp, RemoraAccent, RoundedCornerShape(16.dp))
-                                    .padding(horizontal = 10.dp)
-                            ) {
-                                BasicTextField(
-                                    value = newGroupName,
-                                    onValueChange = { newGroupName = it },
-                                    singleLine = true,
-                                    textStyle = androidx.compose.ui.text.TextStyle(
-                                        color = RemoraTextPrimary,
-                                        fontSize = 13.sp
-                                    ),
-                                    modifier = Modifier.width(90.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                IconButton(
-                                    onClick = {
-                                        if (newGroupName.isNotBlank()) {
-                                            viewModel.createTopic(newGroupName.trim())
-                                            newGroupName = ""
-                                            isAddingGroup = false
-                                        }
-                                    },
-                                    modifier = Modifier.size(20.dp)
-                                ) {
-                                    Icon(Icons.Default.Check, contentDescription = "Save", tint = RemoraAccent, modifier = Modifier.size(14.dp))
                                 }
-                            }
-                        } else {
-                            Surface(
-                                onClick = { isAddingGroup = true },
-                                shape = RoundedCornerShape(16.dp),
-                                color = Color.Transparent,
-                                border = BorderStroke(1.dp, RemoraCardBorder),
-                                modifier = Modifier.height(32.dp)
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(horizontal = 10.dp)
+
+                                Surface(
+                                    onClick = { asOnePassage = false },
+                                    shape = RoundedCornerShape(26.dp),
+                                    color = if (!asOnePassage) RemoraAccent else Color.Transparent,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxHeight()
                                 ) {
-                                    Icon(Icons.Default.Add, contentDescription = null, tint = RemoraTextMuted, modifier = Modifier.size(14.dp))
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text("New Group", fontSize = 13.sp, color = RemoraTextSecondary)
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Text(
+                                            text = "As ${sortedSelected.size} verses",
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (!asOnePassage) Color(0xFF14120E) else RemoraTextSecondary
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    // Section 1: COLLECTIONS
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text(
+                            text = "COLLECTIONS",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.2.sp,
+                            color = RemoraTextMuted
+                        )
 
-                    // Buttons
-                    if (state.selectedVerses.size > 1) {
-                        Button(
-                            onClick = {
-                                viewModel.addSelectedVersesToMemory(
-                                    combineConsecutive = true,
-                                    topicIds = selectedTopicIds.toList()
-                                )
-                                showMemorizeSheet = false
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                            shape = RoundedCornerShape(8.dp),
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Column(
-                                horizontalAlignment = Alignment.Start,
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
-                            ) {
-                                Text("Combine Consecutive", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                                Text("e.g. 1:3-5 and 1:7", fontSize = 12.sp, color = Color.White.copy(alpha = 0.7f))
+                            state.topics.forEach { topic ->
+                                val isSelected = selectedTopicIds.contains(topic.id)
+                                Surface(
+                                    onClick = {
+                                        selectedTopicIds = if (isSelected) {
+                                            selectedTopicIds - topic.id
+                                        } else {
+                                            selectedTopicIds + topic.id
+                                        }
+                                    },
+                                    shape = RoundedCornerShape(22.dp),
+                                    color = Color(0xFF1E1B17),
+                                    border = BorderStroke(1.dp, if (isSelected) RemoraAccent else Color(0xFF332D24))
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(if (isSelected) RemoraAccent else Color.Transparent)
+                                                .border(
+                                                    width = 1.dp,
+                                                    color = if (isSelected) RemoraAccent else Color(0xFF6E6455),
+                                                    shape = RoundedCornerShape(4.dp)
+                                                ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            if (isSelected) {
+                                                Icon(
+                                                    Icons.Default.Check,
+                                                    contentDescription = null,
+                                                    tint = Color(0xFF14120E),
+                                                    modifier = Modifier.size(13.dp)
+                                                )
+                                            }
+                                        }
+                                        Spacer(modifier = Modifier.width(9.dp))
+                                        Text(
+                                            text = topic.name,
+                                            fontSize = 13.5.sp,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                            color = if (isSelected) RemoraTextPrimary else RemoraTextSecondary
+                                        )
+                                    }
+                                }
+                            }
+
+                            // New collection pill button
+                            if (isAddingGroup) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .height(38.dp)
+                                        .background(RemoraCardBgElevated, RoundedCornerShape(22.dp))
+                                        .border(1.dp, RemoraAccent, RoundedCornerShape(22.dp))
+                                        .padding(horizontal = 12.dp)
+                                ) {
+                                    BasicTextField(
+                                        value = newGroupName,
+                                        onValueChange = { newGroupName = it },
+                                        singleLine = true,
+                                        textStyle = androidx.compose.ui.text.TextStyle(
+                                            color = RemoraTextPrimary,
+                                            fontSize = 13.sp
+                                        ),
+                                        modifier = Modifier.width(95.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    IconButton(
+                                        onClick = {
+                                            if (newGroupName.isNotBlank()) {
+                                                viewModel.createTopic(newGroupName.trim())
+                                                newGroupName = ""
+                                                isAddingGroup = false
+                                            }
+                                        },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(Icons.Default.Check, contentDescription = "Save", tint = RemoraAccent, modifier = Modifier.size(16.dp))
+                                    }
+                                }
+                            } else {
+                                Surface(
+                                    onClick = { isAddingGroup = true },
+                                    shape = RoundedCornerShape(22.dp),
+                                    color = Color.Transparent,
+                                    border = BorderStroke(1.dp, Color(0xFF5A4D3B)),
+                                    modifier = Modifier.height(38.dp)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 14.dp)
+                                    ) {
+                                        Text(
+                                            text = "New collection",
+                                            fontSize = 13.5.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = RemoraAccent
+                                        )
+                                    }
+                                }
                             }
                         }
+                    }
 
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        OutlinedButton(
-                            onClick = {
-                                viewModel.addSelectedVersesToMemory(
-                                    combineConsecutive = false,
-                                    topicIds = selectedTopicIds.toList()
-                                )
-                                showMemorizeSheet = false
-                            },
-                            shape = RoundedCornerShape(8.dp),
-                            border = BorderStroke(1.dp, RemoraCardBorder),
+                    // Section 2: KEYWORD (YOUR MEMORY HOOK)
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = "KEYWORD (YOUR MEMORY HOOK)",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.2.sp,
+                            color = RemoraTextMuted
+                        )
+                        Surface(
+                            shape = RoundedCornerShape(14.dp),
+                            color = Color(0xFF181512),
+                            border = BorderStroke(1.dp, Color(0xFF332D24)),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Column(
-                                horizontalAlignment = Alignment.Start,
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
-                            ) {
-                                Text("Individual Verses", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = RemoraTextPrimary)
-                                Text("Add ${state.selectedVerses.size} separate entries", fontSize = 12.sp, color = RemoraTextSecondary)
-                            }
+                            BasicTextField(
+                                value = memoryHookText,
+                                onValueChange = { memoryHookText = it },
+                                singleLine = true,
+                                textStyle = androidx.compose.ui.text.TextStyle(
+                                    color = RemoraTextPrimary,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                ),
+                                decorationBox = { innerTextField ->
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                                    ) {
+                                        if (memoryHookText.isEmpty()) {
+                                            Text(
+                                                text = "e.g. Forever",
+                                                color = RemoraTextMuted.copy(alpha = 0.5f),
+                                                fontSize = 15.sp
+                                            )
+                                        }
+                                        innerTextField()
+                                    }
+                                }
+                            )
                         }
-                    } else {
-                        Button(
-                            onClick = {
-                                viewModel.addSelectedVersesToMemory(
-                                    combineConsecutive = false,
-                                    topicIds = selectedTopicIds.toList()
-                                )
-                                showMemorizeSheet = false
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.fillMaxWidth().height(48.dp)
+                    }
+
+                    // Section 3: Radio Options
+                    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                        // Start learning now
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { startLearningNow = true }
+                                .padding(vertical = 4.dp)
                         ) {
-                            Text("Save to Library", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            Box(
+                                modifier = Modifier
+                                    .size(22.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        color = if (startLearningNow) RemoraAccent else Color(0xFF7A7062),
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (startLearningNow) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(11.dp)
+                                            .background(RemoraAccent, CircleShape)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Text(
+                                text = "Start learning now",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = RemoraTextPrimary
+                            )
                         }
+
+                        // First review tomorrow
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { startLearningNow = false }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(22.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        color = if (!startLearningNow) RemoraAccent else Color(0xFF7A7062),
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (!startLearningNow) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(11.dp)
+                                            .background(RemoraAccent, CircleShape)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Text(
+                                text = "First review tomorrow",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = RemoraTextPrimary
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Section 4: Primary Action Button (Matching Mockup: "Add 2 verses" / "Add passage")
+                    Button(
+                        onClick = {
+                            viewModel.addSelectedVersesToMemory(
+                                combineConsecutive = if (sortedSelected.size > 1) asOnePassage else false,
+                                topicIds = selectedTopicIds.toList(),
+                                startLearningNow = startLearningNow,
+                                keyword = memoryHookText
+                            )
+                            showMemorizeSheet = false
+                        },
+                        shape = RoundedCornerShape(18.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = RemoraAccent,
+                            contentColor = Color(0xFF14120E)
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp)
+                    ) {
+                        Text(
+                            text = when {
+                                sortedSelected.size <= 1 -> "Add verse"
+                                asOnePassage -> "Add passage"
+                                else -> "Add ${sortedSelected.size} verses"
+                            },
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF14120E)
+                        )
                     }
                 }
             }

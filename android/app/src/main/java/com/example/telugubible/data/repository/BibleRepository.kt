@@ -191,8 +191,15 @@ class BibleRepository(
         }
     }
 
-    suspend fun addUserVerse(bookId: Int, chapter: Int, verse: Int, endVerse: Int? = null): Boolean = withContext(ioDispatcher) {
-        val inserted = userDbHelper.addUserVerse(bookId, chapter, verse, endVerse)
+    suspend fun addUserVerse(
+        bookId: Int,
+        chapter: Int,
+        verse: Int,
+        endVerse: Int? = null,
+        nextDueDate: Long? = null,
+        keyword: String? = null
+    ): Boolean = withContext(ioDispatcher) {
+        val inserted = userDbHelper.addUserVerse(bookId, chapter, verse, endVerse, nextDueDate, keyword)
         if (inserted) {
             val settings = userDbHelper.getAppSettings()
             val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()

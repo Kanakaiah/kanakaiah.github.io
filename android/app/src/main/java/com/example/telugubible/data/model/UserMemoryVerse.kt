@@ -19,7 +19,8 @@ data class UserMemoryVerse(
     val createdAt: Long = 0L,
     val lapses: Int = 0,
     val attempts: Int = 0,
-    val topicIds: List<String> = emptyList()
+    val topicIds: List<String> = emptyList(),
+    val keyword: String? = null
 ) {
     val verseRef: String
         get() = if (endVerse != null && endVerse > verse) "$chapter:$verse-$endVerse" else "$chapter:$verse"

@@ -376,6 +376,7 @@ class PracticeViewModel @JvmOverloads constructor(
     }
 
     fun getRetentionStage(verse: UserMemoryVerse?): String {
+        if (!verse?.keyword.isNullOrBlank()) return verse!!.keyword!!
         if (verse == null) return "Learning"
         return when {
             verse.interval >= 30 || verse.repetition >= 6 -> "Forever"

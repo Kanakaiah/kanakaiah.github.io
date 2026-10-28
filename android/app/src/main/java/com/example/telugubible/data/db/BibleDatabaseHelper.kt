@@ -479,7 +479,8 @@ class BibleDatabaseHelper(val context: Context) :
                 interval = uv.interval,
                 efactor = uv.efactor,
                 nextDueDate = uv.nextDueDate,
-                createdAt = uv.createdAt
+                createdAt = uv.createdAt,
+                keyword = uv.keyword
             )
         }
     }

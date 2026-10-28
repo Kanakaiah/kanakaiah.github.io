@@ -608,6 +608,9 @@ export const Practice: React.FC = () => {
 
   const retentionStage = React.useMemo(() => {
     if (!currentVerse) return 'Learning';
+    if (currentVerse.keyword && currentVerse.keyword.trim().length > 0) {
+      return currentVerse.keyword.trim();
+    }
     const interval = currentVerse.sm2?.interval || 0;
     const repetition = currentVerse.sm2?.repetition || 0;
     if (interval >= 30 || repetition >= 6) return 'Forever';

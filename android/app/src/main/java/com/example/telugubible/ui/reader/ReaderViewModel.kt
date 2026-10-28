@@ -453,6 +453,8 @@ class ReaderViewModel @JvmOverloads constructor(
     fun addSelectedVersesToMemory(
         combineConsecutive: Boolean = false,
         topicIds: List<String> = emptyList(),
+        startLearningNow: Boolean = true,
+        keyword: String = "",
         onSuccess: (count: Int) -> Unit = {}
     ) {
         viewModelScope.launch {
@@ -460,6 +462,10 @@ class ReaderViewModel @JvmOverloads constructor(
             val ch = _uiState.value.currentChapter
             val selected = _uiState.value.selectedVerses.sorted()
             if (selected.isEmpty()) return@launch
+
+            val now = System.currentTimeMillis()
+            val dueDate = if (startLearningNow) now else now + 86400000L
+            val trimmedKeyword = keyword.trim().takeIf { it.isNotEmpty() }
 
             var addedCount = 0
             if (combineConsecutive && selected.size > 1) {
@@ -478,7 +484,14 @@ class ReaderViewModel @JvmOverloads constructor(
                 for (grp in groups) {
                     val start = grp.first()
                     val end = if (grp.size > 1) grp.last() else null
-                    val success = repository.addUserVerse(book.id, ch, start, end)
+                    val success = repository.addUserVerse(
+                        bookId = book.id,
+                        chapter = ch,
+                        verse = start,
+                        endVerse = end,
+                        nextDueDate = dueDate,
+                        keyword = trimmedKeyword
+                    )
                     if (success) {
                         addedCount++
                         if (topicIds.isNotEmpty()) {
@@ -492,7 +505,14 @@ class ReaderViewModel @JvmOverloads constructor(
                 }
             } else {
                 for (v in selected) {
-                    val success = repository.addUserVerse(book.id, ch, v, null)
+                    val success = repository.addUserVerse(
+                        bookId = book.id,
+                        chapter = ch,
+                        verse = v,
+                        endVerse = null,
+                        nextDueDate = dueDate,
+                        keyword = trimmedKeyword
+                    )
                     if (success) {
                         addedCount++
                         if (topicIds.isNotEmpty()) {
