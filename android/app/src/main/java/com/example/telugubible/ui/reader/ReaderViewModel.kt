@@ -92,7 +92,7 @@ data class ReaderUiState(
     val occurrencesError: String? = null,
     val kjvChapterVerses: Map<Int, String> = emptyMap(),
     val readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
-    val readerFontFamily: ReaderFontFamily = ReaderFontFamily.MERRIWEATHER,
+    val readerFontFamily: ReaderFontFamily = ReaderFontFamily.INTER,
     val currentAnchor: ChapterAnchor? = null,
     val chapterProgress: ChapterProgressEntity? = null,
     val isAnchorDismissed: Boolean = false,
@@ -786,7 +786,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun resetReadingSettings() {
         val defTheme = ReaderTheme.DARK
-        val defFont = ReaderFontFamily.MERRIWEATHER
+        val defFont = ReaderFontFamily.INTER
         val defScale = FontSizeScale.M
         val defSpacing = LineSpacing.NORMAL
         val defBionic = false

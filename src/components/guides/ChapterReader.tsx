@@ -1416,7 +1416,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                           type: 'UPDATE_SETTINGS',
                           payload: {
                             fontSize: 1.0,
-                            fontFamily: 'serif',
+                            fontFamily: 'inter',
+                            lineSpacing: 'normal',
                             bionicReading: false,
                             showVerseNumbers: true
                           }
@@ -1431,7 +1432,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
                   {/* Preview Box */}
                   <div
-                    className="p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] font-serif transition-[font-size,line-height] duration-75"
+                    className={`p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] transition-[font-size,line-height] duration-75 ${
+                      state.settings.fontFamily === 'system' ? 'font-system' :
+                      state.settings.fontFamily === 'roboto' ? 'font-roboto' :
+                      state.settings.fontFamily === 'opensans' ? 'font-opensans' :
+                      'font-inter'
+                    }`}
                     style={{
                       fontSize: `${Math.round(14 * (state.settings.fontSize || 1))}px`,
                       lineHeight: state.settings.lineSpacing === 'tight' ? 1.3 : state.settings.lineSpacing === 'roomy' ? 2.05 : 1.65
@@ -1484,19 +1490,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   {/* Font */}
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">FONT</span>
-                    <div className="flex items-center gap-2">
+                    <div className="grid grid-cols-4 gap-1.5">
                       {[
-                        { id: 'serif', label: 'Serif' },
-                        { id: 'sans', label: 'Sans' },
-                        { id: 'hyper', label: 'Hyperlegible' },
+                        { id: 'inter', label: 'Inter' },
+                        { id: 'system', label: 'System' },
+                        { id: 'roboto', label: 'Roboto' },
+                        { id: 'opensans', label: 'Open Sans' },
                       ].map(f => {
-                        const isSelected = (state.settings.fontFamily || 'serif') === f.id;
+                        const isSelected = (state.settings.fontFamily || 'inter') === f.id;
                         return (
                           <button
                             key={f.id}
                             type="button"
                             onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: f.id as any } })}
-                            className={`flex-1 py-1.5 px-2 rounded-full text-xs font-semibold transition-all border ${
+                            className={`py-1.5 px-1 rounded-full text-xs font-semibold text-center transition-all border ${
                               isSelected
                                 ? 'bg-accent text-[#14120f] border-accent font-bold'
                                 : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
@@ -1684,9 +1691,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           /* Normal reading mode (selected Bible version) */
           <div
             className={`mx-auto pb-32 select-text ${
-              state.settings.fontFamily === 'serif' ? 'font-serif' :
-              state.settings.fontFamily === 'hyper' ? 'font-hyper' :
-              'font-sans'
+              state.settings.fontFamily === 'system' ? 'font-system' :
+              state.settings.fontFamily === 'roboto' ? 'font-roboto' :
+              state.settings.fontFamily === 'opensans' ? 'font-opensans' :
+              'font-inter'
             }`}
             // fontSize lives on this wrapper (not the inner div) so the `ch` unit in
             // READING_MEASURE resolves against the reader's actual text size.
@@ -1695,9 +1703,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             onKeyDown={handleVerseKeyDown}
           >
             <div
-              className={`tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0 ${
-                state.settings.fontFamily === 'hyper' ? 'tracking-normal' : ''
-              }`}
+              className="tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0"
               style={{ lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem` }}
               dangerouslySetInnerHTML={{ __html: chapterHtml }}
             />

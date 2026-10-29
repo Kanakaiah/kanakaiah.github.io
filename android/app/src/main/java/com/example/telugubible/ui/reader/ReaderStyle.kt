@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.example.telugubible.R
 
 enum class ReaderTheme(
@@ -64,32 +66,46 @@ enum class ReaderTheme(
     }
 }
 
+private val googleFontProvider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
+)
+
 val InterFontFamily = FontFamily(
     Font(R.font.inter_regular, FontWeight.Normal),
     Font(R.font.inter_bold, FontWeight.Bold)
 )
 
-val MerriweatherFontFamily = FontFamily(
-    Font(R.font.merriweather_regular, FontWeight.Normal),
-    Font(R.font.merriweather_bold, FontWeight.Bold)
+val SystemFontFamily = FontFamily.Default
+
+private val RobotoGoogleFont = GoogleFont("Roboto")
+val RobotoFontFamily = FontFamily(
+    Font(googleFont = RobotoGoogleFont, fontProvider = googleFontProvider),
+    Font(googleFont = RobotoGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
 )
 
-val AtkinsonFontFamily = FontFamily(
-    Font(R.font.atkinson_regular, FontWeight.Normal),
-    Font(R.font.atkinson_bold, FontWeight.Bold)
+private val OpenSansGoogleFont = GoogleFont("Open Sans")
+val OpenSansFontFamily = FontFamily(
+    Font(googleFont = OpenSansGoogleFont, fontProvider = googleFontProvider),
+    Font(googleFont = OpenSansGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
 )
 
 enum class ReaderFontFamily(val key: String, val label: String, val fontFamily: FontFamily) {
-    INTER("sans", "Inter", InterFontFamily),
-    MERRIWEATHER("serif", "Merriweather", MerriweatherFontFamily),
-    ATKINSON("hyper", "Atkinson", AtkinsonFontFamily);
+    INTER("inter", "Inter", InterFontFamily),
+    SYSTEM("system", "System", SystemFontFamily),
+    ROBOTO("roboto", "Roboto", RobotoFontFamily),
+    OPEN_SANS("opensans", "Open Sans", OpenSansFontFamily);
 
     companion object {
         fun fromKey(key: String?): ReaderFontFamily {
             return when (key?.lowercase()?.trim()) {
-                "serif", "merriweather" -> MERRIWEATHER
-                "hyper", "atkinson", "hyperlegible" -> ATKINSON
-                "sans", "inter" -> INTER
+                "system", "default" -> SYSTEM
+                "roboto" -> ROBOTO
+                "opensans", "open sans", "open_sans" -> OPEN_SANS
+                "inter", "sans" -> INTER
+                "serif", "merriweather" -> INTER
+                "hyper", "atkinson", "hyperlegible" -> INTER
                 else -> INTER
             }
         }

@@ -53,7 +53,7 @@ export interface UserSettings {
   recallMasking: boolean;
   bionicReading: boolean;
   fontSize: number;
-  fontFamily?: 'sans' | 'serif' | 'hyper';
+  fontFamily?: 'inter' | 'system' | 'roboto' | 'opensans' | 'sans' | 'serif' | 'hyper';
   lineSpacing?: 'tight' | 'normal' | 'roomy';
   bionicIntensity?: 'light' | 'medium' | 'strong';
   bibleVersion?: BibleVersion;

@@ -224,7 +224,7 @@ fun ChapterReaderScreen(
             isEnglish = state.language == BibleLanguage.ENGLISH,
             bionicReading = state.bionicReading,
             recallMasking = false,
-            serifTypography = state.readerFontFamily == ReaderFontFamily.MERRIWEATHER
+            serifTypography = false
         )
         return
     }

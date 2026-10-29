@@ -245,7 +245,7 @@ class ReaderViewModelTest {
         advanceUntilIdle()
 
         assertEquals(ReaderTheme.OBSIDIAN, viewModel.uiState.value.readerTheme)
-        assertEquals(ReaderFontFamily.MERRIWEATHER, viewModel.uiState.value.readerFontFamily)
+        assertEquals(ReaderFontFamily.INTER, viewModel.uiState.value.readerFontFamily)
 
         viewModel.setReaderTheme(ReaderTheme.SEPIA)
         assertEquals(ReaderTheme.SEPIA, viewModel.uiState.value.readerTheme)
@@ -253,8 +253,8 @@ class ReaderViewModelTest {
         viewModel.setReaderTheme(ReaderTheme.PAPER)
         assertEquals(ReaderTheme.PAPER, viewModel.uiState.value.readerTheme)
 
-        viewModel.setReaderFontFamily(ReaderFontFamily.INTER)
-        assertEquals(ReaderFontFamily.INTER, viewModel.uiState.value.readerFontFamily)
+        viewModel.setReaderFontFamily(ReaderFontFamily.ROBOTO)
+        assertEquals(ReaderFontFamily.ROBOTO, viewModel.uiState.value.readerFontFamily)
     }
 
     @Test

@@ -23,7 +23,11 @@ export default {
         'card-hover': 'var(--card-hover)',
       },
       fontFamily: {
-        sans: ['var(--font-primary)', 'system-ui', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        system: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
+        opensans: ['"Open Sans"', 'sans-serif'],
         heading: ['var(--font-heading)', 'Georgia', 'serif'],
         serif: ['Merriweather', 'Georgia', 'serif'],
         hyper: ['"Atkinson Hyperlegible"', 'sans-serif'],
