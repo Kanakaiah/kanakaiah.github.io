@@ -1084,52 +1084,13 @@ export const Guides: React.FC = () => {
           );
         })()}
 
-        <div className="flex flex-col gap-4 mb-2">
-          <div className="flex items-center justify-between gap-4">
-            {/* Breadcrumb Navigation */}
-            <div className="flex items-center gap-1 text-[0.8125rem] font-medium flex-wrap">
-              <button
-                onClick={() => setActiveGuideId(null)}
-                className="text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
-              >
-                Bible
-              </button>
-              {activeGuide.type === 'book-guide' && (() => {
-                const isOT = OT_BOOKS.some(b => b.id === activeGuide.id);
-                return (
-                  <>
-                    <ChevronRight className="w-3.5 h-3.5 text-muted" />
-                    <button
-                      onClick={() => setActiveGuideId(isOT ? BIBLE_BROWSER_OT : BIBLE_BROWSER_NT)}
-                      className="text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
-                    >
-                      {isOT ? 'Old Testament' : 'New Testament'}
-                    </button>
-                    <ChevronRight className="w-3.5 h-3.5 text-muted" />
-                    <span className="text-primary font-bold">{activeGuide.title}</span>
-                  </>
-                );
-              })()}
-              {activeGuide.type !== 'book-guide' && (
-                <>
-                  <ChevronRight className="w-3.5 h-3.5 text-muted" />
-                  <span className="text-primary font-bold">{activeGuide.title}</span>
-                </>
-              )}
-            </div>
-
-            {/* The old X lived here; the fixed header's back arrow replaces it, and
-                the breadcrumb above still offers the jump straight back to "Bible". */}
+        {/* Title and back navigation now live in the fixed header — breadcrumb row removed to eliminate redundancy */}
+        {activeGuide.type !== 'book-guide' && activeGuide.subtitle && (
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-2xl">{activeGuide.icon}</span>
+            <p className="text-secondary text-sm font-medium">{activeGuide.subtitle}</p>
           </div>
-          {/* Title now lives in the fixed header — only the icon and subtitle remain,
-              so it isn't printed twice on screen. */}
-          {activeGuide.type !== 'book-guide' && activeGuide.subtitle && (
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{activeGuide.icon}</span>
-              <p className="text-secondary text-sm font-medium">{activeGuide.subtitle}</p>
-            </div>
-          )}
-        </div>
+        )}
 
         <div className="flex flex-col gap-8">
 

@@ -519,7 +519,7 @@ export const Practice: React.FC = () => {
   // either of their "drill chapters instead" buttons actually leaves verse-land
   // rather than merely offering to.
   if (subject === 'theme') {
-    return <ThemeDrill onExit={() => setSubject('verse')} />;
+    return <ThemeDrill onExit={() => { setSubject('verse'); navigate('/'); }} />;
   }
 
   if (subject === 'anchor') {

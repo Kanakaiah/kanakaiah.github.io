@@ -822,7 +822,7 @@ private fun CollectionsTabContent(
             )
         }
 
-        // Card 0: 66 Key Verses (From Genesis to Revelation)
+        // Card 0: Key Verses (All 66 Books)
         item {
             Surface(
                 shape = RoundedCornerShape(12.dp),
@@ -837,7 +837,7 @@ private fun CollectionsTabContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "66 Key Verses",
+                            text = "Key Verses (All 66 Books)",
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold,
                             color = RemoraTextPrimary
@@ -847,7 +847,7 @@ private fun CollectionsTabContent(
                             color = RemoraGold.copy(alpha = 0.2f)
                         ) {
                             Text(
-                                text = "66 PASSAGES",
+                                text = "206 PASSAGES",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraGold,
@@ -859,7 +859,7 @@ private fun CollectionsTabContent(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "One foundational key verse from every single book of the Bible, from Genesis to Revelation.",
+                        text = "The complete key verses for each of the 66 books of the Bible (all canonical key verses per book, including Genesis 1:1, 3:15, 12:3, 50:20, etc.).",
                         fontSize = 13.sp,
                         color = RemoraTextSecondary,
                         lineHeight = 18.sp
@@ -875,7 +875,7 @@ private fun CollectionsTabContent(
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Add 66 Key Verses", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text("Add All Key Verses (206 Verses)", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     }
                 }
             }

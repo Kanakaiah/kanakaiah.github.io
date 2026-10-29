@@ -569,12 +569,12 @@ class TodayViewModel @JvmOverloads constructor(
 
     fun addCollection(collectionId: String, extraTopicIds: List<String> = emptyList()) {
         val name = when (collectionId) {
-            "key_verses_66", "key_verses" -> "66 Key Verses"
+            "key_verses_66", "key_verses", "all_key_verses" -> "Key Verses (66 Books)"
             "well_known" -> "Well-Known"
             else -> "Top 100 Verses"
         }
         val estimatedTotal = when (collectionId) {
-            "key_verses_66", "key_verses" -> 66
+            "key_verses_66", "key_verses", "all_key_verses" -> 206
             "well_known" -> 75
             else -> 100
         }

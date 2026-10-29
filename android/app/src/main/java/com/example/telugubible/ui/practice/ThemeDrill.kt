@@ -1,5 +1,6 @@
 package com.example.telugubible.ui.practice
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -37,7 +39,9 @@ fun ThemeDrill(
         modifier = modifier
             .fillMaxSize()
             .background(RemoraBackground)
-            .padding(16.dp)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
         when {
             state.isLoading -> {
@@ -86,7 +90,7 @@ fun ThemeDrill(
                     Button(
                         onClick = { viewModel.restart() },
                         colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(12.dp)
                     ) {
                         Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
@@ -95,10 +99,10 @@ fun ThemeDrill(
                     Spacer(modifier = Modifier.height(10.dp))
                     OutlinedButton(
                         onClick = onExit,
-                        shape = RoundedCornerShape(8.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
+                        shape = RoundedCornerShape(12.dp),
+                        border = BorderStroke(1.dp, RemoraCardBorder)
                     ) {
-                        Text("Back to Verses", color = RemoraTextPrimary)
+                        Text("Back to Today", color = RemoraTextPrimary)
                     }
                 }
             }
@@ -108,71 +112,72 @@ fun ThemeDrill(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 16.dp),
+                            .padding(bottom = 6.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Header
-                        Column {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                        // Sleek Unified Top Bar: (X) on left, Scope Pills in center, Progress Counter on right
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // (X) Close button on left
+                            IconButton(
+                                onClick = onExit,
+                                modifier = Modifier.size(36.dp)
                             ) {
-                                IconButton(onClick = onExit, modifier = Modifier.size(32.dp)) {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Back",
-                                        tint = RemoraTextSecondary,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(
-                                        text = "${state.currentIndex + 1} OF ${state.queue.size}",
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.sp,
-                                        color = RemoraTextMuted
-                                    )
-                                    Text(
-                                        text = "${state.learnedCount}/${state.totalCount} secure",
-                                        fontSize = 10.sp,
-                                        color = RemoraTextMuted
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.size(32.dp))
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "Close to Today",
+                                    tint = RemoraTextSecondary,
+                                    modifier = Modifier.size(22.dp)
+                                )
                             }
 
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            // Scope Selector Pills
+                            // Scope Selector Pills in center: Old / New / Whole
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                ScopePill(
-                                    label = "Whole Bible",
-                                    selected = state.scope == ThemeScope.ALL,
-                                    onClick = { viewModel.setScope(ThemeScope.ALL) }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
                                 ScopePill(
                                     label = "Old",
                                     selected = state.scope == ThemeScope.OT,
                                     onClick = { viewModel.setScope(ThemeScope.OT) }
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
                                 ScopePill(
                                     label = "New",
                                     selected = state.scope == ThemeScope.NT,
                                     onClick = { viewModel.setScope(ThemeScope.NT) }
                                 )
+                                ScopePill(
+                                    label = "Whole",
+                                    selected = state.scope == ThemeScope.ALL,
+                                    onClick = { viewModel.setScope(ThemeScope.ALL) }
+                                )
+                            }
+
+                            // Progress text on right: 12/66 + queue index
+                            Column(
+                                horizontalAlignment = Alignment.End,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "${state.learnedCount}/${state.totalCount}",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = RemoraTextPrimary
+                                )
+                                Text(
+                                    text = "${state.currentIndex + 1} of ${state.queue.size}",
+                                    fontSize = 10.sp,
+                                    color = RemoraTextMuted
+                                )
                             }
                         }
 
-                        // Center: Clean, Container-less Editorial Canvas
+                        // Center: Large Cinematic Artwork & Book Theme
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -180,12 +185,14 @@ fun ThemeDrill(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            // Cover Art (Floating with soft rounded corners, no clunky grey border)
+                            // Large Hero Cover Art (Prominent, cinematic, smooth rounded corners)
                             Box(
                                 modifier = Modifier
-                                    .width(220.dp)
-                                    .height(165.dp)
-                                    .clip(RoundedCornerShape(14.dp)),
+                                    .fillMaxWidth(0.88f)
+                                    .heightIn(min = 210.dp, max = 280.dp)
+                                    .aspectRatio(4f / 3f)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .border(1.dp, RemoraCardBorder, RoundedCornerShape(16.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 BookCoverImage(
@@ -195,7 +202,7 @@ fun ThemeDrill(
                                 )
                             }
 
-                            Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(18.dp))
 
                             Text(
                                 text = item.book.nameEn,
@@ -206,21 +213,21 @@ fun ThemeDrill(
                                 textAlign = TextAlign.Center
                             )
 
-                            Spacer(modifier = Modifier.height(6.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
 
                             Text(
                                 text = "What is this book's theme?",
-                                fontSize = 14.sp,
+                                fontSize = 13.sp,
                                 fontStyle = FontStyle.Italic,
                                 color = RemoraTextMuted
                             )
 
-                            Spacer(modifier = Modifier.height(24.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
 
                             if (state.isRevealed) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
                                     Text(
                                         text = item.book.themeWord,
@@ -243,19 +250,19 @@ fun ThemeDrill(
                                     if (item.book.subtitle.isNotBlank()) {
                                         Text(
                                             text = item.book.subtitle,
-                                            fontSize = 15.sp,
+                                            fontSize = 14.sp,
                                             fontStyle = FontStyle.Italic,
                                             fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
                                             color = RemoraTextSecondary,
                                             textAlign = TextAlign.Center,
-                                            modifier = Modifier.padding(horizontal = 24.dp)
+                                            modifier = Modifier.padding(horizontal = 20.dp)
                                         )
                                     }
                                 }
                             } else {
                                 Text(
                                     text = "— · · · —",
-                                    fontSize = 22.sp,
+                                    fontSize = 20.sp,
                                     fontWeight = FontWeight.Medium,
                                     letterSpacing = 4.sp,
                                     color = RemoraTextMuted.copy(alpha = 0.5f)
@@ -263,18 +270,43 @@ fun ThemeDrill(
                             }
                         }
 
-                        // Bottom Actions: Docked Modern Button (18.dp radius matching review screen)
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        // Compact Low-Profile Bottom Action Bar: Skip + Next Theme / Reveal side-by-side
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            OutlinedButton(
+                                onClick = { viewModel.skipToNext() },
+                                shape = RoundedCornerShape(14.dp),
+                                border = BorderStroke(1.dp, RemoraCardBorder),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = RemoraTextSecondary),
+                                modifier = Modifier
+                                    .weight(0.32f)
+                                    .fillMaxHeight()
+                            ) {
+                                Text(
+                                    text = "Skip",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowForward,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(13.dp)
+                                )
+                            }
+
                             if (!state.isRevealed) {
                                 Button(
                                     onClick = { viewModel.revealAnswer() },
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(50.dp),
-                                    shape = RoundedCornerShape(18.dp),
+                                        .weight(0.68f)
+                                        .fillMaxHeight(),
+                                    shape = RoundedCornerShape(14.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = RemoraAccent,
                                         contentColor = Color(0xFF14120E)
@@ -283,7 +315,7 @@ fun ThemeDrill(
                                     Text(
                                         text = "Tap to reveal",
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 15.sp
+                                        fontSize = 14.sp
                                     )
                                 }
                             } else {
@@ -293,35 +325,17 @@ fun ThemeDrill(
                                         containerColor = RemoraAccent,
                                         contentColor = Color(0xFF14120E)
                                     ),
-                                    shape = RoundedCornerShape(18.dp),
+                                    shape = RoundedCornerShape(14.dp),
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(50.dp)
+                                        .weight(0.68f)
+                                        .fillMaxHeight()
                                 ) {
-                                    Text("Next Theme", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = "Next Theme ➔",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { viewModel.skipToNext() }
-                                    .padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Skip",
-                                    fontSize = 13.sp,
-                                    color = RemoraTextMuted
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = "Skip",
-                                    tint = RemoraTextMuted,
-                                    modifier = Modifier.size(14.dp)
-                                )
                             }
                         }
                     }
@@ -339,16 +353,16 @@ private fun ScopePill(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(14.dp),
         color = if (selected) RemoraAccent else Color.Transparent,
-        border = if (!selected) androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder) else null
+        border = if (!selected) BorderStroke(1.dp, RemoraCardBorder) else null
     ) {
         Text(
             text = label,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            color = if (selected) Color.White else RemoraTextMuted,
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+            color = if (selected) Color(0xFF14120E) else RemoraTextMuted,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
         )
     }
 }

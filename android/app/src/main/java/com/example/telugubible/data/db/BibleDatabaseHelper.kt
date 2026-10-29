@@ -426,9 +426,9 @@ class BibleDatabaseHelper(val context: Context) :
     fun getPresetVerseEntries(collectionId: String): List<PresetVerseEntry> {
         val list = mutableListOf<PresetVerseEntry>()
         val db = readableDatabase
-        if (collectionId == "key_verses_66" || collectionId == "key_verses") {
+        if (collectionId == "key_verses_66" || collectionId == "key_verses" || collectionId == "all_key_verses") {
             val cursor = db.rawQuery(
-                "SELECT book_id, ref FROM guide_key_verses GROUP BY book_id ORDER BY book_id ASC",
+                "SELECT book_id, ref FROM guide_key_verses ORDER BY book_id ASC, id ASC",
                 null
             )
             val books = getAllBooks()

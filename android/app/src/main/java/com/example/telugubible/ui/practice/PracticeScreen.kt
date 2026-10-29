@@ -75,7 +75,10 @@ fun PracticeScreen(
         val themeViewModel: ThemeDrillViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
         ThemeDrill(
             viewModel = themeViewModel,
-            onExit = { activeSubject = PracticeSubject.VERSES },
+            onExit = {
+                activeSubject = PracticeSubject.VERSES
+                onExitToToday()
+            },
             modifier = modifier
         )
         return

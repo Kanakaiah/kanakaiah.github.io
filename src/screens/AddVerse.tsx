@@ -10,7 +10,7 @@ import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
 import type { Verse } from '../types/models';
 import { SEED_VERSES } from '../data/seed';
 import { TOP_100_VERSES } from '../data/top100';
-import { KEY_VERSES_66 } from '../data/keyVerses66';
+import { ALL_KEY_VERSES } from '../data/allKeyVerses';
 import { TRANSLATION_OPTIONS } from '../data/bibleMap';
 
 interface AddVerseProps {
@@ -574,29 +574,29 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           <div className="p-4 bg-card-elevated border-2 border-accent/40 rounded-lg flex flex-col gap-3 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <h3 className="font-heading font-bold text-lg text-primary flex items-center gap-2">
-                <span>📖</span> 66 Key Verses
+                <span>📖</span> Key Verses (All 66 Books)
               </h3>
               <span className="text-[11px] font-bold uppercase tracking-wider text-accent bg-accent/15 px-2.5 py-1 rounded-full">
-                66 Books
+                206 Verses · 66 Books
               </span>
             </div>
-            <p className="text-sm text-muted">The primary memory anchor verse from every book of the Bible, Genesis to Revelation.</p>
+            <p className="text-sm text-muted">The complete key verses for each of the 66 books of the Bible (all canonical key verses per book, including Genesis 1:1, 3:15, 12:3, 50:20, etc.).</p>
             <Button
               onClick={() => {
-                const existingTopic = (state.topics || []).find(t => t.name === '66 Key Verses');
+                const existingTopic = (state.topics || []).find(t => t.name === 'Key Verses (66 Books)');
                 const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
                 if (!existingTopic) {
-                  dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: '66 Key Verses' } });
+                  dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Key Verses (66 Books)' } });
                 }
-                const versesWithTopic = KEY_VERSES_66.map(v => ({ ...v, topicIds: [topicId] }));
+                const versesWithTopic = ALL_KEY_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
                 dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
-                showToast(`Added 66 key verses to '66 Key Verses' group!`, 'success');
+                showToast(`Added 206 key verses to 'Key Verses (66 Books)' group!`, 'success');
                 if (onVerseAdded) onVerseAdded();
                 else navigate('/');
               }}
               className="mt-2"
             >
-              <Plus className="w-4 h-4 mr-2" /> Add 66 Key Verses
+              <Plus className="w-4 h-4 mr-2" /> Add All Key Verses (206 Verses)
             </Button>
           </div>
 

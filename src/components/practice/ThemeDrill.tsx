@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { evaluateSM2, formatInterval, isDue } from '../../utils/sm2';
@@ -117,101 +117,138 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
           Nothing in this set is due. {learned} of 66 book themes are secure.
         </p>
         <button onClick={onExit} className="text-sm font-semibold text-accent hover:text-accent-hover transition-colors">
-          Back
+          Back to Today
         </button>
       </div>
     );
   }
 
   return (
-    <div className="relative flex flex-col h-full w-full max-w-md mx-auto px-5 pt-6 pb-6 gap-4">
-      <div className="flex items-center justify-between">
-        <button onClick={onExit} className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors" aria-label="Back">
-          <ArrowLeft className="w-5 h-5 text-secondary" />
+    <div className="relative flex flex-col h-full w-full max-w-lg mx-auto px-4 pt-4 pb-4 justify-between gap-4 select-none">
+      {/* Unified Sleek Top Bar: (X) Close on Left, Scope Pills in Center, Progress on Right */}
+      <div className="flex items-center justify-between w-full h-11">
+        <button
+          onClick={onExit}
+          className="p-2 -ml-2 rounded-full hover:bg-card-hover text-secondary hover:text-primary transition-colors"
+          aria-label="Close to Today"
+          title="Close to Today"
+        >
+          <X className="w-5 h-5" />
         </button>
-        <div className="flex flex-col items-center">
-          <span className="text-[0.625rem] font-bold uppercase tracking-widest text-muted">
-            {index + 1} of {pool.length}
-          </span>
-          <span className="text-[0.625rem] text-muted tabular-nums">{learned}/66 secure</span>
-        </div>
-        <div className="w-9" />
-      </div>
 
-      <div className="flex justify-center gap-2">
-        {(['all', 'ot', 'nt'] as Scope[]).map(s => (
-          <button
-            key={s}
-            onClick={() => changeScope(s)}
-            className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-colors ${
-              scope === s ? 'bg-accent text-white' : 'text-muted hover:text-primary border border-card-border'
-            }`}
-          >
-            {s === 'all' ? 'Whole Bible' : s === 'ot' ? 'Old' : 'New'}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center gap-5 text-center">
-        {/* The prompt: the book, by name and by its cover. Both are things the reader
-            already has; neither gives the answer away. */}
-        <div className="w-52 aspect-[4/3] rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center">
-          {!imgErr ? (
-            <img src={current.image} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover object-top" />
-          ) : (
-            <span className="text-3xl font-heading font-bold text-muted/25">{current.name.slice(0, 3)}</span>
-          )}
-        </div>
-
-        <h2 className="text-3xl font-heading font-bold text-primary leading-tight">{current.name}</h2>
-        <p className="text-xs text-muted italic">What is this book's theme?</p>
-
-        {revealed ? (
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-2xl font-heading font-bold text-accent tracking-wide">{current.themeWord}</span>
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-gold">{current.keyWord}</span>
-            <p className="text-sm text-secondary italic font-serif leading-relaxed max-w-xs">{current.subtitle}</p>
-          </div>
-        ) : (
-          // A fixed-width bar rather than the word blurred — length alone separates
-          // GARDEN from BURNING BUSH.
-          <><span className="sr-only">Answer hidden — recall it, then reveal.</span><span className="inline-block h-6 w-32 rounded-sm bg-card-border" aria-hidden="true" /></>
-        )}
-      </div>
-
-      {revealed ? (
-        <div className="grid grid-cols-4 gap-2">
-          {GRADES.map(g => (
+        {/* Scope Selector Pills: Old / New / Whole */}
+        <div className="flex items-center gap-1 bg-card-elevated p-1 rounded-xl border border-card-border">
+          {([
+            { id: 'ot', label: 'Old' },
+            { id: 'nt', label: 'New' },
+            { id: 'all', label: 'Whole' },
+          ] as const).map(tab => (
             <button
-              key={g.score}
-              onClick={() => handleGrade(g.score)}
-              className={`py-3 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
+              key={tab.id}
+              onClick={() => changeScope(tab.id as Scope)}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                scope === tab.id
+                  ? 'bg-accent text-[#14120E] shadow-sm'
+                  : 'text-muted hover:text-primary'
+              }`}
             >
-              {/* No interval preview. Printing what each grade buys turns the question
-                  from "did you remember it?" into a choice between a short wait and a
-                  long one — and nothing here verifies the answer. The toast on the next
-                  line reports the schedule once the grade is already in. */}
-              <span className="text-xs font-bold leading-tight">{g.label}</span>
+              {tab.label}
             </button>
           ))}
         </div>
-      ) : (
-        <button
-          onClick={() => setRevealed(true)}
-          className="w-full py-3 rounded-md border border-dashed border-card-border-hover text-sm font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
-        >
-          Tap to reveal
-        </button>
-      )}
 
-      <div className="flex justify-center">
-        <button
-          onClick={() => goTo(index < pool.length - 1 ? index + 1 : 0)}
-          className="flex items-center gap-1 text-xs font-medium text-muted hover:text-primary transition-colors px-3 py-1"
-        >
-          Skip <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        {/* Progress Counter Badge */}
+        <div className="flex flex-col items-end">
+          <span className="text-xs font-bold text-primary tabular-nums">
+            {learned}/66
+          </span>
+          <span className="text-[10px] text-muted tabular-nums">
+            {index + 1} of {pool.length}
+          </span>
+        </div>
       </div>
+
+      {/* Center: Large Cinematic Hero Artwork & Book Theme */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center my-auto">
+        <div className="w-full max-w-[320px] aspect-[4/3] rounded-2xl overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center shadow-lg">
+          {!imgErr ? (
+            <img
+              src={current.image}
+              alt=""
+              onError={() => setImgErr(true)}
+              className="w-full h-full object-cover object-top"
+            />
+          ) : (
+            <span className="text-4xl font-heading font-bold text-muted/25">{current.name.slice(0, 3)}</span>
+          )}
+        </div>
+
+        <h2 className="text-3xl font-heading font-bold text-primary leading-tight mt-1">{current.name}</h2>
+        <p className="text-xs text-muted italic">What is this book's theme?</p>
+
+        {revealed ? (
+          <div className="flex flex-col items-center gap-1.5 mt-1">
+            <span className="text-2xl sm:text-3xl font-heading font-extrabold text-accent tracking-wide">{current.themeWord}</span>
+            {current.keyWord && (
+              <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-gold">{current.keyWord}</span>
+            )}
+            <p className="text-xs sm:text-sm text-secondary italic font-serif leading-relaxed max-w-xs px-2">{current.subtitle}</p>
+          </div>
+        ) : (
+          <div className="py-2">
+            <span className="sr-only">Answer hidden — recall it, then reveal.</span>
+            <span className="inline-block text-xl font-medium tracking-[0.3em] text-muted/40" aria-hidden="true">
+              — · · · —
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Compact Low-Profile Bottom Action Bar: Skip + Next Theme / Reveal side-by-side */}
+      {revealed ? (
+        <div className="flex flex-col gap-2 w-full max-w-md mx-auto">
+          <div className="grid grid-cols-4 gap-1.5">
+            {GRADES.map(g => (
+              <button
+                key={g.score}
+                onClick={() => handleGrade(g.score)}
+                className={`py-2 text-xs font-bold rounded-lg border transition-all active:scale-95 ${g.className}`}
+              >
+                {g.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => goTo(index < pool.length - 1 ? index + 1 : 0)}
+              className="py-2.5 px-4 rounded-xl border border-card-border text-xs font-semibold text-secondary hover:text-primary transition-colors flex items-center justify-center gap-1"
+            >
+              Skip <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => handleGrade(4)}
+              className="flex-1 py-2.5 rounded-xl bg-accent text-[#14120E] text-sm font-bold hover:brightness-110 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+            >
+              Next Theme <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 w-full max-w-md mx-auto">
+          <button
+            onClick={() => goTo(index < pool.length - 1 ? index + 1 : 0)}
+            className="py-2.5 px-4 rounded-xl border border-card-border text-xs font-semibold text-secondary hover:text-primary transition-colors flex items-center justify-center gap-1"
+          >
+            Skip <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setRevealed(true)}
+            className="flex-1 py-2.5 rounded-xl bg-accent text-[#14120E] text-sm font-bold hover:brightness-110 transition-colors shadow-sm"
+          >
+            Tap to reveal
+          </button>
+        </div>
+      )}
     </div>
   );
 };
