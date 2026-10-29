@@ -223,7 +223,7 @@ fun ParagraphView(
                     val bgColor = when {
                         isFlashing -> Color(0xFF4CAF50).copy(alpha = 0.35f)
                         isSelected -> readerTheme.accentColor.copy(alpha = 0.22f)
-                        isMemorized -> RemoraGold.copy(alpha = 0.25f)
+                        isMemorized -> RemoraGold.copy(alpha = 0.28f)
                         isSpeaking -> readerTheme.accentColor.copy(alpha = 0.15f)
                         else -> Color.Transparent
                     }

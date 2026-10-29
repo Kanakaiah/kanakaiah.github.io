@@ -1077,6 +1077,21 @@ fun ChapterReaderScreen(
                                         value = newGroupName,
                                         onValueChange = { newGroupName = it },
                                         singleLine = true,
+                                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                                            imeAction = androidx.compose.ui.text.input.ImeAction.Done
+                                        ),
+                                        keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+                                            onDone = {
+                                                val trimmed = newGroupName.trim()
+                                                if (trimmed.isNotBlank()) {
+                                                    viewModel.createTopic(trimmed) { created ->
+                                                        selectedTopicIds = selectedTopicIds + created.id
+                                                    }
+                                                    newGroupName = ""
+                                                    isAddingGroup = false
+                                                }
+                                            }
+                                        ),
                                         textStyle = androidx.compose.ui.text.TextStyle(
                                             color = RemoraTextPrimary,
                                             fontSize = 13.sp
@@ -1086,8 +1101,11 @@ fun ChapterReaderScreen(
                                     Spacer(modifier = Modifier.width(4.dp))
                                     IconButton(
                                         onClick = {
-                                            if (newGroupName.isNotBlank()) {
-                                                viewModel.createTopic(newGroupName.trim())
+                                            val trimmed = newGroupName.trim()
+                                            if (trimmed.isNotBlank()) {
+                                                viewModel.createTopic(trimmed) { created ->
+                                                    selectedTopicIds = selectedTopicIds + created.id
+                                                }
                                                 newGroupName = ""
                                                 isAddingGroup = false
                                             }

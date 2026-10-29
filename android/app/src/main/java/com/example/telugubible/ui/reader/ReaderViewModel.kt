@@ -12,6 +12,7 @@ import com.example.telugubible.data.model.StepBibleWordOccurrence
 import com.example.telugubible.data.model.StrongsOccurrence
 import com.example.telugubible.data.model.StrongsEntry
 import com.example.telugubible.data.model.Topic
+import com.example.telugubible.data.model.UserMemoryVerse
 import com.example.telugubible.data.model.Verse
 import com.example.telugubible.data.model.VerseConnectionsData
 import com.example.telugubible.data.repository.BibleRepository
@@ -138,6 +139,17 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
+    private fun extractMemorizedVerseNumbers(userVerses: List<UserMemoryVerse>, bookId: Int, chapter: Int): Set<Int> {
+        return userVerses
+            .filter { it.bookId == bookId && it.chapter == chapter }
+            .flatMap { uv ->
+                val end = uv.endVerse
+                if (end != null && end >= uv.verse) (uv.verse..end).toList()
+                else listOf(uv.verse)
+            }
+            .toSet()
+    }
+
     private fun loadInitialData() {
         viewModelScope.launch {
             val books = repository.getBooks()
@@ -157,7 +169,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 val currentAnchor = anchors.find { it.chapter == 1 }
                 val chapterProgress = repository.getChapterProgress(firstBook.id)[1]
                 val userVerses = repository.getUserMemoryVerses()
-                val memorized = userVerses.filter { it.bookId == firstBook.id && it.chapter == 1 }.map { it.verse }.toSet()
+                val memorized = extractMemorizedVerseNumbers(userVerses, firstBook.id, 1)
                 val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
                 val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
                 val theme = ReaderTheme.fromKey(settings.theme)
@@ -230,7 +242,7 @@ class ReaderViewModel @JvmOverloads constructor(
             val currentAnchor = anchors.find { it.chapter == chapter }
             val chapterProgress = repository.getChapterProgress(book.id)[chapter]
             val userVerses = repository.getUserMemoryVerses()
-            val memorized = userVerses.filter { it.bookId == book.id && it.chapter == chapter }.map { it.verse }.toSet()
+            val memorized = extractMemorizedVerseNumbers(userVerses, book.id, chapter)
             val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
             val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
             val theme = ReaderTheme.fromKey(settings.theme)
@@ -443,10 +455,11 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
-    fun createTopic(name: String) {
+    fun createTopic(name: String, onCreated: ((com.example.telugubible.data.model.Topic) -> Unit)? = null) {
         viewModelScope.launch {
-            repository.createTopic(name)
+            val topic = repository.createTopic(name)
             loadTopics()
+            onCreated?.invoke(topic)
         }
     }
 
@@ -526,9 +539,13 @@ class ReaderViewModel @JvmOverloads constructor(
                 }
             }
 
+            val updatedUserVerses = repository.getUserMemoryVerses()
+            val updatedMemorized = extractMemorizedVerseNumbers(updatedUserVerses, book.id, ch)
+
             _uiState.update {
                 it.copy(
                     selectedVerses = emptySet(),
+                    memorizedVerses = updatedMemorized,
                     toastMessage = "Added $addedCount passage${if (addedCount == 1) "" else "s"} to memory"
                 )
             }

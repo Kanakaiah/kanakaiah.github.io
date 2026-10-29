@@ -332,7 +332,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     if (!newGroupName.trim()) return;
     const newTopic = { id: crypto.randomUUID(), name: newGroupName.trim() };
     dispatch({ type: 'ADD_TOPIC', payload: newTopic });
-    setSelectedTopicIds([newTopic.id]);
+    setSelectedTopicIds(prev => (prev.includes(newTopic.id) ? prev : [...prev, newTopic.id]));
     setNewGroupName('');
     setIsAddingGroup(false);
   };
@@ -879,22 +879,39 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   const memorizedVerses = useMemo(() => {
     const memSet = new Set<number>();
-    const prefix = `${bookTitle} ${chapter}:`;
+    const englishBookName = ALL_BOOKS.find(b => b.id === bookId)?.name || bookTitle;
+    const localizedBookName = getBookName(bookId, bookTitle, bibleVersion);
+    const validPrefixes = [
+      `${bookTitle} ${chapter}:`,
+      `${englishBookName} ${chapter}:`,
+      `${localizedBookName} ${chapter}:`
+    ];
+
     state.verses.forEach(v => {
-      if (v.ref.startsWith(prefix)) {
-        const versePart = v.ref.substring(prefix.length);
-        if (versePart.includes('-')) {
-          const [start, end] = versePart.split('-').map(n => parseInt(n, 10));
-          for (let i = start; i <= end; i++) memSet.add(i);
-        } else if (versePart.includes(',')) {
-          versePart.split(',').forEach(n => memSet.add(parseInt(n, 10)));
-        } else {
-          memSet.add(parseInt(versePart, 10));
+      const normalizedRef = (v.ref || '').replace(/[–—]/g, '-').trim();
+      for (const prefix of validPrefixes) {
+        if (normalizedRef.startsWith(prefix)) {
+          const versePart = normalizedRef.substring(prefix.length).trim();
+          if (versePart.includes('-')) {
+            const [start, end] = versePart.split('-').map(n => parseInt(n.trim(), 10));
+            if (!isNaN(start) && !isNaN(end)) {
+              for (let i = start; i <= end; i++) memSet.add(i);
+            }
+          } else if (versePart.includes(',')) {
+            versePart.split(',').forEach(n => {
+              const num = parseInt(n.trim(), 10);
+              if (!isNaN(num)) memSet.add(num);
+            });
+          } else {
+            const num = parseInt(versePart, 10);
+            if (!isNaN(num)) memSet.add(num);
+          }
+          break;
         }
       }
     });
     return memSet;
-  }, [state.verses, bookTitle, chapter]);
+  }, [state.verses, bookTitle, bookId, chapter, bibleVersion]);
 
   const toggleVerseSelection = useCallback((verseNum: number) => {
     setSelectedVerses(prev =>
@@ -1294,7 +1311,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       } else if (isSelected) {
         extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
       } else if (inLibrary) {
-        extraClass = 'bg-gold/25 rounded px-1 -mx-1';
+        extraClass = 'verse-memorized rounded px-1 -mx-1';
       }
 
       // Prefer the real paragraph-break dataset (sourced from NASB95) when we have it for

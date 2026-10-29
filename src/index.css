@@ -262,3 +262,9 @@ select option {
 }
 
 .words-of-jesus { color: #ef4444; } /* red-500 */
+
+/* Highlighting for verses added to memory / library */
+.verse-memorized {
+  background-color: rgba(217, 162, 74, 0.25);
+  border-bottom: 2px solid rgba(217, 162, 74, 0.45);
+}
