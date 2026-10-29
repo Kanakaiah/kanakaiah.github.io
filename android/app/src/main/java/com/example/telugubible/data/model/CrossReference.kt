@@ -17,6 +17,7 @@ data class CrossReference(
     val toEndVerse: Int? = null,
     val targetTextEn: String? = null,
     val targetTextTe: String? = null,
+    val targetTextTa: String? = null,
     val votes: Int = 0,
     val direction: LinkDirection = LinkDirection.OUTGOING,
     val otherStartVid: Int = 0,

@@ -149,8 +149,8 @@ fun ChapterReaderScreen(
 
     // Paragraph grouping
     val isPsalms = state.currentBook?.id == 19
-    val paragraphs = remember(state.verses, state.paragraphBreaks, isPsalms) {
-        ParagraphBuilder.buildParagraphs(state.verses, state.paragraphBreaks, isPsalms)
+    val paragraphs = remember(state.verses, state.paragraphBreaks, isPsalms, state.activeVersion) {
+        ParagraphBuilder.buildParagraphs(state.verses, state.paragraphBreaks, isPsalms, state.activeVersion)
     }
 
     // Book display names & navigation labels
@@ -202,8 +202,10 @@ fun ChapterReaderScreen(
             verse = v.verse,
             textEn = v.textEn,
             textTe = v.textTe,
+            textTa = v.textTa,
             bookNameEn = currentBook?.nameEn ?: "Book",
-            bookNameTe = currentBook?.nameTe ?: "Book"
+            bookNameTe = currentBook?.nameTe ?: "Book",
+            bookNameTa = currentBook?.nameTa
         )
         ImmersedReader(
             verse = userVerse,
@@ -1091,6 +1093,7 @@ fun ChapterReaderScreen(
                 initialSection = state.connectionsInitialSection,
                 quoteTextEn = state.connectionsQuoteTextEn,
                 quoteTextTe = state.connectionsQuoteTextTe,
+                quoteTextTa = state.connectionsQuoteTextTa,
                 activeVersion = state.activeVersion,
                 booksMap = booksMap,
                 wordOccurrencesMap = state.stepBibleWordOccurrences,

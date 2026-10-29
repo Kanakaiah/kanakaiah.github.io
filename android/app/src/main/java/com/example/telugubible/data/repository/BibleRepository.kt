@@ -162,10 +162,18 @@ class BibleRepository(
                 verseTexts[Triple(uv.bookId, uv.chapter, v)]?.first
             }.joinToString(" ").ifBlank { null }
 
-            val textEn = range.mapNotNull { v ->
-                cachedActive[Triple(uv.bookId, uv.chapter, v)]
-                    ?: verseTexts[Triple(uv.bookId, uv.chapter, v)]?.second
+            val textTa = range.mapNotNull { v ->
+                verseTexts[Triple(uv.bookId, uv.chapter, v)]?.third
             }.joinToString(" ").ifBlank { null }
+
+            val textEn = if (activeVersion == "TBSI") {
+                textTa ?: range.mapNotNull { v -> verseTexts[Triple(uv.bookId, uv.chapter, v)]?.second }.joinToString(" ").ifBlank { null }
+            } else {
+                range.mapNotNull { v ->
+                    cachedActive[Triple(uv.bookId, uv.chapter, v)]
+                        ?: verseTexts[Triple(uv.bookId, uv.chapter, v)]?.second
+                }.joinToString(" ").ifBlank { null }
+            }
 
             UserMemoryVerse(
                 id = uv.id,
@@ -173,11 +181,13 @@ class BibleRepository(
                 bookKey = book?.key ?: "",
                 bookNameEn = book?.nameEn ?: "",
                 bookNameTe = book?.nameTe ?: "",
+                bookNameTa = book?.nameTa,
                 chapter = uv.chapter,
                 verse = uv.verse,
                 endVerse = uv.endVerse,
                 textTe = textTe,
                 textEn = textEn,
+                textTa = textTa,
                 status = uv.status,
                 repetition = uv.repetition,
                 interval = uv.interval,
@@ -232,7 +242,12 @@ class BibleRepository(
         if (ver == "BSB" || ver == "TELIRV" || ver == "TBSI") {
             val localTexts = bibleDbHelper.getVerseTexts(keys)
             return@withContext targetRange.mapNotNull { v ->
-                val txt = localTexts[Triple(bookId, chapter, v)]?.second ?: localTexts[Triple(bookId, chapter, v)]?.first
+                val trip = localTexts[Triple(bookId, chapter, v)]
+                val txt = when (ver) {
+                    "TBSI" -> trip?.third ?: trip?.second ?: trip?.first
+                    "TELIRV" -> trip?.first ?: trip?.second
+                    else -> trip?.second ?: trip?.first
+                }
                 if (txt != null) Pair(v, txt.replace(Regex("<[^>]+>"), "").trim()) else null
             }
         }
@@ -250,9 +265,11 @@ class BibleRepository(
 
         val localFallback = bibleDbHelper.getVerseTexts(keys)
         targetRange.mapNotNull { v ->
+            val trip = localFallback[Triple(bookId, chapter, v)]
             val txt = cached[Triple(bookId, chapter, v)]
-                ?: localFallback[Triple(bookId, chapter, v)]?.second
-                ?: localFallback[Triple(bookId, chapter, v)]?.first
+                ?: (if (ver == "TBSI") trip?.third else null)
+                ?: trip?.second
+                ?: trip?.first
             if (txt != null) Pair(v, txt.replace(Regex("<[^>]+>"), "").trim()) else null
         }
     }

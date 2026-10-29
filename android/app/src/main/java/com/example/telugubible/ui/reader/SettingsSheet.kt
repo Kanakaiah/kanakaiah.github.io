@@ -278,8 +278,8 @@ fun SettingsSheet(
                     listOf(
                         ReaderFontFamily.INTER to "Inter",
                         ReaderFontFamily.SYSTEM to "System",
-                        ReaderFontFamily.ROBOTO to "Roboto",
-                        ReaderFontFamily.OPEN_SANS to "Open Sans"
+                        ReaderFontFamily.FIGTREE to "Figtree",
+                        ReaderFontFamily.PUBLIC_SANS to "Public Sans"
                     ).forEach { (font, label) ->
                         val isSelected = readerFontFamily == font
                         PillButton(

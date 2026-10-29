@@ -69,6 +69,7 @@ fun CrossReferenceSheet(
     initialSection: String? = null,
     quoteTextEn: String? = null,
     quoteTextTe: String? = null,
+    quoteTextTa: String? = null,
     activeVersion: String = "LSB",
     booksMap: Map<Int, Book> = emptyMap(),
     wordOccurrencesMap: Map<Int, List<StepBibleWordOccurrence>> = emptyMap(),
@@ -84,9 +85,10 @@ fun CrossReferenceSheet(
     val originalWords = connectionsData?.originalWords ?: emptyList()
 
     val isTelugu = language == BibleLanguage.TELUGU
-    val displayTitle = remember(currentVid, fromRefLabel, isTelugu, booksMap) {
+    val isTamil = language == BibleLanguage.TAMIL
+    val displayTitle = remember(currentVid, fromRefLabel, isTelugu, isTamil, booksMap) {
         if (connectionsData != null) {
-            KjvVersification.formatVerseIndexRange(currentVid, currentVid, booksMap, isTelugu)
+            KjvVersification.formatVerseIndexRange(currentVid, currentVid, booksMap, isTelugu, isTamil)
         } else {
             fromRefLabel
         }
@@ -116,10 +118,10 @@ fun CrossReferenceSheet(
     }
     val totalConnections = outgoing.size + incoming.size
 
-    val quoteRaw = if (isTelugu) {
-        quoteTextTe ?: quoteTextEn ?: ""
-    } else {
-        quoteTextEn ?: quoteTextTe ?: ""
+    val quoteRaw = when (language) {
+        BibleLanguage.TAMIL -> quoteTextTa ?: quoteTextEn ?: ""
+        BibleLanguage.TELUGU -> quoteTextTe ?: quoteTextEn ?: ""
+        else -> quoteTextEn ?: quoteTextTe ?: ""
     }
     val cleanQuote = remember(quoteRaw) { parseScriptureText(quoteRaw) }
 
@@ -567,7 +569,7 @@ private fun ConnectionDirectionSection(
         if (showAll || items.size <= INITIAL_VISIBLE_REFS) items else items.take(INITIAL_VISIBLE_REFS)
     }
     val groups = remember(visibleItems, language, booksMap) {
-        groupRefsByBook(visibleItems, language == BibleLanguage.TELUGU, booksMap)
+        groupRefsByBook(visibleItems, language, booksMap)
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -673,10 +675,10 @@ private fun ConnectionDirectionSection(
 
                             // Connections inside this book
                             group.items.forEach { ref ->
-                                val rawText = if (language == BibleLanguage.TELUGU) {
-                                    ref.targetTextTe ?: ref.targetTextEn ?: ""
-                                } else {
-                                    ref.targetTextEn ?: ref.targetTextTe ?: ""
+                                val rawText = when (language) {
+                                    BibleLanguage.TAMIL -> ref.targetTextTa ?: ref.targetTextEn ?: ""
+                                    BibleLanguage.TELUGU -> ref.targetTextTe ?: ref.targetTextEn ?: ""
+                                    else -> ref.targetTextEn ?: ref.targetTextTe ?: ""
                                 }
                                 val annotatedText = remember(rawText) { parseScriptureText(rawText) }
 
@@ -1066,7 +1068,7 @@ private fun SameOriginalWordSection(
 
 private fun groupRefsByBook(
     items: List<CrossReference>,
-    isTelugu: Boolean,
+    language: BibleLanguage,
     booksMap: Map<Int, Book>
 ): List<BookRefGroup> {
     val map = LinkedHashMap<Int, MutableList<CrossReference>>()
@@ -1077,10 +1079,10 @@ private fun groupRefsByBook(
     return map.entries.map { (bookId, list) ->
         val bookObj = booksMap[bookId]
         val defaultName = KjvVersification.BOOK_NAMES_EN.getOrElse(bookId - 1) { "Book $bookId" }
-        val bookName = if (isTelugu) {
-            bookObj?.nameTe?.takeIf { it.isNotBlank() } ?: defaultName
-        } else {
-            bookObj?.nameEn?.takeIf { it.isNotBlank() } ?: defaultName
+        val bookName = when (language) {
+            BibleLanguage.TAMIL -> bookObj?.nameTa?.takeIf { it.isNotBlank() } ?: defaultName
+            BibleLanguage.TELUGU -> bookObj?.nameTe?.takeIf { it.isNotBlank() } ?: defaultName
+            else -> bookObj?.nameEn?.takeIf { it.isNotBlank() } ?: defaultName
         }
         BookRefGroup(
             bookId = bookId,

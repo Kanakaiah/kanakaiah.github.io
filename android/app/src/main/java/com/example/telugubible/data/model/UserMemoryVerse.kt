@@ -6,11 +6,13 @@ data class UserMemoryVerse(
     val bookKey: String = "",
     val bookNameEn: String = "",
     val bookNameTe: String = "",
+    val bookNameTa: String? = null,
     val chapter: Int,
     val verse: Int,
     val endVerse: Int? = null,
     val textTe: String? = null,
     val textEn: String? = null,
+    val textTa: String? = null,
     val status: String = "learning", // "learning" or "memorized"
     val repetition: Int = 0,
     val interval: Int = 1,

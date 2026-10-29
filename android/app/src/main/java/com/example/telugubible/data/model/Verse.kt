@@ -7,5 +7,13 @@ data class Verse(
     val verse: Int,
     val textTe: String?,
     val textEn: String?,
-    val textTa: String?
-)
+    val textTa: String? = null
+) {
+    fun getTextForVersion(version: String): String {
+        return when (version.uppercase().trim()) {
+            "TBSI" -> textTa ?: textEn ?: textTe ?: ""
+            "TELIRV" -> textTe ?: textEn ?: textTa ?: ""
+            else -> textEn ?: textTe ?: textTa ?: ""
+        }
+    }
+}

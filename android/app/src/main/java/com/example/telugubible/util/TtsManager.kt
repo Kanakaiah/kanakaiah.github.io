@@ -51,9 +51,15 @@ class TtsManager(context: Context) : TextToSpeech.OnInitListener {
         }
     }
 
-    fun playVerses(verses: List<Pair<Int, String>>, startIndex: Int = 0) {
+    fun playVerses(verses: List<Pair<Int, String>>, startIndex: Int = 0, langCode: String = "en") {
         if (!_state.value.isReady || verses.isEmpty()) return
         stop()
+        val locale = when (langCode.lowercase()) {
+            "te" -> Locale("te", "IN")
+            "ta" -> Locale("ta", "IN")
+            else -> Locale.US
+        }
+        tts?.language = locale
         queuedVerses = verses
         currentIndex = startIndex.coerceIn(0, verses.size - 1)
         speakCurrent()

@@ -131,10 +131,10 @@ fun ParagraphView(
                     val hasCrossRefs = (crossRefCounts[vNum] ?: 0) > 0
                     val isOtQuote = vNum in otQuotes
 
-                    val rawVerseText = if (language == BibleLanguage.TELUGU) {
-                        verse.textTe ?: verse.textEn ?: ""
-                    } else {
-                        verse.textEn ?: verse.textTe ?: ""
+                    val rawVerseText = when (language) {
+                        BibleLanguage.TAMIL -> verse.textTa ?: verse.textEn ?: ""
+                        BibleLanguage.TELUGU -> verse.textTe ?: verse.textEn ?: ""
+                        else -> verse.textEn ?: verse.textTe ?: verse.textTa ?: ""
                     }
 
                     var text = rawVerseText

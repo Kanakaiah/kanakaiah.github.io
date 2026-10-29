@@ -264,14 +264,15 @@ object KjvVersification {
         startVid: Int,
         endVid: Int,
         booksMap: Map<Int, Book>? = null,
-        isTelugu: Boolean = false
+        isTelugu: Boolean = false,
+        isTamil: Boolean = false
     ): String {
         val start = fromVerseIndex(startVid)
         val startBookObj = booksMap?.get(start.bookId)
-        val startBookName = if (isTelugu) {
-            startBookObj?.nameTe?.takeIf { it.isNotBlank() } ?: start.bookName
-        } else {
-            startBookObj?.nameEn?.takeIf { it.isNotBlank() } ?: start.bookName
+        val startBookName = when {
+            isTamil -> startBookObj?.nameTa?.takeIf { it.isNotBlank() } ?: start.bookName
+            isTelugu -> startBookObj?.nameTe?.takeIf { it.isNotBlank() } ?: start.bookName
+            else -> startBookObj?.nameEn?.takeIf { it.isNotBlank() } ?: start.bookName
         }
 
         if (startVid == endVid) {
@@ -287,10 +288,10 @@ object KjvVersification {
         }
 
         val endBookObj = booksMap?.get(end.bookId)
-        val endBookName = if (isTelugu) {
-            endBookObj?.nameTe?.takeIf { it.isNotBlank() } ?: end.bookName
-        } else {
-            endBookObj?.nameEn?.takeIf { it.isNotBlank() } ?: end.bookName
+        val endBookName = when {
+            isTamil -> endBookObj?.nameTa?.takeIf { it.isNotBlank() } ?: end.bookName
+            isTelugu -> endBookObj?.nameTe?.takeIf { it.isNotBlank() } ?: end.bookName
+            else -> endBookObj?.nameEn?.takeIf { it.isNotBlank() } ?: end.bookName
         }
         return "$startBookName ${start.chapter}:${start.verse}–$endBookName ${end.chapter}:${end.verse}"
     }

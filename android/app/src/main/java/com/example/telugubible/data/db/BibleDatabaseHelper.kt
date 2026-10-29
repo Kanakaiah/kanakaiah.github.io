@@ -212,16 +212,16 @@ class BibleDatabaseHelper(val context: Context) :
         return null
     }
 
-    fun getVerseTexts(keys: List<Triple<Int, Int, Int>>): Map<Triple<Int, Int, Int>, Pair<String?, String?>> {
+    fun getVerseTexts(keys: List<Triple<Int, Int, Int>>): Map<Triple<Int, Int, Int>, Triple<String?, String?, String?>> {
         if (keys.isEmpty()) return emptyMap()
-        val result = mutableMapOf<Triple<Int, Int, Int>, Pair<String?, String?>>()
+        val result = mutableMapOf<Triple<Int, Int, Int>, Triple<String?, String?, String?>>()
         val db = readableDatabase
 
         keys.chunked(100).forEach { batch ->
             val placeholders = batch.joinToString(" OR ") { "(book_id = ? AND chapter = ? AND verse = ?)" }
             val args = batch.flatMap { listOf(it.first.toString(), it.second.toString(), it.third.toString()) }.toTypedArray()
             val cursor = db.rawQuery(
-                "SELECT book_id, chapter, verse, text_te, text_en FROM verses WHERE $placeholders",
+                "SELECT book_id, chapter, verse, text_te, text_en, text_ta FROM verses WHERE $placeholders",
                 args
             )
             cursor.use {
@@ -231,7 +231,8 @@ class BibleDatabaseHelper(val context: Context) :
                     val vs = it.getInt(2)
                     val te = if (it.isNull(3)) null else it.getString(3)
                     val en = if (it.isNull(4)) null else it.getString(4)
-                    result[Triple(bId, ch, vs)] = Pair(te, en)
+                    val ta = if (it.isNull(5)) null else it.getString(5)
+                    result[Triple(bId, ch, vs)] = Triple(te, en, ta)
                 }
             }
         }
@@ -378,23 +379,26 @@ class BibleDatabaseHelper(val context: Context) :
         return list
     }
 
-    fun getRangeVerseText(bookId: Int, chapter: Int, startVerse: Int, endVerse: Int): Pair<String?, String?> {
+    fun getRangeVerseText(bookId: Int, chapter: Int, startVerse: Int, endVerse: Int): Triple<String?, String?, String?> {
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT text_te, text_en FROM verses WHERE book_id = ? AND chapter = ? AND verse BETWEEN ? AND ? ORDER BY verse ASC",
+            "SELECT text_te, text_en, text_ta FROM verses WHERE book_id = ? AND chapter = ? AND verse BETWEEN ? AND ? ORDER BY verse ASC",
             arrayOf(bookId.toString(), chapter.toString(), startVerse.toString(), endVerse.toString())
         )
         val teList = mutableListOf<String>()
         val enList = mutableListOf<String>()
+        val taList = mutableListOf<String>()
         cursor.use {
             while (it.moveToNext()) {
                 if (!it.isNull(0)) teList.add(it.getString(0))
                 if (!it.isNull(1)) enList.add(it.getString(1))
+                if (!it.isNull(2)) taList.add(it.getString(2))
             }
         }
         val te = if (teList.isNotEmpty()) teList.joinToString(" ") else null
         val en = if (enList.isNotEmpty()) enList.joinToString(" ") else null
-        return Pair(te, en)
+        val ta = if (taList.isNotEmpty()) taList.joinToString(" ") else null
+        return Triple(te, en, ta)
     }
 
     fun getPresetRangesMap(): Map<Triple<Int, Int, Int>, Int> {
@@ -490,10 +494,10 @@ class BibleDatabaseHelper(val context: Context) :
         return userVerses.map { uv ->
             val book = books[uv.bookId]
             val effectiveEndVerse = uv.endVerse ?: presetRanges[Triple(uv.bookId, uv.chapter, uv.verse)]
-            val (te, en) = if (effectiveEndVerse != null && effectiveEndVerse > uv.verse) {
+            val (te, en, ta) = if (effectiveEndVerse != null && effectiveEndVerse > uv.verse) {
                 getRangeVerseText(uv.bookId, uv.chapter, uv.verse, effectiveEndVerse)
             } else {
-                verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Pair(null, null)
+                verseTexts[Triple(uv.bookId, uv.chapter, uv.verse)] ?: Triple(null, null, null)
             }
             UserMemoryVerse(
                 id = uv.id,
@@ -501,11 +505,13 @@ class BibleDatabaseHelper(val context: Context) :
                 bookKey = book?.key ?: "",
                 bookNameEn = book?.nameEn ?: "",
                 bookNameTe = book?.nameTe ?: "",
+                bookNameTa = book?.nameTa,
                 chapter = uv.chapter,
                 verse = uv.verse,
                 endVerse = effectiveEndVerse,
                 textTe = te,
                 textEn = en,
+                textTa = ta,
                 status = uv.status,
                 repetition = uv.repetition,
                 interval = uv.interval,
@@ -694,7 +700,7 @@ class BibleDatabaseHelper(val context: Context) :
             val startCoord = KjvVersification.fromVerseIndex(toStart)
             val endCoord = KjvVersification.fromVerseIndex(toEnd)
             val toRef = KjvVersification.formatVerseIndexRange(toStart, toEnd)
-            val (snippetTe, snippetEn) = buildSnippetFromMap(toStart, toEnd, textsMap)
+            val (snippetTe, snippetEn, snippetTa) = buildSnippetFromMap(toStart, toEnd, textsMap)
 
             CrossReference(
                 id = id,
@@ -708,6 +714,7 @@ class BibleDatabaseHelper(val context: Context) :
                 toEndVerse = if (toEnd > toStart && endCoord.bookId == startCoord.bookId && endCoord.chapter == startCoord.chapter) endCoord.verse else null,
                 targetTextEn = snippetEn,
                 targetTextTe = snippetTe,
+                targetTextTa = snippetTa,
                 votes = votes,
                 direction = LinkDirection.OUTGOING,
                 otherStartVid = toStart,
@@ -762,7 +769,7 @@ class BibleDatabaseHelper(val context: Context) :
         return rawLinks.map { raw ->
             val sourceCoord = KjvVersification.fromVerseIndex(raw.fromVid)
             val sourceRef = KjvVersification.formatVerseIndexRange(raw.fromVid, raw.fromVid)
-            val pair = textsMap[Triple(sourceCoord.bookId, sourceCoord.chapter, sourceCoord.verse)]
+            val trip = textsMap[Triple(sourceCoord.bookId, sourceCoord.chapter, sourceCoord.verse)]
             val landing = if (raw.toEnd > raw.toStart) {
                 "to ${KjvVersification.formatVerseIndexRange(raw.toStart, raw.toEnd)}"
             } else null
@@ -777,8 +784,9 @@ class BibleDatabaseHelper(val context: Context) :
                 toChapter = sourceCoord.chapter,
                 toVerse = sourceCoord.verse,
                 toEndVerse = null,
-                targetTextEn = pair?.second,
-                targetTextTe = pair?.first,
+                targetTextEn = trip?.second,
+                targetTextTe = trip?.first,
+                targetTextTa = trip?.third,
                 votes = raw.votes,
                 direction = LinkDirection.INCOMING,
                 otherStartVid = raw.fromVid,
@@ -875,32 +883,36 @@ class BibleDatabaseHelper(val context: Context) :
     private fun buildSnippetFromMap(
         startVid: Int,
         endVid: Int,
-        textsMap: Map<Triple<Int, Int, Int>, Pair<String?, String?>>,
+        textsMap: Map<Triple<Int, Int, Int>, Triple<String?, String?, String?>>,
         maxVerses: Int = 12
-    ): Pair<String?, String?> {
+    ): Triple<String?, String?, String?> {
         if (startVid == endVid) {
             val c = KjvVersification.fromVerseIndex(startVid)
-            return textsMap[Triple(c.bookId, c.chapter, c.verse)] ?: Pair(null, null)
+            return textsMap[Triple(c.bookId, c.chapter, c.verse)] ?: Triple(null, null, null)
         }
         val total = endVid - startVid + 1
         val cappedEnd = minOf(endVid, startVid + maxVerses - 1)
         val teParts = mutableListOf<String>()
         val enParts = mutableListOf<String>()
+        val taParts = mutableListOf<String>()
         for (v in startVid..cappedEnd) {
             val c = KjvVersification.fromVerseIndex(v)
-            val pair = textsMap[Triple(c.bookId, c.chapter, c.verse)]
-            pair?.first?.takeIf { it.isNotBlank() }?.let { teParts.add("${c.verse} $it") }
-            pair?.second?.takeIf { it.isNotBlank() }?.let { enParts.add("${c.verse} $it") }
+            val trip = textsMap[Triple(c.bookId, c.chapter, c.verse)]
+            trip?.first?.takeIf { it.isNotBlank() }?.let { teParts.add("${c.verse} $it") }
+            trip?.second?.takeIf { it.isNotBlank() }?.let { enParts.add("${c.verse} $it") }
+            trip?.third?.takeIf { it.isNotBlank() }?.let { taParts.add("${c.verse} $it") }
         }
         val extra = total - maxVerses
         if (extra > 0) {
             val suffix = "(+ $extra more ${if (extra == 1) "verse" else "verses"})"
             if (teParts.isNotEmpty()) teParts.add(suffix)
             if (enParts.isNotEmpty()) enParts.add(suffix)
+            if (taParts.isNotEmpty()) taParts.add(suffix)
         }
-        return Pair(
+        return Triple(
             teParts.takeIf { it.isNotEmpty() }?.joinToString(" "),
-            enParts.takeIf { it.isNotEmpty() }?.joinToString(" ")
+            enParts.takeIf { it.isNotEmpty() }?.joinToString(" "),
+            taParts.takeIf { it.isNotEmpty() }?.joinToString(" ")
         )
     }
 

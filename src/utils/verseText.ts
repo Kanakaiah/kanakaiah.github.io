@@ -85,12 +85,14 @@ function fetchChapter(version: string, bollsId: number, chapter: number, _bookId
 
   let pending: Promise<BollsVerse[]>;
 
-  if (version === 'TELIRV' || version === 'TBSI' || version === 'BSB') {
-    const folder = version === 'TELIRV' ? 'telugu_irv' : version === 'TBSI' ? 'tamil_bsi' : 'bsb';
+  if (version.toUpperCase() === 'TELIRV' || version.toUpperCase() === 'TBSI' || version.toUpperCase() === 'BSB') {
+    const vUpper = version.toUpperCase();
+    const folder = vUpper === 'TELIRV' ? 'telugu_irv' : vUpper === 'TBSI' ? 'tamil_bsi' : 'bsb';
     const bookKey = `${folder}:${bollsId}`;
     let bookPromise = localBookCache.get(bookKey);
     if (!bookPromise) {
-      bookPromise = fetch(`/bible/${folder}/${bollsId}.json`).then(res => {
+      const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+      bookPromise = fetch(`${base}/bible/${folder}/${bollsId}.json`).then(res => {
         if (!res.ok) throw new Error('Failed to fetch local Bible book.');
         return res.json();
       });

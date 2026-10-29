@@ -79,30 +79,30 @@ val InterFontFamily = FontFamily(
 
 val SystemFontFamily = FontFamily.Default
 
-private val RobotoGoogleFont = GoogleFont("Roboto")
-val RobotoFontFamily = FontFamily(
-    Font(googleFont = RobotoGoogleFont, fontProvider = googleFontProvider),
-    Font(googleFont = RobotoGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
+private val FigtreeGoogleFont = GoogleFont("Figtree")
+val FigtreeFontFamily = FontFamily(
+    Font(googleFont = FigtreeGoogleFont, fontProvider = googleFontProvider),
+    Font(googleFont = FigtreeGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
 )
 
-private val OpenSansGoogleFont = GoogleFont("Open Sans")
-val OpenSansFontFamily = FontFamily(
-    Font(googleFont = OpenSansGoogleFont, fontProvider = googleFontProvider),
-    Font(googleFont = OpenSansGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
+private val PublicSansGoogleFont = GoogleFont("Public Sans")
+val PublicSansFontFamily = FontFamily(
+    Font(googleFont = PublicSansGoogleFont, fontProvider = googleFontProvider),
+    Font(googleFont = PublicSansGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
 )
 
 enum class ReaderFontFamily(val key: String, val label: String, val fontFamily: FontFamily) {
     INTER("inter", "Inter", InterFontFamily),
     SYSTEM("system", "System", SystemFontFamily),
-    ROBOTO("roboto", "Roboto", RobotoFontFamily),
-    OPEN_SANS("opensans", "Open Sans", OpenSansFontFamily);
+    FIGTREE("figtree", "Figtree", FigtreeFontFamily),
+    PUBLIC_SANS("publicsans", "Public Sans", PublicSansFontFamily);
 
     companion object {
         fun fromKey(key: String?): ReaderFontFamily {
             return when (key?.lowercase()?.trim()) {
                 "system", "default" -> SYSTEM
-                "roboto" -> ROBOTO
-                "opensans", "open sans", "open_sans" -> OPEN_SANS
+                "figtree", "roboto" -> FIGTREE
+                "publicsans", "public sans", "public_sans", "opensans", "open sans", "open_sans" -> PUBLIC_SANS
                 "inter", "sans" -> INTER
                 "serif", "merriweather" -> INTER
                 "hyper", "atkinson", "hyperlegible" -> INTER

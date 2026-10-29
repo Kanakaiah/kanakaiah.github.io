@@ -51,6 +51,7 @@ enum class FontSizeScale(
 
 enum class BibleLanguage(val code: String, val displayName: String) {
     TELUGU("TE", "తెలుగు"),
+    TAMIL("TA", "தமிழ்"),
     ENGLISH("EN", "English")
 }
 
@@ -70,6 +71,7 @@ data class ReaderUiState(
     val connectionsInitialSection: String? = null,
     val connectionsQuoteTextEn: String? = null,
     val connectionsQuoteTextTe: String? = null,
+    val connectionsQuoteTextTa: String? = null,
     val stepBibleWordOccurrences: Map<Int, List<StepBibleWordOccurrence>> = emptyMap(),
     val isTtsSpeaking: Boolean = false,
     val activeTtsVerse: Int? = null,
@@ -159,7 +161,11 @@ class ReaderViewModel @JvmOverloads constructor(
             val firstBook = books.firstOrNull { it.id == 1 } ?: books.firstOrNull()
             val settings = repository.getAppSettings()
             val activeVer = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
-            val lang = if (activeVer == "TELIRV") BibleLanguage.TELUGU else BibleLanguage.ENGLISH
+            val lang = when (activeVer) {
+                "TELIRV" -> BibleLanguage.TELUGU
+                "TBSI" -> BibleLanguage.TAMIL
+                else -> BibleLanguage.ENGLISH
+            }
 
             if (firstBook != null) {
                 val rawVerses = repository.getChapterVerses(firstBook.id, 1, activeVer)
@@ -238,7 +244,11 @@ class ReaderViewModel @JvmOverloads constructor(
             }
             val settings = repository.getAppSettings()
             val activeVer = settings.bibleVersion.ifBlank { _uiState.value.activeVersion }.uppercase()
-            val lang = if (activeVer == "TELIRV") BibleLanguage.TELUGU else BibleLanguage.ENGLISH
+            val lang = when (activeVer) {
+                "TELIRV" -> BibleLanguage.TELUGU
+                "TBSI" -> BibleLanguage.TAMIL
+                else -> BibleLanguage.ENGLISH
+            }
             val rawVerses = repository.getChapterVerses(book.id, chapter, activeVer)
             val verses = attachHeadingsIfNeeded(book.id, chapter, activeVer, rawVerses)
             val breaks = repository.getParagraphBreaks(book.id, chapter)
@@ -294,8 +304,16 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     private suspend fun attachHeadingsIfNeeded(bookId: Int, chapter: Int, activeVersion: String, verses: List<Verse>): List<Verse> {
+        val v = activeVersion.uppercase()
         val headingRegex = Regex("<b\\b[^>]*>([\\s\\S]*?)</b>", RegexOption.IGNORE_CASE)
-        val hasHeadings = verses.any { headingRegex.containsMatchIn(it.textEn ?: "") }
+        val hasHeadings = verses.any {
+            val txt = when (v) {
+                "TBSI" -> it.textTa ?: ""
+                "TELIRV" -> it.textTe ?: ""
+                else -> it.textEn ?: ""
+            }
+            headingRegex.containsMatchIn(txt)
+        }
         if (hasHeadings) return verses
         val lsbVerses = repository.getChapterVerses(bookId, chapter, "LSB")
         val lsbHeadings = mutableMapOf<Int, String>()
@@ -307,13 +325,25 @@ class ReaderViewModel @JvmOverloads constructor(
             }
         }
         if (lsbHeadings.isEmpty()) return verses
-        return verses.map { v ->
-            val h = lsbHeadings[v.verse]
+        return verses.map { verse ->
+            val h = lsbHeadings[verse.verse]
             if (h != null) {
-                val currentText = v.textEn ?: v.textTe ?: ""
-                v.copy(textEn = "$h $currentText")
+                when (v) {
+                    "TBSI" -> {
+                        val currentText = verse.textTa ?: verse.textEn ?: ""
+                        verse.copy(textTa = "$h $currentText")
+                    }
+                    "TELIRV" -> {
+                        val currentText = verse.textTe ?: verse.textEn ?: ""
+                        verse.copy(textTe = "$h $currentText")
+                    }
+                    else -> {
+                        val currentText = verse.textEn ?: verse.textTe ?: ""
+                        verse.copy(textEn = "$h $currentText")
+                    }
+                }
             } else {
-                v
+                verse
             }
         }
     }
@@ -373,7 +403,11 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun setBibleVersion(version: String) {
         val v = version.uppercase()
-        val lang = if (v == "TELIRV") BibleLanguage.TELUGU else BibleLanguage.ENGLISH
+        val lang = when (v) {
+            "TELIRV" -> BibleLanguage.TELUGU
+            "TBSI" -> BibleLanguage.TAMIL
+            else -> BibleLanguage.ENGLISH
+        }
         _uiState.update { it.copy(activeVersion = v, language = lang, isLoading = true) }
         viewModelScope.launch {
             val currentSettings = repository.getAppSettings()
@@ -445,14 +479,22 @@ class ReaderViewModel @JvmOverloads constructor(
         val selected = _uiState.value.selectedVerses.sorted()
         if (selected.isEmpty()) return ""
 
-        val bookTitle = if (lang == BibleLanguage.TELUGU) book.nameTe else book.nameEn
+        val bookTitle = when (lang) {
+            BibleLanguage.TAMIL -> book.nameTa ?: book.nameEn
+            BibleLanguage.TELUGU -> book.nameTe
+            else -> book.nameEn
+        }
         val refRange = if (selected.size == 1) "$ch:${selected.first()}" else "$ch:${selected.first()}-${selected.last()}"
         val header = "$bookTitle $refRange"
 
         val versesMap = _uiState.value.verses.associateBy { it.verse }
         val lines = selected.mapNotNull { vNum ->
             val v = versesMap[vNum] ?: return@mapNotNull null
-            val text = if (lang == BibleLanguage.TELUGU) v.textTe ?: v.textEn else v.textEn ?: v.textTe
+            val text = when (lang) {
+                BibleLanguage.TAMIL -> v.textTa ?: v.textEn ?: ""
+                BibleLanguage.TELUGU -> v.textTe ?: v.textEn ?: ""
+                else -> v.textEn ?: v.textTe ?: ""
+            }
             "$vNum $text"
         }
         return "$header\n${lines.joinToString("\n")}"
@@ -584,7 +626,8 @@ class ReaderViewModel @JvmOverloads constructor(
                     connectionsData = connData,
                     connectionsInitialSection = initialSection,
                     connectionsQuoteTextEn = verseObj?.textEn,
-                    connectionsQuoteTextTe = verseObj?.textTe
+                    connectionsQuoteTextTe = verseObj?.textTe,
+                    connectionsQuoteTextTa = verseObj?.textTa
                 )
             }
         }
@@ -604,7 +647,8 @@ class ReaderViewModel @JvmOverloads constructor(
                     connectionsData = connData,
                     connectionsInitialSection = initialSection,
                     connectionsQuoteTextEn = verseObj?.textEn,
-                    connectionsQuoteTextTe = verseObj?.textTe
+                    connectionsQuoteTextTe = verseObj?.textTe,
+                    connectionsQuoteTextTa = verseObj?.textTa
                 )
             }
         }
@@ -664,10 +708,19 @@ class ReaderViewModel @JvmOverloads constructor(
             verses
         }
         val pairs = targetVerses.map { v ->
-            val text = if (lang == BibleLanguage.TELUGU) v.textTe ?: v.textEn ?: "" else v.textEn ?: v.textTe ?: ""
+            val text = when (lang) {
+                BibleLanguage.TAMIL -> v.textTa ?: v.textEn ?: ""
+                BibleLanguage.TELUGU -> v.textTe ?: v.textEn ?: ""
+                else -> v.textEn ?: v.textTe ?: ""
+            }
             Pair(v.verse, text)
         }
-        ttsManager.playVerses(pairs)
+        val langCode = when (lang) {
+            BibleLanguage.TAMIL -> "ta"
+            BibleLanguage.TELUGU -> "te"
+            else -> "en"
+        }
+        ttsManager.playVerses(pairs, langCode = langCode)
     }
 
     fun stopTts() {

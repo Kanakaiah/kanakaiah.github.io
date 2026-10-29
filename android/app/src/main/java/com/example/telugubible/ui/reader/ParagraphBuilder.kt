@@ -24,7 +24,8 @@ object ParagraphBuilder {
     fun buildParagraphs(
         verses: List<Verse>,
         paragraphBreaks: Set<Int>,
-        isPsalms: Boolean = false
+        isPsalms: Boolean = false,
+        activeVersion: String = "LSB"
     ): List<ReaderParagraph> {
         if (verses.isEmpty()) return emptyList()
 
@@ -33,10 +34,15 @@ object ParagraphBuilder {
         var currentHeading: String? = null
         var currentPsalmTitle: String? = null
         var paragraphIdx = 0
+        val vUpper = activeVersion.uppercase().trim()
 
         for (v in verses) {
             val vNum = v.verse
-            val text = v.textEn ?: v.textTe ?: ""
+            val text = when (vUpper) {
+                "TBSI" -> v.textTa ?: v.textEn ?: v.textTe ?: ""
+                "TELIRV" -> v.textTe ?: v.textEn ?: ""
+                else -> v.textEn ?: v.textTe ?: v.textTa ?: ""
+            }
 
             // Check for embedded heading(s) in <b>...</b>
             val headingMatches = Regex("<b\\b[^>]*>([\\s\\S]*?)</b>", RegexOption.IGNORE_CASE).findAll(text).toList()

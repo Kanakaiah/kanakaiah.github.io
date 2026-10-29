@@ -129,9 +129,11 @@ function fetchChapterText(version: string, bollsId: number, chapter: number): Pr
 
   let pending: Promise<Verse[]>;
 
-  if (version === 'TELIRV' || version === 'TBSI' || version === 'BSB') {
-    const folder = version === 'TELIRV' ? 'telugu_irv' : version === 'TBSI' ? 'tamil_bsi' : 'bsb';
-    const url = `/bible/${folder}/${bollsId}.json`;
+  if (version.toUpperCase() === 'TELIRV' || version.toUpperCase() === 'TBSI' || version.toUpperCase() === 'BSB') {
+    const vUpper = version.toUpperCase();
+    const folder = vUpper === 'TELIRV' ? 'telugu_irv' : vUpper === 'TBSI' ? 'tamil_bsi' : 'bsb';
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+    const url = `${base}/bible/${folder}/${bollsId}.json`;
     
     pending = fetch(url, { signal: controller.signal })
       .then(res => {
@@ -1434,8 +1436,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   <div
                     className={`p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] transition-[font-size,line-height] duration-75 ${
                       state.settings.fontFamily === 'system' ? 'font-system' :
-                      state.settings.fontFamily === 'roboto' ? 'font-roboto' :
-                      state.settings.fontFamily === 'opensans' ? 'font-opensans' :
+                      (state.settings.fontFamily === 'figtree' || state.settings.fontFamily === 'roboto') ? 'font-figtree' :
+                      (state.settings.fontFamily === 'publicsans' || state.settings.fontFamily === 'opensans') ? 'font-publicsans' :
                       'font-inter'
                     }`}
                     style={{
@@ -1494,8 +1496,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       {[
                         { id: 'inter', label: 'Inter' },
                         { id: 'system', label: 'System' },
-                        { id: 'roboto', label: 'Roboto' },
-                        { id: 'opensans', label: 'Open Sans' },
+                        { id: 'figtree', label: 'Figtree' },
+                        { id: 'publicsans', label: 'Public Sans' },
                       ].map(f => {
                         const isSelected = (state.settings.fontFamily || 'inter') === f.id;
                         return (
@@ -1692,8 +1694,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           <div
             className={`mx-auto pb-32 select-text ${
               state.settings.fontFamily === 'system' ? 'font-system' :
-              state.settings.fontFamily === 'roboto' ? 'font-roboto' :
-              state.settings.fontFamily === 'opensans' ? 'font-opensans' :
+              (state.settings.fontFamily === 'figtree' || state.settings.fontFamily === 'roboto') ? 'font-figtree' :
+              (state.settings.fontFamily === 'publicsans' || state.settings.fontFamily === 'opensans') ? 'font-publicsans' :
               'font-inter'
             }`}
             // fontSize lives on this wrapper (not the inner div) so the `ch` unit in

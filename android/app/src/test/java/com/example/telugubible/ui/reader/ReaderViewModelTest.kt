@@ -253,8 +253,8 @@ class ReaderViewModelTest {
         viewModel.setReaderTheme(ReaderTheme.PAPER)
         assertEquals(ReaderTheme.PAPER, viewModel.uiState.value.readerTheme)
 
-        viewModel.setReaderFontFamily(ReaderFontFamily.ROBOTO)
-        assertEquals(ReaderFontFamily.ROBOTO, viewModel.uiState.value.readerFontFamily)
+        viewModel.setReaderFontFamily(ReaderFontFamily.FIGTREE)
+        assertEquals(ReaderFontFamily.FIGTREE, viewModel.uiState.value.readerFontFamily)
     }
 
     @Test
@@ -358,6 +358,13 @@ class ReaderViewModelTest {
 
         assertEquals("TELIRV", viewModel.uiState.value.activeVersion)
         assertEquals(BibleLanguage.TELUGU, viewModel.uiState.value.language)
+
+        // Switch to TBSI (Tamil)
+        viewModel.setBibleVersion("TBSI")
+        advanceUntilIdle()
+
+        assertEquals("TBSI", viewModel.uiState.value.activeVersion)
+        assertEquals(BibleLanguage.TAMIL, viewModel.uiState.value.language)
 
         // Switch to ESV
         viewModel.setBibleVersion("ESV")
