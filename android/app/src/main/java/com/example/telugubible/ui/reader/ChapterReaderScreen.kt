@@ -972,7 +972,7 @@ fun ChapterReaderScreen(
                                             text = "As one passage",
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (asOnePassage) Color(0xFF14120E) else RemoraTextSecondary
+                                            color = if (asOnePassage) Color(0xFF14120E) else Color(0xFFF5F2EB)
                                         )
                                     }
                                 }
@@ -990,7 +990,7 @@ fun ChapterReaderScreen(
                                             text = "As ${sortedSelected.size} verses",
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (!asOnePassage) Color(0xFF14120E) else RemoraTextSecondary
+                                            color = if (!asOnePassage) Color(0xFF14120E) else Color(0xFFF5F2EB)
                                         )
                                     }
                                 }
@@ -1005,7 +1005,7 @@ fun ChapterReaderScreen(
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.2.sp,
-                            color = RemoraTextMuted
+                            color = Color(0xFFB5A995)
                         )
 
                         FlowRow(
@@ -1033,12 +1033,12 @@ fun ChapterReaderScreen(
                                     ) {
                                         Box(
                                             modifier = Modifier
-                                                .size(18.dp)
+                                                .size(17.dp)
                                                 .clip(RoundedCornerShape(4.dp))
-                                                .background(if (isSelected) RemoraAccent else Color.Transparent)
+                                                .background(if (isSelected) RemoraAccent else Color(0xFFF5F2EB))
                                                 .border(
                                                     width = 1.dp,
-                                                    color = if (isSelected) RemoraAccent else Color(0xFF6E6455),
+                                                    color = if (isSelected) RemoraAccent else Color(0xFFF5F2EB),
                                                     shape = RoundedCornerShape(4.dp)
                                                 ),
                                             contentAlignment = Alignment.Center
@@ -1057,7 +1057,7 @@ fun ChapterReaderScreen(
                                             text = topic.name,
                                             fontSize = 13.5.sp,
                                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) RemoraTextPrimary else RemoraTextSecondary
+                                            color = Color(0xFFF5F2EB)
                                         )
                                     }
                                 }
@@ -1146,7 +1146,7 @@ fun ChapterReaderScreen(
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.2.sp,
-                            color = RemoraTextMuted
+                            color = Color(0xFFB5A995)
                         )
                         Surface(
                             shape = RoundedCornerShape(14.dp),
@@ -1159,7 +1159,7 @@ fun ChapterReaderScreen(
                                 onValueChange = { memoryHookText = it },
                                 singleLine = true,
                                 textStyle = androidx.compose.ui.text.TextStyle(
-                                    color = RemoraTextPrimary,
+                                    color = Color(0xFFF5F2EB),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Medium
                                 ),
@@ -1171,8 +1171,8 @@ fun ChapterReaderScreen(
                                     ) {
                                         if (memoryHookText.isEmpty()) {
                                             Text(
-                                                text = "e.g. Forever",
-                                                color = RemoraTextMuted.copy(alpha = 0.5f),
+                                                text = "Forever",
+                                                color = Color(0xFFF5F2EB).copy(alpha = 0.5f),
                                                 fontSize = 15.sp
                                             )
                                         }
@@ -1199,7 +1199,7 @@ fun ChapterReaderScreen(
                                     .size(22.dp)
                                     .border(
                                         width = 2.dp,
-                                        color = if (startLearningNow) RemoraAccent else Color(0xFF7A7062),
+                                        color = if (startLearningNow) RemoraAccent else Color(0xFFF5F2EB),
                                         shape = CircleShape
                                     ),
                                 contentAlignment = Alignment.Center
@@ -1217,7 +1217,7 @@ fun ChapterReaderScreen(
                                 text = "Start learning now",
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = RemoraTextPrimary
+                                color = Color(0xFFF5F2EB)
                             )
                         }
 
@@ -1235,9 +1235,10 @@ fun ChapterReaderScreen(
                                     .size(22.dp)
                                     .border(
                                         width = 2.dp,
-                                        color = if (!startLearningNow) RemoraAccent else Color(0xFF7A7062),
+                                        color = if (!startLearningNow) RemoraAccent else Color(0xFFF5F2EB),
                                         shape = CircleShape
-                                    ),
+                                    )
+                                    .background(if (startLearningNow) Color(0xFFF5F2EB) else Color.Transparent, CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 if (!startLearningNow) {
@@ -1253,14 +1254,14 @@ fun ChapterReaderScreen(
                                 text = "First review tomorrow",
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = RemoraTextPrimary
+                                color = Color(0xFFF5F2EB)
                             )
                         }
                     }
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Section 4: Primary Action Button (Matching Mockup: "Add 2 verses" / "Add passage")
+                    // Section 4: Primary Action Button (Matching Mockup: "Add 2 verses")
                     Button(
                         onClick = {
                             viewModel.addSelectedVersesToMemory(
@@ -1281,11 +1282,7 @@ fun ChapterReaderScreen(
                             .height(52.dp)
                     ) {
                         Text(
-                            text = when {
-                                sortedSelected.size <= 1 -> "Add verse"
-                                asOnePassage -> "Add passage"
-                                else -> "Add ${sortedSelected.size} verses"
-                            },
+                            text = if (sortedSelected.size <= 1) "Add verse" else "Add ${sortedSelected.size} verses",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF14120E)

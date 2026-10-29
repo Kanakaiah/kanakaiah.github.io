@@ -476,24 +476,25 @@ private fun AnchorCard(
                 text = item.bookName.uppercase(),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
+                letterSpacing = 1.5.sp,
                 color = RemoraTextMuted
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             when (item.direction) {
                 AnchorDirection.N2W -> {
                     Text(
                         text = "Chapter ${item.chapter}",
                         fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
                         color = RemoraTextPrimary
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "What is the anchor word?",
-                        fontSize = 13.sp,
+                        fontSize = 14.sp,
                         fontStyle = FontStyle.Italic,
                         color = RemoraTextSecondary
                     )
@@ -501,14 +502,14 @@ private fun AnchorCard(
                 AnchorDirection.W2N -> {
                     Text(
                         text = item.word,
-                        fontSize = 28.sp,
+                        fontSize = 32.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = RemoraAccent
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "Which chapter is anchored by this word?",
-                        fontSize = 13.sp,
+                        fontSize = 14.sp,
                         fontStyle = FontStyle.Italic,
                         color = RemoraTextSecondary
                     )
@@ -516,22 +517,24 @@ private fun AnchorCard(
                 AnchorDirection.P2W -> {
                     Text(
                         text = item.scene,
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
                         color = RemoraTextPrimary,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "What is the anchor word?",
-                        fontSize = 13.sp,
+                        fontSize = 14.sp,
                         fontStyle = FontStyle.Italic,
                         color = RemoraTextSecondary
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             if (!isRevealed) {
                 OutlinedTextField(
@@ -550,6 +553,7 @@ private fun AnchorCard(
                         capitalization = KeyboardCapitalization.Characters
                     ),
                     keyboardActions = KeyboardActions(onDone = { onCheck() }),
+                    shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = RemoraTextPrimary,
                         unfocusedTextColor = RemoraTextPrimary,
@@ -558,61 +562,68 @@ private fun AnchorCard(
                         focusedContainerColor = RemoraCardBgElevated,
                         unfocusedContainerColor = RemoraCardBgElevated
                     ),
-                    modifier = Modifier.fillMaxWidth(0.9f)
+                    modifier = Modifier.fillMaxWidth(0.92f)
                 )
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(18.dp))
 
                 Button(
                     onClick = onCheck,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                    modifier = Modifier.fillMaxWidth(0.9f).height(46.dp)
+                    shape = RoundedCornerShape(18.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = Color(0xFF14120E)),
+                    modifier = Modifier.fillMaxWidth(0.92f).height(50.dp)
                 ) {
-                    Text("Check Answer", fontWeight = FontWeight.Bold)
+                    Text("Check Answer", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
             } else {
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = RemoraCardBgElevated,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.fillMaxWidth(0.9f)
+                // Modern container-less revealed anchor
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Anchor: ${item.word}",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraAccent
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Chapter ${item.chapter} · ${item.scene}",
-                            fontSize = 13.sp,
-                            color = RemoraTextSecondary,
-                            textAlign = TextAlign.Center
-                        )
+                    Text(
+                        text = item.word,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = RemoraAccent,
+                        letterSpacing = 1.sp
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "Chapter ${item.chapter} · ${item.scene}",
+                        fontSize = 15.sp,
+                        color = RemoraTextSecondary,
+                        textAlign = TextAlign.Center
+                    )
 
-                        if (judgement != null) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            val verdictText = when (judgement.verdict) {
-                                AnchorVerdict.CORRECT -> "Exact match! ✓"
-                                AnchorVerdict.NEAR -> "Near match (~)"
-                                AnchorVerdict.WRONG -> if (judgement.confusedWith != null) {
-                                    "Confused with Chapter ${judgement.confusedWith.chapter} (${judgement.confusedWith.word})"
-                                } else {
-                                    "Incorrect"
-                                }
+                    if (judgement != null) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        val verdictText = when (judgement.verdict) {
+                            AnchorVerdict.CORRECT -> "Exact match! ✓"
+                            AnchorVerdict.NEAR -> "Near match (~)"
+                            AnchorVerdict.WRONG -> if (judgement.confusedWith != null) {
+                                "Confused with Chapter ${judgement.confusedWith.chapter} (${judgement.confusedWith.word})"
+                            } else {
+                                "Incorrect"
                             }
-                            val verdictColor = when (judgement.verdict) {
-                                AnchorVerdict.CORRECT -> GradeEasy
-                                AnchorVerdict.NEAR -> GradeHard
-                                AnchorVerdict.WRONG -> GradeBlank
-                            }
-                            Text(text = verdictText, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = verdictColor)
+                        }
+                        val verdictColor = when (judgement.verdict) {
+                            AnchorVerdict.CORRECT -> GradeEasy
+                            AnchorVerdict.NEAR -> GradeHard
+                            AnchorVerdict.WRONG -> GradeBlank
+                        }
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = verdictColor.copy(alpha = 0.15f),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, verdictColor.copy(alpha = 0.4f))
+                        ) {
+                            Text(
+                                text = verdictText,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = verdictColor,
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+                            )
                         }
                     }
                 }
@@ -620,7 +631,7 @@ private fun AnchorCard(
         }
 
         if (isRevealed) {
-            Column(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(top = 20.dp)) {
                 Button(
                     onClick = {
                         val score = when (judgement?.verdict) {
@@ -631,11 +642,11 @@ private fun AnchorCard(
                         }
                         onGrade(score)
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth().height(46.dp)
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = Color(0xFF14120E)),
+                    shape = RoundedCornerShape(18.dp),
+                    modifier = Modifier.fillMaxWidth().height(50.dp)
                 ) {
-                    Text("Continue", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Text("Continue", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -660,61 +671,63 @@ private fun ThemeCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
+            // Floating cover art without box container
             Box(
                 modifier = Modifier
-                    .width(180.dp)
-                    .height(135.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(RemoraCardBgElevated)
-                    .border(1.dp, RemoraCardBorder, RoundedCornerShape(8.dp)),
+                    .width(220.dp)
+                    .height(165.dp)
+                    .clip(RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 BookCoverImage(bookKey = item.bookKey, contentDescription = item.bookName)
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             Text(
                 text = item.bookName,
-                fontSize = 24.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
                 color = RemoraTextPrimary
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Text(
                 text = "What is this book's theme?",
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 fontStyle = FontStyle.Italic,
                 color = RemoraTextMuted
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             if (isRevealed) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
                         text = item.themeWord,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraAccent
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = RemoraAccent,
+                        letterSpacing = 0.5.sp
                     )
                     if (item.keyWord.isNotBlank()) {
                         Text(
                             text = item.keyWord.uppercase(),
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = RemoraGold
+                            color = RemoraGold,
+                            letterSpacing = 1.sp
                         )
                     }
                     if (item.subtitle.isNotBlank()) {
                         Text(
                             text = item.subtitle,
-                            fontSize = 13.sp,
+                            fontSize = 14.sp,
                             fontStyle = FontStyle.Italic,
                             color = RemoraTextSecondary,
                             textAlign = TextAlign.Center,
@@ -723,12 +736,11 @@ private fun ThemeCard(
                     }
                 }
             } else {
-                Box(
-                    modifier = Modifier
-                        .width(120.dp)
-                        .height(24.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(RemoraCardBorder)
+                Text(
+                    text = "— · · · —",
+                    fontSize = 24.sp,
+                    color = RemoraTextMuted.copy(alpha = 0.45f),
+                    letterSpacing = 2.sp
                 )
             }
         }
@@ -736,21 +748,21 @@ private fun ThemeCard(
         if (!isRevealed) {
             Button(
                 onClick = onReveal,
-                modifier = Modifier.fillMaxWidth().height(48.dp),
-                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.fillMaxWidth().height(50.dp),
+                shape = RoundedCornerShape(18.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
                 border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorderHover)
             ) {
-                Text("Tap to reveal", fontWeight = FontWeight.SemiBold, color = RemoraTextSecondary)
+                Text("Tap to reveal", fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = RemoraTextPrimary)
             }
         } else {
             Button(
                 onClick = { onGrade(4) },
-                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.fillMaxWidth().height(46.dp)
+                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = Color(0xFF14120E)),
+                shape = RoundedCornerShape(18.dp),
+                modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {
-                Text("Continue", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text("Continue", fontSize = 15.sp, fontWeight = FontWeight.Bold)
             }
         }
     }

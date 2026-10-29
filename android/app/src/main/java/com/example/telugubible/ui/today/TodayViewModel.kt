@@ -171,17 +171,25 @@ class TodayViewModel @JvmOverloads constructor(
                 val isWellKnown = topic.name.equals("Well-Known", ignoreCase = true) ||
                     topic.name.equals("75 Well-Known", ignoreCase = true) ||
                     topic.name.equals("75 Well-Known Verses", ignoreCase = true)
+                val isKeyVerses = topic.name.equals("66 Key Verses", ignoreCase = true) ||
+                    topic.name.equals("Key Verses", ignoreCase = true)
 
-                // Top 100 / Well-Known only exist when added with verses
-                if ((isTop100 || isWellKnown) && versesInTopic.isEmpty()) continue
+                // Preset collections only exist when added with verses
+                if ((isTop100 || isWellKnown || isKeyVerses) && versesInTopic.isEmpty()) continue
 
-                // Avoid duplicate card if Well-Known is already present
+                // Avoid duplicate card if Well-Known or Key Verses is already present
                 if (isWellKnown && collectionList.any { it.name.equals("Well-Known", ignoreCase = true) }) continue
+                if (isKeyVerses && collectionList.any { it.name.equals("66 Key Verses", ignoreCase = true) }) continue
 
-                val displayName = if (isWellKnown) "Well-Known" else topic.name
+                val displayName = when {
+                    isWellKnown -> "Well-Known"
+                    isKeyVerses -> "66 Key Verses"
+                    else -> topic.name
+                }
                 val total = when {
                     isTop100 -> kotlin.math.max(100, versesInTopic.size)
                     isWellKnown -> kotlin.math.max(75, versesInTopic.size)
+                    isKeyVerses -> kotlin.math.max(66, versesInTopic.size)
                     else -> versesInTopic.size
                 }
                 val dueInTopic = versesInTopic.count { it.nextDueDate <= now }
@@ -194,7 +202,7 @@ class TodayViewModel @JvmOverloads constructor(
                         totalCount = total,
                         dueCount = dueInTopic,
                         learnedCount = learnedInTopic,
-                        isPreset = isTop100 || isWellKnown
+                        isPreset = isTop100 || isWellKnown || isKeyVerses
                     )
                 )
             }
@@ -327,10 +335,11 @@ class TodayViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(showManageTopicsSheet = show) }
     }
 
-    fun createTopic(name: String) {
+    fun createTopic(name: String, onCreated: ((com.example.telugubible.data.model.Topic) -> Unit)? = null) {
         viewModelScope.launch {
-            repository.createTopic(name)
+            val topic = repository.createTopic(name)
             loadData()
+            onCreated?.invoke(topic)
         }
     }
 
@@ -559,11 +568,21 @@ class TodayViewModel @JvmOverloads constructor(
     }
 
     fun addCollection(collectionId: String, extraTopicIds: List<String> = emptyList()) {
-        val name = if (collectionId == "well_known") "Well-Known" else "Top 100 Verses"
-        val estimatedTotal = if (collectionId == "well_known") 75 else 100
+        val name = when (collectionId) {
+            "key_verses_66", "key_verses" -> "66 Key Verses"
+            "well_known" -> "Well-Known"
+            else -> "Top 100 Verses"
+        }
+        val estimatedTotal = when (collectionId) {
+            "key_verses_66", "key_verses" -> 66
+            "well_known" -> 75
+            else -> 100
+        }
         viewModelScope.launch {
+            // Dismiss Add dialog immediately so the loading progress dialog is unblocked and directly visible
             _uiState.update {
                 it.copy(
+                    showAddDialog = false,
                     addingProgress = AddingProgress(name, 0, estimatedTotal)
                 )
             }
@@ -592,6 +611,12 @@ class TodayViewModel @JvmOverloads constructor(
                 )
             }
             loadData()
+
+            // Auto-dismiss confirmation banner after 2.5s without requiring manual OK click
+            kotlinx.coroutines.delay(2500)
+            if (_uiState.value.messageBanner?.startsWith("Added $name") == true) {
+                _uiState.update { it.copy(messageBanner = null) }
+            }
         }
     }
 

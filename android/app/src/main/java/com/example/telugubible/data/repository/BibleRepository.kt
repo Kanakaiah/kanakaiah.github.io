@@ -327,6 +327,7 @@ class BibleRepository(
         val topicName = when (collectionId) {
             "top_100" -> "Top 100"
             "well_known" -> "Well-Known"
+            "key_verses_66", "key_verses" -> "66 Key Verses"
             else -> collectionId.replace('_', ' ').replaceFirstChar { it.uppercase() }
         }
         val topic = userDbHelper.getOrCreateTopic(topicName)
@@ -339,6 +340,7 @@ class BibleRepository(
             if (inserted) insertedCount++
             legacyVerses.add(Triple(entry.bookId, entry.chapter, entry.startVerse))
             onProgress?.invoke(idx + 1, total)
+            kotlinx.coroutines.delay(18)
         }
         userDbHelper.tagVersesWithTopic(legacyVerses, topic.id)
         insertedCount

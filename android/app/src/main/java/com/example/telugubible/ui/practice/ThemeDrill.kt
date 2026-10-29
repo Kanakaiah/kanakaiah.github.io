@@ -108,7 +108,7 @@ fun ThemeDrill(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 72.dp),
+                            .padding(bottom = 16.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
                         // Header
@@ -172,7 +172,7 @@ fun ThemeDrill(
                             }
                         }
 
-                        // Center: Card Prompt and Answer
+                        // Center: Clean, Container-less Editorial Canvas
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -180,14 +180,12 @@ fun ThemeDrill(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            // Cover Art Prompt
+                            // Cover Art (Floating with soft rounded corners, no clunky grey border)
                             Box(
                                 modifier = Modifier
-                                    .width(208.dp)
-                                    .height(156.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(RemoraCardBgElevated)
-                                    .border(1.dp, RemoraCardBorder, RoundedCornerShape(10.dp)),
+                                    .width(220.dp)
+                                    .height(165.dp)
+                                    .clip(RoundedCornerShape(14.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 BookCoverImage(
@@ -197,46 +195,47 @@ fun ThemeDrill(
                                 )
                             }
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
 
                             Text(
                                 text = item.book.nameEn,
-                                fontSize = 28.sp,
+                                fontSize = 30.sp,
                                 fontWeight = FontWeight.Bold,
+                                fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
                                 color = RemoraTextPrimary,
                                 textAlign = TextAlign.Center
                             )
 
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
 
                             Text(
                                 text = "What is this book's theme?",
-                                fontSize = 13.sp,
+                                fontSize = 14.sp,
                                 fontStyle = FontStyle.Italic,
                                 color = RemoraTextMuted
                             )
 
-                            Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(24.dp))
 
                             if (state.isRevealed) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     Text(
                                         text = item.book.themeWord,
-                                        fontSize = 24.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.sp,
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        letterSpacing = 1.5.sp,
                                         color = RemoraAccent,
                                         textAlign = TextAlign.Center
                                     )
                                     if (item.book.keyWord.isNotBlank()) {
                                         Text(
                                             text = item.book.keyWord.uppercase(),
-                                            fontSize = 11.sp,
+                                            fontSize = 12.sp,
                                             fontWeight = FontWeight.Bold,
-                                            letterSpacing = 1.5.sp,
+                                            letterSpacing = 2.sp,
                                             color = RemoraGold,
                                             textAlign = TextAlign.Center
                                         )
@@ -244,8 +243,9 @@ fun ThemeDrill(
                                     if (item.book.subtitle.isNotBlank()) {
                                         Text(
                                             text = item.book.subtitle,
-                                            fontSize = 14.sp,
+                                            fontSize = 15.sp,
                                             fontStyle = FontStyle.Italic,
+                                            fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
                                             color = RemoraTextSecondary,
                                             textAlign = TextAlign.Center,
                                             modifier = Modifier.padding(horizontal = 24.dp)
@@ -253,48 +253,52 @@ fun ThemeDrill(
                                     }
                                 }
                             } else {
-                                Box(
-                                    modifier = Modifier
-                                        .width(130.dp)
-                                        .height(24.dp)
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .background(RemoraCardBorder)
+                                Text(
+                                    text = "— · · · —",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    letterSpacing = 4.sp,
+                                    color = RemoraTextMuted.copy(alpha = 0.5f)
                                 )
                             }
                         }
 
-                        // Bottom Actions: Reveal / Grades & Skip
+                        // Bottom Actions: Docked Modern Button (18.dp radius matching review screen)
                         Column(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             if (!state.isRevealed) {
                                 Button(
                                     onClick = { viewModel.revealAnswer() },
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(48.dp),
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
-                                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorderHover)
+                                        .height(50.dp),
+                                    shape = RoundedCornerShape(18.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = RemoraAccent,
+                                        contentColor = Color(0xFF14120E)
+                                    )
                                 ) {
                                     Text(
                                         text = "Tap to reveal",
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = RemoraTextSecondary,
-                                        fontSize = 14.sp
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp
                                     )
                                 }
                             } else {
                                 Button(
                                     onClick = { viewModel.gradeCurrent(4) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = RemoraAccent,
+                                        contentColor = Color(0xFF14120E)
+                                    ),
+                                    shape = RoundedCornerShape(18.dp),
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(48.dp)
+                                        .height(50.dp)
                                 ) {
-                                    Text("Next", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                    Text("Next Theme", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
 

@@ -169,16 +169,16 @@ fun ParagraphView(
 
                     // Superscript Verse Number
                     if (showVerseNumbers) {
-                        val numColor = if (vIndex == 0 && paragraph.isParagraphStart && vNum > 1) {
-                            readerTheme.textColor
-                        } else {
-                            readerTheme.secondaryTextColor.copy(alpha = 0.8f)
+                        val numColor = when {
+                            isMemorized -> RemoraGold
+                            vIndex == 0 && paragraph.isParagraphStart && vNum > 1 -> readerTheme.textColor
+                            else -> readerTheme.secondaryTextColor.copy(alpha = 0.8f)
                         }
                         withStyle(
                             SpanStyle(
                                 fontSize = verseNumSize,
                                 baselineShift = BaselineShift.Superscript,
-                                fontWeight = if (vIndex == 0 && paragraph.isParagraphStart && vNum > 1) FontWeight.Bold else FontWeight.Normal,
+                                fontWeight = if (isMemorized || (vIndex == 0 && paragraph.isParagraphStart && vNum > 1)) FontWeight.Bold else FontWeight.Normal,
                                 color = numColor
                             )
                         ) {
@@ -223,7 +223,7 @@ fun ParagraphView(
                     val bgColor = when {
                         isFlashing -> Color(0xFF4CAF50).copy(alpha = 0.35f)
                         isSelected -> readerTheme.accentColor.copy(alpha = 0.22f)
-                        isMemorized -> RemoraGold.copy(alpha = 0.28f)
+                        isMemorized -> RemoraGold.copy(alpha = 0.35f)
                         isSpeaking -> readerTheme.accentColor.copy(alpha = 0.15f)
                         else -> Color.Transparent
                     }

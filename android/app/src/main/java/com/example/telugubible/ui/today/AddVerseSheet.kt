@@ -44,7 +44,7 @@ fun AddVerseSheet(
     onAddManualVerse: (String, String, String, List<String>) -> Unit,
     onAddCollection: (String, List<String>) -> Unit,
     onSearchVerses: (query: String, translation: String) -> Unit,
-    onCreateTopic: (String) -> Unit,
+    onCreateTopic: (String, (Topic) -> Unit) -> Unit = { _, _ -> },
     onNavigateToGuides: () -> Unit
 ) {
     var activeTab by remember { mutableStateOf(AddVerseTab.MANUAL) }
@@ -156,8 +156,11 @@ fun AddVerseSheet(
                                 )
                                 IconButton(
                                     onClick = {
-                                        if (newGroupName.isNotBlank()) {
-                                            onCreateTopic(newGroupName.trim())
+                                        val trimmed = newGroupName.trim()
+                                        if (trimmed.isNotBlank()) {
+                                            onCreateTopic(trimmed) { created ->
+                                                selectedTopicIds = selectedTopicIds + created.id
+                                            }
                                             newGroupName = ""
                                             isAddingGroup = false
                                         }
@@ -817,6 +820,65 @@ private fun CollectionsTabContent(
                 color = RemoraTextSecondary,
                 lineHeight = 19.sp
             )
+        }
+
+        // Card 0: 66 Key Verses (From Genesis to Revelation)
+        item {
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = RemoraCardBgElevated,
+                border = BorderStroke(1.dp, RemoraAccent.copy(alpha = 0.5f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "66 Key Verses",
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = RemoraTextPrimary
+                        )
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = RemoraGold.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = "66 PASSAGES",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraGold,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        text = "One foundational key verse from every single book of the Bible, from Genesis to Revelation.",
+                        fontSize = 13.sp,
+                        color = RemoraTextSecondary,
+                        lineHeight = 18.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Button(
+                        onClick = { onAddCollection("key_verses_66") },
+                        colors = ButtonDefaults.buttonColors(containerColor = RemoraGold, contentColor = Color.Black),
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.fillMaxWidth().height(44.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Add 66 Key Verses", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    }
+                }
+            }
         }
 
         // Card 1: Top 100 Verses

@@ -634,6 +634,7 @@ fun BookGuideScreen(
                             MemorySentenceCard(
                                 memorySentence = memorySentence,
                                 bookName = BookNameUtils.getBookDisplayName(book, state.activeVersion),
+                                anchors = guide.anchors,
                                 onCopy = {
                                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("Memory Sentence", memorySentence.replace("**", ""))
@@ -1035,6 +1036,7 @@ private fun NarrativeArchitectureSection(
 private fun MemorySentenceCard(
     memorySentence: String,
     bookName: String,
+    anchors: List<com.example.telugubible.data.model.ChapterAnchor> = emptyList(),
     onCopy: () -> Unit
 ) {
     Surface(
@@ -1081,15 +1083,15 @@ private fun MemorySentenceCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Formatted markdown bold keywords
-            val annotatedText = remember(memorySentence) {
-                buildAnnotatedMemorySentence(memorySentence)
+            // Formatted markdown bold & all-caps anchor keywords
+            val annotatedText = remember(memorySentence, anchors) {
+                buildAnnotatedMemorySentence(memorySentence, anchors)
             }
 
             Text(
                 text = annotatedText,
-                fontSize = 14.sp,
-                lineHeight = 22.sp,
+                fontSize = 15.sp,
+                lineHeight = 24.sp,
                 color = RemoraTextPrimary,
                 fontFamily = FontFamily.Serif
             )
@@ -1097,18 +1099,48 @@ private fun MemorySentenceCard(
     }
 }
 
-private fun buildAnnotatedMemorySentence(sentence: String): AnnotatedString {
+private fun buildAnnotatedMemorySentence(
+    sentence: String,
+    anchors: List<com.example.telugubible.data.model.ChapterAnchor> = emptyList()
+): AnnotatedString {
     return buildAnnotatedString {
-        val parts = sentence.split("**")
-        parts.forEachIndexed { index, part ->
-            if (index % 2 == 1) {
-                // Bold keyword
-                pushStyle(SpanStyle(fontWeight = FontWeight.Bold, color = RemoraAccentLight))
-                append(part)
-                pop()
-            } else {
-                append(part)
+        if (sentence.contains("**")) {
+            val parts = sentence.split("**")
+            parts.forEachIndexed { index, part ->
+                if (index % 2 == 1) {
+                    // Bold keyword
+                    pushStyle(SpanStyle(fontWeight = FontWeight.Bold, color = RemoraAccentLight))
+                    append(part)
+                    pop()
+                } else {
+                    append(part)
+                }
             }
+            return@buildAnnotatedString
+        }
+
+        // Mnemonic Anchor words in ALL-CAPS (e.g. STRONG, SCARLET, PRIESTS in Joshua)
+        val pattern = Regex("\\b[A-Z]{2,}(?:'S)?\\b")
+        val matches = pattern.findAll(sentence).toList()
+        if (matches.isEmpty()) {
+            append(sentence)
+            return@buildAnnotatedString
+        }
+
+        var lastIdx = 0
+        for (m in matches) {
+            val start = m.range.first
+            val end = m.range.last + 1
+            if (start > lastIdx) {
+                append(sentence.substring(lastIdx, start))
+            }
+            pushStyle(SpanStyle(fontWeight = FontWeight.Bold, color = RemoraAccentLight))
+            append(m.value)
+            pop()
+            lastIdx = end
+        }
+        if (lastIdx < sentence.length) {
+            append(sentence.substring(lastIdx))
         }
     }
 }
@@ -1233,11 +1265,11 @@ private fun KeyVersesSection(
                         }
                         Text(
                             text = "\"$cleanKvText\"",
-                            fontSize = 14.sp,
+                            fontSize = 17.sp,
                             fontStyle = FontStyle.Italic,
                             fontFamily = FontFamily.Serif,
                             color = RemoraTextSecondary,
-                            lineHeight = 20.sp
+                            lineHeight = 25.sp
                         )
                     }
                 }

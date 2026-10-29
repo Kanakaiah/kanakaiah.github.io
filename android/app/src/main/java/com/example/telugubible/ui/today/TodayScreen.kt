@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -269,7 +270,7 @@ fun TodayScreen(
                 onAddManualVerse = { ref, text, trans, topicIds -> viewModel.addManualVerse(ref, text, trans, topicIds) },
                 onAddCollection = { collId, topicIds -> viewModel.addCollection(collId, topicIds) },
                 onSearchVerses = { q, trans -> viewModel.searchVersesForDialog(q, trans) },
-                onCreateTopic = { viewModel.createTopic(it) },
+                onCreateTopic = { name, cb -> viewModel.createTopic(name, cb) },
                 onNavigateToGuides = {
                     viewModel.toggleAddDialog(false)
                     onNavigateToGuide(1)
@@ -288,21 +289,42 @@ fun TodayScreen(
             )
         }
 
-        // Notification Snackbar
-        state.messageBanner?.let { msg ->
-            Snackbar(
-                action = {
-                    TextButton(onClick = { viewModel.dismissMessage() }) {
-                        Text("OK", color = RemoraAccentLight)
+        // Notification Banner (Auto-dismissing toast)
+        androidx.compose.animation.AnimatedVisibility(
+            visible = state.messageBanner != null,
+            enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.slideInVertically(initialOffsetY = { it / 2 }),
+            exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.slideOutVertically(targetOffsetY = { it / 2 }),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 80.dp)
+        ) {
+            state.messageBanner?.let { msg ->
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = RemoraCardBgElevated,
+                    border = BorderStroke(1.dp, RemoraAccent.copy(alpha = 0.5f)),
+                    shadowElevation = 8.dp,
+                    onClick = { viewModel.dismissMessage() }
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Check,
+                            contentDescription = null,
+                            tint = RemoraAccentLight,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = msg,
+                            color = RemoraTextPrimary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
-                },
-                containerColor = RemoraCardBgElevated,
-                contentColor = RemoraTextPrimary,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 80.dp)
-            ) {
-                Text(msg)
+                }
             }
         }
 
@@ -953,7 +975,8 @@ private fun CollectionVersesSheet(
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Text(
                                             text = cleanText,
-                                            fontSize = 13.sp,
+                                            fontSize = 17.sp,
+                                            lineHeight = 24.sp,
                                             color = RemoraTextSecondary,
                                             maxLines = 2
                                         )
@@ -1194,7 +1217,7 @@ private fun NewCollectionDialog(
     onAddPreset: (String) -> Unit
 ) {
     var collectionName by remember { mutableStateOf("") }
-    val curatedSuggestions = listOf("Top 100", "Anxiety", "Peace", "Courage", "Faith & Trust", "Salvation")
+    val curatedSuggestions = listOf("66 Key Verses", "Top 100", "Well-Known", "Anxiety", "Peace", "Courage", "Faith & Trust", "Salvation")
 
     AlertDialog(
         onDismissRequest = onDismiss,

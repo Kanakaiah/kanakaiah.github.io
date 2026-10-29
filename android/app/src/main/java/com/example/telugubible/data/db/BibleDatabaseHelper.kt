@@ -350,18 +350,29 @@ class BibleDatabaseHelper(val context: Context) :
 
     fun getPresetCollections(): List<PresetCollection> {
         val list = mutableListOf<PresetCollection>()
+        list.add(
+            PresetCollection(
+                id = "key_verses_66",
+                title = "66 Key Verses",
+                description = "One foundational key verse from every book of the Bible (Genesis to Revelation).",
+                count = 66
+            )
+        )
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT id, title, description, count FROM preset_collections ORDER BY count ASC", null)
         cursor.use {
             while (it.moveToNext()) {
-                list.add(
-                    PresetCollection(
-                        id = it.getString(0),
-                        title = it.getString(1),
-                        description = it.getString(2),
-                        count = it.getInt(3)
+                val id = it.getString(0)
+                if (id != "key_verses_66") {
+                    list.add(
+                        PresetCollection(
+                            id = id,
+                            title = it.getString(1),
+                            description = it.getString(2),
+                            count = it.getInt(3)
+                        )
                     )
-                )
+                }
             }
         }
         return list
@@ -411,6 +422,27 @@ class BibleDatabaseHelper(val context: Context) :
     fun getPresetVerseEntries(collectionId: String): List<PresetVerseEntry> {
         val list = mutableListOf<PresetVerseEntry>()
         val db = readableDatabase
+        if (collectionId == "key_verses_66" || collectionId == "key_verses") {
+            val cursor = db.rawQuery(
+                "SELECT book_id, ref FROM guide_key_verses GROUP BY book_id ORDER BY book_id ASC",
+                null
+            )
+            val books = getAllBooks()
+            cursor.use {
+                while (it.moveToNext()) {
+                    val bId = it.getInt(0)
+                    val ref = it.getString(1) ?: ""
+                    val parsed = com.example.telugubible.util.ScriptureRefParser.parseReferences(ref, books)
+                    if (parsed.isNotEmpty()) {
+                        val p = parsed.first()
+                        val endVerse = if (p.verseEnd > p.verseStart) p.verseEnd else null
+                        list.add(PresetVerseEntry(bId, p.chapter, p.verseStart, endVerse, ref))
+                    }
+                }
+            }
+            if (list.isNotEmpty()) return list
+        }
+
         val cursor = db.rawQuery(
             "SELECT book_id, chapter, verse, reference FROM preset_verses WHERE collection_id = ?",
             arrayOf(collectionId)
