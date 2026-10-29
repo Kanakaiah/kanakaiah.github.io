@@ -90,6 +90,32 @@ fun SettingsSheet(
                 )
             }
 
+            // Shared font size scales & smooth slider position state
+            val allScales = remember {
+                listOf(FontSizeScale.XS, FontSizeScale.S, FontSizeScale.M, FontSizeScale.L, FontSizeScale.XL)
+            }
+            val currentIndex = remember(fontSizeScale) {
+                allScales.indexOf(fontSizeScale).coerceAtLeast(0)
+            }
+            var sliderPosition by remember(fontSizeScale) {
+                mutableFloatStateOf(currentIndex.toFloat())
+            }
+
+            LaunchedEffect(currentIndex) {
+                if (Math.abs(sliderPosition - currentIndex) > 0.05f) {
+                    sliderPosition = currentIndex.toFloat()
+                }
+            }
+
+            val currentSpSize = remember(sliderPosition) {
+                val baseSizes = listOf(15f, 18f, 23f, 29f, 36f)
+                val pos = sliderPosition.coerceIn(0f, 4f)
+                val lower = pos.toInt().coerceIn(0, 3)
+                val upper = (lower + 1).coerceIn(0, 4)
+                val fraction = pos - lower
+                baseSizes[lower] + fraction * (baseSizes[upper] - baseSizes[lower])
+            }
+
             // Live Interactive Preview Card
             Surface(
                 shape = RoundedCornerShape(14.dp),
@@ -103,7 +129,7 @@ fun SettingsSheet(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 val previewSample = remember(
-                    fontSizeScale,
+                    currentSpSize,
                     readerFontFamily,
                     lineSpacing,
                     readerTheme,
@@ -112,7 +138,7 @@ fun SettingsSheet(
                     showVerseNumbers
                 ) {
                     buildAnnotatedString {
-                        val baseFontSize = fontSizeScale.spSize.sp
+                        val baseFontSize = currentSpSize.sp
                         val verseNumSize = (baseFontSize.value * 0.58f).sp
 
                         if (showVerseNumbers) {
@@ -156,9 +182,9 @@ fun SettingsSheet(
                 ) {
                     Text(
                         text = previewSample,
-                        fontSize = fontSizeScale.spSize.sp,
+                        fontSize = currentSpSize.sp,
                         fontFamily = readerFontFamily.fontFamily,
-                        lineHeight = (fontSizeScale.lineHeightSp * lineSpacing.multiplier).sp
+                        lineHeight = (currentSpSize * 1.55f * lineSpacing.multiplier).sp
                     )
                 }
             }
@@ -173,9 +199,6 @@ fun SettingsSheet(
                     color = Color(0xFFB5A995)
                 )
 
-                val allScales = listOf(FontSizeScale.XS, FontSizeScale.S, FontSizeScale.M, FontSizeScale.L, FontSizeScale.XL)
-                val currentIndex = allScales.indexOf(fontSizeScale).coerceAtLeast(0)
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -185,17 +208,32 @@ fun SettingsSheet(
                         text = "A",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
+                        color = RemoraTextPrimary,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(4.dp))
+                            .clickable {
+                                val newIdx = (Math.round(sliderPosition) - 1).coerceAtLeast(0)
+                                sliderPosition = newIdx.toFloat()
+                                onFontSizeChange(allScales[newIdx])
+                            }
+                            .padding(4.dp)
                     )
 
                     Slider(
-                        value = currentIndex.toFloat(),
+                        value = sliderPosition,
                         onValueChange = { newVal ->
+                            sliderPosition = newVal
                             val idx = Math.round(newVal).coerceIn(0, allScales.size - 1)
-                            onFontSizeChange(allScales[idx])
+                            if (allScales[idx] != fontSizeScale) {
+                                onFontSizeChange(allScales[idx])
+                            }
+                        },
+                        onValueChangeFinished = {
+                            val targetIdx = Math.round(sliderPosition).coerceIn(0, allScales.size - 1)
+                            sliderPosition = targetIdx.toFloat()
+                            onFontSizeChange(allScales[targetIdx])
                         },
                         valueRange = 0f..(allScales.size - 1).toFloat(),
-                        steps = allScales.size - 2,
                         modifier = Modifier.weight(1f),
                         colors = SliderDefaults.colors(
                             thumbColor = RemoraAccent,
@@ -210,7 +248,15 @@ fun SettingsSheet(
                         text = "A",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
+                        color = RemoraTextPrimary,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(4.dp))
+                            .clickable {
+                                val newIdx = (Math.round(sliderPosition) + 1).coerceAtMost(allScales.size - 1)
+                                sliderPosition = newIdx.toFloat()
+                                onFontSizeChange(allScales[newIdx])
+                            }
+                            .padding(4.dp)
                     )
                 }
             }

@@ -54,6 +54,8 @@ export interface UserSettings {
   bionicReading: boolean;
   fontSize: number;
   fontFamily?: 'sans' | 'serif' | 'hyper';
+  lineSpacing?: 'tight' | 'normal' | 'roomy';
+  bionicIntensity?: 'light' | 'medium' | 'strong';
   bibleVersion?: BibleVersion;
   // Chapter reader apparatus. Undefined means on, so a profile saved before these
   // existed reads exactly as it did before.

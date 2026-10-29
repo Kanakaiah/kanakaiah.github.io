@@ -1430,7 +1430,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   </div>
 
                   {/* Preview Box */}
-                  <div className="p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] font-serif text-[13px] leading-relaxed">
+                  <div
+                    className="p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] font-serif transition-[font-size,line-height] duration-75"
+                    style={{
+                      fontSize: `${Math.round(14 * (state.settings.fontSize || 1))}px`,
+                      lineHeight: state.settings.lineSpacing === 'tight' ? 1.3 : state.settings.lineSpacing === 'roomy' ? 2.05 : 1.65
+                    }}
+                  >
                     <sup className="text-accent text-[10px] font-bold mr-1.5 align-super">12</sup>
                     <span className="font-bold">Sample</span> text <span className="font-bold">stands</span> in <span className="font-bold">for</span> scripture so the <span className="font-bold">layout</span> can be <span className="font-bold">judged</span>.
                   </div>
@@ -1439,17 +1445,39 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">TEXT SIZE</span>
                     <div className="flex items-center gap-3 px-1">
-                      <span className="text-xs text-[#a89f91] font-serif">A</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = state.settings.fontSize || 1;
+                          const next = Math.max(0.82, Math.round((current - 0.15) * 100) / 100);
+                          dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: next } });
+                        }}
+                        className="text-xs text-[#a89f91] font-serif hover:text-accent transition-colors p-1"
+                        aria-label="Decrease text size"
+                      >
+                        A
+                      </button>
                       <input
                         type="range"
-                        min={0.85}
-                        max={1.45}
-                        step={0.15}
+                        min={0.82}
+                        max={1.60}
+                        step={0.01}
                         value={state.settings.fontSize || 1}
                         onChange={(e) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(e.target.value) } })}
                         className="w-full accent-accent cursor-pointer h-1.5 bg-[#2b2722] rounded-lg"
                       />
-                      <span className="text-base text-[#a89f91] font-serif">A</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = state.settings.fontSize || 1;
+                          const next = Math.min(1.60, Math.round((current + 0.15) * 100) / 100);
+                          dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: next } });
+                        }}
+                        className="text-base text-[#a89f91] font-serif hover:text-accent transition-colors p-1"
+                        aria-label="Increase text size"
+                      >
+                        A
+                      </button>
                     </div>
                   </div>
 
@@ -1485,19 +1513,24 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">LINE SPACING</span>
                     <div className="flex items-center gap-2">
-                      {['Tight', 'Normal', 'Roomy'].map((spacing, idx) => {
-                        const isSelected = idx === 1; // default normal
+                      {[
+                        { id: 'tight', label: 'Tight' },
+                        { id: 'normal', label: 'Normal' },
+                        { id: 'roomy', label: 'Roomy' }
+                      ].map(spacing => {
+                        const isSelected = (state.settings.lineSpacing || 'normal') === spacing.id;
                         return (
                           <button
-                            key={spacing}
+                            key={spacing.id}
                             type="button"
+                            onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { lineSpacing: spacing.id as any } })}
                             className={`flex-1 py-1.5 px-2 rounded-full text-xs font-semibold transition-all border ${
                               isSelected
                                 ? 'bg-accent text-[#14120f] border-accent font-bold'
                                 : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
                             }`}
                           >
-                            {spacing}
+                            {spacing.label}
                           </button>
                         );
                       })}
