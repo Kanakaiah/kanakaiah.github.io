@@ -1434,15 +1434,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
                   {/* Preview Box */}
                   <div
-                    className={`p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] transition-[font-size,line-height] duration-75 ${
-                      state.settings.fontFamily === 'system' ? 'font-system' :
-                      (state.settings.fontFamily === 'figtree' || state.settings.fontFamily === 'roboto') ? 'font-figtree' :
-                      (state.settings.fontFamily === 'publicsans' || state.settings.fontFamily === 'opensans') ? 'font-publicsans' :
-                      'font-inter'
-                    }`}
+                    className="p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] transition-[font-size,line-height] duration-75"
                     style={{
                       fontSize: `${Math.round(14 * (state.settings.fontSize || 1))}px`,
-                      lineHeight: state.settings.lineSpacing === 'tight' ? 1.3 : state.settings.lineSpacing === 'roomy' ? 2.05 : 1.65
+                      lineHeight: state.settings.lineSpacing === 'tight' ? 1.3 : state.settings.lineSpacing === 'roomy' ? 2.05 : 1.65,
+                      fontFamily: state.settings.fontFamily === 'system'
+                        ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                        : (state.settings.fontFamily === 'merriweather' || state.settings.fontFamily === 'serif')
+                        ? "'Merriweather', Georgia, serif"
+                        : (state.settings.fontFamily === 'atkinson' || state.settings.fontFamily === 'hyper')
+                        ? "'Atkinson Hyperlegible', sans-serif"
+                        : "'Inter', sans-serif"
                     }}
                   >
                     <sup className="text-accent text-[10px] font-bold mr-1.5 align-super">12</sup>
@@ -1495,9 +1497,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     <div className="grid grid-cols-4 gap-1.5">
                       {[
                         { id: 'inter', label: 'Inter' },
+                        { id: 'merriweather', label: 'Merriweather' },
+                        { id: 'atkinson', label: 'Atkinson' },
                         { id: 'system', label: 'System' },
-                        { id: 'figtree', label: 'Figtree' },
-                        { id: 'publicsans', label: 'Public Sans' },
                       ].map(f => {
                         const isSelected = (state.settings.fontFamily || 'inter') === f.id;
                         return (
@@ -1692,15 +1694,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         ) : (
           /* Normal reading mode (selected Bible version) */
           <div
-            className={`mx-auto pb-32 select-text ${
-              state.settings.fontFamily === 'system' ? 'font-system' :
-              (state.settings.fontFamily === 'figtree' || state.settings.fontFamily === 'roboto') ? 'font-figtree' :
-              (state.settings.fontFamily === 'publicsans' || state.settings.fontFamily === 'opensans') ? 'font-publicsans' :
-              'font-inter'
-            }`}
+            className="mx-auto pb-32 select-text"
             // fontSize lives on this wrapper (not the inner div) so the `ch` unit in
             // READING_MEASURE resolves against the reader's actual text size.
-            style={{ fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`, maxWidth: READING_MEASURE }}
+            style={{
+              fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
+              maxWidth: READING_MEASURE,
+              fontFamily: state.settings.fontFamily === 'system'
+                ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                : (state.settings.fontFamily === 'merriweather' || state.settings.fontFamily === 'serif')
+                ? "'Merriweather', Georgia, serif"
+                : (state.settings.fontFamily === 'atkinson' || state.settings.fontFamily === 'hyper')
+                ? "'Atkinson Hyperlegible', sans-serif"
+                : "'Inter', sans-serif"
+            }}
             onClick={handleVerseClick}
             onKeyDown={handleVerseKeyDown}
           >

@@ -77,35 +77,31 @@ val InterFontFamily = FontFamily(
     Font(R.font.inter_bold, FontWeight.Bold)
 )
 
+val MerriweatherFontFamily = FontFamily(
+    Font(R.font.merriweather_regular, FontWeight.Normal),
+    Font(R.font.merriweather_bold, FontWeight.Bold)
+)
+
+val AtkinsonFontFamily = FontFamily(
+    Font(R.font.atkinson_regular, FontWeight.Normal),
+    Font(R.font.atkinson_bold, FontWeight.Bold)
+)
+
 val SystemFontFamily = FontFamily.Default
-
-private val FigtreeGoogleFont = GoogleFont("Figtree")
-val FigtreeFontFamily = FontFamily(
-    Font(googleFont = FigtreeGoogleFont, fontProvider = googleFontProvider),
-    Font(googleFont = FigtreeGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
-)
-
-private val PublicSansGoogleFont = GoogleFont("Public Sans")
-val PublicSansFontFamily = FontFamily(
-    Font(googleFont = PublicSansGoogleFont, fontProvider = googleFontProvider),
-    Font(googleFont = PublicSansGoogleFont, fontProvider = googleFontProvider, weight = FontWeight.Bold)
-)
 
 enum class ReaderFontFamily(val key: String, val label: String, val fontFamily: FontFamily) {
     INTER("inter", "Inter", InterFontFamily),
-    SYSTEM("system", "System", SystemFontFamily),
-    FIGTREE("figtree", "Figtree", FigtreeFontFamily),
-    PUBLIC_SANS("publicsans", "Public Sans", PublicSansFontFamily);
+    MERRIWEATHER("merriweather", "Merriweather", MerriweatherFontFamily),
+    ATKINSON("atkinson", "Atkinson", AtkinsonFontFamily),
+    SYSTEM("system", "System", SystemFontFamily);
 
     companion object {
         fun fromKey(key: String?): ReaderFontFamily {
             return when (key?.lowercase()?.trim()) {
                 "system", "default" -> SYSTEM
-                "figtree", "roboto" -> FIGTREE
-                "publicsans", "public sans", "public_sans", "opensans", "open sans", "open_sans" -> PUBLIC_SANS
-                "inter", "sans" -> INTER
-                "serif", "merriweather" -> INTER
-                "hyper", "atkinson", "hyperlegible" -> INTER
+                "serif", "merriweather" -> MERRIWEATHER
+                "hyper", "atkinson", "hyperlegible" -> ATKINSON
+                "inter", "sans", "figtree", "roboto", "publicsans", "opensans" -> INTER
                 else -> INTER
             }
         }

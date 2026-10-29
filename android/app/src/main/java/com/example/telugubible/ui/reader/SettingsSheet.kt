@@ -277,9 +277,9 @@ fun SettingsSheet(
                 ) {
                     listOf(
                         ReaderFontFamily.INTER to "Inter",
-                        ReaderFontFamily.SYSTEM to "System",
-                        ReaderFontFamily.FIGTREE to "Figtree",
-                        ReaderFontFamily.PUBLIC_SANS to "Public Sans"
+                        ReaderFontFamily.MERRIWEATHER to "Merriweather",
+                        ReaderFontFamily.ATKINSON to "Atkinson",
+                        ReaderFontFamily.SYSTEM to "System"
                     ).forEach { (font, label) ->
                         val isSelected = readerFontFamily == font
                         PillButton(
@@ -457,10 +457,15 @@ private fun PillButton(
         border = BorderStroke(1.dp, if (isSelected) RemoraAccent else Color(0xFF332D24)),
         modifier = modifier.height(40.dp)
     ) {
-        Box(contentAlignment = Alignment.Center) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(horizontal = 4.dp)
+        ) {
             Text(
                 text = text,
-                fontSize = 13.5.sp,
+                fontSize = 12.sp,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                 color = if (isSelected) Color(0xFF14120E) else Color(0xFFF5F2EB)
             )

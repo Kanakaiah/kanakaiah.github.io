@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+@utility font-inter {
+  font-family: 'Inter', sans-serif;
+}
+@utility font-merriweather {
+  font-family: 'Merriweather', Georgia, serif;
+}
+@utility font-atkinson {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+@utility font-system {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 @layer base {
   :root {
     color-scheme: dark;
