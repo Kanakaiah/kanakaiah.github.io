@@ -161,6 +161,10 @@ class PracticeViewModel @JvmOverloads constructor(
                         if (savedMode != null) {
                             restoredMode = try { PracticeMode.valueOf(savedMode) } catch (_: Exception) { restoredMode }
                         }
+                        val savedLang = repository.getSessionState(KEY_SESSION_LANG)
+                        if (savedLang != null) {
+                            restoredLang = try { DisplayLanguage.valueOf(savedLang) } catch (_: Exception) { restoredLang }
+                        }
                     }
                 }
             }

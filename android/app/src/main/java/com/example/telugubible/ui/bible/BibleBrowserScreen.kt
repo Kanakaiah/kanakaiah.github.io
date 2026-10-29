@@ -34,6 +34,7 @@ import com.example.telugubible.data.model.Book
 import com.example.telugubible.theme.*
 import com.example.telugubible.util.BookNameUtils
 import com.example.telugubible.ui.common.BookCoverImage
+import kotlinx.coroutines.launch
 
 @Composable
 fun BibleBrowserScreen(
@@ -44,9 +45,24 @@ fun BibleBrowserScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
-    var showIndexModal by remember { mutableStateOf(false) }
     var isChromeVisible by remember { mutableStateOf(true) }
     val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // Automatically sync OT/NT top pill based on which book is in view
+    val visibleTestament by remember {
+        derivedStateOf {
+            val idx = listState.firstVisibleItemIndex
+            val book = state.filteredBooks.getOrNull(idx)
+            book?.testament?.uppercase() ?: state.currentTestament
+        }
+    }
+
+    LaunchedEffect(visibleTestament) {
+        if (state.currentSection == "All" && state.searchQuery.isBlank()) {
+            viewModel.updateTestamentOnScroll(visibleTestament)
+        }
+    }
 
     fun updateChromeVisibility(visible: Boolean) {
         if (isChromeVisible != visible) {
@@ -137,7 +153,12 @@ fun BibleBrowserScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Surface(
-                            onClick = { viewModel.setTestament("OT") },
+                            onClick = {
+                                viewModel.setTestament("OT")
+                                coroutineScope.launch {
+                                    listState.animateScrollToItem(0)
+                                }
+                            },
                             shape = RoundedCornerShape(14.dp),
                             color = if (state.currentTestament == "OT") RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
                             border = BorderStroke(1.dp, if (state.currentTestament == "OT") RemoraAccent else RemoraCardBorder)
@@ -152,7 +173,15 @@ fun BibleBrowserScreen(
                         }
 
                         Surface(
-                            onClick = { viewModel.setTestament("NT") },
+                            onClick = {
+                                viewModel.setTestament("NT")
+                                val ntIndex = state.filteredBooks.indexOfFirst { it.testament.equals("NT", ignoreCase = true) }
+                                if (ntIndex >= 0) {
+                                    coroutineScope.launch {
+                                        listState.animateScrollToItem(ntIndex)
+                                    }
+                                }
+                            },
                             shape = RoundedCornerShape(14.dp),
                             color = if (state.currentTestament == "NT") RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
                             border = BorderStroke(1.dp, if (state.currentTestament == "NT") RemoraAccent else RemoraCardBorder)
@@ -254,7 +283,7 @@ fun BibleBrowserScreen(
             } else {
                 LazyColumn(
                     state = listState,
-                    contentPadding = PaddingValues(bottom = 80.dp),
+                    contentPadding = PaddingValues(bottom = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -268,99 +297,6 @@ fun BibleBrowserScreen(
                 }
             }
         }
-
-        // Bottom Navigation Bar matching Remora PWA Guides.tsx lines 1004-1052
-        AnimatedVisibility(
-            visible = isChromeVisible || state.searchQuery.isNotBlank(),
-            enter = slideInVertically { it } + fadeIn(),
-            exit = slideOutVertically { it } + fadeOut(),
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = RemoraCardBg,
-                border = BorderStroke(1.dp, RemoraCardBorder)
-            ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // OT Button
-                TextButton(
-                    onClick = { viewModel.setTestament("OT") },
-                    enabled = state.currentTestament != "OT"
-                ) {
-                    Icon(
-                        Icons.Default.ChevronLeft,
-                        contentDescription = "Old Testament",
-                        tint = if (state.currentTestament != "OT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f),
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Old Testament",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = if (state.currentTestament != "OT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f)
-                    )
-                }
-
-                // INDEX Button
-                OutlinedButton(
-                    onClick = { showIndexModal = true },
-                    shape = RoundedCornerShape(6.dp),
-                    border = BorderStroke(1.dp, RemoraCardBorder),
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 4.dp),
-                    modifier = Modifier.height(30.dp)
-                ) {
-                    Text(
-                        text = "INDEX",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = RemoraTextMuted
-                    )
-                }
-
-                // NT Button
-                TextButton(
-                    onClick = { viewModel.setTestament("NT") },
-                    enabled = state.currentTestament != "NT"
-                ) {
-                    Text(
-                        text = "New Testament",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = if (state.currentTestament != "NT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        Icons.Default.ChevronRight,
-                        contentDescription = "New Testament",
-                        tint = if (state.currentTestament != "NT") RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.4f),
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            }
-        }
-    }
-    }
-
-    if (showIndexModal) {
-        BibleIndexModal(
-            isOpen = showIndexModal,
-            selectedBookId = null,
-            books = state.allBooks,
-            activeVersion = state.activeVersion,
-            onSelectBook = { bookId ->
-                showIndexModal = false
-                onOpenBook(bookId)
-            },
-            onDismiss = { showIndexModal = false }
-        )
     }
 }
 

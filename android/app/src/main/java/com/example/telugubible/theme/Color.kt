@@ -78,20 +78,20 @@ data class RemoraColors(
         )
 
         val Paper = RemoraColors(
-            background = Color(0xFFFFFFFF),
-            cardBg = Color(0xFFF8FAFC),
-            cardBgElevated = Color(0xFFFFFFFF),
-            cardBorder = Color(0xFFE5E7EB),
-            cardBorderHover = Color(0xFFD1D5DB),
-            textPrimary = Color(0xFF111827),
-            textSecondary = Color(0xFF4B5563),
-            textMuted = Color(0xFF9CA3AF),
+            background = Color(0xFFFAF6EE),
+            cardBg = Color(0xFFFFFFFF),
+            cardBgElevated = Color(0xFFFDFBF6),
+            cardBorder = Color(0xFFE8E0D0),
+            cardBorderHover = Color(0xFFD9CDB4),
+            textPrimary = Color(0xFF211C14),
+            textSecondary = Color(0xFF5C5346),
+            textMuted = Color(0xFF948A78),
             accent = Color(0xFFB8552F),
             accentHover = Color(0xFF96431F),
             accentLight = Color(0xFFC96A44),
             gold = Color(0xFFA97A1F),
-            chipBg = Color(0xFFF3F4F6),
-            chipBorder = Color(0xFFE5E7EB),
+            chipBg = Color(0xFFF5F0E4),
+            chipBorder = Color(0xFFE2D9C8),
             isDark = false
         )
 

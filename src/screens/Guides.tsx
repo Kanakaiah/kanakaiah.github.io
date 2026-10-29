@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, ListChecks, Check, Plus, Loader2, Settings } from 'lucide-react';
+import { ChevronRight, ChevronDown, BookOpen, Globe, Headphones, PlayCircle, Radio, Search, ChevronLeft, ArrowLeft, X, Eye, EyeOff, Check, Plus, Loader2, Settings } from 'lucide-react';
 import { useSearchParams, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
@@ -968,79 +968,37 @@ export const Guides: React.FC = () => {
             >
               <ArrowLeft className="w-6 h-6 text-secondary" />
             </button>
-            <h2 className="absolute left-1/2 -translate-x-1/2 text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-2 w-full pointer-events-none">
+            <h2 className="absolute left-1/2 -translate-x-1/2 text-2xl sm:text-3xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-1 w-full pointer-events-none">
               {isNT ? 'New Testament' : 'Old Testament'}
             </h2>
-            <div className="w-10 flex-shrink-0" aria-hidden="true" />
+            <div className="z-10 flex items-center gap-1.5">
+              <button
+                onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
+                className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
+                  !isNT
+                    ? 'bg-accent/20 border-accent text-accent'
+                    : 'bg-card border-card-border text-secondary hover:text-primary'
+                }`}
+              >
+                OT
+              </button>
+              <button
+                onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
+                className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
+                  isNT
+                    ? 'bg-accent/20 border-accent text-accent'
+                    : 'bg-card border-card-border text-secondary hover:text-primary'
+                }`}
+              >
+                NT
+              </button>
+            </div>
           </div>
         </div>
 
         <BibleBrowser
           initialTestament={isNT ? 'NT' : 'OT'}
           onOpenGuide={(guideId) => setActiveGuideId(guideId)}
-        />
-
-        {/* Bottom bar — the testament switcher is this level's equivalent of the
-            book page's prev/next book and the reader's prev/next chapter, with the
-            current one disabled the same way the reader disables "Start" on
-            Genesis 1. Centre opens the same index modal the book page uses. */}
-        <div className={`
-          fixed bottom-0 left-0 right-0
-          bg-card border-t border-card-border
-          z-40 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
-          ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}
-        `}>
-          <div className="max-w-4xl mx-auto flex items-center justify-between px-5 sm:px-8 py-3 pb-safe">
-            <button
-              onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
-              disabled={!isNT}
-              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
-              aria-label="Old Testament"
-            >
-              <ChevronLeft className="w-4 h-4 flex-shrink-0" />
-              <span className="hidden sm:block">Old Testament</span>
-              <span className="sm:hidden">OT</span>
-            </button>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsIndexModalOpen(true)}
-                className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5 relative after:absolute after:-inset-y-2 after:inset-x-0 after:content-['']"
-              >
-                INDEX
-              </button>
-              {/* A testament sweep — every chapter of every book in this list, in
-                  order — via AnchorDrill's sweepBookIds, the same slot every other
-                  screen's bottom bar puts its most useful action in. */}
-              <button
-                onClick={() => navigate('/practice', { state: { subject: 'anchor', sweepBookIds: (isNT ? NT_BOOKS : OT_BOOKS).map(b => b.id) } })}
-                title={`Test me on these ${isNT ? NT_BOOKS.length : OT_BOOKS.length}`}
-                className="flex items-center gap-1 text-xs font-bold text-accent uppercase tracking-wider hover:text-accent-hover transition-colors border border-card-border hover:border-accent/40 rounded-md px-3 py-1.5"
-              >
-                <ListChecks className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Test Me</span>
-              </button>
-            </div>
-
-            <button
-              onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
-              disabled={isNT}
-              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
-              aria-label="New Testament"
-            >
-              <span className="hidden sm:block">New Testament</span>
-              <span className="sm:hidden">NT</span>
-              <ChevronRight className="w-4 h-4 flex-shrink-0" />
-            </button>
-          </div>
-        </div>
-
-        <BibleIndexModal
-          isOpen={isIndexModalOpen}
-          selectedId={activeGuideId}
-          onSelect={(id) => { setActiveGuideId(id); setIsIndexModalOpen(false); }}
-          onClose={() => setIsIndexModalOpen(false)}
-          mastery={mastery}
         />
       </div>
     );
@@ -1449,8 +1407,8 @@ export const Guides: React.FC = () => {
                       <div className="flex-1 p-4 flex justify-between items-center gap-4">
                         <div className="flex flex-col gap-1 min-w-0">
                            <span className="text-[9px] uppercase tracking-widest text-muted font-bold">SECTION {String(i+1).padStart(2, '0')}</span>
-                           <h3 className={`text-lg font-heading font-bold ${color.text} truncate`}>{labelTitleCase}</h3>
-                           <p className="text-[0.8125rem] text-secondary italic truncate">{cleanDesc}</p>
+                           <h3 className={`text-lg font-heading font-bold ${color.text}`}>{labelTitleCase}</h3>
+                           <p className="text-[0.8125rem] text-secondary italic break-words leading-relaxed">{cleanDesc}</p>
                         </div>
                         
                         <div className="flex flex-col items-end gap-2 flex-shrink-0 self-stretch justify-between py-0.5">

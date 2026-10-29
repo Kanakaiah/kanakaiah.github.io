@@ -103,7 +103,7 @@ class SettingsViewModel @JvmOverloads constructor(
             }
             "clean" -> updateSettings {
                 it.copy(
-                    showSectionHeadings = true,
+                    showSectionHeadings = false,
                     showVerseNumbers = false,
                     showParagraphMarks = false,
                     showCrossRefMarkers = false

@@ -853,7 +853,7 @@ private fun NarrativeArchitectureSection(
             border = BorderStroke(1.dp, RemoraCardBorder),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .height(54.dp)
         ) {
             Row(modifier = Modifier.fillMaxSize()) {
                 guide.blocks.forEachIndexed { index, block ->
@@ -872,17 +872,25 @@ private fun NarrativeArchitectureSection(
                             .clickable { onSelectChapter(startCh) },
                         contentAlignment = Alignment.Center
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(horizontal = 2.dp, vertical = 4.dp)
+                        ) {
                             Text(
                                 text = block.chapters,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                             Text(
                                 text = "${count}ch",
                                 fontSize = 9.sp,
-                                color = Color.White.copy(alpha = 0.8f)
+                                lineHeight = 11.sp,
+                                color = Color.White.copy(alpha = 0.85f),
+                                maxLines = 1
                             )
                         }
                     }
@@ -962,7 +970,8 @@ private fun NarrativeArchitectureSection(
                             ) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.padding(vertical = 12.dp)
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
                                 ) {
                                     Text(
                                         text = "CH",
@@ -973,9 +982,12 @@ private fun NarrativeArchitectureSection(
                                     )
                                     Text(
                                         text = block.chapters,
-                                        fontSize = 17.sp,
+                                        fontSize = 15.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = color
+                                        color = color,
+                                        textAlign = TextAlign.Center,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                 }
                             }
@@ -1014,14 +1026,13 @@ private fun NarrativeArchitectureSection(
                                 color = color
                             )
                             if (block.description.isNotBlank()) {
-                                Spacer(modifier = Modifier.height(2.dp))
+                                Spacer(modifier = Modifier.height(3.dp))
                                 Text(
                                     text = block.description,
-                                    fontSize = 12.sp,
+                                    fontSize = 13.sp,
+                                    lineHeight = 18.sp,
                                     fontStyle = FontStyle.Italic,
-                                    color = RemoraTextSecondary,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis
+                                    color = RemoraTextSecondary
                                 )
                             }
                         }

@@ -50,6 +50,12 @@ class BibleBrowserViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun updateTestamentOnScroll(testament: String) {
+        if (_uiState.value.currentTestament != testament) {
+            _uiState.update { it.copy(currentTestament = testament) }
+        }
+    }
+
     fun setTestament(testament: String) {
         val state = _uiState.value
         val filtered = applyFilter(state.allBooks, testament, "All", state.searchQuery)
@@ -98,10 +104,15 @@ class BibleBrowserViewModel(application: Application) : AndroidViewModel(applica
             }
         }
 
-        // Otherwise filter by testament and section
+        // When viewing "All" sections, provide continuous list of all books (OT then NT)
+        if (section == "All") {
+            return books
+        }
+
+        // When a specific section is chosen, filter to that section
         return books.filter { b ->
             val matchTestament = b.testament.equals(testament, ignoreCase = true)
-            val matchSection = section == "All" || b.section.equals(section, ignoreCase = true)
+            val matchSection = b.section.equals(section, ignoreCase = true)
             matchTestament && matchSection
         }
     }

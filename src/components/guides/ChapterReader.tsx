@@ -1301,7 +1301,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       if (v.verse === flashVerse) {
         extraClass = 'bg-green-500/30 rounded px-1 -mx-1 transition-colors duration-1000';
       } else if (isSelected) {
-        extraClass = 'bg-accent/20 text-primary rounded px-1 -mx-1';
+        extraClass = 'bg-accent/20 text-primary underline decoration-accent underline-offset-4 decoration-2 rounded px-1 -mx-1';
       } else if (inLibrary) {
         extraClass = 'verse-memorized rounded px-1 -mx-1';
       }
@@ -1437,7 +1437,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
                   {/* Text Size */}
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Text Size</span>
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">TEXT SIZE</span>
                     <div className="flex items-center gap-3 px-1">
                       <span className="text-xs text-[#a89f91] font-serif">A</span>
                       <input
@@ -1455,12 +1455,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
                   {/* Font */}
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Font</span>
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">FONT</span>
                     <div className="flex items-center gap-2">
                       {[
-                        { id: 'sans', label: 'Inter' },
-                        { id: 'serif', label: 'Merriweather' },
-                        { id: 'hyper', label: 'Atkinson' },
+                        { id: 'serif', label: 'Serif' },
+                        { id: 'sans', label: 'Sans' },
+                        { id: 'hyper', label: 'Hyperlegible' },
                       ].map(f => {
                         const isSelected = (state.settings.fontFamily || 'serif') === f.id;
                         return (
@@ -1483,7 +1483,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
                   {/* Line Spacing */}
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Line Spacing</span>
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">LINE SPACING</span>
                     <div className="flex items-center gap-2">
                       {['Tight', 'Normal', 'Roomy'].map((spacing, idx) => {
                         const isSelected = idx === 1; // default normal
@@ -1506,7 +1506,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
                   {/* Theme */}
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Theme</span>
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">THEME</span>
                     <div className="grid grid-cols-4 gap-2">
                       {[
                         { id: 'dark', label: 'Dark' },
