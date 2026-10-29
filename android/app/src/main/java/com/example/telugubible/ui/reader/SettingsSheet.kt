@@ -230,9 +230,9 @@ fun SettingsSheet(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     listOf(
-                        ReaderFontFamily.MERRIWEATHER to "Serif",
-                        ReaderFontFamily.INTER to "Sans",
-                        ReaderFontFamily.ATKINSON to "Hyperlegible"
+                        ReaderFontFamily.INTER to "Inter",
+                        ReaderFontFamily.MERRIWEATHER to "Merriweather",
+                        ReaderFontFamily.ATKINSON to "Atkinson"
                     ).forEach { (font, label) ->
                         val isSelected = readerFontFamily == font
                         PillButton(

@@ -80,17 +80,17 @@ val AtkinsonFontFamily = FontFamily(
 )
 
 enum class ReaderFontFamily(val key: String, val label: String, val fontFamily: FontFamily) {
-    MERRIWEATHER("serif", "Serif", MerriweatherFontFamily),
-    INTER("sans", "Sans", InterFontFamily),
-    ATKINSON("hyper", "Hyperlegible", AtkinsonFontFamily);
+    INTER("sans", "Inter", InterFontFamily),
+    MERRIWEATHER("serif", "Merriweather", MerriweatherFontFamily),
+    ATKINSON("hyper", "Atkinson", AtkinsonFontFamily);
 
     companion object {
         fun fromKey(key: String?): ReaderFontFamily {
             return when (key?.lowercase()?.trim()) {
-                "sans", "inter" -> INTER
-                "hyper", "atkinson", "hyperlegible" -> ATKINSON
                 "serif", "merriweather" -> MERRIWEATHER
-                else -> MERRIWEATHER
+                "hyper", "atkinson", "hyperlegible" -> ATKINSON
+                "sans", "inter" -> INTER
+                else -> INTER
             }
         }
     }

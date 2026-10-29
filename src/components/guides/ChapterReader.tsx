@@ -1458,9 +1458,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Font</span>
                     <div className="flex items-center gap-2">
                       {[
-                        { id: 'serif', label: 'Serif' },
-                        { id: 'sans', label: 'Sans' },
-                        { id: 'hyper', label: 'Hyperlegible' },
+                        { id: 'sans', label: 'Inter' },
+                        { id: 'serif', label: 'Merriweather' },
+                        { id: 'hyper', label: 'Atkinson' },
                       ].map(f => {
                         const isSelected = (state.settings.fontFamily || 'serif') === f.id;
                         return (
