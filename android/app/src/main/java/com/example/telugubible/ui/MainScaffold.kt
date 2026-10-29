@@ -104,11 +104,13 @@ fun MainScaffold(
         settingsViewModel.loadSettings()
     }
 
-    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode || isInRetentionMode) {
+    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode || isInRetentionMode || selectedTab == RemoraTab.BIBLE) {
         if (isInReaderMode) {
             isInReaderMode = false
         } else if (activeGuideBookId != null) {
             activeGuideBookId = null
+        } else if (selectedTab == RemoraTab.BIBLE) {
+            selectedTab = RemoraTab.TODAY
         } else if (isInSettingsMode) {
             isInSettingsMode = false
             todayViewModel.loadData()
@@ -164,6 +166,12 @@ fun MainScaffold(
         RetentionScreen(
             viewModel = retentionViewModel,
             onBack = { isInRetentionMode = false }
+        )
+    } else if (selectedTab == RemoraTab.BIBLE) {
+        BibleBrowserScreen(
+            viewModel = bibleBrowserViewModel,
+            onOpenBook = { bookId -> activeGuideBookId = bookId },
+            onCloseToToday = { selectedTab = RemoraTab.TODAY }
         )
     } else {
         Scaffold(
@@ -369,6 +377,7 @@ fun MainScaffold(
                         RemoraTab.BIBLE -> BibleBrowserScreen(
                             viewModel = bibleBrowserViewModel,
                             onOpenBook = { bookId -> activeGuideBookId = bookId },
+                            onCloseToToday = { selectedTab = RemoraTab.TODAY },
                             onChromeVisibilityChange = { visible -> isBibleChromeVisible = visible }
                         )
                     }

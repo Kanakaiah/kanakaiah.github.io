@@ -33,13 +33,8 @@ export const AppLayout: React.FC = () => {
   const isGuidePage = /^\/guides\/.+/.test(location.pathname)
     || new URLSearchParams(location.search).has('guide');
   const isPracticePage = location.pathname === '/practice';
-  const isFullscreenView = isReadingPage || isPracticePage || isGuidePage;
-  // The Bible tab root is the one tab whose page has a real name of its own, and
-  // every screen you can reach from it now shows that name in a pinned header. It
-  // shows "Bible" here for the same reason, instead of repeating the app wordmark
-  // and leaving the page itself untitled on mobile (its "Bible" heading is
-  // desktop-only). Other tabs keep the wordmark.
-  const isBibleRoot = location.pathname === '/guides' && !isFullscreenView;
+  const isBibleRoot = location.pathname === '/guides';
+  const isFullscreenView = isReadingPage || isPracticePage || isGuidePage || isBibleRoot;
 
   // Tap-to-toggle, the same rule every screen below the tab roots uses: a tap on
   // empty space toggles the header and tab bar, a tap on anything interactive only

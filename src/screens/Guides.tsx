@@ -1771,7 +1771,15 @@ export const Guides: React.FC = () => {
       className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4"
       style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
     >
-      <div className="hidden lg:block mb-2">
+      <div className="flex items-center gap-3 mb-2">
+        <button
+          onClick={() => navigate('/')}
+          className="p-2 -ml-2 rounded-full hover:bg-card-hover text-secondary hover:text-primary transition-colors"
+          title="Close to Today"
+          aria-label="Close to Today"
+        >
+          <X className="w-6 h-6 text-secondary hover:text-primary" />
+        </button>
         <h1 className="text-3xl font-heading font-bold text-primary">Bible</h1>
       </div>
 

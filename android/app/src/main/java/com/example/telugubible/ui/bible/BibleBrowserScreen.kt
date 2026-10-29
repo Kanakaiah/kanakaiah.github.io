@@ -39,6 +39,7 @@ import com.example.telugubible.ui.common.BookCoverImage
 fun BibleBrowserScreen(
     viewModel: BibleBrowserViewModel,
     onOpenBook: (Int) -> Unit,
+    onCloseToToday: (() -> Unit)? = null,
     onChromeVisibilityChange: ((Boolean) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -96,8 +97,78 @@ fun BibleBrowserScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
                 .padding(horizontal = 16.dp)
         ) {
+            // Fullscreen Top Bar with (X) at leftmost
+            if (onCloseToToday != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onCloseToToday,
+                        modifier = Modifier.size(38.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Close to Today",
+                            tint = RemoraTextPrimary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(6.dp))
+
+                    Text(
+                        text = "Bible",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RemoraTextPrimary,
+                        letterSpacing = (-0.5).sp,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    // Testament switcher pills (OT / NT)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(
+                            onClick = { viewModel.setTestament("OT") },
+                            shape = RoundedCornerShape(14.dp),
+                            color = if (state.currentTestament == "OT") RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
+                            border = BorderStroke(1.dp, if (state.currentTestament == "OT") RemoraAccent else RemoraCardBorder)
+                        ) {
+                            Text(
+                                text = "OT",
+                                fontSize = 12.sp,
+                                fontWeight = if (state.currentTestament == "OT") FontWeight.Bold else FontWeight.Medium,
+                                color = if (state.currentTestament == "OT") RemoraAccentLight else RemoraTextSecondary,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            )
+                        }
+
+                        Surface(
+                            onClick = { viewModel.setTestament("NT") },
+                            shape = RoundedCornerShape(14.dp),
+                            color = if (state.currentTestament == "NT") RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
+                            border = BorderStroke(1.dp, if (state.currentTestament == "NT") RemoraAccent else RemoraCardBorder)
+                        ) {
+                            Text(
+                                text = "NT",
+                                fontSize = 12.sp,
+                                fontWeight = if (state.currentTestament == "NT") FontWeight.Bold else FontWeight.Medium,
+                                color = if (state.currentTestament == "NT") RemoraAccentLight else RemoraTextSecondary,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
             // Auto-hiding Top Chrome: Search Bar & Section Chips
             AnimatedVisibility(
                 visible = isChromeVisible || state.searchQuery.isNotBlank(),
