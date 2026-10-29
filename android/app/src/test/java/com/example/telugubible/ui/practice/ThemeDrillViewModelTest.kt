@@ -150,4 +150,49 @@ class ThemeDrillViewModelTest {
         assertEquals(40, state.queue[0].book.id)
         assertEquals("Matthew", state.queue[0].book.nameEn)
     }
+
+    @Test
+    fun testPracticeAgainAndRelaunchWhenAllFinished() = runTest(testDispatcher) {
+        val vm = ThemeDrillViewModel(application, repository)
+        advanceUntilIdle()
+
+        // Fast-forward grade all books so nothing is due or fresh
+        val now = System.currentTimeMillis()
+        val db = userDbHelper.writableDatabase
+        for (bookId in 1..66) {
+            db.execSQL("INSERT OR REPLACE INTO theme_progress (book_id, repetition, interval, efactor, next_due_date, last_score, attempts) VALUES ($bookId, 2, 6, 2.5, ${now + 86400000}, 5, 2)")
+        }
+
+        // Restart drill
+        vm.restart()
+        advanceUntilIdle()
+
+        // Must NOT be finished, queue must be full 66 books, starting from Genesis
+        assertFalse(vm.uiState.value.isFinished)
+        assertEquals(66, vm.uiState.value.queue.size)
+        assertEquals(0, vm.uiState.value.currentIndex)
+        assertEquals(1, vm.uiState.value.currentItem?.book?.id)
+
+        // Simulate finishing session
+        val lastIdx = vm.uiState.value.queue.size - 1
+        for (i in 0 until lastIdx) {
+            vm.skipToNext()
+        }
+        assertEquals(lastIdx, vm.uiState.value.currentIndex)
+        vm.revealAnswer()
+        vm.gradeCurrent(5)
+        advanceUntilIdle()
+
+        // Session is marked finished
+        assertTrue(vm.uiState.value.isFinished)
+
+        // Relaunching/entering screen again must auto-restart from Genesis (index 0)
+        vm.onScreenEntered()
+        advanceUntilIdle()
+
+        assertFalse(vm.uiState.value.isFinished)
+        assertEquals(66, vm.uiState.value.queue.size)
+        assertEquals(0, vm.uiState.value.currentIndex)
+        assertEquals(1, vm.uiState.value.currentItem?.book?.id)
+    }
 }

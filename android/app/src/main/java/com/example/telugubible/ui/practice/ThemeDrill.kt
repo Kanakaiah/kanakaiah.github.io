@@ -35,6 +35,10 @@ fun ThemeDrill(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.onScreenEntered()
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()

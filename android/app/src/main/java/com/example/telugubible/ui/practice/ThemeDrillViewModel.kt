@@ -62,9 +62,17 @@ class ThemeDrillViewModel @JvmOverloads constructor(
         }
     }
 
+    fun onScreenEntered() {
+        if (_uiState.value.isFinished || _uiState.value.queue.isEmpty()) {
+            restart()
+        } else {
+            _uiState.update { it.copy(isRevealed = false) }
+        }
+    }
+
     fun setScope(scope: ThemeScope) {
         if (_uiState.value.scope == scope) return
-        _uiState.update { it.copy(scope = scope, currentIndex = 0, isRevealed = false) }
+        _uiState.update { it.copy(scope = scope, currentIndex = 0, isRevealed = false, isFinished = false) }
         viewModelScope.launch {
             buildPool(resetFrozen = true)
         }
@@ -126,13 +134,13 @@ class ThemeDrillViewModel @JvmOverloads constructor(
 
     fun restart() {
         frozenPool = null
-        _uiState.update { it.copy(currentIndex = 0, isRevealed = false, isFinished = false) }
+        _uiState.update { it.copy(currentIndex = 0, isRevealed = false, isFinished = false, isLoading = true) }
         viewModelScope.launch {
-            buildPool(resetFrozen = true)
+            buildPool(resetFrozen = true, forceAll = true)
         }
     }
 
-    private suspend fun buildPool(resetFrozen: Boolean) {
+    private suspend fun buildPool(resetFrozen: Boolean, forceAll: Boolean = false) {
         if (resetFrozen) {
             frozenPool = null
         }
@@ -150,7 +158,7 @@ class ThemeDrillViewModel @JvmOverloads constructor(
         // Remora queue logic:
         // 1. Due first (most overdue leading)
         // 2. Never-attempted fresh books in canon order
-        // 3. Deliberately excludes books known and not yet due
+        // 3. Deliberately excludes books known and not yet due unless forceAll is set or nothing is due/fresh
         val dueBooks = books.filter { b ->
             val p = allProgress[b.id]
             p != null && p.nextDueDate <= now
@@ -158,7 +166,12 @@ class ThemeDrillViewModel @JvmOverloads constructor(
 
         val freshBooks = books.filter { b -> !allProgress.containsKey(b.id) }
 
-        val targetBooks = if (dueBooks.isNotEmpty()) dueBooks + freshBooks else freshBooks
+        val targetBooks = when {
+            forceAll -> books
+            dueBooks.isNotEmpty() -> dueBooks + freshBooks
+            freshBooks.isNotEmpty() -> freshBooks
+            else -> books // Fallback so practice is always possible across the scope!
+        }
 
         val items = targetBooks.map { b ->
             ThemeDrillItem(
@@ -175,7 +188,7 @@ class ThemeDrillViewModel @JvmOverloads constructor(
                 learnedCount = learned,
                 totalCount = 66,
                 isLoading = false,
-                isFinished = items.isEmpty()
+                isFinished = false
             )
         }
     }

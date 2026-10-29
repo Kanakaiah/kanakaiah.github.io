@@ -42,12 +42,11 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [imgErr, setImgErr] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
   const livePool = useMemo(() => {
     const books = scope === 'ot' ? OT_BOOKS : scope === 'nt' ? NT_BOOKS : ALL_BOOKS;
-    // Due first (most overdue leading), then never-attempted, then the rest. A reader
-    // who has learned nothing yet simply gets the canon in order, which is the right
-    // way to meet 66 unfamiliar books.
+    // Due first (most overdue leading), then never-attempted, then the rest.
     const due = books.filter(b => {
       const p = state.themeProgress[b.id];
       return p && isDue(p.sm2);
@@ -56,9 +55,9 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       new Date(state.themeProgress[b.id].sm2.nextDueDate).getTime());
 
     const fresh = books.filter(b => !state.themeProgress[b.id]);
-    return due.length > 0 ? [...due, ...fresh] : fresh;
-    // Deliberately excludes books already known and not yet due — drilling those early
-    // is exactly the massed repetition the schedule exists to prevent.
+    if (due.length > 0) return [...due, ...fresh];
+    if (fresh.length > 0) return fresh;
+    return books; // Fallback so review is always possible across the scope!
   }, [scope, state.themeProgress]);
 
   // Frozen on the first grade, for the same reason the anchor drill's queue is: this
@@ -74,7 +73,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
   // Reset happens where the change happens. An effect that setStates on [index, scope]
   // is a cascading render for something both call sites already know they're doing.
   const goTo = (next: number) => { setIndex(next); setRevealed(false); setImgErr(false); };
-  const changeScope = (next: Scope) => { setScope(next); setFrozenPool(null); goTo(0); };
+  const changeScope = (next: Scope) => { setScope(next); setFrozenPool(null); setIsFinished(false); goTo(0); };
 
   const existing = current ? state.themeProgress[current.id] : undefined;
 
@@ -100,8 +99,12 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
     });
     dispatch({ type: 'RECORD_ACTIVITY' });
     showToast(`Score logged. Next review in ${formatInterval(newSM2.interval)}.`, 'success');
-    if (index < pool.length - 1) { goTo(index + 1); }
-    else { setFrozenPool(null); goTo(0); }
+    if (index < pool.length - 1) {
+      goTo(index + 1);
+    } else {
+      setFrozenPool(null);
+      setIsFinished(true);
+    }
   };
 
   const learned = useMemo(
@@ -109,16 +112,31 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
     [state.themeProgress]
   );
 
-  if (!current) {
+  if (isFinished || !current) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center px-6 gap-4 pt-20">
         <h2 className="text-xl font-bold text-primary">Every theme is scheduled</h2>
         <p className="text-secondary max-w-sm">
           Nothing in this set is due. {learned} of 66 book themes are secure.
         </p>
-        <button onClick={onExit} className="text-sm font-semibold text-accent hover:text-accent-hover transition-colors">
-          Back to Today
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 mt-4">
+          <button
+            onClick={() => {
+              setIsFinished(false);
+              setFrozenPool(null);
+              goTo(0);
+            }}
+            className="px-6 py-2.5 rounded-xl bg-accent text-[#14120E] text-sm font-bold hover:brightness-110 transition-colors shadow-sm"
+          >
+            Practice Again
+          </button>
+          <button
+            onClick={onExit}
+            className="px-6 py-2.5 rounded-xl border border-card-border text-sm font-semibold text-secondary hover:text-primary transition-colors"
+          >
+            Back to Today
+          </button>
+        </div>
       </div>
     );
   }
