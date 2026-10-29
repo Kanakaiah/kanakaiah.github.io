@@ -101,6 +101,8 @@ data class ReaderUiState(
     val flashVerse: Int? = null,
     val memorizedVerses: Set<Int> = emptySet(),
     val bionicReading: Boolean = false,
+    val lineSpacing: LineSpacing = LineSpacing.NORMAL,
+    val bionicIntensity: BionicIntensity = BionicIntensity.MEDIUM,
     val topics: List<Topic> = emptyList(),
     val anchorReveal: String = "tap",
     val showSectionHeadings: Boolean = true,
@@ -173,6 +175,8 @@ class ReaderViewModel @JvmOverloads constructor(
                 val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
                 val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
                 val theme = ReaderTheme.fromKey(settings.theme)
+                val spacing = LineSpacing.fromKey(settings.lineSpacing)
+                val bionicInt = BionicIntensity.fromKey(settings.bionicIntensity)
 
                 _uiState.update {
                     it.copy(
@@ -192,6 +196,8 @@ class ReaderViewModel @JvmOverloads constructor(
                         fontSizeScale = fontScale,
                         readerFontFamily = fontFam,
                         readerTheme = theme,
+                        lineSpacing = spacing,
+                        bionicIntensity = bionicInt,
                         bionicReading = settings.bionicReading,
                         anchorReveal = settings.anchorReveal,
                         showSectionHeadings = settings.showSectionHeadings,
@@ -246,6 +252,8 @@ class ReaderViewModel @JvmOverloads constructor(
             val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
             val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
             val theme = ReaderTheme.fromKey(settings.theme)
+            val spacing = LineSpacing.fromKey(settings.lineSpacing)
+            val bionicInt = BionicIntensity.fromKey(settings.bionicIntensity)
             val kjvMap = if (_uiState.value.alphaMode) {
                 kjvService.getChapterKjv(book.id, chapter) ?: emptyMap()
             } else {
@@ -267,6 +275,8 @@ class ReaderViewModel @JvmOverloads constructor(
                     fontSizeScale = fontScale,
                     readerFontFamily = fontFam,
                     readerTheme = theme,
+                    lineSpacing = spacing,
+                    bionicIntensity = bionicInt,
                     bionicReading = settings.bionicReading,
                     anchorReveal = settings.anchorReveal,
                     showSectionHeadings = settings.showSectionHeadings,
@@ -742,17 +752,90 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
+    fun setLineSpacing(spacing: LineSpacing) {
+        _uiState.update { it.copy(lineSpacing = spacing) }
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(settings.copy(lineSpacing = spacing.key))
+        }
+    }
+
+    fun setBionicReading(enabled: Boolean) {
+        _uiState.update { it.copy(bionicReading = enabled) }
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(settings.copy(bionicReading = enabled))
+        }
+    }
+
+    fun setBionicIntensity(intensity: BionicIntensity) {
+        _uiState.update { it.copy(bionicIntensity = intensity) }
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(settings.copy(bionicIntensity = intensity.key))
+        }
+    }
+
+    fun setShowVerseNumbers(show: Boolean) {
+        _uiState.update { it.copy(showVerseNumbers = show) }
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(settings.copy(showVerseNumbers = show))
+        }
+    }
+
+    fun resetReadingSettings() {
+        val defTheme = ReaderTheme.DARK
+        val defFont = ReaderFontFamily.MERRIWEATHER
+        val defScale = FontSizeScale.M
+        val defSpacing = LineSpacing.NORMAL
+        val defBionic = false
+        val defBionicInt = BionicIntensity.MEDIUM
+        val defVerseNums = true
+
+        _uiState.update {
+            it.copy(
+                readerTheme = defTheme,
+                readerFontFamily = defFont,
+                fontSizeScale = defScale,
+                lineSpacing = defSpacing,
+                bionicReading = defBionic,
+                bionicIntensity = defBionicInt,
+                showVerseNumbers = defVerseNums
+            )
+        }
+        com.example.telugubible.theme.RemoraThemeState.themeName = defTheme.toSettingKey()
+        viewModelScope.launch {
+            val settings = repository.getAppSettings()
+            repository.saveAppSettings(
+                settings.copy(
+                    theme = defTheme.toSettingKey(),
+                    fontFamily = defFont.key,
+                    fontSize = defScale.multiplier,
+                    lineSpacing = defSpacing.key,
+                    bionicReading = defBionic,
+                    bionicIntensity = defBionicInt.key,
+                    showVerseNumbers = defVerseNums
+                )
+            )
+        }
+    }
+
     fun syncSettings() {
         viewModelScope.launch {
             val settings = repository.getAppSettings()
             val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
             val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
             val theme = ReaderTheme.fromKey(settings.theme)
+            val spacing = LineSpacing.fromKey(settings.lineSpacing)
+            val bionicInt = BionicIntensity.fromKey(settings.bionicIntensity)
             _uiState.update {
                 it.copy(
                     fontSizeScale = fontScale,
                     readerFontFamily = fontFam,
                     readerTheme = theme,
+                    lineSpacing = spacing,
+                    bionicIntensity = bionicInt,
                     bionicReading = settings.bionicReading,
                     anchorReveal = settings.anchorReveal,
                     showSectionHeadings = settings.showSectionHeadings,

@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.CropFree
 import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.MenuBook
@@ -308,6 +309,8 @@ fun ChapterReaderScreen(
                                 showCrossRefMarkers = state.showCrossRefMarkers,
                                 crossRefCounts = state.crossRefCounts,
                                 bionicReading = state.bionicReading,
+                                bionicIntensity = state.bionicIntensity,
+                                lineSpacing = state.lineSpacing,
                                 fontSizeScale = state.fontSizeScale,
                                 readerFontFamily = state.readerFontFamily,
                                 readerTheme = state.readerTheme,
@@ -383,329 +386,101 @@ fun ChapterReaderScreen(
                         }
                     }
             ) {
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .statusBarsPadding()
-                        .padding(top = 4.dp, bottom = 12.dp)
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Left: Back button
                     IconButton(
                         onClick = { onBack?.invoke() },
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(start = 4.dp, top = 2.dp)
+                        modifier = Modifier.size(38.dp)
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Go back",
-                            tint = state.readerTheme.textColor
+                            tint = state.readerTheme.textColor,
+                            modifier = Modifier.size(22.dp)
                         )
                     }
 
-                    // Right: Reading Options & Immerse Reader Buttons
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(end = 4.dp, top = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Reading Options (Type) Button
-                        IconButton(
-                            onClick = { viewModel.toggleReadingOptions() },
-                            modifier = Modifier.size(38.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.TextFields,
-                                contentDescription = "Reading Options",
-                                tint = if (state.showReadingOptions) state.readerTheme.accentColor else state.readerTheme.textColor,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                    Spacer(modifier = Modifier.width(6.dp))
 
-                        // Immerse Reader Button
-                        IconButton(
-                            onClick = { immersedVerseIndex = 0 },
-                            modifier = Modifier.size(38.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Fullscreen,
-                                contentDescription = "Immerse Reading",
-                                tint = state.readerTheme.textColor,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                    // Title: e.g. "2 Samuel 7"
+                    Text(
+                        text = "$bookDisplayName $currentChapter",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            fontFamily = state.readerFontFamily.fontFamily,
+                            letterSpacing = (-0.01).sp
+                        ),
+                        color = state.readerTheme.textColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { viewModel.toggleBookSelector(true) }
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    // Translation Badge Pill [ NASB ]
+                    Surface(
+                        shape = RoundedCornerShape(18.dp),
+                        color = state.readerTheme.cardColor,
+                        border = BorderStroke(1.dp, Color(0xFF383531)),
+                        modifier = Modifier.clickable { viewModel.toggleBookSelector(true) }
+                    ) {
+                        Text(
+                            text = BibleTranslation.getLabel(state.activeVersion).uppercase(),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = state.readerTheme.textColor,
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
+                        )
                     }
 
-                    // Center: Chapter Title + Translation Badge on the same row
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    // ( Aa ) Button - Circular button that opens Reading Settings
+                    Surface(
+                        shape = CircleShape,
+                        color = state.readerTheme.cardColor,
+                        border = BorderStroke(1.dp, Color(0xFF383531)),
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 76.dp, vertical = 2.dp)
+                            .size(38.dp)
+                            .clickable { viewModel.toggleSettings(true) }
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
+                        Box(contentAlignment = Alignment.Center) {
                             Text(
-                                text = "$bookDisplayName $currentChapter".uppercase(),
-                                style = MaterialTheme.typography.headlineLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 26.sp,
-                                    lineHeight = 32.sp,
-                                    fontFamily = state.readerFontFamily.fontFamily,
-                                    letterSpacing = (-0.02).sp
-                                ),
-                                color = state.readerTheme.textColor,
-                                textAlign = TextAlign.Center,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f, fill = false)
+                                text = "Aa",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = RemoraAccent
                             )
-
-                            // Translation Badge on the same row as the book name
-                            Surface(
-                                shape = RoundedCornerShape(10.dp),
-                                color = state.readerTheme.accentColor.copy(alpha = 0.14f),
-                                border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.35f)),
-                                modifier = Modifier.clickable { viewModel.toggleBookSelector(true) }
-                            ) {
-                                Text(
-                                    text = BibleTranslation.getLabel(state.activeVersion).uppercase(),
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = state.readerTheme.accentColor,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                                )
-                            }
                         }
                     }
-                }
-            }
-        }
 
-        // --- 3. Reading Options Dropdown Popover ---
-        if (state.showReadingOptions) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable { viewModel.toggleReadingOptions(false) },
-                contentAlignment = Alignment.TopEnd
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = state.readerTheme.cardColor,
-                    border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.25f)),
-                    shadowElevation = 16.dp,
-                    modifier = Modifier
-                        .padding(top = if (headerHeightDp > 0.dp) headerHeightDp + 6.dp else 120.dp, end = 16.dp)
-                        .width(280.dp)
-                        .clickable(enabled = false) {}
-                ) {
-                    Column(
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    // ( ⛶ ) Immerse Reader Button
+                    Surface(
+                        shape = CircleShape,
+                        color = state.readerTheme.cardColor,
+                        border = BorderStroke(1.dp, Color(0xFF383531)),
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                            .size(38.dp)
+                            .clickable { immersedVerseIndex = 0 }
                     ) {
-                        // Text Size Controls
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Text Size", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = state.readerTheme.textColor)
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                OutlinedButton(
-                                    onClick = { viewModel.decreaseFontSize() },
-                                    enabled = state.fontSizeScale != FontSizeScale.XS,
-                                    shape = RoundedCornerShape(8.dp),
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                                    modifier = Modifier.height(28.dp)
-                                ) {
-                                    Text(
-                                        "-",
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (state.fontSizeScale != FontSizeScale.XS) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.35f)
-                                    )
-                                }
-                                Text(
-                                    text = state.fontSizeScale.label,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp,
-                                    color = state.readerTheme.textColor,
-                                    modifier = Modifier.padding(horizontal = 10.dp)
-                                )
-                                OutlinedButton(
-                                    onClick = { viewModel.increaseFontSize() },
-                                    enabled = state.fontSizeScale != FontSizeScale.XL,
-                                    shape = RoundedCornerShape(8.dp),
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                                    modifier = Modifier.height(28.dp)
-                                ) {
-                                    Text(
-                                        "+",
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (state.fontSizeScale != FontSizeScale.XL) state.readerTheme.textColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.35f)
-                                    )
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = state.readerTheme.accentColor.copy(alpha = 0.15f))
-
-                        // Theme Palette Selector
-                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text("Theme", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = state.readerTheme.textColor)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                ReaderTheme.entries.forEach { themeOpt ->
-                                    val isSelected = state.readerTheme == themeOpt
-                                    Surface(
-                                        shape = RoundedCornerShape(8.dp),
-                                        color = themeOpt.backgroundColor,
-                                        border = BorderStroke(
-                                            width = if (isSelected) 2.dp else 1.dp,
-                                            color = if (isSelected) themeOpt.accentColor else state.readerTheme.secondaryTextColor.copy(alpha = 0.35f)
-                                        ),
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .height(34.dp)
-                                            .clickable { viewModel.setReaderTheme(themeOpt) }
-                                    ) {
-                                        Box(contentAlignment = Alignment.Center) {
-                                            Text(
-                                                text = themeOpt.label,
-                                                fontSize = 11.sp,
-                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                                color = themeOpt.textColor
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = state.readerTheme.accentColor.copy(alpha = 0.15f))
-
-                        // Font Family
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Font", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = state.readerTheme.textColor)
-                            Surface(
-                                shape = RoundedCornerShape(8.dp),
-                                color = state.readerTheme.cardColor,
-                                border = BorderStroke(1.dp, state.readerTheme.accentColor.copy(alpha = 0.25f))
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(2.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    ReaderFontFamily.values().forEach { font ->
-                                        val isSelected = state.readerFontFamily == font
-                                        Box(
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(6.dp))
-                                                .background(if (isSelected) state.readerTheme.accentColor else Color.Transparent)
-                                                .clickable { viewModel.setReaderFontFamily(font) }
-                                                .padding(horizontal = 8.dp, vertical = 5.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = font.label,
-                                                fontSize = 11.sp,
-                                                fontFamily = font.fontFamily,
-                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                                color = if (isSelected) Color.White else state.readerTheme.secondaryTextColor
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = state.readerTheme.accentColor.copy(alpha = 0.15f))
-
-                        // Bionic Reading Toggle
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column {
-                                Text("Bionic Reading", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = state.readerTheme.textColor)
-                                Text("Bold first letters", fontSize = 10.sp, color = state.readerTheme.secondaryTextColor)
-                            }
-                            Switch(
-                                checked = state.bionicReading,
-                                onCheckedChange = { viewModel.toggleReadingOption("bionicReading") },
-                                colors = SwitchDefaults.colors(checkedThumbColor = state.readerTheme.accentColor)
-                            )
-                        }
-
-                        HorizontalDivider(color = state.readerTheme.accentColor.copy(alpha = 0.15f))
-
-                        // Display Toggles: Section Headings
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Section Headings", fontSize = 12.sp, color = state.readerTheme.textColor)
-                            Checkbox(
-                                checked = state.showSectionHeadings,
-                                onCheckedChange = { viewModel.toggleReadingOption("showSectionHeadings") },
-                                colors = CheckboxDefaults.colors(checkedColor = state.readerTheme.accentColor)
-                            )
-                        }
-
-                        // Display Toggles: Verse Numbers
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Verse Numbers", fontSize = 12.sp, color = state.readerTheme.textColor)
-                            Checkbox(
-                                checked = state.showVerseNumbers,
-                                onCheckedChange = { viewModel.toggleReadingOption("showVerseNumbers") },
-                                colors = CheckboxDefaults.colors(checkedColor = state.readerTheme.accentColor)
-                            )
-                        }
-
-                        // Display Toggles: Paragraph Marks ¶
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Paragraph Marks (¶)", fontSize = 12.sp, color = state.readerTheme.textColor)
-                            Checkbox(
-                                checked = state.showParagraphMarks,
-                                onCheckedChange = { viewModel.toggleReadingOption("showParagraphMarks") },
-                                colors = CheckboxDefaults.colors(checkedColor = state.readerTheme.accentColor)
-                            )
-                        }
-
-                        // Display Toggles: Cross-Reference Markers ✻
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Cross-Ref Markers (✻)", fontSize = 12.sp, color = state.readerTheme.textColor)
-                            Checkbox(
-                                checked = state.showCrossRefMarkers,
-                                onCheckedChange = { viewModel.toggleReadingOption("showCrossRefMarkers") },
-                                colors = CheckboxDefaults.colors(checkedColor = state.readerTheme.accentColor)
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.CropFree,
+                                contentDescription = "Immerse Reading",
+                                tint = state.readerTheme.textColor.copy(alpha = 0.85f),
+                                modifier = Modifier.size(18.dp)
                             )
                         }
                     }
@@ -1367,15 +1142,20 @@ fun ChapterReaderScreen(
         if (state.showSettings) {
             SettingsSheet(
                 fontSizeScale = state.fontSizeScale,
-                language = state.language,
-                readerTheme = state.readerTheme,
                 readerFontFamily = state.readerFontFamily,
-                onIncreaseFontSize = { viewModel.increaseFontSize() },
-                onDecreaseFontSize = { viewModel.decreaseFontSize() },
-                onResetFontSize = { viewModel.resetFontSize() },
-                onLanguageChange = { viewModel.setLanguage(it) },
-                onThemeChange = { viewModel.setReaderTheme(it) },
+                lineSpacing = state.lineSpacing,
+                readerTheme = state.readerTheme,
+                bionicReading = state.bionicReading,
+                bionicIntensity = state.bionicIntensity,
+                showVerseNumbers = state.showVerseNumbers,
+                onFontSizeChange = { viewModel.setFontSizeScale(it) },
                 onFontFamilyChange = { viewModel.setReaderFontFamily(it) },
+                onLineSpacingChange = { viewModel.setLineSpacing(it) },
+                onThemeChange = { viewModel.setReaderTheme(it) },
+                onBionicReadingChange = { viewModel.setBionicReading(it) },
+                onBionicIntensityChange = { viewModel.setBionicIntensity(it) },
+                onShowVerseNumbersChange = { viewModel.setShowVerseNumbers(it) },
+                onReset = { viewModel.resetReadingSettings() },
                 onDismiss = { viewModel.toggleSettings(false) }
             )
         }

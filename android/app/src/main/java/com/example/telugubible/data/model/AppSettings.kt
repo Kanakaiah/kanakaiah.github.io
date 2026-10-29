@@ -15,5 +15,7 @@ data class AppSettings(
     val showVerseNumbers: Boolean = true,
     val showParagraphMarks: Boolean = true,
     val showCrossRefMarkers: Boolean = true,
-    val intervalScale: Double = 1.0
+    val intervalScale: Double = 1.0,
+    val lineSpacing: String = "normal", // "tight", "normal", "roomy"
+    val bionicIntensity: String = "medium" // "light", "medium", "strong"
 )

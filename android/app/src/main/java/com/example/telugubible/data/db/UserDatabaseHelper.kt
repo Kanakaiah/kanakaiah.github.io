@@ -1695,7 +1695,9 @@ class UserDatabaseHelper(private val context: Context) :
             showVerseNumbers = getSetting("setting_showVerseNumbers", "true").toBoolean(),
             showParagraphMarks = getSetting("setting_showParagraphMarks", "true").toBoolean(),
             showCrossRefMarkers = getSetting("setting_showCrossRefMarkers", "true").toBoolean(),
-            intervalScale = getSetting("setting_intervalScale", "1.0").toDoubleOrNull() ?: 1.0
+            intervalScale = getSetting("setting_intervalScale", "1.0").toDoubleOrNull() ?: 1.0,
+            lineSpacing = getSetting("setting_lineSpacing", "normal"),
+            bionicIntensity = getSetting("setting_bionicIntensity", "medium")
         )
     }
 
@@ -1715,6 +1717,8 @@ class UserDatabaseHelper(private val context: Context) :
         setSetting("setting_showParagraphMarks", settings.showParagraphMarks.toString())
         setSetting("setting_showCrossRefMarkers", settings.showCrossRefMarkers.toString())
         setSetting("setting_intervalScale", settings.intervalScale.toString())
+        setSetting("setting_lineSpacing", settings.lineSpacing)
+        setSetting("setting_bionicIntensity", settings.bionicIntensity)
     }
 
     fun getSetting(key: String, defaultValue: String): String {

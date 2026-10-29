@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Type, Plus, Minus, X, Copy, Trash2, BookOpen, RotateCw, Check } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Plus, X, Copy, Trash2, BookOpen, RotateCw, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
@@ -51,15 +51,7 @@ function formatShortDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
-// fontSize is a raw multiplier (0.85–1.45); surface it as a size label instead
-// of the internal number so "1.15" doesn't leak into the reading-options UI.
-const FONT_SIZE_LABELS = (size: number): string => {
-  if (size <= 0.90) return 'XS';
-  if (size <= 1.05) return 'S';
-  if (size <= 1.20) return 'M';
-  if (size <= 1.35) return 'L';
-  return 'XL';
-};
+
 
 // Parses a "book chapter:verse" reference string (e.g. "genesis 1:1", or a multi-word
 // book like "song of solomon 3:1") into a resolved book id. Anchored on the trailing
@@ -190,7 +182,7 @@ function extractHeadings(verses: Verse[]): Record<number, string[]> {
   return byVerse;
 }
 
-const HEADING_CLASSES = 'mt-10 first-of-type:mt-0 mb-4 text-[1.2em] font-bold tracking-tight text-accent-light font-heading italic leading-snug break-words w-full block';
+const HEADING_CLASSES = 'mt-10 first-of-type:mt-0 mb-4 text-xs font-bold tracking-[0.14em] text-accent uppercase not-italic leading-snug break-words w-full block';
 
 // End-of-chapter recall card. A local component (not its own file) for the same
 // reason ChapterAnchorCard lives inside Guides.tsx — it exists only to answer the
@@ -1403,60 +1395,135 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           <div className="absolute right-0 top-1 flex items-center gap-1">
             <button
               onClick={() => setShowOptions(!showOptions)}
-              className={`p-2 -mr-2 rounded-full transition-colors ${showOptions ? 'bg-card-hover text-primary' : 'hover:bg-card-hover text-secondary'}`}
-              title="Reading Options"
-              aria-label="Reading options"
+              className={`w-9 h-9 rounded-full border border-card-border flex items-center justify-center font-bold text-sm transition-colors ${showOptions ? 'bg-accent/20 border-accent text-accent' : 'bg-card text-accent hover:border-accent'}`}
+              title="Reading Settings"
+              aria-label="Reading settings"
             >
-              <Type className="w-5 h-5" />
+              Aa
             </button>
 
             {showOptions && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowOptions(false)} onTouchStart={() => setShowOptions(false)} />
-                <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-card-border rounded-lg shadow-md z-50 overflow-hidden p-4 flex flex-col gap-4 animate-[fadeScaleIn_0.15s_ease-out]">
+                <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px]" onClick={() => setShowOptions(false)} onTouchStart={() => setShowOptions(false)} />
+                <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-[#191714] border border-[#332f29] rounded-2xl shadow-2xl z-50 overflow-hidden p-5 flex flex-col gap-4 animate-[fadeScaleIn_0.15s_ease-out]">
+                  {/* Header: Title + Reset */}
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-primary">Text Size</span>
-                    <div className="flex items-center gap-2 bg-card border border-card-border rounded-md p-1">
-                      <button
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.max(0.85, state.settings.fontSize - 0.15).toFixed(2)) }})}
-                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                        disabled={state.settings.fontSize <= 0.85}
-                        aria-label="Decrease text size"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="text-xs font-bold min-w-8 px-1 text-center">{FONT_SIZE_LABELS(state.settings.fontSize)}</span>
-                      <button
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(Math.min(1.45, state.settings.fontSize + 0.15).toFixed(2)) }})}
-                        className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-card-hover text-secondary hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                        disabled={state.settings.fontSize >= 1.45}
-                        aria-label="Increase text size"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
+                    <h3 className="text-lg font-bold font-serif text-[#f5efe3]">Reading settings</h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        dispatch({
+                          type: 'UPDATE_SETTINGS',
+                          payload: {
+                            fontSize: 1.0,
+                            fontFamily: 'serif',
+                            bionicReading: false,
+                            showVerseNumbers: true
+                          }
+                        });
+                        dispatch({ type: 'SET_THEME', payload: 'dark' });
+                      }}
+                      className="text-xs font-bold text-accent hover:opacity-80 transition-opacity"
+                    >
+                      Reset
+                    </button>
+                  </div>
+
+                  {/* Preview Box */}
+                  <div className="p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] font-serif text-[13px] leading-relaxed">
+                    <sup className="text-accent text-[10px] font-bold mr-1.5 align-super">12</sup>
+                    <span className="font-bold">Sample</span> text <span className="font-bold">stands</span> in <span className="font-bold">for</span> scripture so the <span className="font-bold">layout</span> can be <span className="font-bold">judged</span>.
+                  </div>
+
+                  {/* Text Size */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Text Size</span>
+                    <div className="flex items-center gap-3 px-1">
+                      <span className="text-xs text-[#a89f91] font-serif">A</span>
+                      <input
+                        type="range"
+                        min={0.85}
+                        max={1.45}
+                        step={0.15}
+                        value={state.settings.fontSize || 1}
+                        onChange={(e) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(e.target.value) } })}
+                        className="w-full accent-accent cursor-pointer h-1.5 bg-[#2b2722] rounded-lg"
+                      />
+                      <span className="text-base text-[#a89f91] font-serif">A</span>
                     </div>
                   </div>
 
-                  <div className="h-[1px] bg-card-border w-full" />
+                  {/* Font */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Font</span>
+                    <div className="flex items-center gap-2">
+                      {[
+                        { id: 'serif', label: 'Serif' },
+                        { id: 'sans', label: 'Sans' },
+                        { id: 'hyper', label: 'Hyperlegible' },
+                      ].map(f => {
+                        const isSelected = (state.settings.fontFamily || 'serif') === f.id;
+                        return (
+                          <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: f.id as any } })}
+                            className={`flex-1 py-1.5 px-2 rounded-full text-xs font-semibold transition-all border ${
+                              isSelected
+                                ? 'bg-accent text-[#14120f] border-accent font-bold'
+                                : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
+                            }`}
+                          >
+                            {f.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm font-bold text-primary">Theme</span>
-                    <div className="grid grid-cols-4 gap-1.5">
-                      {([
-                        { id: 'black', label: 'Midnight', bg: '#0c0a08', text: '#f3ede2' },
-                        { id: 'dark', label: 'Walnut', bg: '#1a1613', text: '#f5efe3' },
-                        { id: 'sepia', label: 'Sepia', bg: '#f6ecd6', text: '#4a3a2c' },
-                        { id: 'white', label: 'Paper', bg: '#ffffff', text: '#111827' },
-                      ] as const).map(t => {
-                        const isSelected = (state.theme || 'black') === t.id;
+                  {/* Line Spacing */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Line Spacing</span>
+                    <div className="flex items-center gap-2">
+                      {['Tight', 'Normal', 'Roomy'].map((spacing, idx) => {
+                        const isSelected = idx === 1; // default normal
+                        return (
+                          <button
+                            key={spacing}
+                            type="button"
+                            className={`flex-1 py-1.5 px-2 rounded-full text-xs font-semibold transition-all border ${
+                              isSelected
+                                ? 'bg-accent text-[#14120f] border-accent font-bold'
+                                : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
+                            }`}
+                          >
+                            {spacing}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Theme */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">Theme</span>
+                    <div className="grid grid-cols-4 gap-2">
+                      {[
+                        { id: 'dark', label: 'Dark' },
+                        { id: 'black', label: 'Black' },
+                        { id: 'sepia', label: 'Sepia' },
+                        { id: 'white', label: 'Light' },
+                      ].map(t => {
+                        const isSelected = (state.theme || 'dark') === t.id;
                         return (
                           <button
                             key={t.id}
                             type="button"
-                            onClick={() => dispatch({ type: 'SET_THEME', payload: t.id })}
-                            style={{ backgroundColor: t.bg, color: t.text }}
-                            className={`py-1.5 px-1 rounded-md text-[11px] font-bold transition-all border ${
-                              isSelected ? 'border-accent ring-1 ring-accent' : 'border-card-border'
+                            onClick={() => dispatch({ type: 'SET_THEME', payload: t.id as any })}
+                            className={`py-1.5 px-1 rounded-full text-xs font-semibold text-center transition-all border ${
+                              isSelected
+                                ? 'bg-accent text-[#14120f] border-accent font-bold'
+                                : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
                             }`}
                           >
                             {t.label}
@@ -1466,46 +1533,58 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     </div>
                   </div>
 
-                  <div className="h-[1px] bg-card-border w-full" />
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-primary">Font</span>
-                    <div className="flex items-center bg-card border border-card-border rounded-md p-1 gap-1">
-                      <button
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'sans' }})}
-                        className={`px-2 py-1 text-xs font-sans rounded-md transition-colors ${(!state.settings.fontFamily || state.settings.fontFamily === 'sans') ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-card-hover'}`}
-                      >
-                        Inter
-                      </button>
-                      <button
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'serif' }})}
-                        className={`px-2 py-1 text-xs font-serif rounded-md transition-colors ${state.settings.fontFamily === 'serif' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-card-hover'}`}
-                      >
-                        Merriweather
-                      </button>
-                      <button
-                        onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: 'hyper' }})}
-                        className={`px-2 py-1 text-xs font-hyper rounded-md transition-colors ${state.settings.fontFamily === 'hyper' ? 'bg-accent text-white font-bold' : 'text-secondary hover:text-primary hover:bg-card-hover'}`}
-                      >
-                        Atkinson
-                      </button>
+                  {/* Bionic reading */}
+                  <div className="flex flex-col gap-2 pt-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-[#f5efe3]">Bionic reading</span>
+                      <input
+                        type="checkbox"
+                        checked={state.settings.bionicReading}
+                        onChange={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { bionicReading: !state.settings.bionicReading } })}
+                        className="w-4 h-4 rounded accent-accent cursor-pointer"
+                      />
                     </div>
+                    {state.settings.bionicReading && (
+                      <div className="flex items-center gap-2">
+                        {['Light', 'Medium', 'Strong'].map((intensity, idx) => {
+                          const isSelected = idx === 1;
+                          return (
+                            <button
+                              key={intensity}
+                              type="button"
+                              className={`flex-1 py-1 rounded-full text-[11px] font-semibold transition-all border ${
+                                isSelected
+                                  ? 'bg-accent text-[#14120f] border-accent font-bold'
+                                  : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29]'
+                              }`}
+                            >
+                              {intensity}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
-                  <div className="h-[1px] bg-card-border w-full" />
-                  
-                  <label className="flex items-center justify-between cursor-pointer group">
-                    <div>
-                      <span className="text-sm font-bold text-primary block">Bionic Reading</span>
-                      <span className="text-[0.625rem] text-secondary">Bold first letters</span>
-                    </div>
+                  {/* Verse numbers */}
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-xs font-semibold text-[#f5efe3]">Verse numbers</span>
                     <input
                       type="checkbox"
-                      checked={state.settings.bionicReading}
-                      onChange={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { bionicReading: !state.settings.bionicReading }})}
-                      className="w-4 h-4 accent-accent"
+                      checked={state.settings.showVerseNumbers !== false}
+                      onChange={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { showVerseNumbers: state.settings.showVerseNumbers === false } })}
+                      className="w-4 h-4 rounded accent-accent cursor-pointer"
                     />
-                  </label>
+                  </div>
+
+                  {/* Done button */}
+                  <button
+                    type="button"
+                    onClick={() => setShowOptions(false)}
+                    className="w-full mt-2 py-2.5 rounded-xl bg-accent hover:opacity-95 text-[#14120f] font-bold text-sm shadow-md transition-all text-center"
+                  >
+                    Done
+                  </button>
                 </div>
               </>
             )}

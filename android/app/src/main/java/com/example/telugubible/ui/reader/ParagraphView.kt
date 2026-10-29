@@ -23,6 +23,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +43,8 @@ fun ParagraphView(
     showCrossRefMarkers: Boolean,
     crossRefCounts: Map<Int, Int>,
     bionicReading: Boolean,
+    bionicIntensity: BionicIntensity = BionicIntensity.MEDIUM,
+    lineSpacing: LineSpacing = LineSpacing.NORMAL,
     fontSizeScale: FontSizeScale,
     readerFontFamily: ReaderFontFamily,
     readerTheme: ReaderTheme,
@@ -52,23 +55,23 @@ fun ParagraphView(
     modifier: Modifier = Modifier
 ) {
     val baseFontSize = fontSizeScale.spSize.sp
-    val baseLineHeight = fontSizeScale.lineHeightSp.sp
+    val baseLineHeight = (fontSizeScale.lineHeightSp * lineSpacing.multiplier).sp
     val verseNumSize = (baseFontSize.value * 0.58f).sp
     val xrefNumSize = (baseFontSize.value * 0.55f).sp
 
     Column(modifier = modifier.fillMaxWidth()) {
-        // 1. Section Heading
+        // 1. Section Heading (All caps with tracking matching mockup)
         if (showSectionHeadings && !paragraph.sectionHeading.isNullOrBlank()) {
             Text(
-                text = paragraph.sectionHeading,
+                text = paragraph.sectionHeading.uppercase(),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = (baseFontSize.value * 1.15f).sp,
+                    fontSize = (baseFontSize.value * 0.95f).sp,
                     lineHeight = (baseFontSize.value * 1.35f).sp,
                     fontFamily = readerFontFamily.fontFamily,
-                    letterSpacing = (-0.01).sp
+                    letterSpacing = 1.2.sp
                 ),
-                color = readerTheme.accentColor,
+                color = RemoraGold,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -112,6 +115,7 @@ fun ParagraphView(
             showCrossRefMarkers,
             crossRefCounts,
             bionicReading,
+            bionicIntensity,
             fontSizeScale,
             readerTheme,
             readerFontFamily,
@@ -191,6 +195,7 @@ fun ParagraphView(
                         rawText = text,
                         isOtQuote = isOtQuote,
                         bionicReading = bionicReading,
+                        bionicIntensity = bionicIntensity,
                         defaultColor = readerTheme.textColor
                     )
 
@@ -219,18 +224,21 @@ fun ParagraphView(
                     append(" ")
                     val verseEnd = length
 
-                    // Background highlighting: flash (green) > selected (accent) > memorized (gold) > speaking
+                    // Background highlighting: flash (green) > selected (accent + underline) > memorized (gold) > speaking
                     val bgColor = when {
                         isFlashing -> Color(0xFF4CAF50).copy(alpha = 0.35f)
-                        isSelected -> readerTheme.accentColor.copy(alpha = 0.22f)
+                        isSelected -> RemoraGold.copy(alpha = 0.22f)
                         isMemorized -> RemoraGold.copy(alpha = 0.35f)
                         isSpeaking -> readerTheme.accentColor.copy(alpha = 0.15f)
                         else -> Color.Transparent
                     }
 
-                    if (bgColor != Color.Transparent) {
+                    if (bgColor != Color.Transparent || isSelected) {
                         addStyle(
-                            style = SpanStyle(background = bgColor),
+                            style = SpanStyle(
+                                background = bgColor,
+                                textDecoration = if (isSelected) TextDecoration.Underline else TextDecoration.None
+                            ),
                             start = verseStart,
                             end = verseEnd
                         )
@@ -294,6 +302,7 @@ private fun AnnotatedString.Builder.appendFormattedVerseText(
     rawText: String,
     isOtQuote: Boolean,
     bionicReading: Boolean,
+    bionicIntensity: BionicIntensity = BionicIntensity.MEDIUM,
     defaultColor: Color
 ) {
     // Process translator supplied words inside <i ...>...</i>
@@ -302,7 +311,7 @@ private fun AnnotatedString.Builder.appendFormattedVerseText(
 
     val matches = iRegex.findAll(rawText).toList()
     if (matches.isEmpty()) {
-        appendVerseStringSegment(rawText, isOtQuote, bionicReading, isItalicTranslator = false, defaultColor)
+        appendVerseStringSegment(rawText, isOtQuote, bionicReading, bionicIntensity, isItalicTranslator = false, defaultColor)
     } else {
         for (match in matches) {
             val start = match.range.first
@@ -310,17 +319,17 @@ private fun AnnotatedString.Builder.appendFormattedVerseText(
 
             if (start > cursor) {
                 val nonItalic = rawText.substring(cursor, start)
-                appendVerseStringSegment(nonItalic, isOtQuote, bionicReading, isItalicTranslator = false, defaultColor)
+                appendVerseStringSegment(nonItalic, isOtQuote, bionicReading, bionicIntensity, isItalicTranslator = false, defaultColor)
             }
 
             val italicContent = match.groupValues[1]
-            appendVerseStringSegment(italicContent, isOtQuote, bionicReading, isItalicTranslator = true, defaultColor)
+            appendVerseStringSegment(italicContent, isOtQuote, bionicReading, bionicIntensity, isItalicTranslator = true, defaultColor)
             cursor = end
         }
 
         if (cursor < rawText.length) {
             val trailing = rawText.substring(cursor)
-            appendVerseStringSegment(trailing, isOtQuote, bionicReading, isItalicTranslator = false, defaultColor)
+            appendVerseStringSegment(trailing, isOtQuote, bionicReading, bionicIntensity, isItalicTranslator = false, defaultColor)
         }
     }
 }
@@ -329,6 +338,7 @@ private fun AnnotatedString.Builder.appendVerseStringSegment(
     segment: String,
     isOtQuote: Boolean,
     bionicReading: Boolean,
+    bionicIntensity: BionicIntensity,
     isItalicTranslator: Boolean,
     defaultColor: Color
 ) {
@@ -354,9 +364,10 @@ private fun AnnotatedString.Builder.appendVerseStringSegment(
             append(textToRender)
         }
     } else {
-        // Bionic Reading: bold first half of words
+        // Bionic Reading: bold first portion of words based on intensity ratio
         val wordRegex = Regex("([a-zA-Z\\u00C0-\\u024F]+)")
         var wCursor = 0
+        val ratio = bionicIntensity.ratio
         for (m in wordRegex.findAll(textToRender)) {
             val wStart = m.range.first
             val wEnd = m.range.last + 1
@@ -370,7 +381,7 @@ private fun AnnotatedString.Builder.appendVerseStringSegment(
             val boldLen = when {
                 word.length <= 1 -> word.length
                 word.length <= 3 -> 1
-                else -> Math.ceil(word.length / 2.0).toInt()
+                else -> Math.max(1, Math.ceil(word.length * ratio.toDouble()).toInt()).coerceAtMost(word.length)
             }
 
             withStyle(baseStyle.copy(fontWeight = FontWeight.Bold)) {

@@ -5,215 +5,443 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.telugubible.theme.RemoraAccent
+import com.example.telugubible.theme.RemoraTextMuted
+import com.example.telugubible.theme.RemoraTextPrimary
+import com.example.telugubible.theme.RemoraTextSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsSheet(
     fontSizeScale: FontSizeScale,
-    language: BibleLanguage,
-    readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
-    readerFontFamily: ReaderFontFamily = ReaderFontFamily.MERRIWEATHER,
-    onIncreaseFontSize: () -> Unit,
-    onDecreaseFontSize: () -> Unit,
-    onResetFontSize: () -> Unit,
-    onLanguageChange: (BibleLanguage) -> Unit,
-    onThemeChange: (ReaderTheme) -> Unit = {},
-    onFontFamilyChange: (ReaderFontFamily) -> Unit = {},
+    readerFontFamily: ReaderFontFamily,
+    lineSpacing: LineSpacing,
+    readerTheme: ReaderTheme,
+    bionicReading: Boolean,
+    bionicIntensity: BionicIntensity,
+    showVerseNumbers: Boolean,
+    onFontSizeChange: (FontSizeScale) -> Unit,
+    onFontFamilyChange: (ReaderFontFamily) -> Unit,
+    onLineSpacingChange: (LineSpacing) -> Unit,
+    onThemeChange: (ReaderTheme) -> Unit,
+    onBionicReadingChange: (Boolean) -> Unit,
+    onBionicIntensityChange: (BionicIntensity) -> Unit,
+    onShowVerseNumbersChange: (Boolean) -> Unit,
+    onReset: () -> Unit,
     onDismiss: () -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = Color(0xFF14120E),
+        tonalElevation = 8.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 36.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 22.dp)
+                .padding(top = 4.dp, bottom = 36.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            Text(
-                text = "Reading Settings",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+            // Header: "Reading settings" + "Reset"
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Reading settings",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Serif,
+                    color = RemoraTextPrimary,
+                    letterSpacing = (-0.3).sp
+                )
+                Text(
+                    text = "Reset",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = RemoraAccent,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { onReset() }
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
 
-            // 1. Theme Palette Selector (Obsidian, Umber, Sepia, Paper)
+            // Live Interactive Preview Card
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = when (readerTheme) {
+                    ReaderTheme.PAPER -> Color(0xFFF8FAFC)
+                    ReaderTheme.SEPIA -> Color(0xFFF0E3C8)
+                    ReaderTheme.DARK -> Color(0xFF181512)
+                    ReaderTheme.OBSIDIAN -> Color(0xFF0A0908)
+                },
+                border = BorderStroke(1.dp, Color(0xFF2C261F)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                val previewSample = remember(
+                    fontSizeScale,
+                    readerFontFamily,
+                    lineSpacing,
+                    readerTheme,
+                    bionicReading,
+                    bionicIntensity,
+                    showVerseNumbers
+                ) {
+                    buildAnnotatedString {
+                        val baseFontSize = fontSizeScale.spSize.sp
+                        val verseNumSize = (baseFontSize.value * 0.58f).sp
+
+                        if (showVerseNumbers) {
+                            withStyle(
+                                SpanStyle(
+                                    fontSize = verseNumSize,
+                                    baselineShift = BaselineShift.Superscript,
+                                    color = readerTheme.secondaryTextColor
+                                )
+                            ) {
+                                append("12 ")
+                            }
+                        }
+
+                        val rawSample = "Sample text stands in for scripture so the layout can be judged."
+                        if (!bionicReading) {
+                            withStyle(SpanStyle(color = readerTheme.textColor)) {
+                                append(rawSample)
+                            }
+                        } else {
+                            val ratio = bionicIntensity.ratio
+                            val words = rawSample.split(" ")
+                            words.forEachIndexed { idx, word ->
+                                val boldLen = Math.max(1, Math.ceil(word.length * ratio.toDouble()).toInt()).coerceAtMost(word.length)
+                                withStyle(SpanStyle(color = readerTheme.textColor, fontWeight = FontWeight.Bold)) {
+                                    append(word.substring(0, boldLen))
+                                }
+                                withStyle(SpanStyle(color = readerTheme.textColor, fontWeight = FontWeight.Normal)) {
+                                    append(word.substring(boldLen))
+                                }
+                                if (idx < words.size - 1) append(" ")
+                            }
+                        }
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 18.dp)
+                ) {
+                    Text(
+                        text = previewSample,
+                        fontSize = fontSizeScale.spSize.sp,
+                        fontFamily = readerFontFamily.fontFamily,
+                        lineHeight = (fontSizeScale.lineHeightSp * lineSpacing.multiplier).sp
+                    )
+                }
+            }
+
+            // 1. TEXT SIZE
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = "TEXT SIZE",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp,
+                    color = Color(0xFFB5A995)
+                )
+
+                val allScales = listOf(FontSizeScale.XS, FontSizeScale.S, FontSizeScale.M, FontSizeScale.L, FontSizeScale.XL)
+                val currentIndex = allScales.indexOf(fontSizeScale).coerceAtLeast(0)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "A",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RemoraTextPrimary
+                    )
+
+                    Slider(
+                        value = currentIndex.toFloat(),
+                        onValueChange = { newVal ->
+                            val idx = Math.round(newVal).coerceIn(0, allScales.size - 1)
+                            onFontSizeChange(allScales[idx])
+                        },
+                        valueRange = 0f..(allScales.size - 1).toFloat(),
+                        steps = allScales.size - 2,
+                        modifier = Modifier.weight(1f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = RemoraAccent,
+                            activeTrackColor = RemoraAccent,
+                            inactiveTrackColor = Color(0xFF332D24),
+                            activeTickColor = Color.Transparent,
+                            inactiveTickColor = Color.Transparent
+                        )
+                    )
+
+                    Text(
+                        text = "A",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RemoraTextPrimary
+                    )
+                }
+            }
+
+            // 2. FONT
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Theme Palette",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "FONT",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp,
+                    color = Color(0xFFB5A995)
                 )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    ReaderTheme.entries.forEach { theme ->
-                        val isSelected = theme == readerTheme
-                        Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = theme.backgroundColor,
-                            border = BorderStroke(
-                                width = if (isSelected) 2.dp else 1.dp,
-                                color = if (isSelected) theme.accentColor else Color.Gray.copy(alpha = 0.3f)
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(48.dp)
-                                .clickable { onThemeChange(theme) }
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .clip(CircleShape)
-                                            .background(theme.accentColor)
-                                    )
-                                    Text(
-                                        text = theme.label,
-                                        fontSize = 12.sp,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                        color = theme.textColor
-                                    )
-                                }
-                            }
-                        }
+                    listOf(
+                        ReaderFontFamily.MERRIWEATHER to "Serif",
+                        ReaderFontFamily.INTER to "Sans",
+                        ReaderFontFamily.ATKINSON to "Hyperlegible"
+                    ).forEach { (font, label) ->
+                        val isSelected = readerFontFamily == font
+                        PillButton(
+                            text = label,
+                            isSelected = isSelected,
+                            onClick = { onFontFamilyChange(font) },
+                            modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }
 
-            // 2. Typography Font Style (Serif vs Sans)
+            // 3. LINE SPACING
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Font Family",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(3.dp),
-                        horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        ReaderFontFamily.values().forEach { font ->
-                            val isSelected = readerFontFamily == font
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(if (isSelected) readerTheme.accentColor else Color.Transparent)
-                                    .clickable { onFontFamilyChange(font) }
-                                    .padding(vertical = 8.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = font.label,
-                                    fontSize = 12.sp,
-                                    fontFamily = font.fontFamily,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) Color.White else readerTheme.secondaryTextColor
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 3. Text Size Control
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "Text Size",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "LINE SPACING",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp,
+                    color = Color(0xFFB5A995)
                 )
 
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    listOf(
+                        LineSpacing.TIGHT to "Tight",
+                        LineSpacing.NORMAL to "Normal",
+                        LineSpacing.ROOMY to "Roomy"
+                    ).forEach { (spacing, label) ->
+                        val isSelected = lineSpacing == spacing
+                        PillButton(
+                            text = label,
+                            isSelected = isSelected,
+                            onClick = { onLineSpacingChange(spacing) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+
+            // 4. THEME
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "THEME",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp,
+                    color = Color(0xFFB5A995)
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    listOf(
+                        ReaderTheme.DARK to "Dark",
+                        ReaderTheme.OBSIDIAN to "Black",
+                        ReaderTheme.SEPIA to "Sepia",
+                        ReaderTheme.PAPER to "Light"
+                    ).forEach { (theme, label) ->
+                        val isSelected = readerTheme == theme
+                        PillButton(
+                            text = label,
+                            isSelected = isSelected,
+                            onClick = { onThemeChange(theme) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+
+            // 5. Bionic reading
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-                        .padding(8.dp),
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { onBionicReadingChange(!bionicReading) }
+                        .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    FilledTonalButton(
-                        onClick = onDecreaseFontSize,
-                        enabled = fontSizeScale != FontSizeScale.XS,
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("−", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    }
+                    Text(
+                        text = "Bionic reading",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFFF5F2EB)
+                    )
 
-                    Surface(
-                        onClick = onResetFontSize,
-                        shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.surface,
-                        modifier = Modifier
-                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
-                            .padding(horizontal = 20.dp, vertical = 8.dp)
-                    ) {
-                        Text(
-                            text = fontSizeScale.label,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                    CheckboxBox(isChecked = bionicReading)
+                }
+
+                // Intensity Pills (Light, Medium, Strong)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    listOf(
+                        BionicIntensity.LIGHT to "Light",
+                        BionicIntensity.MEDIUM to "Medium",
+                        BionicIntensity.STRONG to "Strong"
+                    ).forEach { (intensity, label) ->
+                        val isSelected = bionicReading && bionicIntensity == intensity
+                        PillButton(
+                            text = label,
+                            isSelected = isSelected,
+                            onClick = {
+                                if (!bionicReading) onBionicReadingChange(true)
+                                onBionicIntensityChange(intensity)
+                            },
+                            modifier = Modifier.weight(1f)
                         )
                     }
-
-                    FilledTonalButton(
-                        onClick = onIncreaseFontSize,
-                        enabled = fontSizeScale != FontSizeScale.XL,
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("+", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    }
                 }
+            }
+
+            // 6. Verse numbers
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { onShowVerseNumbersChange(!showVerseNumbers) }
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Verse numbers",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFFF5F2EB)
+                )
+
+                CheckboxBox(isChecked = showVerseNumbers)
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // 7. Done Button
+            Button(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(18.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RemoraAccent,
+                    contentColor = Color(0xFF14120E)
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+            ) {
+                Text(
+                    text = "Done",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF14120E)
+                )
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun SettingsSheetPreview() {
-    MaterialTheme {
-        SettingsSheet(
-            fontSizeScale = FontSizeScale.M,
-            language = BibleLanguage.TELUGU,
-            readerTheme = ReaderTheme.OBSIDIAN,
-            readerFontFamily = ReaderFontFamily.MERRIWEATHER,
-            onIncreaseFontSize = {},
-            onDecreaseFontSize = {},
-            onResetFontSize = {},
-            onLanguageChange = {},
-            onThemeChange = {},
-            onFontFamilyChange = {},
-            onDismiss = {}
-        )
+private fun PillButton(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(22.dp),
+        color = if (isSelected) RemoraAccent else Color(0xFF1C1813),
+        border = BorderStroke(1.dp, if (isSelected) RemoraAccent else Color(0xFF332D24)),
+        modifier = modifier.height(40.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = text,
+                fontSize = 13.5.sp,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                color = if (isSelected) Color(0xFF14120E) else Color(0xFFF5F2EB)
+            )
+        }
+    }
+}
+
+@Composable
+private fun CheckboxBox(isChecked: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(22.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .background(if (isChecked) RemoraAccent else Color.Transparent)
+            .border(
+                width = 1.dp,
+                color = if (isChecked) RemoraAccent else Color(0xFF6E6455),
+                shape = RoundedCornerShape(4.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isChecked) {
+            Icon(
+                Icons.Default.Check,
+                contentDescription = null,
+                tint = Color(0xFF14120E),
+                modifier = Modifier.size(15.dp)
+            )
+        }
     }
 }

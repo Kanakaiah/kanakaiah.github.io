@@ -15,20 +15,20 @@ enum class ReaderTheme(
     val accentColor: Color
 ) {
     OBSIDIAN(
-        label = "Obsidian",
+        label = "Black",
         backgroundColor = Color(0xFF0C0A08),
         cardColor = Color(0xFF131110),
         textColor = Color(0xFFF3EDE2),
         secondaryTextColor = Color(0xFFB3A891),
-        accentColor = Color(0xFFCC6F47)
+        accentColor = Color(0xFFD4A359)
     ),
     DARK(
-        label = "Umber",
-        backgroundColor = Color(0xFF1A1613),
-        cardColor = Color(0xFF221D18),
+        label = "Dark",
+        backgroundColor = Color(0xFF14120E),
+        cardColor = Color(0xFF1C1813),
         textColor = Color(0xFFF5EFE3),
         secondaryTextColor = Color(0xFFB8AD99),
-        accentColor = Color(0xFFCF7350)
+        accentColor = Color(0xFFD4A359)
     ),
     SEPIA(
         label = "Sepia",
@@ -39,7 +39,7 @@ enum class ReaderTheme(
         accentColor = Color(0xFFA8562E)
     ),
     PAPER(
-        label = "Paper",
+        label = "Light",
         backgroundColor = Color(0xFFFFFFFF),
         cardColor = Color(0xFFF8FAFC),
         textColor = Color(0xFF111827),
@@ -80,17 +80,49 @@ val AtkinsonFontFamily = FontFamily(
 )
 
 enum class ReaderFontFamily(val key: String, val label: String, val fontFamily: FontFamily) {
-    INTER("sans", "Inter", InterFontFamily),
-    MERRIWEATHER("serif", "Merriweather", MerriweatherFontFamily),
-    ATKINSON("hyper", "Atkinson", AtkinsonFontFamily);
+    MERRIWEATHER("serif", "Serif", MerriweatherFontFamily),
+    INTER("sans", "Sans", InterFontFamily),
+    ATKINSON("hyper", "Hyperlegible", AtkinsonFontFamily);
 
     companion object {
         fun fromKey(key: String?): ReaderFontFamily {
             return when (key?.lowercase()?.trim()) {
                 "sans", "inter" -> INTER
-                "hyper", "atkinson" -> ATKINSON
+                "hyper", "atkinson", "hyperlegible" -> ATKINSON
                 "serif", "merriweather" -> MERRIWEATHER
                 else -> MERRIWEATHER
+            }
+        }
+    }
+}
+
+enum class LineSpacing(val key: String, val label: String, val multiplier: Float) {
+    TIGHT("tight", "Tight", 1.30f),
+    NORMAL("normal", "Normal", 1.65f),
+    ROOMY("roomy", "Roomy", 2.05f);
+
+    companion object {
+        fun fromKey(key: String?): LineSpacing {
+            return when (key?.lowercase()?.trim()) {
+                "tight" -> TIGHT
+                "roomy" -> ROOMY
+                else -> NORMAL
+            }
+        }
+    }
+}
+
+enum class BionicIntensity(val key: String, val label: String, val ratio: Float) {
+    LIGHT("light", "Light", 0.35f),
+    MEDIUM("medium", "Medium", 0.48f),
+    STRONG("strong", "Strong", 0.62f);
+
+    companion object {
+        fun fromKey(key: String?): BionicIntensity {
+            return when (key?.lowercase()?.trim()) {
+                "light" -> LIGHT
+                "strong" -> STRONG
+                else -> MEDIUM
             }
         }
     }
