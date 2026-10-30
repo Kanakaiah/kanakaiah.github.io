@@ -172,24 +172,25 @@ class TodayViewModel @JvmOverloads constructor(
                     topic.name.equals("75 Well-Known", ignoreCase = true) ||
                     topic.name.equals("75 Well-Known Verses", ignoreCase = true)
                 val isKeyVerses = topic.name.equals("66 Key Verses", ignoreCase = true) ||
-                    topic.name.equals("Key Verses", ignoreCase = true)
+                    topic.name.equals("Key Verses", ignoreCase = true) ||
+                    topic.name.contains("Key Verses", ignoreCase = true)
 
                 // Preset collections only exist when added with verses
                 if ((isTop100 || isWellKnown || isKeyVerses) && versesInTopic.isEmpty()) continue
 
                 // Avoid duplicate card if Well-Known or Key Verses is already present
                 if (isWellKnown && collectionList.any { it.name.equals("Well-Known", ignoreCase = true) }) continue
-                if (isKeyVerses && collectionList.any { it.name.equals("66 Key Verses", ignoreCase = true) }) continue
+                if (isKeyVerses && collectionList.any { it.name.contains("Key Verses", ignoreCase = true) }) continue
 
                 val displayName = when {
                     isWellKnown -> "Well-Known"
-                    isKeyVerses -> "66 Key Verses"
+                    isKeyVerses -> "Key Verses (66 Books)"
                     else -> topic.name
                 }
                 val total = when {
                     isTop100 -> kotlin.math.max(100, versesInTopic.size)
                     isWellKnown -> kotlin.math.max(75, versesInTopic.size)
-                    isKeyVerses -> kotlin.math.max(66, versesInTopic.size)
+                    isKeyVerses -> kotlin.math.max(206, versesInTopic.size)
                     else -> versesInTopic.size
                 }
                 val dueInTopic = versesInTopic.count { it.nextDueDate <= now }

@@ -76,25 +76,28 @@ export const Dashboard: React.FC = () => {
 
       const isTop100 = topic.name.toLowerCase() === 'top 100';
       const isWellKnown = topic.name.toLowerCase() === 'well-known';
+      const isKeyVerses = topic.name.toLowerCase().includes('key verses');
 
-      // Top 100 / Well-Known only exist when added with verses
-      if ((isTop100 || isWellKnown) && versesInTopic.length === 0) continue;
+      // Curated collections only exist when added with verses
+      if ((isTop100 || isWellKnown || isKeyVerses) && versesInTopic.length === 0) continue;
 
       const totalCount = isTop100
         ? Math.max(100, versesInTopic.length)
         : isWellKnown
         ? Math.max(75, versesInTopic.length)
+        : isKeyVerses
+        ? Math.max(206, versesInTopic.length)
         : versesInTopic.length;
       const dueCount = versesInTopic.filter(v => isDue(v.sm2, now)).length;
       const learnedCount = versesInTopic.filter(v => (v.sm2?.repetition || 0) >= 6).length;
 
       list.push({
         id: topic.id,
-        name: topic.name,
+        name: isKeyVerses ? 'Key Verses (66 Books)' : topic.name,
         totalCount,
         dueCount,
         learnedCount,
-        isPreset: isTop100 || isWellKnown,
+        isPreset: isTop100 || isWellKnown || isKeyVerses,
       });
     }
 

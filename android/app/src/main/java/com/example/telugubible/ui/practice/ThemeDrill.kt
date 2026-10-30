@@ -35,6 +35,10 @@ fun ThemeDrill(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    androidx.activity.compose.BackHandler {
+        onExit()
+    }
+
     LaunchedEffect(Unit) {
         viewModel.onScreenEntered()
     }
@@ -274,37 +278,37 @@ fun ThemeDrill(
                             }
                         }
 
-                        // Compact Low-Profile Bottom Action Bar: Skip + Next Theme / Reveal side-by-side
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(46.dp),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            OutlinedButton(
-                                onClick = { viewModel.skipToNext() },
-                                shape = RoundedCornerShape(14.dp),
-                                border = BorderStroke(1.dp, RemoraCardBorder),
-                                colors = ButtonDefaults.outlinedButtonColors(contentColor = RemoraTextSecondary),
+                        // Bottom Action Controls: Skip + Reveal / SM-2 Grades + Next Theme
+                        if (!state.isRevealed) {
+                            Row(
                                 modifier = Modifier
-                                    .weight(0.32f)
-                                    .fillMaxHeight()
+                                    .fillMaxWidth()
+                                    .height(46.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = "Skip",
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(13.dp)
-                                )
-                            }
+                                OutlinedButton(
+                                    onClick = { viewModel.skipToNext() },
+                                    shape = RoundedCornerShape(14.dp),
+                                    border = BorderStroke(1.dp, RemoraCardBorder),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = RemoraTextSecondary),
+                                    modifier = Modifier
+                                        .weight(0.32f)
+                                        .fillMaxHeight()
+                                ) {
+                                    Text(
+                                        text = "Skip",
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ArrowForward,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(13.dp)
+                                    )
+                                }
 
-                            if (!state.isRevealed) {
                                 Button(
                                     onClick = { viewModel.revealAnswer() },
                                     modifier = Modifier
@@ -322,23 +326,93 @@ fun ThemeDrill(
                                         fontSize = 14.sp
                                     )
                                 }
-                            } else {
-                                Button(
-                                    onClick = { viewModel.gradeCurrent(4) },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = RemoraAccent,
-                                        contentColor = Color(0xFF14120E)
-                                    ),
-                                    shape = RoundedCornerShape(14.dp),
-                                    modifier = Modifier
-                                        .weight(0.68f)
-                                        .fillMaxHeight()
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                // 4 SM-2 Spaced Repetition Grade Buttons: Blank, Hard, Good, Easy
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
-                                    Text(
-                                        text = "Next Theme ➔",
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                    listOf(
+                                        Triple("Blank", 1, GradeBlank),
+                                        Triple("Hard", 3, GradeHard),
+                                        Triple("Good", 4, GradeGood),
+                                        Triple("Easy", 5, GradeEasy)
+                                    ).forEach { (label, score, color) ->
+                                        Surface(
+                                            onClick = { viewModel.gradeCurrent(score) },
+                                            shape = RoundedCornerShape(10.dp),
+                                            color = color.copy(alpha = 0.12f),
+                                            border = BorderStroke(1.dp, color.copy(alpha = 0.30f)),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .height(36.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(
+                                                    text = label,
+                                                    fontSize = 12.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = color
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(46.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { viewModel.skipToNext() },
+                                        shape = RoundedCornerShape(14.dp),
+                                        border = BorderStroke(1.dp, RemoraCardBorder),
+                                        colors = ButtonDefaults.outlinedButtonColors(contentColor = RemoraTextSecondary),
+                                        modifier = Modifier
+                                            .weight(0.32f)
+                                            .fillMaxHeight()
+                                    ) {
+                                        Text(
+                                            text = "Skip",
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Icon(
+                                            Icons.AutoMirrored.Filled.ArrowForward,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(13.dp)
+                                        )
+                                    }
+
+                                    Button(
+                                        onClick = { viewModel.gradeCurrent(4) },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = RemoraAccent,
+                                            contentColor = Color(0xFF14120E)
+                                        ),
+                                        shape = RoundedCornerShape(14.dp),
+                                        modifier = Modifier
+                                            .weight(0.68f)
+                                            .fillMaxHeight()
+                                    ) {
+                                        Text(
+                                            text = "Next Theme ➔",
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
                                 }
                             }
                         }

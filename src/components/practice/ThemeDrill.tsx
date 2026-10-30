@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, X } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
@@ -112,6 +112,38 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
     [state.themeProgress]
   );
 
+  // Desktop keyboard shortcuts: Space/Enter = reveal / advance, 1-5 = grade, Escape = exit, ArrowRight = skip
+  useEffect(() => {
+    if (isFinished || !current) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement)?.closest('input, textarea, select')) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onExit();
+      } else if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        if (!revealed) {
+          setRevealed(true);
+        } else {
+          handleGrade(4);
+        }
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        goTo(index < pool.length - 1 ? index + 1 : 0);
+      } else if (revealed) {
+        if (e.key === '1') handleGrade(1);
+        else if (e.key === '2' || e.key === '3') handleGrade(3);
+        else if (e.key === '4') handleGrade(4);
+        else if (e.key === '5') handleGrade(5);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [revealed, index, pool.length, isFinished, current, onExit]);
+
   if (isFinished || !current) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center px-6 gap-4 pt-20">
@@ -187,8 +219,8 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
       </div>
 
       {/* Center: Large Cinematic Hero Artwork & Book Theme */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center my-auto">
-        <div className="w-full max-w-[320px] aspect-[4/3] rounded-2xl overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center shadow-lg">
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center my-auto min-h-0">
+        <div className="w-full max-w-[340px] sm:max-w-[380px] max-h-[38vh] aspect-[4/3] rounded-2xl overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center shadow-lg transition-transform hover:scale-[1.01]">
           {!imgErr ? (
             <img
               src={current.image}

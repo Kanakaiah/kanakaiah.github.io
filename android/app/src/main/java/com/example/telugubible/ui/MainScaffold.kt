@@ -104,12 +104,12 @@ fun MainScaffold(
         settingsViewModel.loadSettings()
     }
 
-    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode || isInRetentionMode || selectedTab == RemoraTab.BIBLE) {
+    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode || isInRetentionMode || selectedTab == RemoraTab.BIBLE || selectedTab == RemoraTab.PRACTICE) {
         if (isInReaderMode) {
             isInReaderMode = false
         } else if (activeGuideBookId != null) {
             activeGuideBookId = null
-        } else if (selectedTab == RemoraTab.BIBLE) {
+        } else if (selectedTab == RemoraTab.BIBLE || selectedTab == RemoraTab.PRACTICE) {
             selectedTab = RemoraTab.TODAY
         } else if (isInSettingsMode) {
             isInSettingsMode = false
