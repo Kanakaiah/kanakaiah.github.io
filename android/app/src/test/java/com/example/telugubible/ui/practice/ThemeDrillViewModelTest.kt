@@ -68,7 +68,7 @@ class ThemeDrillViewModelTest {
         assertEquals(66, vm.uiState.value.queue.size)
         assertEquals(1, vm.uiState.value.queue[0].book.id)
         assertEquals("Genesis", vm.uiState.value.queue[0].book.nameEn)
-        assertEquals("GARDEN", vm.uiState.value.queue[0].book.themeWord)
+        assertEquals("CREATION & FALL", vm.uiState.value.queue[0].book.themeWord)
 
         // Switch to OT -> 39 books
         vm.setScope(ThemeScope.OT)
