@@ -17,6 +17,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -48,7 +49,7 @@ class SettingsViewModelTest {
         bibleDbHelper = BibleDatabaseHelper(context)
         userDbHelper = UserDatabaseHelper(context)
         repository = BibleRepository(bibleDbHelper, userDbHelper, testDispatcher)
-        viewModel = SettingsViewModel(context as Application, repository)
+        viewModel = SettingsViewModel(context as Application, repository, testDispatcher)
     }
 
     @After
@@ -58,6 +59,43 @@ class SettingsViewModelTest {
         context.deleteDatabase(UserDatabaseHelper.USER_DB_NAME)
         context.deleteDatabase(BibleDatabaseHelper.STATIC_DB_NAME)
         Dispatchers.resetMain()
+    }
+
+    @Test
+    fun restoreRequiresPreviewAndCancelLeavesDataUntouched() = runTest(testDispatcher) {
+        advanceUntilIdle()
+        userDbHelper.addUserVerse(1, 1, 1, endVerse = 3, keyword = "Beginning")
+        val backup = userDbHelper.exportUserDataJson()
+        userDbHelper.addUserVerse(43, 3, 16)
+        val before = userDbHelper.getUserVerses()
+        viewModel.prepareRestore(backup)
+        advanceUntilIdle()
+        assertEquals(1, viewModel.uiState.value.backupPreview?.verses)
+        assertEquals(before, userDbHelper.getUserVerses())
+        viewModel.cancelRestorePreview()
+        viewModel.confirmPreparedRestore { throw AssertionError("Canceled backup must not restore") }
+        advanceUntilIdle()
+        assertEquals(before, userDbHelper.getUserVerses())
+        viewModel.prepareRestore(backup)
+        advanceUntilIdle()
+        var completions = 0
+        viewModel.confirmPreparedRestore { success -> assertTrue(success); completions++ }
+        viewModel.confirmPreparedRestore { completions++ }
+        assertTrue(viewModel.uiState.value.isRestoring)
+        advanceUntilIdle()
+        assertEquals(1, completions)
+        assertEquals(2, userDbHelper.getUserVerses().size)
+        assertNull(viewModel.uiState.value.backupPreview)
+    }
+
+    @Test
+    fun invalidBackupCannotBeConfirmed() = runTest(testDispatcher) {
+        advanceUntilIdle()
+        viewModel.prepareRestore("{\"formatVersion\":999,\"verses\":[]}")
+        advanceUntilIdle()
+        assertNull(viewModel.uiState.value.backupPreview)
+        assertNotNull(viewModel.uiState.value.backupError)
+        viewModel.confirmPreparedRestore { throw AssertionError("Invalid backup must not restore") }
     }
 
     @Test
@@ -82,7 +120,7 @@ class SettingsViewModelTest {
         viewModel.updateSettings { it.copy(fontFamily = "atkinson", lineSpacing = "roomy", bionicIntensity = "strong") }
         viewModel.setChapterDisplayPreset("clean")
         advanceUntilIdle()
-        val restored = SettingsViewModel(context as Application, repository)
+        val restored = SettingsViewModel(context as Application, repository, testDispatcher)
         advanceUntilIdle()
         val settings = restored.uiState.value.settings
         assertEquals("white", settings.theme)

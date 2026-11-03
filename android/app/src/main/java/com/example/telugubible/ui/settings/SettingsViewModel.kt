@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.telugubible.data.model.AppSettings
+import com.example.telugubible.data.model.BackupInspector
+import com.example.telugubible.data.model.BackupPreview
 import com.example.telugubible.data.repository.BibleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -19,18 +24,25 @@ data class SettingsUiState(
     val backupJson: String? = null,
     val toastMessage: String? = null,
     val settingsRevision: Int = 0,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val backupPreview: BackupPreview? = null,
+    val isInspectingBackup: Boolean = false,
+    val isRestoring: Boolean = false,
+    val isClearing: Boolean = false,
+    val backupError: String? = null
 )
 
 class SettingsViewModel @JvmOverloads constructor(
     application: Application,
-    private val repository: BibleRepository = BibleRepository(application)
+    private val repository: BibleRepository = BibleRepository(application),
+    private val backupDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
     private val settingsMutex = Mutex()
     private var pendingWrites = 0
+    private var preparedBackup: String? = null
 
     init {
         loadSettings()
@@ -144,33 +156,99 @@ class SettingsViewModel @JvmOverloads constructor(
         }
     }
 
-    fun generateBackup(onReady: (String) -> Unit) {
+    fun generateBackup(onError: () -> Unit = {}, onReady: (String) -> Unit) {
         viewModelScope.launch {
-            val json = repository.exportUserDataJson()
-            _uiState.update { it.copy(backupJson = json, toastMessage = "Backup generated successfully") }
-            onReady(json)
+            try {
+                val json = settingsMutex.withLock { repository.exportUserDataJson() }
+                BackupFileIO.checkSize(json.length)
+                withContext(backupDispatcher) { BackupInspector.inspect(json) }
+                _uiState.update { it.copy(backupJson = json) }
+                onReady(json)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                onError()
+                val message = if (e is BackupTooLargeException) "Backup exceeds the 10 million character limit." else "Couldn't create the backup. Please try again."
+                _uiState.update { it.copy(toastMessage = message) }
+            }
         }
     }
 
-    fun restoreBackup(jsonString: String, onComplete: (Boolean) -> Unit) {
+    fun prepareRestore(json: String) {
+        if (_uiState.value.isInspectingBackup || _uiState.value.isRestoring || _uiState.value.isClearing) return
+        preparedBackup = null
+        _uiState.update { it.copy(isInspectingBackup = true, backupPreview = null, backupError = null) }
         viewModelScope.launch {
-            val success = repository.restoreUserDataJson(jsonString)
-            if (success) {
-                val reloaded = repository.getAppSettings()
-                _uiState.update { it.copy(settings = reloaded, settingsRevision = it.settingsRevision + 1, toastMessage = "Data restored successfully!") }
-            } else {
-                _uiState.update { it.copy(toastMessage = "Failed to restore: Invalid backup file") }
+            try {
+                val preview = withContext(backupDispatcher) { BackupFileIO.checkSize(json.length); BackupInspector.inspect(json) }
+                preparedBackup = json
+                _uiState.update { it.copy(backupPreview = preview) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                val message = if (e is BackupTooLargeException) "This backup exceeds the 10 million character limit. Your data has not changed."
+                    else "This file is not a supported Remora backup. Your data has not changed."
+                _uiState.update { it.copy(backupError = message) }
+            } finally {
+                _uiState.update { it.copy(isInspectingBackup = false) }
             }
+        }
+    }
+
+    fun cancelRestorePreview() {
+        if (_uiState.value.isRestoring) return
+        preparedBackup = null
+        _uiState.update { it.copy(backupPreview = null, backupError = null) }
+    }
+
+    fun confirmPreparedRestore(onComplete: (Boolean) -> Unit) {
+        val json = preparedBackup ?: return
+        restoreBackup(json) { success ->
+            if (success) preparedBackup = null
             onComplete(success)
         }
     }
 
-    fun clearAllData(onComplete: () -> Unit) {
+    fun restoreBackup(jsonString: String, onComplete: (Boolean) -> Unit) {
+        if (_uiState.value.isRestoring || _uiState.value.isClearing) return
+        _uiState.update { it.copy(isRestoring = true, backupError = null) }
         viewModelScope.launch {
-            repository.clearAllUserData()
-            val reloaded = repository.getAppSettings()
-            _uiState.update { it.copy(settings = reloaded, settingsRevision = it.settingsRevision + 1, toastMessage = "All user data cleared") }
-            onComplete()
+            try {
+                val success = settingsMutex.withLock { repository.restoreUserDataJson(jsonString) }
+                if (success) {
+                    val reloaded = repository.getAppSettings()
+                    _uiState.update { it.copy(settings = reloaded, settingsRevision = it.settingsRevision + 1, backupPreview = null, toastMessage = "Backup restored.") }
+                } else {
+                    _uiState.update { it.copy(backupError = "Couldn't restore this backup. Your data has not changed.") }
+                }
+                onComplete(success)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(backupError = "Couldn't confirm the restore. Check your data before trying again.") }
+                onComplete(false)
+            } finally {
+                _uiState.update { it.copy(isRestoring = false) }
+            }
+        }
+    }
+
+    fun clearAllData(onComplete: () -> Unit) {
+        if (_uiState.value.isRestoring || _uiState.value.isClearing) return
+        _uiState.update { it.copy(isClearing = true) }
+        viewModelScope.launch {
+            try {
+                settingsMutex.withLock { repository.clearAllUserData() }
+                val reloaded = repository.getAppSettings()
+                _uiState.update { it.copy(settings = reloaded, settingsRevision = it.settingsRevision + 1, toastMessage = "All user data cleared") }
+                onComplete()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(toastMessage = "Couldn't clear the data. Please check and try again.") }
+            } finally {
+                _uiState.update { it.copy(isClearing = false) }
+            }
         }
     }
 

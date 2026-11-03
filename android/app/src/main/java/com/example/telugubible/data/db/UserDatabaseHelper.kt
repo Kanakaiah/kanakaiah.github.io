@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.telugubible.data.model.AdherenceStats
 import com.example.telugubible.data.model.AppSettings
+import com.example.telugubible.data.model.BackupInspector
 import com.example.telugubible.data.model.ColdCheckResult
 import com.example.telugubible.data.model.ReviewLogEntry
 import com.example.telugubible.data.model.Topic
@@ -1814,7 +1815,11 @@ class UserDatabaseHelper(private val context: Context) :
 
     // Backup & Restore
     fun exportUserDataJson(): String {
+        val db = writableDatabase
+        db.beginTransactionNonExclusive()
+        try {
         val root = JSONObject()
+        root.put("formatVersion", 2)
         val versesArray = JSONArray()
         val userVerses = getUserVerses()
         for (v in userVerses) {
@@ -1823,6 +1828,8 @@ class UserDatabaseHelper(private val context: Context) :
                 put("book_id", v.bookId)
                 put("chapter", v.chapter)
                 put("verse", v.verse)
+                put("end_verse", v.endVerse ?: JSONObject.NULL)
+                put("keyword", v.keyword ?: JSONObject.NULL)
                 put("status", v.status)
                 put("repetition", v.repetition)
                 put("interval", v.interval)
@@ -1839,8 +1846,7 @@ class UserDatabaseHelper(private val context: Context) :
 
         // Chapter progress
         val progressObj = JSONObject()
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT book_id, chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts FROM chapter_progress", null)
+        val cursor = db.rawQuery("SELECT book_id, chapter, status, repetition, interval, efactor, next_due_date, lapses, attempts, pre_lapse_interval, chain_hits, chain_misses, last_chain_date FROM chapter_progress", null)
         cursor.use {
             while (it.moveToNext()) {
                 val key = "${it.getInt(0)}:${it.getInt(1)}"
@@ -1854,6 +1860,10 @@ class UserDatabaseHelper(private val context: Context) :
                     put("next_due_date", it.getLong(6))
                     put("lapses", if (it.columnCount > 7) it.getInt(7) else 0)
                     put("attempts", if (it.columnCount > 8) it.getInt(8) else 0)
+                    put("pre_lapse_interval", it.getInt(9))
+                    put("chain_hits", it.getInt(10))
+                    put("chain_misses", it.getInt(11))
+                    put("last_chain_date", it.getLong(12))
                 }
                 progressObj.put(key, item)
             }
@@ -1889,6 +1899,19 @@ class UserDatabaseHelper(private val context: Context) :
             }
         }
         root.put("blockProgress", blockObj)
+
+        val themeObj = JSONObject()
+        db.rawQuery("SELECT book_id, status, repetition, interval, efactor, next_due_date, lapses, attempts, last_score, pre_lapse_interval FROM theme_progress", null).use {
+            while (it.moveToNext()) {
+                val item = JSONObject().apply {
+                    put("book_id", it.getInt(0)); put("status", it.getString(1)); put("repetition", it.getInt(2))
+                    put("interval", it.getInt(3)); put("efactor", it.getDouble(4)); put("next_due_date", it.getLong(5))
+                    put("lapses", it.getInt(6)); put("attempts", it.getInt(7)); put("last_score", it.getInt(8)); put("pre_lapse_interval", it.getInt(9))
+                }
+                themeObj.put(it.getInt(0).toString(), item)
+            }
+        }
+        root.put("themeProgress", themeObj)
 
         // Review log
         val logArray = JSONArray()
@@ -1934,6 +1957,18 @@ class UserDatabaseHelper(private val context: Context) :
         }
         root.put("coldChecks", coldArray)
 
+        val adherenceArray = JSONArray()
+        db.rawQuery("SELECT ts, completed, duration_ms, abandoned_at FROM session_adherence", null).use {
+            while (it.moveToNext()) {
+                val item = JSONObject().apply {
+                    put("ts", it.getLong(0)); put("completed", it.getInt(1)); put("duration_ms", it.getLong(2))
+                    if (!it.isNull(3)) put("abandoned_at", it.getInt(3))
+                }
+                adherenceArray.put(item)
+            }
+        }
+        root.put("sessionAdherence", adherenceArray)
+
         // Stats & Settings
         val statsObj = JSONObject()
         val statsCursor = db.rawQuery("SELECT key, val FROM user_stats", null)
@@ -1973,37 +2008,62 @@ class UserDatabaseHelper(private val context: Context) :
         }
         root.put("verseTopics", verseTopicsArray)
 
-        return root.toString(2)
+        val result = root.toString(2)
+        db.setTransactionSuccessful()
+        return result
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun restoreUserDataJson(jsonString: String): Boolean {
         return try {
+            BackupInspector.inspect(jsonString)
             val root = JSONObject(jsonString)
             val db = writableDatabase
             db.beginTransaction()
             try {
+                val verseIds = mutableMapOf<Long, Long>()
+                val topicIds = mutableMapOf<String, String>()
                 if (root.has("verses")) {
                     val arr = root.getJSONArray("verses")
                     for (i in 0 until arr.length()) {
                         val item = arr.getJSONObject(i)
                         val values = ContentValues().apply {
-                            if (item.has("id")) {
-                                put("id", item.getLong("id"))
-                            }
                             put("book_id", item.optInt("book_id", item.optInt("bookId", 1)))
                             put("chapter", item.optInt("chapter", 1))
                             put("verse", item.optInt("verse", 1))
-                            put("status", item.optString("status", "learning"))
-                            put("repetition", item.optInt("repetition", 0))
-                            put("interval", item.optInt("interval", 0))
-                            put("efactor", item.optDouble("efactor", 2.5))
-                            put("next_due_date", item.optLong("next_due_date", item.optLong("nextDueDate", System.currentTimeMillis())))
-                            put("created_at", item.optLong("created_at", item.optLong("createdAt", System.currentTimeMillis())))
-                            put("lapses", item.optInt("lapses", 0))
-                            put("pre_lapse_interval", item.optInt("pre_lapse_interval", 0))
-                            put("attempts", item.optInt("attempts", 0))
+                            if (item.has("status")) put("status", item.getString("status"))
+                            if (item.has("repetition")) put("repetition", item.getInt("repetition"))
+                            if (item.has("interval")) put("interval", item.getInt("interval"))
+                            if (item.has("efactor")) put("efactor", item.getDouble("efactor"))
+                            if (item.has("next_due_date") || item.has("nextDueDate")) put("next_due_date", if (item.has("next_due_date")) item.getLong("next_due_date") else item.getLong("nextDueDate"))
+                            if (item.has("created_at") || item.has("createdAt")) put("created_at", if (item.has("created_at")) item.getLong("created_at") else item.getLong("createdAt"))
+                            if (item.has("lapses")) put("lapses", item.getInt("lapses"))
+                            if (item.has("pre_lapse_interval")) put("pre_lapse_interval", item.getInt("pre_lapse_interval"))
+                            if (item.has("attempts")) put("attempts", item.getInt("attempts"))
+                            if (item.has("end_verse") || item.has("endVerse")) {
+                                val name = if (item.has("end_verse")) "end_verse" else "endVerse"
+                                if (item.isNull(name)) putNull("end_verse") else put("end_verse", item.getInt(name))
+                            }
+                            if (item.has("keyword")) {
+                                if (item.isNull("keyword")) putNull("keyword") else put("keyword", item.getString("keyword"))
+                            }
                         }
-                        db.insertWithOnConflict("user_verses", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                        val book = values.getAsInteger("book_id")
+                        val chapter = values.getAsInteger("chapter")
+                        val verse = values.getAsInteger("verse")
+                        val localId = db.rawQuery("SELECT id FROM user_verses WHERE book_id = ? AND chapter = ? AND verse = ?",
+                            arrayOf(book.toString(), chapter.toString(), verse.toString())).use { if (it.moveToFirst()) it.getLong(0) else null }
+                        val resultId = if (localId != null) {
+                            check(db.update("user_verses", values, "id = ?", arrayOf(localId.toString())) == 1)
+                            localId
+                        } else {
+                            if (!values.containsKey("next_due_date")) values.put("next_due_date", System.currentTimeMillis())
+                            if (!values.containsKey("created_at")) values.put("created_at", System.currentTimeMillis())
+                            db.insertOrThrow("user_verses", null, values)
+                        }
+                        if (item.has("id")) verseIds[item.getLong("id")] = resultId
                     }
                 }
 
@@ -2016,15 +2076,24 @@ class UserDatabaseHelper(private val context: Context) :
                         val values = ContentValues().apply {
                             put("book_id", item.optInt("book_id", 1))
                             put("chapter", item.optInt("chapter", 1))
-                            put("status", item.optString("status", "learning"))
-                            put("repetition", item.optInt("repetition", 0))
-                            put("interval", item.optInt("interval", 0))
-                            put("efactor", item.optDouble("efactor", 2.5))
-                            put("next_due_date", item.optLong("next_due_date", System.currentTimeMillis()))
-                            put("lapses", item.optInt("lapses", 0))
-                            put("attempts", item.optInt("attempts", 0))
+                            if (item.has("status")) put("status", item.getString("status"))
+                            if (item.has("repetition")) put("repetition", item.getInt("repetition"))
+                            if (item.has("interval")) put("interval", item.getInt("interval"))
+                            if (item.has("efactor")) put("efactor", item.getDouble("efactor"))
+                            if (item.has("next_due_date")) put("next_due_date", item.getLong("next_due_date"))
+                            if (item.has("lapses")) put("lapses", item.getInt("lapses"))
+                            if (item.has("attempts")) put("attempts", item.getInt("attempts"))
+                            if (item.has("pre_lapse_interval")) put("pre_lapse_interval", item.getInt("pre_lapse_interval"))
+                            if (item.has("chain_hits")) put("chain_hits", item.getInt("chain_hits"))
+                            if (item.has("chain_misses")) put("chain_misses", item.getInt("chain_misses"))
+                            if (item.has("last_chain_date")) put("last_chain_date", item.getLong("last_chain_date"))
                         }
-                        db.insertWithOnConflict("chapter_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                        val changed = db.update("chapter_progress", values, "book_id = ? AND chapter = ?",
+                            arrayOf(values.getAsInteger("book_id").toString(), values.getAsInteger("chapter").toString()))
+                        if (changed == 0) {
+                            if (!values.containsKey("next_due_date")) values.put("next_due_date", System.currentTimeMillis())
+                            db.insertOrThrow("chapter_progress", null, values)
+                        }
                     }
                 }
 
@@ -2037,20 +2106,41 @@ class UserDatabaseHelper(private val context: Context) :
                         val values = ContentValues().apply {
                             put("book_id", item.optInt("book_id", 1))
                             put("block_index", item.optInt("block_index", 0))
-                            put("label", item.optString("label", ""))
-                            put("status", item.optString("status", "learning"))
-                            put("repetition", item.optInt("repetition", 0))
-                            put("interval", item.optInt("interval", 0))
-                            put("efactor", item.optDouble("efactor", 2.5))
-                            put("next_due_date", item.optLong("next_due_date", System.currentTimeMillis()))
-                            put("lapses", item.optInt("lapses", 0))
-                            put("attempts", item.optInt("attempts", 0))
-                            put("last_score", item.optInt("last_score", 0))
-                            put("last_accuracy", item.optDouble("last_accuracy", 0.0))
-                            put("last_attempt_date", item.optLong("last_attempt_date", 0L))
-                            put("pre_lapse_interval", item.optInt("pre_lapse_interval", 0))
+                            if (item.has("label")) put("label", item.getString("label"))
+                            if (item.has("status")) put("status", item.getString("status"))
+                            if (item.has("repetition")) put("repetition", item.getInt("repetition"))
+                            if (item.has("interval")) put("interval", item.getInt("interval"))
+                            if (item.has("efactor")) put("efactor", item.getDouble("efactor"))
+                            if (item.has("next_due_date")) put("next_due_date", item.getLong("next_due_date"))
+                            if (item.has("lapses")) put("lapses", item.getInt("lapses"))
+                            if (item.has("attempts")) put("attempts", item.getInt("attempts"))
+                            if (item.has("last_score")) put("last_score", item.getInt("last_score"))
+                            if (item.has("last_accuracy")) put("last_accuracy", item.getDouble("last_accuracy"))
+                            if (item.has("last_attempt_date")) put("last_attempt_date", item.getLong("last_attempt_date"))
+                            if (item.has("pre_lapse_interval")) put("pre_lapse_interval", item.getInt("pre_lapse_interval"))
                         }
-                        db.insertWithOnConflict("block_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                        val changed = db.update("block_progress", values, "book_id = ? AND block_index = ?",
+                            arrayOf(values.getAsInteger("book_id").toString(), values.getAsInteger("block_index").toString()))
+                        if (changed == 0) {
+                            if (!values.containsKey("label")) values.put("label", "")
+                            if (!values.containsKey("next_due_date")) values.put("next_due_date", System.currentTimeMillis())
+                            db.insertOrThrow("block_progress", null, values)
+                        }
+                    }
+                }
+
+                if (root.has("themeProgress")) {
+                    val prog = root.getJSONObject("themeProgress")
+                    for (key in prog.keys()) {
+                        val item = prog.getJSONObject(key)
+                        val values = ContentValues().apply {
+                            put("book_id", item.getInt("book_id")); put("status", item.optString("status", "learning"))
+                            put("repetition", item.optInt("repetition", 0)); put("interval", item.optInt("interval", 0))
+                            put("efactor", item.optDouble("efactor", 2.5)); put("next_due_date", item.optLong("next_due_date", System.currentTimeMillis()))
+                            put("lapses", item.optInt("lapses", 0)); put("attempts", item.optInt("attempts", 0))
+                            put("last_score", item.optInt("last_score", 0)); put("pre_lapse_interval", item.optInt("pre_lapse_interval", 0))
+                        }
+                        check(db.insertWithOnConflict("theme_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1L)
                     }
                 }
 
@@ -2058,23 +2148,35 @@ class UserDatabaseHelper(private val context: Context) :
                     val arr = root.getJSONArray("reviewLog")
                     for (i in 0 until arr.length()) {
                         val item = arr.getJSONObject(i)
+                        val kind = item.optString("item_kind", "verse")
+                        val oldVerseId = item.optLong("verse_id", 0L)
+                        val localVerseId = verseIds[oldVerseId] ?: 0L
+                        val originalItemId = item.optString("item_id", "")
+                        val mappedItemId = if (kind == "verse" && oldVerseId > 0L) {
+                            if (localVerseId > 0L) localVerseId.toString() else "unlinked-backup:$oldVerseId"
+                        } else originalItemId
                         val values = ContentValues().apply {
-                            put("verse_id", item.optLong("verse_id", 0L))
+                            put("verse_id", localVerseId)
                             put("score", item.optInt("score", 3))
                             put("review_date", item.optLong("review_date", System.currentTimeMillis()))
                             put("prev_interval", item.optInt("prev_interval", 0))
                             put("new_interval", item.optInt("new_interval", 1))
                             put("prev_efactor", item.optDouble("prev_efactor", 2.5))
                             put("new_efactor", item.optDouble("new_efactor", 2.5))
-                            put("item_kind", item.optString("item_kind", "verse"))
-                            put("item_id", item.optString("item_id", ""))
+                            put("item_kind", kind)
+                            put("item_id", mappedItemId)
                             put("cue_level", item.optInt("cue_level", 0))
                             put("mode", item.optString("mode", "reveal"))
                             if (item.has("measured_accuracy")) {
                                 put("measured_accuracy", item.optDouble("measured_accuracy"))
                             }
                         }
-                        db.insertWithOnConflict("review_log", null, values, SQLiteDatabase.CONFLICT_IGNORE)
+                        val exists = db.rawQuery("SELECT 1 FROM review_log WHERE verse_id = ? AND score = ? AND review_date = ? AND prev_interval = ? AND new_interval = ? AND prev_efactor = ? AND new_efactor = ? AND item_kind = ? AND item_id = ? AND cue_level = ? AND mode = ? AND COALESCE(measured_accuracy, -9999) = CAST(? AS REAL) LIMIT 1",
+                            arrayOf(values.getAsString("verse_id"), values.getAsString("score"), values.getAsString("review_date"),
+                                values.getAsString("prev_interval"), values.getAsString("new_interval"), values.getAsString("prev_efactor"),
+                                values.getAsString("new_efactor"), kind, mappedItemId, values.getAsString("cue_level"), values.getAsString("mode"), values.getAsString("measured_accuracy") ?: "-9999"))
+                            .use { it.moveToFirst() }
+                        if (!exists) db.insertOrThrow("review_log", null, values)
                     }
                 }
 
@@ -2088,7 +2190,23 @@ class UserDatabaseHelper(private val context: Context) :
                             put("total", item.optInt("total", 0))
                             put("median_cold_for", item.optInt("median_cold_for", 30))
                         }
-                        db.insert("cold_checks", null, values)
+                        val exists = db.rawQuery("SELECT 1 FROM cold_checks WHERE ts = ? AND correct = ? AND total = ? AND median_cold_for = ? LIMIT 1",
+                            arrayOf(values.getAsString("ts"), values.getAsString("correct"), values.getAsString("total"), values.getAsString("median_cold_for"))).use { it.moveToFirst() }
+                        if (!exists) db.insertOrThrow("cold_checks", null, values)
+                    }
+                }
+
+                if (root.has("sessionAdherence")) {
+                    val arr = root.getJSONArray("sessionAdherence")
+                    for (i in 0 until arr.length()) {
+                        val item = arr.getJSONObject(i)
+                        val values = ContentValues().apply {
+                            put("ts", item.getLong("ts")); put("completed", item.getInt("completed")); put("duration_ms", item.getLong("duration_ms"))
+                            if (item.has("abandoned_at") && !item.isNull("abandoned_at")) put("abandoned_at", item.getInt("abandoned_at"))
+                        }
+                        val exists = db.rawQuery("SELECT 1 FROM session_adherence WHERE ts = ? AND completed = ? AND duration_ms = ? AND COALESCE(abandoned_at, -1) = CAST(? AS INTEGER) LIMIT 1",
+                            arrayOf(values.getAsString("ts"), values.getAsString("completed"), values.getAsString("duration_ms"), values.getAsString("abandoned_at") ?: "-1")).use { it.moveToFirst() }
+                        if (!exists) db.insertOrThrow("session_adherence", null, values)
                     }
                 }
 
@@ -2102,7 +2220,7 @@ class UserDatabaseHelper(private val context: Context) :
                             put("key", k)
                             put("val", v)
                         }
-                        db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                        check(db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1L)
                     }
                 }
 
@@ -2110,12 +2228,24 @@ class UserDatabaseHelper(private val context: Context) :
                     val arr = root.getJSONArray("topics")
                     for (i in 0 until arr.length()) {
                         val item = arr.getJSONObject(i)
+                        val originalId = item.getString("id")
+                        val name = item.getString("name")
+                        val existingName = db.rawQuery("SELECT name FROM topics WHERE id = ?", arrayOf(originalId)).use { if (it.moveToFirst()) it.getString(0) else null }
+                        val matchingId = db.rawQuery("SELECT id FROM topics WHERE LOWER(name) = LOWER(?) LIMIT 1", arrayOf(name.trim())).use { if (it.moveToFirst()) it.getString(0) else null }
+                        val localId = when {
+                            existingName != null && existingName.equals(name, ignoreCase = true) -> originalId
+                            matchingId != null -> matchingId
+                            existingName != null -> UUID.randomUUID().toString()
+                            else -> originalId
+                        }
+                        topicIds[originalId] = localId
                         val values = ContentValues().apply {
-                            put("id", item.getString("id"))
+                            put("id", localId)
                             put("name", item.getString("name"))
                             put("created_at", item.optLong("createdAt", item.optLong("created_at", System.currentTimeMillis())))
                         }
-                        db.insertWithOnConflict("topics", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                        val localExists = db.rawQuery("SELECT 1 FROM topics WHERE id = ?", arrayOf(localId)).use { it.moveToFirst() }
+                        if (!localExists) db.insertOrThrow("topics", null, values)
                     }
                 }
 
@@ -2124,10 +2254,16 @@ class UserDatabaseHelper(private val context: Context) :
                     for (i in 0 until arr.length()) {
                         val item = arr.getJSONObject(i)
                         val values = ContentValues().apply {
-                            put("verse_id", item.optLong("verseId", item.optLong("verse_id", 0L)))
-                            put("topic_id", item.optString("topicId", item.optString("topic_id", "")))
+                            val originalVerseId = if (item.has("verseId")) item.getLong("verseId") else item.getLong("verse_id")
+                            val originalTopicId = if (item.has("topicId")) item.getString("topicId") else item.getString("topic_id")
+                            put("verse_id", requireNotNull(verseIds[originalVerseId]))
+                            put("topic_id", requireNotNull(topicIds[originalTopicId]))
                         }
-                        db.insertWithOnConflict("verse_topics", null, values, SQLiteDatabase.CONFLICT_IGNORE)
+                        val added = db.insertWithOnConflict("verse_topics", null, values, SQLiteDatabase.CONFLICT_IGNORE)
+                        if (added == -1L) {
+                            check(db.rawQuery("SELECT 1 FROM verse_topics WHERE verse_id = ? AND topic_id = ?",
+                                arrayOf(values.getAsString("verse_id"), values.getAsString("topic_id"))).use { it.moveToFirst() })
+                        }
                     }
                 }
 
@@ -2148,6 +2284,7 @@ class UserDatabaseHelper(private val context: Context) :
             db.delete("user_verses", null, null)
             db.delete("chapter_progress", null, null)
             db.delete("block_progress", null, null)
+            db.delete("theme_progress", null, null)
             db.delete("session_state", null, null)
             db.delete("review_log", null, null)
             db.delete("cold_checks", null, null)

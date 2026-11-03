@@ -47,6 +47,85 @@ class UserDatabaseHelperTest {
     }
 
     @Test
+    fun legacyBackupKeepsFieldsItDoesNotContain() {
+        assertTrue(userDbHelper.addUserVerse(1, 1, 1, endVerse = 4, keyword = "Kept"))
+        userDbHelper.gradeUserVerseAndUpdateSession(userDbHelper.getUserVerses().single().id, 4, 0, "read", null, emptyMap())
+        userDbHelper.recordChainPass(1, listOf(1 to true))
+        val before = userDbHelper.getChapterProgress(1).getValue(1)
+        val root = org.json.JSONObject(userDbHelper.exportUserDataJson())
+        root.remove("formatVersion"); root.remove("themeProgress"); root.remove("sessionAdherence")
+        val verse = root.getJSONArray("verses").getJSONObject(0)
+        verse.remove("end_verse"); verse.remove("keyword"); verse.remove("attempts")
+        val chapter = root.getJSONObject("chapterProgress").getJSONObject("1:1")
+        chapter.remove("pre_lapse_interval"); chapter.remove("chain_hits"); chapter.remove("chain_misses"); chapter.remove("last_chain_date")
+        assertTrue(com.example.telugubible.data.model.BackupInspector.inspect(root.toString()).isLegacy)
+        assertTrue(userDbHelper.restoreUserDataJson(root.toString()))
+        assertEquals(4, userDbHelper.getUserVerses().single().endVerse)
+        assertEquals("Kept", userDbHelper.getUserVerses().single().keyword)
+        assertEquals(1, userDbHelper.getUserVerses().single().attempts)
+        assertEquals(before.chainHits, userDbHelper.getChapterProgress(1).getValue(1).chainHits)
+    }
+
+    @Test
+    fun versionedBackupPreservesProgressAndRemapsConflictingIds() {
+        assertTrue(userDbHelper.addUserVerse(1, 1, 1, endVerse = 3, keyword = "Beginning"))
+        val oldId = userDbHelper.getUserVerses().single().id
+        userDbHelper.insertTopic(Topic("shared-id", "Original collection", 100))
+        userDbHelper.tagVerse(oldId, "shared-id")
+        userDbHelper.gradeUserVerseAndUpdateSession(oldId, 4, 0, "read", null, emptyMap())
+        userDbHelper.gradeChapterAnchor(1, 1, 4)
+        userDbHelper.recordChainPass(1, listOf(1 to true))
+        userDbHelper.gradeThemeProgress(1, 4)
+        userDbHelper.recordSessionAdherence(true, 120000)
+        userDbHelper.recordColdCheck(1, 1, 40)
+        val backup = userDbHelper.exportUserDataJson()
+        val beforeChapter = userDbHelper.getChapterProgress(1).getValue(1)
+        assertEquals(2, com.example.telugubible.data.model.BackupInspector.inspect(backup).formatVersion)
+        userDbHelper.clearAllUserData()
+        assertTrue(userDbHelper.getAllThemeProgress().isEmpty())
+        assertTrue(userDbHelper.addUserVerse(43, 3, 16))
+        userDbHelper.writableDatabase.execSQL("UPDATE user_verses SET id = ? WHERE book_id = 43", arrayOf(oldId))
+        userDbHelper.insertTopic(Topic("shared-id", "Local collection", 200))
+        assertTrue(userDbHelper.restoreUserDataJson(backup))
+        assertTrue(userDbHelper.restoreUserDataJson(backup))
+        val verses = userDbHelper.getUserVerses()
+        assertEquals(2, verses.size)
+        assertEquals(43, verses.single { it.id == oldId }.bookId)
+        val restored = verses.single { it.bookId == 1 }
+        assertEquals(3, restored.endVerse)
+        assertEquals("Beginning", restored.keyword)
+        assertTrue(restored.id != oldId)
+        val topics = userDbHelper.getAllTopics()
+        assertEquals(2, topics.size)
+        val importedTopic = topics.single { it.name == "Original collection" }
+        assertTrue(userDbHelper.getAllVerseTopicMappings()[restored.id]!!.contains(importedTopic.id))
+        assertEquals(1, userDbHelper.getReviewLog().count { it.itemKind == "verse" })
+        assertEquals(restored.id.toString(), userDbHelper.getReviewLog().single { it.itemKind == "verse" }.itemId)
+        assertEquals(beforeChapter, userDbHelper.getChapterProgress(1).getValue(1))
+        assertEquals(1, userDbHelper.getAllThemeProgress().size)
+        assertEquals(1, userDbHelper.getAdherenceStats().started)
+        assertNotNull(userDbHelper.getLastColdCheck())
+    }
+
+    @Test
+    fun invalidAndFailedBackupRestoreDoNotModifyExistingData() {
+        assertTrue(userDbHelper.addUserVerse(43, 3, 16))
+        val before = userDbHelper.getUserVerses()
+        assertFalse(userDbHelper.restoreUserDataJson("{}"))
+        assertFalse(userDbHelper.restoreUserDataJson("{\"formatVersion\":99,\"verses\":[]}"))
+        assertFalse(userDbHelper.restoreUserDataJson("{\"verses\":[{\"book_id\":1,\"chapter\":1,\"verse\":1}],\"verseTopics\":[{\"verseId\":1,\"topicId\":\"missing\"}]}"))
+        val backup = org.json.JSONObject(userDbHelper.exportUserDataJson())
+        val extra = org.json.JSONObject(backup.getJSONArray("verses").getJSONObject(0).toString())
+        extra.put("id", 123); extra.put("book_id", 1); extra.put("chapter", 1); extra.put("verse", 1)
+        backup.getJSONArray("verses").put(extra)
+        backup.getJSONObject("themeProgress").put("1", org.json.JSONObject("""{"book_id":1,"status":"learning","repetition":0,"interval":0,"efactor":2.5,"next_due_date":0,"lapses":0,"attempts":0,"last_score":0,"pre_lapse_interval":0}"""))
+        val db = userDbHelper.writableDatabase
+        db.execSQL("CREATE TRIGGER fail_restore BEFORE INSERT ON theme_progress BEGIN SELECT RAISE(ABORT, 'test failure'); END")
+        assertFalse(userDbHelper.restoreUserDataJson(backup.toString()))
+        assertEquals(before, userDbHelper.getUserVerses())
+    }
+
+    @Test
     fun verseGradeAndSessionPositionRollbackTogetherOnWriteFailure() {
         assertTrue(userDbHelper.addUserVerse(1, 1, 1))
         val id = userDbHelper.getUserVerses().single().id

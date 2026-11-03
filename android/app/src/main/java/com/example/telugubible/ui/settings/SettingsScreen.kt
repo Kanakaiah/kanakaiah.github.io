@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -31,6 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.theme.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +46,7 @@ fun SettingsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var selectedCategory by rememberSaveable { mutableStateOf(SettingsCategory.APPEARANCE) }
     val listState = rememberLazyListState()
     LaunchedEffect(selectedCategory) { listState.scrollToItem(0) }
@@ -51,21 +56,20 @@ fun SettingsScreen(
     var restoreInputText by remember { mutableStateOf("") }
     var showBackupDialog by remember { mutableStateOf(false) }
     var exportedBackupText by remember { mutableStateOf("") }
+    BackHandler(enabled = state.isRestoring || state.isClearing || state.isInspectingBackup) { }
 
     val createDocumentLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
     ) { uri ->
         if (uri != null) {
-            viewModel.generateBackup { json ->
-                try {
-                    context.contentResolver.openOutputStream(uri)?.use { os ->
-                        os.write(json.toByteArray(Charsets.UTF_8))
+            viewModel.generateBackup(onReady = { json ->
+                scope.launch {
+                    val saved = withContext(Dispatchers.IO) {
+                        runCatching { BackupFileIO.write({ context.contentResolver.openOutputStream(uri) }, json) }.isSuccess
                     }
-                    Toast.makeText(context, "Backup saved to device storage!", Toast.LENGTH_SHORT).show()
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Failed to save backup: " + e.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, if (saved) "Backup saved." else "Couldn't save the backup file.", Toast.LENGTH_SHORT).show()
                 }
-            }
+            })
         }
     }
 
@@ -73,21 +77,12 @@ fun SettingsScreen(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
         if (uri != null) {
-            try {
-                val jsonString = context.contentResolver.openInputStream(uri)?.use { isStream ->
-                    isStream.bufferedReader().readText()
+            scope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    runCatching { BackupFileIO.read { context.contentResolver.openInputStream(uri) } }
                 }
-                if (!jsonString.isNullOrBlank()) {
-                    viewModel.restoreBackup(jsonString) { success ->
-                        if (success) {
-                            Toast.makeText(context, "Data restored successfully!", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, "Failed to restore: Invalid backup file format", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Toast.makeText(context, "Error reading backup file: " + e.message, Toast.LENGTH_SHORT).show()
+                result.fold(onSuccess = viewModel::prepareRestore,
+                    onFailure = { error -> Toast.makeText(context, if (error is BackupTooLargeException) "Backup exceeds the 10 million character limit." else "Couldn't read the selected backup file.", Toast.LENGTH_SHORT).show() })
             }
         }
     }
@@ -153,158 +148,18 @@ fun SettingsScreen(
                 item { CircularProgressIndicator() }
             }
             if (selectedCategory == SettingsCategory.DATA && !state.isLoading) {
-            // 4. Data Management Section
-            item {
-                SettingsSectionHeader(icon = Icons.Default.Download, title = "Data Management")
-                Spacer(modifier = Modifier.height(8.dp))
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = RemoraCardBg,
-                    border = BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                        // Backup
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = "Backup User Data",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary
-                            )
-                            Text(
-                                text = "Export memory verses, chapter progress, and streak to JSON",
-                                fontSize = 12.sp,
-                                color = RemoraTextSecondary
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Button(
-                                    onClick = {
-                                        val dateStr = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
-                                        createDocumentLauncher.launch("remora_backup_$dateStr.json")
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                    shape = RoundedCornerShape(8.dp),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onPrimary)
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Save File", color = MaterialTheme.colorScheme.onPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                                }
-                                Button(
-                                    onClick = {
-                                        viewModel.generateBackup { json ->
-                                            exportedBackupText = json
-                                            showBackupDialog = true
-                                        }
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
-                                    border = BorderStroke(1.dp, RemoraCardBorder),
-                                    shape = RoundedCornerShape(8.dp),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(14.dp), tint = RemoraTextSecondary)
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Copy / Share", color = RemoraTextSecondary, fontSize = 12.sp)
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = RemoraCardBorder)
-
-                        // Restore
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = "Restore User Data",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary
-                            )
-                            Text(
-                                text = "Load a previously exported JSON backup file",
-                                fontSize = 12.sp,
-                                color = RemoraTextSecondary
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Button(
-                                    onClick = {
-                                        openDocumentLauncher.launch(arrayOf("application/json", "text/*", "*/*"))
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                    shape = RoundedCornerShape(8.dp),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Icon(Icons.Default.Upload, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onPrimary)
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Pick File", color = MaterialTheme.colorScheme.onPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                                }
-                                Button(
-                                    onClick = {
-                                        restoreInputText = ""
-                                        showRestoreDialog = true
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
-                                    border = BorderStroke(1.dp, RemoraCardBorder),
-                                    shape = RoundedCornerShape(8.dp),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Icon(Icons.Default.ContentCopy, contentDescription = null, modifier = Modifier.size(14.dp), tint = RemoraTextSecondary)
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Paste Text", color = RemoraTextSecondary, fontSize = 12.sp)
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = RemoraCardBorder)
-
-                        // Clear All Data (Danger Zone)
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = RemoraDanger.copy(alpha = 0.08f),
-                            border = BorderStroke(1.dp, RemoraDanger.copy(alpha = 0.25f)),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Danger Zone",
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = RemoraDanger
-                                    )
-                                    Text(
-                                        text = "Permanently delete all user verses and progress",
-                                        fontSize = 11.sp,
-                                        color = RemoraDanger.copy(alpha = 0.8f)
-                                    )
-                                }
-                                Button(
-                                    onClick = { showClearDataConfirm = true },
-                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraDanger),
-                                    shape = RoundedCornerShape(6.dp),
-                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
-                                ) {
-                                    Text("Clear All", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                                }
-                            }
-                        }
-                    }
+                item {
+                    DataManagementContent(
+                        onExportFile = {
+                            val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+                            createDocumentLauncher.launch("remora_backup_$date.json")
+                        },
+                        onImportFile = { openDocumentLauncher.launch(arrayOf("application/json", "text/*", "*/*")) },
+                        onExportText = { viewModel.generateBackup(onReady = { exportedBackupText = it; showBackupDialog = true }) },
+                        onImportText = { restoreInputText = ""; showRestoreDialog = true },
+                        onClear = { showClearDataConfirm = true }
+                    )
                 }
-            }
             }
         }
     }
@@ -312,7 +167,7 @@ fun SettingsScreen(
     // Dialog: Confirm Clear All
     if (showClearDataConfirm) {
         AlertDialog(
-            onDismissRequest = { showClearDataConfirm = false },
+            onDismissRequest = { if (!state.isClearing) showClearDataConfirm = false },
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Warning, contentDescription = null, tint = RemoraDanger)
@@ -322,7 +177,7 @@ fun SettingsScreen(
             },
             text = {
                 Text(
-                    "This will delete all your added memory verses, chapter anchor progress, streaks, and review history. This action cannot be undone.",
+                    "This permanently removes saved verses, collections, chapter and book progress, review history, settings and cached text from this device. Export a backup first if you want to keep them.",
                     color = RemoraTextSecondary,
                     fontSize = 13.sp
                 )
@@ -337,13 +192,14 @@ fun SettingsScreen(
                             onDataCleared()
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = RemoraDanger)
+                    enabled = !state.isClearing,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Yes, Delete All", color = Color.White)
+                    Text(if (state.isClearing) "Clearing…" else "Clear data", color = MaterialTheme.colorScheme.onError)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showClearDataConfirm = false }) {
+                TextButton(onClick = { showClearDataConfirm = false }, enabled = !state.isClearing) {
                     Text("Cancel", color = RemoraTextSecondary)
                 }
             }
@@ -473,16 +329,15 @@ fun SettingsScreen(
                 Button(
                     onClick = {
                         if (restoreInputText.isNotBlank()) {
-                            viewModel.restoreBackup(restoreInputText) { success ->
-                                if (success) {
-                                    showRestoreDialog = false
-                                }
-                            }
+                            val json = restoreInputText
+                            restoreInputText = ""
+                            showRestoreDialog = false
+                            viewModel.prepareRestore(json)
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent)
                 ) {
-                    Text("Restore")
+                    Text("Review backup")
                 }
             },
             dismissButton = {
@@ -492,24 +347,20 @@ fun SettingsScreen(
             }
         )
     }
-}
 
-@Composable
-private fun SettingsSectionHeader(icon: ImageVector, title: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = RemoraAccentLight,
-            modifier = Modifier.size(16.dp)
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        Text(
-            text = title.uppercase(),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp,
-            color = RemoraAccentLight
-        )
+    if (state.isInspectingBackup) {
+        AlertDialog(onDismissRequest = {}, title = { Text("Checking backup") },
+            text = { Text("Reading the backup before showing its contents.") },
+            confirmButton = { CircularProgressIndicator() })
+    }
+    state.backupPreview?.let { preview ->
+        BackupPreviewDialog(preview, state.isRestoring, state.backupError,
+            onCancel = viewModel::cancelRestorePreview,
+            onRestore = { viewModel.confirmPreparedRestore { success -> if (success) onDataCleared() } })
+    }
+    if (state.backupError != null && state.backupPreview == null && !state.isInspectingBackup) {
+        AlertDialog(onDismissRequest = viewModel::cancelRestorePreview,
+            title = { Text("Backup unavailable") }, text = { Text(state.backupError!!) },
+            confirmButton = { TextButton(onClick = viewModel::cancelRestorePreview) { Text("Close") } })
     }
 }

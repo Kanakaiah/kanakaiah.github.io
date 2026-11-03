@@ -105,7 +105,7 @@ class AppBaselineTest {
     fun todayLookupAndBibleNavigation() {
         screenshot("today")
         compose.onNode(hasText("Lookup") and hasClickAction()).performClick()
-        awaitNode(hasText("Bible Verses"))
+        awaitNode(hasText("Bible verses"))
         screenshot("lookup")
         compose.onNode(hasText("Bible") and hasClickAction()).performClick()
         awaitNode(hasContentDescription("Close to Today"))
@@ -119,11 +119,11 @@ class AppBaselineTest {
     @Test
     fun settingsReturnsToLookupThenBackReturnsToToday() {
         compose.onNode(hasText("Lookup") and hasClickAction()).performClick()
-        awaitNode(hasText("Bible Verses"))
+        awaitNode(hasText("Bible verses"))
         compose.onNodeWithContentDescription("Settings").performClick()
-        awaitNode(hasText("Theme Palette"))
+        awaitNode(hasText("Theme"))
         compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
-        awaitNode(hasText("Bible Verses"))
+        awaitNode(hasText("Bible verses"))
         compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
         awaitNode(hasText("Collections"))
     }
@@ -131,10 +131,10 @@ class AppBaselineTest {
     @Test
     fun settingsSurviveActivityRecreationAndBackReturnsToToday() {
         compose.onNodeWithContentDescription("Settings").performClick()
-        awaitNode(hasText("Theme Palette"))
+        awaitNode(hasText("Theme"))
         screenshot("settings")
         compose.activityRule.scenario.recreate()
-        awaitNode(hasText("Theme Palette"))
+        awaitNode(hasText("Theme"))
         compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
         awaitNode(hasContentDescription("Settings"))
         compose.onNode(hasText("Lookup") and hasClickAction()).assertExists()
