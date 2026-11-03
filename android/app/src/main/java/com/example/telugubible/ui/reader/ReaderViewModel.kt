@@ -20,7 +20,7 @@ import com.example.telugubible.data.repository.BibleRepository
 import com.example.telugubible.data.service.KjvService
 import com.example.telugubible.util.KjvVersification
 import com.example.telugubible.util.StrongsParser
-import com.example.telugubible.util.TtsManager
+import com.example.telugubible.util.BackgroundListenService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -130,8 +130,6 @@ class ReaderViewModel @JvmOverloads constructor(
     private val kjvService: KjvService = KjvService()
 ) : AndroidViewModel(application) {
 
-    private val ttsManager = TtsManager(application)
-
     private val _uiState = MutableStateFlow(ReaderUiState())
     val uiState: StateFlow<ReaderUiState> = _uiState.asStateFlow()
 
@@ -145,11 +143,13 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private fun observeTts() {
         viewModelScope.launch {
-            ttsManager.state.collect { tts ->
+            BackgroundListenService.state.collect { tts ->
                 _uiState.update {
+                    val ownsPlayback = tts.source == "reader:${it.currentBook?.id}:${it.currentChapter}"
                     it.copy(
-                        isTtsSpeaking = tts.isSpeaking,
-                        activeTtsVerse = tts.currentVerse
+                        isTtsSpeaking = ownsPlayback && tts.playing,
+                        activeTtsVerse = if (ownsPlayback && tts.playing) tts.itemId.toInt() else null,
+                        toastMessage = if (ownsPlayback && tts.error != null) tts.error else it.toastMessage
                     )
                 }
             }
@@ -269,7 +269,8 @@ class ReaderViewModel @JvmOverloads constructor(
             val book = books.firstOrNull { it.id == bookId } ?: return@launch
             val chapter = requestedChapter.coerceIn(1, book.chapters)
             val topics = if (_uiState.value.books.isEmpty()) repository.getTopics() else _uiState.value.topics
-            ttsManager.stop()
+            val activeSource = BackgroundListenService.state.value.source
+            if (activeSource.startsWith("reader:") && activeSource != "reader:$bookId:$chapter") stopTts()
             _uiState.update {
                 it.copy(
                     isLoading = true,
@@ -317,12 +318,16 @@ class ReaderViewModel @JvmOverloads constructor(
                 ensureActive()
                 repository.setSessionState(ReadingPosition.STORAGE_KEY, ReadingPosition(book.id, chapter).encode())
                 _uiState.update {
+                    val speech = BackgroundListenService.state.value
+                    val ownsSpeech = speech.playing && speech.source == "reader:${book.id}:$chapter"
                     it.copy(
                         books = books,
                         topics = topics,
                         hasSavedReadingPosition = true,
                         currentBook = book,
                         currentChapter = chapter,
+                        isTtsSpeaking = ownsSpeech,
+                        activeTtsVerse = if (ownsSpeech) speech.itemId.toInt() else null,
                         activeVersion = activeVer,
                         language = lang,
                         verses = verses,
@@ -802,11 +807,15 @@ class ReaderViewModel @JvmOverloads constructor(
             BibleLanguage.TELUGU -> "te"
             else -> "en"
         }
-        ttsManager.playVerses(pairs, langCode = langCode)
+        val book = _uiState.value.currentBook ?: return
+        val started = BackgroundListenService.start(getApplication(), pairs.map { it.second },
+            pairs.map { langCode }, pairs.map { it.first.toLong() }.toLongArray(), 0, 1, true, 1f,
+            "reader:${book.id}:${_uiState.value.currentChapter}")
+        if (!started) _uiState.update { it.copy(toastMessage = "Couldn't start listening.") }
     }
 
     fun stopTts() {
-        ttsManager.stop()
+        if (BackgroundListenService.state.value.source.startsWith("reader:")) BackgroundListenService.stop(getApplication())
     }
 
     fun clearToast() {
@@ -1127,8 +1136,4 @@ class ReaderViewModel @JvmOverloads constructor(
         return repository.getVerse(bookId, chapter, verse)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        ttsManager.shutdown()
-    }
 }

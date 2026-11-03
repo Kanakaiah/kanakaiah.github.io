@@ -754,6 +754,16 @@ class PracticeViewModel @JvmOverloads constructor(
         loadPracticeVerses(forceNewSession = true)
     }
 
+    fun seekListeningVerse(index: Int) {
+        if (index !in _uiState.value.verses.indices || index == _uiState.value.currentIndex) return
+        _uiState.update { it.copy(currentIndex = index, isRevealed = false, modeAccuracy = null,
+            modeCommitted = null, hintRevealedRatio = null, eraserHiddenRatio = null, scrambleAccuracy = null) }
+        viewModelScope.launch {
+            repository.setSessionState(KEY_SESSION_INDEX, index.toString())
+            repository.setSessionState(KEY_SESSION_REVEALED, "false")
+        }
+    }
+
     fun nextVerse() {
         val curr = _uiState.value.currentIndex
         val size = _uiState.value.verses.size

@@ -36,6 +36,14 @@ enum class PracticeSubject {
     THEMES
 }
 
+private fun cleanSpeechText(raw: String): String = raw
+    .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
+    .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+    .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+    .replace(Regex("<[^>]+>"), "")
+    .replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", "\"").replace("&#39;", "'")
+    .trim()
+
 @Composable
 fun PracticeScreen(
     viewModel: PracticeViewModel,
@@ -119,16 +127,7 @@ fun PracticeScreen(
                     val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
                     val rawText = if (isEnglish) verse.textEn.orEmpty().ifBlank { verse.textTe.orEmpty() }
                         else verse.textTe.orEmpty().ifBlank { verse.textEn.orEmpty() }
-                    val activeText = rawText
-                        .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
-                        .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
-                        .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
-                        .replace(Regex("<[^>]+>"), "")
-                        .replace("&nbsp;", " ")
-                        .replace("&amp;", "&")
-                        .replace("&quot;", "\"")
-                        .replace("&#39;", "'")
-                        .trim()
+                    val activeText = cleanSpeechText(rawText)
 
                     val verseRef = "$bookName ${verse.chapter}:${verse.verse}" +
                         (verse.endVerse?.takeIf { it > verse.verse }?.let { "–$it" } ?: "")
@@ -206,7 +205,19 @@ fun PracticeScreen(
                                         modifier = Modifier.fillMaxSize(),
                                         itemKey = verse.id,
                                         canGoPrevious = state.currentIndex > 0,
-                                        canGoNext = state.currentIndex < state.verses.lastIndex
+                                        canGoNext = state.currentIndex < state.verses.lastIndex,
+                                        backgroundQueue = BackgroundListenQueue(
+                                            texts = state.verses.map { item ->
+                                                cleanSpeechText(if (isEnglish) item.textEn.orEmpty().ifBlank { item.textTe.orEmpty() }
+                                                    else item.textTe.orEmpty().ifBlank { item.textEn.orEmpty() })
+                                            },
+                                            languages = state.verses.map { item ->
+                                                if (isEnglish && !item.textEn.isNullOrBlank() || !isEnglish && item.textTe.isNullOrBlank()) "en" else "te"
+                                            },
+                                            ids = state.verses.map { it.id }.toLongArray(),
+                                            index = state.currentIndex,
+                                            onPositionChanged = viewModel::seekListeningVerse
+                                        )
                                     )
                                 }
                                 PracticeMode.TYPING -> {
