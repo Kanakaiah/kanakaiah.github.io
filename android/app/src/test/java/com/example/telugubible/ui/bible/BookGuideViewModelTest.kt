@@ -61,6 +61,36 @@ class BookGuideViewModelTest {
     }
 
     @Test
+    fun chainSaveFailureDoesNotLeavePartialProgressOrAdvanceTwice() = runTest(testDispatcher) {
+        viewModel.loadBookGuide(1)
+        advanceUntilIdle()
+        userDbHelper.writableDatabase.execSQL("CREATE TRIGGER reject_chain_chapter BEFORE INSERT ON chapter_progress WHEN NEW.chapter = 2 BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        viewModel.gradeBlockChain(0, "Beginnings", listOf(1 to true, 2 to false))
+        viewModel.gradeBlockChain(0, "Beginnings", listOf(1 to true, 2 to false))
+        assertTrue(viewModel.uiState.value.isChainSaving)
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.isChainSaving)
+        assertNotNull(viewModel.uiState.value.chainSaveError)
+        assertTrue(userDbHelper.getBlockProgress(1).isEmpty())
+        assertTrue(userDbHelper.getChapterProgress(1).isEmpty())
+        assertTrue(userDbHelper.getReviewLog().isEmpty())
+    }
+
+    @Test
+    fun preservesRevealedAnchorsOnReturnAndResetsForNewBook() = runTest(testDispatcher) {
+        viewModel.loadBookGuide(1)
+        advanceUntilIdle()
+        viewModel.toggleAnchorReveal(1)
+        viewModel.loadBookGuide(1, preserveUi = true)
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.revealedAnchors.contains(1))
+        viewModel.loadBookGuide(2, preserveUi = true)
+        advanceUntilIdle()
+        assertEquals(2, viewModel.uiState.value.book?.id)
+        assertTrue(viewModel.uiState.value.revealedAnchors.isEmpty())
+    }
+
+    @Test
     fun testLoadBookGuide() = runTest(testDispatcher) {
         viewModel.loadBookGuide(1)
         advanceUntilIdle()

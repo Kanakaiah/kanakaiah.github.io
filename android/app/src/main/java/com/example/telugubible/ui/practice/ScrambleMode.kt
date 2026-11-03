@@ -41,10 +41,9 @@ fun ScrambleMode(
 
     // Clean and split words
     val cleanWords = remember(text) {
-        text.replace(Regex("[.,/#!$%^&*;:{}=\\-_`~()\"'”’]"), "")
-            .trim()
+        text.trim()
             .split(Regex("\\s+"))
-            .filter { it.isNotEmpty() }
+            .filter { it.replace(Regex("[.,/#!$%^&*;:{}=\\-_`~()\"'”’]"), "").isNotEmpty() }
     }
 
     // Chunking into manageable groups (10 words per chunk for long verses)
@@ -110,20 +109,15 @@ fun ScrambleMode(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Instruction Subtitle
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = if (chunks.size > 1) {
                     "Put the words in order. (Part ${currentChunkIndex + 1} of ${chunks.size})"
                 } else {
                     "Put the words in order."
                 },
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                color = RemoraTextSecondary
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             if (placedChips.isNotEmpty()) {
@@ -144,20 +138,21 @@ fun ScrambleMode(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "Reset",
-                        fontSize = 11.sp,
-                        color = RemoraTextMuted
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         }
 
-        // Target Word Slot Board (Rounded Card)
+        Text("Your order · ${placedChips.size} of ${currentTargetWords.size}", style = MaterialTheme.typography.titleSmall, modifier = Modifier.fillMaxWidth())
+        // Target word board
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = Color(0xFF1A1815),
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             border = androidx.compose.foundation.BorderStroke(
                 1.dp,
-                if (isCheckingSuccess) RemoraAccent else Color(0xFF2C2720)
+                if (isCheckingSuccess) RemoraAccent else MaterialTheme.colorScheme.surfaceContainerHighest
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -180,53 +175,32 @@ fun ScrambleMode(
                                 feedbackMessage = null
                             }
                         },
-                        shape = RoundedCornerShape(8.dp),
-                        color = RemoraAccent,
+                        shape = RoundedCornerShape(20.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer,
                         shadowElevation = 2.dp
                     ) {
                         Text(
                             text = chip.word,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF14120E),
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.heightIn(min = 48.dp).padding(horizontal = 12.dp, vertical = 12.dp)
                         )
                     }
                 }
 
-                // Empty Placeholder Slots
-                val remainingSlots = (currentTargetWords.size - placedChips.size).coerceAtLeast(0)
-                repeat(remainingSlots) {
-                    Box(
-                        modifier = Modifier
-                            .height(34.dp)
-                            .width(52.dp)
-                            .border(
-                                width = 1.dp,
-                                color = Color(0xFF38322A),
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "·",
-                            fontSize = 18.sp,
-                            color = Color(0xFF4A4237),
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
+                if (placedChips.isEmpty()) Text("Choose words from the bank below.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
         // Feedback / Status Banner
         if (feedbackMessage != null) {
             Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = if (isCheckingSuccess) RemoraAccent.copy(alpha = 0.15f) else Color(0xFFEF4444).copy(alpha = 0.15f),
+                shape = RoundedCornerShape(20.dp),
+                color = if (isCheckingSuccess) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.errorContainer,
                 border = androidx.compose.foundation.BorderStroke(
                     1.dp,
-                    if (isCheckingSuccess) RemoraAccent else Color(0xFFEF4444)
+                    if (isCheckingSuccess) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.error
                 ),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -234,7 +208,7 @@ fun ScrambleMode(
                     text = feedbackMessage ?: "",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isCheckingSuccess) RemoraAccent else Color(0xFFF87171),
+                    color = if (isCheckingSuccess) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onErrorContainer,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                     textAlign = TextAlign.Center
                 )
@@ -248,11 +222,9 @@ fun ScrambleMode(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "WORD BANK",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    color = RemoraTextMuted
+                    text = "Word bank",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 FlowRow(
@@ -269,17 +241,17 @@ fun ScrambleMode(
                                     feedbackMessage = null
                                 }
                             },
-                            shape = RoundedCornerShape(8.dp),
-                            color = Color(0xFF221F1B),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A)),
+                            shape = RoundedCornerShape(20.dp),
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             shadowElevation = 1.dp
                         ) {
                             Text(
                                 text = chip.word,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = RemoraTextPrimary,
-                                modifier = Modifier.padding(horizontal = 13.dp, vertical = 7.dp)
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.heightIn(min = 48.dp).padding(horizontal = 13.dp, vertical = 12.dp)
                             )
                         }
                     }
@@ -322,13 +294,13 @@ fun ScrambleMode(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .heightIn(min = 52.dp)
         ) {
             Text(
                 text = if (isCheckingSuccess) "Correct!" else "Check order",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF14120E)
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

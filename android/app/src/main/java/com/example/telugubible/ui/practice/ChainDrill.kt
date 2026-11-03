@@ -42,7 +42,10 @@ fun ChainDrill(
     onClose: () -> Unit,
     onGradeChain: (List<Pair<Int, Boolean>>) -> Unit,
     nextIntervalDays: Int? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSaving: Boolean = false,
+    saveError: String? = null,
+    onRestartChain: () -> Unit = {}
 ) {
     val chain = remember(anchors) {
         anchors.filter { it.word.isNotBlank() }
@@ -62,10 +65,11 @@ fun ChainDrill(
     val correctCount = results.count { it }
 
     BackHandler {
-        onClose()
+        if (!isSaving) onClose()
     }
 
     fun mark(correct: Boolean) {
+        if (!revealed || finished || isSaving) return
         val next = results + correct
         results = next
         revealed = false
@@ -82,6 +86,8 @@ fun ChainDrill(
     }
 
     fun restart() {
+        if (isSaving || saveError != null) return
+        onRestartChain()
         position = 0
         revealed = false
         results = emptyList()
@@ -89,7 +95,7 @@ fun ChainDrill(
     }
 
     Dialog(
-        onDismissRequest = onClose,
+        onDismissRequest = { if (!isSaving) onClose() },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
             decorFitsSystemWindows = false
@@ -114,7 +120,8 @@ fun ChainDrill(
                 ) {
                     IconButton(
                         onClick = onClose,
-                        modifier = Modifier.size(36.dp)
+                        enabled = !isSaving,
+                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
@@ -132,9 +139,7 @@ fun ChainDrill(
                             style = MaterialTheme.typography.titleSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraTextPrimary
-                            ),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            )
                         )
                         Text(
                             text = if (finished) "CHAIN COMPLETE" else "LINK ${position + 1} OF ${chain.size}",
@@ -147,33 +152,12 @@ fun ChainDrill(
                         )
                     }
 
-                    Spacer(modifier = Modifier.size(36.dp))
+                    Spacer(modifier = Modifier.size(48.dp))
                 }
 
                 HorizontalDivider(color = RemoraCardBorder, thickness = 1.dp)
 
-                // Progress Pip Bar
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    chain.forEachIndexed { i, _ ->
-                        val pipColor = when {
-                            i < results.size -> if (results[i]) RemoraGreen else RemoraRed
-                            i == position && !finished -> RemoraAccent
-                            else -> RemoraCardBorder
-                        }
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(6.dp)
-                                .clip(RoundedCornerShape(3.dp))
-                                .background(pipColor)
-                        )
-                    }
-                }
+                LinearProgressIndicator(progress = { results.size.toFloat() / chain.size }, modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp))
 
                 // Main Content
                 if (finished) {
@@ -196,13 +180,11 @@ fun ChainDrill(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        val intervalText = nextIntervalDays?.let { SM2Engine.formatInterval(it) } ?: "1 day"
-                        Text(
-                            text = "Next chain review in $intervalText.",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = RemoraTextSecondary
-                            )
-                        )
+                        when {
+                            isSaving -> Text("Saving review…", style = MaterialTheme.typography.bodyMedium)
+                            saveError != null -> Text(saveError, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+                            nextIntervalDays != null -> Text("Next chain review in ${SM2Engine.formatInterval(nextIntervalDays)}.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
 
                         Spacer(modifier = Modifier.height(24.dp))
 
@@ -260,9 +242,10 @@ fun ChainDrill(
                         // Bottom Actions
                         OutlinedButton(
                             onClick = { restart() },
+                            enabled = !isSaving && saveError == null,
                             modifier = Modifier
                                 .fillMaxWidth(0.85f)
-                                .height(48.dp),
+                                .heightIn(min = 48.dp),
                             shape = RoundedCornerShape(10.dp),
                             border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
                             colors = ButtonDefaults.outlinedButtonColors(
@@ -282,13 +265,14 @@ fun ChainDrill(
 
                         Button(
                             onClick = onClose,
+                            enabled = !isSaving,
                             modifier = Modifier
                                 .fillMaxWidth(0.85f)
-                                .height(48.dp),
+                                .heightIn(min = 48.dp),
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = RemoraAccent,
-                                contentColor = Color.White
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             )
                         ) {
                             Text("Done", fontWeight = FontWeight.Bold)
@@ -299,7 +283,8 @@ fun ChainDrill(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(24.dp),
+                            .padding(24.dp)
+                            .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -378,7 +363,7 @@ fun ChainDrill(
                                 onClick = { revealed = true },
                                 modifier = Modifier
                                     .fillMaxWidth(0.85f)
-                                    .height(50.dp),
+                                    .heightIn(min = 48.dp),
                                 shape = RoundedCornerShape(10.dp),
                                 border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
                                 colors = ButtonDefaults.outlinedButtonColors(
@@ -396,12 +381,12 @@ fun ChainDrill(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth(0.85f)
-                                    .height(50.dp),
+                                    .heightIn(min = 48.dp),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 Button(
                                     onClick = { mark(false) },
-                                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                                    modifier = Modifier.weight(1f).heightIn(min = 48.dp),
                                     shape = RoundedCornerShape(10.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = RemoraRed.copy(alpha = 0.12f),
@@ -417,7 +402,7 @@ fun ChainDrill(
 
                                 Button(
                                     onClick = { mark(true) },
-                                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                                    modifier = Modifier.weight(1f).heightIn(min = 48.dp),
                                     shape = RoundedCornerShape(10.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = RemoraGreen.copy(alpha = 0.14f),

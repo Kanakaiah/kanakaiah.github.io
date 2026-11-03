@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,7 +30,9 @@ import kotlin.math.ceil
 fun FirstLetterMode(
     text: String,
     onComplete: (revealedRatio: Float) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    previouslySeen: List<Int> = emptyList(),
+    onSeenChanged: (Set<Int>, Int) -> Unit = { _, _ -> }
 ) {
     val scrollState = rememberScrollState()
 
@@ -38,8 +41,16 @@ fun FirstLetterMode(
         text.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
     }
 
-    var hintLevel by remember(text) { mutableIntStateOf(0) }
-    val manuallyRevealed = remember(text) { mutableStateListOf<Int>() }
+    var hintLevel by rememberSaveable(text) { mutableIntStateOf(0) }
+    var manuallyRevealed by rememberSaveable(text) { mutableStateOf(arrayListOf<Int>()) }
+    var seen by rememberSaveable(text) { mutableStateOf(ArrayList(previouslySeen.filter { it in rawWords.indices })) }
+    fun recordSeen(indices: Collection<Int>) {
+        val updated = (seen + indices).distinct().sorted()
+        if (updated.size != seen.size) {
+            seen = ArrayList(updated)
+            onSeenChanged(updated.toSet(), rawWords.size)
+        }
+    }
 
     // Words revealed via hint button
     val hintRevealedCount = remember(hintLevel, rawWords.size) {
@@ -50,92 +61,37 @@ fun FirstLetterMode(
         index < hintRevealedCount || manuallyRevealed.contains(index)
     }
 
-    val totalRevealedCount = remember(hintRevealedCount, manuallyRevealed.size, rawWords.size) {
-        rawWords.indices.count { isWordRevealed(it) }
-    }
+    val totalRevealedCount = seen.size
 
     val revealedRatio = if (rawWords.isNotEmpty()) totalRevealedCount.toFloat() / rawWords.size else 0f
 
     // Grade ceiling based on hint reveal
     val gradeCeilingLabel = when {
-        revealedRatio == 0f -> "Easy (5)"
+        revealedRatio <= 0.05f -> "Easy (5)"
         revealedRatio <= 0.25f -> "Good (4)"
         revealedRatio <= 0.75f -> "Hard (3)"
-        else -> "Blank (1)"
+        else -> "Again (1)"
     }
 
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // Top Controls Row: Lightweight Hint Pill + Ceiling Info
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                onClick = {
-                    hintLevel = if (hintLevel >= 4) 0 else hintLevel + 1
-                },
-                shape = RoundedCornerShape(16.dp),
-                color = if (hintLevel > 0) RemoraAccent.copy(alpha = 0.25f) else Color(0xFF1E1B17),
-                border = androidx.compose.foundation.BorderStroke(
-                    1.dp,
-                    if (hintLevel > 0) RemoraAccent else Color(0xFF332D24)
-                )
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.Lightbulb,
-                        contentDescription = "Hint",
-                        tint = if (hintLevel > 0) RemoraAccentLight else RemoraTextMuted,
-                        modifier = Modifier.size(15.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = if (hintLevel == 0) "Hint" else if (hintLevel < 4) "Hint $hintLevel/4" else "Full",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (hintLevel > 0) RemoraAccentLight else RemoraTextSecondary
-                    )
-                }
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            TextButton(onClick = {
+                hintLevel = if (hintLevel >= 4) 0 else hintLevel + 1
+                val count = ceil(rawWords.size * (hintLevel * 0.25f)).toInt().coerceAtMost(rawWords.size)
+                recordSeen((0 until count).toList())
+            }) {
+                Icon(Icons.Default.Lightbulb, contentDescription = "Hint")
+                Spacer(Modifier.width(8.dp))
+                Text(if (hintLevel == 0) "Hint" else if (hintLevel < 4) "Hint $hintLevel/4" else "Full hint")
             }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = if (totalRevealedCount == 0) "Recite from first letters"
-                    else "$totalRevealedCount of ${rawWords.size} revealed",
-                    fontSize = 11.5.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = RemoraTextSecondary
-                )
-                Surface(
-                    shape = RoundedCornerShape(10.dp),
-                    color = Color(0xFF1E1B17),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF332D24))
-                ) {
-                    Text(
-                        text = gradeCeilingLabel,
-                        fontSize = 10.5.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (revealedRatio > 0.75f) GradeBlank
-                        else if (revealedRatio > 0.25f) GradeHard
-                        else RemoraAccentLight,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                    )
-                }
-            }
+            Text(
+                if (totalRevealedCount == 0) "Recite from first letters" else "$totalRevealedCount of ${rawWords.size} words seen · Highest grade: $gradeCeilingLabel",
+                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
-
         // Free-Flow Passage Display (Unconstrained canvas, full screen space like Immerse mode)
         Box(
             modifier = Modifier
@@ -158,11 +114,8 @@ fun FirstLetterMode(
 
                     Surface(
                         onClick = {
-                            if (manuallyRevealed.contains(index)) {
-                                manuallyRevealed.remove(index)
-                            } else {
-                                manuallyRevealed.add(index)
-                            }
+                            recordSeen(listOf(index))
+                            manuallyRevealed = ArrayList(if (manuallyRevealed.contains(index)) manuallyRevealed - index else manuallyRevealed + index)
                         },
                         shape = RoundedCornerShape(6.dp),
                         color = if (revealed) RemoraAccent.copy(alpha = 0.18f) else Color.Transparent,
@@ -174,12 +127,12 @@ fun FirstLetterMode(
                         Text(
                             text = if (revealed) word else cuedWord,
                             fontSize = 20.sp,
-                            lineHeight = 32.sp,
+                            lineHeight = 30.sp,
                             fontFamily = FontFamily.Serif,
                             fontWeight = if (revealed) FontWeight.SemiBold else FontWeight.Medium,
                             letterSpacing = if (revealed) 0.sp else 0.5.sp,
                             color = if (revealed) RemoraTextPrimary else RemoraTextSecondary,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            modifier = Modifier.heightIn(min = 48.dp).padding(horizontal = 8.dp, vertical = 8.dp)
                         )
                     }
                 }
@@ -205,18 +158,18 @@ fun FirstLetterMode(
                 onClick = { onComplete(revealedRatio) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = RemoraAccent,
-                    contentColor = Color(0xFF141414)
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .heightIn(min = 48.dp)
             ) {
                 Text(
                     text = "Done Reciting — Check Recall",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF141414)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

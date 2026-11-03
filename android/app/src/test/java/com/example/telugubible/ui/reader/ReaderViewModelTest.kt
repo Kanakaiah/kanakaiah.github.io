@@ -64,6 +64,89 @@ class ReaderViewModelTest {
     }
 
     @Test
+    fun legacyTeluguTranslationUsesLocalReaderWithoutRewritingPreference() = runTest {
+        advanceUntilIdle()
+        val original = repository.getAppSettings()
+        repository.saveAppSettings(original.copy(bibleVersion = "IRV-TE"))
+        val restored = ReaderViewModel(application, repository, kjvService)
+        advanceUntilIdle()
+        assertEquals("TELIRV", restored.uiState.value.activeVersion)
+        assertEquals(BibleLanguage.TELUGU, restored.uiState.value.language)
+        assertEquals("IRV-TE", repository.getAppSettings().bibleVersion)
+        assertEquals(repository.getChapterVerses(1, 1, "TELIRV"), repository.getChapterVerses(1, 1, "IRV-TE"))
+        assertEquals("NASB95", com.example.telugubible.data.model.BibleTranslation.normalizeCode("nasb95"))
+    }
+
+    @Test
+    fun failedReadingSettingsSaveReloadsPreviousValues() = runTest {
+        advanceUntilIdle()
+        val before = repository.getAppSettings()
+        val revision = viewModel.uiState.value.settingsRevision
+        userDbHelper.writableDatabase.execSQL("CREATE TRIGGER reject_reader_settings BEFORE INSERT ON user_stats WHEN NEW.key = 'setting_fontSize' BEGIN SELECT RAISE(ABORT, 'test failure'); END")
+        viewModel.setReaderTheme(ReaderTheme.PAPER)
+        advanceUntilIdle()
+        assertEquals(before, repository.getAppSettings())
+        assertEquals(ReaderTheme.fromKey(before.theme), viewModel.uiState.value.readerTheme)
+        assertEquals(revision, viewModel.uiState.value.settingsRevision)
+        assertNotNull(viewModel.uiState.value.toastMessage)
+    }
+
+    @Test
+    fun savedChapterRestoresInNewReaderWithoutChangingVersion() = runTest {
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.hasSavedReadingPosition)
+        viewModel.selectBookAndChapterById(43, 3)
+        advanceUntilIdle()
+        assertEquals("43:3", repository.getSessionState("reader_position"))
+        val restored = ReaderViewModel(application, repository, kjvService)
+        advanceUntilIdle()
+        assertEquals(43, restored.uiState.value.currentBook?.id)
+        assertEquals(3, restored.uiState.value.currentChapter)
+        assertEquals(3, restored.uiState.value.verses.first().chapter)
+        assertTrue(restored.uiState.value.hasSavedReadingPosition)
+        assertEquals(viewModel.uiState.value.activeVersion, restored.uiState.value.activeVersion)
+    }
+
+    @Test
+    fun invalidSavedPositionFallsBackAndOversizedChapterIsClamped() = runTest {
+        advanceUntilIdle()
+        for (value in listOf("broken", "-1:2", "1:0", "999:1")) {
+            repository.setSessionState("reader_position", value)
+            val restored = ReaderViewModel(application, repository, kjvService)
+            advanceUntilIdle()
+            assertEquals(1, restored.uiState.value.currentBook?.id)
+            assertEquals(1, restored.uiState.value.currentChapter)
+            assertFalse(restored.uiState.value.hasSavedReadingPosition)
+        }
+        repository.setSessionState("reader_position", "1:999")
+        val restored = ReaderViewModel(application, repository, kjvService)
+        advanceUntilIdle()
+        assertEquals(50, restored.uiState.value.currentChapter)
+        assertTrue(restored.uiState.value.verses.all { it.chapter == 50 })
+    }
+
+    @Test
+    fun latestNavigationWinsOverInitializationAndEarlierRequests() = runTest {
+        viewModel.selectBookAndChapterById(2, 2)
+        viewModel.selectBookAndChapterById(43, 3)
+        advanceUntilIdle()
+        assertEquals(43, viewModel.uiState.value.currentBook?.id)
+        assertEquals(3, viewModel.uiState.value.currentChapter)
+        assertTrue(viewModel.uiState.value.books.isNotEmpty())
+        assertEquals("43:3", repository.getSessionState("reader_position"))
+    }
+
+    @Test
+    fun readerPalettesMatchTheAppPalettes() {
+        ReaderTheme.entries.forEach { theme ->
+            val palette = com.example.telugubible.theme.RemoraColors.forTheme(theme.toSettingKey())
+            assertEquals(palette.background, theme.backgroundColor)
+            assertEquals(palette.textPrimary, theme.textColor)
+            assertEquals(palette.accent, theme.accentColor)
+        }
+    }
+
+    @Test
     fun testInitialDataLoading() = runTest {
         advanceUntilIdle()
         val state = viewModel.uiState.value
@@ -75,6 +158,24 @@ class ReaderViewModelTest {
         assertTrue(state.verses.isNotEmpty())
         assertEquals(31, state.verses.size) // Genesis 1 has 31 verses
         assertTrue("Genesis 1 has cross reference counts", state.crossRefCounts.isNotEmpty())
+    }
+
+    @Test
+    fun savingSelectionCapturesVersesAndDoesNotClearLaterSelection() = runTest {
+        advanceUntilIdle()
+        viewModel.toggleVerseSelection(1)
+        viewModel.toggleVerseSelection(2)
+        viewModel.toggleVerseSelection(4)
+        viewModel.setLanguage(BibleLanguage.ENGLISH)
+        assertTrue(viewModel.formatSelectedVersesForClipboard().startsWith("Genesis 1:1-2, 4\n"))
+        viewModel.addSelectedVersesToMemory(combineConsecutive = true)
+        viewModel.clearVerseSelection()
+        viewModel.toggleVerseSelection(5)
+        advanceUntilIdle()
+        assertEquals(setOf(5), viewModel.uiState.value.selectedVerses)
+        val saved = repository.getUserMemoryVerses().sortedBy { it.verse }
+        assertEquals(listOf(1, 4), saved.map { it.verse })
+        assertEquals(listOf(2, null), saved.map { it.endVerse })
     }
 
     @Test
@@ -114,6 +215,33 @@ class ReaderViewModelTest {
         assertEquals(1, viewModel.uiState.value.selectedVerses.size)
         viewModel.clearVerseSelection()
         assertTrue(viewModel.uiState.value.selectedVerses.isEmpty())
+    }
+
+    @Test
+    fun connectionNavigationUsesLatestRequestAndDismissCancelsQueuedWork() = runTest {
+        advanceUntilIdle()
+        val first = com.example.telugubible.util.KjvVersification.toVerseIndex(1, 1, 1)!!
+        val second = com.example.telugubible.util.KjvVersification.toVerseIndex(43, 1, 1)!!
+        viewModel.openConnectionsForVid(first)
+        viewModel.openConnectionsForVid(second)
+        advanceUntilIdle()
+        assertEquals(second, viewModel.uiState.value.connectionsData?.vid)
+        viewModel.openConnectionsForVid(first)
+        viewModel.dismissCrossReferences()
+        advanceUntilIdle()
+        assertNull(viewModel.uiState.value.connectionsData)
+        assertNull(viewModel.uiState.value.crossRefSheetVerses)
+    }
+
+    @Test
+    fun returningToReadingContextRestoresOriginalSelection() = runTest {
+        advanceUntilIdle()
+        viewModel.selectBookAndChapterById(43, 1)
+        advanceUntilIdle()
+        viewModel.restoreReadingContext(1, 1, setOf(1, 3, 999))
+        assertEquals(1, viewModel.uiState.value.currentBook?.id)
+        assertEquals(1, viewModel.uiState.value.currentChapter)
+        assertEquals(setOf(1, 3), viewModel.uiState.value.selectedVerses)
     }
 
     @Test
@@ -203,6 +331,27 @@ class ReaderViewModelTest {
     }
 
     @Test
+    fun missingTaggedVerseDoesNotGuessOriginalWords() = runTest {
+        advanceUntilIdle()
+        kjvService.seedCache(1, 1, mapOf(1 to "beginning<S>7225</S>"))
+        viewModel.openOriginalWords(2)
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.isOriginalWordsLoading)
+        assertTrue(viewModel.uiState.value.originalWordsList.isEmpty())
+    }
+
+    @Test
+    fun dismissingOriginalWordsInvalidatesPendingLoad() = runTest {
+        advanceUntilIdle()
+        kjvService.seedCache(1, 1, mapOf(1 to "beginning<S>7225</S>"))
+        viewModel.openOriginalWords(1)
+        viewModel.dismissOriginalWords()
+        advanceUntilIdle()
+        assertNull(viewModel.uiState.value.originalWordsVerse)
+        assertTrue(viewModel.uiState.value.originalWordsList.isEmpty())
+    }
+
+    @Test
     fun testOriginalWordsAndStrongsLookup() = runTest {
         advanceUntilIdle()
 
@@ -238,6 +387,20 @@ class ReaderViewModelTest {
         viewModel.dismissOriginalWords()
         assertNull(viewModel.uiState.value.originalWordsVerse)
         assertTrue(viewModel.uiState.value.originalWordsList.isEmpty())
+    }
+
+    @Test
+    fun readerThemeIsPublishedAfterPersistenceAndSyncDoesNotRepublish() = runTest {
+        advanceUntilIdle()
+        val revision = viewModel.uiState.value.settingsRevision
+        viewModel.setReaderTheme(ReaderTheme.SEPIA)
+        assertEquals(revision, viewModel.uiState.value.settingsRevision)
+        advanceUntilIdle()
+        assertEquals("sepia", repository.getAppSettings().theme)
+        assertEquals(revision + 1, viewModel.uiState.value.settingsRevision)
+        viewModel.syncSettings()
+        advanceUntilIdle()
+        assertEquals(revision + 1, viewModel.uiState.value.settingsRevision)
     }
 
     @Test
@@ -312,6 +475,33 @@ class ReaderViewModelTest {
         viewModel.dismissOccurrences()
         assertNull(viewModel.uiState.value.occurrencesStrongs)
         assertTrue(viewModel.uiState.value.occurrencesList.isEmpty())
+    }
+
+    @Test
+    fun chapterRecallSaveFailureShowsErrorWithoutRecordingProgress() = runTest {
+        advanceUntilIdle()
+        userDbHelper.writableDatabase.execSQL("CREATE TRIGGER reject_anchor BEFORE INSERT ON review_log WHEN NEW.item_kind = 'anchor' BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        viewModel.gradeChapterRecall(4)
+        advanceUntilIdle()
+        assertNotNull(viewModel.uiState.value.chapterRecallError)
+        assertFalse(viewModel.uiState.value.isChapterRecallSaving)
+        assertFalse(viewModel.uiState.value.isAnchorDismissed)
+        assertTrue(userDbHelper.getChapterProgress(1).isEmpty())
+    }
+
+    @Test
+    fun chapterRecallDismissDoesNotGradeAndRepeatedTapsSaveOnce() = runTest {
+        advanceUntilIdle()
+        viewModel.dismissChapterRecall()
+        assertTrue(userDbHelper.getChapterProgress(1).isEmpty())
+        viewModel.selectBookAndChapterById(1, 1)
+        advanceUntilIdle()
+        viewModel.gradeChapterRecall(4)
+        viewModel.gradeChapterRecall(4)
+        assertTrue(viewModel.uiState.value.isChapterRecallSaving)
+        advanceUntilIdle()
+        assertEquals(1, userDbHelper.getChapterProgress(1)[1]?.attempts)
+        assertFalse(viewModel.uiState.value.isChapterRecallSaving)
     }
 
     @Test

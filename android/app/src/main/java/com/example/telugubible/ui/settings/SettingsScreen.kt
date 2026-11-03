@@ -7,38 +7,23 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Layers
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Title
 import androidx.compose.material.icons.filled.Upload
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -46,25 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.theme.*
-import com.example.telugubible.ui.reader.FontSizeScale
-
-data class ThemeOption(val id: String, val label: String, val color: Color)
-data class FontSizeOption(val size: Float, val label: String)
-
-private val THEME_OPTIONS = listOf(
-    ThemeOption("black", "Midnight", Color(0xFF0C0A08)),
-    ThemeOption("dark", "Walnut", Color(0xFF1A1613)),
-    ThemeOption("sepia", "Sepia", Color(0xFFF6ECD6)),
-    ThemeOption("white", "Paper", Color(0xFFFFFFFF))
-)
-
-private val FONT_SIZE_OPTIONS = listOf(
-    FontSizeOption(0.82f, "XS"),
-    FontSizeOption(1.00f, "S"),
-    FontSizeOption(1.28f, "M"),
-    FontSizeOption(1.60f, "L"),
-    FontSizeOption(2.00f, "XL")
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,6 +42,9 @@ fun SettingsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    var selectedCategory by rememberSaveable { mutableStateOf(SettingsCategory.APPEARANCE) }
+    val listState = rememberLazyListState()
+    LaunchedEffect(selectedCategory) { listState.scrollToItem(0) }
 
     var showClearDataConfirm by remember { mutableStateOf(false) }
     var showRestoreDialog by remember { mutableStateOf(false) }
@@ -136,8 +105,7 @@ fun SettingsScreen(
                 title = {
                     Text(
                         text = "Settings",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge,
                         color = RemoraTextPrimary
                     )
                 },
@@ -159,6 +127,7 @@ fun SettingsScreen(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
         LazyColumn(
+            state = listState,
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
@@ -168,340 +137,22 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            // 1. Appearance Section
             item {
-                SettingsSectionHeader(icon = Icons.Default.Palette, title = "Appearance")
-                Spacer(modifier = Modifier.height(8.dp))
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = RemoraCardBg,
-                    border = BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Theme Palette",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Text(
-                            text = "Choose your preferred color scheme",
-                            fontSize = 12.sp,
-                            color = RemoraTextSecondary
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            THEME_OPTIONS.forEach { opt ->
-                                val isSelected = state.settings.theme == opt.id
-                                Surface(
-                                    onClick = { viewModel.setTheme(opt.id) },
-                                    shape = RoundedCornerShape(10.dp),
-                                    color = if (isSelected) RemoraCardBgElevated else RemoraBackground,
-                                    border = BorderStroke(
-                                        if (isSelected) 2.dp else 1.dp,
-                                        if (isSelected) RemoraAccent else RemoraCardBorder
-                                    ),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp)
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(24.dp)
-                                                .background(opt.color, CircleShape)
-                                                .border(1.dp, RemoraCardBorder, CircleShape)
-                                        )
-                                        Spacer(modifier = Modifier.height(6.dp))
-                                        Text(
-                                            text = opt.label,
-                                            fontSize = 11.sp,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) RemoraTextPrimary else RemoraTextSecondary
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = RemoraCardBorder, modifier = Modifier.padding(vertical = 14.dp))
-
-                        Text(
-                            text = "Global Text Size",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Text(
-                            text = "Scale the font size for the reader and memory cards",
-                            fontSize = 12.sp,
-                            color = RemoraTextSecondary
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            FONT_SIZE_OPTIONS.forEach { opt ->
-                                val isSelected = FontSizeScale.fromMultiplier(state.settings.fontSize) == FontSizeScale.fromMultiplier(opt.size)
-                                Surface(
-                                    onClick = { viewModel.setFontSize(opt.size) },
-                                    shape = RoundedCornerShape(8.dp),
-                                    color = if (isSelected) RemoraAccent else RemoraCardBgElevated,
-                                    border = BorderStroke(1.dp, if (isSelected) RemoraAccent else RemoraCardBorder),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Box(
-                                        contentAlignment = Alignment.Center,
-                                        modifier = Modifier.padding(vertical = 8.dp)
-                                    ) {
-                                        Text(
-                                            text = opt.label,
-                                            fontSize = 11.sp,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) Color.White else RemoraTextSecondary
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                SettingsCategoryTabs(selectedCategory) { selectedCategory = it }
+            }
+            if (selectedCategory != SettingsCategory.DATA) {
+                item {
+                    if (state.isLoading) {
+                        CircularProgressIndicator()
+                    } else {
+                        SettingsCategoryContent(selectedCategory, state.settings, viewModel::updateSettings, viewModel::setChapterDisplayPreset)
                     }
                 }
             }
-
-            // 2. Practice & Reading Section
-            item {
-                SettingsSectionHeader(icon = Icons.Default.Psychology, title = "Practice & Reading")
-                Spacer(modifier = Modifier.height(8.dp))
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = RemoraCardBg,
-                    border = BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                        // TTS toggle
-                        SettingsSwitchRow(
-                            icon = Icons.AutoMirrored.Filled.VolumeUp,
-                            title = "Text-to-Speech",
-                            subtitle = "Read verses aloud during practice drill",
-                            isChecked = state.settings.ttsEnabled,
-                            onCheckedChange = { viewModel.setTtsEnabled(it) }
-                        )
-
-                        HorizontalDivider(color = RemoraCardBorder)
-
-                        // Recall Masking toggle
-                        SettingsSwitchRow(
-                            icon = Icons.Default.VisibilityOff,
-                            title = "Recall Masking",
-                            subtitle = "Hide parts of verses in the dashboard",
-                            isChecked = state.settings.recallMasking,
-                            onCheckedChange = { viewModel.setRecallMasking(it) }
-                        )
-
-                        HorizontalDivider(color = RemoraCardBorder)
-
-                        // Bionic Reading toggle
-                        SettingsSwitchRow(
-                            icon = Icons.Default.Title,
-                            title = "Bionic Reading",
-                            subtitle = "Bold first letters of words to read faster",
-                            isChecked = state.settings.bionicReading,
-                            onCheckedChange = { viewModel.setBionicReading(it) }
-                        )
-
-                        HorizontalDivider(color = RemoraCardBorder)
-
-                        // Reading apparatus presets
-                        Column(modifier = Modifier.padding(vertical = 12.dp)) {
-                            Text(
-                                text = "Chapter Display Preset",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary
-                            )
-                            Text(
-                                text = "How much the reader shows alongside scripture",
-                                fontSize = 12.sp,
-                                color = RemoraTextSecondary
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                listOf("study" to "Study", "reading" to "Reading", "clean" to "Clean").forEach { (id, label) ->
-                                    val isMatch = when (id) {
-                                        "study" -> state.settings.showSectionHeadings && state.settings.showVerseNumbers && state.settings.showParagraphMarks && state.settings.showCrossRefMarkers
-                                        "reading" -> state.settings.showSectionHeadings && state.settings.showVerseNumbers && !state.settings.showParagraphMarks && !state.settings.showCrossRefMarkers
-                                        "clean" -> state.settings.showSectionHeadings && !state.settings.showVerseNumbers && !state.settings.showParagraphMarks && !state.settings.showCrossRefMarkers
-                                        else -> false
-                                    }
-
-                                    Surface(
-                                        onClick = { viewModel.setChapterDisplayPreset(id) },
-                                        shape = RoundedCornerShape(8.dp),
-                                        color = if (isMatch) RemoraAccent else RemoraCardBgElevated,
-                                        border = BorderStroke(1.dp, if (isMatch) RemoraAccent else RemoraCardBorder),
-                                        modifier = Modifier.weight(1f)
-                                    ) {
-                                        Box(
-                                            contentAlignment = Alignment.Center,
-                                            modifier = Modifier.padding(vertical = 8.dp)
-                                        ) {
-                                            Text(
-                                                text = label,
-                                                fontSize = 12.sp,
-                                                fontWeight = if (isMatch) FontWeight.Bold else FontWeight.Medium,
-                                                color = if (isMatch) Color.White else RemoraTextSecondary
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            // Individual reading switches
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                MiniToggleRow(label = "Section headings", isChecked = state.settings.showSectionHeadings, onToggle = { viewModel.toggleReadingOption("showSectionHeadings") })
-                                MiniToggleRow(label = "Verse numbers", isChecked = state.settings.showVerseNumbers, onToggle = { viewModel.toggleReadingOption("showVerseNumbers") })
-                                MiniToggleRow(label = "Paragraph marks", isChecked = state.settings.showParagraphMarks, onToggle = { viewModel.toggleReadingOption("showParagraphMarks") })
-                                MiniToggleRow(label = "Cross-reference marks", isChecked = state.settings.showCrossRefMarkers, onToggle = { viewModel.toggleReadingOption("showCrossRefMarkers") })
-                            }
-                        }
-
-                        HorizontalDivider(color = RemoraCardBorder)
-
-                        // Bible Version
-                        Column(modifier = Modifier.padding(vertical = 12.dp)) {
-                            Text(
-                                text = "Default Bible Translation",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary
-                            )
-                            Text(
-                                text = "Preferred translation for reading and key verses",
-                                fontSize = 12.sp,
-                                color = RemoraTextSecondary
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                com.example.telugubible.data.model.BibleTranslation.ALL.chunked(3).forEach { rowTranslations ->
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        rowTranslations.forEach { translation ->
-                                            val isSelected = state.settings.bibleVersion.equals(translation.code, ignoreCase = true)
-                                            Surface(
-                                                onClick = { viewModel.setBibleVersion(translation.code) },
-                                                shape = RoundedCornerShape(8.dp),
-                                                color = if (isSelected) RemoraAccent else RemoraCardBgElevated,
-                                                border = BorderStroke(1.dp, if (isSelected) RemoraAccent else RemoraCardBorder),
-                                                modifier = Modifier.weight(1f)
-                                            ) {
-                                                Box(
-                                                    contentAlignment = Alignment.Center,
-                                                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
-                                                ) {
-                                                    Text(
-                                                        text = translation.shortLabel,
-                                                        fontSize = 11.sp,
-                                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                                        color = if (isSelected) Color.White else RemoraTextSecondary,
-                                                        maxLines = 1
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            if (selectedCategory == SettingsCategory.DATA && state.isLoading) {
+                item { CircularProgressIndicator() }
             }
-
-            // 3. Memory Section
-            item {
-                SettingsSectionHeader(icon = Icons.Default.Layers, title = "Memory")
-                Spacer(modifier = Modifier.height(8.dp))
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = RemoraCardBg,
-                    border = BorderStroke(1.dp, RemoraCardBorder),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Chapter Anchor Reveal",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Text(
-                            text = "When a chapter's memory anchor shows in guide and reader",
-                            fontSize = 12.sp,
-                            color = RemoraTextSecondary
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            listOf("tap" to "Tap to reveal", "always" to "Always show", "never" to "Never show").forEach { (id, label) ->
-                                val isSelected = state.settings.anchorReveal == id
-                                Surface(
-                                    onClick = { viewModel.setAnchorReveal(id) },
-                                    shape = RoundedCornerShape(8.dp),
-                                    color = if (isSelected) RemoraAccent else RemoraCardBgElevated,
-                                    border = BorderStroke(1.dp, if (isSelected) RemoraAccent else RemoraCardBorder),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Box(
-                                        contentAlignment = Alignment.Center,
-                                        modifier = Modifier.padding(vertical = 8.dp)
-                                    ) {
-                                        Text(
-                                            text = label,
-                                            fontSize = 11.sp,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) Color.White else RemoraTextSecondary
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = RemoraCardBorder, modifier = Modifier.padding(vertical = 14.dp))
-
-                        SettingsSwitchRow(
-                            icon = Icons.Default.Whatshot,
-                            title = "Streak Includes Chapters",
-                            subtitle = "Count chapter anchors and memory sentences toward daily streak",
-                            isChecked = state.settings.streakIncludesChapters,
-                            onCheckedChange = { viewModel.setStreakIncludesChapters(it) }
-                        )
-                    }
-                }
-            }
-
+            if (selectedCategory == SettingsCategory.DATA && !state.isLoading) {
             // 4. Data Management Section
             item {
                 SettingsSectionHeader(icon = Icons.Default.Download, title = "Data Management")
@@ -540,9 +191,9 @@ fun SettingsScreen(
                                     shape = RoundedCornerShape(8.dp),
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
+                                    Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onPrimary)
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Save File", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text("Save File", color = MaterialTheme.colorScheme.onPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 }
                                 Button(
                                     onClick = {
@@ -591,9 +242,9 @@ fun SettingsScreen(
                                     shape = RoundedCornerShape(8.dp),
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Icon(Icons.Default.Upload, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
+                                    Icon(Icons.Default.Upload, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onPrimary)
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Pick File", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text("Pick File", color = MaterialTheme.colorScheme.onPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 }
                                 Button(
                                     onClick = {
@@ -653,6 +304,7 @@ fun SettingsScreen(
                         }
                     }
                 }
+            }
             }
         }
     }
@@ -858,100 +510,6 @@ private fun SettingsSectionHeader(icon: ImageVector, title: String) {
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp,
             color = RemoraAccentLight
-        )
-    }
-}
-
-@Composable
-private fun SettingsSwitchRow(
-    icon: ImageVector,
-    title: String,
-    subtitle: String,
-    isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onCheckedChange(!isChecked) }
-            .padding(vertical = 12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.weight(1f)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .background(RemoraAccent.copy(alpha = 0.12f), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = RemoraAccent,
-                    modifier = Modifier.size(18.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(12.dp))
-            Column {
-                Text(
-                    text = title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextPrimary
-                )
-                Text(
-                    text = subtitle,
-                    fontSize = 12.sp,
-                    color = RemoraTextSecondary
-                )
-            }
-        }
-        Switch(
-            checked = isChecked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = RemoraAccent,
-                uncheckedThumbColor = RemoraTextSecondary,
-                uncheckedTrackColor = RemoraCardBgElevated
-            )
-        )
-    }
-}
-
-@Composable
-private fun MiniToggleRow(
-    label: String,
-    isChecked: Boolean,
-    onToggle: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onToggle() }
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            fontSize = 13.sp,
-            color = RemoraTextPrimary
-        )
-        Switch(
-            checked = isChecked,
-            onCheckedChange = { onToggle() },
-            modifier = Modifier.height(24.dp),
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = RemoraAccent,
-                uncheckedThumbColor = RemoraTextSecondary,
-                uncheckedTrackColor = RemoraCardBgElevated
-            )
         )
     }
 }

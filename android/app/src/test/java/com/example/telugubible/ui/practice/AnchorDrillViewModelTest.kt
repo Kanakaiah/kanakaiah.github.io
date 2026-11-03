@@ -61,6 +61,47 @@ class AnchorDrillViewModelTest {
     }
 
     @Test
+    fun failedAnchorGradeDoesNotAdvanceOrRecordReview() = runTest(testDispatcher) {
+        val vm = AnchorDrillViewModel(application, repository)
+        advanceUntilIdle()
+        vm.selectBook(1)
+        advanceUntilIdle()
+        vm.reveal()
+        userDbHelper.writableDatabase.execSQL("CREATE TRIGGER reject_anchor_review BEFORE INSERT ON review_log WHEN NEW.item_kind = 'anchor' BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        vm.gradeCurrent(4)
+        advanceUntilIdle()
+        assertNotNull(vm.uiState.value.gradingError)
+        assertEquals(0, vm.uiState.value.currentIndex)
+        assertTrue(repository.getReviewLog().isEmpty())
+        assertTrue(userDbHelper.getChapterProgress(1).isEmpty())
+    }
+
+    @Test
+    fun duplicateGradeRecordsOnlyOneAnchorReview() = runTest(testDispatcher) {
+        val vm = AnchorDrillViewModel(application, repository)
+        advanceUntilIdle()
+        vm.reveal()
+        vm.gradeCurrent(3)
+        vm.gradeCurrent(5)
+        assertTrue(vm.uiState.value.isGrading)
+        advanceUntilIdle()
+        assertEquals(1, vm.uiState.value.currentIndex)
+        assertEquals(1, repository.getReviewLog().size)
+        assertEquals(3, repository.getReviewLog().single().score)
+        assertFalse(vm.uiState.value.isGrading)
+    }
+
+    @Test
+    fun selectedBookSupersedesInitialLoad() = runTest(testDispatcher) {
+        val vm = AnchorDrillViewModel(application, repository)
+        vm.loadData(2)
+        advanceUntilIdle()
+        assertEquals(2, vm.uiState.value.selectedBookId)
+        assertTrue(vm.uiState.value.queue.isNotEmpty())
+        assertTrue(vm.uiState.value.queue.all { it.bookId == 2 })
+    }
+
+    @Test
     fun testAnchorDrillQueueLoading() = runTest(testDispatcher) {
         val vm = AnchorDrillViewModel(application, repository)
         advanceUntilIdle()

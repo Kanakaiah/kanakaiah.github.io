@@ -151,9 +151,10 @@ fun ChapterPlateImage(
         Box(
             modifier = Modifier
                 .padding(8.dp)
-                .size(28.dp)
+                .sizeIn(minWidth = 28.dp, minHeight = 28.dp)
                 .background(RemoraBackground.copy(alpha = 0.88f), CircleShape)
-                .border(1.dp, RemoraCardBorder, CircleShape),
+                .border(1.dp, RemoraCardBorder, CircleShape)
+                .padding(horizontal = 6.dp, vertical = 2.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(

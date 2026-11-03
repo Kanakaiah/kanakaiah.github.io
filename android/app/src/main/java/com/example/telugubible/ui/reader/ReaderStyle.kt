@@ -8,46 +8,17 @@ import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.example.telugubible.R
 
-enum class ReaderTheme(
-    val label: String,
-    val backgroundColor: Color,
-    val cardColor: Color,
-    val textColor: Color,
-    val secondaryTextColor: Color,
-    val accentColor: Color
-) {
-    OBSIDIAN(
-        label = "Black",
-        backgroundColor = Color(0xFF0C0A08),
-        cardColor = Color(0xFF131110),
-        textColor = Color(0xFFF3EDE2),
-        secondaryTextColor = Color(0xFFB3A891),
-        accentColor = Color(0xFFD4A359)
-    ),
-    DARK(
-        label = "Dark",
-        backgroundColor = Color(0xFF14120E),
-        cardColor = Color(0xFF1C1813),
-        textColor = Color(0xFFF5EFE3),
-        secondaryTextColor = Color(0xFFB8AD99),
-        accentColor = Color(0xFFD4A359)
-    ),
-    SEPIA(
-        label = "Sepia",
-        backgroundColor = Color(0xFFF6ECD6),
-        cardColor = Color(0xFFF0E3C8),
-        textColor = Color(0xFF4A3A2C),
-        secondaryTextColor = Color(0xFF7D6A56),
-        accentColor = Color(0xFFA8562E)
-    ),
-    PAPER(
-        label = "Light",
-        backgroundColor = Color(0xFFFFFFFF),
-        cardColor = Color(0xFFF8FAFC),
-        textColor = Color(0xFF111827),
-        secondaryTextColor = Color(0xFF4B5563),
-        accentColor = Color(0xFFB8552F)
-    );
+enum class ReaderTheme(val label: String, private val palette: com.example.telugubible.theme.RemoraColors) {
+    OBSIDIAN("Midnight", com.example.telugubible.theme.RemoraColors.Midnight),
+    DARK("Walnut", com.example.telugubible.theme.RemoraColors.Walnut),
+    SEPIA("Sepia", com.example.telugubible.theme.RemoraColors.Sepia),
+    PAPER("Paper", com.example.telugubible.theme.RemoraColors.Paper);
+
+    val backgroundColor: Color get() = palette.background
+    val cardColor: Color get() = palette.cardBg
+    val textColor: Color get() = palette.textPrimary
+    val secondaryTextColor: Color get() = palette.textSecondary
+    val accentColor: Color get() = palette.accent
 
     fun toSettingKey(): String = when (this) {
         OBSIDIAN -> "black"

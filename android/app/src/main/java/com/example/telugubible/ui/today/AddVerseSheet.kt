@@ -15,12 +15,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.BibleTranslation
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.VerseSearchResult
 import com.example.telugubible.theme.*
@@ -30,7 +35,7 @@ enum class AddVerseTab {
     MANUAL, SEARCH, COLLECTIONS
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AddVerseSheet(
     books: List<Book>,
@@ -41,16 +46,20 @@ fun AddVerseSheet(
     onDismiss: () -> Unit,
     onAddSingleVerse: (bookId: Int, chapter: Int, verse: Int, endVerse: Int?, topicIds: List<String>) -> Unit,
     onAddIndividually: (verses: List<Triple<Int, Int, Int>>, topicIds: List<String>) -> Unit,
-    onAddManualVerse: (String, String, String, List<String>) -> Unit,
+    onAddManualVerse: (String, List<String>) -> Unit,
     onAddCollection: (String, List<String>) -> Unit,
     onSearchVerses: (query: String, translation: String) -> Unit,
     onCreateTopic: (String, (Topic) -> Unit) -> Unit = { _, _ -> },
-    onNavigateToGuides: () -> Unit
+    onNavigateToGuides: () -> Unit,
+    initialTopicIds: Set<String> = emptySet(),
+    searchError: String? = null,
+    addError: String? = null
 ) {
     var activeTab by remember { mutableStateOf(AddVerseTab.MANUAL) }
-    var selectedTopicIds by remember { mutableStateOf(setOf<String>()) }
+    var selectedTopicIds by remember(initialTopicIds) { mutableStateOf(initialTopicIds) }
     var isAddingGroup by remember { mutableStateOf(false) }
     var newGroupName by remember { mutableStateOf("") }
+    val compactForKeyboard = WindowInsets.ime.getBottom(LocalDensity.current) > 0 && !isAddingGroup
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -64,27 +73,13 @@ fun AddVerseSheet(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
         ) {
-            // Header matching PWD AddVerse.tsx
+            if (!compactForKeyboard) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Add New Verses",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary,
-                        letterSpacing = (-0.5).sp
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "Grow your library by searching or adding verses manually.",
-                        fontSize = 13.sp,
-                        color = RemoraTextSecondary
-                    )
-                }
+                Text("Add verses", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.weight(1f))
                 IconButton(onClick = onDismiss) {
                     Icon(Icons.Default.Close, contentDescription = "Close", tint = RemoraTextSecondary)
                 }
@@ -92,14 +87,11 @@ fun AddVerseSheet(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Global Group Selector: "Assign to Groups (Optional)"
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "ASSIGN TO GROUPS (OPTIONAL)",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.8.sp,
-                    color = RemoraTextMuted
+                    text = "Collections (optional)",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(6.dp))
 
@@ -119,7 +111,8 @@ fun AddVerseSheet(
                                 }
                             },
                             shape = RoundedCornerShape(16.dp),
-                            color = if (isSelected) RemoraAccent.copy(alpha = 0.18f) else Color.Transparent,
+                            modifier = Modifier.heightIn(min = 48.dp).semantics { selected = isSelected },
+                            color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                             border = BorderStroke(
                                 1.dp,
                                 if (isSelected) RemoraAccent else RemoraCardBorder
@@ -127,9 +120,8 @@ fun AddVerseSheet(
                         ) {
                             Text(
                                 text = topic.name,
-                                fontSize = 13.sp,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
@@ -144,9 +136,9 @@ fun AddVerseSheet(
                                 OutlinedTextField(
                                     value = newGroupName,
                                     onValueChange = { newGroupName = it },
-                                    placeholder = { Text("New group...", fontSize = 13.sp) },
+                                    placeholder = { Text("New collection") },
                                     singleLine = true,
-                                    modifier = Modifier.width(130.dp).height(46.dp),
+                                    modifier = Modifier.width(180.dp).heightIn(min = 56.dp),
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedTextColor = RemoraTextPrimary,
                                         unfocusedTextColor = RemoraTextPrimary,
@@ -165,15 +157,16 @@ fun AddVerseSheet(
                                             isAddingGroup = false
                                         }
                                     },
-                                    modifier = Modifier.size(36.dp)
+                                    modifier = Modifier.size(48.dp)
                                 ) {
-                                    Icon(Icons.Default.Check, contentDescription = "Save group", tint = RemoraAccent)
+                                    Icon(Icons.Default.Check, contentDescription = "Save collection", tint = RemoraAccent)
                                 }
                             }
                         } else {
                             Surface(
                                 onClick = { isAddingGroup = true },
                                 shape = RoundedCornerShape(16.dp),
+                                modifier = Modifier.heightIn(min = 48.dp),
                                 color = Color.Transparent,
                                 border = BorderStroke(1.dp, RemoraCardBorder)
                             ) {
@@ -183,7 +176,7 @@ fun AddVerseSheet(
                                 ) {
                                     Icon(Icons.Default.Add, contentDescription = null, tint = RemoraTextSecondary, modifier = Modifier.size(14.dp))
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Text("New Group", fontSize = 13.sp, color = RemoraTextSecondary, fontWeight = FontWeight.Medium)
+                                    Text("New collection", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
                                 }
                             }
                         }
@@ -193,47 +186,48 @@ fun AddVerseSheet(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // 3 Mode Selection Buttons Grid (Manual, Search API, Collections) matching PWD
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(RemoraCardBgElevated, shape = RoundedCornerShape(10.dp))
-                    .border(1.dp, RemoraCardBorder, shape = RoundedCornerShape(10.dp))
-                    .padding(4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ModeTabButton(
                     icon = Icons.Default.Edit,
                     label = "Manual",
                     isSelected = activeTab == AddVerseTab.MANUAL,
-                    onClick = { activeTab = AddVerseTab.MANUAL },
-                    modifier = Modifier.weight(1f)
+                    onClick = { activeTab = AddVerseTab.MANUAL }
                 )
                 ModeTabButton(
                     icon = Icons.Default.Search,
-                    label = "Search API",
+                    label = "Search",
                     isSelected = activeTab == AddVerseTab.SEARCH,
-                    onClick = { activeTab = AddVerseTab.SEARCH },
-                    modifier = Modifier.weight(1f)
+                    onClick = { activeTab = AddVerseTab.SEARCH }
                 )
                 ModeTabButton(
                     icon = Icons.Default.ViewList,
                     label = "Collections",
                     isSelected = activeTab == AddVerseTab.COLLECTIONS,
-                    onClick = { activeTab = AddVerseTab.COLLECTIONS },
-                    modifier = Modifier.weight(1f)
+                    onClick = { activeTab = AddVerseTab.COLLECTIONS }
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            } else {
+                Text("Add verses", style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(vertical = 8.dp).testTag("add-verse-compact-header"))
+            }
+
+            if (!addError.isNullOrBlank()) {
+                Text(addError, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 8.dp))
+            }
             when (activeTab) {
                 AddVerseTab.MANUAL -> {
                     ManualTabContent(
                         books = books,
                         activeVersion = activeVersion,
-                        onAddManual = { ref, text, trans ->
-                            onAddManualVerse(ref, text, trans, selectedTopicIds.toList())
+                        onAddManual = { ref ->
+                            onAddManualVerse(ref, selectedTopicIds.toList())
                         },
                         onAddByPicker = { bookId, ch, vs ->
                             onAddSingleVerse(bookId, ch, vs, null, selectedTopicIds.toList())
@@ -256,7 +250,8 @@ fun AddVerseSheet(
                             results.forEach { r ->
                                 onAddSingleVerse(r.bookId, r.chapter, r.verse, r.endVerse, selectedTopicIds.toList())
                             }
-                        }
+                        },
+                        searchError = searchError
                     )
                 }
                 AddVerseTab.COLLECTIONS -> {
@@ -280,32 +275,9 @@ private fun ModeTabButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(8.dp),
-        color = if (isSelected) RemoraAccent else Color.Transparent,
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier.padding(vertical = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = if (isSelected) Color.White else RemoraTextSecondary,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = label,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                color = if (isSelected) Color.White else RemoraTextSecondary
-            )
-        }
-    }
+    FilterChip(selected = isSelected, onClick = onClick, label = { Text(label) },
+        leadingIcon = { Icon(icon, contentDescription = null, modifier = Modifier.size(18.dp)) },
+        modifier = modifier.heightIn(min = 48.dp))
 }
 
 // ----------------------------------------------------
@@ -316,12 +288,10 @@ private fun ModeTabButton(
 private fun ManualTabContent(
     books: List<Book>,
     activeVersion: String = "LSB",
-    onAddManual: (String, String, String) -> Unit,
+    onAddManual: (String) -> Unit,
     onAddByPicker: (Int, Int, Int) -> Unit
 ) {
     var manualRef by remember { mutableStateOf("") }
-    var manualTranslation by remember { mutableStateOf(activeVersion) }
-    var manualText by remember { mutableStateOf("") }
     var usePicker by remember { mutableStateOf(false) }
 
     // Picker state
@@ -330,11 +300,15 @@ private fun ManualTabContent(
     var verseText by remember { mutableStateOf("1") }
     var isExpanded by remember { mutableStateOf(false) }
     val currentBook = books.getOrNull(selectedBookIndex)
+    val chapterNumber = chapterText.toIntOrNull()
+    val verseNumber = verseText.toIntOrNull()
+    val validChapter = chapterNumber != null && currentBook != null && chapterNumber in 1..currentBook.chapters
+    val validVerse = verseNumber != null && verseNumber > 0
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(14.dp),
         contentPadding = PaddingValues(bottom = 32.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().testTag("manual-entry-list")
     ) {
         item {
             Row(
@@ -343,7 +317,7 @@ private fun ManualTabContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (usePicker) "Pick book, chapter & verse:" else "Type reference & text:",
+                    text = if (usePicker) "Pick book, chapter & verse:" else "Enter a reference:",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = RemoraTextSecondary
@@ -403,6 +377,8 @@ private fun ManualTabContent(
                         value = chapterText,
                         onValueChange = { chapterText = it.filter { c -> c.isDigit() } },
                         label = { Text("Chapter") },
+                        isError = chapterText.isNotEmpty() && !validChapter,
+                        supportingText = { if (chapterText.isNotEmpty() && !validChapter) Text("Choose a valid chapter") },
                         modifier = Modifier.weight(1f),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = RemoraTextPrimary,
@@ -416,6 +392,8 @@ private fun ManualTabContent(
                         value = verseText,
                         onValueChange = { verseText = it.filter { c -> c.isDigit() } },
                         label = { Text("Verse") },
+                        isError = verseText.isNotEmpty() && !validVerse,
+                        supportingText = { if (verseText.isNotEmpty() && !validVerse) Text("Enter a valid verse") },
                         modifier = Modifier.weight(1f),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = RemoraTextPrimary,
@@ -431,13 +409,14 @@ private fun ManualTabContent(
                 Button(
                     onClick = {
                         val book = currentBook ?: return@Button
-                        val ch = chapterText.toIntOrNull() ?: 1
-                        val vs = verseText.toIntOrNull() ?: 1
+                        val ch = chapterNumber ?: return@Button
+                        val vs = verseNumber ?: return@Button
                         onAddByPicker(book.id, ch, vs)
                     },
+                    enabled = validChapter && validVerse,
                     colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
                     shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth().height(48.dp)
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 ) {
                     Text("Add to Library", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
@@ -463,52 +442,16 @@ private fun ManualTabContent(
             }
 
             item {
-                OutlinedTextField(
-                    value = manualTranslation,
-                    onValueChange = { manualTranslation = it },
-                    label = { Text("Translation Version") },
-                    placeholder = { Text("e.g. LSB, NIV, ESV", color = RemoraTextMuted) },
-                    singleLine = true,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = RemoraTextPrimary,
-                        unfocusedTextColor = RemoraTextPrimary,
-                        focusedBorderColor = RemoraAccent,
-                        unfocusedBorderColor = RemoraCardBorder
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            item {
-                OutlinedTextField(
-                    value = manualText,
-                    onValueChange = { manualText = it },
-                    label = { Text("Verse Text") },
-                    placeholder = { Text("Type or paste the verse text here...", color = RemoraTextMuted) },
-                    minLines = 4,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = RemoraTextPrimary,
-                        unfocusedTextColor = RemoraTextPrimary,
-                        focusedBorderColor = RemoraAccent,
-                        unfocusedBorderColor = RemoraCardBorder
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            item {
                 Button(
                     onClick = {
                         if (manualRef.isNotBlank()) {
-                            onAddManual(manualRef.trim(), manualText.trim(), manualTranslation.trim().ifBlank { "LSB" })
+                            onAddManual(manualRef.trim())
                         }
                     },
                     enabled = manualRef.isNotBlank(),
                     colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
                     shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth().height(48.dp)
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 ) {
                     Text("Add Verse", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
@@ -520,20 +463,23 @@ private fun ManualTabContent(
 // ----------------------------------------------------
 // 2. SEARCH API TAB CONTENT
 // ----------------------------------------------------
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SearchTabContent(
+internal fun SearchTabContent(
     searchResults: List<VerseSearchResult>,
     isSearching: Boolean,
     activeVersion: String = "LSB",
     onSearch: (String, String) -> Unit,
     onAddVerse: (Int, Int, Int, Int?) -> Unit,
     onAddIndividually: (List<Triple<Int, Int, Int>>) -> Unit,
-    onAddAll: (List<VerseSearchResult>) -> Unit
+    onAddAll: (List<VerseSearchResult>) -> Unit,
+    searchError: String? = null
 ) {
     var query by remember { mutableStateOf("") }
     var selectedTranslation by remember { mutableStateOf(activeVersion.ifBlank { "LSB" }) }
     var translationExpanded by remember { mutableStateOf(false) }
-    val translationOptions = listOf("LSB", "WEB", "NASB", "ESV", "KJV", "NLT", "BSB")
+    val translationOptions = BibleTranslation.ALL
+    LaunchedEffect(Unit) { onSearch("", selectedTranslation) }
 
     val curatedCollections = listOf(
         Triple("Peace & Calming", "Verses for anxiety & stress", "Philippians 4:6-7"),
@@ -559,7 +505,8 @@ private fun SearchTabContent(
                         query = it
                         onSearch(it, selectedTranslation)
                     },
-                    placeholder = { Text("e.g. John 3:16 or Psalm 23:1-3", color = RemoraTextMuted, fontSize = 13.sp) },
+                    label = { Text("Search Scripture") },
+                    placeholder = { Text("e.g. John 3:16", color = RemoraTextMuted) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = RemoraTextMuted) },
                     trailingIcon = {
                         if (query.isNotEmpty()) {
@@ -590,14 +537,14 @@ private fun SearchTabContent(
                         shape = RoundedCornerShape(8.dp),
                         color = RemoraCardBgElevated,
                         border = BorderStroke(1.dp, RemoraCardBorder),
-                        modifier = Modifier.height(52.dp)
+                        modifier = Modifier.heightIn(min = 52.dp)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         ) {
                             Text(
-                                text = selectedTranslation,
+                                text = BibleTranslation.getLabel(selectedTranslation),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraAccentLight
@@ -612,12 +559,13 @@ private fun SearchTabContent(
                     ) {
                         translationOptions.forEach { opt ->
                             DropdownMenuItem(
-                                text = { Text(opt, fontSize = 14.sp, fontWeight = if (opt == selectedTranslation) FontWeight.Bold else FontWeight.Normal) },
+                                text = { Text(opt.fullLabel, style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = if (opt.code == selectedTranslation) FontWeight.Bold else FontWeight.Normal) },
                                 onClick = {
-                                    selectedTranslation = opt
+                                    selectedTranslation = opt.code
                                     translationExpanded = false
                                     if (query.isNotBlank()) {
-                                        onSearch(query, opt)
+                                        onSearch(query, opt.code)
                                     }
                                 }
                             )
@@ -625,6 +573,14 @@ private fun SearchTabContent(
                     }
                 }
             }
+        }
+
+        item {
+            Text("Reference search uses the selected translation. Keyword search uses offline Bible text.",
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        if (!searchError.isNullOrBlank()) item {
+            Text(searchError, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
         }
 
         if (isSearching) {
@@ -638,17 +594,17 @@ private fun SearchTabContent(
                 item {
                     Button(
                         onClick = { onAddAll(searchResults) },
-                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent.copy(alpha = 0.2f)),
-                        border = BorderStroke(1.dp, RemoraAccent.copy(alpha = 0.5f)),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = RemoraAccentLight, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "Add All ${searchResults.size} Results",
                             fontWeight = FontWeight.Bold,
-                            color = RemoraAccentLight
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
                 }
@@ -669,10 +625,10 @@ private fun SearchTabContent(
                             "${result.bookNameEn} (${result.bookNameTe}) ${result.chapter}:${result.verse}"
                         }
 
-                        Row(
+                        FlowRow(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
                                 text = refDisplay,
@@ -680,18 +636,6 @@ private fun SearchTabContent(
                                 fontWeight = FontWeight.Bold,
                                 color = RemoraAccentLight
                             )
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = RemoraAccent.copy(alpha = 0.2f)
-                            ) {
-                                Text(
-                                    text = selectedTranslation,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = RemoraAccentLight,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
-                            }
                         }
 
                         Spacer(modifier = Modifier.height(6.dp))
@@ -707,7 +651,8 @@ private fun SearchTabContent(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             if (hasMultiple) {
                                 val versesList = if (result.individualVerses.isNotEmpty()) {
                                     result.individualVerses.map { Triple(result.bookId, result.chapter, it.first) }
@@ -722,7 +667,6 @@ private fun SearchTabContent(
                                 ) {
                                     Text("Add Individually (${versesList.size})", fontSize = 12.sp, color = RemoraTextPrimary)
                                 }
-                                Spacer(modifier = Modifier.width(8.dp))
                                 Button(
                                     onClick = { onAddVerse(result.bookId, result.chapter, result.verse, result.endVerse) },
                                     colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
@@ -794,248 +738,6 @@ private fun SearchTabContent(
                         fontSize = 12.sp,
                         color = RemoraTextSecondary
                     )
-                }
-            }
-        }
-    }
-}
-
-// ----------------------------------------------------
-// 3. COLLECTIONS TAB CONTENT (Top 100 & 75 Well-Known)
-// ----------------------------------------------------
-@Composable
-private fun CollectionsTabContent(
-    onAddCollection: (String) -> Unit,
-    onNavigateToGuides: () -> Unit
-) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-        contentPadding = PaddingValues(bottom = 32.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        item {
-            Text(
-                text = "Kickstart your memory journey with curated collections of popular verses. Adding a collection automatically groups them together for easy practice.",
-                fontSize = 13.sp,
-                color = RemoraTextSecondary,
-                lineHeight = 19.sp
-            )
-        }
-
-        // Card 0: Key Verses (All 66 Books)
-        item {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBgElevated,
-                border = BorderStroke(1.dp, RemoraAccent.copy(alpha = 0.5f)),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Key Verses (All 66 Books)",
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = RemoraGold.copy(alpha = 0.2f)
-                        ) {
-                            Text(
-                                text = "206 PASSAGES",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraGold,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = "The complete key verses for each of the 66 books of the Bible (all canonical key verses per book, including Genesis 1:1, 3:15, 12:3, 50:20, etc.).",
-                        fontSize = 13.sp,
-                        color = RemoraTextSecondary,
-                        lineHeight = 18.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    Button(
-                        onClick = { onAddCollection("key_verses_66") },
-                        colors = ButtonDefaults.buttonColors(containerColor = RemoraGold, contentColor = Color.Black),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.fillMaxWidth().height(44.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Add All Key Verses (206 Verses)", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    }
-                }
-            }
-        }
-
-        // Card 1: Top 100 Verses
-        item {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBgElevated,
-                border = BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Top 100 Verses",
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = RemoraAccent.copy(alpha = 0.2f)
-                        ) {
-                            Text(
-                                text = "100 PASSAGES",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraAccentLight,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = "The 100 most popular Bible verses according to global search data.",
-                        fontSize = 13.sp,
-                        color = RemoraTextSecondary,
-                        lineHeight = 18.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    Button(
-                        onClick = { onAddCollection("top_100") },
-                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.fillMaxWidth().height(44.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Add Top 100", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    }
-                }
-            }
-        }
-
-        // Card 2: 75 Well-Known Verses
-        item {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBgElevated,
-                border = BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "75 Well-Known Verses",
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = RemoraGold.copy(alpha = 0.2f)
-                        ) {
-                            Text(
-                                text = "75 PASSAGES",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraGold,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = "A hand-picked selection of deeply encouraging and essential scriptures.",
-                        fontSize = 13.sp,
-                        color = RemoraTextSecondary,
-                        lineHeight = 18.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    OutlinedButton(
-                        onClick = { onAddCollection("well_known") },
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, RemoraGold),
-                        modifier = Modifier.fillMaxWidth().height(44.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = RemoraGold, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Add Well-Known", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = RemoraGold)
-                    }
-                }
-            }
-        }
-
-        // Card 3: Topical Memory Collections
-        item {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBgElevated,
-                border = BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Topical Memory Collections",
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = "Explore these thematic and book-specific collections in the Guides tab to view and add them in your preferred translation.",
-                        fontSize = 13.sp,
-                        color = RemoraTextSecondary,
-                        lineHeight = 18.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    OutlinedButton(
-                        onClick = onNavigateToGuides,
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, RemoraCardBorder),
-                        modifier = Modifier.fillMaxWidth().height(44.dp)
-                    ) {
-                        Icon(Icons.Default.ViewList, contentDescription = null, tint = RemoraAccentLight, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("View Collections in Guides", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = RemoraAccentLight)
-                    }
                 }
             }
         }

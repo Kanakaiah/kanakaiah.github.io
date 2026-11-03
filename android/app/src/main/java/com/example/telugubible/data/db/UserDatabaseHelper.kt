@@ -781,7 +781,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("pre_lapse_interval", eval.preLapseInterval)
             put("attempts", attempts + 1)
         }
-        db.update("user_verses", values, "id = ?", arrayOf(id.toString()))
+        check(db.update("user_verses", values, "id = ?", arrayOf(id.toString())) == 1) { "Verse was not updated" }
 
         // Record in review log
         val logValues = ContentValues().apply {
@@ -798,8 +798,36 @@ class UserDatabaseHelper(private val context: Context) :
             put("mode", mode)
             if (measuredAccuracy != null) put("measured_accuracy", measuredAccuracy)
         }
-        db.insert("review_log", null, logValues)
+        db.insertOrThrow("review_log", null, logValues)
         pruneReviewLog(db)
+    }
+
+    fun gradeUserVerseAndUpdateSession(
+        id: Long,
+        score: Int,
+        cueLevel: Int,
+        mode: String,
+        measuredAccuracy: Double?,
+        sessionUpdates: Map<String, String?>
+    ) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val exists = db.rawQuery("SELECT 1 FROM user_verses WHERE id = ?", arrayOf(id.toString())).use { it.moveToFirst() }
+            check(exists) { "Verse no longer exists" }
+            gradeUserVerse(id, score, cueLevel, mode, measuredAccuracy)
+            sessionUpdates.forEach { (key, value) ->
+                if (value == null) {
+                    db.delete("session_state", "key = ?", arrayOf(key))
+                } else {
+                    val values = ContentValues().apply { put("key", key); put("val", value) }
+                    check(db.insertWithOnConflict("session_state", null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1L) { "Practice session was not updated" }
+                }
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun getStreak(): Int {
@@ -807,10 +835,10 @@ class UserDatabaseHelper(private val context: Context) :
         val cursor = db.rawQuery("SELECT val FROM user_stats WHERE key = 'streak'", null)
         cursor.use {
             if (it.moveToNext()) {
-                return it.getString(0)?.toIntOrNull() ?: 14
+                return it.getString(0)?.toIntOrNull() ?: 0
             }
         }
-        return 14
+        return 0
     }
 
     fun setStreak(streak: Int) {
@@ -1111,6 +1139,18 @@ class UserDatabaseHelper(private val context: Context) :
     }
 
     fun gradeChapterAnchor(bookId: Int, chapter: Int, score: Int): ChapterProgressEntity {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val result = gradeChapterAnchorInTransaction(bookId, chapter, score)
+            db.setTransactionSuccessful()
+            return result
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    private fun gradeChapterAnchorInTransaction(bookId: Int, chapter: Int, score: Int): ChapterProgressEntity {
         val existing = getChapterProgress(bookId)[chapter]
         val rep = existing?.repetition ?: 0
         val interval = existing?.interval ?: 0
@@ -1160,7 +1200,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("attempts", attempts)
             put("pre_lapse_interval", eval.preLapseInterval)
         }
-        db.insertWithOnConflict("chapter_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+        check(db.insertWithOnConflict("chapter_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1L) { "Chapter progress was not updated" }
 
         // Record in review log
         val logValues = ContentValues().apply {
@@ -1176,7 +1216,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("cue_level", 0)
             put("mode", "reveal")
         }
-        db.insert("review_log", null, logValues)
+        db.insertOrThrow("review_log", null, logValues)
         pruneReviewLog(db)
 
         return entity
@@ -1235,6 +1275,18 @@ class UserDatabaseHelper(private val context: Context) :
     }
 
     fun gradeThemeProgress(bookId: Int, score: Int): ThemeProgressEntity {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val result = gradeThemeProgressInTransaction(bookId, score)
+            db.setTransactionSuccessful()
+            return result
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    private fun gradeThemeProgressInTransaction(bookId: Int, score: Int): ThemeProgressEntity {
         val existing = getThemeProgress(bookId)
         val rep = existing?.repetition ?: 0
         val interval = existing?.interval ?: 0
@@ -1284,7 +1336,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("last_score", score)
             put("pre_lapse_interval", eval.preLapseInterval)
         }
-        db.insertWithOnConflict("theme_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+        check(db.insertWithOnConflict("theme_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1L) { "Theme progress was not updated" }
 
         // Record in review log
         val logValues = ContentValues().apply {
@@ -1300,7 +1352,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("cue_level", 0)
             put("mode", "reveal")
         }
-        db.insert("review_log", null, logValues)
+        db.insertOrThrow("review_log", null, logValues)
         pruneReviewLog(db)
 
         return entity
@@ -1385,6 +1437,18 @@ class UserDatabaseHelper(private val context: Context) :
         label: String,
         results: List<Pair<Int, Boolean>> // List of (chapter, isCorrect)
     ): BlockProgressEntity {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val result = gradeBlockChainInTransaction(bookId, blockIndex, label, results)
+            db.setTransactionSuccessful()
+            return result
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    private fun gradeBlockChainInTransaction(bookId: Int, blockIndex: Int, label: String, results: List<Pair<Int, Boolean>>): BlockProgressEntity {
         val existing = getBlockProgress(bookId)[blockIndex]
         val rep = existing?.repetition ?: 0
         val interval = existing?.interval ?: 0
@@ -1451,7 +1515,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("last_attempt_date", now)
             put("pre_lapse_interval", eval.preLapseInterval)
         }
-        db.insertWithOnConflict("block_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+        check(db.insertWithOnConflict("block_progress", null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1L) { "Chain progress was not updated" }
 
         // Record in review log
         val logValues = ContentValues().apply {
@@ -1467,7 +1531,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("cue_level", 0)
             put("mode", "chain")
         }
-        db.insert("review_log", null, logValues)
+        db.insertOrThrow("review_log", null, logValues)
         pruneReviewLog(db)
 
         // Record chain pass for chapters (chain hits/misses)
@@ -1519,7 +1583,7 @@ class UserDatabaseHelper(private val context: Context) :
                         put("chain_misses", missDelta)
                         put("last_chain_date", now)
                     }
-                    db.insert("chapter_progress", null, cv)
+                    db.insertOrThrow("chapter_progress", null, cv)
                 }
             }
             db.setTransactionSuccessful()
@@ -1614,7 +1678,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("total", total)
             put("median_cold_for", medianColdFor)
         }
-        return db.insert("cold_checks", null, values)
+        return db.insertOrThrow("cold_checks", null, values)
     }
 
     fun getLastColdCheck(): ColdCheckResult? {
@@ -1641,7 +1705,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("duration_ms", durationMs)
             if (abandonedAt != null) put("abandoned_at", abandonedAt)
         }
-        db.insert("session_adherence", null, values)
+        db.insertOrThrow("session_adherence", null, values)
     }
 
     fun getAdherenceStats(): AdherenceStats {
@@ -1702,6 +1766,9 @@ class UserDatabaseHelper(private val context: Context) :
     }
 
     fun saveAppSettings(settings: AppSettings) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
         setSetting("setting_theme", settings.theme)
         setSetting("setting_fontSize", settings.fontSize.toString())
         setSetting("setting_fontFamily", settings.fontFamily)
@@ -1719,6 +1786,10 @@ class UserDatabaseHelper(private val context: Context) :
         setSetting("setting_intervalScale", settings.intervalScale.toString())
         setSetting("setting_lineSpacing", settings.lineSpacing)
         setSetting("setting_bionicIntensity", settings.bionicIntensity)
+        db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun getSetting(key: String, defaultValue: String): String {
@@ -1738,7 +1809,7 @@ class UserDatabaseHelper(private val context: Context) :
             put("key", key)
             put("val", value)
         }
-        db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+        check(db.insertWithOnConflict("user_stats", null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1L) { "Setting was not saved" }
     }
 
     // Backup & Restore

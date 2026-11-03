@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
 
 data class BookGuideUiState(
     val bookId: Int = 1,
@@ -29,6 +30,9 @@ data class BookGuideUiState(
     val gradedAnchorsOnThisPass: Map<Int, Int> = emptyMap(), // chapter -> interval in days
     val userVerseKeys: Set<Triple<Int, Int, Int>> = emptySet(), // (bookId, chapter, verse)
     val isLoading: Boolean = true,
+    val isChainSaving: Boolean = false,
+    val chainSaveError: String? = null,
+    val chainSavedInterval: Int? = null,
     val toastMessage: String? = null
 )
 
@@ -39,10 +43,13 @@ class BookGuideViewModel @JvmOverloads constructor(
 
     private val _uiState = MutableStateFlow(BookGuideUiState())
     val uiState: StateFlow<BookGuideUiState> = _uiState.asStateFlow()
+    private var loadJob: Job? = null
 
-    fun loadBookGuide(bookId: Int) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, bookId = bookId) }
+    fun loadBookGuide(bookId: Int, preserveUi: Boolean = false) {
+        loadJob?.cancel()
+        val preserve = preserveUi && _uiState.value.book?.id == bookId
+        loadJob = viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = !preserve, bookId = bookId) }
             val books = if (_uiState.value.books.isEmpty()) repository.getBooks() else _uiState.value.books
             val book = books.firstOrNull { it.id == bookId } ?: repository.getBook(bookId)
             val guide = repository.getBookGuide(bookId)
@@ -61,11 +68,11 @@ class BookGuideViewModel @JvmOverloads constructor(
                     chapterProgress = progress,
                     blockProgress = blocks,
                     userVerseKeys = verseKeys,
-                    revealedAnchors = emptySet(),
-                    showAllAnchors = settings.anchorReveal == "always",
+                    revealedAnchors = if (preserve) it.revealedAnchors else emptySet(),
+                    showAllAnchors = if (preserve) it.showAllAnchors else settings.anchorReveal == "always",
                     activeVersion = settings.bibleVersion.ifBlank { "LSB" },
-                    collapsedBlocks = emptySet(),
-                    gradedAnchorsOnThisPass = emptyMap(),
+                    collapsedBlocks = if (preserve) it.collapsedBlocks else emptySet(),
+                    gradedAnchorsOnThisPass = if (preserve) it.gradedAnchorsOnThisPass else emptyMap(),
                     isLoading = false
                 )
             }
@@ -121,19 +128,29 @@ class BookGuideViewModel @JvmOverloads constructor(
         results: List<Pair<Int, Boolean>>,
         onFinished: (BlockProgressEntity) -> Unit = {}
     ) {
+        if (_uiState.value.isChainSaving || _uiState.value.chainSaveError != null) return
         val bookId = _uiState.value.bookId
+        _uiState.update { it.copy(isChainSaving = true, chainSaveError = null, chainSavedInterval = null) }
         viewModelScope.launch {
-            val entity = repository.gradeBlockChain(bookId, blockIndex, label, results)
-            val updatedBlocks = repository.getBlockProgress(bookId)
-            val updatedChapters = repository.getChapterProgress(bookId)
-            _uiState.update { state ->
-                state.copy(
-                    blockProgress = updatedBlocks,
-                    chapterProgress = updatedChapters
-                )
+            try {
+                val entity = repository.gradeBlockChain(bookId, blockIndex, label, results)
+                val updatedBlocks = repository.getBlockProgress(bookId)
+                val updatedChapters = repository.getChapterProgress(bookId)
+                _uiState.update { state ->
+                    if (state.bookId == bookId) state.copy(blockProgress = updatedBlocks, chapterProgress = updatedChapters,
+                        isChainSaving = false, chainSavedInterval = entity.interval) else state.copy(isChainSaving = false)
+                }
+                onFinished(entity)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(isChainSaving = false, chainSaveError = "Could not confirm the review was saved. Close and check your progress before trying again.") }
             }
-            onFinished(entity)
         }
+    }
+
+    fun resetChainSaveState() {
+        if (!_uiState.value.isChainSaving) _uiState.update { it.copy(chainSaveError = null, chainSavedInterval = null) }
     }
 
     fun addKeyVerseToLibrary(ref: String): Boolean {

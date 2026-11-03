@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
 
 data class AnchorDrillItem(
     val bookId: Int,
@@ -38,7 +39,9 @@ data class AnchorDrillUiState(
     val books: List<Book> = emptyList(),
     val selectedBookId: Int? = null,
     val isLoading: Boolean = true,
-    val isFinished: Boolean = false
+    val isFinished: Boolean = false,
+    val isGrading: Boolean = false,
+    val gradingError: String? = null
 ) {
     val currentItem: AnchorDrillItem?
         get() = queue.getOrNull(currentIndex)
@@ -56,9 +59,13 @@ class AnchorDrillViewModel @JvmOverloads constructor(
         loadData()
     }
 
+    private var loadJob: Job? = null
+
     fun loadData(initialBookId: Int? = null) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, selectedBookId = initialBookId) }
+        if (_uiState.value.isGrading) return
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, selectedBookId = initialBookId, gradingError = null) }
             val books = repository.getBooks()
             val bookMap = books.associateBy { it.id }
 
@@ -68,13 +75,7 @@ class AnchorDrillViewModel @JvmOverloads constructor(
     }
 
     fun selectBook(bookId: Int?) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, selectedBookId = bookId, currentIndex = 0) }
-            val books = repository.getBooks()
-            val bookMap = books.associateBy { it.id }
-            buildQueue(bookId, bookMap)
-            _uiState.update { it.copy(isLoading = false) }
-        }
+        loadData(bookId)
     }
 
     private suspend fun buildQueue(bookId: Int?, bookMap: Map<Int, Book>) {
@@ -177,6 +178,7 @@ class AnchorDrillViewModel @JvmOverloads constructor(
     }
 
     fun setDirection(direction: AnchorDirection) {
+        if (_uiState.value.isGrading) return
         _uiState.update {
             it.copy(
                 direction = direction,
@@ -217,30 +219,39 @@ class AnchorDrillViewModel @JvmOverloads constructor(
 
     fun gradeCurrent(score: Int) {
         val state = _uiState.value
+        if (state.isGrading || state.isLoading || state.isFinished || state.gradingError != null) return
         val item = state.currentItem ?: return
-
+        _uiState.update { it.copy(isGrading = true) }
         viewModelScope.launch {
-            repository.gradeChapterAnchor(item.bookId, item.chapter, score)
+            try {
+                repository.gradeChapterAnchor(item.bookId, item.chapter, score)
 
-            val nextIndex = state.currentIndex + 1
-            if (nextIndex >= state.queue.size) {
-                _uiState.update { it.copy(isFinished = true, currentIndex = nextIndex) }
-            } else {
-                val nextItem = state.queue.getOrNull(nextIndex)
-                // Auto rotate direction if known cold
-                val autoDirection = if (nextItem != null) {
-                    AnchorJudge.directionFor(nextItem.repetition, hasArt = true)
-                } else state.direction
+                val nextIndex = state.currentIndex + 1
+                if (nextIndex >= state.queue.size) {
+                    _uiState.update { it.copy(isFinished = true, currentIndex = nextIndex) }
+                } else {
+                    val nextItem = state.queue.getOrNull(nextIndex)
+                    // Auto rotate direction if known cold
+                    val autoDirection = if (nextItem != null) {
+                        AnchorJudge.directionFor(nextItem.repetition, hasArt = true)
+                    } else state.direction
 
-                _uiState.update {
-                    it.copy(
-                        currentIndex = nextIndex,
-                        direction = autoDirection,
-                        isRevealed = false,
-                        typedInput = "",
-                        judgement = null
-                    )
+                    _uiState.update {
+                        it.copy(
+                            currentIndex = nextIndex,
+                            direction = autoDirection,
+                            isRevealed = false,
+                            typedInput = "",
+                            judgement = null
+                        )
+                    }
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(gradingError = "Could not confirm the review was saved. Leave and reopen practice to check your progress.") }
+            } finally {
+                _uiState.update { it.copy(isGrading = false) }
             }
         }
     }

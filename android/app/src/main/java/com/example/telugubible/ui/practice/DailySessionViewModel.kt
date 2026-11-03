@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 
 data class SessionOutcome(
     val id: String,
@@ -24,6 +25,9 @@ data class DailySessionUiState(
     val isRevealed: Boolean = false,
     val isFinished: Boolean = false,
     val isLoading: Boolean = true,
+    val isGrading: Boolean = false,
+    val gradingError: String? = null,
+    val sessionWarning: String? = null,
     val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH,
     val activeVerseMode: PracticeMode = PracticeMode.TYPING,
     val anchorInput: String = "",
@@ -33,14 +37,23 @@ data class DailySessionUiState(
     val verseAccuracy: Int? = null,
     val verseCommitted: String? = null,
     val hintRevealedRatio: Float? = null,
+    val firstLetterSeenByVerse: Map<Long, FirstLetterExposure> = emptyMap(),
+    val immersiveSeenByVerse: Map<Long, FirstLetterExposure> = emptyMap(),
     val eraserHiddenRatio: Float? = null,
     val scrambleAccuracy: Float? = null,
-    val isTtsSpeaking: Boolean = false
+    val isTtsSpeaking: Boolean = false,
+    val isImmersed: Boolean = false,
+    val readingSettings: com.example.telugubible.data.model.AppSettings = com.example.telugubible.data.model.AppSettings()
 ) {
     val currentItem: SessionItem?
         get() = plan?.items?.getOrNull(currentIndex)
 
-    val gradeCeiling: Int
+    val gradeCeiling: Int get() {
+        val verseId = (currentItem as? SessionItem.Verse)?.verseId
+        return minOf(modeGradeCeiling, combinedExposureCeiling(firstLetterSeenByVerse[verseId], immersiveSeenByVerse[verseId]))
+    }
+
+    private val modeGradeCeiling: Int
         get() {
             if (activeVerseMode == PracticeMode.ERASER) {
                 val hidden = eraserHiddenRatio ?: return 5
@@ -145,7 +158,11 @@ class DailySessionViewModel @JvmOverloads constructor(
                     isRevealed = false,
                     isFinished = plan.items.isEmpty(),
                     isLoading = false,
+                    gradingError = null,
+                    sessionWarning = null,
                     displayLanguage = globalLang,
+                    readingSettings = appSettings,
+                    isImmersed = false,
                     startedAtMs = now,
                     outcomes = emptyList(),
                     anchorInput = "",
@@ -153,6 +170,8 @@ class DailySessionViewModel @JvmOverloads constructor(
                     verseAccuracy = null,
                     verseCommitted = null,
                     hintRevealedRatio = null,
+                    firstLetterSeenByVerse = emptyMap(),
+                    immersiveSeenByVerse = emptyMap(),
                     eraserHiddenRatio = null,
                     scrambleAccuracy = null
                 )
@@ -167,6 +186,10 @@ class DailySessionViewModel @JvmOverloads constructor(
     }
 
     fun setVerseMode(mode: PracticeMode) {
+        if (mode == PracticeMode.IMMERSED) {
+            _uiState.update { it.copy(isImmersed = true) }
+            return
+        }
         _uiState.update {
             it.copy(
                 activeVerseMode = mode,
@@ -177,6 +200,21 @@ class DailySessionViewModel @JvmOverloads constructor(
                 eraserHiddenRatio = null,
                 scrambleAccuracy = null
             )
+        }
+    }
+
+    fun exitImmersed() {
+        stopTts()
+        _uiState.update { it.copy(isImmersed = false) }
+    }
+
+    fun recordImmersiveExposure(verseId: Long, indices: Set<Int>, total: Int) {
+        if (total <= 0) return
+        _uiState.update {
+            if (!it.isImmersed || it.isRevealed || (it.currentItem as? SessionItem.Verse)?.verseId != verseId) return@update it
+            val old = it.immersiveSeenByVerse[verseId]
+            val merged = ((old?.seen ?: emptyList()) + indices.filter { index -> index in 0 until total }).distinct().sorted()
+            it.copy(immersiveSeenByVerse = it.immersiveSeenByVerse + (verseId to FirstLetterExposure(merged, total)))
         }
     }
 
@@ -191,7 +229,20 @@ class DailySessionViewModel @JvmOverloads constructor(
     }
 
     fun updateHintRatio(ratio: Float) {
-        _uiState.update { it.copy(hintRevealedRatio = ratio) }
+        _uiState.update {
+            val id = (it.currentItem as? SessionItem.Verse)?.verseId
+            val seen = it.firstLetterSeenByVerse[id]
+            val seenRatio = if (seen != null && seen.total > 0) seen.seen.size.toFloat() / seen.total else 0f
+            it.copy(hintRevealedRatio = maxOf(ratio, seenRatio))
+        }
+    }
+
+    fun recordFirstLetterSeen(verseId: Long, indices: Set<Int>, total: Int) {
+        _uiState.update {
+            val existing = it.firstLetterSeenByVerse[verseId]?.seen.orEmpty()
+            it.copy(firstLetterSeenByVerse = it.firstLetterSeenByVerse +
+                (verseId to FirstLetterExposure((existing + indices).distinct().sorted(), total)))
+        }
     }
 
     fun updateEraserRatio(ratio: Float) {
@@ -239,11 +290,12 @@ class DailySessionViewModel @JvmOverloads constructor(
     }
 
     fun advanceIntroduce() {
-        val plan = _uiState.value.plan ?: return
-        val nextIndex = _uiState.value.currentIndex + 1
         _uiState.update {
+            val plan = it.plan ?: return@update it
+            if (it.currentItem !is SessionItem.Introduce || it.isGrading || it.isFinished ||
+                it.currentIndex + 1 >= plan.items.size) return@update it
             it.copy(
-                currentIndex = nextIndex,
+                currentIndex = it.currentIndex + 1,
                 isRevealed = false,
                 anchorInput = "",
                 anchorJudgement = null
@@ -253,9 +305,13 @@ class DailySessionViewModel @JvmOverloads constructor(
 
     fun gradeCurrent(score: Int) {
         val state = _uiState.value
+        if (state.isGrading || state.isFinished || state.gradingError != null || !state.isRevealed) return
         val item = state.currentItem ?: return
+        if (item is SessionItem.Introduce) return
 
+        _uiState.update { it.copy(isGrading = true) }
         viewModelScope.launch {
+            try {
             when (item) {
                 is SessionItem.Verse -> {
                     val effectiveScore = score.coerceAtMost(state.gradeCeiling)
@@ -300,12 +356,14 @@ class DailySessionViewModel @JvmOverloads constructor(
                             Triple(0, "immersed", null)
                         }
                     }
-                    repository.gradeUserVerse(
+                    repository.gradeUserVerseAndUpdateSession(
                         id = item.verseId,
                         score = effectiveScore,
-                        cueLevel = cueLevel,
+                        cueLevel = maxOf(cueLevel, exposureCueLevel(combineExposure(state.firstLetterSeenByVerse[item.verseId], state.immersiveSeenByVerse[item.verseId])),
+                            exposureCueLevel(state.firstLetterSeenByVerse[item.verseId]), exposureCueLevel(state.immersiveSeenByVerse[item.verseId])),
                         mode = modeName,
-                        measuredAccuracy = accuracy
+                        measuredAccuracy = accuracy,
+                        sessionUpdates = emptyMap()
                     )
                 }
                 is SessionItem.Anchor -> {
@@ -319,21 +377,30 @@ class DailySessionViewModel @JvmOverloads constructor(
                 }
             }
 
-            val newOutcomes = state.outcomes + SessionOutcome(item.id, item.kind, score)
+            val recordedScore = if (item is SessionItem.Verse) score.coerceAtMost(state.gradeCeiling) else score
+            val newOutcomes = state.outcomes + SessionOutcome(item.id, item.kind, recordedScore)
             val nextIndex = state.currentIndex + 1
             val itemsCount = state.plan?.items?.size ?: 0
 
             if (nextIndex >= itemsCount) {
                 // Session finished!
                 val duration = System.currentTimeMillis() - state.startedAtMs
-                repository.recordSessionAdherence(completed = true, durationMs = duration)
-                sessionRecorded = true
+                val warning = try {
+                    repository.recordSessionAdherence(completed = true, durationMs = duration)
+                    sessionRecorded = true
+                    null
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    "Your reviews are saved, but session statistics could not be recorded."
+                }
 
                 _uiState.update {
                     it.copy(
                         currentIndex = nextIndex,
                         isRevealed = false,
                         isFinished = true,
+                        sessionWarning = warning,
                         outcomes = newOutcomes,
                         anchorInput = "",
                         anchorJudgement = null,
@@ -359,6 +426,13 @@ class DailySessionViewModel @JvmOverloads constructor(
                         scrambleAccuracy = null
                     )
                 }
+            }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(gradingError = "Could not confirm this review was saved. Leave and reopen practice before trying again.") }
+            } finally {
+                _uiState.update { it.copy(isGrading = false) }
             }
         }
     }
@@ -423,42 +497,18 @@ class DailySessionViewModel @JvmOverloads constructor(
         }
 
         val rawText = item.textEn.ifBlank { item.textTe }
-        val cleanText = rawText
-            .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
-            .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
-            .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
-            .replace(Regex("<[^>]+>"), "")
-            .replace("&nbsp;", " ")
-            .replace("&amp;", "&")
-            .replace("&quot;", "\"")
-            .replace("&#39;", "'")
-            .trim()
+        val cleanText = immersiveText(rawText)
         val ref = "${item.bookName} ${item.displayRef}"
         val textToSpeak = "$ref. $cleanText"
         val isEn = item.textEn.isNotBlank()
 
-        ttsManager.speak(textToSpeak, langCode = if (isEn) "en" else "te", onDone = {
+        val started = ttsManager.speak(textToSpeak, langCode = if (isEn) "en" else "te", onFailure = { stopTts() }, onDone = {
             ttsJob = viewModelScope.launch {
                 if (!_uiState.value.isTtsSpeaking) return@launch
-                val nextIdx = _uiState.value.currentIndex + 1
-                val totalItems = _uiState.value.plan?.items?.size ?: 0
-                if (nextIdx < totalItems) {
-                    kotlinx.coroutines.delay(800)
-                    if (!_uiState.value.isTtsSpeaking) return@launch
-                    _uiState.update {
-                        it.copy(
-                            currentIndex = nextIdx,
-                            isRevealed = false,
-                            anchorInput = "",
-                            anchorJudgement = null
-                        )
-                    }
-                    playCurrentItemTts()
-                } else {
-                    _uiState.update { it.copy(isTtsSpeaking = false) }
-                }
+                _uiState.update { it.copy(isTtsSpeaking = false) }
             }
         })
+        if (!started) stopTts()
     }
 
     fun stopTts() {
@@ -479,12 +529,18 @@ class DailySessionViewModel @JvmOverloads constructor(
         if (!sessionRecorded && state.currentIndex > 0 && state.currentIndex < itemsCount) {
             val duration = System.currentTimeMillis() - state.startedAtMs
             viewModelScope.launch {
-                repository.recordSessionAdherence(
-                    completed = false,
-                    durationMs = duration,
-                    abandonedAt = state.currentIndex
-                )
-                sessionRecorded = true
+                try {
+                    repository.recordSessionAdherence(
+                        completed = false,
+                        durationMs = duration,
+                        abandonedAt = state.currentIndex
+                    )
+                    sessionRecorded = true
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    // Completed reviews remain saved even if session statistics cannot be recorded.
+                }
             }
         }
     }

@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 
 enum class LookupMode {
     VERSES, STRONGS
@@ -24,7 +26,8 @@ data class LookupUiState(
     val verseResults: List<VerseSearchResult> = emptyList(),
     val strongsResults: List<StrongsEntry> = emptyList(),
     val isSearching: Boolean = false,
-    val hasSearched: Boolean = false
+    val hasSearched: Boolean = false,
+    val searchError: String? = null
 )
 
 class LookupViewModel(application: Application) : AndroidViewModel(application) {
@@ -32,16 +35,19 @@ class LookupViewModel(application: Application) : AndroidViewModel(application) 
 
     private val _uiState = MutableStateFlow(LookupUiState())
     val uiState: StateFlow<LookupUiState> = _uiState.asStateFlow()
+    private var searchJob: Job? = null
+    private var searchGeneration = 0
 
     fun setQuery(q: String) {
-        _uiState.update { it.copy(query = q) }
-        if (q.isBlank()) {
-            _uiState.update { it.copy(verseResults = emptyList(), strongsResults = emptyList(), hasSearched = false) }
-        }
+        searchGeneration++
+        searchJob?.cancel()
+        _uiState.update { it.copy(query = q, verseResults = emptyList(), strongsResults = emptyList(), isSearching = false, hasSearched = false, searchError = null) }
     }
 
     fun setMode(mode: LookupMode) {
-        _uiState.update { it.copy(mode = mode) }
+        searchGeneration++
+        searchJob?.cancel()
+        _uiState.update { it.copy(mode = mode, verseResults = emptyList(), strongsResults = emptyList(), isSearching = false, hasSearched = false, searchError = null) }
         val q = _uiState.value.query
         if (q.isNotBlank()) {
             performSearch(q, mode)
@@ -52,8 +58,11 @@ class LookupViewModel(application: Application) : AndroidViewModel(application) 
         val q = queryToUse.trim()
         if (q.isBlank()) return
 
-        viewModelScope.launch {
-            _uiState.update { it.copy(isSearching = true, hasSearched = true) }
+        val generation = ++searchGeneration
+        searchJob?.cancel()
+        _uiState.update { it.copy(isSearching = true, hasSearched = true, searchError = null) }
+        searchJob = viewModelScope.launch {
+          try {
             if (modeToUse == LookupMode.VERSES) {
                 val books = repository.getBooks()
                 val parsedRefs = ScriptureRefParser.parseReferences(q, books)
@@ -61,10 +70,9 @@ class LookupViewModel(application: Application) : AndroidViewModel(application) 
                     val booksMap = books.associateBy { it.id }
                     val matchedVerses = mutableListOf<VerseSearchResult>()
                     for (ref in parsedRefs) {
-                        for (vNum in ref.verseStart..ref.verseEnd) {
-                            val verse = repository.getVerse(ref.bookId, ref.chapter, vNum)
+                        for (verse in repository.getVerses(ref.bookId, ref.chapter).filter { it.verse in ref.verseStart..ref.verseEnd }) {
                             val b = booksMap[ref.bookId]
-                            if (verse != null && b != null) {
+                            if (b != null) {
                                 matchedVerses.add(
                                     VerseSearchResult(
                                         id = verse.id,
@@ -82,16 +90,21 @@ class LookupViewModel(application: Application) : AndroidViewModel(application) 
                         }
                     }
                     if (matchedVerses.isNotEmpty()) {
-                        _uiState.update { it.copy(verseResults = matchedVerses, isSearching = false) }
+                        if (generation == searchGeneration) _uiState.update { it.copy(verseResults = matchedVerses, isSearching = false) }
                         return@launch
                     }
                 }
                 val results = repository.searchVerses(q, limit = 50)
-                _uiState.update { it.copy(verseResults = results, isSearching = false) }
+                if (generation == searchGeneration) _uiState.update { it.copy(verseResults = results, isSearching = false) }
             } else {
                 val results = repository.searchStrongs(q, limit = 30)
-                _uiState.update { it.copy(strongsResults = results, isSearching = false) }
+                if (generation == searchGeneration) _uiState.update { it.copy(strongsResults = results, isSearching = false) }
             }
+          } catch (e: CancellationException) {
+              throw e
+          } catch (e: Exception) {
+              if (generation == searchGeneration) _uiState.update { it.copy(isSearching = false, searchError = "Search is unavailable. Please try again.") }
+          }
         }
     }
 

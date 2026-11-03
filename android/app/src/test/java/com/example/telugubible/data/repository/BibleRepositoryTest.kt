@@ -7,6 +7,7 @@ import com.example.telugubible.data.db.UserDatabaseHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -76,7 +77,7 @@ class BibleRepositoryTest {
         assertEquals(1, updated.interval)
 
         // Streak
-        assertEquals(14, repository.getStreak())
+        assertEquals(0, repository.getStreak())
         repository.setStreak(25)
         assertEquals(25, repository.getStreak())
 
@@ -104,6 +105,36 @@ class BibleRepositoryTest {
         // Ensure book and verse texts are resolved
         val first = memoryVerses.first()
         assertTrue(first.bookNameEn.isNotEmpty())
+    }
+
+    @Test
+    fun importingExistingPresetTagsOnlyItsPassagesInTheSelectedCollection() = runTest {
+        val entries = bibleDbHelper.getPresetVerseEntries("top_100")
+        assertTrue(entries.isNotEmpty())
+        val keys = entries.map { Triple(it.bookId, it.chapter, it.startVerse) }.toSet()
+        val unrelated = (1..31).map { Triple(1, 1, it) }.first { it !in keys && bibleDbHelper.getVerse(it.first, it.second, it.third) != null }
+        val first = entries.first()
+        repository.addUserVerse(first.bookId, first.chapter, first.startVerse, first.endVerse)
+        repository.addUserVerse(unrelated.first, unrelated.second, unrelated.third)
+        repository.addPresetCollection("top_100")
+        val destination = repository.createTopic("Destination")
+        val insertedAgain = repository.addPresetCollection("top_100", listOf(destination.id))
+        assertEquals(0, insertedAgain)
+        val verses = userDbHelper.getUserVerses()
+        val matching = verses.first { it.bookId == first.bookId && it.chapter == first.chapter && it.verse == first.startVerse }
+        val other = verses.first { it.bookId == unrelated.first && it.chapter == unrelated.second && it.verse == unrelated.third }
+        assertTrue(userDbHelper.getTopicIdsForVerse(matching.id).contains(destination.id))
+        assertFalse(userDbHelper.getTopicIdsForVerse(other.id).contains(destination.id))
+    }
+
+    @Test
+    fun passagePreviewDoesNotSubstituteMissingTamilText() = runTest {
+        val verse = bibleDbHelper.getVerse(1, 1, 1)!!
+        val tamil = repository.fetchVerseRange("TBSI", 1, 1, 1, 1)
+        if (verse.textTa == null) assertTrue(tamil.isEmpty())
+        else assertEquals(1, tamil.size)
+        assertEquals(2, repository.fetchVerseRange("BSB", 1, 1, 1, 2).size)
+        assertTrue(repository.fetchVerseRange("BSB", 1, 1, 999, 999).isEmpty())
     }
 
     @Test

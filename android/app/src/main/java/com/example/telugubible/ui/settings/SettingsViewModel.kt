@@ -10,12 +10,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 data class SettingsUiState(
     val settings: AppSettings = AppSettings(),
     val backupJson: String? = null,
     val toastMessage: String? = null,
-    val isLoading: Boolean = false
+    val settingsRevision: Int = 0,
+    val isLoading: Boolean = true
 )
 
 class SettingsViewModel @JvmOverloads constructor(
@@ -25,6 +29,8 @@ class SettingsViewModel @JvmOverloads constructor(
 
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+    private val settingsMutex = Mutex()
+    private var pendingWrites = 0
 
     init {
         loadSettings()
@@ -32,22 +38,36 @@ class SettingsViewModel @JvmOverloads constructor(
 
     fun loadSettings() {
         viewModelScope.launch {
-            val s = repository.getAppSettings()
-            com.example.telugubible.theme.RemoraThemeState.themeName = s.theme
-            _uiState.update { it.copy(settings = s) }
+            settingsMutex.withLock {
+                val s = repository.getAppSettings()
+                if (pendingWrites == 0) _uiState.update { it.copy(settings = s, isLoading = false) }
+            }
         }
     }
 
     fun updateSettings(transform: (AppSettings) -> AppSettings) {
+        if (_uiState.value.isLoading) return
         val updated = transform(_uiState.value.settings)
         _uiState.update { it.copy(settings = updated) }
+        pendingWrites++
         viewModelScope.launch {
-            repository.saveAppSettings(updated)
+            try {
+                settingsMutex.withLock {
+                    repository.saveAppSettings(updated)
+                    _uiState.update { it.copy(settingsRevision = it.settingsRevision + 1) }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(toastMessage = "Couldn't save settings. Please check them and try again.") }
+            } finally {
+                pendingWrites--
+                if (pendingWrites == 0) loadSettings()
+            }
         }
     }
 
     fun setTheme(theme: String) {
-        com.example.telugubible.theme.RemoraThemeState.themeName = theme
         updateSettings { it.copy(theme = theme) }
     }
 
@@ -137,7 +157,7 @@ class SettingsViewModel @JvmOverloads constructor(
             val success = repository.restoreUserDataJson(jsonString)
             if (success) {
                 val reloaded = repository.getAppSettings()
-                _uiState.update { it.copy(settings = reloaded, toastMessage = "Data restored successfully!") }
+                _uiState.update { it.copy(settings = reloaded, settingsRevision = it.settingsRevision + 1, toastMessage = "Data restored successfully!") }
             } else {
                 _uiState.update { it.copy(toastMessage = "Failed to restore: Invalid backup file") }
             }
@@ -149,7 +169,7 @@ class SettingsViewModel @JvmOverloads constructor(
         viewModelScope.launch {
             repository.clearAllUserData()
             val reloaded = repository.getAppSettings()
-            _uiState.update { it.copy(settings = reloaded, toastMessage = "All user data cleared") }
+            _uiState.update { it.copy(settings = reloaded, settingsRevision = it.settingsRevision + 1, toastMessage = "All user data cleared") }
             onComplete()
         }
     }

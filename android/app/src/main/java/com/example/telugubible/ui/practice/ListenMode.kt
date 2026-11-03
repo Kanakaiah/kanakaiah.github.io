@@ -1,35 +1,23 @@
 package com.example.telugubible.ui.practice
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.telugubible.theme.*
-import com.example.telugubible.util.TtsManager
-import kotlinx.coroutines.delay
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.example.telugubible.util.ListenSpeechPlayer
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -47,443 +35,81 @@ fun ListenMode(
     onPrev: () -> Unit,
     onNext: () -> Unit,
     onComplete: () -> Unit,
-    ttsManager: TtsManager,
-    modifier: Modifier = Modifier
+    ttsManager: ListenSpeechPlayer,
+    modifier: Modifier = Modifier,
+    itemKey: Any = verseText,
+    canGoPrevious: Boolean = true,
+    canGoNext: Boolean = true
 ) {
-    val scrollState = rememberScrollState()
+    var playing by remember { mutableStateOf(false) }
+    var iteration by remember { mutableIntStateOf(1) }
+    var error by remember { mutableStateOf<String?>(null) }
+    var optionsExpanded by remember { mutableStateOf(false) }
+    val ttsState by ttsManager.state.collectAsState()
+    val latestSpeed by rememberUpdatedState(speed)
+    val latestRepeat by rememberUpdatedState(repeatCount)
+    val latestAutoAdvance by rememberUpdatedState(autoAdvance)
+    val latestCanNext by rememberUpdatedState(canGoNext)
+    val latestNext by rememberUpdatedState(onNext)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    // Cleaned words
-    val words = remember(verseText) {
-        verseText.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
-    }
-
-    // Estimated duration in seconds based on word count & speed
-    val wordsPerSecond = 2.4f * speed
-    val totalSeconds = remember(words.size, speed) {
-        (words.size / wordsPerSecond).toInt().coerceAtLeast(3)
-    }
-
-    var isPlaying by remember { mutableStateOf(false) }
-    var elapsedSeconds by remember { mutableFloatStateOf(0f) }
-    var currentWordIndex by remember { mutableIntStateOf(-1) }
-    var currentIteration by remember { mutableIntStateOf(1) }
-
-    // When verseText changes (e.g. advanced to next verse):
-    // If was playing, restart elapsed seconds & word index so playback flows immediately
-    LaunchedEffect(verseText) {
-        elapsedSeconds = 0f
-        currentWordIndex = 0
-        currentIteration = 1
-        if (isPlaying) {
-            val langCode = if (isEnglish) "en" else "te"
-            ttsManager.speak(verseText, langCode = langCode, rate = speed) {
-                if (currentIteration < repeatCount) {
-                    currentIteration++
-                    elapsedSeconds = 0f
-                } else {
-                    if (autoAdvance) {
-                        currentIteration = 1
-                        elapsedSeconds = 0f
-                        currentWordIndex = 0
-                        onNext()
-                    } else {
-                        isPlaying = false
-                        elapsedSeconds = totalSeconds.toFloat()
-                        currentWordIndex = words.size - 1
-                    }
+    LaunchedEffect(playing, iteration, itemKey, isEnglish) {
+        if (!playing) return@LaunchedEffect
+        val started = ttsManager.speak(
+            verseText, langCode = if (isEnglish) "en" else "te", rate = latestSpeed,
+            onFailure = { playing = false; error = "Speech could not be played. Check your device's text-to-speech voice." },
+            onDone = {
+                if (playing) {
+                    if (iteration < latestRepeat) iteration++
+                    else if (latestAutoAdvance && latestCanNext) { iteration = 1; latestNext() }
+                    else { playing = false; iteration = 1 }
                 }
             }
+        )
+        if (!started) {
+            playing = false
+            error = "Speech is unavailable. Check your device's text-to-speech voice and try again."
         }
     }
-
-    // Synchronize highlight with elapsed time
-    LaunchedEffect(isPlaying, elapsedSeconds, words.size, totalSeconds) {
-        if (words.isNotEmpty() && totalSeconds > 0) {
-            val progressRatio = (elapsedSeconds / totalSeconds).coerceIn(0f, 1f)
-            currentWordIndex = (progressRatio * words.size).toInt().coerceIn(0, words.size - 1)
+    DisposableEffect(lifecycle, ttsManager) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_STOP) { playing = false; iteration = 1; ttsManager.stop() }
         }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer); ttsManager.stop() }
     }
 
-    // Playback loop timer & TTS trigger
-    LaunchedEffect(isPlaying, currentIteration) {
-        if (isPlaying) {
-            val langCode = if (isEnglish) "en" else "te"
-            ttsManager.speak(verseText, langCode = langCode, rate = speed) {
-                // When TTS utterance completes:
-                if (currentIteration < repeatCount) {
-                    currentIteration++
-                    elapsedSeconds = 0f
-                } else {
-                    if (autoAdvance) {
-                        currentIteration = 1
-                        elapsedSeconds = 0f
-                        currentWordIndex = 0
-                        onNext()
-                    } else {
-                        isPlaying = false
-                        elapsedSeconds = totalSeconds.toFloat()
-                        currentWordIndex = words.size - 1
-                    }
-                }
+    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text("Listen", style = MaterialTheme.typography.titleMedium)
+        Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.surfaceContainerLow, modifier = Modifier.fillMaxWidth()) {
+            Text(if (hideText) "Verse text hidden while you listen." else verseText,
+                style = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Serif), modifier = Modifier.padding(20.dp))
+        }
+        if (error != null) Text(error!!, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+        if (!ttsState.isReady && error == null) Text(if (ttsState.initializationFailed) "Text-to-speech is unavailable on this device." else "Preparing voice…", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = { playing = false; iteration = 1; ttsManager.stop(); onPrev() }, enabled = canGoPrevious) { Icon(Icons.Default.SkipPrevious, contentDescription = "Previous verse") }
+            FilledIconButton(onClick = {
+                if (playing) { playing = false; iteration = 1; ttsManager.stop() }
+                else { error = null; iteration = 1; playing = true }
+            }, enabled = ttsState.isReady, modifier = Modifier.size(56.dp)) {
+                Icon(if (playing) Icons.Default.Stop else Icons.Default.PlayArrow, contentDescription = if (playing) "Stop playback" else "Play verse")
             }
-
-            while (isPlaying && elapsedSeconds < totalSeconds) {
-                delay(100)
-                elapsedSeconds += 0.1f
-            }
-        } else {
-            ttsManager.stop()
+            IconButton(onClick = { playing = false; iteration = 1; ttsManager.stop(); onNext() }, enabled = canGoNext) { Icon(Icons.Default.SkipNext, contentDescription = "Next verse") }
         }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            ttsManager.stop()
-        }
-    }
-
-    val formatTime = { sec: Int ->
-        val m = sec / 60
-        val s = sec % 60
-        "%d:%02d".format(m, s)
-    }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        // Upper Content: "NOW PLAYING" & Large Serif Verse Text
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Text(
-                text = "NOW PLAYING",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 2.sp,
-                color = RemoraAccent
-            )
-
-            // Text Flow with Karaoke Synchronized Highlight
-            if (hideText) {
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = Color(0xFF191714),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF2C2720)),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.VisibilityOff,
-                            contentDescription = null,
-                            tint = RemoraAccent,
-                            modifier = Modifier.size(28.dp)
-                        )
-                        Text(
-                            text = "Text Hidden for Auditory Recall",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = RemoraTextPrimary
-                        )
-                        Text(
-                            text = "Listen closely and recite from memory as the audio plays.",
-                            fontSize = 12.sp,
-                            color = RemoraTextSecondary,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            } else {
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    words.forEachIndexed { idx, word ->
-                        val isHighlighted = isPlaying && idx == currentWordIndex
-                        val hasPassed = isPlaying && idx < currentWordIndex
-
-                        val bgColor by animateColorAsState(
-                            targetValue = if (isHighlighted) RemoraAccent else Color.Transparent,
-                            label = "karaoke_bg"
-                        )
-                        val textColor by animateColorAsState(
-                            targetValue = when {
-                                isHighlighted -> Color(0xFF14120E)
-                                hasPassed -> RemoraTextPrimary
-                                else -> RemoraTextSecondary.copy(alpha = 0.85f)
-                            },
-                            label = "karaoke_text"
-                        )
-
-                        Surface(
-                            shape = RoundedCornerShape(4.dp),
-                            color = bgColor,
-                            modifier = Modifier.padding(vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = word,
-                                fontSize = 21.sp,
-                                fontFamily = FontFamily.Serif,
-                                fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal,
-                                color = textColor,
-                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                            )
-                        }
-                    }
-                }
+        Text(if (playing) "Playing · repetition $iteration of $repeatCount" else "Stopped", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        TextButton(onClick = { optionsExpanded = !optionsExpanded }) { Text(if (optionsExpanded) "Hide listening options" else "Listening options") }
+        if (optionsExpanded) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                AssistChip(onClick = { onSpeedChange(when (speed) { 0.75f -> 1f; 1f -> 1.25f; 1.25f -> 1.5f; else -> 0.75f }) }, label = { Text("Speed ${speed}×") })
+                AssistChip(onClick = { onRepeatChange(when (repeatCount) { 1 -> 2; 2 -> 3; 3 -> 999; else -> 1 }) }, label = { Text("Repeat $repeatCount×") })
+                FilterChip(selected = hideText, onClick = { onHideTextToggle(!hideText) }, label = { Text("Hide text") })
             }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Audio Player Controller Card (Bottom Docked Container matching Mockup 3 & 4)
-        Surface(
-            shape = RoundedCornerShape(24.dp),
-            color = Color(0xFF1A1815),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF2C2720)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(18.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Scrubber Slider Row
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Slider(
-                        value = elapsedSeconds.coerceIn(0f, totalSeconds.toFloat()),
-                        onValueChange = { newSec ->
-                            elapsedSeconds = newSec
-                            if (words.isNotEmpty() && totalSeconds > 0) {
-                                currentWordIndex = ((newSec / totalSeconds) * words.size).toInt().coerceIn(0, words.size - 1)
-                            }
-                        },
-                        valueRange = 0f..totalSeconds.toFloat(),
-                        colors = SliderDefaults.colors(
-                            thumbColor = RemoraAccent,
-                            activeTrackColor = RemoraAccent,
-                            inactiveTrackColor = Color(0xFF332D24)
-                        ),
-                        modifier = Modifier.height(20.dp)
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = formatTime(elapsedSeconds.toInt()),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = RemoraTextMuted
-                        )
-                        Text(
-                            text = formatTime(totalSeconds),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = RemoraTextMuted
-                        )
-                    }
-                }
-
-                // Playback Controls Row: Prev | Play/Pause | Next
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Surface(
-                        onClick = {
-                            elapsedSeconds = 0f
-                            currentWordIndex = 0
-                            onPrev()
-                        },
-                        shape = CircleShape,
-                        color = Color(0xFF221F1B),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A)),
-                        modifier = Modifier.size(44.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Default.SkipPrevious,
-                                contentDescription = "Previous Verse",
-                                tint = RemoraTextPrimary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(20.dp))
-
-                    // Play/Pause Big Gold Button
-                    Surface(
-                        onClick = { isPlaying = !isPlaying },
-                        shape = CircleShape,
-                        color = RemoraAccent,
-                        shadowElevation = 4.dp,
-                        modifier = Modifier.size(56.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                                contentDescription = if (isPlaying) "Pause" else "Play",
-                                tint = Color(0xFF14120E),
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(20.dp))
-
-                    Surface(
-                        onClick = {
-                            elapsedSeconds = 0f
-                            currentWordIndex = 0
-                            onNext()
-                        },
-                        shape = CircleShape,
-                        color = Color(0xFF221F1B),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A)),
-                        modifier = Modifier.size(44.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Default.SkipNext,
-                                contentDescription = "Next Verse",
-                                tint = RemoraTextPrimary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-                }
-
-                // Playback Option Chips Row: Speed | Repeat | Hide text (Rounded-full stadium pills)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Speed Chip
-                    Surface(
-                        onClick = {
-                            val nextSpeed = when (speed) {
-                                0.75f -> 1.0f
-                                1.0f -> 1.25f
-                                1.25f -> 1.5f
-                                else -> 0.75f
-                            }
-                            onSpeedChange(nextSpeed)
-                        },
-                        shape = RoundedCornerShape(22.dp),
-                        color = Color(0xFF221F1B),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
-                    ) {
-                        Text(
-                            text = "Speed ${speed}x",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = RemoraTextPrimary,
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
-                        )
-                    }
-
-                    // Repeat Chip
-                    Surface(
-                        onClick = {
-                            val nextRepeat = when (repeatCount) {
-                                1 -> 2
-                                2 -> 3
-                                3 -> 999
-                                else -> 1
-                            }
-                            onRepeatChange(nextRepeat)
-                        },
-                        shape = RoundedCornerShape(22.dp),
-                        color = Color(0xFF221F1B),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
-                    ) {
-                        val repeatLabel = if (repeatCount > 10) "∞" else "${repeatCount}x"
-                        Text(
-                            text = "Repeat $repeatLabel",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = RemoraTextPrimary,
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
-                        )
-                    }
-
-                    // Hide text Chip
-                    Surface(
-                        onClick = { onHideTextToggle(!hideText) },
-                        shape = RoundedCornerShape(22.dp),
-                        color = if (hideText) RemoraAccent.copy(alpha = 0.18f) else Color(0xFF221F1B),
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            if (hideText) RemoraAccent else Color(0xFF38322A)
-                        )
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (hideText) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                contentDescription = null,
-                                tint = if (hideText) RemoraAccent else RemoraTextSecondary,
-                                modifier = Modifier.size(14.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = "Hide text",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = if (hideText) RemoraAccent else RemoraTextPrimary
-                            )
-                        }
-                    }
-                }
-
-                HorizontalDivider(color = Color(0xFF28241E), thickness = 1.dp)
-
-                // Auto-advance Checkbox Row (Text on Left, Custom Gold Checkbox on Right matching Mockup 3)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onAutoAdvanceToggle(!autoAdvance) },
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Auto-advance to next verse",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = RemoraTextPrimary
-                    )
-
-                    Checkbox(
-                        checked = autoAdvance,
-                        onCheckedChange = { isChecked -> onAutoAdvanceToggle(isChecked) },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = RemoraAccent,
-                            uncheckedColor = RemoraTextMuted,
-                            checkmarkColor = Color(0xFF14120E)
-                        )
-                    )
-                }
+            Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("Advance to next verse after listening", modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+                Switch(checked = autoAdvance, onCheckedChange = onAutoAdvanceToggle)
             }
+            Text("Speed changes apply on the next playback. Advancing does not grade the verse.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

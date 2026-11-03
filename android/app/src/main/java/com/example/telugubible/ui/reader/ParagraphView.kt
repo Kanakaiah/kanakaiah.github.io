@@ -16,6 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
@@ -52,26 +55,28 @@ fun ParagraphView(
     onVerseClick: (Int) -> Unit,
     onCrossRefClick: (Int) -> Unit,
     onEmptySpaceClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFlashVersePosition: (Float) -> Unit = {}
 ) {
     val baseFontSize = fontSizeScale.spSize.sp
-    val baseLineHeight = (fontSizeScale.lineHeightSp * lineSpacing.multiplier).sp
+    val baseLineHeight = (fontSizeScale.spSize * lineSpacing.multiplier).sp
     val verseNumSize = (baseFontSize.value * 0.58f).sp
     val xrefNumSize = (baseFontSize.value * 0.55f).sp
+    val markerColor = RemoraGold
 
     Column(modifier = modifier.fillMaxWidth()) {
-        // 1. Section Heading (All caps with tracking matching mockup)
+        // Section headings follow the reading typeface and preserve source casing.
         if (showSectionHeadings && !paragraph.sectionHeading.isNullOrBlank()) {
             Text(
-                text = paragraph.sectionHeading.uppercase(),
+                text = paragraph.sectionHeading,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = (baseFontSize.value * 0.95f).sp,
-                    lineHeight = (baseFontSize.value * 1.35f).sp,
+                    fontSize = (baseFontSize.value * 1.15f).sp,
+                    lineHeight = (baseFontSize.value * 1.5f).sp,
                     fontFamily = readerFontFamily.fontFamily,
-                    letterSpacing = 1.2.sp
+                    letterSpacing = 0.sp
                 ),
-                color = RemoraGold,
+                color = markerColor,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -104,6 +109,7 @@ fun ParagraphView(
 
         // 3. Continuous Prose Paragraph Text
         val annotatedString = remember(
+            markerColor,
             paragraph,
             selectedVerses,
             flashVerse,
@@ -174,7 +180,7 @@ fun ParagraphView(
                     // Superscript Verse Number
                     if (showVerseNumbers) {
                         val numColor = when {
-                            isMemorized -> RemoraGold
+                            isMemorized -> markerColor
                             vIndex == 0 && paragraph.isParagraphStart && vNum > 1 -> readerTheme.textColor
                             else -> readerTheme.secondaryTextColor.copy(alpha = 0.8f)
                         }
@@ -207,7 +213,7 @@ fun ParagraphView(
                                 fontSize = xrefNumSize,
                                 baselineShift = BaselineShift.Superscript,
                                 fontWeight = FontWeight.Bold,
-                                color = RemoraGold
+                                color = markerColor
                             )
                         ) {
                             append("✻")
@@ -227,8 +233,8 @@ fun ParagraphView(
                     // Background highlighting: flash (green) > selected (accent + underline) > memorized (gold) > speaking
                     val bgColor = when {
                         isFlashing -> Color(0xFF4CAF50).copy(alpha = 0.35f)
-                        isSelected -> RemoraGold.copy(alpha = 0.22f)
-                        isMemorized -> RemoraGold.copy(alpha = 0.35f)
+                        isSelected -> markerColor.copy(alpha = 0.22f)
+                        isMemorized -> markerColor.copy(alpha = 0.35f)
                         isSpeaking -> readerTheme.accentColor.copy(alpha = 0.15f)
                         else -> Color.Transparent
                     }
@@ -256,6 +262,14 @@ fun ParagraphView(
         }
 
         var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
+        var textCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+        fun reportFlashPosition(layout: TextLayoutResult?, coordinates: LayoutCoordinates?) {
+            if (flashVerse == null || layout == null || coordinates == null || !coordinates.isAttached) return
+            val annotation = annotatedString.getStringAnnotations("VERSE", 0, annotatedString.length)
+                .firstOrNull { it.item == flashVerse.toString() } ?: return
+            if (annotation.start >= annotatedString.length) return
+            onFlashVersePosition(coordinates.positionInRoot().y + layout.getLineTop(layout.getLineForOffset(annotation.start)))
+        }
 
         Text(
             text = annotatedString,
@@ -263,9 +277,10 @@ fun ParagraphView(
             lineHeight = baseLineHeight,
             fontFamily = readerFontFamily.fontFamily,
             color = readerTheme.textColor,
-            onTextLayout = { textLayoutResult = it },
+            onTextLayout = { textLayoutResult = it; reportFlashPosition(it, textCoordinates) },
             modifier = Modifier
                 .fillMaxWidth()
+                .onGloballyPositioned { textCoordinates = it; reportFlashPosition(textLayoutResult, it) }
                 .pointerInput(annotatedString) {
                     detectTapGestures { offset ->
                         textLayoutResult?.let { layout ->

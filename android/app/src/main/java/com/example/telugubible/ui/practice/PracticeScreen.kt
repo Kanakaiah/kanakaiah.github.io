@@ -1,5 +1,6 @@
 package com.example.telugubible.ui.practice
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -85,13 +86,16 @@ fun PracticeScreen(
     }
 
     val state by viewModel.uiState.collectAsState()
+    BackHandler { if (!state.isGrading) onExitToToday() }
 
-    Box(
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
             .background(RemoraBackground)
+            .imePadding()
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
+        val drillHeight = maxOf(320.dp, maxHeight - 280.dp)
         when {
             state.isLoading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -104,7 +108,8 @@ fun PracticeScreen(
                     onRestart = { viewModel.restart() },
                     onBrowseBible = onNavigateToBible,
                     onPracticeAnchors = { activeSubject = PracticeSubject.ANCHORS },
-                    onPracticeThemes = { activeSubject = PracticeSubject.THEMES }
+                    onPracticeThemes = { activeSubject = PracticeSubject.THEMES },
+                    onExit = onExitToToday
                 )
             }
             else -> {
@@ -112,8 +117,8 @@ fun PracticeScreen(
                 if (verse != null) {
                     val isEnglish = state.displayLanguage == DisplayLanguage.ENGLISH
                     val bookName = if (isEnglish) verse.bookNameEn else verse.bookNameTe
-                    val rawText = (if (isEnglish) verse.textEn else verse.textTe)
-                        ?: (if (isEnglish) verse.textTe else verse.textEn) ?: ""
+                    val rawText = if (isEnglish) verse.textEn.orEmpty().ifBlank { verse.textTe.orEmpty() }
+                        else verse.textTe.orEmpty().ifBlank { verse.textEn.orEmpty() }
                     val activeText = rawText
                         .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
                         .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
@@ -125,145 +130,59 @@ fun PracticeScreen(
                         .replace("&#39;", "'")
                         .trim()
 
-                    val verseRef = "$bookName ${verse.chapter}:${verse.verse}"
+                    val verseRef = "$bookName ${verse.chapter}:${verse.verse}" +
+                        (verse.endVerse?.takeIf { it > verse.verse }?.let { "–$it" } ?: "")
 
-                    if (state.activeMode == PracticeMode.IMMERSED) {
+                    if (state.isImmersed) {
                         ImmersedReader(
                             verse = verse,
                             index = state.currentIndex,
                             total = state.verses.size,
                             onPrev = { viewModel.prevVerse() },
                             onNext = { viewModel.nextVerse() },
-                            onExit = { viewModel.setPracticeMode(PracticeMode.SCRAMBLE) },
+                            onExit = viewModel::exitImmersed,
                             isAutoPlaying = state.isTtsSpeaking,
                             onToggleAutoPlay = { viewModel.toggleTts() },
+                            onStopPlayback = viewModel::stopTts,
+                            onExposure = { seen, total -> viewModel.recordImmersiveExposure(verse.id, state.displayLanguage, seen, total) },
                             isEnglish = isEnglish,
                             bionicReading = state.bionicReading,
                             recallMasking = state.recallMasking,
-                            serifTypography = state.serifTypography
+                            serifTypography = state.serifTypography,
+                            readingSettings = state.readingSettings
                         )
-                        return@Box
+                        return@BoxWithConstraints
                     }
 
                     Column(
                         modifier = Modifier
+                            .widthIn(max = 640.dp)
                             .fillMaxSize()
+                            .align(Alignment.TopCenter)
+                            .verticalScroll(rememberScrollState())
                             .navigationBarsPadding()
                             .padding(bottom = 8.dp),
-                        verticalArrangement = Arrangement.SpaceBetween
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Top Header (✕, Reference, Subtitle, Mode Pills, Segmented Dash)
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            // Row with Close ✕ | Centered Title & Subtitle | Language Switcher
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(
-                                    onClick = onExitToToday,
-                                    modifier = Modifier.size(36.dp)
-                                ) {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = "Exit to Today",
-                                        tint = RemoraTextPrimary,
-                                        modifier = Modifier.size(22.dp)
-                                    )
-                                }
-
-                                Column(
-                                    modifier = Modifier.weight(1f),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = verseRef,
-                                        fontSize = 19.sp,
-                                        fontFamily = FontFamily.Serif,
-                                        fontWeight = FontWeight.Bold,
-                                        color = RemoraTextPrimary,
-                                        textAlign = TextAlign.Center
-                                    )
-                                    Spacer(modifier = Modifier.height(2.dp))
-                                    Text(
-                                        text = "${state.currentCollectionTitle} · ${state.currentIndex + 1} of ${state.verses.size} · ${viewModel.getRetentionStage(verse)}",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = RemoraTextSecondary,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.size(36.dp))
-                            }
-
-                            // Horizontal Mode Selector Pills
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .horizontalScroll(rememberScrollState()),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                PracticeMode.MENU_MODES.forEach { mode ->
-                                    val isSelected = state.activeMode == mode
-                                    Surface(
-                                        onClick = { viewModel.setPracticeMode(mode) },
-                                        shape = RoundedCornerShape(20.dp),
-                                        color = if (isSelected) RemoraAccent else Color(0xFF1E1B17),
-                                        border = androidx.compose.foundation.BorderStroke(
-                                            1.dp,
-                                            if (isSelected) RemoraAccent else Color(0xFF332D24)
-                                        )
-                                    ) {
-                                        Text(
-                                            text = mode.label,
-                                            fontSize = 12.sp,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) Color(0xFF14120E) else RemoraTextSecondary,
-                                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
-                                        )
-                                    }
-                                }
-                            }
-
-                            // Segmented Dash Progress Bar (positioned directly under mode pills)
-                            if (state.verses.isNotEmpty()) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 2.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    state.verses.indices.forEach { idx ->
-                                        val isFilled = idx <= state.currentIndex
-                                        Box(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .height(4.dp)
-                                                .clip(RoundedCornerShape(2.dp))
-                                                .background(if (isFilled) RemoraAccent else Color(0xFF2C2720))
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
+                        PracticeHeader("Verse practice", state.currentCollectionTitle, state.currentIndex, state.verses.size, onExitToToday, exitEnabled = !state.isGrading)
+                        Text(verseRef, style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Serif))
+                        PracticeModePicker(state.activeMode, viewModel::setPracticeMode, enabled = !state.isGrading && !state.isRevealed && state.gradingError == null)
                         // Drill / Working Area
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(1f)
-                                .padding(vertical = 10.dp)
+                                .then(if (state.isRevealed || state.activeMode == PracticeMode.READ || state.activeMode == PracticeMode.TYPING) Modifier else Modifier.height(drillHeight))
+                                .padding(vertical = 4.dp)
                         ) {
-                            when (state.activeMode) {
+                            key(if (state.activeMode == PracticeMode.LISTEN) "listening" else verse.id, state.activeMode, state.displayLanguage) {
+                            if (state.isRevealed && state.activeMode != PracticeMode.LISTEN) {
+                                ReviewAnswer(activeText, state.modeCommitted, state.modeAccuracy, showWordDiff = state.activeMode == PracticeMode.TYPING)
+                            } else when (state.activeMode) {
                                 PracticeMode.SCRAMBLE -> {
                                     ScrambleMode(
                                         text = activeText,
                                         onComplete = { acc ->
                                             viewModel.recordScrambleAttempt(acc)
-                                            viewModel.gradeCurrent(4)
                                         },
                                         modifier = Modifier.fillMaxSize()
                                     )
@@ -284,7 +203,10 @@ fun PracticeScreen(
                                         onNext = { viewModel.nextVerse() },
                                         onComplete = { viewModel.gradeCurrent(4) },
                                         ttsManager = viewModel.getTtsManager(),
-                                        modifier = Modifier.fillMaxSize()
+                                        modifier = Modifier.fillMaxSize(),
+                                        itemKey = verse.id,
+                                        canGoPrevious = state.currentIndex > 0,
+                                        canGoNext = state.currentIndex < state.verses.lastIndex
                                     )
                                 }
                                 PracticeMode.TYPING -> {
@@ -293,16 +215,22 @@ fun PracticeScreen(
                                         onAttempt = { accuracy, committed ->
                                             viewModel.recordAttempt(accuracy, committed)
                                         },
-                                        modifier = Modifier.fillMaxSize()
+                                        modifier = Modifier.fillMaxWidth(),
+                                        scrollInternally = false
                                     )
                                 }
                                 PracticeMode.FIRST_LETTER -> {
+                                    val exposureKey = "${verse.id}:${state.displayLanguage.name}"
                                     FirstLetterMode(
-                                        text = activeText,
+                                        text = remember(rawText) { practicePassage(rawText).practiceWords.joinToString(" ") },
                                         onComplete = { ratio ->
                                             viewModel.recordFirstLetterAttempt(ratio)
                                         },
-                                        modifier = Modifier.fillMaxSize()
+                                        modifier = Modifier.fillMaxSize(),
+                                        previouslySeen = (combineExposure(firstLetterExposureFor(verse, state.displayLanguage, state.firstLetterSeenByVerse),
+                                            state.immersiveSeenByVerse[immersiveExposureKey(verse, state.displayLanguage)])
+                                            ?: state.firstLetterSeenByVerse[exposureKey])?.seen ?: emptyList(),
+                                        onSeenChanged = { seen, total -> viewModel.recordFirstLetterSeen(exposureKey, seen, total) }
                                     )
                                 }
                                 PracticeMode.ERASER -> {
@@ -325,88 +253,19 @@ fun PracticeScreen(
                                     )
                                 }
                                 PracticeMode.READ, PracticeMode.IMMERSED -> {
-                                    Surface(
-                                        shape = RoundedCornerShape(16.dp),
-                                        color = RemoraCardBgElevated,
-                                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                                        modifier = Modifier.fillMaxSize()
-                                    ) {
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(20.dp),
-                                            verticalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            Text(
-                                                text = activeText,
-                                                fontSize = if (isEnglish) 20.sp else 22.sp,
-                                                lineHeight = if (isEnglish) 30.sp else 34.sp,
-                                                fontFamily = FontFamily.Serif,
-                                                color = RemoraTextPrimary,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .verticalScroll(rememberScrollState())
-                                            )
-
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceBetween,
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                OutlinedButton(
-                                                    onClick = { viewModel.prevVerse() },
-                                                    shape = RoundedCornerShape(8.dp),
-                                                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF38322A))
-                                                ) {
-                                                    Text("Previous", color = RemoraTextSecondary)
-                                                }
-
-                                                Button(
-                                                    onClick = { viewModel.nextVerse() },
-                                                    shape = RoundedCornerShape(8.dp),
-                                                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent)
-                                                ) {
-                                                    Text("Next", color = Color(0xFF14120E), fontWeight = FontWeight.Bold)
-                                                }
-                                            }
-                                        }
+                                    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                                        Text("Recall the verse in your own time.", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Button(onClick = viewModel::revealVerse, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("Show verse") }
                                     }
                                 }
                             }
-                        }
-
-                        // Bottom Continue Bar (For Typing, First Letters, Blanks, Speech when completed)
-                        if (state.activeMode != PracticeMode.LISTEN && state.activeMode != PracticeMode.SCRAMBLE && state.activeMode != PracticeMode.READ) {
-                            if (state.isRevealed) {
-                                Column(modifier = Modifier.fillMaxWidth()) {
-                                    if (state.modeAccuracy != null) {
-                                        Text(
-                                            text = "${state.modeAccuracy}% accuracy",
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = RemoraTextSecondary,
-                                            modifier = Modifier.padding(bottom = 6.dp)
-                                        )
-                                    }
-
-                                    Button(
-                                        onClick = { viewModel.gradeCurrent(4) },
-                                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                        shape = RoundedCornerShape(10.dp),
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(48.dp)
-                                    ) {
-                                        Text(
-                                            text = if (state.currentIndex >= state.verses.size - 1) "Finish Practice" else "Next Verse",
-                                            fontSize = 15.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = Color(0xFF14120E)
-                                        )
-                                    }
-                                }
                             }
                         }
+                        if (state.isRevealed && state.activeMode != PracticeMode.LISTEN) {
+                            ReviewGrades(state.gradeCeiling, viewModel::gradeCurrent, enabled = !state.isGrading && state.gradingError == null)
+                            if (state.isGrading) Text("Saving review…", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        state.gradingError?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
                     }
                 }
             }
@@ -420,102 +279,18 @@ private fun FinishedState(
     onRestart: () -> Unit,
     onBrowseBible: () -> Unit,
     onPracticeAnchors: () -> Unit,
-    onPracticeThemes: () -> Unit
+    onPracticeThemes: () -> Unit,
+    onExit: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .size(72.dp)
-                .clip(CircleShape)
-                .background(GradeEasy.copy(alpha = 0.15f)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.Default.CheckCircle,
-                contentDescription = null,
-                tint = GradeEasy,
-                modifier = Modifier.size(44.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        Text(
-            text = if (isEmpty) "No Verses in Practice Queue" else "All Caught Up!",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = RemoraTextPrimary,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = if (isEmpty)
-                "Add memory verses from the Today tab or the Chapter Reader to begin practicing."
-            else
-                "You've reviewed all scheduled verses! The Word of God is firmly rooted in your heart.",
-            fontSize = 14.sp,
-            color = RemoraTextSecondary,
-            textAlign = TextAlign.Center,
-            lineHeight = 20.sp,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = onPracticeAnchors,
-            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent.copy(alpha = 0.2f)),
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraAccent),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth(0.7f)
-        ) {
-            Text("Practice Chapter Anchors 🎯", color = RemoraAccentLight, fontWeight = FontWeight.Bold)
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Button(
-            onClick = onPracticeThemes,
-            colors = ButtonDefaults.buttonColors(containerColor = RemoraGold.copy(alpha = 0.2f)),
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraGold),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth(0.7f)
-        ) {
-            Text("Practice Book Themes 📖", color = RemoraGold, fontWeight = FontWeight.Bold)
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        if (!isEmpty) {
-            Button(
-                onClick = onRestart,
-                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.fillMaxWidth(0.7f)
-            ) {
-                Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Practice Again", fontWeight = FontWeight.Bold, color = Color(0xFF14120E))
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-        }
-
-        OutlinedButton(
-            onClick = onBrowseBible,
-            shape = RoundedCornerShape(8.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth(0.7f)
-        ) {
-            Text("Browse Bible", color = RemoraTextPrimary)
-        }
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        PracticeHeader("Practice", "A little practice, every day.", 0, 0, onExit)
+        Text(if (isEmpty) "Your practice starts here" else "Practice complete", style = MaterialTheme.typography.headlineMedium)
+        Text(if (isEmpty) "Add verses from Today or the Reader to begin." else "You reviewed the verses in this queue.",
+            style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Button(onClick = onExit, modifier = Modifier.fillMaxWidth()) { Text("Back to Today") }
+        if (!isEmpty) FilledTonalButton(onClick = onRestart, modifier = Modifier.fillMaxWidth()) { Text("Practice again") }
+        OutlinedButton(onClick = onBrowseBible, modifier = Modifier.fillMaxWidth()) { Text("Browse Bible") }
+        TextButton(onClick = onPracticeAnchors) { Text("Practice chapter anchors") }
+        TextButton(onClick = onPracticeThemes) { Text("Practice book themes") }
     }
 }

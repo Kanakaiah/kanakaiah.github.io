@@ -438,7 +438,7 @@ private fun InlineChapterGrid(
                                             text = ch.toString(),
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (isCurrent) Color.White else RemoraTextPrimary
+                                            color = if (isCurrent) MaterialTheme.colorScheme.onPrimary else RemoraTextPrimary
                                         )
                                     }
                                 }

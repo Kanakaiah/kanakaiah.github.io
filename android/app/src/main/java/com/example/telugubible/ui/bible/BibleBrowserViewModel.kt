@@ -15,15 +15,16 @@ import kotlinx.coroutines.launch
 data class BibleBrowserUiState(
     val allBooks: List<Book> = emptyList(),
     val filteredBooks: List<Book> = emptyList(),
-    val currentTestament: String = "OT", // "OT" or "NT"
+    val currentTestament: String = "ALL",
     val currentSection: String = "All",
     val searchQuery: String = "",
     val isLoading: Boolean = true,
     val activeVersion: String = "LSB"
 )
 
-class BibleBrowserViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = BibleRepository(BibleDatabaseHelper(application))
+class BibleBrowserViewModel @JvmOverloads constructor(application: Application,
+    private val repository: BibleRepository = BibleRepository(application)
+) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(BibleBrowserUiState())
     val uiState: StateFlow<BibleBrowserUiState> = _uiState.asStateFlow()
@@ -38,21 +39,21 @@ class BibleBrowserViewModel(application: Application) : AndroidViewModel(applica
             val books = repository.getBooks()
             val settings = repository.getAppSettings()
             val ver = settings.bibleVersion.ifBlank { "LSB" }
-            val filtered = applyFilter(books, "OT", "All", "")
             _uiState.update {
                 it.copy(
                     allBooks = books,
                     activeVersion = ver,
-                    filteredBooks = filtered,
+                    filteredBooks = applyFilter(books, it.currentTestament, it.currentSection, it.searchQuery),
                     isLoading = false
                 )
             }
         }
     }
 
-    fun updateTestamentOnScroll(testament: String) {
-        if (_uiState.value.currentTestament != testament) {
-            _uiState.update { it.copy(currentTestament = testament) }
+    fun refreshVersion() {
+        viewModelScope.launch {
+            val version = repository.getAppSettings().bibleVersion.ifBlank { "LSB" }
+            _uiState.update { it.copy(activeVersion = version) }
         }
     }
 
@@ -104,15 +105,9 @@ class BibleBrowserViewModel(application: Application) : AndroidViewModel(applica
             }
         }
 
-        // When viewing "All" sections, provide continuous list of all books (OT then NT)
-        if (section == "All") {
-            return books
-        }
-
-        // When a specific section is chosen, filter to that section
         return books.filter { b ->
-            val matchTestament = b.testament.equals(testament, ignoreCase = true)
-            val matchSection = b.section.equals(section, ignoreCase = true)
+            val matchTestament = testament == "ALL" || b.testament.equals(testament, ignoreCase = true)
+            val matchSection = section == "All" || b.section.equals(section, ignoreCase = true)
             matchTestament && matchSection
         }
     }

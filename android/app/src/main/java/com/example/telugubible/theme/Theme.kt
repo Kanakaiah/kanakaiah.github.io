@@ -1,66 +1,57 @@
 package com.example.telugubible.theme
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Color
 
 val LocalRemoraColors = staticCompositionLocalOf { RemoraColors.Midnight }
 
-@Composable
-fun RemoraTheme(
-    themeName: String = RemoraThemeState.themeName,
-    content: @Composable () -> Unit
-) {
-    if (RemoraThemeState.themeName != themeName) {
-        RemoraThemeState.themeName = themeName
-    }
-
+/** One semantic palette for M3 components and the legacy tokens during migration. */
+internal fun remoraColorScheme(themeName: String): ColorScheme {
     val colors = RemoraColors.forTheme(themeName)
+    val base = if (colors.isDark) darkColorScheme() else lightColorScheme()
+    val inverse = if (colors.isDark) RemoraColors.Paper else RemoraColors.Midnight
+    return base.copy(
+        primary = colors.accent,
+        onPrimary = colors.onAccent,
+        primaryContainer = colors.accentContainer,
+        onPrimaryContainer = colors.onAccentContainer,
+        inversePrimary = inverse.accent,
+        secondary = colors.accent,
+        onSecondary = colors.onAccent,
+        secondaryContainer = colors.cardBgElevated,
+        onSecondaryContainer = colors.textPrimary,
+        tertiary = colors.accent,
+        onTertiary = colors.onAccent,
+        tertiaryContainer = colors.accentContainer,
+        onTertiaryContainer = colors.onAccentContainer,
+        background = colors.background,
+        onBackground = colors.textPrimary,
+        surface = colors.background,
+        onSurface = colors.textPrimary,
+        surfaceVariant = colors.cardBgElevated,
+        onSurfaceVariant = colors.textSecondary,
+        surfaceTint = colors.accent,
+        surfaceBright = colors.cardBgElevated,
+        surfaceDim = colors.background,
+        surfaceContainerLowest = colors.background,
+        surfaceContainerLow = colors.cardBg,
+        surfaceContainer = colors.cardBg,
+        surfaceContainerHigh = colors.cardBgElevated,
+        surfaceContainerHighest = colors.cardBgElevated,
+        inverseSurface = inverse.cardBg,
+        inverseOnSurface = inverse.textPrimary,
+        outline = colors.cardBorderHover,
+        outlineVariant = colors.cardBorder
+    )
+}
 
-    val colorScheme = if (colors.isDark) {
-        darkColorScheme(
-            primary = colors.accent,
-            onPrimary = colors.textPrimary,
-            primaryContainer = colors.cardBgElevated,
-            onPrimaryContainer = colors.textPrimary,
-            secondary = colors.gold,
-            onSecondary = colors.background,
-            background = colors.background,
-            onBackground = colors.textPrimary,
-            surface = colors.cardBg,
-            onSurface = colors.textPrimary,
-            surfaceVariant = colors.cardBgElevated,
-            onSurfaceVariant = colors.textSecondary,
-            outline = colors.cardBorder,
-            outlineVariant = colors.cardBorderHover
-        )
-    } else {
-        lightColorScheme(
-            primary = colors.accent,
-            onPrimary = Color.White,
-            primaryContainer = colors.cardBgElevated,
-            onPrimaryContainer = colors.textPrimary,
-            secondary = colors.gold,
-            onSecondary = Color.White,
-            background = colors.background,
-            onBackground = colors.textPrimary,
-            surface = colors.cardBg,
-            onSurface = colors.textPrimary,
-            surfaceVariant = colors.cardBgElevated,
-            onSurfaceVariant = colors.textSecondary,
-            outline = colors.cardBorder,
-            outlineVariant = colors.cardBorderHover
-        )
-    }
-
-    CompositionLocalProvider(LocalRemoraColors provides colors) {
+@Composable
+fun RemoraTheme(themeName: String = "black", content: @Composable () -> Unit) {
+    CompositionLocalProvider(LocalRemoraColors provides RemoraColors.forTheme(themeName)) {
         MaterialTheme(
-            colorScheme = colorScheme,
+            colorScheme = remoraColorScheme(themeName),
             typography = Typography,
             content = content
         )

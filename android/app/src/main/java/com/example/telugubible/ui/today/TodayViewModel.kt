@@ -18,6 +18,8 @@ import com.example.telugubible.util.BookMasteryCounts
 import com.example.telugubible.util.MasteryUtils
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 
 enum class VerseFilter {
     ALL, DUE, LEARNING, MEMORIZED
@@ -69,7 +71,7 @@ data class TodayUiState(
     val filter: VerseFilter = VerseFilter.ALL,
     val sortOrder: VerseSortOrder = VerseSortOrder.SMART,
     val displayLanguage: DisplayLanguage = DisplayLanguage.ENGLISH,
-    val streak: Int = 14,
+    val streak: Int = 0,
     val memorizedCount: Int = 0,
     val learningCount: Int = 0,
     val dueCount: Int = 0,
@@ -79,6 +81,8 @@ data class TodayUiState(
     val selectedVerseForDetail: UserMemoryVerse? = null,
     val searchResults: List<VerseSearchResult> = emptyList(),
     val isSearchingInDialog: Boolean = false,
+    val searchError: String? = null,
+    val addError: String? = null,
     val messageBanner: String? = null,
     val masteryByBook: Map<Int, BookMasteryCounts> = emptyMap(),
     val totalSecureChapters: Int = 0,
@@ -104,6 +108,8 @@ class TodayViewModel @JvmOverloads constructor(
     private val ttsManager = com.example.telugubible.util.TtsManager(application)
     private val _uiState = MutableStateFlow(TodayUiState())
     val uiState: StateFlow<TodayUiState> = _uiState.asStateFlow()
+    private var dialogSearchJob: Job? = null
+    private var dialogSearchGeneration = 0L
 
     init {
         loadData()
@@ -507,6 +513,12 @@ class TodayViewModel @JvmOverloads constructor(
 
     fun addVerse(bookId: Int, chapter: Int, verse: Int, endVerse: Int? = null, topicIds: List<String> = emptyList()) {
         viewModelScope.launch {
+            if (verse < 1 || (endVerse != null && endVerse < verse) ||
+                repository.getVerse(bookId, chapter, verse) == null ||
+                (endVerse != null && repository.getVerse(bookId, chapter, endVerse) == null)) {
+                _uiState.update { it.copy(addError = "Check the book, chapter, and verse range.") }
+                return@launch
+            }
             val added = repository.addUserVerse(bookId, chapter, verse, endVerse)
             val effectiveTopicIds = if (topicIds.isNotEmpty()) {
                 topicIds
@@ -555,15 +567,15 @@ class TodayViewModel @JvmOverloads constructor(
         }
     }
 
-    fun addManualVerse(refStr: String, text: String, translation: String, topicIds: List<String> = emptyList()) {
+    fun addManualVerse(refStr: String, topicIds: List<String> = emptyList()) {
         viewModelScope.launch {
             val parsedRefs = com.example.telugubible.util.ScriptureRefParser.parseReferences(refStr, _uiState.value.books)
-            if (parsedRefs.isNotEmpty()) {
+            if (parsedRefs.size == 1 && refStr.split(';').count { it.isNotBlank() } == 1) {
                 val parsed = parsedRefs.first()
                 val endVerse = if (parsed.verseEnd > parsed.verseStart) parsed.verseEnd else null
                 addVerse(parsed.bookId, parsed.chapter, parsed.verseStart, endVerse, topicIds)
             } else {
-                _uiState.update { it.copy(messageBanner = "Could not parse reference: $refStr") }
+                _uiState.update { it.copy(addError = "Enter one valid passage at a time.") }
             }
         }
     }
@@ -588,19 +600,9 @@ class TodayViewModel @JvmOverloads constructor(
                 )
             }
 
-            val count = repository.addPresetCollection(collectionId) { current, total ->
+            val count = repository.addPresetCollection(collectionId, extraTopicIds) { current, total ->
                 _uiState.update {
                     it.copy(addingProgress = AddingProgress(name, current, total))
-                }
-            }
-
-            // Associate with extra topics if provided
-            if (extraTopicIds.isNotEmpty()) {
-                val allVerses = repository.getUserMemoryVerses()
-                allVerses.takeLast(count).forEach { v ->
-                    extraTopicIds.forEach { tid ->
-                        repository.addTopicToVerse(v.id, tid)
-                    }
                 }
             }
 
@@ -622,22 +624,38 @@ class TodayViewModel @JvmOverloads constructor(
     }
 
     fun toggleAddDialog(show: Boolean) {
-        _uiState.update { it.copy(showAddDialog = show, searchResults = emptyList()) }
+        dialogSearchGeneration++
+        dialogSearchJob?.cancel()
+        _uiState.update { it.copy(showAddDialog = show, searchResults = emptyList(), isSearchingInDialog = false, searchError = null, addError = null) }
     }
 
     fun searchVersesForDialog(query: String, translation: String = "LSB") {
+        val generation = ++dialogSearchGeneration
+        dialogSearchJob?.cancel()
         if (query.isBlank()) {
-            _uiState.update { it.copy(searchResults = emptyList()) }
+            _uiState.update { it.copy(searchResults = emptyList(), isSearchingInDialog = false, searchError = null) }
             return
         }
-        viewModelScope.launch {
-            _uiState.update { it.copy(isSearchingInDialog = true) }
+        _uiState.update { it.copy(isSearchingInDialog = true, searchResults = emptyList(), searchError = null) }
+        dialogSearchJob = viewModelScope.launch {
+            try {
             val parsedRefs = com.example.telugubible.util.ScriptureRefParser.parseReferences(query, _uiState.value.books)
             if (parsedRefs.isNotEmpty()) {
                 val results = mutableListOf<com.example.telugubible.data.model.VerseSearchResult>()
+                var unavailable = false
                 for (ref in parsedRefs) {
                     val book = _uiState.value.books.find { it.id == ref.bookId } ?: continue
+                    if (ref.verseStart < 1 || ref.verseEnd < ref.verseStart ||
+                        repository.getVerse(ref.bookId, ref.chapter, ref.verseStart) == null ||
+                        repository.getVerse(ref.bookId, ref.chapter, ref.verseEnd) == null) {
+                        unavailable = true
+                        continue
+                    }
                     val rangeVerses = repository.fetchVerseRange(translation, ref.bookId, ref.chapter, ref.verseStart, ref.verseEnd)
+                    if (rangeVerses.size != ref.verseEnd - ref.verseStart + 1) {
+                        unavailable = true
+                        continue
+                    }
                     val combinedText = rangeVerses.joinToString(" ") { it.second }
                     val result = com.example.telugubible.data.model.VerseSearchResult(
                         id = (ref.bookId * 1_000_000L) + (ref.chapter * 1_000L) + ref.verseStart,
@@ -654,10 +672,20 @@ class TodayViewModel @JvmOverloads constructor(
                     )
                     results.add(result)
                 }
-                _uiState.update { it.copy(searchResults = results, isSearchingInDialog = false) }
+                if (generation == dialogSearchGeneration) _uiState.update {
+                    it.copy(searchResults = results, isSearchingInDialog = false,
+                        searchError = if (unavailable) "Some passages are invalid or unavailable in the selected translation." else null)
+                }
             } else {
                 val results = repository.searchVerses(query, limit = 25)
-                _uiState.update { it.copy(searchResults = results, isSearchingInDialog = false) }
+                if (generation == dialogSearchGeneration) _uiState.update { it.copy(searchResults = results, isSearchingInDialog = false) }
+            }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                if (generation == dialogSearchGeneration) _uiState.update {
+                    it.copy(searchResults = emptyList(), isSearchingInDialog = false, searchError = "Search is unavailable. Try again.")
+                }
             }
         }
     }
@@ -670,10 +698,12 @@ class TodayViewModel @JvmOverloads constructor(
             val isEn = _uiState.value.displayLanguage == DisplayLanguage.ENGLISH
             val text = (if (isEn) verse.textEn else verse.textTe)
                 ?: (if (isEn) verse.textTe else verse.textEn) ?: ""
-            ttsManager.speak(text, langCode = if (isEn) "en" else "te", onDone = {
+            val started = ttsManager.speak(text, langCode = if (isEn) "en" else "te", onFailure = {
+                _uiState.update { it.copy(isTtsSpeaking = false) }
+            }, onDone = {
                 _uiState.update { it.copy(isTtsSpeaking = false) }
             })
-            _uiState.update { it.copy(isTtsSpeaking = true) }
+            _uiState.update { it.copy(isTtsSpeaking = started) }
         }
     }
 

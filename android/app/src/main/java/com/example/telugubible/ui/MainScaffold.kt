@@ -24,9 +24,9 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -82,6 +82,7 @@ fun MainScaffold(
     var isInRetentionMode by rememberSaveable { mutableStateOf(false) }
     var showAboutDialog by rememberSaveable { mutableStateOf(false) }
     var isBibleChromeVisible by remember { mutableStateOf(true) }
+    val screenStateHolder = rememberSaveableStateHolder()
 
     LaunchedEffect(selectedTab) {
         isBibleChromeVisible = true
@@ -97,40 +98,36 @@ fun MainScaffold(
 
     val settingsState by settingsViewModel.uiState.collectAsState()
     val readerState by readerViewModel.uiState.collectAsState()
-    LaunchedEffect(settingsState.settings.theme) {
+    LaunchedEffect(settingsState.settingsRevision) {
         readerViewModel.syncSettings()
     }
-    LaunchedEffect(readerState.readerTheme) {
+    LaunchedEffect(readerState.settingsRevision) {
         settingsViewModel.loadSettings()
     }
 
-    BackHandler(enabled = isInReaderMode || activeGuideBookId != null || isInSettingsMode || isInRetentionMode || selectedTab == RemoraTab.BIBLE || selectedTab == RemoraTab.PRACTICE) {
-        if (isInReaderMode) {
-            isInReaderMode = false
-        } else if (activeGuideBookId != null) {
-            activeGuideBookId = null
-        } else if (selectedTab == RemoraTab.BIBLE || selectedTab == RemoraTab.PRACTICE) {
-            selectedTab = RemoraTab.TODAY
-        } else if (isInSettingsMode) {
-            isInSettingsMode = false
-            todayViewModel.loadData()
-            retentionViewModel.loadAnalytics()
-            readerViewModel.syncSettings()
-        } else if (isInRetentionMode) {
-            isInRetentionMode = false
+    val backTarget = backTarget(
+        isInReaderMode, activeGuideBookId != null, isInSettingsMode,
+        isInRetentionMode, selectedTab == RemoraTab.TODAY
+    )
+    BackHandler(enabled = backTarget != BackTarget.EXIT) {
+        when (backTarget) {
+            BackTarget.READER -> isInReaderMode = false
+            BackTarget.GUIDE -> activeGuideBookId = null
+            BackTarget.SETTINGS -> {
+                isInSettingsMode = false
+                todayViewModel.loadData()
+                retentionViewModel.loadAnalytics()
+                readerViewModel.syncSettings()
+            }
+            BackTarget.RETENTION -> isInRetentionMode = false
+            BackTarget.TODAY -> selectedTab = RemoraTab.TODAY
+            BackTarget.EXIT -> Unit
         }
     }
 
     val currentDensity = LocalDensity.current
-    val customDensity = remember(currentDensity, settingsState.settings.fontSize) {
-        Density(
-            density = currentDensity.density,
-            fontScale = currentDensity.fontScale * settingsState.settings.fontSize
-        )
-    }
-
     RemoraTheme(themeName = settingsState.settings.theme) {
-        CompositionLocalProvider(LocalDensity provides customDensity) {
+        CompositionLocalProvider(LocalDensity provides currentDensity) {
     if (isInReaderMode) {
         // Reader manages its own typography scaling directly via FontSizeScale (XS-XL)
         CompositionLocalProvider(LocalDensity provides currentDensity) {
@@ -140,6 +137,7 @@ fun MainScaffold(
             )
         }
     } else if (activeGuideBookId != null) {
+        screenStateHolder.SaveableStateProvider("guide-$activeGuideBookId") {
         BookGuideScreen(
             viewModel = bookGuideViewModel,
             bookId = activeGuideBookId!!,
@@ -147,6 +145,7 @@ fun MainScaffold(
             onSelectBook = { activeGuideBookId = it },
             onOpenReader = openReader
         )
+        }
     } else if (isInSettingsMode) {
         SettingsScreen(
             viewModel = settingsViewModel,
@@ -167,17 +166,11 @@ fun MainScaffold(
             viewModel = retentionViewModel,
             onBack = { isInRetentionMode = false }
         )
-    } else if (selectedTab == RemoraTab.BIBLE) {
-        BibleBrowserScreen(
-            viewModel = bibleBrowserViewModel,
-            onOpenBook = { bookId -> activeGuideBookId = bookId },
-            onCloseToToday = { selectedTab = RemoraTab.TODAY }
-        )
     } else {
         Scaffold(
             topBar = {
                 AnimatedVisibility(
-                    visible = selectedTab != RemoraTab.TODAY && selectedTab != RemoraTab.PRACTICE && (selectedTab != RemoraTab.BIBLE || isBibleChromeVisible),
+                    visible = selectedTab != RemoraTab.TODAY && selectedTab != RemoraTab.PRACTICE && selectedTab != RemoraTab.BIBLE,
                     enter = expandVertically() + fadeIn(),
                     exit = shrinkVertically() + fadeOut()
                 ) {
@@ -274,16 +267,13 @@ fun MainScaffold(
                 ) {
                     Surface(
                         color = RemoraCardBg,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         NavigationBar(
-                            containerColor = RemoraCardBg,
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
                             tonalElevation = 0.dp,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .navigationBarsPadding()
-                                .height(64.dp)
                         ) {
                             RemoraTab.entries.forEach { tab ->
                                 val isSelected = selectedTab == tab
@@ -300,24 +290,17 @@ fun MainScaffold(
                                     icon = {
                                         Icon(
                                             tab.icon,
-                                            contentDescription = tab.title,
+                                            contentDescription = null,
                                             modifier = Modifier.size(22.dp)
                                         )
                                     },
                                     label = {
                                         Text(
                                             text = tab.title,
-                                            fontSize = 11.sp,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                            style = MaterialTheme.typography.labelMedium
                                         )
                                     },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = RemoraAccent,
-                                        selectedTextColor = RemoraAccent,
-                                        unselectedIconColor = RemoraTextMuted,
-                                        unselectedTextColor = RemoraTextMuted,
-                                        indicatorColor = RemoraAccent.copy(alpha = 0.15f)
-                                    )
+                                    colors = NavigationBarItemDefaults.colors()
                                 )
                             }
                         }
@@ -335,6 +318,9 @@ fun MainScaffold(
                     when (tab) {
                         RemoraTab.TODAY -> TodayScreen(
                             viewModel = todayViewModel,
+                            readingBook = readerState.currentBook,
+                            readingChapter = readerState.currentChapter,
+                            hasOpenedReader = readerState.hasSavedReadingPosition,
                             onStartSession = { collectionId ->
                                 practiceViewModel.startCollectionReview(collectionId, todayState.reviewOrder)
                                 practiceSubject = PracticeSubject.VERSES
@@ -374,12 +360,15 @@ fun MainScaffold(
                             initialSubject = practiceSubject,
                             initialAnchorBookId = selectedAnchorBookId
                         )
-                        RemoraTab.BIBLE -> BibleBrowserScreen(
-                            viewModel = bibleBrowserViewModel,
-                            onOpenBook = { bookId -> activeGuideBookId = bookId },
-                            onCloseToToday = { selectedTab = RemoraTab.TODAY },
-                            onChromeVisibilityChange = { visible -> isBibleChromeVisible = visible }
-                        )
+                        RemoraTab.BIBLE -> screenStateHolder.SaveableStateProvider("bible-library") {
+                            BibleBrowserScreen(
+                                viewModel = bibleBrowserViewModel,
+                                onOpenBook = { bookId -> activeGuideBookId = bookId },
+                                onCloseToToday = { selectedTab = RemoraTab.TODAY },
+                                onChromeVisibilityChange = { visible -> isBibleChromeVisible = visible },
+                                onReadBook = { bookId -> openReader(bookId, 1) }
+                            )
+                        }
                     }
                 }
             }

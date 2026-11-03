@@ -13,9 +13,16 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            // Opt-in test install: keep instrumentation fixtures separate from personal progress.
+            if (providers.gradleProperty("isolatedUiTests").orNull == "true") {
+                applicationIdSuffix = ".uitest"
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -31,6 +38,8 @@ android {
       buildConfig = false
       shaders = false
     }
+
+    testOptions { unitTests.isIncludeAndroidResources = true }
 
     packaging {
       resources {
@@ -76,6 +85,8 @@ dependencies {
   testImplementation("org.robolectric:robolectric:4.14.1")
   testImplementation(libs.androidx.test.core)
   testImplementation(libs.androidx.test.ext.junit)
+  testImplementation(composeBom)
+  testImplementation(libs.androidx.compose.ui.test.junit4)
 
   // Instrumented tests: jUnit rules and runners
   androidTestImplementation(libs.androidx.test.core)

@@ -1,446 +1,67 @@
 package com.example.telugubible.ui.practice
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.telugubible.theme.*
 import com.example.telugubible.ui.common.BookCoverImage
+import com.example.telugubible.data.model.Book
 
 @Composable
-fun ThemeDrill(
-    viewModel: ThemeDrillViewModel,
-    onExit: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ThemeDrill(viewModel: ThemeDrillViewModel, onExit: () -> Unit, modifier: Modifier = Modifier) {
     val state by viewModel.uiState.collectAsState()
-
-    androidx.activity.compose.BackHandler {
-        onExit()
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.onScreenEntered()
-    }
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(RemoraBackground)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 10.dp)
-    ) {
-        when {
-            state.isLoading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = RemoraAccent)
-                }
-            }
-            state.isFinished || state.queue.isEmpty() -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(72.dp)
-                            .clip(CircleShape)
-                            .background(GradeEasy.copy(alpha = 0.15f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = GradeEasy,
-                            modifier = Modifier.size(44.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(18.dp))
-                    Text(
-                        text = "Every theme is scheduled",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Nothing in this set is due. ${state.learnedCount} of ${state.totalCount} book themes are secure.",
-                        fontSize = 14.sp,
-                        color = RemoraTextSecondary,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Button(
-                        onClick = { viewModel.restart() },
-                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Practice Again", fontWeight = FontWeight.Bold)
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    OutlinedButton(
-                        onClick = onExit,
-                        shape = RoundedCornerShape(12.dp),
-                        border = BorderStroke(1.dp, RemoraCardBorder)
-                    ) {
-                        Text("Back to Today", color = RemoraTextPrimary)
-                    }
-                }
-            }
-            else -> {
-                val item = state.currentItem
-                if (item != null) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = 6.dp),
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        // Sleek Unified Top Bar: (X) on left, Scope Pills in center, Progress Counter on right
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(46.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // (X) Close button on left
-                            IconButton(
-                                onClick = onExit,
-                                modifier = Modifier.size(36.dp)
-                            ) {
-                                Icon(
-                                    Icons.Default.Close,
-                                    contentDescription = "Close to Today",
-                                    tint = RemoraTextSecondary,
-                                    modifier = Modifier.size(22.dp)
-                                )
-                            }
-
-                            // Scope Selector Pills in center: Old / New / Whole
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                ScopePill(
-                                    label = "Old",
-                                    selected = state.scope == ThemeScope.OT,
-                                    onClick = { viewModel.setScope(ThemeScope.OT) }
-                                )
-                                ScopePill(
-                                    label = "New",
-                                    selected = state.scope == ThemeScope.NT,
-                                    onClick = { viewModel.setScope(ThemeScope.NT) }
-                                )
-                                ScopePill(
-                                    label = "Whole",
-                                    selected = state.scope == ThemeScope.ALL,
-                                    onClick = { viewModel.setScope(ThemeScope.ALL) }
-                                )
-                            }
-
-                            // Progress text on right: 12/66 + queue index
-                            Column(
-                                horizontalAlignment = Alignment.End,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "${state.learnedCount}/${state.totalCount}",
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = RemoraTextPrimary
-                                )
-                                Text(
-                                    text = "${state.currentIndex + 1} of ${state.queue.size}",
-                                    fontSize = 10.sp,
-                                    color = RemoraTextMuted
-                                )
-                            }
-                        }
-
-                        // Center: Large Cinematic Artwork & Book Theme
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            // Large Hero Cover Art (Prominent, cinematic, smooth rounded corners)
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.88f)
-                                    .heightIn(min = 210.dp, max = 280.dp)
-                                    .aspectRatio(4f / 3f)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .border(1.dp, RemoraCardBorder, RoundedCornerShape(16.dp)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                BookCoverImage(
-                                    bookKey = item.book.key,
-                                    contentDescription = item.book.nameEn,
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(18.dp))
-
-                            Text(
-                                text = item.book.nameEn,
-                                fontSize = 30.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
-                                color = RemoraTextPrimary,
-                                textAlign = TextAlign.Center
-                            )
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Text(
-                                text = "What is this book's theme?",
-                                fontSize = 13.sp,
-                                fontStyle = FontStyle.Italic,
-                                color = RemoraTextMuted
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            if (state.isRevealed) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    Text(
-                                        text = item.book.themeWord,
-                                        fontSize = 28.sp,
-                                        fontWeight = FontWeight.ExtraBold,
-                                        letterSpacing = 1.5.sp,
-                                        color = RemoraAccent,
-                                        textAlign = TextAlign.Center
-                                    )
-                                    if (item.book.keyWord.isNotBlank()) {
-                                        Text(
-                                            text = item.book.keyWord.uppercase(),
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            letterSpacing = 2.sp,
-                                            color = RemoraGold,
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                    if (item.book.subtitle.isNotBlank()) {
-                                        Text(
-                                            text = item.book.subtitle,
-                                            fontSize = 14.sp,
-                                            fontStyle = FontStyle.Italic,
-                                            fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
-                                            color = RemoraTextSecondary,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier.padding(horizontal = 20.dp)
-                                        )
-                                    }
-                                }
-                            } else {
-                                Text(
-                                    text = "— · · · —",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    letterSpacing = 4.sp,
-                                    color = RemoraTextMuted.copy(alpha = 0.5f)
-                                )
-                            }
-                        }
-
-                        // Bottom Action Controls: Skip + Reveal / SM-2 Grades + Next Theme
-                        if (!state.isRevealed) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(46.dp),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                OutlinedButton(
-                                    onClick = { viewModel.skipToNext() },
-                                    shape = RoundedCornerShape(14.dp),
-                                    border = BorderStroke(1.dp, RemoraCardBorder),
-                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = RemoraTextSecondary),
-                                    modifier = Modifier
-                                        .weight(0.32f)
-                                        .fillMaxHeight()
-                                ) {
-                                    Text(
-                                        text = "Skip",
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowForward,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(13.dp)
-                                    )
-                                }
-
-                                Button(
-                                    onClick = { viewModel.revealAnswer() },
-                                    modifier = Modifier
-                                        .weight(0.68f)
-                                        .fillMaxHeight(),
-                                    shape = RoundedCornerShape(14.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = RemoraAccent,
-                                        contentColor = Color(0xFF14120E)
-                                    )
-                                ) {
-                                    Text(
-                                        text = "Tap to reveal",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 14.sp
-                                    )
-                                }
-                            }
-                        } else {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                // 4 SM-2 Spaced Repetition Grade Buttons: Blank, Hard, Good, Easy
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    listOf(
-                                        Triple("Blank", 1, GradeBlank),
-                                        Triple("Hard", 3, GradeHard),
-                                        Triple("Good", 4, GradeGood),
-                                        Triple("Easy", 5, GradeEasy)
-                                    ).forEach { (label, score, color) ->
-                                        Surface(
-                                            onClick = { viewModel.gradeCurrent(score) },
-                                            shape = RoundedCornerShape(10.dp),
-                                            color = color.copy(alpha = 0.12f),
-                                            border = BorderStroke(1.dp, color.copy(alpha = 0.30f)),
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .height(36.dp)
-                                        ) {
-                                            Box(
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Text(
-                                                    text = label,
-                                                    fontSize = 12.sp,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = color
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(46.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    OutlinedButton(
-                                        onClick = { viewModel.skipToNext() },
-                                        shape = RoundedCornerShape(14.dp),
-                                        border = BorderStroke(1.dp, RemoraCardBorder),
-                                        colors = ButtonDefaults.outlinedButtonColors(contentColor = RemoraTextSecondary),
-                                        modifier = Modifier
-                                            .weight(0.32f)
-                                            .fillMaxHeight()
-                                    ) {
-                                        Text(
-                                            text = "Skip",
-                                            fontSize = 13.sp,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                        Spacer(modifier = Modifier.width(4.dp))
-                                        Icon(
-                                            Icons.AutoMirrored.Filled.ArrowForward,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(13.dp)
-                                        )
-                                    }
-
-                                    Button(
-                                        onClick = { viewModel.gradeCurrent(4) },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = RemoraAccent,
-                                            contentColor = Color(0xFF14120E)
-                                        ),
-                                        shape = RoundedCornerShape(14.dp),
-                                        modifier = Modifier
-                                            .weight(0.68f)
-                                            .fillMaxHeight()
-                                    ) {
-                                        Text(
-                                            text = "Next Theme ➔",
-                                            fontSize = 14.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    BackHandler { if (!state.isGrading) onExit() }
+    LaunchedEffect(Unit) { viewModel.onScreenEntered() }
+    ThemeDrillContent(state, viewModel::setScope, viewModel::revealAnswer, viewModel::gradeCurrent,
+        viewModel::skipToNext, viewModel::restart, onExit, modifier)
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ScopePill(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit
+internal fun ThemeDrillContent(
+    state: ThemeDrillUiState,
+    onScope: (ThemeScope) -> Unit,
+    onReveal: () -> Unit,
+    onGrade: (Int) -> Unit,
+    onSkip: () -> Unit,
+    onRestart: () -> Unit,
+    onExit: () -> Unit,
+    modifier: Modifier = Modifier,
+    cover: @Composable (Book) -> Unit = { book -> BookCoverImage(book.key, "${book.nameEn} cover", Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(24.dp))) }
 ) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(14.dp),
-        color = if (selected) RemoraAccent else Color.Transparent,
-        border = if (!selected) BorderStroke(1.dp, RemoraCardBorder) else null
-    ) {
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (selected) Color(0xFF14120E) else RemoraTextMuted,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
-        )
+    StudyPracticeLayout(modifier, Triple(state.currentIndex, state.scope, state.isFinished)) {
+        PracticeHeader("Book themes", "Recall the central theme of each book.", state.currentIndex,
+            if (state.isFinished) 0 else state.queue.size, onExit, exitEnabled = !state.isGrading)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            listOf(ThemeScope.ALL to "Whole Bible", ThemeScope.OT to "Old Testament", ThemeScope.NT to "New Testament").forEach { (scope, label) ->
+                FilterChip(selected = state.scope == scope, onClick = { onScope(scope) }, label = { Text(label) },
+                    enabled = !state.isLoading && !state.isGrading && state.gradingError == null)
+            }
+        }
+        Text("${state.learnedCount} of ${state.totalCount} themes learned across the Bible",
+            style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        when {
+            state.isLoading -> CircularProgressIndicator()
+            state.isFinished || state.queue.isEmpty() -> PracticeEndCard(state.queue.isEmpty(), "Theme practice complete", onRestart, onExit, "Back to Today")
+            else -> state.currentItem?.let { item ->
+                cover(item.book)
+                Text(item.book.nameEn, style = MaterialTheme.typography.headlineLarge.copy(fontFamily = FontFamily.Serif))
+                if (state.isRevealed) {
+                    StudyAnswerCard("Book theme", item.book.themeWord, item.book.subtitle, item.book.keyWord)
+                    ReviewGrades(5, onGrade, enabled = !state.isGrading && state.gradingError == null)
+                    if (state.isGrading) Text("Saving review…", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    state.gradingError?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
+                } else {
+                    Text("What is this book’s theme?", style = MaterialTheme.typography.bodyLarge)
+                    Button(onClick = onReveal, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("Show theme") }
+                }
+                TextButton(onClick = onSkip, enabled = !state.isGrading && state.gradingError == null) { Text("Skip without grading") }
+            }
+        }
     }
 }

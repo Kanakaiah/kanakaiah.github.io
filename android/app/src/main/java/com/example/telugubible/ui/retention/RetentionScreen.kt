@@ -1,12 +1,5 @@
 package com.example.telugubible.ui.retention
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,13 +12,11 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -43,7 +34,24 @@ fun RetentionScreen(
     onBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    RetentionContent(state, onBack, viewModel::setIntervalScale, viewModel::startColdCheck,
+        viewModel::updateColdAnswer, viewModel::revealColdAnswer, viewModel::nextColdItem, viewModel::closeColdCheck)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun RetentionContent(
+    state: com.example.telugubible.data.model.RetentionUiState,
+    onBack: () -> Unit,
+    onSetIntervalScale: (Double) -> Unit,
+    onStartColdCheck: () -> Unit,
+    onUpdateColdAnswer: (String) -> Unit,
+    onRevealColdAnswer: () -> Unit,
+    onNextColdItem: () -> Unit,
+    onCloseColdCheck: () -> Unit
+) {
     val scrollState = rememberScrollState()
+    var showDetails by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -109,13 +117,13 @@ fun RetentionScreen(
                                 color = RemoraTextPrimary
                             )
                             Text(
-                                text = "Retention needs about a week of reviews before it can tell you anything. Keep going.",
+                                text = "At least five eligible reviews are needed to show this estimate.",
                                 fontSize = 14.sp,
                                 color = RemoraTextSecondary,
                                 lineHeight = 20.sp
                             )
                             Text(
-                                text = "This screen will show what you'd still recall unaided — not how much you've practised.",
+                                text = "Eligible reviews have a previous interval and use little or no prompting.",
                                 fontSize = 13.sp,
                                 color = RemoraTextMuted,
                                 lineHeight = 18.sp
@@ -134,7 +142,7 @@ fun RetentionScreen(
                             letterSpacing = (-1).sp
                         )
                         Text(
-                            text = "recalled on the first try, last 30 days",
+                            text = "successful low-cue reviews in the last 30 days",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = RemoraTextSecondary
@@ -157,7 +165,7 @@ fun RetentionScreen(
                                     modifier = Modifier.size(14.dp)
                                 )
                                 Text(
-                                    text = "${state.overdueCount} items overdue. This counts only what you've actually reviewed.",
+                                    text = "${state.overdueCount} items overdue",
                                     fontSize = 12.sp,
                                     color = RemoraAccentLight
                                 )
@@ -165,6 +173,7 @@ fun RetentionScreen(
                         }
                     }
 
+                    if (showDetails) {
                     // Forgetting Curve ("How long it holds")
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(
@@ -198,22 +207,22 @@ fun RetentionScreen(
                                     verticalArrangement = Arrangement.spacedBy(12.dp)
                                 ) {
                                     Text(
-                                        text = "You're forgetting faster than the schedule assumes. Shortening every interval brings reviews forward across the board.",
+                                        text = "Some interval results are below the current target. You can adjust future intervals.",
                                         fontSize = 13.sp,
                                         color = RemoraTextSecondary,
                                         lineHeight = 19.sp
                                     )
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                    Column(
+                                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                                        modifier = Modifier.fillMaxWidth()
                                     ) {
                                         listOf(Pair(0.70, "30% shorter"), Pair(0.85, "15% shorter"), Pair(1.0, "Normal")).forEach { (scaleVal, label) ->
                                             val isSelected = (state.intervalScale == scaleVal)
                                             Button(
-                                                onClick = { viewModel.setIntervalScale(scaleVal) },
+                                                onClick = { onSetIntervalScale(scaleVal) },
                                                 colors = ButtonDefaults.buttonColors(
                                                     containerColor = if (isSelected) RemoraAccent else RemoraCardBgElevated,
-                                                    contentColor = if (isSelected) Color.White else RemoraTextSecondary
+                                                    contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else RemoraTextSecondary
                                                 ),
                                                 border = androidx.compose.foundation.BorderStroke(
                                                     1.dp,
@@ -221,9 +230,9 @@ fun RetentionScreen(
                                                 ),
                                                 shape = RoundedCornerShape(6.dp),
                                                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
-                                                modifier = Modifier.height(36.dp)
+                                                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                                             ) {
-                                                Text(text = label, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                                                Text(text = if (isSelected) "$label (selected)" else label, style = MaterialTheme.typography.labelLarge)
                                             }
                                         }
                                     }
@@ -250,16 +259,16 @@ fun RetentionScreen(
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Text(
-                                    text = "ARE YOUR GRADES HONEST?",
+                                    text = "GRADES AND MEASURED ATTEMPTS",
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = RemoraAccent,
                                     letterSpacing = 2.sp
                                 )
                                 val gapMsg = when {
-                                    gap.gap >= 0.5 -> "You grade yourself about ${String.format(Locale.US, "%.1f", gap.gap)} of a grade above what you actually typed, across ${gap.n} measured attempts. Intervals are running longer than the recall behind them."
-                                    gap.gap <= -0.5 -> "You grade yourself harder than the words you produced, across ${gap.n} measured attempts. Nothing is broken — you may just be scoring on meaning rather than wording."
-                                    else -> "Your grades match what you actually produced, across ${gap.n} measured attempts."
+                                    gap.gap >= 0.5 -> "Your average grade was ${String.format(Locale.US, "%.1f", gap.gap)} above the estimate from measured accuracy, across ${gap.n} attempts."
+                                    gap.gap <= -0.5 -> "Your average grade was ${String.format(Locale.US, "%.1f", -gap.gap)} below the estimate from measured accuracy, across ${gap.n} attempts."
+                                    else -> "Your average grade was close to the estimate from measured accuracy, across ${gap.n} attempts."
                                 }
                                 Text(
                                     text = gapMsg,
@@ -326,6 +335,11 @@ fun RetentionScreen(
                             }
                         }
                     }
+                    }
+                }
+
+                TextButton(onClick = { showDetails = !showDetails }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                    Text(if (showDetails) "Hide detailed statistics" else "Show detailed statistics")
                 }
 
                 // Cold Check Card
@@ -349,13 +363,13 @@ fun RetentionScreen(
 
                         if (state.coldAvailableCount > 0) {
                             Text(
-                                text = "${state.coldAvailableCount} items have gone 30+ days without a successful recall. A check asks 5 of them and changes nothing — no grades, no schedule.",
+                                text = "${state.coldAvailableCount} items are available for this check. It does not change grades or review schedules.",
                                 fontSize = 13.sp,
                                 color = RemoraTextSecondary,
                                 lineHeight = 19.sp
                             )
                             Button(
-                                onClick = { viewModel.startColdCheck() },
+                                onClick = onStartColdCheck,
                                 colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
                                 shape = RoundedCornerShape(6.dp),
                                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -364,7 +378,7 @@ fun RetentionScreen(
                             }
                         } else {
                             Text(
-                                text = "Nothing has been away long enough yet. This becomes available once something you once knew has had 30+ days to fade — the waiting is what makes it mean anything.",
+                                text = "No items currently qualify for a cold check.",
                                 fontSize = 13.sp,
                                 color = RemoraTextSecondary,
                                 lineHeight = 19.sp
@@ -383,7 +397,7 @@ fun RetentionScreen(
                 }
 
                 // Adherence (if sessions started)
-                if (state.adherence.started > 0) {
+                if (showDetails && state.adherence.started > 0) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
                             text = "ARE YOU FINISHING?",
@@ -446,7 +460,7 @@ fun RetentionScreen(
 
                         if ((state.adherence.completionRate ?: 1.0) < 0.60) {
                             Text(
-                                text = "More than a third of sessions go unfinished. If that started recently, the day's work has probably become too long or too hard — shorten it before trusting any retention number above.",
+                                text = "Some sessions were left unfinished. Completed reviews remain saved.",
                                 fontSize = 13.sp,
                                 color = RemoraAccentLight,
                                 lineHeight = 18.sp
@@ -456,7 +470,7 @@ fun RetentionScreen(
                 }
 
                 // Leeches (Costing you the most)
-                if (state.leeches.isNotEmpty()) {
+                if (showDetails && state.leeches.isNotEmpty()) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
                             text = "COSTING YOU THE MOST",
@@ -499,7 +513,7 @@ fun RetentionScreen(
                             }
                         }
                         Text(
-                            text = "These keep slipping. Reword the hook, split the passage, or set it aside — more repetitions is the one thing that reliably won't help.",
+                            text = "These items have more recorded lapses. You can revisit them in practice.",
                             fontSize = 13.sp,
                             color = RemoraTextSecondary,
                             lineHeight = 18.sp
@@ -508,7 +522,7 @@ fun RetentionScreen(
                 }
 
                 // Active days footer
-                Text(
+                if (showDetails) Text(
                     text = "Reviewed on ${state.activeDaysCount} of the last 45 days.",
                     fontSize = 13.sp,
                     color = RemoraTextMuted,
@@ -522,10 +536,10 @@ fun RetentionScreen(
     if (state.isColdCheckActive) {
         ColdCheckDialog(
             state = state,
-            onUpdateAnswer = { viewModel.updateColdAnswer(it) },
-            onReveal = { viewModel.revealColdAnswer() },
-            onNext = { viewModel.nextColdItem() },
-            onClose = { viewModel.closeColdCheck() }
+            onUpdateAnswer = onUpdateColdAnswer,
+            onReveal = onRevealColdAnswer,
+            onNext = onNextColdItem,
+            onClose = onCloseColdCheck
         )
     }
 }
@@ -533,60 +547,18 @@ fun RetentionScreen(
 @Composable
 fun ForgettingCurveChart(curve: List<RetentionBucket>) {
     Surface(
-        shape = RoundedCornerShape(8.dp),
-        color = RemoraCardBg,
-        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(180.dp)
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 12.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom
-        ) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             curve.forEach { bucket ->
-                val rate = bucket.rate
-                val heightPct = rate?.toFloat() ?: 0.05f
-                val barColor = when {
-                    rate == null -> RemoraCardBorder
-                    rate >= 0.85 -> Color(0xFF10B981) // Emerald
-                    rate >= 0.70 -> RemoraGold        // Gold
-                    else -> Color(0xFFEF4444)         // Red
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Text(
-                        text = rate?.let { "${(it * 100).roundToInt()}%" } ?: "—",
-                        fontSize = 10.sp,
-                        color = RemoraTextMuted,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.6f)
-                            .fillMaxHeight(heightPct.coerceIn(0.06f, 0.82f))
-                            .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                            .background(barColor)
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = bucket.label,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = RemoraTextSecondary
-                    )
+                val result = bucket.rate?.let { "${(it * 100).roundToInt()}% recalled" } ?: "Not enough reviews"
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("${bucket.label}: $result · ${bucket.attempts} reviews", style = MaterialTheme.typography.bodyMedium)
+                    bucket.rate?.let { rate ->
+                        LinearProgressIndicator(progress = { rate.toFloat().coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
+                    }
                 }
             }
         }
@@ -601,192 +573,60 @@ fun ColdCheckDialog(
     onNext: () -> Unit,
     onClose: () -> Unit
 ) {
-    Dialog(
-        onDismissRequest = onClose,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = RemoraBackground
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp)
-            ) {
-                // Header
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = onClose) {
-                        Icon(Icons.Default.Close, contentDescription = "Close", tint = RemoraTextSecondary)
+    val close = { if (!state.coldCheckSaving) onClose() }
+    Dialog(onDismissRequest = close, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            Column(Modifier.fillMaxSize().imePadding().padding(horizontal = 20.dp, vertical = 12.dp)) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = close, enabled = !state.coldCheckSaving) {
+                        Icon(Icons.Default.Close, contentDescription = "Close cold check")
                     }
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Cold Check", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = RemoraTextPrimary)
-                        if (state.coldCheckFinishedResult == null && state.coldCheckCandidates.isNotEmpty()) {
-                            Text(
-                                "${state.activeColdIndex + 1} of ${state.coldCheckCandidates.size}",
-                                fontSize = 11.sp,
-                                color = RemoraTextMuted
-                            )
-                        }
+                    Text("Cold check", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+                    if (state.coldCheckFinishedResult == null && state.coldCheckCandidates.isNotEmpty()) {
+                        Text("${state.activeColdIndex + 1} of ${state.coldCheckCandidates.size}", style = MaterialTheme.typography.labelLarge)
                     }
-                    Box(modifier = Modifier.size(48.dp))
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                state.coldCheckFinishedResult?.let { result ->
-                    // Done screen
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "${result.correct} / ${result.total}",
-                            fontSize = 54.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Recalled unaided after a median of ${result.medianColdFor} days away.",
-                            fontSize = 15.sp,
-                            color = RemoraTextSecondary,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Nothing was scheduled or graded by this. Your intervals are exactly where they were.",
-                            fontSize = 12.sp,
-                            color = RemoraTextMuted,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(28.dp))
-                        Button(
-                            onClick = onClose,
-                            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.fillMaxWidth(0.7f)
-                        ) {
-                            Text("Done", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                } ?: run {
-                    val current = state.coldCheckCandidates.getOrNull(state.activeColdIndex)
-                    if (current != null) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = RemoraCardBg,
-                                border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Column(
-                                    modifier = Modifier.padding(24.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                                ) {
-                                    Text(
-                                        text = "${current.kind.uppercase()} · LAST RECALLED ${current.coldForDays} DAYS AGO",
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = RemoraAccent,
-                                        letterSpacing = 1.5.sp
-                                    )
-                                    Text(
-                                        text = current.prompt,
-                                        fontSize = 24.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = RemoraTextPrimary,
-                                        textAlign = TextAlign.Center
-                                    )
-                                    Text(
-                                        text = if (current.kind == "verse") "Type what you remember." else "One word anchor.",
-                                        fontSize = 13.sp,
-                                        color = RemoraTextMuted
-                                    )
-
-                                    OutlinedTextField(
-                                        value = state.coldCheckAnswerTyped,
-                                        onValueChange = onUpdateAnswer,
-                                        placeholder = { Text("Your recollection...", color = RemoraTextMuted) },
-                                        modifier = Modifier.fillMaxWidth(),
-                                        enabled = !state.coldCheckRevealed,
-                                        colors = OutlinedTextFieldDefaults.colors(
-                                            focusedBorderColor = RemoraAccent,
-                                            unfocusedBorderColor = RemoraCardBorder,
-                                            focusedTextColor = RemoraTextPrimary,
-                                            unfocusedTextColor = RemoraTextPrimary
-                                        ),
-                                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                        keyboardActions = KeyboardActions(onDone = { if (!state.coldCheckRevealed) onReveal() })
-                                    )
-
-                                    AnimatedVisibility(visible = state.coldCheckRevealed) {
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                        ) {
-                                            HorizontalDivider(color = RemoraCardBorder, thickness = 1.dp)
-                                            val isCorrect = state.coldCheckCorrectKeys.contains(current.key)
-                                            Surface(
-                                                shape = RoundedCornerShape(6.dp),
-                                                color = if (isCorrect) Color(0xFF10B981).copy(alpha = 0.15f) else Color(0xFFEF4444).copy(alpha = 0.15f),
-                                                modifier = Modifier.padding(vertical = 4.dp)
-                                            ) {
-                                                Text(
-                                                    text = if (isCorrect) "✓ Correct" else "✗ Missed",
-                                                    fontSize = 12.sp,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = if (isCorrect) Color(0xFF10B981) else Color(0xFFEF4444),
-                                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                                                )
-                                            }
-                                            Text(
-                                                text = current.answer,
-                                                fontSize = 15.sp,
-                                                color = RemoraTextSecondary,
-                                                textAlign = TextAlign.Center
-                                            )
-                                        }
-                                    }
-
-                                    Spacer(modifier = Modifier.height(8.dp))
-
-                                    if (!state.coldCheckRevealed) {
-                                        Button(
-                                            onClick = onReveal,
-                                            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                            shape = RoundedCornerShape(8.dp),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) {
-                                            Text("Reveal Answer", fontWeight = FontWeight.Bold)
-                                        }
-                                    } else {
-                                        Button(
-                                            onClick = onNext,
-                                            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                                            shape = RoundedCornerShape(8.dp),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) {
-                                            Text(
-                                                if (state.activeColdIndex < state.coldCheckCandidates.size - 1) "Next" else "Finish",
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        }
-                                    }
+                Column(Modifier.fillMaxWidth().weight(1f).verticalScroll(rememberScrollState()).padding(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text("This check does not change your review schedule.", style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    val result = state.coldCheckFinishedResult
+                    if (result != null) {
+                        Text("Check complete", style = MaterialTheme.typography.headlineSmall)
+                        Text("${result.correct} of ${result.total} answers matched", style = MaterialTheme.typography.titleLarge)
+                        Text("The selected items had a median interval of ${result.medianColdFor} days since their last recorded activity or fallback date.",
+                            style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Button(onClick = close, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("Done") }
+                    } else {
+                        val item = state.coldCheckCandidates.getOrNull(state.activeColdIndex)
+                        if (item == null) {
+                            Text("No items in this check", style = MaterialTheme.typography.titleLarge)
+                            TextButton(onClick = close) { Text("Close") }
+                        } else {
+                            Text(if (item.kind == "verse") "Verse" else "Chapter theme", style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary)
+                            Text(item.prompt, style = MaterialTheme.typography.headlineSmall)
+                            Text(if (item.kind == "verse") "Type what you remember." else "Type the chapter theme.",
+                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            OutlinedTextField(value = state.coldCheckAnswerTyped, onValueChange = onUpdateAnswer,
+                                label = { Text("Your answer") }, enabled = !state.coldCheckRevealed && !state.coldCheckSaving,
+                                modifier = Modifier.fillMaxWidth(), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = { if (!state.coldCheckRevealed) onReveal() }))
+                            if (state.coldCheckRevealed) {
+                                val matched = state.coldCheckCorrectKeys.contains(item.key)
+                                Text(if (matched) "Answer matched" else "Answer did not match", style = MaterialTheme.typography.titleMedium)
+                                Surface(shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceContainerLow) {
+                                    Text(item.answer, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.fillMaxWidth().padding(16.dp))
+                                }
+                            }
+                            if (state.coldCheckSaving) Text("Saving check…", style = MaterialTheme.typography.bodyMedium)
+                            state.coldCheckSaveError?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
+                            if (!state.coldCheckRevealed) {
+                                Button(onClick = onReveal, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("Check answer") }
+                            } else {
+                                Button(onClick = onNext, enabled = !state.coldCheckSaving && state.coldCheckSaveError == null,
+                                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                                    Text(if (state.activeColdIndex < state.coldCheckCandidates.size - 1) "Next" else "Finish check")
                                 }
                             }
                         }

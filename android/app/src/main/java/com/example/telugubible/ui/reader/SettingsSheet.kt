@@ -11,8 +11,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,450 +54,78 @@ fun SettingsSheet(
     onReset: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    var advancedExpanded by remember { mutableStateOf(false) }
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = Color(0xFF14120E),
-        tonalElevation = 8.dp
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 22.dp)
-                .padding(top = 4.dp, bottom = 36.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp)
+            Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp).padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Header: "Reading settings" + "Reset"
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Reading settings",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif,
-                    color = RemoraTextPrimary,
-                    letterSpacing = (-0.3).sp
-                )
-                Text(
-                    text = "Reset",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraAccent,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { onReset() }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
-
-            // Shared font size scales & smooth slider position state
-            val allScales = remember {
-                listOf(FontSizeScale.XS, FontSizeScale.S, FontSizeScale.M, FontSizeScale.L, FontSizeScale.XL)
-            }
-            val currentIndex = remember(fontSizeScale) {
-                allScales.indexOf(fontSizeScale).coerceAtLeast(0)
-            }
-            var sliderPosition by remember(fontSizeScale) {
-                mutableFloatStateOf(currentIndex.toFloat())
-            }
-
-            LaunchedEffect(currentIndex) {
-                if (Math.abs(sliderPosition - currentIndex) > 0.05f) {
-                    sliderPosition = currentIndex.toFloat()
-                }
-            }
-
-            val currentSpSize = remember(sliderPosition) {
-                val baseSizes = listOf(15f, 18f, 23f, 29f, 36f)
-                val pos = sliderPosition.coerceIn(0f, 4f)
-                val lower = pos.toInt().coerceIn(0, 3)
-                val upper = (lower + 1).coerceIn(0, 4)
-                val fraction = pos - lower
-                baseSizes[lower] + fraction * (baseSizes[upper] - baseSizes[lower])
-            }
-
-            // Live Interactive Preview Card
-            Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = when (readerTheme) {
-                    ReaderTheme.PAPER -> Color(0xFFF8FAFC)
-                    ReaderTheme.SEPIA -> Color(0xFFF0E3C8)
-                    ReaderTheme.DARK -> Color(0xFF181512)
-                    ReaderTheme.OBSIDIAN -> Color(0xFF0A0908)
-                },
-                border = BorderStroke(1.dp, Color(0xFF2C261F)),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                val previewSample = remember(
-                    currentSpSize,
-                    readerFontFamily,
-                    lineSpacing,
-                    readerTheme,
-                    bionicReading,
-                    bionicIntensity,
-                    showVerseNumbers
-                ) {
-                    buildAnnotatedString {
-                        val baseFontSize = currentSpSize.sp
-                        val verseNumSize = (baseFontSize.value * 0.58f).sp
-
-                        if (showVerseNumbers) {
-                            withStyle(
-                                SpanStyle(
-                                    fontSize = verseNumSize,
-                                    baselineShift = BaselineShift.Superscript,
-                                    color = readerTheme.secondaryTextColor
-                                )
-                            ) {
-                                append("12 ")
-                            }
-                        }
-
-                        val rawSample = "Sample text stands in for scripture so the layout can be judged."
-                        if (!bionicReading) {
-                            withStyle(SpanStyle(color = readerTheme.textColor)) {
-                                append(rawSample)
-                            }
-                        } else {
-                            val ratio = bionicIntensity.ratio
-                            val words = rawSample.split(" ")
-                            words.forEachIndexed { idx, word ->
-                                val boldLen = Math.max(1, Math.ceil(word.length * ratio.toDouble()).toInt()).coerceAtMost(word.length)
-                                withStyle(SpanStyle(color = readerTheme.textColor, fontWeight = FontWeight.Bold)) {
-                                    append(word.substring(0, boldLen))
-                                }
-                                withStyle(SpanStyle(color = readerTheme.textColor, fontWeight = FontWeight.Normal)) {
-                                    append(word.substring(boldLen))
-                                }
-                                if (idx < words.size - 1) append(" ")
-                            }
-                        }
+            Text("Reading settings", style = MaterialTheme.typography.headlineSmall)
+            Text("These settings apply to reading and Immerse. The palette also changes the app theme.",
+                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Surface(shape = RoundedCornerShape(20.dp), color = readerTheme.backgroundColor) {
+                val sample = buildAnnotatedString {
+                    if (showVerseNumbers) withStyle(SpanStyle(baselineShift = BaselineShift.Superscript,
+                        fontSize = (fontSizeScale.spSize * 0.6f).sp)) { append("12 ") }
+                    "Sample text for your reading preferences.".split(" ").forEachIndexed { index, word ->
+                        if (index > 0) append(" ")
+                        val boldLength = if (bionicReading) kotlin.math.ceil(word.length * bionicIntensity.ratio).toInt().coerceIn(1, word.length) else 0
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(word.take(boldLength)) }
+                        append(word.drop(boldLength))
                     }
                 }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 18.dp, vertical = 18.dp)
-                ) {
-                    Text(
-                        text = previewSample,
-                        fontSize = currentSpSize.sp,
-                        fontFamily = readerFontFamily.fontFamily,
-                        lineHeight = (currentSpSize * 1.55f * lineSpacing.multiplier).sp
-                    )
+                Text(sample, modifier = Modifier.padding(20.dp), fontFamily = readerFontFamily.fontFamily,
+                    fontSize = fontSizeScale.spSize.sp, lineHeight = (fontSizeScale.spSize * lineSpacing.multiplier).sp,
+                    color = readerTheme.textColor)
+            }
+            ReadingChoiceGroup("Scripture text size", FontSizeScale.entries.toList(), fontSizeScale, { it.label }, onFontSizeChange)
+            Text("Interface text size follows your device settings.", style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            ReadingChoiceGroup("Typeface", ReaderFontFamily.entries.toList(), readerFontFamily, { it.label }, onFontFamilyChange)
+            ReadingChoiceGroup("Line spacing", LineSpacing.entries.toList(), lineSpacing, { it.label }, onLineSpacingChange)
+            ReadingChoiceGroup("Palette", ReaderTheme.entries.toList(), readerTheme, { it.label }, onThemeChange)
+            ReadingSwitch("Verse numbers", showVerseNumbers, onShowVerseNumbersChange)
+            TextButton(onClick = { advancedExpanded = !advancedExpanded }) {
+                Text(if (advancedExpanded) "Hide advanced reading options" else "Advanced reading options")
+                Spacer(Modifier.width(8.dp))
+                Icon(if (advancedExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
+            }
+            if (advancedExpanded) {
+                ReadingSwitch("Bionic reading", bionicReading, onBionicReadingChange)
+                if (bionicReading) {
+                    ReadingChoiceGroup("Bionic intensity", BionicIntensity.entries.toList(), bionicIntensity, { it.label }, onBionicIntensityChange)
                 }
             }
+            Text("Reset restores text size, typeface, spacing, palette, bionic reading and verse numbers.",
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick = onReset) { Text("Reset reading settings") }
+            Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("Done") }
+        }
+    }
+}
 
-            // 1. TEXT SIZE
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(
-                    text = "TEXT SIZE",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp,
-                    color = Color(0xFFB5A995)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "A",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .clickable {
-                                val newIdx = (Math.round(sliderPosition) - 1).coerceAtLeast(0)
-                                sliderPosition = newIdx.toFloat()
-                                onFontSizeChange(allScales[newIdx])
-                            }
-                            .padding(4.dp)
-                    )
-
-                    Slider(
-                        value = sliderPosition,
-                        onValueChange = { newVal ->
-                            sliderPosition = newVal
-                            val idx = Math.round(newVal).coerceIn(0, allScales.size - 1)
-                            if (allScales[idx] != fontSizeScale) {
-                                onFontSizeChange(allScales[idx])
-                            }
-                        },
-                        onValueChangeFinished = {
-                            val targetIdx = Math.round(sliderPosition).coerceIn(0, allScales.size - 1)
-                            sliderPosition = targetIdx.toFloat()
-                            onFontSizeChange(allScales[targetIdx])
-                        },
-                        valueRange = 0f..(allScales.size - 1).toFloat(),
-                        modifier = Modifier.weight(1f),
-                        colors = SliderDefaults.colors(
-                            thumbColor = RemoraAccent,
-                            activeTrackColor = RemoraAccent,
-                            inactiveTrackColor = Color(0xFF332D24),
-                            activeTickColor = Color.Transparent,
-                            inactiveTickColor = Color.Transparent
-                        )
-                    )
-
-                    Text(
-                        text = "A",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .clickable {
-                                val newIdx = (Math.round(sliderPosition) + 1).coerceAtMost(allScales.size - 1)
-                                sliderPosition = newIdx.toFloat()
-                                onFontSizeChange(allScales[newIdx])
-                            }
-                            .padding(4.dp)
-                    )
-                }
-            }
-
-            // 2. FONT
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "FONT",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp,
-                    color = Color(0xFFB5A995)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    listOf(
-                        ReaderFontFamily.INTER to "Inter",
-                        ReaderFontFamily.MERRIWEATHER to "Merriweather",
-                        ReaderFontFamily.ATKINSON to "Atkinson",
-                        ReaderFontFamily.SYSTEM to "System"
-                    ).forEach { (font, label) ->
-                        val isSelected = readerFontFamily == font
-                        PillButton(
-                            text = label,
-                            isSelected = isSelected,
-                            onClick = { onFontFamilyChange(font) },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-
-            // 3. LINE SPACING
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "LINE SPACING",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp,
-                    color = Color(0xFFB5A995)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    listOf(
-                        LineSpacing.TIGHT to "Tight",
-                        LineSpacing.NORMAL to "Normal",
-                        LineSpacing.ROOMY to "Roomy"
-                    ).forEach { (spacing, label) ->
-                        val isSelected = lineSpacing == spacing
-                        PillButton(
-                            text = label,
-                            isSelected = isSelected,
-                            onClick = { onLineSpacingChange(spacing) },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-
-            // 4. THEME
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "THEME",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp,
-                    color = Color(0xFFB5A995)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    listOf(
-                        ReaderTheme.DARK to "Dark",
-                        ReaderTheme.OBSIDIAN to "Black",
-                        ReaderTheme.SEPIA to "Sepia",
-                        ReaderTheme.PAPER to "Light"
-                    ).forEach { (theme, label) ->
-                        val isSelected = readerTheme == theme
-                        PillButton(
-                            text = label,
-                            isSelected = isSelected,
-                            onClick = { onThemeChange(theme) },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-
-            // 5. Bionic reading
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { onBionicReadingChange(!bionicReading) }
-                        .padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Bionic reading",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFFF5F2EB)
-                    )
-
-                    CheckboxBox(isChecked = bionicReading)
-                }
-
-                // Intensity Pills (Light, Medium, Strong)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    listOf(
-                        BionicIntensity.LIGHT to "Light",
-                        BionicIntensity.MEDIUM to "Medium",
-                        BionicIntensity.STRONG to "Strong"
-                    ).forEach { (intensity, label) ->
-                        val isSelected = bionicReading && bionicIntensity == intensity
-                        PillButton(
-                            text = label,
-                            isSelected = isSelected,
-                            onClick = {
-                                if (!bionicReading) onBionicReadingChange(true)
-                                onBionicIntensityChange(intensity)
-                            },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-
-            // 6. Verse numbers
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { onShowVerseNumbersChange(!showVerseNumbers) }
-                    .padding(vertical = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Verse numbers",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFFF5F2EB)
-                )
-
-                CheckboxBox(isChecked = showVerseNumbers)
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // 7. Done Button
-            Button(
-                onClick = onDismiss,
-                shape = RoundedCornerShape(18.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = RemoraAccent,
-                    contentColor = Color(0xFF14120E)
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp)
-            ) {
-                Text(
-                    text = "Done",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF14120E)
-                )
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun <T> ReadingChoiceGroup(title: String, choices: List<T>, selected: T, label: (T) -> String, onSelect: (T) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(title, style = MaterialTheme.typography.titleMedium)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            choices.forEach { choice ->
+                FilterChip(selected = choice == selected, onClick = { onSelect(choice) }, label = { Text(label(choice)) })
             }
         }
     }
 }
 
 @Composable
-private fun PillButton(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(22.dp),
-        color = if (isSelected) RemoraAccent else Color(0xFF1C1813),
-        border = BorderStroke(1.dp, if (isSelected) RemoraAccent else Color(0xFF332D24)),
-        modifier = modifier.height(40.dp)
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(horizontal = 4.dp)
-        ) {
-            Text(
-                text = text,
-                fontSize = 12.sp,
-                maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                color = if (isSelected) Color(0xFF14120E) else Color(0xFFF5F2EB)
-            )
-        }
-    }
-}
-
-@Composable
-private fun CheckboxBox(isChecked: Boolean) {
-    Box(
-        modifier = Modifier
-            .size(22.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(if (isChecked) RemoraAccent else Color.Transparent)
-            .border(
-                width = 1.dp,
-                color = if (isChecked) RemoraAccent else Color(0xFF6E6455),
-                shape = RoundedCornerShape(4.dp)
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        if (isChecked) {
-            Icon(
-                Icons.Default.Check,
-                contentDescription = null,
-                tint = Color(0xFF14120E),
-                modifier = Modifier.size(15.dp)
-            )
-        }
+private fun ReadingSwitch(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+    Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text(label, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        Switch(checked = checked, onCheckedChange = onChange,
+            modifier = Modifier.semantics { contentDescription = label })
     }
 }

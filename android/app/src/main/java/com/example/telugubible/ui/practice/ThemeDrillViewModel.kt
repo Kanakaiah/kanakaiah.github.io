@@ -32,7 +32,9 @@ data class ThemeDrillUiState(
     val totalCount: Int = 66,
     val isLoading: Boolean = true,
     val lastGradedIntervalDays: Int? = null,
-    val isFinished: Boolean = false
+    val isFinished: Boolean = false,
+    val isGrading: Boolean = false,
+    val gradingError: String? = null
 ) {
     val currentItem: ThemeDrillItem?
         get() = queue.getOrNull(currentIndex)
@@ -55,7 +57,7 @@ class ThemeDrillViewModel @JvmOverloads constructor(
 
     fun loadData() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, gradingError = null) }
             val books = repository.getBooks()
             allBooksCache = books
             buildPool(resetFrozen = true)
@@ -63,6 +65,8 @@ class ThemeDrillViewModel @JvmOverloads constructor(
     }
 
     fun onScreenEntered() {
+        if (_uiState.value.isLoading || _uiState.value.isGrading) return
+        if (_uiState.value.gradingError != null) { loadData(); return }
         if (_uiState.value.isFinished || _uiState.value.queue.isEmpty()) {
             restart()
         } else {
@@ -71,8 +75,9 @@ class ThemeDrillViewModel @JvmOverloads constructor(
     }
 
     fun setScope(scope: ThemeScope) {
+        if (_uiState.value.isLoading || _uiState.value.isGrading || _uiState.value.gradingError != null) return
         if (_uiState.value.scope == scope) return
-        _uiState.update { it.copy(scope = scope, currentIndex = 0, isRevealed = false, isFinished = false) }
+        _uiState.update { it.copy(scope = scope, currentIndex = 0, isRevealed = false, isFinished = false, isLoading = true) }
         viewModelScope.launch {
             buildPool(resetFrozen = true)
         }
@@ -84,6 +89,7 @@ class ThemeDrillViewModel @JvmOverloads constructor(
 
     fun skipToNext() {
         val state = _uiState.value
+        if (state.isGrading || state.isLoading || state.isFinished || state.gradingError != null) return
         if (state.queue.isEmpty()) return
         val nextIndex = if (state.currentIndex < state.queue.size - 1) state.currentIndex + 1 else 0
         _uiState.update {
@@ -95,44 +101,55 @@ class ThemeDrillViewModel @JvmOverloads constructor(
     }
 
     fun gradeCurrent(score: Int) {
-        val current = _uiState.value.currentItem ?: return
-
+        val state = _uiState.value
+        if (state.isGrading || state.isLoading || state.isFinished || state.gradingError != null) return
+        val current = state.currentItem ?: return
+        _uiState.update { it.copy(isGrading = true) }
         viewModelScope.launch {
-            if (frozenPool == null) {
-                frozenPool = _uiState.value.queue
-            }
-
-            val entity = repository.gradeThemeProgress(current.book.id, score)
-            val allProgress = repository.getAllThemeProgress()
-            val learned = allProgress.values.count { it.repetition >= 6 }
-
-            val queue = frozenPool ?: _uiState.value.queue
-            val isLast = _uiState.value.currentIndex >= queue.size - 1
-
-            if (isLast) {
-                frozenPool = null
-                _uiState.update {
-                    it.copy(
-                        isRevealed = false,
-                        learnedCount = learned,
-                        lastGradedIntervalDays = entity.interval,
-                        isFinished = true
-                    )
+            try {
+                if (frozenPool == null) {
+                    frozenPool = _uiState.value.queue
                 }
-            } else {
-                _uiState.update {
-                    it.copy(
-                        currentIndex = it.currentIndex + 1,
-                        isRevealed = false,
-                        learnedCount = learned,
-                        lastGradedIntervalDays = entity.interval
-                    )
+
+                val entity = repository.gradeThemeProgress(current.book.id, score)
+                val allProgress = repository.getAllThemeProgress()
+                val learned = allProgress.values.count { it.repetition >= 6 }
+
+                val queue = frozenPool ?: _uiState.value.queue
+                val isLast = _uiState.value.currentIndex >= queue.size - 1
+
+                if (isLast) {
+                    frozenPool = null
+                    _uiState.update {
+                        it.copy(
+                            isRevealed = false,
+                            learnedCount = learned,
+                            lastGradedIntervalDays = entity.interval,
+                            isFinished = true
+                        )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            currentIndex = it.currentIndex + 1,
+                            isRevealed = false,
+                            learnedCount = learned,
+                            lastGradedIntervalDays = entity.interval
+                        )
+                    }
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(gradingError = "Could not confirm the review was saved. Leave and reopen practice to check your progress.") }
+            } finally {
+                _uiState.update { it.copy(isGrading = false) }
             }
         }
     }
 
     fun restart() {
+        if (_uiState.value.isGrading) return
         frozenPool = null
         _uiState.update { it.copy(currentIndex = 0, isRevealed = false, isFinished = false, isLoading = true) }
         viewModelScope.launch {

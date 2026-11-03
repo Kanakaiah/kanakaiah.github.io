@@ -96,5 +96,7 @@ data class RetentionUiState(
     val coldCheckAnswerTyped: String = "",
     val coldCheckRevealed: Boolean = false,
     val coldCheckCorrectKeys: Set<String> = emptySet(),
-    val coldCheckFinishedResult: ColdCheckResult? = null
+    val coldCheckFinishedResult: ColdCheckResult? = null,
+    val coldCheckSaving: Boolean = false,
+    val coldCheckSaveError: String? = null
 )

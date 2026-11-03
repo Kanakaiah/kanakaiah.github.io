@@ -1,581 +1,127 @@
 package com.example.telugubible.ui.today
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Fullscreen
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.SwapHoriz
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.filled.Translate
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.DisplayLanguage
 import com.example.telugubible.data.model.Topic
 import com.example.telugubible.data.model.UserMemoryVerse
-import com.example.telugubible.theme.RemoraAccent
-import com.example.telugubible.theme.RemoraAccentLight
-import com.example.telugubible.theme.RemoraCardBg
-import com.example.telugubible.theme.RemoraCardBgElevated
-import com.example.telugubible.theme.RemoraCardBorder
-import com.example.telugubible.theme.RemoraDanger
-import com.example.telugubible.theme.RemoraSurface
-import com.example.telugubible.theme.RemoraTextMuted
-import com.example.telugubible.theme.RemoraTextPrimary
-import com.example.telugubible.theme.RemoraTextSecondary
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun VerseDetailSheet(
-    verse: UserMemoryVerse,
-    displayLanguage: DisplayLanguage,
-    hasPrev: Boolean,
-    hasNext: Boolean,
-    onPrev: () -> Unit,
-    onNext: () -> Unit,
-    onToggleLanguage: () -> Unit,
-    onDismiss: () -> Unit,
-    onPractice: () -> Unit,
-    onImmerse: () -> Unit = {},
-    onReadInChapter: () -> Unit,
-    onDelete: () -> Unit,
-    topics: List<Topic> = emptyList(),
-    onToggleTopic: (String) -> Unit = {},
+    verse: UserMemoryVerse, displayLanguage: DisplayLanguage, hasPrev: Boolean, hasNext: Boolean,
+    onPrev: () -> Unit, onNext: () -> Unit, onToggleLanguage: () -> Unit, onDismiss: () -> Unit,
+    onPractice: () -> Unit, onImmerse: () -> Unit = {}, onReadInChapter: () -> Unit, onDelete: () -> Unit,
+    topics: List<Topic> = emptyList(), onToggleTopic: (String) -> Unit = {},
     onCreateTopicForVerse: (String) -> Unit = {}
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var confirmingDelete by remember { mutableStateOf(false) }
-    var isAddingGroup by remember { mutableStateOf(false) }
-    var newGroupName by remember { mutableStateOf("") }
-
-    val masteryPct = min(100, ((verse.repetition.toFloat() / 6f) * 100f).roundToInt())
-
+    var confirmingDelete by rememberSaveable { mutableStateOf(false) }
+    var showNewCollection by rememberSaveable { mutableStateOf(false) }
+    var newCollectionName by rememberSaveable { mutableStateOf("") }
+    var showReviewDetails by rememberSaveable { mutableStateOf(false) }
+    val isEnglish = displayLanguage == DisplayLanguage.ENGLISH
+    val rawText = if (isEnglish) verse.textEn?.takeIf { it.isNotBlank() } ?: "English text unavailable"
+        else verse.textTe?.takeIf { it.isNotBlank() } ?: "తెలుగు వచన పాఠం అందుబాటులో లేదు"
+    val displayText = remember(rawText) {
+        rawText.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+            .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
+            .replace(Regex("<[^>]+>"), "")
+            .replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", "\"")
+            .replace("&#39;", "'").trim()
+    }
     val now = System.currentTimeMillis()
-    val reviewStr = remember(verse.nextDueDate) {
-        val diffDays = ((verse.nextDueDate - now) / (1000 * 60 * 60 * 24)).toInt()
-        when {
-            verse.nextDueDate <= now -> "Due Today"
-            diffDays == 1 -> "Tomorrow"
-            diffDays < 7 -> "in $diffDays days"
-            else -> SimpleDateFormat("EEE, MMM d", Locale.getDefault()).format(Date(verse.nextDueDate))
+    val days = ((verse.nextDueDate - now) / (1000 * 60 * 60 * 24)).toInt()
+    val review = when {
+        verse.nextDueDate <= now -> "Due today"
+        days == 1 -> "Tomorrow"
+        days < 7 -> "In $days days"
+        else -> SimpleDateFormat("EEE, MMM d", Locale.getDefault()).format(Date(verse.nextDueDate))
+    }
+    val mastery = min(100, ((verse.repetition.toFloat() / 6f) * 100f).roundToInt())
+
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        modifier = Modifier.fillMaxHeight(0.92f)) {
+        Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).imePadding().navigationBarsPadding()
+            .padding(start = 20.dp, end = 20.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(verse.fullRef(isEnglish), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.weight(1f))
+                IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, "Close") }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onPrev, enabled = hasPrev) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Previous verse") }
+                IconButton(onClick = onNext, enabled = hasNext) { Icon(Icons.AutoMirrored.Filled.ArrowForward, "Next verse") }
+                Spacer(Modifier.weight(1f))
+                IconButton(onClick = onToggleLanguage) { Icon(Icons.Default.Translate, "Change display language") }
+            }
+            Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.surfaceContainerLow,
+                modifier = Modifier.fillMaxWidth()) {
+                Text(displayText, style = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Serif),
+                    modifier = Modifier.padding(20.dp))
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Button(onClick = { onDismiss(); onPractice() }, modifier = Modifier.heightIn(min = 48.dp)) { Text("Practice") }
+                FilledTonalButton(onClick = { onDismiss(); onReadInChapter() }, modifier = Modifier.heightIn(min = 48.dp)) { Text("Read chapter") }
+            }
+            HorizontalDivider()
+            Text("Collections", style = MaterialTheme.typography.titleMedium)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                topics.forEach { topic ->
+                    FilterChip(selected = topic.id in verse.topicIds, onClick = { onToggleTopic(topic.id) },
+                        label = { Text(topic.name) }, modifier = Modifier.heightIn(min = 48.dp))
+                }
+                if (!showNewCollection) SuggestionChip(onClick = { showNewCollection = true },
+                    label = { Text("New collection") }, modifier = Modifier.heightIn(min = 48.dp))
+            }
+            if (showNewCollection) {
+                OutlinedTextField(value = newCollectionName, onValueChange = { newCollectionName = it },
+                    label = { Text("Collection name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = { showNewCollection = false; newCollectionName = "" }) { Text("Cancel") }
+                    TextButton(onClick = {
+                        onCreateTopicForVerse(newCollectionName.trim()); newCollectionName = ""; showNewCollection = false
+                    }, enabled = newCollectionName.isNotBlank()) { Text("Add collection") }
+                }
+            }
+            HorizontalDivider()
+            TextButton(onClick = { showReviewDetails = !showReviewDetails }) {
+                Text(if (showReviewDetails) "Hide review details" else "Review details")
+            }
+            if (showReviewDetails) {
+                Text("Mastery: $mastery%", style = MaterialTheme.typography.bodyLarge)
+                Text("Reviews: ${verse.repetition} · Interval: ${verse.interval} days", style = MaterialTheme.typography.bodyLarge)
+                Text("Next review: $review", style = MaterialTheme.typography.bodyLarge)
+            }
+            TextButton(onClick = { confirmingDelete = true }) {
+                Icon(Icons.Default.DeleteOutline, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                Spacer(Modifier.width(8.dp))
+                Text("Delete verse", color = MaterialTheme.colorScheme.error)
+            }
         }
     }
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = RemoraSurface,
-        dragHandle = null,
-        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            // 1. Navigation Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Left side: Prev / Next pagination arrows
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(
-                        onClick = onPrev,
-                        enabled = hasPrev,
-                        modifier = Modifier.size(36.dp)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Previous Verse",
-                            tint = if (hasPrev) RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.3f),
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                    IconButton(
-                        onClick = onNext,
-                        enabled = hasNext,
-                        modifier = Modifier.size(36.dp)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = "Next Verse",
-                            tint = if (hasNext) RemoraTextSecondary else RemoraTextMuted.copy(alpha = 0.3f),
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-
-                // Right side: Close (X)
-                IconButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.size(36.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = "Close",
-                        tint = RemoraTextSecondary,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 2. Title Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = verse.fullRef(displayLanguage == DisplayLanguage.ENGLISH),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary
-                    )
-                    Text(
-                        text = if (displayLanguage == DisplayLanguage.TELUGU) verse.bookNameEn else verse.bookNameTe,
-                        fontSize = 13.sp,
-                        color = RemoraTextSecondary
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            // 3. Scripture Text
-            val rawText = if (displayLanguage == DisplayLanguage.TELUGU) {
-                verse.textTe ?: verse.textEn ?: "వచన పాఠం అందుబాటులో లేదు"
-            } else {
-                verse.textEn ?: verse.textTe ?: "Scripture text unavailable"
-            }
-            val displayText = rawText
-                .replace(Regex("<b[^>]*>[\\s\\S]*?</b>", RegexOption.IGNORE_CASE), "")
-                .replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
-                .replace(Regex("<S>\\d+</S>", RegexOption.IGNORE_CASE), "")
-                .replace(Regex("<[^>]+>"), "")
-                .replace("&nbsp;", " ")
-                .replace("&amp;", "&")
-                .replace("&quot;", "\"")
-                .replace("&#39;", "'")
-                .trim()
-
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBg,
-                border = BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = displayText,
-                    fontSize = 17.sp,
-                    lineHeight = 26.sp,
-                    fontFamily = FontFamily.Serif,
-                    color = RemoraTextPrimary,
-                    modifier = Modifier.padding(18.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 3.5 Groups Section (Matching React's VerseDetailModal)
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBg,
-                border = BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "GROUPS",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = RemoraTextMuted
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    @OptIn(ExperimentalLayoutApi::class)
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        for (topic in topics) {
-                            val isActive = topic.id in verse.topicIds
-                            Surface(
-                                shape = RoundedCornerShape(16.dp),
-                                color = if (isActive) RemoraAccent.copy(alpha = 0.15f) else Color.Transparent,
-                                border = BorderStroke(
-                                    1.dp,
-                                    if (isActive) RemoraAccent.copy(alpha = 0.5f) else RemoraCardBorder
-                                ),
-                                modifier = Modifier.clickable { onToggleTopic(topic.id) }
-                            ) {
-                                Text(
-                                    text = topic.name,
-                                    fontSize = 13.sp,
-                                    fontWeight = if (isActive) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isActive) RemoraAccentLight else RemoraTextSecondary,
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                )
-                            }
-                        }
-
-                        if (isAddingGroup) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                OutlinedTextField(
-                                    value = newGroupName,
-                                    onValueChange = { newGroupName = it },
-                                    placeholder = { Text("New group...", fontSize = 12.sp, color = RemoraTextMuted) },
-                                    singleLine = true,
-                                    shape = RoundedCornerShape(14.dp),
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        focusedContainerColor = RemoraCardBgElevated,
-                                        unfocusedContainerColor = RemoraCardBgElevated,
-                                        focusedTextColor = RemoraTextPrimary,
-                                        unfocusedTextColor = RemoraTextPrimary,
-                                        focusedBorderColor = RemoraAccent,
-                                        unfocusedBorderColor = RemoraCardBorder
-                                    ),
-                                    modifier = Modifier.width(130.dp)
-                                )
-
-                                IconButton(
-                                    onClick = {
-                                        val trimmed = newGroupName.trim()
-                                        if (trimmed.isNotEmpty()) {
-                                            onCreateTopicForVerse(trimmed)
-                                            newGroupName = ""
-                                            isAddingGroup = false
-                                        }
-                                    },
-                                    modifier = Modifier.size(28.dp)
-                                ) {
-                                    Icon(
-                                        Icons.Default.Check,
-                                        contentDescription = "Save group",
-                                        tint = RemoraAccentLight,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
-
-                                IconButton(
-                                    onClick = {
-                                        newGroupName = ""
-                                        isAddingGroup = false
-                                    },
-                                    modifier = Modifier.size(28.dp)
-                                ) {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = "Cancel",
-                                        tint = RemoraTextMuted,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
-                            }
-                        } else {
-                            Surface(
-                                shape = RoundedCornerShape(16.dp),
-                                color = Color.Transparent,
-                                border = BorderStroke(1.dp, RemoraCardBorder),
-                                modifier = Modifier.clickable { isAddingGroup = true }
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-                                ) {
-                                    Icon(
-                                        Icons.Default.Add,
-                                        contentDescription = null,
-                                        tint = RemoraTextSecondary,
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(
-                                        text = "New Group",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = RemoraTextSecondary
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 4. Spaced Repetition Mastery & Cadence Stats
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = RemoraCardBg,
-                border = BorderStroke(1.dp, RemoraCardBorder),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Mastery %
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "$masteryPct%",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (masteryPct >= 80) RemoraAccentLight else RemoraTextPrimary
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "Mastery",
-                            fontSize = 12.sp,
-                            color = RemoraTextMuted,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .width(1.dp)
-                            .height(30.dp)
-                            .background(RemoraCardBorder)
-                    )
-
-                    // Cadence (reps / interval)
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "${verse.repetition} reps",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RemoraTextPrimary
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "${verse.interval}d interval",
-                            fontSize = 12.sp,
-                            color = RemoraTextMuted,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .width(1.dp)
-                            .height(30.dp)
-                            .background(RemoraCardBorder)
-                    )
-
-                    // Next Review
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = reviewStr,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (verse.nextDueDate <= now) RemoraAccent else RemoraTextPrimary,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "Review",
-                            fontSize = 12.sp,
-                            color = RemoraTextMuted,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // 5. Actions / Delete Confirmation
-            if (confirmingDelete) {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = RemoraDanger.copy(alpha = 0.12f),
-                    border = BorderStroke(1.dp, RemoraDanger.copy(alpha = 0.35f)),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Remove this verse from your memory library?",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = RemoraDanger,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(14.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            OutlinedButton(
-                                onClick = { confirmingDelete = false },
-                                modifier = Modifier.weight(1f),
-                                shape = RoundedCornerShape(8.dp),
-                                border = BorderStroke(1.dp, RemoraCardBorder)
-                            ) {
-                                Text("Cancel", color = RemoraTextPrimary)
-                            }
-                            Button(
-                                onClick = {
-                                    confirmingDelete = false
-                                    onDelete()
-                                    onDismiss()
-                                },
-                                modifier = Modifier.weight(1f),
-                                colors = ButtonDefaults.buttonColors(containerColor = RemoraDanger),
-                                shape = RoundedCornerShape(8.dp)
-                            ) {
-                                Text("Delete", color = Color.White, fontWeight = FontWeight.Bold)
-                            }
-                        }
-                    }
-                }
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Context / Read in chapter button
-                    OutlinedButton(
-                        onClick = {
-                            onDismiss()
-                            onReadInChapter()
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(1.dp, RemoraCardBorder)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.MenuBook,
-                            contentDescription = null,
-                            tint = RemoraTextSecondary,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Context", color = RemoraTextPrimary, fontSize = 14.sp)
-                    }
-
-                    // Practice button
-                    Button(
-                        onClick = {
-                            onDismiss()
-                            onPractice()
-                        },
-                        modifier = Modifier.weight(1.8f),
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent)
-                    ) {
-                        Icon(
-                            Icons.Default.PlayArrow,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Practice", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    }
-
-                    // Trash icon button
-                    Surface(
-                        shape = RoundedCornerShape(10.dp),
-                        color = RemoraCardBg,
-                        border = BorderStroke(1.dp, RemoraCardBorder),
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clickable { confirmingDelete = true }
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Default.Delete,
-                                contentDescription = "Delete Verse",
-                                tint = RemoraTextMuted,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
+    if (confirmingDelete) AlertDialog(onDismissRequest = { confirmingDelete = false },
+        title = { Text("Delete ${verse.fullRef(isEnglish)}?") },
+        text = { Text("This deletes the saved verse from your library and all its collections.") },
+        confirmButton = { TextButton(onClick = { confirmingDelete = false; onDelete(); onDismiss() }) {
+            Text("Delete verse", color = MaterialTheme.colorScheme.error)
+        } },
+        dismissButton = { TextButton(onClick = { confirmingDelete = false }) { Text("Cancel") } })
 }

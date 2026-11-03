@@ -61,6 +61,158 @@ class PracticeViewModelTest {
     }
 
     @Test
+    fun distinctFirstLetterAndImmerseWordsCombineAfterRestoring() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        val verseId = vm.uiState.value.currentVerse!!.id
+        vm.setPracticeMode(PracticeMode.FIRST_LETTER)
+        vm.recordFirstLetterSeen("$verseId:ENGLISH", setOf(0, 1), 4)
+        vm.setPracticeMode(PracticeMode.IMMERSED)
+        vm.recordImmersiveExposure(verseId, DisplayLanguage.ENGLISH, setOf(2, 3), 4)
+        vm.exitImmersed()
+        vm.setPracticeMode(PracticeMode.TYPING)
+        advanceUntilIdle()
+        val restored = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        assertEquals(1, restored.uiState.value.gradeCeiling)
+        restored.recordAttempt(100, "answer")
+        restored.gradeCurrent(5)
+        advanceUntilIdle()
+        assertEquals(1, repository.getReviewLog().single().score)
+        assertEquals(4, repository.getReviewLog().single().cueLevel)
+    }
+
+    @Test
+    fun immersiveExposureSurvivesModeChangesAndRestoreAndCapsSavedGrade() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        val verseId = vm.uiState.value.currentVerse!!.id
+        vm.setPracticeMode(PracticeMode.IMMERSED)
+        vm.recordImmersiveExposure(verseId, DisplayLanguage.ENGLISH, setOf(0, 1), 4)
+        vm.exitImmersed()
+        vm.setPracticeMode(PracticeMode.TYPING)
+        advanceUntilIdle()
+        val restored = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        assertEquals(3, restored.uiState.value.gradeCeiling)
+        restored.recordAttempt(100, "answer")
+        restored.gradeCurrent(5)
+        advanceUntilIdle()
+        assertEquals(3, repository.getReviewLog().single().score)
+        assertEquals(3, repository.getReviewLog().single().cueLevel)
+    }
+
+    @Test
+    fun immersiveExposureDoesNotPenalizeViewingAfterAnswerOrAnotherLanguage() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        val verseId = vm.uiState.value.currentVerse!!.id
+        vm.revealVerse()
+        vm.setPracticeMode(PracticeMode.IMMERSED)
+        vm.recordImmersiveExposure(verseId, DisplayLanguage.ENGLISH, setOf(0, 1), 2)
+        assertTrue(vm.uiState.value.immersiveSeenByVerse.isEmpty())
+        vm.exitImmersed()
+        vm.setPracticeMode(PracticeMode.READ)
+        vm.setPracticeMode(PracticeMode.IMMERSED)
+        vm.recordImmersiveExposure(verseId, DisplayLanguage.ENGLISH, setOf(0, 1), 2)
+        vm.exitImmersed()
+        assertEquals(1, vm.uiState.value.gradeCeiling)
+        val bilingual = com.example.telugubible.data.model.UserMemoryVerse(id = 9, bookId = 1, chapter = 1, verse = 1, textEn = "One", textTe = "ఒకటి")
+        assertEquals("9:ENGLISH", immersiveExposureKey(bilingual, DisplayLanguage.ENGLISH))
+        assertEquals("9:TELUGU", immersiveExposureKey(bilingual, DisplayLanguage.TELUGU))
+        assertEquals("9:ENGLISH", immersiveExposureKey(bilingual.copy(textTe = ""), DisplayLanguage.TELUGU))
+    }
+
+    @Test
+    fun immerseReturnsToTheSamePracticeModeAndAnswerState() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        vm.setPracticeMode(PracticeMode.READ)
+        vm.revealVerse()
+        val current = vm.uiState.value.currentVerse
+        vm.setPracticeMode(PracticeMode.IMMERSED)
+        assertTrue(vm.uiState.value.isImmersed)
+        vm.exitImmersed()
+        assertFalse(vm.uiState.value.isImmersed)
+        assertEquals(current, vm.uiState.value.currentVerse)
+        assertEquals(PracticeMode.READ, vm.uiState.value.activeMode)
+        assertTrue(vm.uiState.value.isRevealed)
+        assertTrue(repository.getReviewLog().isEmpty())
+    }
+
+    @Test
+    fun firstLetterExposureSurvivesModeChangesAndSessionRestoration() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        val key = "${vm.uiState.value.currentVerse!!.id}:${vm.uiState.value.displayLanguage.name}"
+        vm.setPracticeMode(PracticeMode.FIRST_LETTER)
+        vm.recordFirstLetterSeen(key, setOf(0, 1), 4)
+        vm.setPracticeMode(PracticeMode.READ)
+        vm.setPracticeMode(PracticeMode.FIRST_LETTER)
+        assertEquals(listOf(0, 1), vm.uiState.value.firstLetterSeenByVerse[key]?.seen)
+        vm.recordFirstLetterAttempt(0f)
+        advanceUntilIdle()
+        val restored = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        assertTrue(restored.uiState.value.isRevealed)
+        assertEquals(listOf(0, 1), restored.uiState.value.firstLetterSeenByVerse[key]?.seen)
+        assertEquals(3, restored.uiState.value.gradeCeiling)
+        restored.gradeCurrent(5)
+        advanceUntilIdle()
+        assertEquals(3, repository.getReviewLog().single().score)
+    }
+
+    @Test
+    fun failedReviewWriteLeavesProgressAndSessionUnchanged() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        repository.addUserVerse(1, 1, 2)
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        vm.revealVerse()
+        advanceUntilIdle()
+        userDbHelper.writableDatabase.execSQL("CREATE TRIGGER reject_review BEFORE INSERT ON review_log WHEN NEW.item_kind = 'verse' BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        vm.gradeCurrent(4)
+        advanceUntilIdle()
+        assertNotNull(vm.uiState.value.gradingError)
+        assertEquals(0, vm.uiState.value.currentIndex)
+        assertTrue(repository.getReviewLog().isEmpty())
+        assertEquals(0, userDbHelper.getUserVerses().first().attempts)
+        vm.gradeCurrent(4)
+        advanceUntilIdle()
+        assertTrue(repository.getReviewLog().isEmpty())
+        userDbHelper.writableDatabase.execSQL("DROP TRIGGER reject_review")
+        val restored = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        assertEquals(0, restored.uiState.value.currentIndex)
+        restored.gradeCurrent(4)
+        advanceUntilIdle()
+        assertEquals(1, restored.uiState.value.currentIndex)
+        assertEquals(1, repository.getReviewLog().size)
+    }
+
+    @Test
+    fun repeatedGradeWhileSavingRecordsOnlyOneReview() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        repository.addUserVerse(1, 1, 2)
+        val vm = PracticeViewModel(application, repository)
+        advanceUntilIdle()
+        vm.revealVerse()
+        vm.gradeCurrent(5)
+        vm.gradeCurrent(1)
+        assertTrue(vm.uiState.value.isGrading)
+        advanceUntilIdle()
+        assertEquals(1, repository.getReviewLog().size)
+        assertEquals(5, repository.getReviewLog().single().score)
+        assertEquals(1, vm.uiState.value.currentIndex)
+        assertFalse(vm.uiState.value.isGrading)
+    }
+
+    @Test
     fun testSessionRestorationAcrossProcessDeath() = runTest(testDispatcher) {
         // Seed 3 memory verses
         repository.addUserVerse(1, 1, 1)

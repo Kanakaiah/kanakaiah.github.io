@@ -61,6 +61,53 @@ class SettingsViewModelTest {
     }
 
     @Test
+    fun failedSettingsWriteRollsBackAllFieldsAndReloadsSavedValues() = runTest(testDispatcher) {
+        advanceUntilIdle()
+        val before = repository.getAppSettings()
+        userDbHelper.writableDatabase.execSQL("CREATE TRIGGER reject_settings BEFORE INSERT ON user_stats WHEN NEW.key = 'setting_fontSize' BEGIN SELECT RAISE(ABORT, 'test failure'); END")
+        val revision = viewModel.uiState.value.settingsRevision
+        viewModel.setTheme("sepia")
+        advanceUntilIdle()
+        assertEquals(before, repository.getAppSettings())
+        assertEquals(before, viewModel.uiState.value.settings)
+        assertEquals(revision, viewModel.uiState.value.settingsRevision)
+        assertNotNull(viewModel.uiState.value.toastMessage)
+    }
+
+    @Test
+    fun successiveChangesAndReaderPreferencesSurviveViewModelRecreation() = runTest(testDispatcher) {
+        advanceUntilIdle()
+        viewModel.setTheme("white")
+        viewModel.setFontSize(1.28f)
+        viewModel.updateSettings { it.copy(fontFamily = "atkinson", lineSpacing = "roomy", bionicIntensity = "strong") }
+        viewModel.setChapterDisplayPreset("clean")
+        advanceUntilIdle()
+        val restored = SettingsViewModel(context as Application, repository)
+        advanceUntilIdle()
+        val settings = restored.uiState.value.settings
+        assertEquals("white", settings.theme)
+        assertEquals(1.28f, settings.fontSize)
+        assertEquals("atkinson", settings.fontFamily)
+        assertEquals("roomy", settings.lineSpacing)
+        assertEquals("strong", settings.bionicIntensity)
+        assertEquals("clean", readingPreset(settings))
+    }
+
+    @Test
+    fun themeChangeIsPublishedAfterPersistenceAndReloadDoesNotRepublish() = runTest(testDispatcher) {
+        advanceUntilIdle()
+        val revision = viewModel.uiState.value.settingsRevision
+        viewModel.setTheme("sepia")
+        assertEquals(revision, viewModel.uiState.value.settingsRevision)
+        advanceUntilIdle()
+        assertEquals("sepia", repository.getAppSettings().theme)
+        assertEquals(revision + 1, viewModel.uiState.value.settingsRevision)
+        viewModel.loadSettings()
+        advanceUntilIdle()
+        assertEquals(revision + 1, viewModel.uiState.value.settingsRevision)
+    }
+
+    @Test
     fun testLoadAndSaveSettings() = runTest(testDispatcher) {
         viewModel.loadSettings()
         advanceUntilIdle()

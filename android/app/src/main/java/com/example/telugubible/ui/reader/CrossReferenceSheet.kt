@@ -79,6 +79,13 @@ fun CrossReferenceSheet(
 ) {
     val clipboardManager = LocalClipboardManager.current
     val currentVid = connectionsData?.vid ?: 0
+    val verseHistory = remember { mutableStateListOf<Int>() }
+    val openLinkedVerse: (Int) -> Unit = { target ->
+        if (connectionsData != null && target != currentVid) {
+            verseHistory.add(currentVid)
+            onSelectVid(target)
+        }
+    }
     val coord = remember(currentVid) { KjvVersification.fromVerseIndex(currentVid) }
     val outgoing = connectionsData?.outgoing ?: crossReferences
     val incoming = connectionsData?.incoming ?: emptyList()
@@ -137,138 +144,27 @@ fun CrossReferenceSheet(
                 .fillMaxHeight(0.88f)
                 .navigationBarsPadding()
         ) {
-            // ── Sticky Top Header ─────────────────────────────────────────
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 4.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        // Genre dot + Genre · Testament eyebrow
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(coord.genre.colorHex))
-                            )
-                            Text(
-                                text = "${coord.genre.label} · ${if (coord.isOldTestament) "Old Testament" else "New Testament"}".uppercase(),
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.8.sp,
-                                color = RemoraTextSecondary
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = displayTitle,
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary
-                            )
-                            Surface(
-                                shape = RoundedCornerShape(6.dp),
-                                color = RemoraGold.copy(alpha = 0.14f),
-                                border = BorderStroke(1.dp, RemoraGold.copy(alpha = 0.35f))
-                            ) {
-                                Text(
-                                    text = activeVersion.uppercase(),
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = RemoraGold,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
-                            }
-                        }
+            Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text("Cross references", style = MaterialTheme.typography.headlineSmall)
+                        Text(displayTitle, style = MaterialTheme.typography.titleMedium)
+                        Text(activeVersion.uppercase(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-
-                    // Action Buttons: Vote filter + Prev/Next verse + Close
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = if (minVotes > 0) RemoraGold.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                            border = BorderStroke(
-                                1.dp,
-                                if (minVotes > 0) RemoraGold.copy(alpha = 0.45f) else RemoraTextSecondary.copy(alpha = 0.25f)
-                            ),
-                            modifier = Modifier.clickable {
-                                onMinVotesChange(if (minVotes > 0) 0 else 4)
-                            }
-                        ) {
-                            Text(
-                                text = if (minVotes > 0) "≥ 4 votes" else "All votes",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (minVotes > 0) RemoraGold else RemoraTextSecondary,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
-                            )
-                        }
-
-                        IconButton(
-                            onClick = { if (currentVid > 0) onSelectVid(currentVid - 1) },
-                            enabled = currentVid > 0,
-                            modifier = Modifier.size(32.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ChevronLeft,
-                                contentDescription = "Previous verse",
-                                tint = if (currentVid > 0) RemoraTextPrimary else RemoraTextSecondary.copy(alpha = 0.3f)
-                            )
-                        }
-
-                        IconButton(
-                            onClick = {
-                                if (currentVid < KjvVersification.TOTAL_VERSES - 1) {
-                                    onSelectVid(currentVid + 1)
-                                }
-                            },
-                            enabled = currentVid < KjvVersification.TOTAL_VERSES - 1,
-                            modifier = Modifier.size(32.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ChevronRight,
-                                contentDescription = "Next verse",
-                                tint = if (currentVid < KjvVersification.TOTAL_VERSES - 1) RemoraTextPrimary else RemoraTextSecondary.copy(alpha = 0.3f)
-                            )
-                        }
-
-                        IconButton(
-                            onClick = onDismiss,
-                            modifier = Modifier.size(32.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Close",
-                                tint = RemoraTextSecondary
-                            )
-                        }
+                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, contentDescription = "Close cross references") }
+                }
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(selected = minVotes > 0, onClick = { onMinVotesChange(if (minVotes > 0) 0 else 4) }, label = { Text(if (minVotes > 0) "At least 4 votes" else "All votes") })
+                    if (verseHistory.isNotEmpty()) {
+                        TextButton(onClick = { onSelectVid(verseHistory.removeAt(verseHistory.lastIndex)) }) { Text("Back to previous verse") }
+                    }
+                    if (connectionsData != null) {
+                        IconButton(onClick = { openLinkedVerse(currentVid - 1) }, enabled = currentVid > 0) { Icon(Icons.Default.ChevronLeft, contentDescription = "Previous verse") }
+                        IconButton(onClick = { openLinkedVerse(currentVid + 1) }, enabled = currentVid < KjvVersification.TOTAL_VERSES - 1) { Icon(Icons.Default.ChevronRight, contentDescription = "Next verse") }
                     }
                 }
             }
-
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             // ── Scrollable Body ───────────────────────────────────────────
             LazyColumn(
                 modifier = Modifier
@@ -296,10 +192,10 @@ fun CrossReferenceSheet(
                             Spacer(modifier = Modifier.height(10.dp))
                         }
 
-                        Row(
+                        FlowRow(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            itemVerticalAlignment = Alignment.CenterVertically
                         ) {
                             TextButton(
                                 onClick = {
@@ -317,9 +213,7 @@ fun CrossReferenceSheet(
                                 Text("Copy verse", fontSize = 12.sp, color = RemoraTextSecondary)
                             }
 
-                            FilledTonalButton(
-                                onClick = {
-                                    onNavigateToTarget(coord.bookId, coord.chapter, coord.verse)
+                            if (connectionsData != null) FilledTonalButton(onClick = { onNavigateToTarget(coord.bookId, coord.chapter, coord.verse)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
@@ -473,7 +367,7 @@ fun CrossReferenceSheet(
                         booksMap = booksMap,
                         onSelectRef = { ref ->
                             if (connectionsData != null && ref.otherStartVid in 0 until KjvVersification.TOTAL_VERSES) {
-                                onSelectVid(ref.otherStartVid)
+                                openLinkedVerse(ref.otherStartVid)
                             } else if (ref.toBookId != null && ref.toChapter != null) {
                                 onNavigateToTarget(ref.toBookId, ref.toChapter, ref.toVerse ?: 1)
                             }
@@ -502,7 +396,7 @@ fun CrossReferenceSheet(
                         booksMap = booksMap,
                         onSelectRef = { ref ->
                             if (connectionsData != null && ref.otherStartVid in 0 until KjvVersification.TOTAL_VERSES) {
-                                onSelectVid(ref.otherStartVid)
+                                openLinkedVerse(ref.otherStartVid)
                             } else if (ref.toBookId != null && ref.toChapter != null) {
                                 onNavigateToTarget(ref.toBookId, ref.toChapter, ref.toVerse ?: 1)
                             }
@@ -538,7 +432,7 @@ fun CrossReferenceSheet(
                         wordOccurrencesMap = wordOccurrencesMap,
                         language = language,
                         onSelectOccurrence = { occ ->
-                            onSelectVid(occ.vid)
+                            openLinkedVerse(occ.vid)
                         },
                         onJumpToOccurrence = { occ ->
                             onNavigateToTarget(occ.bookId, occ.chapter, occ.verse)
@@ -552,221 +446,61 @@ fun CrossReferenceSheet(
 
 @Composable
 private fun ConnectionDirectionSection(
-    arrow: String,
-    title: String,
-    subtitle: String,
-    items: List<CrossReference>,
-    isOpen: Boolean,
-    onToggleOpen: () -> Unit,
-    showAll: Boolean,
-    onShowAll: () -> Unit,
-    language: BibleLanguage,
-    booksMap: Map<Int, Book>,
-    onSelectRef: (CrossReference) -> Unit,
-    onJumpToChapter: (CrossReference) -> Unit
+    arrow: String, title: String, subtitle: String, items: List<CrossReference>,
+    isOpen: Boolean, onToggleOpen: () -> Unit, showAll: Boolean, onShowAll: () -> Unit,
+    language: BibleLanguage, booksMap: Map<Int, Book>,
+    onSelectRef: (CrossReference) -> Unit, onJumpToChapter: (CrossReference) -> Unit
 ) {
-    val visibleItems = remember(items, showAll) {
-        if (showAll || items.size <= INITIAL_VISIBLE_REFS) items else items.take(INITIAL_VISIBLE_REFS)
-    }
-    val groups = remember(visibleItems, language, booksMap) {
-        groupRefsByBook(visibleItems, language, booksMap)
-    }
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        // Section Header
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onToggleOpen() }
-                .padding(horizontal = 20.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(
-                    imageVector = if (isOpen) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = RemoraTextSecondary,
-                    modifier = Modifier.size(18.dp)
-                )
-                Text(
-                    text = arrow,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraGold
-                )
-                Text(
-                    text = title.uppercase(),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.8.sp,
-                    color = RemoraTextPrimary
-                )
-                Text(
-                    text = subtitle,
-                    fontSize = 13.sp,
-                    color = RemoraTextSecondary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+    val visibleItems = remember(items, showAll) { if (showAll) items else items.take(INITIAL_VISIBLE_REFS) }
+    val groups = remember(visibleItems, language, booksMap) { groupRefsByBook(visibleItems, language, booksMap) }
+    Column(Modifier.fillMaxWidth()) {
+        Row(Modifier.fillMaxWidth().clickable(onClick = onToggleOpen).heightIn(min = 56.dp).padding(horizontal = 20.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(if (isOpen) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Column(Modifier.weight(1f)) {
+                Text("$arrow $title", style = MaterialTheme.typography.titleMedium)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-
-            Surface(
-                shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-            ) {
-                Text(
-                    text = "${items.size}",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextSecondary,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                )
-            }
+            Text("${items.size}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-
         if (isOpen) {
             if (items.isEmpty()) {
-                Text(
-                    text = "None recorded.",
-                    fontSize = 13.sp,
-                    fontStyle = FontStyle.Italic,
-                    color = RemoraTextSecondary,
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 14.dp)
-                )
+                Text("None recorded.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 16.dp))
             } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .padding(bottom = 14.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
+                Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     groups.forEach { group ->
-                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            // Book Group Header
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(9.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(group.genre.colorHex))
-                                )
-                                Text(
-                                    text = group.bookName.uppercase(),
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 0.7.sp,
-                                    color = RemoraTextSecondary
-                                )
-                                Text(
-                                    text = "${group.items.size}",
-                                    fontSize = 13.sp,
-                                    color = RemoraTextSecondary.copy(alpha = 0.7f)
-                                )
-                            }
-
-                            // Connections inside this book
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(group.bookName, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             group.items.forEach { ref ->
                                 val rawText = when (language) {
                                     BibleLanguage.TAMIL -> ref.targetTextTa ?: ref.targetTextEn ?: ""
                                     BibleLanguage.TELUGU -> ref.targetTextTe ?: ref.targetTextEn ?: ""
                                     else -> ref.targetTextEn ?: ref.targetTextTe ?: ""
                                 }
-                                val annotatedText = remember(rawText) { parseScriptureText(rawText) }
-
-                                Surface(
-                                    shape = RoundedCornerShape(10.dp),
-                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { onSelectRef(ref) }
-                                ) {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(14.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.Top
-                                    ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                            ) {
-                                                Text(
-                                                    text = ref.toRef,
-                                                    fontSize = 16.sp,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = RemoraGold
-                                                )
-                                                if (!ref.landingNote.isNullOrBlank()) {
-                                                    Text(
-                                                        text = ref.landingNote,
-                                                        fontSize = 13.sp,
-                                                        color = RemoraTextSecondary
-                                                    )
-                                                }
-                                            }
-
-                                            if (annotatedText.isNotBlank()) {
-                                                Spacer(modifier = Modifier.height(6.dp))
-                                                Text(
-                                                    text = annotatedText,
-                                                    fontSize = 17.sp,
-                                                    lineHeight = 25.sp,
-                                                    color = RemoraTextPrimary
-                                                )
-                                            }
+                                val text = remember(rawText) { parseScriptureText(rawText) }
+                                Surface(shape = MaterialTheme.shapes.medium, color = MaterialTheme.colorScheme.surfaceContainerHigh, modifier = Modifier.fillMaxWidth()) {
+                                    Column(Modifier.fillMaxWidth()) {
+                                        Column(Modifier.fillMaxWidth().clickable { onSelectRef(ref) }.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            Text(ref.toRef, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                                            if (!ref.landingNote.isNullOrBlank()) Text(ref.landingNote, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                            if (text.isNotBlank()) Text(text, style = MaterialTheme.typography.bodyLarge)
                                         }
-
                                         if (ref.toBookId != null && ref.toChapter != null) {
-                                            Spacer(modifier = Modifier.width(8.dp))
-                                            IconButton(
-                                                onClick = { onJumpToChapter(ref) },
-                                                modifier = Modifier.size(28.dp)
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                                    contentDescription = "Jump to chapter",
-                                                    tint = RemoraTextSecondary,
-                                                    modifier = Modifier.size(16.dp)
-                                                )
-                                            }
+                                            TextButton(onClick = { onJumpToChapter(ref) }, modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)) { Text("Read in context") }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-
                     if (!showAll && items.size > INITIAL_VISIBLE_REFS) {
-                        OutlinedButton(
-                            onClick = onShowAll,
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = "Show all ${items.size}",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = RemoraTextPrimary
-                            )
-                        }
+                        OutlinedButton(onClick = onShowAll, modifier = Modifier.fillMaxWidth()) { Text("Show all ${items.size}") }
                     }
                 }
             }
         }
     }
 }
-
 @Composable
 private fun SameOriginalWordSection(
     isOldTestament: Boolean,
@@ -790,56 +524,15 @@ private fun SameOriginalWordSection(
     val hiddenCount = words.size - visibleWords.size
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        // Section Header
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onToggleOpen() }
-                .padding(horizontal = 20.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(
-                    imageVector = if (isOpen) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = RemoraTextSecondary,
-                    modifier = Modifier.size(18.dp)
-                )
-                Text(
-                    text = "Same $languageLabel word".uppercase(),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.8.sp,
-                    color = RemoraTextPrimary
-                )
-                Text(
-                    text = "where else it is used",
-                    fontSize = 13.sp,
-                    color = RemoraTextSecondary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+        Row(Modifier.fillMaxWidth().clickable(onClick = onToggleOpen).heightIn(min = 56.dp).padding(horizontal = 20.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(if (isOpen) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Column(Modifier.weight(1f)) {
+                Text("Same $languageLabel word", style = MaterialTheme.typography.titleMedium)
+                Text("Where else it is used", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-
-            Surface(
-                shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-            ) {
-                Text(
-                    text = "${words.size}",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextSecondary,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                )
-            }
+            Text("${words.size}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-
         if (isOpen) {
             Column(
                 modifier = Modifier
@@ -881,47 +574,12 @@ private fun SameOriginalWordSection(
                                         .clickable { onToggleWord(entry.id) }
                                         .padding(12.dp)
                                 ) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                            modifier = Modifier.weight(1f)
-                                        ) {
-                                            Text(
-                                                text = entry.lemma,
-                                                fontSize = 20.sp,
-                                                fontFamily = FontFamily.Serif,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = RemoraTextPrimary
-                                            )
-                                            if (entry.transliteration.isNotBlank()) {
-                                                Text(
-                                                    text = entry.transliteration,
-                                                    fontSize = 15.sp,
-                                                    fontStyle = FontStyle.Italic,
-                                                    color = RemoraTextSecondary
-                                                )
-                                            }
-                                            Text(
-                                                text = entry.strongs,
-                                                fontSize = 13.sp,
-                                                fontFamily = FontFamily.Monospace,
-                                                color = RemoraTextSecondary.copy(alpha = 0.75f)
-                                            )
-                                        }
-
-                                        Text(
-                                            text = "${entry.verseCount} ${if (entry.verseCount == 1) "verse" else "verses"}",
-                                            fontSize = 13.sp,
-                                            fontWeight = FontWeight.SemiBold,
-                                            color = RemoraGold
-                                        )
+                                    Text(entry.lemma, style = MaterialTheme.typography.titleLarge, fontFamily = FontFamily.Serif)
+                                    if (entry.transliteration.isNotBlank()) {
+                                        Text(entry.transliteration, style = MaterialTheme.typography.bodyMedium, fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                     }
-
+                                    Text("${entry.strongs} · ${entry.verseCount} ${if (entry.verseCount == 1) "verse" else "verses"}",
+                                        style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                     if (entry.gloss.isNotBlank()) {
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Text(
@@ -1019,7 +677,7 @@ private fun SameOriginalWordSection(
                                                     if (!isHere) {
                                                         IconButton(
                                                             onClick = { onJumpToOccurrence(occ) },
-                                                            modifier = Modifier.size(26.dp)
+                                                            modifier = Modifier.size(48.dp)
                                                         ) {
                                                             Icon(
                                                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,

@@ -59,6 +59,38 @@ class ThemeDrillViewModelTest {
     }
 
     @Test
+    fun failedThemeGradeDoesNotAdvanceOrRecordReview() = runTest(testDispatcher) {
+        val vm = ThemeDrillViewModel(application, repository)
+        advanceUntilIdle()
+        vm.revealAnswer()
+        userDbHelper.writableDatabase.execSQL("CREATE TRIGGER reject_theme_review BEFORE INSERT ON review_log WHEN NEW.item_kind = 'theme' BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        vm.gradeCurrent(4)
+        advanceUntilIdle()
+        assertNotNull(vm.uiState.value.gradingError)
+        assertEquals(0, vm.uiState.value.currentIndex)
+        assertTrue(repository.getReviewLog().isEmpty())
+        assertTrue(repository.getAllThemeProgress().isEmpty())
+    }
+
+    @Test
+    fun duplicateGradeAndSkipWhileSavingCannotAdvanceTwice() = runTest(testDispatcher) {
+        val vm = ThemeDrillViewModel(application, repository)
+        advanceUntilIdle()
+        vm.revealAnswer()
+        vm.gradeCurrent(3)
+        vm.gradeCurrent(5)
+        vm.skipToNext()
+        vm.setScope(ThemeScope.NT)
+        assertTrue(vm.uiState.value.isGrading)
+        advanceUntilIdle()
+        assertEquals(1, vm.uiState.value.currentIndex)
+        assertEquals(ThemeScope.ALL, vm.uiState.value.scope)
+        assertEquals(1, repository.getReviewLog().size)
+        assertEquals(3, repository.getReviewLog().single().score)
+        assertFalse(vm.uiState.value.isGrading)
+    }
+
+    @Test
     fun testThemeDrillPoolScopes() = runTest(testDispatcher) {
         val vm = ThemeDrillViewModel(application, repository)
         advanceUntilIdle()

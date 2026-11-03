@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.telugubible.data.db.ChapterProgressEntity
 import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.BibleTranslation
 import com.example.telugubible.data.model.ChapterAnchor
 import com.example.telugubible.data.model.CrossReference
 import com.example.telugubible.data.model.OriginalWord
@@ -25,6 +26,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.ensureActive
+import com.example.telugubible.data.model.ReadingPosition
 
 enum class FontSizeScale(
     val label: String,
@@ -59,6 +65,7 @@ data class ReaderUiState(
     val books: List<Book> = emptyList(),
     val currentBook: Book? = null,
     val currentChapter: Int = 1,
+    val hasSavedReadingPosition: Boolean = false,
     val verses: List<Verse> = emptyList(),
     val paragraphBreaks: Set<Int> = emptySet(),
     val crossRefCounts: Map<Int, Int> = emptyMap(),
@@ -93,10 +100,13 @@ data class ReaderUiState(
     val isOccurrencesLoading: Boolean = false,
     val occurrencesError: String? = null,
     val kjvChapterVerses: Map<Int, String> = emptyMap(),
+    val settingsRevision: Int = 0,
     val readerTheme: ReaderTheme = ReaderTheme.OBSIDIAN,
     val readerFontFamily: ReaderFontFamily = ReaderFontFamily.INTER,
     val currentAnchor: ChapterAnchor? = null,
     val chapterProgress: ChapterProgressEntity? = null,
+    val isChapterRecallSaving: Boolean = false,
+    val chapterRecallError: String? = null,
     val isAnchorDismissed: Boolean = false,
     val anchorWordRevealed: Boolean = false,
     val showAnchorScene: Boolean = false,
@@ -124,6 +134,9 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private val _uiState = MutableStateFlow(ReaderUiState())
     val uiState: StateFlow<ReaderUiState> = _uiState.asStateFlow()
+
+    private var chapterLoadJob: Job? = null
+    private val positionCommitMutex = Mutex()
 
     init {
         loadInitialData()
@@ -155,12 +168,15 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     private fun loadInitialData() {
-        viewModelScope.launch {
+        chapterLoadJob = viewModelScope.launch {
             val books = repository.getBooks()
             val topics = repository.getTopics()
-            val firstBook = books.firstOrNull { it.id == 1 } ?: books.firstOrNull()
+            val saved = ReadingPosition.decode(repository.getSessionState(ReadingPosition.STORAGE_KEY))
+            val savedBook = books.firstOrNull { it.id == saved?.bookId }
+            val firstBook = savedBook ?: books.firstOrNull { it.id == 1 } ?: books.firstOrNull()
+            val chapter = if (savedBook != null) saved!!.chapter.coerceIn(1, savedBook.chapters) else 1
             val settings = repository.getAppSettings()
-            val activeVer = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
+            val activeVer = BibleTranslation.normalizeCode(settings.bibleVersion.ifBlank { "LSB" })
             val lang = when (activeVer) {
                 "TELIRV" -> BibleLanguage.TELUGU
                 "TBSI" -> BibleLanguage.TAMIL
@@ -168,16 +184,16 @@ class ReaderViewModel @JvmOverloads constructor(
             }
 
             if (firstBook != null) {
-                val rawVerses = repository.getChapterVerses(firstBook.id, 1, activeVer)
-                val verses = attachHeadingsIfNeeded(firstBook.id, 1, activeVer, rawVerses)
-                val breaks = repository.getParagraphBreaks(firstBook.id, 1)
-                val crossRefCounts = repository.getCrossReferenceCountsForChapter(firstBook.id, 1)
-                val otQuotes = repository.getOtQuotesForChapter(firstBook.id, 1)
+                val rawVerses = repository.getChapterVerses(firstBook.id, chapter, activeVer)
+                val verses = attachHeadingsIfNeeded(firstBook.id, chapter, activeVer, rawVerses)
+                val breaks = repository.getParagraphBreaks(firstBook.id, chapter)
+                val crossRefCounts = repository.getCrossReferenceCountsForChapter(firstBook.id, chapter)
+                val otQuotes = repository.getOtQuotesForChapter(firstBook.id, chapter)
                 val anchors = repository.getChapterAnchors(firstBook.id)
-                val currentAnchor = anchors.find { it.chapter == 1 }
-                val chapterProgress = repository.getChapterProgress(firstBook.id)[1]
+                val currentAnchor = anchors.find { it.chapter == chapter }
+                val chapterProgress = repository.getChapterProgress(firstBook.id)[chapter]
                 val userVerses = repository.getUserMemoryVerses()
-                val memorized = extractMemorizedVerseNumbers(userVerses, firstBook.id, 1)
+                val memorized = extractMemorizedVerseNumbers(userVerses, firstBook.id, chapter)
                 val fontScale = FontSizeScale.fromMultiplier(settings.fontSize)
                 val fontFam = ReaderFontFamily.fromKey(settings.fontFamily)
                 val theme = ReaderTheme.fromKey(settings.theme)
@@ -189,7 +205,8 @@ class ReaderViewModel @JvmOverloads constructor(
                         books = books,
                         topics = topics,
                         currentBook = firstBook,
-                        currentChapter = 1,
+                        currentChapter = chapter,
+                        hasSavedReadingPosition = savedBook != null,
                         activeVersion = activeVer,
                         language = lang,
                         verses = verses,
@@ -219,20 +236,45 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
-    fun selectBookAndChapterById(bookId: Int, chapter: Int = 1) {
-        viewModelScope.launch {
-            val books = _uiState.value.books.ifEmpty { repository.getBooks() }
-            val target = books.firstOrNull { it.id == bookId } ?: return@launch
-            selectBookAndChapter(target, chapter)
+    fun selectBookAndChapterById(bookId: Int, chapter: Int = 1) = loadChapter(bookId, chapter)
+
+    suspend fun restoreReadingContext(bookId: Int, chapter: Int, selection: Set<Int>) {
+        loadChapter(bookId, chapter)
+        val requestedJob = chapterLoadJob
+        requestedJob?.join()
+        if (requestedJob == chapterLoadJob) {
+            _uiState.update { current ->
+                if (current.currentBook?.id == bookId && current.currentChapter == chapter && !current.isLoading) {
+                    val available = current.verses.map { it.verse }.toSet()
+                    current.copy(selectedVerses = selection.intersect(available))
+                } else current
+            }
         }
     }
 
-    fun selectBookAndChapter(book: Book, chapter: Int) {
-        viewModelScope.launch {
+    fun selectBookAndChapter(book: Book, chapter: Int) = loadChapter(book.id, chapter)
+
+    suspend fun getPassageVerseNumbers(book: Book, chapter: Int, version: String): List<Int> =
+        repository.getChapterVerses(book.id, chapter, version).map { it.verse }
+
+    private fun loadChapter(bookId: Int, requestedChapter: Int) {
+        originalWordsGeneration++
+        originalWordsJob?.cancel()
+        val previous = chapterLoadJob
+        previous?.cancel()
+        chapterLoadJob = viewModelScope.launch {
+            // Let the previous request finish cancellation before loading the next chapter.
+            previous?.join()
+            val books = _uiState.value.books.ifEmpty { repository.getBooks() }
+            val book = books.firstOrNull { it.id == bookId } ?: return@launch
+            val chapter = requestedChapter.coerceIn(1, book.chapters)
+            val topics = if (_uiState.value.books.isEmpty()) repository.getTopics() else _uiState.value.topics
             ttsManager.stop()
             _uiState.update {
                 it.copy(
                     isLoading = true,
+                    isChapterRecallSaving = false,
+                    chapterRecallError = null,
                     showBookSelector = false,
                     selectedVerses = emptySet(),
                     crossRefSheetVerses = null,
@@ -243,7 +285,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 )
             }
             val settings = repository.getAppSettings()
-            val activeVer = settings.bibleVersion.ifBlank { _uiState.value.activeVersion }.uppercase()
+            val activeVer = BibleTranslation.normalizeCode(settings.bibleVersion.ifBlank { _uiState.value.activeVersion })
             val lang = when (activeVer) {
                 "TELIRV" -> BibleLanguage.TELUGU
                 "TBSI" -> BibleLanguage.TAMIL
@@ -269,36 +311,45 @@ class ReaderViewModel @JvmOverloads constructor(
             } else {
                 emptyMap()
             }
-            _uiState.update {
-                it.copy(
-                    currentBook = book,
-                    currentChapter = chapter,
-                    activeVersion = activeVer,
-                    language = lang,
-                    verses = verses,
-                    paragraphBreaks = breaks,
-                    crossRefCounts = crossRefCounts,
-                    otQuotes = otQuotes,
-                    currentAnchor = currentAnchor,
-                    chapterProgress = chapterProgress,
-                    memorizedVerses = memorized,
-                    fontSizeScale = fontScale,
-                    readerFontFamily = fontFam,
-                    readerTheme = theme,
-                    lineSpacing = spacing,
-                    bionicIntensity = bionicInt,
-                    bionicReading = settings.bionicReading,
-                    anchorReveal = settings.anchorReveal,
-                    showSectionHeadings = settings.showSectionHeadings,
-                    showVerseNumbers = settings.showVerseNumbers,
-                    showParagraphMarks = settings.showParagraphMarks,
-                    showCrossRefMarkers = settings.showCrossRefMarkers,
-                    anchorWordRevealed = settings.anchorReveal == "always",
-                    showAnchorScene = false,
-                    isAnchorDismissed = false,
-                    kjvChapterVerses = kjvMap,
-                    isLoading = false
-                )
+            // A canceled SQLite call can finish its write before cancellation is observed.
+            // Serialize commits even when several intermediate requests are canceled.
+            positionCommitMutex.withLock {
+                ensureActive()
+                repository.setSessionState(ReadingPosition.STORAGE_KEY, ReadingPosition(book.id, chapter).encode())
+                _uiState.update {
+                    it.copy(
+                        books = books,
+                        topics = topics,
+                        hasSavedReadingPosition = true,
+                        currentBook = book,
+                        currentChapter = chapter,
+                        activeVersion = activeVer,
+                        language = lang,
+                        verses = verses,
+                        paragraphBreaks = breaks,
+                        crossRefCounts = crossRefCounts,
+                        otQuotes = otQuotes,
+                        currentAnchor = currentAnchor,
+                        chapterProgress = chapterProgress,
+                        memorizedVerses = memorized,
+                        fontSizeScale = fontScale,
+                        readerFontFamily = fontFam,
+                        readerTheme = theme,
+                        lineSpacing = spacing,
+                        bionicIntensity = bionicInt,
+                        bionicReading = settings.bionicReading,
+                        anchorReveal = settings.anchorReveal,
+                        showSectionHeadings = settings.showSectionHeadings,
+                        showVerseNumbers = settings.showVerseNumbers,
+                        showParagraphMarks = settings.showParagraphMarks,
+                        showCrossRefMarkers = settings.showCrossRefMarkers,
+                        anchorWordRevealed = settings.anchorReveal == "always",
+                        showAnchorScene = false,
+                        isAnchorDismissed = false,
+                        kjvChapterVerses = kjvMap,
+                        isLoading = false
+                    )
+                }
             }
         }
     }
@@ -348,12 +399,26 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
+    private var chapterRecallJob: kotlinx.coroutines.Job? = null
+
     fun gradeChapterRecall(score: Int) {
+        if (chapterRecallJob?.isActive == true || _uiState.value.chapterRecallError != null) return
         val b = _uiState.value.currentBook ?: return
         val ch = _uiState.value.currentChapter
-        viewModelScope.launch {
-            val updated = repository.gradeChapterAnchor(b.id, ch, score)
-            _uiState.update { it.copy(chapterProgress = updated, isAnchorDismissed = true) }
+        _uiState.update { it.copy(isChapterRecallSaving = true, chapterRecallError = null) }
+        chapterRecallJob = viewModelScope.launch {
+            try {
+                val updated = repository.gradeChapterAnchor(b.id, ch, score)
+                _uiState.update { current ->
+                    if (current.currentBook?.id == b.id && current.currentChapter == ch) current.copy(chapterProgress = updated, isAnchorDismissed = true, isChapterRecallSaving = false) else current
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _uiState.update { current ->
+                    if (current.currentBook?.id == b.id && current.currentChapter == ch) current.copy(isChapterRecallSaving = false, chapterRecallError = "Could not confirm the save. Check chapter progress before trying again.") else current
+                }
+            }
         }
     }
 
@@ -388,7 +453,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 "showCrossRefMarkers" -> current.copy(showCrossRefMarkers = !current.showCrossRefMarkers)
                 else -> current
             }
-            repository.saveAppSettings(updated)
+            saveReaderSettings(updated)
             _uiState.update {
                 it.copy(
                     bionicReading = updated.bionicReading,
@@ -402,7 +467,7 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     fun setBibleVersion(version: String) {
-        val v = version.uppercase()
+        val v = BibleTranslation.normalizeCode(version)
         val lang = when (v) {
             "TELIRV" -> BibleLanguage.TELUGU
             "TBSI" -> BibleLanguage.TAMIL
@@ -411,7 +476,7 @@ class ReaderViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(activeVersion = v, language = lang, isLoading = true) }
         viewModelScope.launch {
             val currentSettings = repository.getAppSettings()
-            repository.saveAppSettings(currentSettings.copy(bibleVersion = v))
+            saveReaderSettings(currentSettings.copy(bibleVersion = v))
             val book = _uiState.value.currentBook ?: return@launch
             val ch = _uiState.value.currentChapter
             val rawVerses = repository.getChapterVerses(book.id, ch, v)
@@ -484,8 +549,7 @@ class ReaderViewModel @JvmOverloads constructor(
             BibleLanguage.TELUGU -> book.nameTe
             else -> book.nameEn
         }
-        val refRange = if (selected.size == 1) "$ch:${selected.first()}" else "$ch:${selected.first()}-${selected.last()}"
-        val header = "$bookTitle $refRange"
+        val header = formatSelectedReference(bookTitle, ch, selected).replace('–', '-')
 
         val versesMap = _uiState.value.verses.associateBy { it.verse }
         val lines = selected.mapNotNull { vNum ->
@@ -507,11 +571,17 @@ class ReaderViewModel @JvmOverloads constructor(
         }
     }
 
-    fun createTopic(name: String, onCreated: ((com.example.telugubible.data.model.Topic) -> Unit)? = null) {
+    fun createTopic(name: String, onCreated: ((com.example.telugubible.data.model.Topic?) -> Unit)? = null) {
         viewModelScope.launch {
-            val topic = repository.createTopic(name)
-            loadTopics()
-            onCreated?.invoke(topic)
+            try {
+                val topic = repository.createTopic(name)
+                loadTopics()
+                onCreated?.invoke(topic)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                onCreated?.invoke(null)
+            }
         }
     }
 
@@ -522,12 +592,11 @@ class ReaderViewModel @JvmOverloads constructor(
         keyword: String = "",
         onSuccess: (count: Int) -> Unit = {}
     ) {
+        val book = _uiState.value.currentBook ?: return
+        val ch = _uiState.value.currentChapter
+        val selected = _uiState.value.selectedVerses.sorted()
+        if (selected.isEmpty()) return
         viewModelScope.launch {
-            val book = _uiState.value.currentBook ?: return@launch
-            val ch = _uiState.value.currentChapter
-            val selected = _uiState.value.selectedVerses.sorted()
-            if (selected.isEmpty()) return@launch
-
             val now = System.currentTimeMillis()
             val dueDate = if (startLearningNow) now else now + 86400000L
             val trimmedKeyword = keyword.trim().takeIf { it.isNotEmpty() }
@@ -596,8 +665,8 @@ class ReaderViewModel @JvmOverloads constructor(
 
             _uiState.update {
                 it.copy(
-                    selectedVerses = emptySet(),
-                    memorizedVerses = updatedMemorized,
+                    selectedVerses = if (it.currentBook?.id == book.id && it.currentChapter == ch && it.selectedVerses == selected.toSet()) emptySet() else it.selectedVerses,
+                    memorizedVerses = if (it.currentBook?.id == book.id && it.currentChapter == ch) updatedMemorized else it.memorizedVerses,
                     toastMessage = "Added $addedCount passage${if (addedCount == 1) "" else "s"} to memory"
                 )
             }
@@ -606,8 +675,12 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     // Cross-References & Verse Connections
+    private var connectionsJob: kotlinx.coroutines.Job? = null
+    private var connectionsGeneration = 0
     fun openCrossReferences(verseNumbers: List<Int>, initialSection: String? = null) {
-        viewModelScope.launch {
+        val generation = ++connectionsGeneration
+        connectionsJob?.cancel()
+        connectionsJob = viewModelScope.launch {
             val currentBook = _uiState.value.currentBook ?: return@launch
             val ch = _uiState.value.currentChapter
             val minVotes = _uiState.value.connectionsMinVotes
@@ -619,6 +692,7 @@ class ReaderViewModel @JvmOverloads constructor(
             val connData = repository.getVerseConnections(currentBook.id, ch, firstVerse, minVotes)
             val verseObj = _uiState.value.verses.firstOrNull { it.verse == firstVerse }
                 ?: repository.getVerse(currentBook.id, ch, firstVerse)
+            if (generation != connectionsGeneration) return@launch
             _uiState.update {
                 it.copy(
                     crossRefSheetVerses = verseNumbers,
@@ -635,11 +709,14 @@ class ReaderViewModel @JvmOverloads constructor(
 
     fun openConnectionsForVid(vid: Int, initialSection: String? = null) {
         if (vid !in 0 until KjvVersification.TOTAL_VERSES) return
-        viewModelScope.launch {
+        val generation = ++connectionsGeneration
+        connectionsJob?.cancel()
+        connectionsJob = viewModelScope.launch {
             val coord = KjvVersification.fromVerseIndex(vid)
             val minVotes = _uiState.value.connectionsMinVotes
             val connData = repository.getVerseConnections(coord.bookId, coord.chapter, coord.verse, minVotes)
             val verseObj = repository.getVerse(coord.bookId, coord.chapter, coord.verse)
+            if (generation != connectionsGeneration) return@launch
             _uiState.update {
                 it.copy(
                     crossRefSheetVerses = listOf(coord.verse),
@@ -657,8 +734,11 @@ class ReaderViewModel @JvmOverloads constructor(
     fun setConnectionsMinVotes(minVotes: Int) {
         _uiState.update { it.copy(connectionsMinVotes = minVotes) }
         val conn = _uiState.value.connectionsData ?: return
-        viewModelScope.launch {
+        val generation = ++connectionsGeneration
+        connectionsJob?.cancel()
+        connectionsJob = viewModelScope.launch {
             val updated = repository.getVerseConnections(conn.bookId, conn.chapter, conn.verse, minVotes)
+            if (generation != connectionsGeneration) return@launch
             _uiState.update {
                 it.copy(
                     connectionsData = updated,
@@ -679,6 +759,8 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     fun dismissCrossReferences() {
+        connectionsGeneration++
+        connectionsJob?.cancel()
         _uiState.update {
             it.copy(
                 crossRefSheetVerses = null,
@@ -764,7 +846,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private fun persistFontSize(scale: FontSizeScale) {
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(settings.copy(fontSize = scale.multiplier))
+            saveReaderSettings(settings.copy(fontSize = scale.multiplier))
         }
     }
 
@@ -795,13 +877,25 @@ class ReaderViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(selectedStrongs = null) }
     }
 
+    // Publish only after persistence so the app shell cannot reload the previous value.
+    private suspend fun saveReaderSettings(settings: com.example.telugubible.data.model.AppSettings) {
+        try {
+            repository.saveAppSettings(settings)
+            _uiState.update { it.copy(settingsRevision = it.settingsRevision + 1) }
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            _uiState.update { it.copy(toastMessage = "Couldn't save reading settings. Please try again.") }
+            syncSettings()
+        }
+    }
+
     // Theme & Typography
     fun setReaderTheme(theme: ReaderTheme) {
         _uiState.update { it.copy(readerTheme = theme) }
-        com.example.telugubible.theme.RemoraThemeState.themeName = theme.toSettingKey()
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(settings.copy(theme = theme.toSettingKey()))
+            saveReaderSettings(settings.copy(theme = theme.toSettingKey()))
         }
     }
 
@@ -809,7 +903,7 @@ class ReaderViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(lineSpacing = spacing) }
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(settings.copy(lineSpacing = spacing.key))
+            saveReaderSettings(settings.copy(lineSpacing = spacing.key))
         }
     }
 
@@ -817,7 +911,7 @@ class ReaderViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(bionicReading = enabled) }
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(settings.copy(bionicReading = enabled))
+            saveReaderSettings(settings.copy(bionicReading = enabled))
         }
     }
 
@@ -825,7 +919,7 @@ class ReaderViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(bionicIntensity = intensity) }
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(settings.copy(bionicIntensity = intensity.key))
+            saveReaderSettings(settings.copy(bionicIntensity = intensity.key))
         }
     }
 
@@ -833,7 +927,7 @@ class ReaderViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(showVerseNumbers = show) }
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(settings.copy(showVerseNumbers = show))
+            saveReaderSettings(settings.copy(showVerseNumbers = show))
         }
     }
 
@@ -857,10 +951,9 @@ class ReaderViewModel @JvmOverloads constructor(
                 showVerseNumbers = defVerseNums
             )
         }
-        com.example.telugubible.theme.RemoraThemeState.themeName = defTheme.toSettingKey()
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(
+            saveReaderSettings(
                 settings.copy(
                     theme = defTheme.toSettingKey(),
                     fontFamily = defFont.key,
@@ -904,7 +997,7 @@ class ReaderViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(readerFontFamily = fontFamily) }
         viewModelScope.launch {
             val settings = repository.getAppSettings()
-            repository.saveAppSettings(settings.copy(fontFamily = fontFamily.key))
+            saveReaderSettings(settings.copy(fontFamily = fontFamily.key))
         }
     }
 
@@ -925,10 +1018,15 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     // Original Words Sheet
+    private var originalWordsJob: kotlinx.coroutines.Job? = null
+    private var originalWordsGeneration = 0
+
     fun openOriginalWords(verseNumber: Int) {
         val book = _uiState.value.currentBook ?: return
         val chapter = _uiState.value.currentChapter
         val isOT = book.id <= 39
+        val generation = ++originalWordsGeneration
+        originalWordsJob?.cancel()
 
         _uiState.update {
             it.copy(
@@ -938,11 +1036,12 @@ class ReaderViewModel @JvmOverloads constructor(
             )
         }
 
-        viewModelScope.launch {
+        originalWordsJob = viewModelScope.launch {
             var taggedText = _uiState.value.kjvChapterVerses[verseNumber]
             if (taggedText == null) {
                 val kjvMap = kjvService.getChapterKjv(book.id, chapter)
                 if (kjvMap != null) {
+                    if (generation != originalWordsGeneration) return@launch
                     _uiState.update { it.copy(kjvChapterVerses = kjvMap) }
                     taggedText = kjvMap[verseNumber]
                 }
@@ -954,17 +1053,9 @@ class ReaderViewModel @JvmOverloads constructor(
                     val entry = strongsId?.let { repository.getStrongs(it) }
                     OriginalWord(english = english, strongsId = strongsId, entry = entry)
                 }
-            } else {
-                val verse = _uiState.value.verses.firstOrNull { it.verse == verseNumber }
-                val enText = verse?.textEn ?: ""
-                val tokens = enText.split(Regex("[^a-zA-Z]+")).filter { it.length > 2 }
-                tokens.map { token ->
-                    val results = repository.searchStrongs(token)
-                    val match = results.firstOrNull { it.lang == if (isOT) "H" else "G" } ?: results.firstOrNull()
-                    OriginalWord(english = token, strongsId = match?.id, entry = match)
-                }
-            }
+            } else emptyList()
 
+            if (generation != originalWordsGeneration) return@launch
             _uiState.update {
                 it.copy(
                     originalWordsList = wordsList,
@@ -975,6 +1066,8 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     fun dismissOriginalWords() {
+        originalWordsGeneration++
+        originalWordsJob?.cancel()
         _uiState.update {
             it.copy(
                 originalWordsVerse = null,
@@ -985,64 +1078,51 @@ class ReaderViewModel @JvmOverloads constructor(
     }
 
     // Strong's Occurrences Sheet
-    fun openOccurrences(strongsId: String) {
-        viewModelScope.launch {
-            val normalized = StrongsParser.normalizeStrongsRef(strongsId)
-            val entry = repository.getStrongs(normalized) ?: StrongsEntry(
-                id = normalized,
-                lang = if (StrongsParser.isHebrewStrongs(normalized)) "H" else "G",
-                lemma = null,
-                xlit = null,
-                pron = null,
-                derivation = null,
-                strongsDef = null,
-                kjvDef = null,
-                pos = null
-            )
-            openOccurrencesForEntry(entry)
-        }
-    }
+    private var occurrenceJob: kotlinx.coroutines.Job? = null
+    private var occurrenceGeneration = 0
 
-    fun openOccurrencesForEntry(entry: StrongsEntry) {
-        _uiState.update {
-            it.copy(
-                occurrencesStrongs = entry,
-                isOccurrencesLoading = true,
-                occurrencesError = null,
-                occurrencesList = emptyList()
-            )
-        }
-        viewModelScope.launch {
+    fun openOccurrences(strongsId: String) {
+        val generation = ++occurrenceGeneration
+        occurrenceJob?.cancel()
+        val normalized = StrongsParser.normalizeStrongsRef(strongsId)
+        val placeholder = StrongsEntry(normalized, if (StrongsParser.isHebrewStrongs(normalized)) "H" else "G", null, null, null, null, null, null, null)
+        _uiState.update { it.copy(occurrencesStrongs = placeholder, isOccurrencesLoading = true, occurrencesError = null, occurrencesList = emptyList()) }
+        occurrenceJob = viewModelScope.launch {
             try {
+                val entry = repository.getStrongs(normalized) ?: placeholder
                 val list = repository.getStrongsOccurrences(entry.id)
-                _uiState.update {
-                    it.copy(
-                        occurrencesList = list,
-                        isOccurrencesLoading = false
-                    )
-                }
+                if (generation == occurrenceGeneration) _uiState.update { it.copy(occurrencesStrongs = entry, occurrencesList = list, isOccurrencesLoading = false) }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isOccurrencesLoading = false,
-                        occurrencesError = e.message ?: "Failed to search occurrences"
-                    )
-                }
+                if (generation == occurrenceGeneration) _uiState.update { it.copy(isOccurrencesLoading = false, occurrencesError = e.message ?: "Failed to search occurrences") }
             }
         }
     }
 
+    fun openOccurrencesForEntry(entry: StrongsEntry) = openOccurrences(entry.id)
+
     fun dismissOccurrences() {
-        _uiState.update {
-            it.copy(
-                occurrencesStrongs = null,
-                occurrencesList = emptyList(),
-                isOccurrencesLoading = false,
-                occurrencesError = null
-            )
-        }
+        occurrenceGeneration++
+        occurrenceJob?.cancel()
+        _uiState.update { it.copy(occurrencesStrongs = null, occurrencesList = emptyList(), isOccurrencesLoading = false, occurrencesError = null) }
     }
 
+    fun restoreWordStudy(snapshot: ReaderUiState) {
+        if (_uiState.value.currentBook?.id != snapshot.currentBook?.id || _uiState.value.currentChapter != snapshot.currentChapter) return
+        occurrenceGeneration++
+        occurrenceJob?.cancel()
+        _uiState.update { it.copy(
+            originalWordsVerse = snapshot.originalWordsVerse,
+            originalWordsList = snapshot.originalWordsList,
+            isOriginalWordsLoading = false,
+            selectedStrongs = snapshot.selectedStrongs,
+            occurrencesStrongs = snapshot.occurrencesStrongs,
+            occurrencesList = snapshot.occurrencesList,
+            occurrencesError = snapshot.occurrencesError,
+            isOccurrencesLoading = false
+        ) }
+    }
     suspend fun getOfflineVerse(bookId: Int, chapter: Int, verse: Int): Verse? {
         return repository.getVerse(bookId, chapter, verse)
     }

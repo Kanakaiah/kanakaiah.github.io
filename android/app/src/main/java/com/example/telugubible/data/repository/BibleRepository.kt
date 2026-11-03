@@ -8,6 +8,7 @@ import com.example.telugubible.data.db.ThemeProgressEntity
 import com.example.telugubible.data.db.UserDatabaseHelper
 import com.example.telugubible.data.model.AdherenceStats
 import com.example.telugubible.data.model.AppSettings
+import com.example.telugubible.data.model.BibleTranslation
 import com.example.telugubible.data.model.Book
 import com.example.telugubible.data.model.BookGuide
 import com.example.telugubible.data.model.ChapterAnchor
@@ -53,7 +54,7 @@ class BibleRepository(
     )
 
     suspend fun getChapterVerses(bookId: Int, chapter: Int, version: String): List<Verse> = withContext(ioDispatcher) {
-        val v = version.uppercase()
+        val v = BibleTranslation.normalizeCode(version)
         when (v) {
             "BSB" -> bibleDbHelper.getVerses(bookId, chapter)
             "TELIRV" -> bibleDbHelper.getVerses(bookId, chapter)
@@ -132,7 +133,7 @@ class BibleRepository(
         val topicMappings = userDbHelper.getAllVerseTopicMappings()
 
         val settings = userDbHelper.getAppSettings()
-        val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
+        val activeVersion = BibleTranslation.normalizeCode(settings.bibleVersion.ifBlank { "LSB" })
         var cachedActive = if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
             userDbHelper.getCachedVerseTexts(activeVersion, allKeys)
         } else emptyMap()
@@ -212,7 +213,7 @@ class BibleRepository(
         val inserted = userDbHelper.addUserVerse(bookId, chapter, verse, endVerse, nextDueDate, keyword)
         if (inserted) {
             val settings = userDbHelper.getAppSettings()
-            val activeVersion = settings.bibleVersion.ifBlank { "LSB" }.uppercase()
+            val activeVersion = BibleTranslation.normalizeCode(settings.bibleVersion.ifBlank { "LSB" })
             if (activeVersion != "BSB" && activeVersion != "TELIRV" && activeVersion != "TBSI") {
                 val cached = userDbHelper.getCachedVerses(activeVersion, bookId, chapter)
                 if (cached.isEmpty()) {
@@ -235,7 +236,7 @@ class BibleRepository(
         startVerse: Int,
         endVerse: Int
     ): List<Pair<Int, String>> = withContext(ioDispatcher) {
-        val ver = version.uppercase().trim()
+        val ver = BibleTranslation.normalizeCode(version)
         val targetRange = (startVerse..endVerse)
         val keys = targetRange.map { Triple(bookId, chapter, it) }
 
@@ -244,9 +245,9 @@ class BibleRepository(
             return@withContext targetRange.mapNotNull { v ->
                 val trip = localTexts[Triple(bookId, chapter, v)]
                 val txt = when (ver) {
-                    "TBSI" -> trip?.third ?: trip?.second ?: trip?.first
-                    "TELIRV" -> trip?.first ?: trip?.second
-                    else -> trip?.second ?: trip?.first
+                    "TBSI" -> trip?.third
+                    "TELIRV" -> trip?.first
+                    else -> trip?.second
                 }
                 if (txt != null) Pair(v, txt.replace(Regex("<[^>]+>"), "").trim()) else null
             }
@@ -263,13 +264,8 @@ class BibleRepository(
             } catch (_: Exception) {}
         }
 
-        val localFallback = bibleDbHelper.getVerseTexts(keys)
         targetRange.mapNotNull { v ->
-            val trip = localFallback[Triple(bookId, chapter, v)]
             val txt = cached[Triple(bookId, chapter, v)]
-                ?: (if (ver == "TBSI") trip?.third else null)
-                ?: trip?.second
-                ?: trip?.first
             if (txt != null) Pair(v, txt.replace(Regex("<[^>]+>"), "").trim()) else null
         }
     }
@@ -286,6 +282,17 @@ class BibleRepository(
         measuredAccuracy: Double? = null
     ) = withContext(ioDispatcher) {
         userDbHelper.gradeUserVerse(id, score, cueLevel, mode, measuredAccuracy)
+    }
+
+    suspend fun gradeUserVerseAndUpdateSession(
+        id: Long,
+        score: Int,
+        cueLevel: Int,
+        mode: String,
+        measuredAccuracy: Double?,
+        sessionUpdates: Map<String, String?>
+    ) = withContext(ioDispatcher) {
+        userDbHelper.gradeUserVerseAndUpdateSession(id, score, cueLevel, mode, measuredAccuracy, sessionUpdates)
     }
 
     suspend fun getStreak(): Int = withContext(ioDispatcher) {
@@ -338,6 +345,7 @@ class BibleRepository(
 
     suspend fun addPresetCollection(
         collectionId: String,
+        extraTopicIds: List<String> = emptyList(),
         onProgress: ((current: Int, total: Int) -> Unit)? = null
     ): Int = withContext(ioDispatcher) {
         val presetEntries = bibleDbHelper.getPresetVerseEntries(collectionId)
@@ -360,6 +368,9 @@ class BibleRepository(
             kotlinx.coroutines.delay(18)
         }
         userDbHelper.tagVersesWithTopic(legacyVerses, topic.id)
+        extraTopicIds.distinct().filter { it != topic.id }.forEach { targetId ->
+            userDbHelper.tagVersesWithTopic(legacyVerses, targetId)
+        }
         insertedCount
     }
 

@@ -1,40 +1,24 @@
 package com.example.telugubible.ui.bible
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.telugubible.data.model.Book
-import com.example.telugubible.theme.*
-import com.example.telugubible.util.BookNameUtils
 import com.example.telugubible.ui.common.BookCoverImage
-import kotlinx.coroutines.launch
+import com.example.telugubible.util.BookNameUtils
 
 @Composable
 fun BibleBrowserScreen(
@@ -42,339 +26,103 @@ fun BibleBrowserScreen(
     onOpenBook: (Int) -> Unit,
     onCloseToToday: (() -> Unit)? = null,
     onChromeVisibilityChange: ((Boolean) -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onReadBook: ((Int) -> Unit)? = null
 ) {
     val state by viewModel.uiState.collectAsState()
-    var isChromeVisible by remember { mutableStateOf(true) }
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) { onChromeVisibilityChange?.invoke(true); viewModel.refreshVersion() }
+    BibleLibraryContent(state, viewModel::setSearchQuery, viewModel::setTestament,
+        viewModel::setSection, onOpenBook, onCloseToToday, modifier, onReadBook)
+}
 
-    // Automatically sync OT/NT top pill based on which book is in view
-    val visibleTestament by remember {
-        derivedStateOf {
-            val idx = listState.firstVisibleItemIndex
-            val book = state.filteredBooks.getOrNull(idx)
-            book?.testament?.uppercase() ?: state.currentTestament
-        }
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+internal fun BibleLibraryContent(
+    state: BibleBrowserUiState,
+    onSearch: (String) -> Unit,
+    onTestament: (String) -> Unit,
+    onSection: (String) -> Unit,
+    onOpenBook: (Int) -> Unit,
+    onClose: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+    onReadBook: ((Int) -> Unit)? = null
+) {
+    val grid = rememberLazyGridState()
+    val focus = LocalFocusManager.current
+    val filterKey = listOf(state.searchQuery, state.currentTestament, state.currentSection).joinToString("\u0000")
+    var previousFilter by rememberSaveable { mutableStateOf(filterKey) }
+    LaunchedEffect(filterKey) {
+        if (previousFilter != filterKey) grid.scrollToItem(0)
+        previousFilter = filterKey
     }
-
-    LaunchedEffect(visibleTestament) {
-        if (state.currentSection == "All" && state.searchQuery.isBlank()) {
-            viewModel.updateTestamentOnScroll(visibleTestament)
-        }
-    }
-
-    fun updateChromeVisibility(visible: Boolean) {
-        if (isChromeVisible != visible) {
-            isChromeVisible = visible
-            onChromeVisibilityChange?.invoke(visible)
-        }
-    }
-
-    // Always keep chrome visible if search is active
-    LaunchedEffect(state.searchQuery) {
-        if (state.searchQuery.isNotBlank()) {
-            updateChromeVisibility(true)
-        }
-    }
-
-    // Auto-hide when scrolling down, auto-show when scrolling up
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                if (state.searchQuery.isNotBlank()) return Offset.Zero
-
-                val delta = available.y
-                if (delta < -12f) {
-                    // Scrolling down -> hide chrome
-                    updateChromeVisibility(false)
-                } else if (delta > 12f) {
-                    // Scrolling up -> show chrome
-                    updateChromeVisibility(true)
-                }
-                return Offset.Zero
-            }
-        }
-    }
-
-    // Always show chrome when scrolled to top
-    LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
-        if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 15) {
-            updateChromeVisibility(true)
-        }
-    }
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(RemoraBackground)
-            .nestedScroll(nestedScrollConnection)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .padding(horizontal = 16.dp)
-        ) {
-            // Fullscreen Top Bar with (X) at leftmost
-            if (onCloseToToday != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp, bottom = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = onCloseToToday,
-                        modifier = Modifier.size(38.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = "Close to Today",
-                            tint = RemoraTextPrimary,
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    Text(
-                        text = "Bible",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraTextPrimary,
-                        letterSpacing = (-0.5).sp,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    // Testament switcher pills (OT / NT)
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Surface(
-                            onClick = {
-                                viewModel.setTestament("OT")
-                                coroutineScope.launch {
-                                    listState.animateScrollToItem(0)
-                                }
-                            },
-                            shape = RoundedCornerShape(14.dp),
-                            color = if (state.currentTestament == "OT") RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
-                            border = BorderStroke(1.dp, if (state.currentTestament == "OT") RemoraAccent else RemoraCardBorder)
-                        ) {
-                            Text(
-                                text = "OT",
-                                fontSize = 12.sp,
-                                fontWeight = if (state.currentTestament == "OT") FontWeight.Bold else FontWeight.Medium,
-                                color = if (state.currentTestament == "OT") RemoraAccentLight else RemoraTextSecondary,
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                            )
+    Surface(modifier.fillMaxSize()) {
+        BoxWithConstraints(Modifier.fillMaxSize().safeDrawingPadding().imePadding(), contentAlignment = Alignment.TopCenter) {
+            val columns = if (maxWidth >= 600.dp && LocalDensity.current.fontScale < 1.3f) 2 else 1
+            LazyVerticalGrid(columns = GridCells.Fixed(columns), state = grid,
+                contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.widthIn(max = 1000.dp).fillMaxSize()) {
+                item(key = "controls", span = { GridItemSpan(maxLineSpan) }) {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            onClose?.let { IconButton(onClick = it) { Icon(Icons.Default.Close, "Close to Today") } }
+                            Text("Bible", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.weight(1f))
                         }
-
-                        Surface(
-                            onClick = {
-                                viewModel.setTestament("NT")
-                                val ntIndex = state.filteredBooks.indexOfFirst { it.testament.equals("NT", ignoreCase = true) }
-                                if (ntIndex >= 0) {
-                                    coroutineScope.launch {
-                                        listState.animateScrollToItem(ntIndex)
+                        OutlinedTextField(value = state.searchQuery, onValueChange = onSearch, singleLine = true,
+                            label = { Text("Search all books") }, placeholder = { Text("Book, theme or keyword") },
+                            leadingIcon = { Icon(Icons.Default.Search, null) },
+                            trailingIcon = { if (state.searchQuery.isNotEmpty()) IconButton(onClick = { onSearch("") }) { Icon(Icons.Default.Close, "Clear search") } },
+                            shape = RoundedCornerShape(24.dp), modifier = Modifier.fillMaxWidth())
+                        if (state.searchQuery.isBlank()) {
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                listOf("ALL" to "All books", "OT" to "Old Testament", "NT" to "New Testament").forEach { (key, label) ->
+                                    FilterChip(selected = state.currentTestament == key, onClick = { focus.clearFocus(); onTestament(key) }, label = { Text(label) })
+                                }
+                            }
+                            var expanded by remember { mutableStateOf(false) }
+                            val sections = state.allBooks.filter { state.currentTestament == "ALL" || it.testament.equals(state.currentTestament, true) }
+                                .map { it.section }.distinct()
+                            Box {
+                                FilledTonalButton(onClick = { expanded = true }) { Text("Section: ${state.currentSection}") }
+                                DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
+                                    (listOf("All") + sections).forEach { section ->
+                                        DropdownMenuItem(text = { Text(section) }, onClick = { expanded = false; onSection(section) })
                                     }
                                 }
-                            },
-                            shape = RoundedCornerShape(14.dp),
-                            color = if (state.currentTestament == "NT") RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
-                            border = BorderStroke(1.dp, if (state.currentTestament == "NT") RemoraAccent else RemoraCardBorder)
-                        ) {
-                            Text(
-                                text = "NT",
-                                fontSize = 12.sp,
-                                fontWeight = if (state.currentTestament == "NT") FontWeight.Bold else FontWeight.Medium,
-                                color = if (state.currentTestament == "NT") RemoraAccentLight else RemoraTextSecondary,
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                            )
-                        }
-                    }
-                }
-            }
-
-            // Auto-hiding Top Chrome: Search Bar & Section Chips
-            AnimatedVisibility(
-                visible = isChromeVisible || state.searchQuery.isNotBlank(),
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
-            ) {
-                Column {
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Search Bar
-                    OutlinedTextField(
-                        value = state.searchQuery,
-                        onValueChange = { viewModel.setSearchQuery(it) },
-                        placeholder = { Text("Search books, themes, keywords...", color = RemoraTextMuted, fontSize = 14.sp) },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = RemoraTextMuted) },
-                        trailingIcon = {
-                            if (state.searchQuery.isNotEmpty()) {
-                                IconButton(onClick = { viewModel.setSearchQuery("") }) {
-                                    Icon(Icons.Default.Close, contentDescription = "Clear", tint = RemoraTextMuted)
-                                }
-                            }
-                        },
-                        singleLine = true,
-                        shape = RoundedCornerShape(10.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = RemoraCardBg,
-                            unfocusedContainerColor = RemoraCardBg,
-                            focusedTextColor = RemoraTextPrimary,
-                            unfocusedTextColor = RemoraTextPrimary,
-                            focusedBorderColor = RemoraAccent,
-                            unfocusedBorderColor = RemoraCardBorder
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // Section Filter Chips (OT/NT link row removed as requested)
-                    if (state.searchQuery.isBlank()) {
-                        val sections = if (state.currentTestament == "OT") {
-                            listOf("All", "Pentateuch", "Historical", "Poetry", "Major Prophets", "Minor Prophets")
-                        } else {
-                            listOf("All", "Gospels", "History", "Pauline Epistles", "General Epistles", "Apocalyptic")
-                        }
-
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            items(sections) { sec ->
-                                val isSelected = state.currentSection == sec
-                                Surface(
-                                    onClick = { viewModel.setSection(sec) },
-                                    shape = RoundedCornerShape(18.dp),
-                                    color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBg,
-                                    border = BorderStroke(
-                                        1.dp,
-                                        if (isSelected) RemoraAccent else RemoraCardBorder
-                                    )
-                                ) {
-                                    Text(
-                                        text = sec,
-                                        fontSize = 13.sp,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                        color = if (isSelected) RemoraAccentLight else RemoraTextSecondary,
-                                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
-                                    )
-                                }
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
-            }
-
-            // Books Grid
-            if (state.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = RemoraAccent)
-                }
-            } else if (state.filteredBooks.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No books found matching \"${state.searchQuery}\"", color = RemoraTextSecondary)
-                }
-            } else {
-                LazyColumn(
-                    state = listState,
-                    contentPadding = PaddingValues(bottom = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(state.filteredBooks, key = { it.id }) { book ->
-                        RemoraBookCard(
-                            book = book,
-                            activeVersion = state.activeVersion,
-                            onClick = { onOpenBook(book.id) }
-                        )
+                if (state.isLoading) item(span = { GridItemSpan(maxLineSpan) }) { CircularProgressIndicator(Modifier.wrapContentSize()) }
+                if (!state.isLoading && state.filteredBooks.isEmpty()) item(span = { GridItemSpan(maxLineSpan) }) {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text("No books found", style = MaterialTheme.typography.titleLarge)
+                        Text("Try another book name, theme or keyword.")
+                        TextButton(onClick = { onSearch(""); onTestament("ALL") }) { Text("Reset filters") }
                     }
+                }
+                items(state.filteredBooks, key = { it.id }) { book ->
+                    LibraryBookCard(book, state.activeVersion,
+                        onOpen = { focus.clearFocus(); onOpenBook(book.id) },
+                        onRead = onReadBook?.let { read -> { focus.clearFocus(); read(book.id) } })
                 }
             }
         }
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun RemoraBookCard(
-    book: Book,
-    activeVersion: String = "LSB",
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
-        color = RemoraCardBg,
-        border = BorderStroke(1.dp, RemoraCardBorder),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column {
-            // Book Cover Image Plate (Aspect Ratio 4:3, matching 4:3 artwork)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(4f / 3f)
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-            ) {
-                BookCoverImage(
-                    bookKey = book.key,
-                    contentDescription = book.nameEn,
-                    modifier = Modifier.fillMaxSize()
-                )
+internal fun LibraryBookCard(book: Book, version: String, onOpen: () -> Unit, onRead: (() -> Unit)? = null) {
+    Card(shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow), modifier = Modifier.fillMaxWidth()) {
+        BookCoverImage(book.key, book.nameEn, Modifier.fillMaxWidth().aspectRatio(4f / 3f).clickable(onClick = onOpen))
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(BookNameUtils.getBookDisplayName(book, version), style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Serif))
+            Text("${book.chapters} chapters", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (onRead != null) Button(onClick = onRead) { Text("Read") }
+                TextButton(onClick = onOpen) { Text("Open book guide") }
             }
-
-            // Caption Section
-            Column(modifier = Modifier.padding(14.dp)) {
-                // Meta Line: KEYWORD · THEMEWORD · CHAPTERS
-                val meta = buildString {
-                    if (book.keyWord.isNotBlank()) append("${book.keyWord} · ")
-                    if (book.themeWord.isNotBlank()) append("${book.themeWord} · ")
-                    append("${book.chapters} chapters")
-                }
-                Text(
-                    text = meta.uppercase(),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.8.sp,
-                    color = RemoraAccentLight
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Title: English & Telugu Name
-                Text(
-                    text = BookNameUtils.getBookDisplayName(book, activeVersion),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RemoraTextPrimary,
-                    maxLines = 1
-                )
-
-                if (book.subtitle.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = book.subtitle,
-                        fontSize = 13.sp,
-                        fontStyle = FontStyle.Italic,
-                        lineHeight = 18.sp,
-                        color = RemoraTextSecondary,
-                        maxLines = 2
-                    )
-                }
-            }
-
-            // Hairline Accent Rule at bottom
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(3.dp)
-                    .background(RemoraAccent.copy(alpha = 0.5f))
-            )
         }
     }
 }

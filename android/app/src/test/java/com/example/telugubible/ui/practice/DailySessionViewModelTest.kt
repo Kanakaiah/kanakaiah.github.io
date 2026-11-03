@@ -60,6 +60,142 @@ class DailySessionViewModelTest {
     }
 
     @Test
+    fun distinctFirstLetterAndImmerseWordsCombineInDailyPractice() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        userDbHelper.writableDatabase.execSQL("UPDATE user_verses SET next_due_date = 0")
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        val verse = vm.uiState.value.currentItem as com.example.telugubible.util.SessionItem.Verse
+        vm.setVerseMode(PracticeMode.FIRST_LETTER)
+        vm.recordFirstLetterSeen(verse.verseId, setOf(0, 1), 4)
+        vm.setVerseMode(PracticeMode.IMMERSED)
+        vm.recordImmersiveExposure(verse.verseId, setOf(2, 3), 4)
+        vm.exitImmersed()
+        vm.setVerseMode(PracticeMode.SPEECH)
+        vm.recordSpeechAttempt(100, "answer")
+        assertEquals(1, vm.uiState.value.gradeCeiling)
+        vm.gradeCurrent(5)
+        advanceUntilIdle()
+        assertEquals(1, repository.getReviewLog().single().score)
+        assertEquals(4, repository.getReviewLog().single().cueLevel)
+    }
+
+    @Test
+    fun immersiveExposureCapsDailyGradesAcrossModes() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        userDbHelper.writableDatabase.execSQL("UPDATE user_verses SET next_due_date = 0")
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        val verse = vm.uiState.value.currentItem as com.example.telugubible.util.SessionItem.Verse
+        vm.setVerseMode(PracticeMode.IMMERSED)
+        vm.recordImmersiveExposure(verse.verseId, setOf(0, 1), 4)
+        vm.exitImmersed()
+        vm.setVerseMode(PracticeMode.SPEECH)
+        vm.recordSpeechAttempt(100, "answer")
+        assertEquals(3, vm.uiState.value.gradeCeiling)
+        vm.gradeCurrent(5)
+        advanceUntilIdle()
+        assertEquals(3, repository.getReviewLog().single().score)
+        assertEquals(3, repository.getReviewLog().single().cueLevel)
+        assertEquals(3, vm.uiState.value.outcomes.single().score)
+    }
+
+    @Test
+    fun immerseReturnsToSameUnchangedDailyReview() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        userDbHelper.writableDatabase.execSQL("UPDATE user_verses SET next_due_date = 0")
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        vm.setVerseMode(PracticeMode.READ)
+        vm.revealAnswer()
+        val item = vm.uiState.value.currentItem
+        vm.setVerseMode(PracticeMode.IMMERSED)
+        assertTrue(vm.uiState.value.isImmersed)
+        vm.exitImmersed()
+        assertFalse(vm.uiState.value.isImmersed)
+        assertEquals(item, vm.uiState.value.currentItem)
+        assertEquals(PracticeMode.READ, vm.uiState.value.activeVerseMode)
+        assertTrue(vm.uiState.value.isRevealed)
+        assertTrue(repository.getReviewLog().isEmpty())
+    }
+
+    @Test
+    fun firstLetterExposureSurvivesModeChangesWithinDailySession() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        userDbHelper.writableDatabase.execSQL("UPDATE user_verses SET next_due_date = 0")
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        val verse = vm.uiState.value.currentItem as com.example.telugubible.util.SessionItem.Verse
+        vm.setVerseMode(PracticeMode.FIRST_LETTER)
+        vm.recordFirstLetterSeen(verse.verseId, setOf(0, 1, 2), 4)
+        vm.setVerseMode(PracticeMode.TYPING)
+        vm.setVerseMode(PracticeMode.FIRST_LETTER)
+        vm.recordFirstLetterSeen(verse.verseId, setOf(3), 4)
+        vm.updateHintRatio(0f)
+        vm.revealAnswer()
+        assertEquals(1f, vm.uiState.value.hintRevealedRatio!!, 0.001f)
+        assertEquals(1, vm.uiState.value.gradeCeiling)
+    }
+
+    @Test
+    fun failedVerseReviewRollsBackAndCannotBeSubmittedTwice() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        val db = userDbHelper.writableDatabase
+        db.execSQL("UPDATE user_verses SET next_due_date = 0")
+        db.execSQL("CREATE TRIGGER fail_daily_review BEFORE INSERT ON review_log BEGIN SELECT RAISE(ABORT, 'test failure'); END")
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        vm.revealAnswer()
+        vm.gradeCurrent(4)
+        advanceUntilIdle()
+        assertNotNull(vm.uiState.value.gradingError)
+        assertEquals(0, vm.uiState.value.currentIndex)
+        assertTrue(vm.uiState.value.outcomes.isEmpty())
+        assertTrue(repository.getReviewLog().isEmpty())
+        db.rawQuery("SELECT attempts FROM user_verses", null).use { assertTrue(it.moveToFirst()); assertEquals(0, it.getInt(0)) }
+        vm.gradeCurrent(4)
+        advanceUntilIdle()
+        assertTrue(repository.getReviewLog().isEmpty())
+    }
+
+    @Test
+    fun failedSessionStatisticsDoNotRepeatAnAlreadySavedReview() = runTest(testDispatcher) {
+        val db = userDbHelper.writableDatabase
+        db.execSQL("CREATE TRIGGER fail_daily_adherence BEFORE INSERT ON session_adherence BEGIN SELECT RAISE(ABORT, 'test failure'); END")
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        val count = vm.uiState.value.plan!!.items.size
+        repeat(count) {
+            if (vm.uiState.value.currentItem is com.example.telugubible.util.SessionItem.Introduce) vm.advanceIntroduce()
+            else { vm.revealAnswer(); vm.gradeCurrent(4); advanceUntilIdle() }
+        }
+        assertTrue(vm.uiState.value.isFinished)
+        assertNotNull(vm.uiState.value.sessionWarning)
+        val logCount = repository.getReviewLog().size
+        vm.gradeCurrent(4)
+        advanceUntilIdle()
+        assertEquals(logCount, repository.getReviewLog().size)
+    }
+
+    @Test
+    fun repeatedGradeWhileSavingRecordsOnlyOneOutcome() = runTest(testDispatcher) {
+        repository.addUserVerse(1, 1, 1)
+        userDbHelper.writableDatabase.execSQL("UPDATE user_verses SET next_due_date = 0")
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        assertTrue(vm.uiState.value.currentItem is com.example.telugubible.util.SessionItem.Verse)
+        vm.revealAnswer()
+        vm.gradeCurrent(4)
+        vm.gradeCurrent(1)
+        assertTrue(vm.uiState.value.isGrading)
+        advanceUntilIdle()
+        assertEquals(1, vm.uiState.value.outcomes.size)
+        assertEquals(4, vm.uiState.value.outcomes.single().score)
+        assertEquals(1, repository.getReviewLog().size)
+        assertFalse(vm.uiState.value.isGrading)
+    }
+
+    @Test
     fun testDailySessionPlanAndExecution() = runTest(testDispatcher) {
         // Add a due memory verse
         val now = System.currentTimeMillis()
@@ -113,6 +249,20 @@ class DailySessionViewModelTest {
         // Verify adherence recorded
         val stats = repository.getAdherenceStats()
         assertEquals(1, stats.completed)
+    }
+
+    @Test
+    fun repeatedIntroductionAdvanceDoesNotSkipOrGradeTheNextItem() = runTest(testDispatcher) {
+        val vm = DailySessionViewModel(application, repository)
+        advanceUntilIdle()
+        assertTrue(vm.uiState.value.currentItem is com.example.telugubible.util.SessionItem.Introduce)
+        vm.advanceIntroduce()
+        val next = vm.uiState.value.currentItem
+        vm.advanceIntroduce()
+        assertEquals(1, vm.uiState.value.currentIndex)
+        assertEquals(next, vm.uiState.value.currentItem)
+        assertTrue(vm.uiState.value.outcomes.isEmpty())
+        assertTrue(repository.getReviewLog().isEmpty())
     }
 
     @Test

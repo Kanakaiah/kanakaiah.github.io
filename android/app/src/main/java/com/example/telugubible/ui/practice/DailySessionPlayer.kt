@@ -1,5 +1,6 @@
 package com.example.telugubible.ui.practice
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.telugubible.theme.*
 import com.example.telugubible.ui.common.BookCoverImage
+import com.example.telugubible.ui.common.ChapterPlateImage
 import com.example.telugubible.util.AnchorDirection
 import com.example.telugubible.util.AnchorVerdict
 import com.example.telugubible.util.CueLevel
@@ -47,12 +49,21 @@ fun DailySessionPlayer(
 ) {
     val state by viewModel.uiState.collectAsState()
     var showQuitDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(viewModel) {
+        if (viewModel.uiState.value.gradingError != null) viewModel.loadSession(forceNew = true)
+    }
+    val requestExit = {
+        if (!state.isGrading) {
+            if (!state.isFinished && state.currentIndex > 0) showQuitDialog = true else onExit()
+        }
+    }
+    BackHandler { requestExit() }
 
     if (showQuitDialog) {
         AlertDialog(
             onDismissRequest = { showQuitDialog = false },
-            title = { Text("Quit Session?", color = RemoraTextPrimary, fontWeight = FontWeight.Bold) },
-            text = { Text("Your progress on graded items is already saved. You can resume anytime.", color = RemoraTextSecondary) },
+            title = { Text("Leave this session?", color = RemoraTextPrimary, fontWeight = FontWeight.Bold) },
+            text = { Text("Completed reviews stay saved. Unanswered items are not graded.", color = RemoraTextSecondary) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -90,6 +101,7 @@ fun DailySessionPlayer(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -112,9 +124,8 @@ fun DailySessionPlayer(
                     Spacer(modifier = Modifier.height(18.dp))
 
                     Text(
-                        text = if (state.outcomes.isNotEmpty()) "Session Complete! 🎉" else "All Caught Up!",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
+                        text = if (state.outcomes.isNotEmpty()) "Session complete" else "No items in this session",
+                        style = MaterialTheme.typography.headlineSmall,
                         color = RemoraTextPrimary,
                         textAlign = TextAlign.Center
                     )
@@ -122,42 +133,34 @@ fun DailySessionPlayer(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     val summaryText = if (state.outcomes.isNotEmpty()) {
-                        "You completed ${state.outcomes.size} review items across verses, anchors, and themes."
+                        "${state.outcomes.size} reviews completed and saved."
                     } else {
-                        "No items are currently due for review. Outstanding work!"
+                        "There are no items to review right now."
                     }
 
                     Text(
                         text = summaryText,
-                        fontSize = 14.sp,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = RemoraTextSecondary,
                         textAlign = TextAlign.Center
                     )
+                    state.sessionWarning?.let {
+                        Spacer(Modifier.height(12.dp))
+                        Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    if (plan != null && plan.heldBack > 0) {
-                        Button(
-                            onClick = { viewModel.keepGoing() },
-                            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.fillMaxWidth(0.75f)
-                        ) {
-                            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Keep Going (${plan.heldBack} more due)", fontWeight = FontWeight.Bold)
-                        }
-
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-
-                    OutlinedButton(
+                    Button(
                         onClick = onExit,
-                        shape = RoundedCornerShape(8.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-                        modifier = Modifier.fillMaxWidth(0.75f)
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                     ) {
-                        Text("Finish & Return", color = RemoraTextPrimary)
+                        Text("Finish")
+                    }
+                    if (plan != null && plan.heldBack > 0) {
+                        TextButton(onClick = { viewModel.keepGoing() }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                            Text("Practice more (${plan.heldBack} due)")
+                        }
                     }
                 }
             }
@@ -165,7 +168,7 @@ fun DailySessionPlayer(
                 val plan = state.plan!!
                 val item = state.currentItem
                 if (item != null) {
-                    if (state.activeVerseMode == PracticeMode.IMMERSED && item is SessionItem.Verse) {
+                    if (state.isImmersed && item is SessionItem.Verse) {
                         val userVerse = com.example.telugubible.data.model.UserMemoryVerse(
                             id = item.verseId,
                             bookId = item.bookId,
@@ -180,14 +183,17 @@ fun DailySessionPlayer(
                         )
                         ImmersedReader(
                             verse = userVerse,
-                            index = state.currentIndex,
-                            total = plan.items.size,
-                            onPrev = { viewModel.prevStep() },
-                            onNext = { viewModel.nextStep() },
-                            onExit = { viewModel.setVerseMode(PracticeMode.READ) },
+                            index = 0,
+                            total = 1,
+                            onPrev = {},
+                            onNext = {},
+                            onExit = viewModel::exitImmersed,
                             isAutoPlaying = state.isTtsSpeaking,
                             onToggleAutoPlay = { viewModel.toggleTts() },
-                            isEnglish = item.textEn.isNotBlank()
+                            onStopPlayback = viewModel::stopTts,
+                            onExposure = { seen, total -> viewModel.recordImmersiveExposure(item.verseId, seen, total) },
+                            isEnglish = item.textEn.isNotBlank(),
+                            readingSettings = state.readingSettings
                         )
                         return@Box
                     }
@@ -195,108 +201,13 @@ fun DailySessionPlayer(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 72.dp),
+                            .imePadding(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Top Header: Segmented Progress Bar & Status Pill
-                        Column {
-                            // Segmented Kind Progress Bar
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(5.dp)
-                                    .clip(RoundedCornerShape(3.dp))
-                                    .background(RemoraCardBorder),
-                                horizontalArrangement = Arrangement.spacedBy(2.dp)
-                            ) {
-                                plan.items.forEachIndexed { i, itm ->
-                                    val kindColor = when (itm) {
-                                        is SessionItem.Verse -> RemoraAccent
-                                        is SessionItem.Anchor -> RemoraGold
-                                        is SessionItem.Introduce -> RemoraGold.copy(alpha = 0.5f)
-                                        is SessionItem.Theme -> Color(0xFF10B981) // Emerald
-                                    }
-                                    val alpha = if (i <= state.currentIndex) 1.0f else 0.25f
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxHeight()
-                                            .background(kindColor.copy(alpha = alpha))
-                                    )
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            // Top Info Bar
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(
-                                    onClick = {
-                                        if (state.currentIndex > 0) showQuitDialog = true else onExit()
-                                    },
-                                    modifier = Modifier.size(32.dp)
-                                ) {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Back",
-                                        tint = RemoraTextSecondary,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = "${state.currentIndex + 1} OF ${plan.items.size}",
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.sp,
-                                        color = RemoraTextMuted
-                                    )
-
-                                    val daysLate = calculateDaysLate(item.dueAt)
-                                    if (daysLate >= 3) {
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Surface(
-                                            shape = RoundedCornerShape(4.dp),
-                                            color = GradeHard.copy(alpha = 0.15f)
-                                        ) {
-                                            Text(
-                                                text = "$daysLate DAYS LATE",
-                                                fontSize = 9.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = GradeHard,
-                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                            )
-                                        }
-                                    }
-                                }
-
-                                // Kind Tag
-                                Surface(
-                                    shape = RoundedCornerShape(4.dp),
-                                    color = RemoraCardBgElevated,
-                                    border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder)
-                                ) {
-                                    Text(
-                                        text = item.kind.uppercase(),
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = when (item) {
-                                            is SessionItem.Verse -> RemoraAccent
-                                            is SessionItem.Anchor -> RemoraGold
-                                            is SessionItem.Introduce -> RemoraGold
-                                            is SessionItem.Theme -> Color(0xFF10B981)
-                                        },
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                                    )
-                                }
-                            }
-                        }
-
+                        PracticeHeader("Daily practice", "Verses, chapter anchors and book themes",
+                            state.currentIndex, plan.items.size, requestExit, exitEnabled = !state.isGrading)
+                        if (state.isGrading) Text("Saving review…", style = MaterialTheme.typography.bodyMedium)
+                        state.gradingError?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
                         // Middle Content based on Item Kind
                         Box(
                             modifier = Modifier
@@ -316,7 +227,8 @@ fun DailySessionPlayer(
                                         judgement = state.anchorJudgement,
                                         onInputChange = { viewModel.setAnchorInput(it) },
                                         onCheck = { viewModel.checkAnchorAnswer() },
-                                        onGrade = { viewModel.gradeCurrent(it) }
+                                        onGrade = { viewModel.gradeCurrent(it) },
+                                        gradeEnabled = !state.isGrading && state.gradingError == null
                                     )
                                 }
                                 is SessionItem.Theme -> {
@@ -324,7 +236,8 @@ fun DailySessionPlayer(
                                         item = item,
                                         isRevealed = state.isRevealed,
                                         onReveal = { viewModel.revealAnswer() },
-                                        onGrade = { viewModel.gradeCurrent(it) }
+                                        onGrade = { viewModel.gradeCurrent(it) },
+                                        gradeEnabled = !state.isGrading && state.gradingError == null
                                     )
                                 }
                                 is SessionItem.Verse -> {
@@ -351,115 +264,56 @@ private fun calculateDaysLate(dueAt: Long): Int {
 }
 
 @Composable
-private fun IntroduceCard(
+internal fun IntroduceCard(
     item: SessionItem.Introduce,
-    onReady: () -> Unit
+    onReady: () -> Unit,
+    artwork: @Composable (SessionItem.Introduce) -> Unit = {
+        ChapterPlateImage(
+            bookKey = it.bookKey,
+            chapter = it.chapter,
+            contentDescription = "Chapter illustration",
+            modifier = Modifier.fillMaxWidth().aspectRatio(1.7f).clip(RoundedCornerShape(16.dp))
+        )
+    }
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
     ) {
-        Box(
-            modifier = Modifier
-                .width(208.dp)
-                .height(156.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(RemoraCardBgElevated)
-                .border(1.dp, RemoraCardBorder, RoundedCornerShape(10.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            BookCoverImage(bookKey = item.bookKey, contentDescription = item.bookName)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
+        Box(Modifier.widthIn(max = 420.dp).fillMaxWidth()) { artwork(item) }
+        Text("New chapter theme", style = MaterialTheme.typography.labelLarge, color = RemoraAccent)
         Text(
-            text = "INTRODUCING CHAPTER ${item.chapter}",
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp,
-            color = RemoraGold
+            "${item.bookName} ${item.chapter} · ${item.word}",
+            style = MaterialTheme.typography.headlineSmall,
+            color = RemoraTextPrimary,
+            textAlign = TextAlign.Center
         )
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-        Text(
-            text = item.bookName,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = RemoraTextPrimary
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        Surface(
-            shape = RoundedCornerShape(8.dp),
-            color = RemoraCardBgElevated,
-            border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorder),
-            modifier = Modifier.fillMaxWidth(0.9f)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = item.word,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 1.sp,
-                    color = RemoraAccent,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = item.scene,
-                    fontSize = 14.sp,
-                    color = RemoraTextSecondary,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
-                )
-
-                if (!item.prevWord.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "Follows: ${item.prevWord}",
-                        fontSize = 12.sp,
-                        fontStyle = FontStyle.Italic,
-                        color = RemoraTextMuted
-                    )
-                }
-            }
+        Text(item.scene, style = MaterialTheme.typography.bodyLarge,
+            color = RemoraTextSecondary, textAlign = TextAlign.Center)
+        if (!item.prevWord.isNullOrBlank()) {
+            Text("Follows: ${item.prevWord}", style = MaterialTheme.typography.bodyMedium,
+                color = RemoraTextSecondary, textAlign = TextAlign.Center)
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = onReady,
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-            modifier = Modifier.fillMaxWidth(0.85f).height(48.dp)
-        ) {
-            Text("Got it — Start Drill", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-            Spacer(modifier = Modifier.width(6.dp))
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+        Text("Study the chapter theme, then try recalling it.",
+            style = MaterialTheme.typography.bodyMedium, color = RemoraTextSecondary,
+            textAlign = TextAlign.Center)
+        Button(onClick = onReady, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+            Text("Start practice")
         }
     }
 }
 
 @Composable
-private fun AnchorCard(
+internal fun AnchorCard(
     item: SessionItem.Anchor,
     input: String,
     isRevealed: Boolean,
     judgement: com.example.telugubible.util.AnchorJudgement?,
     onInputChange: (String) -> Unit,
     onCheck: () -> Unit,
-    onGrade: (Int) -> Unit
+    onGrade: (Int) -> Unit,
+    gradeEnabled: Boolean = true
 ) {
     Column(
         modifier = Modifier
@@ -515,6 +369,9 @@ private fun AnchorCard(
                     )
                 }
                 AnchorDirection.P2W -> {
+                    ChapterPlateImage(bookKey = item.bookKey, chapter = item.chapter,
+                        contentDescription = "Chapter artwork", modifier = Modifier.fillMaxWidth().aspectRatio(4f / 3f).clip(RoundedCornerShape(16.dp)))
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = item.scene,
                         fontSize = 22.sp,
@@ -570,7 +427,7 @@ private fun AnchorCard(
                 Button(
                     onClick = onCheck,
                     shape = RoundedCornerShape(18.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = Color(0xFF14120E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = MaterialTheme.colorScheme.onPrimary),
                     modifier = Modifier.fillMaxWidth(0.92f).height(50.dp)
                 ) {
                     Text("Check Answer", fontSize = 15.sp, fontWeight = FontWeight.Bold)
@@ -581,6 +438,11 @@ private fun AnchorCard(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    if (item.direction != AnchorDirection.P2W) {
+                        ChapterPlateImage(bookKey = item.bookKey, chapter = item.chapter,
+                            contentDescription = "Chapter artwork", modifier = Modifier.fillMaxWidth().aspectRatio(4f / 3f).clip(RoundedCornerShape(16.dp)))
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                     Text(
                         text = item.word,
                         fontSize = 32.sp,
@@ -607,21 +469,15 @@ private fun AnchorCard(
                                 "Incorrect"
                             }
                         }
-                        val verdictColor = when (judgement.verdict) {
-                            AnchorVerdict.CORRECT -> GradeEasy
-                            AnchorVerdict.NEAR -> GradeHard
-                            AnchorVerdict.WRONG -> GradeBlank
-                        }
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            color = verdictColor.copy(alpha = 0.15f),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, verdictColor.copy(alpha = 0.4f))
+                            color = MaterialTheme.colorScheme.secondaryContainer
                         ) {
                             Text(
                                 text = verdictText,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = verdictColor,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
                                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
                             )
                         }
@@ -632,6 +488,8 @@ private fun AnchorCard(
 
         if (isRevealed) {
             Column(modifier = Modifier.fillMaxWidth().padding(top = 20.dp)) {
+                Text("Your result will be saved when you continue.", style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Button(
                     onClick = {
                         val score = when (judgement?.verdict) {
@@ -642,9 +500,10 @@ private fun AnchorCard(
                         }
                         onGrade(score)
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = Color(0xFF14120E)),
+                    enabled = gradeEnabled,
+                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = MaterialTheme.colorScheme.onPrimary),
                     shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier.fillMaxWidth().height(50.dp)
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 ) {
                     Text("Continue", fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
@@ -654,11 +513,12 @@ private fun AnchorCard(
 }
 
 @Composable
-private fun ThemeCard(
+internal fun ThemeCard(
     item: SessionItem.Theme,
     isRevealed: Boolean,
     onReveal: () -> Unit,
-    onGrade: (Int) -> Unit
+    onGrade: (Int) -> Unit,
+    gradeEnabled: Boolean = true
 ) {
     Column(
         modifier = Modifier
@@ -674,8 +534,8 @@ private fun ThemeCard(
             // Floating cover art without box container
             Box(
                 modifier = Modifier
-                    .width(220.dp)
-                    .height(165.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(4f / 3f)
                     .clip(RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
@@ -735,20 +595,13 @@ private fun ThemeCard(
                         )
                     }
                 }
-            } else {
-                Text(
-                    text = "— · · · —",
-                    fontSize = 24.sp,
-                    color = RemoraTextMuted.copy(alpha = 0.45f),
-                    letterSpacing = 2.sp
-                )
             }
         }
 
         if (!isRevealed) {
             Button(
                 onClick = onReveal,
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
                 shape = RoundedCornerShape(18.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
                 border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorderHover)
@@ -756,13 +609,18 @@ private fun ThemeCard(
                 Text("Tap to reveal", fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = RemoraTextPrimary)
             }
         } else {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Continue records Good.", style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
             Button(
                 onClick = { onGrade(4) },
-                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = Color(0xFF14120E)),
+                enabled = gradeEnabled,
+                colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent, contentColor = MaterialTheme.colorScheme.onPrimary),
                 shape = RoundedCornerShape(18.dp),
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
             ) {
                 Text("Continue", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+            }
             }
         }
     }
@@ -805,36 +663,8 @@ private fun VerseCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Mode Selector Pills
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                PracticeMode.MENU_MODES.forEach { mode ->
-                    val isSelected = state.activeVerseMode == mode
-                    Surface(
-                        onClick = { viewModel.setVerseMode(mode) },
-                        shape = RoundedCornerShape(16.dp),
-                        color = if (isSelected) RemoraAccent.copy(alpha = 0.2f) else RemoraCardBgElevated,
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            if (isSelected) RemoraAccent else RemoraCardBorder
-                        )
-                    ) {
-                        Text(
-                            text = mode.label,
-                            fontSize = 11.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) RemoraAccentLight else RemoraTextMuted,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
+            PracticeModePicker(state.activeVerseMode, viewModel::setVerseMode, !state.isGrading && !state.isRevealed)
+            Spacer(Modifier.height(12.dp))
 
             // Verse Drill View
             when (state.activeVerseMode) {
@@ -849,12 +679,15 @@ private fun VerseCard(
                 }
                 PracticeMode.FIRST_LETTER -> {
                     FirstLetterMode(
-                        text = activeText,
+                        text = remember(rawActive) { practicePassage(rawActive).practiceWords.joinToString(" ") },
                         onComplete = { ratio ->
                             viewModel.updateHintRatio(ratio)
                             viewModel.revealAnswer()
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        previouslySeen = (combineExposure(state.firstLetterSeenByVerse[item.verseId],
+                            state.immersiveSeenByVerse[item.verseId]) ?: state.firstLetterSeenByVerse[item.verseId])?.seen ?: emptyList(),
+                        onSeenChanged = { seen, total -> viewModel.recordFirstLetterSeen(item.verseId, seen, total) }
                     )
                 }
                 PracticeMode.ERASER -> {
@@ -941,12 +774,12 @@ private fun VerseCard(
         if (!state.isRevealed && state.activeVerseMode == PracticeMode.READ) {
             Button(
                 onClick = { viewModel.revealAnswer() },
-                modifier = Modifier.fillMaxWidth().height(48.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = RemoraCardBgElevated),
                 border = androidx.compose.foundation.BorderStroke(1.dp, RemoraCardBorderHover)
             ) {
-                Text("Show Answer", fontWeight = FontWeight.Bold, color = RemoraTextPrimary)
+                Text("Show verse", fontWeight = FontWeight.Bold, color = RemoraTextPrimary)
             }
         } else if (state.isRevealed) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -959,18 +792,7 @@ private fun VerseCard(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-                Button(
-                    onClick = { viewModel.gradeCurrent(4) },
-                    colors = ButtonDefaults.buttonColors(containerColor = RemoraAccent),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth().height(46.dp)
-                ) {
-                    Text(
-                        text = if (state.currentIndex >= (state.plan?.items?.size ?: 0) - 1) "Complete Session" else "Next Question",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                ReviewGrades(state.gradeCeiling, viewModel::gradeCurrent, enabled = !state.isGrading && state.gradingError == null)
             }
         }
     }

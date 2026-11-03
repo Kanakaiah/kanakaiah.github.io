@@ -11,6 +11,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
+
+internal fun coldAnswerMatches(kind: String, answer: String, typed: String): Boolean {
+    val cleanAnswer = answer.trim().lowercase()
+    val cleanTyped = typed.trim().lowercase()
+    if (cleanAnswer.isBlank() || cleanTyped.isBlank()) return false
+    if (kind != "verse") return cleanAnswer == cleanTyped || (cleanTyped.length >= 3 && cleanAnswer.startsWith(cleanTyped))
+    val targetWords = cleanAnswer.split(Regex("\\s+")).filter { it.isNotBlank() }
+    val typedWords = cleanTyped.split(Regex("\\s+")).filter { it.isNotBlank() }
+    val available = targetWords.groupingBy { it }.eachCount().toMutableMap()
+    var matches = 0
+    for (word in typedWords) {
+        val count = available[word] ?: 0
+        if (count > 0) { matches++; available[word] = count - 1 }
+    }
+    return targetWords.isNotEmpty() && matches.toDouble() / targetWords.size >= 0.75
+}
 
 class RetentionViewModel @JvmOverloads constructor(
     application: Application,
@@ -103,7 +120,9 @@ class RetentionViewModel @JvmOverloads constructor(
                 coldCheckAnswerTyped = "",
                 coldCheckRevealed = false,
                 coldCheckCorrectKeys = emptySet(),
-                coldCheckFinishedResult = null
+                coldCheckFinishedResult = null,
+                coldCheckSaving = false,
+                coldCheckSaveError = null
             )
         }
     }
@@ -117,22 +136,7 @@ class RetentionViewModel @JvmOverloads constructor(
         val item = state.coldCheckCandidates.getOrNull(state.activeColdIndex) ?: return
         if (state.coldCheckRevealed) return
 
-        val typed = state.coldCheckAnswerTyped.trim()
-        val isCorrect = if (item.kind == "verse") {
-            // Verse accuracy check: words match or fuzzy match
-            val targetWords = item.answer.lowercase().split("\\s+".toRegex()).filter { it.isNotBlank() }
-            val typedWords = typed.lowercase().split("\\s+".toRegex()).filter { it.isNotBlank() }
-            if (targetWords.isEmpty()) false
-            else {
-                val matches = typedWords.count { targetWords.contains(it) }
-                (matches.toDouble() / targetWords.size) >= 0.75
-            }
-        } else {
-            // Anchor word check: exact or single word match
-            val cleanedTarget = item.answer.trim().lowercase()
-            val cleanedTyped = typed.trim().lowercase()
-            cleanedTarget == cleanedTyped || cleanedTarget.startsWith(cleanedTyped) && cleanedTyped.length >= 3
-        }
+        val isCorrect = coldAnswerMatches(item.kind, item.answer, state.coldCheckAnswerTyped)
 
         val nextCorrect = if (isCorrect) state.coldCheckCorrectKeys + item.key else state.coldCheckCorrectKeys
         _uiState.update {
@@ -145,6 +149,8 @@ class RetentionViewModel @JvmOverloads constructor(
 
     fun nextColdItem() {
         val state = _uiState.value
+        if (!state.isColdCheckActive || !state.coldCheckRevealed || state.coldCheckSaving ||
+            state.coldCheckFinishedResult != null || state.coldCheckSaveError != null || state.coldCheckCandidates.isEmpty()) return
         if (state.activeColdIndex < state.coldCheckCandidates.size - 1) {
             _uiState.update {
                 it.copy(
@@ -168,19 +174,24 @@ class RetentionViewModel @JvmOverloads constructor(
                 medianColdFor = medianCold
             )
 
+            _uiState.update { it.copy(coldCheckSaving = true) }
             viewModelScope.launch {
-                repository.recordColdCheck(result.correct, result.total, result.medianColdFor)
-                _uiState.update {
-                    it.copy(
-                        coldCheckFinishedResult = result,
-                        lastColdCheck = result
-                    )
+                try {
+                    repository.recordColdCheck(result.correct, result.total, result.medianColdFor)
+                    _uiState.update { it.copy(coldCheckFinishedResult = result, lastColdCheck = result) }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    _uiState.update { it.copy(coldCheckSaveError = "Could not confirm this check was saved. Close it and check your history before trying again.") }
+                } finally {
+                    _uiState.update { it.copy(coldCheckSaving = false) }
                 }
             }
         }
     }
 
     fun closeColdCheck() {
+        if (_uiState.value.coldCheckSaving) return
         _uiState.update {
             it.copy(isColdCheckActive = false, coldCheckFinishedResult = null)
         }

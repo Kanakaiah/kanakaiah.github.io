@@ -47,6 +47,62 @@ class UserDatabaseHelperTest {
     }
 
     @Test
+    fun verseGradeAndSessionPositionRollbackTogetherOnWriteFailure() {
+        assertTrue(userDbHelper.addUserVerse(1, 1, 1))
+        val id = userDbHelper.getUserVerses().single().id
+        userDbHelper.setSessionState("practice_index", "0")
+        val db = userDbHelper.writableDatabase
+        db.execSQL("CREATE TRIGGER reject_practice_update BEFORE INSERT ON session_state WHEN NEW.key = 'practice_index' BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        var failed = false
+        try {
+            userDbHelper.gradeUserVerseAndUpdateSession(id, 4, 0, "read", null, mapOf("practice_index" to "1"))
+        } catch (_: Exception) { failed = true }
+        assertTrue(failed)
+        assertEquals(0, userDbHelper.getUserVerses().single().attempts)
+        assertTrue(userDbHelper.getReviewLog().isEmpty())
+        assertEquals("0", userDbHelper.getSessionState("practice_index"))
+        db.execSQL("DROP TRIGGER reject_practice_update")
+        userDbHelper.gradeUserVerseAndUpdateSession(id, 4, 0, "read", null, mapOf("practice_index" to "1"))
+        assertEquals(1, userDbHelper.getUserVerses().single().attempts)
+        assertEquals(1, userDbHelper.getReviewLog().size)
+        assertEquals("1", userDbHelper.getSessionState("practice_index"))
+    }
+
+    @Test
+    fun chainGradeRollsBackAllProgressWhenChapterWriteFails() {
+        val db = userDbHelper.writableDatabase
+        db.execSQL("CREATE TRIGGER reject_chain_chapter BEFORE INSERT ON chapter_progress WHEN NEW.chapter = 2 BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        var failed = false
+        try { userDbHelper.gradeBlockChain(1, 0, "Beginnings", listOf(1 to true, 2 to false)) } catch (_: Exception) { failed = true }
+        assertTrue(failed)
+        assertTrue(userDbHelper.getBlockProgress(1).isEmpty())
+        assertTrue(userDbHelper.getChapterProgress(1).isEmpty())
+        assertTrue(userDbHelper.getReviewLog().isEmpty())
+    }
+
+    @Test
+    fun themeGradeRollsBackWhenReviewLogFails() {
+        val db = userDbHelper.writableDatabase
+        db.execSQL("CREATE TRIGGER reject_theme_log BEFORE INSERT ON review_log WHEN NEW.item_kind = 'theme' BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        var failed = false
+        try { userDbHelper.gradeThemeProgress(1, 4) } catch (_: Exception) { failed = true }
+        assertTrue(failed)
+        assertNull(userDbHelper.getThemeProgress(1))
+        assertTrue(userDbHelper.getReviewLog().isEmpty())
+    }
+
+    @Test
+    fun chapterGradeRollsBackWhenReviewLogFails() {
+        val db = userDbHelper.writableDatabase
+        db.execSQL("CREATE TRIGGER reject_anchor_log BEFORE INSERT ON review_log WHEN NEW.item_kind = 'anchor' BEGIN SELECT RAISE(ABORT, 'injected failure'); END")
+        var failed = false
+        try { userDbHelper.gradeChapterAnchor(1, 1, 4) } catch (_: Exception) { failed = true }
+        assertTrue(failed)
+        assertTrue(userDbHelper.getChapterProgress(1).isEmpty())
+        assertTrue(userDbHelper.getReviewLog().isEmpty())
+    }
+
+    @Test
     fun testAddAndRetrieveUserVerse() {
         val success = userDbHelper.addUserVerse(bookId = 1, chapter = 1, verse = 1)
         assertTrue("Adding verse should succeed", success)
@@ -139,7 +195,7 @@ class UserDatabaseHelperTest {
 
     @Test
     fun testStreakPersistence() {
-        assertEquals(14, userDbHelper.getStreak())
+        assertEquals(0, userDbHelper.getStreak())
 
         userDbHelper.setStreak(42)
         assertEquals(42, userDbHelper.getStreak())

@@ -23,9 +23,14 @@ data class BibleTranslation(
 
         private val MAP_BY_CODE = ALL.associateBy { it.code.uppercase() }
 
+        fun normalizeCode(code: String): String = when (val value = code.trim().uppercase()) {
+            "IRV-TE" -> "TELIRV"
+            else -> value
+        }
+
         fun fromCode(code: String?): BibleTranslation {
             if (code == null) return LSB
-            return MAP_BY_CODE[code.uppercase()] ?: LSB
+            return MAP_BY_CODE[normalizeCode(code)] ?: LSB
         }
 
         fun getLabel(code: String?): String {

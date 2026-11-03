@@ -1,8 +1,7 @@
 package com.example.telugubible.theme
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 
 data class RemoraColors(
@@ -20,83 +19,98 @@ data class RemoraColors(
     val gold: Color,
     val chipBg: Color,
     val chipBorder: Color,
-    val isDark: Boolean
+    val isDark: Boolean,
+    val onAccent: Color,
+    val accentContainer: Color,
+    val onAccentContainer: Color
 ) {
     companion object {
         val Midnight = RemoraColors(
-            background = Color(0xFF0C0A08),
-            cardBg = Color(0xFF131110),
-            cardBgElevated = Color(0xFF1C1917),
-            cardBorder = Color(0xFF2A2521),
-            cardBorderHover = Color(0xFF3A332C),
-            textPrimary = Color(0xFFF3EDE2),
-            textSecondary = Color(0xFFB3A891),
-            textMuted = Color(0xFF7D7462),
-            accent = Color(0xFFCC6F47),
-            accentHover = Color(0xFFB25A37),
-            accentLight = Color(0xFFE2A07E),
-            gold = Color(0xFFD9A24A),
-            chipBg = Color(0xFF1A1715),
-            chipBorder = Color(0xFF2E2823),
+            background = Color(0xFF100D0B),
+            cardBg = Color(0xFF201A16),
+            cardBgElevated = Color(0xFF302620),
+            cardBorder = Color(0xFF302620),
+            cardBorderHover = Color(0xFF8C776A),
+            textPrimary = Color(0xFFF3E7DF),
+            textSecondary = Color(0xFFD0BDB0),
+            textMuted = Color(0xFFD0BDB0),
+            accent = Color(0xFFFFB591),
+            accentHover = Color(0xFFFFB591),
+            accentLight = Color(0xFFFFB591),
+            gold = Color(0xFFFFB591),
+            chipBg = Color(0xFF302620),
+            chipBorder = Color(0xFF8C776A),
+            onAccent = Color(0xFF532200),
+            accentContainer = Color(0xFF73391D),
+            onAccentContainer = Color(0xFFFFDBC9),
             isDark = true
         )
 
         val Walnut = RemoraColors(
-            background = Color(0xFF1A1613),
-            cardBg = Color(0xFF221D18),
-            cardBgElevated = Color(0xFF2C2620),
-            cardBorder = Color(0xFF3A332B),
-            cardBorderHover = Color(0xFF4A4237),
-            textPrimary = Color(0xFFF5EFE3),
-            textSecondary = Color(0xFFB8AD99),
-            textMuted = Color(0xFF8A8069),
-            accent = Color(0xFFCF7350),
-            accentHover = Color(0xFFB25A37),
-            accentLight = Color(0xFFE2A07E),
-            gold = Color(0xFFD9A24A),
-            chipBg = Color(0xFF26201B),
-            chipBorder = Color(0xFF3D342C),
+            background = Color(0xFF211A15),
+            cardBg = Color(0xFF2C231D),
+            cardBgElevated = Color(0xFF3C3026),
+            cardBorder = Color(0xFF3C3026),
+            cardBorderHover = Color(0xFF9C8775),
+            textPrimary = Color(0xFFF7EBDF),
+            textSecondary = Color(0xFFD4C0AF),
+            textMuted = Color(0xFFD4C0AF),
+            accent = Color(0xFFEDBB8D),
+            accentHover = Color(0xFFEDBB8D),
+            accentLight = Color(0xFFEDBB8D),
+            gold = Color(0xFFEDBB8D),
+            chipBg = Color(0xFF3C3026),
+            chipBorder = Color(0xFF9C8775),
+            onAccent = Color(0xFF45290C),
+            accentContainer = Color(0xFF614027),
+            onAccentContainer = Color(0xFFFFDDBA),
             isDark = true
         )
 
         val Sepia = RemoraColors(
-            background = Color(0xFFF6ECD6),
-            cardBg = Color(0xFFF0E3C8),
-            cardBgElevated = Color(0xFFF9F0DC),
-            cardBorder = Color(0xFFE3D3AE),
-            cardBorderHover = Color(0xFFD3BD8C),
-            textPrimary = Color(0xFF4A3A2C),
-            textSecondary = Color(0xFF7D6A56),
-            textMuted = Color(0xFFA08D76),
-            accent = Color(0xFFA8562E),
-            accentHover = Color(0xFF8A4423),
-            accentLight = Color(0xFFC17A4F),
-            gold = Color(0xFFA1731C),
-            chipBg = Color(0xFFEADFC0),
-            chipBorder = Color(0xFFDACBA4),
+            background = Color(0xFFF9EFD9),
+            cardBg = Color(0xFFF0E4C8),
+            cardBgElevated = Color(0xFFE8D7B5),
+            cardBorder = Color(0xFFE8D7B5),
+            cardBorderHover = Color(0xFFAB9472),
+            textPrimary = Color(0xFF362B1C),
+            textSecondary = Color(0xFF68563E),
+            textMuted = Color(0xFF68563E),
+            accent = Color(0xFF80512B),
+            accentHover = Color(0xFF80512B),
+            accentLight = Color(0xFF80512B),
+            gold = Color(0xFF80512B),
+            chipBg = Color(0xFFE8D7B5),
+            chipBorder = Color(0xFFAB9472),
+            onAccent = Color(0xFFFFFFFF),
+            accentContainer = Color(0xFFF5D9B0),
+            onAccentContainer = Color(0xFF472A10),
             isDark = false
         )
 
         val Paper = RemoraColors(
-            background = Color(0xFFFAF6EE),
-            cardBg = Color(0xFFFFFFFF),
-            cardBgElevated = Color(0xFFFDFBF6),
-            cardBorder = Color(0xFFE8E0D0),
-            cardBorderHover = Color(0xFFD9CDB4),
-            textPrimary = Color(0xFF211C14),
-            textSecondary = Color(0xFF5C5346),
-            textMuted = Color(0xFF948A78),
-            accent = Color(0xFFB8552F),
-            accentHover = Color(0xFF96431F),
-            accentLight = Color(0xFFC96A44),
-            gold = Color(0xFFA97A1F),
-            chipBg = Color(0xFFF5F0E4),
-            chipBorder = Color(0xFFE2D9C8),
+            background = Color(0xFFFFF8F4),
+            cardBg = Color(0xFFF6ECE6),
+            cardBgElevated = Color(0xFFEEE1D8),
+            cardBorder = Color(0xFFEEE1D8),
+            cardBorderHover = Color(0xFFB9A69A),
+            textPrimary = Color(0xFF251A14),
+            textSecondary = Color(0xFF69564A),
+            textMuted = Color(0xFF69564A),
+            accent = Color(0xFF8F4827),
+            accentHover = Color(0xFF8F4827),
+            accentLight = Color(0xFF8F4827),
+            gold = Color(0xFF8F4827),
+            chipBg = Color(0xFFEEE1D8),
+            chipBorder = Color(0xFFB9A69A),
+            onAccent = Color(0xFFFFFFFF),
+            accentContainer = Color(0xFFFFDBC9),
+            onAccentContainer = Color(0xFF542309),
             isDark = false
         )
 
-        fun forTheme(themeName: String): RemoraColors = when (themeName.lowercase()) {
-            "dark", "walnut" -> Walnut
+        fun forTheme(themeName: String): RemoraColors = when (themeName.lowercase().trim()) {
+            "dark", "walnut", "umber" -> Walnut
             "sepia" -> Sepia
             "white", "paper" -> Paper
             else -> Midnight
@@ -104,30 +118,23 @@ data class RemoraColors(
     }
 }
 
-object RemoraThemeState {
-    var themeName by mutableStateOf("black")
-
-    val colors: RemoraColors
-        get() = RemoraColors.forTheme(themeName)
-}
-
 // Dynamic Theme-Aware Tokens
-val RemoraBackground: Color get() = RemoraThemeState.colors.background
-val RemoraCardBg: Color get() = RemoraThemeState.colors.cardBg
-val RemoraCardBgElevated: Color get() = RemoraThemeState.colors.cardBgElevated
-val RemoraCardBorder: Color get() = RemoraThemeState.colors.cardBorder
-val RemoraCardBorderHover: Color get() = RemoraThemeState.colors.cardBorderHover
+val RemoraBackground: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.background
+val RemoraCardBg: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.cardBg
+val RemoraCardBgElevated: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.cardBgElevated
+val RemoraCardBorder: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.cardBorder
+val RemoraCardBorderHover: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.cardBorderHover
 
 // Remora Typography Colors
-val RemoraTextPrimary: Color get() = RemoraThemeState.colors.textPrimary
-val RemoraTextSecondary: Color get() = RemoraThemeState.colors.textSecondary
-val RemoraTextMuted: Color get() = RemoraThemeState.colors.textMuted
+val RemoraTextPrimary: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.textPrimary
+val RemoraTextSecondary: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.textSecondary
+val RemoraTextMuted: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.textMuted
 
 // Remora Brand & Accent Colors
-val RemoraAccent: Color get() = RemoraThemeState.colors.accent
-val RemoraAccentHover: Color get() = RemoraThemeState.colors.accentHover
-val RemoraAccentLight: Color get() = RemoraThemeState.colors.accentLight
-val RemoraGold: Color get() = RemoraThemeState.colors.gold
+val RemoraAccent: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.accent
+val RemoraAccentHover: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.accentHover
+val RemoraAccentLight: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.accentLight
+val RemoraGold: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.gold
 
 // Spaced Repetition Grading Colors (SM-2)
 val GradeBlank = Color(0xFFEF4444)  // Red (Score 1)
@@ -139,9 +146,9 @@ val RemoraGreen = Color(0xFF22C55E)
 val RemoraRed = Color(0xFFEF4444)
 
 // Pill & Chip Backgrounds
-val RemoraChipBg: Color get() = RemoraThemeState.colors.chipBg
-val RemoraChipBorder: Color get() = RemoraThemeState.colors.chipBorder
+val RemoraChipBg: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.chipBg
+val RemoraChipBorder: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.chipBorder
 
 // Semantic Helpers
 val RemoraDanger = GradeBlank
-val RemoraSurface: Color get() = RemoraThemeState.colors.background
+val RemoraSurface: Color @Composable @ReadOnlyComposable get() = LocalRemoraColors.current.background

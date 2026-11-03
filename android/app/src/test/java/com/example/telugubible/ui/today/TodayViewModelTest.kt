@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -56,6 +57,46 @@ class TodayViewModelTest {
         if (::userDbHelper.isInitialized) userDbHelper.close()
         application.deleteDatabase(UserDatabaseHelper.USER_DB_NAME)
         application.deleteDatabase(BibleDatabaseHelper.STATIC_DB_NAME)
+    }
+
+    @Test
+    fun clearedSearchDoesNotReturnStaleResults() = runTest(testDispatcher) {
+        val viewModel = TodayViewModel(application, repository)
+        advanceUntilIdle()
+        viewModel.searchVersesForDialog("Genesis 1:1", "BSB")
+        viewModel.searchVersesForDialog("", "BSB")
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.searchResults.isEmpty())
+        assertFalse(viewModel.uiState.value.isSearchingInDialog)
+        assertNull(viewModel.uiState.value.searchError)
+    }
+
+    @Test
+    fun invalidPassagesAreNotAddedOrPresentedAsSearchResults() = runTest(testDispatcher) {
+        val viewModel = TodayViewModel(application, repository)
+        advanceUntilIdle()
+        viewModel.searchVersesForDialog("Genesis 1:1-999999999", "BSB")
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.searchResults.isEmpty())
+        assertNotNull(viewModel.uiState.value.searchError)
+        viewModel.addVerse(1, 1, 999)
+        advanceUntilIdle()
+        assertTrue(userDbHelper.getUserVerses().isEmpty())
+        assertEquals("Check the book, chapter, and verse range.", viewModel.uiState.value.addError)
+    }
+
+    @Test
+    fun manualEntryDoesNotSilentlyDiscardExtraReferences() = runTest(testDispatcher) {
+        val viewModel = TodayViewModel(application, repository)
+        advanceUntilIdle()
+        viewModel.addManualVerse("Genesis 1:1; Genesis 1:2")
+        advanceUntilIdle()
+        assertTrue(userDbHelper.getUserVerses().isEmpty())
+        assertEquals("Enter one valid passage at a time.", viewModel.uiState.value.addError)
+        viewModel.addManualVerse("Genesis 1:1; nonsense")
+        advanceUntilIdle()
+        assertTrue(userDbHelper.getUserVerses().isEmpty())
+        assertEquals("Enter one valid passage at a time.", viewModel.uiState.value.addError)
     }
 
     @Test

@@ -10,6 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -53,9 +55,7 @@ fun EraserMode(
         manuallyToggled[index] ?: sliderHiddenSet.contains(index)
     }
 
-    val totalHiddenCount = remember(rawWords.size, sliderHiddenSet, manuallyToggled.size) {
-        rawWords.indices.count { isWordHidden(it) }
-    }
+    val totalHiddenCount = rawWords.indices.count { isWordHidden(it) }
 
     val hiddenRatio = if (rawWords.isNotEmpty()) totalHiddenCount.toFloat() / rawWords.size else 0f
 
@@ -63,7 +63,7 @@ fun EraserMode(
         hiddenRatio >= 0.75f -> "Easy (5)"
         hiddenRatio >= 0.50f -> "Good (4)"
         hiddenRatio >= 0.25f -> "Hard (3)"
-        else -> "Blank (1)"
+        else -> "Again (1)"
     }
 
     Column(
@@ -73,8 +73,8 @@ fun EraserMode(
         // Slider Control Surface
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = Color(0xFF1E1B17),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF332D24)),
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
@@ -86,18 +86,11 @@ fun EraserMode(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "BLANKS",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        color = RemoraAccent
-                    )
+                    Text("Blanks", style = MaterialTheme.typography.titleMedium)
                     Text(
                         text = "${sliderValue.roundToInt()}% (${totalHiddenCount}/${rawWords.size} hidden)",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RemoraAccentLight
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -113,26 +106,19 @@ fun EraserMode(
                         activeTrackColor = RemoraAccent,
                         inactiveTrackColor = RemoraCardBorder
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Amount of text hidden" }
                 )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = "Tap any word to reveal or hide",
-                        fontSize = 10.sp,
-                        color = RemoraTextMuted
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = "Ceiling: $gradeCeilingLabel",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (hiddenRatio >= 0.75f) GradeEasy
-                        else if (hiddenRatio >= 0.50f) GradeGood
-                        else if (hiddenRatio >= 0.25f) GradeHard
-                        else GradeBlank
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -159,11 +145,12 @@ fun EraserMode(
                         onClick = {
                             manuallyToggled[index] = !hidden
                         },
+                        modifier = if (hidden) Modifier.semantics { contentDescription = "Hidden word, tap to reveal" } else Modifier,
                         shape = RoundedCornerShape(6.dp),
-                        color = if (hidden) Color(0xFF2C2720) else Color.Transparent,
+                        color = if (hidden) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent,
                         border = if (hidden) androidx.compose.foundation.BorderStroke(
                             1.dp,
-                            Color(0xFF453E33)
+                            MaterialTheme.colorScheme.outline
                         ) else null
                     ) {
                         Text(
@@ -173,8 +160,8 @@ fun EraserMode(
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Medium,
                             letterSpacing = if (hidden) 2.sp else 0.sp,
-                            color = if (hidden) Color(0xFF6E6455) else RemoraTextPrimary,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            color = if (hidden) MaterialTheme.colorScheme.onSurfaceVariant else RemoraTextPrimary,
+                            modifier = Modifier.heightIn(min = 48.dp).padding(horizontal = 8.dp, vertical = 8.dp)
                         )
                     }
                 }
@@ -191,8 +178,8 @@ fun EraserMode(
         ) {
             Text(
                 text = "Recite the verse filling in the erased gaps from memory",
-                fontSize = 11.sp,
-                color = RemoraTextMuted,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
 
@@ -200,18 +187,18 @@ fun EraserMode(
                 onClick = { onComplete(hiddenRatio) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = RemoraAccent,
-                    contentColor = Color(0xFF141414)
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .heightIn(min = 48.dp)
             ) {
                 Text(
                     text = "Done Reciting — Check Recall",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF141414)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
