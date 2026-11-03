@@ -26,6 +26,27 @@ class AppBaselineTest {
     }
 
     @Test
+    fun readerNavigatesWhenBackgroundAudioReachesNextChapter() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        compose.runOnUiThread {
+            androidx.lifecycle.ViewModelProvider(compose.activity)[com.example.telugubible.ui.reader.ReaderViewModel::class.java]
+                .selectBookAndChapterById(1, 1)
+        }
+        awaitNode(hasText("Genesis 1"))
+        compose.onNodeWithText("Genesis 1").performScrollTo().performClick()
+        awaitNode(hasContentDescription("Go back"))
+        compose.runOnUiThread {
+            check(com.example.telugubible.util.BackgroundListenService.start(context,
+                listOf("The end."), listOf("en"), longArrayOf(31), 0, 1, true, 1f, "reader:1:1", "BSB"))
+        }
+        try {
+            awaitNode(hasText("Genesis 2"))
+        } finally {
+            compose.runOnUiThread { com.example.telugubible.util.BackgroundListenService.stop(context) }
+        }
+    }
+
+    @Test
     fun chapterAnchorsReturnThroughVersePractice() {
         compose.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Chapter Themes"))
         compose.onNodeWithText("Chapter Themes").performClick()

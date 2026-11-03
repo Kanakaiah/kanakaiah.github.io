@@ -143,7 +143,19 @@ class ReaderViewModel @JvmOverloads constructor(
 
     private fun observeTts() {
         viewModelScope.launch {
+            var requestedSource: String? = null
             BackgroundListenService.state.collect { tts ->
+                val parts = tts.source.split(':')
+                val bookId = parts.getOrNull(1)?.toIntOrNull()
+                val chapter = parts.getOrNull(2)?.toIntOrNull()
+                val current = _uiState.value
+                if (tts.playing && parts.firstOrNull() == "reader" && bookId != null && chapter != null &&
+                    current.currentBook != null && tts.source != requestedSource) {
+                    requestedSource = tts.source
+                    if (current.currentBook.id != bookId || current.currentChapter != chapter) {
+                        selectBookAndChapterById(bookId, chapter)
+                    }
+                }
                 _uiState.update {
                     val ownsPlayback = tts.source == "reader:${it.currentBook?.id}:${it.currentChapter}"
                     it.copy(
@@ -810,7 +822,8 @@ class ReaderViewModel @JvmOverloads constructor(
         val book = _uiState.value.currentBook ?: return
         val started = BackgroundListenService.start(getApplication(), pairs.map { it.second },
             pairs.map { langCode }, pairs.map { it.first.toLong() }.toLongArray(), 0, 1, true, 1f,
-            "reader:${book.id}:${_uiState.value.currentChapter}")
+            "reader:${book.id}:${_uiState.value.currentChapter}",
+            readerVersion = if (selected.isEmpty()) _uiState.value.activeVersion else null)
         if (!started) _uiState.update { it.copy(toastMessage = "Couldn't start listening.") }
     }
 

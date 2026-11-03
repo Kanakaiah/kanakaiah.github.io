@@ -77,4 +77,61 @@ class BackgroundListenDeviceTest {
             compose.runOnUiThread { BackgroundListenService.stop(context) }
         }
     }
+
+    @Test fun readerMovesToNextChapterWithScreenOff() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
+        check(context.packageName.endsWith(".uitest"))
+        check(context.getSystemService(PowerManager::class.java).isInteractive)
+        var started = false
+        compose.runOnUiThread {
+            started = BackgroundListenService.start(context, listOf("The end."), listOf("en"),
+                longArrayOf(31), 0, 1, true, 1f, "reader:1:1", "BSB")
+        }
+        assertTrue(started)
+        try {
+            runBlocking { withTimeout(10_000) { BackgroundListenService.state.first { it.playing && it.source == "reader:1:1" } } }
+            instrumentation.uiAutomation.executeShellCommand("input keyevent KEYCODE_SLEEP").close()
+            val next = runBlocking { withTimeout(30_000) { BackgroundListenService.state.first { it.playing && it.source == "reader:1:2" } } }
+            assertEquals(1L, next.itemId)
+            assertFalse(context.getSystemService(PowerManager::class.java).isInteractive)
+        } finally {
+            instrumentation.uiAutomation.executeShellCommand("input keyevent KEYCODE_WAKEUP").close()
+            compose.runOnUiThread { BackgroundListenService.stop(context) }
+        }
+    }
+
+    @Test fun selectedReaderVersesStopAfterTheirQueue() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        check(context.packageName.endsWith(".uitest"))
+        var started = false
+        compose.runOnUiThread {
+            started = BackgroundListenService.start(context, listOf("The end."), listOf("en"),
+                longArrayOf(31), 0, 1, true, 1f, "reader:1:1")
+        }
+        assertTrue(started)
+        runBlocking {
+            withTimeout(10_000) { BackgroundListenService.state.first { it.playing && it.source == "reader:1:1" } }
+            val stopped = withTimeout(15_000) { BackgroundListenService.state.first { !it.playing } }
+            assertEquals("reader:1:1", stopped.source)
+            assertNull(stopped.error)
+        }
+    }
+
+    @Test fun readerMovesFromLastChapterToNextBook() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        check(context.packageName.endsWith(".uitest"))
+        var started = false
+        compose.runOnUiThread {
+            started = BackgroundListenService.start(context, listOf("The end."), listOf("en"),
+                longArrayOf(26), 0, 1, true, 1f, "reader:1:50", "BSB")
+        }
+        assertTrue(started)
+        try {
+            val next = runBlocking { withTimeout(30_000) { BackgroundListenService.state.first { it.playing && it.source == "reader:2:1" } } }
+            assertEquals(1L, next.itemId)
+        } finally {
+            compose.runOnUiThread { BackgroundListenService.stop(context) }
+        }
+    }
 }

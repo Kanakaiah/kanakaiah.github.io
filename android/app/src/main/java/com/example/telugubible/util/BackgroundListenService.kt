@@ -13,6 +13,9 @@ import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
 import com.example.telugubible.MainActivity
+import com.example.telugubible.data.model.Book
+import com.example.telugubible.data.model.ReadingPosition
+import com.example.telugubible.data.repository.BibleRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,6 +32,14 @@ data class BackgroundListenState(
     val error: String? = null
 )
 
+internal fun nextListeningChapter(books: List<Book>, bookId: Int, chapter: Int): ReadingPosition? {
+    val ordered = books.sortedBy { it.id }
+    val index = ordered.indexOfFirst { it.id == bookId }
+    if (index < 0 || chapter !in 1..ordered[index].chapters) return null
+    if (chapter < ordered[index].chapters) return ReadingPosition(bookId, chapter + 1)
+    return ordered.getOrNull(index + 1)?.let { ReadingPosition(it.id, 1) }
+}
+
 /** A service-owned queue keeps the listening session alive independently of the screen. */
 class BackgroundListenService : Service() {
     companion object {
@@ -40,7 +51,8 @@ class BackgroundListenService : Service() {
         val state = mutableState.asStateFlow()
 
         fun start(context: Context, texts: List<String>, languages: List<String>, ids: LongArray,
-                  index: Int, repeat: Int, autoAdvance: Boolean, speed: Float, source: String = "practice"): Boolean {
+                  index: Int, repeat: Int, autoAdvance: Boolean, speed: Float, source: String = "practice",
+                  readerVersion: String? = null): Boolean {
             if (texts.isEmpty() || texts.size != languages.size || texts.size != ids.size || index !in texts.indices) return false
             // Stay comfortably below Android's intent transaction limit.
             if (texts.sumOf { it.length } > 200_000) return false
@@ -49,6 +61,7 @@ class BackgroundListenService : Service() {
                 .putStringArrayListExtra("languages", ArrayList(languages))
                 .putExtra("ids", ids).putExtra("index", index).putExtra("repeat", repeat)
                 .putExtra("advance", autoAdvance).putExtra("speed", speed).putExtra("source", source)
+                .putExtra("readerVersion", readerVersion)
             return try { ContextCompat.startForegroundService(context, intent); true } catch (_: Exception) { false }
         }
 
@@ -79,6 +92,7 @@ class BackgroundListenService : Service() {
     private var advance = false
     private var speed = 1f
     private var source = ""
+    private var readerVersion: String? = null
     private var generation = 0
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -112,6 +126,7 @@ class BackgroundListenService : Service() {
         advance = intent.getBooleanExtra("advance", false)
         speed = intent.getFloatExtra("speed", 1f).coerceIn(0.5f, 2f)
         source = intent.getStringExtra("source").orEmpty()
+        readerVersion = intent.getStringExtra("readerVersion")
         iteration = 1
         if (texts.size != ids.size || texts.size != languages.size || index !in texts.indices || !requestFocus()) {
             finish("Unable to start listening."); return START_NOT_STICKY
@@ -140,12 +155,47 @@ class BackgroundListenService : Service() {
                     when {
                         iteration < repeat -> iteration++
                         advance && index < texts.lastIndex -> { index++; iteration = 1 }
+                        advance && readerVersion != null && source.startsWith("reader:") -> {
+                            loadNextChapter(run)
+                            return@speak
+                        }
                         else -> { finish(); return@speak }
                     }
                     play(run)
                 }
             }) == true
         if (!started) finish("Speech is unavailable. Check your device's voice.")
+    }
+
+    private fun loadNextChapter(run: Int) {
+        val version = readerVersion ?: return
+        val parts = source.split(':')
+        val bookId = parts.getOrNull(1)?.toIntOrNull()
+        val chapter = parts.getOrNull(2)?.toIntOrNull()
+        if (bookId == null || chapter == null) { finish("Couldn't continue to the next chapter."); return }
+        scope.launch {
+            try {
+                val repository = BibleRepository(applicationContext)
+                val next = nextListeningChapter(repository.getBooks(), bookId, chapter)
+                if (run != generation) return@launch
+                if (next == null) { finish(); return@launch }
+                val verses = repository.getChapterVerses(next.bookId, next.chapter, version)
+                if (run != generation) return@launch
+                if (verses.isEmpty()) { finish("Couldn't load the next chapter. Please try again."); return@launch }
+                val language = when (version.uppercase()) { "TELIRV" -> "te"; "TBSI" -> "ta"; else -> "en" }
+                texts = verses.map { it.getTextForVersion(version) }
+                languages = List(verses.size) { language }
+                ids = verses.map { it.verse.toLong() }.toLongArray()
+                index = 0
+                iteration = 1
+                source = "reader:${next.bookId}:${next.chapter}"
+                play(run)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                if (run == generation) finish("Couldn't load the next chapter. Please try again.")
+            }
+        }
     }
 
     private fun requestFocus(): Boolean {
