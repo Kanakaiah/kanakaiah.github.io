@@ -19,7 +19,7 @@
 // rather than pre-cached: there are well over a thousand plates and pre-caching them
 // would mean a very large download for images most readers will never open.
 
-const VERSION = 'v7';
+const VERSION = 'v8';
 const SHELL_CACHE = `remora-shell-${VERSION}`;
 const CONTENT_CACHE = `remora-content-${VERSION}`;
 
@@ -103,7 +103,7 @@ async function cacheFirst(request, cacheName) {
   const cached = await cache.match(request, MATCH_OPTS);
   if (cached) return cached;
   try {
-    const response = await fetch(request);
+    const response = await fetch(request, { cache: 'no-cache' });
     if (response && response.ok) cache.put(request, response.clone());
     return response;
   } catch (err) {
@@ -116,7 +116,7 @@ async function cacheFirst(request, cacheName) {
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cached = await cache.match(request, MATCH_OPTS);
-  const network = fetch(request)
+  const network = fetch(request, { cache: 'no-cache' })
     .then(response => {
       if (response && response.ok) cache.put(request, response.clone());
       return response;
