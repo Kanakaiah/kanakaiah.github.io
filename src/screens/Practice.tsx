@@ -101,6 +101,16 @@ export const Practice: React.FC = () => {
   // worth anything. Read is still one tap away, and is still the right thing for looking
   // at a verse you are not yet trying to produce.
   const [activeMode, setActiveMode] = useState<PracticeMode>('typing');
+  const isImmersed = activeMode === 'immersed';
+  const lastNonImmersedMode = React.useRef<PracticeMode>('typing');
+  React.useEffect(() => {
+    if (activeMode !== 'immersed') {
+      lastNonImmersedMode.current = activeMode;
+    }
+  }, [activeMode]);
+  const handleExitImmersed = React.useCallback(() => {
+    setActiveMode(lastNonImmersedMode.current);
+  }, []);
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   
   const [isAutoPlaying, setIsAutoPlaying] = useState(state.settings.ttsEnabled);
@@ -238,7 +248,7 @@ export const Practice: React.FC = () => {
     observer.observe(el);
     measure();
     return () => observer.disconnect();
-  }, [activeVerseIndex]);
+  }, [activeVerseIndex, isImmersed]);
 
   // Objective accuracy from whichever mode can measure it (Typing, Recite). Null in
   // the modes that genuinely can't know — Read and Erase have no ground truth to
@@ -264,6 +274,30 @@ export const Practice: React.FC = () => {
 
   const safeVerseIndex = activeVerseIndex >= verses.length ? Math.max(0, verses.length - 1) : activeVerseIndex;
   const currentVerse = verses[safeVerseIndex];
+
+  const collectionTitle = React.useMemo(() => {
+    if (!activeTopicFilter) return 'All';
+    if (activeTopicFilter === '__general__') return 'General';
+    const topic = state.topics?.find(t => t.id === activeTopicFilter);
+    if (topic) {
+      return topic.name.toLowerCase() === 'well_known' || topic.name.toLowerCase() === '75 well-known'
+        ? 'Well-Known'
+        : topic.name;
+    }
+    return 'Review';
+  }, [activeTopicFilter, state.topics]);
+
+  const retentionStage = React.useMemo(() => {
+    if (!currentVerse) return 'Learning';
+    if (currentVerse.keyword && currentVerse.keyword.trim().length > 0) {
+      return currentVerse.keyword.trim();
+    }
+    const interval = currentVerse.sm2?.interval || 0;
+    const repetition = currentVerse.sm2?.repetition || 0;
+    if (interval >= 30 || repetition >= 6) return 'Forever';
+    if (repetition >= 2 || interval >= 6) return 'Review';
+    return 'Learning';
+  }, [currentVerse]);
 
   const handleToggleTTS = () => {
     if (isAutoPlaying) {
@@ -394,8 +428,6 @@ export const Practice: React.FC = () => {
       </div>
     );
   };
-
-  const isImmersed = activeMode === 'immersed';
 
   // Hint for tap-to-toggle discoverability
   React.useEffect(() => {
@@ -587,36 +619,12 @@ export const Practice: React.FC = () => {
         total={verses.length}
         onPrev={handlePrev}
         onNext={handleNext}
-        onExit={() => setActiveMode('read')}
+        onExit={handleExitImmersed}
         isAutoPlaying={isAutoPlaying}
         onToggleAutoPlay={handleToggleTTS}
       />
     );
   }
-
-  const collectionTitle = React.useMemo(() => {
-    if (!activeTopicFilter) return 'All';
-    if (activeTopicFilter === '__general__') return 'General';
-    const topic = state.topics?.find(t => t.id === activeTopicFilter);
-    if (topic) {
-      return topic.name.toLowerCase() === 'well_known' || topic.name.toLowerCase() === '75 well-known'
-        ? 'Well-Known'
-        : topic.name;
-    }
-    return 'Review';
-  }, [activeTopicFilter, state.topics]);
-
-  const retentionStage = React.useMemo(() => {
-    if (!currentVerse) return 'Learning';
-    if (currentVerse.keyword && currentVerse.keyword.trim().length > 0) {
-      return currentVerse.keyword.trim();
-    }
-    const interval = currentVerse.sm2?.interval || 0;
-    const repetition = currentVerse.sm2?.repetition || 0;
-    if (interval >= 30 || repetition >= 6) return 'Forever';
-    if (repetition >= 2 || interval >= 6) return 'Review';
-    return 'Learning';
-  }, [currentVerse]);
 
   return (
       <div
