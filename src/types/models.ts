@@ -38,6 +38,7 @@ export interface Verse {
   attempts: number;
   topicIds?: string[];
   keyword?: string;
+  note?: string;
 }
 
 export type BibleVersion = 'LSB' | 'NASB' | 'NLT' | 'ESV' | 'WEB' | 'KJV' | 'BSB' | 'TBSI' | 'TELIRV';
@@ -53,9 +54,9 @@ export interface UserSettings {
   recallMasking: boolean;
   bionicReading: boolean;
   fontSize: number;
-  fontFamily?: 'inter' | 'merriweather' | 'atkinson' | 'system' | 'figtree' | 'publicsans' | 'roboto' | 'opensans' | 'sans' | 'serif' | 'hyper';
-  lineSpacing?: 'tight' | 'normal' | 'roomy';
-  bionicIntensity?: 'light' | 'medium' | 'strong';
+  fontFamily?: 'inter' | 'merriweather' | 'atkinson' | 'system' | 'figtree' | 'publicsans' | 'roboto' | 'opensans' | 'sans' | 'serif' | 'mono' | 'hyper';
+  lineSpacing?: 'tight' | 'normal' | 'roomy' | 'compact' | 'relaxed' | 'spacious';
+  bionicIntensity?: 'light' | 'medium' | 'strong' | 'low' | 'high';
   bibleVersion?: BibleVersion;
   // Chapter reader apparatus. Undefined means on, so a profile saved before these
   // existed reads exactly as it did before.
@@ -77,7 +78,7 @@ export interface UserSettings {
   streakIncludesChapters?: boolean;
 }
 
-export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'random';
+export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'date-asc' | 'date-desc' | 'random';
 export type Theme = 'black' | 'dark' | 'sepia' | 'white';
 
 // A book guide's "Test Yourself" recall of its Memory Sentence, scheduled the
@@ -220,7 +221,7 @@ export interface ReviewEvent {
   /** How much of the answer was on screen as a cue: 0 none … 4 all of it. Derived from
    * hint level where one exists, so a verse read off a full hint cannot look like recall. */
   cueLevel: 0 | 1 | 2 | 3 | 4;
-  mode: 'type' | 'speak' | 'reveal' | 'chain' | 'scramble' | 'erase';
+  mode: 'type' | 'speak' | 'reveal' | 'chain' | 'scramble' | 'erase' | 'assisted' | 'reference';
   /** Prompt shown → answer committed. 0 when the surface does not time the attempt. */
   elapsedMs: number;
   /** What the reader actually produced, where a mode collects it. Null for reveal-only. */

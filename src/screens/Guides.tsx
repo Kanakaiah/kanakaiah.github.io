@@ -4,14 +4,16 @@ import { useSearchParams, useNavigate, useParams, useLocation } from 'react-rout
 import { guidePath, parseReaderRef, readerPath, readerPathFromLegacyParams } from '../utils/readerRoute';
 import { NT_STUDY_GUIDES } from '../data/guides';
 import { OT_STUDY_GUIDES } from '../data/otGuides';
-import { NT_BOOKS, NT_SECTIONS } from '../data/ntBooks';
-import { OT_BOOKS, OT_SECTIONS } from '../data/otBooks';
+import { NT_BOOKS } from '../data/ntBooks';
+import { OT_BOOKS } from '../data/otBooks';
 import { BibleBrowser, BookCard } from '../components/guides/BibleBrowser';
 import { ChapterReader } from '../components/guides/ChapterReader';
 import { MemorySentence } from '../components/guides/MemorySentence';
 import { KeyVerseCard } from '../components/guides/KeyVerseCard';
 import { RecordCards } from '../components/guides/RecordCards';
+import { CommentaryModal, TheologiansModal } from '../components/guides/StudyToolsSheet';
 import { ChainDrill, type ChainAnchor } from '../components/practice/ChainDrill';
+import { GalleryViewMenu, galleryGridClass, useGalleryColumns } from '../utils/galleryView';
 import { CustomSelect } from '../components/ui/CustomSelect';
 import { TRANSLATION_OPTIONS } from '../data/bibleMap';
 import { fetchVerseText, formatVerseNumbers, parseVerseRef } from '../utils/verseText';
@@ -21,6 +23,25 @@ import { Button } from '../components/ui/Button';
 import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
+
+type TestamentFilter = 'ALL' | 'OT' | 'NT';
+
+const LIBRARY_SECTION_GROUPS: {
+  label: string;
+  testament: 'OT' | 'NT';
+  sections: string[];
+}[] = [
+  { label: 'Pentateuch', testament: 'OT', sections: ['Pentateuch'] },
+  { label: 'Historical', testament: 'OT', sections: ['Historical Books'] },
+  { label: 'Wisdom & Poetry', testament: 'OT', sections: ['Wisdom Literature'] },
+  { label: 'Major Prophets', testament: 'OT', sections: ['Major Prophets'] },
+  { label: 'Minor Prophets', testament: 'OT', sections: ['Minor Prophets'] },
+  { label: 'Gospels', testament: 'NT', sections: ['Gospels'] },
+  { label: 'History', testament: 'NT', sections: ['Acts'] },
+  { label: 'Pauline Epistles', testament: 'NT', sections: ['Paul — Major', 'Paul — Minor', 'Pastorals'] },
+  { label: 'General Epistles', testament: 'NT', sections: ['General Epistles', "John's Letters", 'Last Stand'] },
+  { label: 'Prophecy', testament: 'NT', sections: ['Apocalypse'] },
+];
 
 const DEFAULT_CHAPTER_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
 
@@ -209,7 +230,10 @@ const ChapterAnchorCard = ({
       <div className="p-5 flex flex-col gap-1.5 min-h-[92px] justify-center">
         {revealed ? (
           <>
-            <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{anchor.word}</span>
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{anchor.word}</span>
+              <span className="text-[0.6875rem] font-semibold text-accent">Read ch. {anchor.ch} →</span>
+            </div>
             <p className="text-sm text-secondary italic font-serif leading-relaxed">{anchor.scene}</p>
             {(prevWord || nextWord) && (
               <p className="text-[0.6875rem] text-muted mt-1 truncate">
@@ -220,32 +244,39 @@ const ChapterAnchorCard = ({
             )}
           </>
         ) : (
-          <span className="text-sm text-muted italic">What anchors chapter {anchor.ch}?</span>
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm text-muted italic">What anchors chapter {anchor.ch}?</span>
+            <span className="text-xs font-semibold text-accent">Show anchor</span>
+          </div>
         )}
       </div>
     </a>
 
-    {/* Grading. This grid was already the right retrieval task — a cold, correctly
-        prompted, properly withheld cued recall, fifty of them per book — and it
-        recorded none of it: revealedAnchors was plain component state, discarded on
-        unmount. The interaction, the art, the prompt copy and the layout all already
-        existed; only the dispatch was missing. Sits outside the <a> above rather than
-        inside it so these are not interactive elements nested in a link. */}
-    {revealed && !graded && (
-      <div className="px-3 pb-3 pt-1 grid grid-cols-4 gap-1.5 border-t border-card-border/60">
-        {ANCHOR_GRADES.map(g => (
-          <button
-            key={g.score}
-            onClick={() => onGrade(g.score)}
-            className={`py-2.5 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
-            aria-label={`${g.label} — chapter ${anchor.ch}`}
-          >
-            {/* No interval preview, matching every other grade strip. Printing what each
-                grade buys turns "did you remember it?" into a choice between a short wait
-                and a long one, and nothing here verifies the answer. */}
-            <span className="text-[0.6875rem] font-bold leading-tight">{g.label}</span>
-          </button>
-        ))}
+    {/* Grading & hide toggle — outside the <a> above so these are never interactive elements nested inside a link. */}
+    {revealed && (
+      <div className="px-3 pb-3 pt-1 flex flex-col gap-2 border-t border-card-border/60">
+        {!graded && (
+          <div className="grid grid-cols-4 gap-1.5">
+            {ANCHOR_GRADES.map(g => (
+              <button
+                key={g.score}
+                type="button"
+                onClick={() => onGrade(g.score)}
+                className={`py-2.5 flex items-center justify-center rounded-md border transition-colors active:scale-95 ${g.className}`}
+                aria-label={`${g.label} — chapter ${anchor.ch}`}
+              >
+                <span className="text-[0.6875rem] font-bold leading-tight">{g.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onReveal}
+          className="text-[0.6875rem] font-semibold text-muted hover:text-primary transition-colors self-end"
+        >
+          Hide anchor
+        </button>
       </div>
     )}
     </div>
@@ -394,8 +425,6 @@ export const Guides: React.FC = () => {
   const [collapsedSections2, setCollapsedSections2] = useState<Record<string, boolean>>(
     () => Object.fromEntries(GUIDE_SECTIONS.filter(s => !s.defaultOpen).map(s => [s.id, true]))
   );
-  const [isOTExpanded, setIsOTExpanded] = useState(true);
-  const [isNTExpanded, setIsNTExpanded] = useState(true);
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
 
   const toggleSection = (section: string) => {
@@ -418,6 +447,15 @@ export const Guides: React.FC = () => {
   // Which block's chain drill is open, if any. blockIndex is the block's position in
   // the book, which is what its BlockProgress record is keyed by.
   const [drillBlock, setDrillBlock] = useState<{ label: string; blockIndex: number; anchors: ChainAnchor[] } | null>(null);
+  const [libraryColumns, setLibraryColumns] = useGalleryColumns('remora_gallery_books', 2);
+  const [anchorColumns, setAnchorColumns] = useGalleryColumns('remora_gallery_anchors', 2);
+  const [testamentFilter, setTestamentFilter] = useState<TestamentFilter>('ALL');
+  const [sectionFilter, setSectionFilter] = useState<string>('All');
+  const [chooseChapterOpen, setChooseChapterOpen] = useState(false);
+  const [blockChapterPicker, setBlockChapterPicker] = useState<{ label: string; start: number; end: number } | null>(null);
+  const [chapterThemesOpen, setChapterThemesOpen] = useState(true);
+  const [commentaryModalOpen, setCommentaryModalOpen] = useState(false);
+  const [theologiansModalOpen, setTheologiansModalOpen] = useState(false);
 
   // "Covers only" — drops every book card's name/subtitle/key word on the index,
   // leaving art and theme word, so browsing becomes a recognition pass instead of
@@ -508,6 +546,10 @@ export const Guides: React.FC = () => {
     setShowAllAnchors(state.settings.anchorReveal === 'always');
     setCollapsedBlocks(new Set());
     setGradedAnchors(new Map());
+    setChooseChapterOpen(false);
+    setBlockChapterPicker(null);
+    setCommentaryModalOpen(false);
+    setTheologiansModalOpen(false);
   }, [activeGuideId]);
 
   // If the user toggles the global anchor reveal setting while on this page, reflect it
@@ -1196,30 +1238,86 @@ export const Guides: React.FC = () => {
           {activeGuide.type === 'book-guide' && activeGuide.blocks && (
             <div className="flex flex-col gap-6">
 
-              {/* Book title moved to the fixed header above; this keeps only the
-                  architecture caption so the name isn't rendered twice. */}
-              <div className="flex flex-col items-center mb-2 mt-2 gap-1.5">
+              {/* Book Hero + Chapter Entry + Quick Jumps */}
+              <div className="flex flex-col items-center mb-2 mt-2 gap-3">
                 <div className="text-[0.625rem] uppercase tracking-[0.2em] font-bold text-muted text-center">
                   NARRATIVE ARCHITECTURE · {activeGuide.chapters || 28} CHAPTERS
                 </div>
-                {/* The book's shape in four or five numbers — authored on 44 of the
-                    66 guides and, until now, never rendered anywhere. */}
                 {activeGuide.structureFormula && (
-                  <div className="font-heading font-bold text-accent-light text-lg tracking-wide">
+                  <div className="font-heading font-bold text-accent-light text-lg tracking-wide text-center">
                     {activeGuide.structureFormula}
                   </div>
                 )}
-                {/* A jump straight to the one control on this page that actually
-                    tests recall, offered up here rather than only at the bottom of
-                    a fifty- (or a hundred-and-fifty-) card scroll. */}
-                {activeGuide.memorySentence && (
-                  <button
-                    onClick={() => document.getElementById('memory-sentence-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                    className="text-[0.6875rem] font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors mt-1"
-                  >
-                    Jump to Memory Sentence ↓
-                  </button>
+                {ALL_BOOKS.some((b) => b.id === activeGuide.id) && (
+                  <div className="flex flex-wrap items-center justify-center gap-2.5 mt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const target = readerPath(activeGuide.id, 1);
+                        if (target) navigate(target);
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+                    >
+                      <BookOpen className="h-4 w-4" />
+                      Read chapter 1
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setChooseChapterOpen(true)}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-card-border bg-card px-4 py-2.5 text-sm font-semibold text-primary hover:border-accent/50 transition-colors"
+                    >
+                      Choose chapter
+                    </button>
+                  </div>
                 )}
+                <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                  {activeGuide.blocks?.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById('guide-structure')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                      className="rounded-full border border-card-border bg-card px-3 py-1 text-xs font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
+                    >
+                      Structure
+                    </button>
+                  )}
+                  {activeGuide.anchors?.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setChapterThemesOpen(true);
+                        setTimeout(() => document.getElementById('guide-chapters')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
+                      }}
+                      className="rounded-full border border-card-border bg-card px-3 py-1 text-xs font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
+                    >
+                      Chapter themes
+                    </button>
+                  )}
+                  {activeGuide.keyVerses?.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById('guide-key-verses')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                      className="rounded-full border border-card-border bg-card px-3 py-1 text-xs font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
+                    >
+                      Key verses
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById('guide-commentary')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                    className="rounded-full border border-card-border bg-card px-3 py-1 text-xs font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
+                  >
+                    Commentary
+                  </button>
+                  {activeGuide.memorySentence && (
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById('memory-sentence-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                      className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent hover:bg-accent/15 transition-colors"
+                    >
+                      Memory sentence
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* CHAPTER DISTRIBUTION */}
@@ -1332,7 +1430,7 @@ export const Guides: React.FC = () => {
                   : (activeGuide.chapters || 28);
 
                 return (
-              <div className="flex flex-col gap-3">
+              <div id="guide-structure" className="flex flex-col gap-3 scroll-mt-24">
                 {activeGuide.blocks.map((block: any, i: number) => {
                   const color = DISTRIBUTION_COLORS[i % DISTRIBUTION_COLORS.length];
 
@@ -1343,7 +1441,8 @@ export const Guides: React.FC = () => {
                     .replace('4', 'IV').replace('5', 'V');
 
                   const [start, end] = String(block.chapters).split(/[-–]/).map(Number);
-                  const count = (end || start) - start + 1;
+                  const rangeEnd = end || start;
+                  const count = rangeEnd - start + 1;
                   const percent = ((count / totalUnits) * 100).toFixed(1) + '%';
 
                   let cleanDesc = block.description;
@@ -1354,10 +1453,26 @@ export const Guides: React.FC = () => {
                     }
                   }
 
+                  const handleStructureTap = () => {
+                    if (isVerseBased || (activeGuide.chapters || 1) === 1 || start === rangeEnd) {
+                      const path = readerPath(activeGuide.id, isVerseBased ? 1 : start);
+                      if (path) {
+                        navigate(path);
+                        return;
+                      }
+                    }
+                    if (rangeEnd > start) {
+                      setBlockChapterPicker({ label: labelTitleCase, start, end: rangeEnd });
+                    } else {
+                      handleScrollToChapter(isVerseBased ? 1 : start);
+                    }
+                  };
+
                   return (
                     <button
                       key={i}
-                      onClick={() => handleScrollToChapter(isVerseBased ? 1 : start)}
+                      type="button"
+                      onClick={handleStructureTap}
                       className="w-full text-left flex rounded-lg overflow-hidden bg-card border border-card-border hover:bg-card-hover transition-colors min-h-[80px]"
                     >
                       <div className={`w-[72px] flex-shrink-0 flex flex-col items-center justify-center border-l-4 ${color.border} border-r border-r-card-border`}>
@@ -1389,19 +1504,41 @@ export const Guides: React.FC = () => {
               })()}
 
               {activeGuide.anchors && (
-                <div className="mt-4 pt-6 border-t border-card-border flex flex-col gap-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">One-Word Chapter Anchors</h3>
+                <div id="guide-chapters" className="mt-4 pt-6 border-t border-card-border flex flex-col gap-5 scroll-mt-24">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
                     <button
-                      onClick={() => setShowAllAnchors(v => !v)}
-                      className="flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
+                      type="button"
+                      onClick={() => setChapterThemesOpen(v => !v)}
+                      className="flex items-center gap-2 text-left group"
                     >
-                      {showAllAnchors ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      {showAllAnchors ? 'Hide all' : 'Reveal all'}
+                      <h3 className="font-bold text-accent-light text-sm uppercase tracking-[0.15em]">
+                        Chapter themes
+                      </h3>
+                      <span className="rounded-full bg-card-elevated px-2 py-0.5 text-[0.6875rem] font-semibold text-muted tabular-nums">
+                        {activeGuide.anchors.length}
+                      </span>
+                      {chapterThemesOpen ? (
+                        <ChevronDown className="w-4 h-4 text-accent" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-accent" />
+                      )}
                     </button>
+                    {chapterThemesOpen && (
+                      <div className="flex items-center gap-3">
+                        <GalleryViewMenu columns={anchorColumns} onChange={setAnchorColumns} />
+                        <button
+                          type="button"
+                          onClick={() => setShowAllAnchors(v => !v)}
+                          className="flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-accent hover:text-accent-hover transition-colors relative after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
+                        >
+                          {showAllAnchors ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          {showAllAnchors ? 'Hide all' : 'Reveal all'}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
-                  {anchorGroups.map(({ block, colorIndex, anchors }) => {
+                  {chapterThemesOpen && anchorGroups.map(({ block, colorIndex, anchors }) => {
                     const color = DISTRIBUTION_COLORS[colorIndex % DISTRIBUTION_COLORS.length];
                     const isCollapsed = collapsedBlocks.has(colorIndex);
                     const revealedInBlock = anchors.filter((a: any) => showAllAnchors || revealedAnchors.has(Number(a.ch))).length;
@@ -1418,6 +1555,7 @@ export const Guides: React.FC = () => {
                             className={`flex items-center gap-2 border-l-4 ${color.border} pl-3 py-1`}
                           >
                             <button
+                              type="button"
                               onClick={() => setCollapsedBlocks(prev => {
                                 const next = new Set(prev);
                                 if (next.has(colorIndex)) next.delete(colorIndex); else next.add(colorIndex);
@@ -1442,6 +1580,7 @@ export const Guides: React.FC = () => {
                               const chainDue = chain && isDue(chain.sm2);
                               return (
                               <button
+                                type="button"
                                 onClick={() => setDrillBlock({ label: block.label, blockIndex: colorIndex, anchors })}
                                 title={chain
                                   ? `Chain last run at ${Math.round(chain.lastAccuracy * 100)}%${chainDue ? ' — due now' : ''}`
@@ -1462,7 +1601,7 @@ export const Guides: React.FC = () => {
                         )}
 
                         {!isCollapsed && (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className={galleryGridClass(anchorColumns)}>
                             {anchors.map((anchor: any) => {
                               const ch = Number(anchor.ch);
                               const neighbors = anchorNeighbors.get(ch);
@@ -1472,7 +1611,12 @@ export const Guides: React.FC = () => {
                                   anchor={anchor}
                                   guideId={activeGuide.id}
                                   revealed={showAllAnchors || revealedAnchors.has(ch)}
-                                  onReveal={() => setRevealedAnchors(prev => new Set(prev).add(ch))}
+                                  onReveal={() => setRevealedAnchors(prev => {
+                                    const next = new Set(prev);
+                                    if (next.has(ch)) next.delete(ch);
+                                    else next.add(ch);
+                                    return next;
+                                  })}
                                   prevWord={neighbors?.prev}
                                   nextWord={neighbors?.next}
                                   graded={gradedAnchors.get(ch)}
@@ -1491,7 +1635,7 @@ export const Guides: React.FC = () => {
           )}
 
           {activeGuide.keyVerses && (
-            <div className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4">
+            <div id="guide-key-verses" className="mt-2 pt-6 border-t border-card-border flex flex-col gap-4 scroll-mt-24">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Key Verses</h3>
                 <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
@@ -1525,9 +1669,35 @@ export const Guides: React.FC = () => {
               memorySentence field but have no chapter architecture, so this has
               to live outside the type-specific blocks above to reach them. */}
           {activeGuide.memorySentence && (
-            <div id="memory-sentence-section" className="pt-6 border-t border-card-border flex flex-col gap-4">
+            <div id="memory-sentence-section" className="pt-6 border-t border-card-border flex flex-col gap-4 scroll-mt-24">
               <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>Memory Sentence</h3>
               <MemorySentence sentence={activeGuide.memorySentence} anchors={activeGuide.anchors} guideId={activeGuide.id} />
+            </div>
+          )}
+
+          {activeGuide.type === 'book-guide' && (
+            <div id="guide-commentary" className="pt-6 border-t border-card-border flex flex-col gap-3 scroll-mt-24">
+              <h3 className="font-bold text-sm uppercase tracking-[0.15em]" style={{ color: 'var(--accent-light)' }}>
+                Study resources
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCommentaryModalOpen(true)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-accent/30 bg-accent/15 px-4 py-3 text-sm font-bold text-accent hover:bg-accent/20 transition-colors"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Browse commentaries
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheologiansModalOpen(true)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-card-border bg-card px-4 py-3 text-sm font-bold text-primary hover:border-accent/40 transition-colors"
+                >
+                  <Globe className="h-4 w-4 text-accent" />
+                  Theologians
+                </button>
+              </div>
             </div>
           )}
 
@@ -1557,10 +1727,11 @@ export const Guides: React.FC = () => {
             </button>
 
             <button
+              type="button"
               onClick={() => setIsIndexModalOpen(true)}
               className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5 relative after:absolute after:-inset-y-2 after:inset-x-0 after:content-['']"
             >
-              INDEX
+              All books
             </button>
 
             <button
@@ -1584,6 +1755,90 @@ export const Guides: React.FC = () => {
           onSelect={(id) => { setActiveGuideId(id); setIsIndexModalOpen(false); }}
           onClose={() => setIsIndexModalOpen(false)}
           mastery={mastery}
+        />
+
+        <Modal
+          isOpen={chooseChapterOpen}
+          onClose={() => setChooseChapterOpen(false)}
+          variant="sheet"
+          size="md"
+          title="Choose chapter"
+          subtitle={activeGuide.title}
+        >
+          <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 max-h-[60vh] overflow-y-auto py-1">
+            {Array.from({ length: Number(activeGuide.chapters) || 1 }, (_, i) => i + 1).map((ch) => (
+              <button
+                key={ch}
+                type="button"
+                onClick={() => {
+                  setChooseChapterOpen(false);
+                  const path = readerPath(activeGuide.id, ch);
+                  if (path) navigate(path);
+                }}
+                aria-label={`Read chapter ${ch}`}
+                className="min-h-[44px] rounded-xl border border-card-border bg-card-elevated text-sm font-bold text-primary hover:border-accent hover:text-accent transition-colors tabular-nums"
+              >
+                {ch}
+              </button>
+            ))}
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={Boolean(blockChapterPicker)}
+          onClose={() => setBlockChapterPicker(null)}
+          variant="sheet"
+          size="md"
+          title={blockChapterPicker?.label || 'Choose chapter'}
+          subtitle={blockChapterPicker ? `Chapters ${blockChapterPicker.start}–${blockChapterPicker.end}` : undefined}
+        >
+          {blockChapterPicker && (
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 max-h-[50vh] overflow-y-auto py-1">
+                {Array.from(
+                  { length: blockChapterPicker.end - blockChapterPicker.start + 1 },
+                  (_, i) => blockChapterPicker.start + i,
+                ).map((ch) => (
+                  <button
+                    key={ch}
+                    type="button"
+                    onClick={() => {
+                      setBlockChapterPicker(null);
+                      const path = readerPath(activeGuide.id, ch);
+                      if (path) navigate(path);
+                    }}
+                    className="min-h-[44px] rounded-xl border border-card-border bg-card-elevated text-sm font-bold text-primary hover:border-accent hover:text-accent transition-colors tabular-nums"
+                  >
+                    {ch}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const targetCh = blockChapterPicker.start;
+                  setBlockChapterPicker(null);
+                  setChapterThemesOpen(true);
+                  setTimeout(() => handleScrollToChapter(targetCh), 40);
+                }}
+                className="self-start text-xs font-semibold text-accent hover:underline"
+              >
+                Jump to chapter themes ↓
+              </button>
+            </div>
+          )}
+        </Modal>
+
+        <CommentaryModal
+          isOpen={commentaryModalOpen}
+          onClose={() => setCommentaryModalOpen(false)}
+          bookId={activeGuide.id}
+          bookName={activeGuide.title}
+        />
+
+        <TheologiansModal
+          isOpen={theologiansModalOpen}
+          onClose={() => setTheologiansModalOpen(false)}
         />
 
         {drillBlock && (
@@ -1717,8 +1972,8 @@ export const Guides: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex items-center gap-2 mt-2">
-        <div className="relative flex-1">
+      <div className="flex flex-wrap items-center gap-2 mt-2">
+        <div className="relative flex-1 min-w-[200px]">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search className="w-4 h-4 text-muted" />
           </div>
@@ -1726,18 +1981,32 @@ export const Guides: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search books and study resources..."
-            className="w-full bg-card border border-card-border rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 transition-colors text-primary placeholder:text-muted shadow-sm"
+            placeholder="Search books, themes, or keywords"
+            className="w-full bg-card border border-card-border rounded-full pl-10 pr-9 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 transition-colors text-primary placeholder:text-muted shadow-sm"
           />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              aria-label="Clear search"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-primary"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
+        {activeTab === 'books' && (
+          <GalleryViewMenu columns={libraryColumns} onChange={setLibraryColumns} />
+        )}
         {/* A recognition pass through the same grid: art and theme word only, name
             withheld until tapped through to the book itself. */}
         <button
+          type="button"
           onClick={() => setCoversOnlyMode(v => !v)}
           title={coversOnlyMode ? 'Show book names' : 'Hide book names — covers only'}
           aria-pressed={coversOnlyMode}
-          className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-3 rounded-md border text-xs font-bold uppercase tracking-wide transition-colors ${
-            coversOnlyMode ? 'border-accent text-accent bg-accent/10' : 'border-card-border text-muted hover:text-primary hover:border-card-border-hover'
+          className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wide transition-colors ${
+            coversOnlyMode ? 'border-accent text-accent bg-accent/10' : 'border-card-border text-muted hover:text-primary hover:border-card-border-hover bg-card'
           }`}
         >
           {coversOnlyMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -1745,50 +2014,168 @@ export const Guides: React.FC = () => {
         </button>
       </div>
 
+      {activeTab === 'books' && !searchQuery.trim() && (
+        <div className="flex flex-col gap-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            {(
+              [
+                ['ALL', 'Whole Bible'],
+                ['OT', 'Old Testament'],
+                ['NT', 'New Testament'],
+              ] as [TestamentFilter, string][]
+            ).map(([key, label]) => {
+              const active = testamentFilter === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => {
+                    setTestamentFilter(key);
+                    setSectionFilter('All');
+                  }}
+                  className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                    active
+                      ? 'border-accent bg-accent/15 text-accent'
+                      : 'border-card-border bg-card text-secondary hover:text-primary'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+            <button
+              type="button"
+              onClick={() => setSectionFilter('All')}
+              className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                sectionFilter === 'All'
+                  ? 'border-accent bg-accent/15 text-accent'
+                  : 'border-card-border bg-card text-secondary hover:text-primary'
+              }`}
+            >
+              All sections
+            </button>
+            {LIBRARY_SECTION_GROUPS.filter(
+              (group) => testamentFilter === 'ALL' || group.testament === testamentFilter,
+            ).map((group) => {
+              const active = sectionFilter === group.label;
+              return (
+                <button
+                  key={group.label}
+                  type="button"
+                  onClick={() => setSectionFilter(group.label)}
+                  className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                    active
+                      ? 'border-accent bg-accent/15 text-accent'
+                      : 'border-card-border bg-card text-secondary hover:text-primary'
+                  }`}
+                >
+                  {group.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col gap-8 pb-12">
-        {activeTab === 'books' && (
-          <>
-        {/* ── Bible Books — OT ── */}
-        <div className="flex flex-col gap-3">
-          <button 
-            onClick={() => setIsOTExpanded(!isOTExpanded)}
-            className="flex items-center justify-between py-2 border-b border-card-border/50 group"
-          >
-            <h2 className="text-sm uppercase tracking-[0.15em] font-bold text-muted group-hover:text-primary transition-colors flex items-center gap-2">
-              <span className="text-xl">📜</span> Old Testament
-            </h2>
-            <div className="flex items-center gap-2">
-              <span className="text-[0.625rem] font-bold text-muted uppercase tracking-wider bg-card-elevated px-2 py-0.5 rounded">39 Books</span>
-              {isOTExpanded ? <ChevronDown className="w-4 h-4 text-muted" /> : <ChevronRight className="w-4 h-4 text-muted" />}
-            </div>
-          </button>
-          
-          {isOTExpanded && (
+        {activeTab === 'books' && (() => {
+          const q = searchQuery.trim().toLowerCase();
+          const bookMatches = (book: (typeof ALL_BOOKS)[number]) =>
+            matchesBookSearch(book, q)
+            || getBookName(book.id, book.name, state.settings.bibleVersion).toLowerCase().includes(q);
+
+          if (q) {
+            const matchedBooks = ALL_BOOKS.filter(bookMatches);
+            if (matchedBooks.length === 0) {
+              return (
+                <div className="rounded-xl border border-card-border bg-card p-8 text-center flex flex-col items-center gap-3">
+                  <h2 className="font-heading text-lg font-bold text-primary">No books found</h2>
+                  <p className="text-sm text-secondary">Try another book name, theme, or keyword.</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setTestamentFilter('ALL');
+                      setSectionFilter('All');
+                    }}
+                    className="rounded-full bg-accent/15 px-4 py-1.5 text-xs font-semibold text-accent hover:bg-accent/25 transition-colors"
+                  >
+                    Reset filters
+                  </button>
+                </div>
+              );
+            }
+            return (
+              <div className="flex flex-col gap-3">
+                <p className="text-xs font-bold uppercase tracking-widest text-muted">
+                  {matchedBooks.length} {matchedBooks.length === 1 ? 'book' : 'books'} matched
+                </p>
+                <div className={galleryGridClass(libraryColumns)}>
+                  {matchedBooks.map((book) => (
+                    <BookCard
+                      key={book.id}
+                      book={book}
+                      onClick={() => setActiveGuideId(book.id)}
+                      mastery={mastery[book.id]}
+                      coversOnly={coversOnlyMode}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          }
+
+          const visibleGroups = LIBRARY_SECTION_GROUPS.filter((group) => {
+            if (testamentFilter !== 'ALL' && group.testament !== testamentFilter) return false;
+            if (sectionFilter !== 'All' && group.label !== sectionFilter) return false;
+            return true;
+          });
+
+          return (
             <div className="flex flex-col gap-6 animate-[fadeIn_0.2s_ease-out]">
-              {OT_SECTIONS.map(section => {
-                const books = OT_BOOKS.filter(b => b.section === section && matchesBookSearch(b, searchQuery));
+              {visibleGroups.map((group) => {
+                const source = group.testament === 'OT' ? OT_BOOKS : NT_BOOKS;
+                const books = source.filter((b) => group.sections.includes(b.section));
                 if (!books.length) return null;
-                const division = divisionForSection(section);
+                const division = divisionForSection(books[0].section);
+                const isGroupCollapsed = sectionFilter === 'All' && collapsedSections[group.label];
                 return (
-                  <div key={section} className="flex flex-col gap-3">
+                  <div key={group.label} className="flex flex-col gap-3">
                     <button
-                      onClick={() => toggleSection(section)}
-                      className="flex items-center justify-between border-b border-card-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
+                      type="button"
+                      onClick={() => toggleSection(group.label)}
+                      className="flex items-center justify-between border-b border-card-border pb-1.5 w-full text-left group hover:border-accent/50 transition-colors"
                     >
                       <span className="flex items-center gap-2">
                         <span className={`w-1.5 h-1.5 rounded-full ${division.color.bg}`} aria-hidden="true" />
-                        <p className={`text-[0.6875rem] font-bold uppercase tracking-widest ${division.color.text}`}>{section}</p>
+                        <span className={`text-[0.6875rem] font-bold uppercase tracking-widest ${division.color.text}`}>
+                          {group.label}
+                        </span>
+                        <span className="text-[0.625rem] text-muted font-medium">
+                          · {books.length} {books.length === 1 ? 'book' : 'books'}
+                        </span>
                       </span>
-                      {collapsedSections[section] ? (
-                        <ChevronRight className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
-                      ) : (
-                        <ChevronDown className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
+                      {sectionFilter === 'All' && (
+                        isGroupCollapsed ? (
+                          <ChevronRight className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
+                        ) : (
+                          <ChevronDown className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
+                        )
                       )}
                     </button>
-                    {!collapsedSections[section] && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {books.map(book => (
-                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} mastery={mastery[book.id]} coversOnly={coversOnlyMode} />
+                    {!isGroupCollapsed && (
+                      <div className={galleryGridClass(libraryColumns)}>
+                        {books.map((book) => (
+                          <BookCard
+                            key={book.id}
+                            book={book}
+                            onClick={() => setActiveGuideId(book.id)}
+                            mastery={mastery[book.id]}
+                            coversOnly={coversOnlyMode}
+                          />
                         ))}
                       </div>
                     )}
@@ -1796,62 +2183,8 @@ export const Guides: React.FC = () => {
                 );
               })}
             </div>
-          )}
-        </div>
-
-        {/* ── Bible Books — NT ── */}
-        <div className="flex flex-col gap-3">
-          <button 
-            onClick={() => setIsNTExpanded(!isNTExpanded)}
-            className="flex items-center justify-between py-2 border-b border-card-border/50 group"
-          >
-            <h2 className="text-sm uppercase tracking-[0.15em] font-bold text-muted group-hover:text-primary transition-colors flex items-center gap-2">
-              <span className="text-xl">✝️</span> New Testament
-            </h2>
-            <div className="flex items-center gap-2">
-              <span className="text-[0.625rem] font-bold text-accent uppercase tracking-wider bg-accent/10 px-2 py-0.5 rounded">27 Books</span>
-              {isNTExpanded ? <ChevronDown className="w-4 h-4 text-accent" /> : <ChevronRight className="w-4 h-4 text-accent" />}
-            </div>
-          </button>
-          
-          {isNTExpanded && (
-            <div className="flex flex-col gap-6 animate-[fadeIn_0.2s_ease-out]">
-              {NT_SECTIONS.map(section => {
-                const books = NT_BOOKS.filter(b => b.section === section && matchesBookSearch(b, searchQuery));
-                if (!books.length) return null;
-                const division = divisionForSection(section);
-                return (
-                  <div key={section} className="flex flex-col gap-3">
-                    <button
-                      onClick={() => toggleSection(section)}
-                      className="flex items-center justify-between border-b border-card-border pb-1 w-full text-left group hover:border-accent/50 transition-colors"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className={`w-1.5 h-1.5 rounded-full ${division.color.bg}`} aria-hidden="true" />
-                        <p className={`text-[0.6875rem] font-bold uppercase tracking-widest ${division.color.text}`}>{section}</p>
-                      </span>
-                      {collapsedSections[section] ? (
-                        <ChevronRight className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
-                      ) : (
-                        <ChevronDown className="w-3.5 h-3.5 text-accent opacity-70 group-hover:opacity-100" />
-                      )}
-                    </button>
-                    {!collapsedSections[section] && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {books.map(book => (
-                          <BookCard key={book.id} book={book} onClick={() => setActiveGuideId(book.id)} mastery={mastery[book.id]} coversOnly={coversOnlyMode} />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-          </>
-        )}
+          );
+        })()}
 
         {activeTab === 'guides' && (
           <>

@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { BookOpen, Check, HelpCircle, Maximize, X } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { BookOpen, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
-import { evaluateSM2, formatInterval, suggestedScore, isDue } from '../utils/sm2';
+import { evaluateSM2, formatInterval, isDue, suggestedScore } from '../utils/sm2';
 import { dueChapters } from '../utils/mastery';
 import { parseReference } from '../utils/bible';
-import type { Verse, ReviewEvent } from '../types/models';
+import { cueForRepetition, cueLevelToNumber } from '../utils/cue';
 import { buildReviewEvent } from '../utils/reviewLog';
+import { practicePassage } from '../utils/studyText';
+import type { ReviewEvent, SortOrder, Verse } from '../types/models';
+import { useWakeLock } from '../hooks/useWakeLock';
+import { Button } from '../components/ui/Button';
+import { Modal } from '../components/ui/Modal';
 
-// Subcomponents
-import { ReadMode } from '../components/practice/ReadMode';
-import { EraserMode } from '../components/practice/EraserMode';
 import { FirstLetterMode } from '../components/practice/FirstLetterMode';
+import { EraserMode } from '../components/practice/EraserMode';
 import { ScrambleMode } from '../components/practice/ScrambleMode';
 import { TypingMode } from '../components/practice/TypingMode';
 import { SpeechMode } from '../components/practice/SpeechMode';
@@ -21,550 +24,471 @@ import { ImmersedReader } from '../components/practice/ImmersedReader';
 import { AnchorDrill } from '../components/practice/AnchorDrill';
 import { ThemeDrill } from '../components/practice/ThemeDrill';
 import { Session } from '../components/practice/Session';
-import { Button } from '../components/ui/Button';
-import { Modal } from '../components/ui/Modal';
-import { useWakeLock } from '../hooks/useWakeLock';
+import {
+  BuildPassageMode,
+  ReferenceRecallMode,
+} from '../components/practice/PassageLearningModes';
+import {
+  IS_LEARNING_MODE,
+  PracticeHeader,
+  PracticeModePicker,
+  PracticeOrderMenu,
+  ReviewAnswer,
+  ReviewGrades,
+  type PracticeModeKey,
+} from '../components/practice/PracticeFeedback';
 
-type PracticeMode = 'read' | 'eraser' | 'first-letter' | 'scramble' | 'typing' | 'speech' | 'listen' | 'immersed';
-
-/** The app's three stated goals, and now its top-level control. This used to be a
- * two-way 'verses' | 'chapters' switch rendered as 10px text below the workspace,
- * below the scoring block — on a screen whose entire header is about verses. Theme
- * had no home at all. Naming the navigation after the goal is what makes the anchor
- * and theme layers discoverable rather than buried. */
 type Subject = 'theme' | 'anchor' | 'verse';
 
-const SUGGESTED_LABEL: Record<number, string> = { 1: 'Blank', 3: 'Hard', 4: 'Good', 5: 'Easy' };
-
-/** Practice's own mode names, in the vocabulary the review history uses. Read mode has
- * no scoring block, so it can never reach the log. */
-const MODE_TO_LOG: Partial<Record<PracticeMode, ReviewEvent['mode']>> = {
+const MODE_TO_LOG: Partial<Record<PracticeModeKey, ReviewEvent['mode']>> = {
   typing: 'type',
   speech: 'speak',
+  read: 'reveal',
   scramble: 'scramble',
   eraser: 'erase',
   'first-letter': 'reveal',
-  listen: 'reveal',
+  build: 'assisted',
+  listen: 'assisted',
+  immersed: 'assisted',
+  reference: 'reference',
 };
 
-/**
- * The best grade a hinted attempt can honestly earn.
- *
- * `handleScore` never consulted `hintLevel`, so a reader could press the hint button
- * four times — revealing the entire verse, which the badge itself labels "(Full)" —
- * then press Easy and have it recorded as a clean recall worth a long interval. That
- * is the same defect as every other one this app has been fixing: the schedule acting
- * on something that did not happen.
- *
- * A quarter of the verse is a nudge, so Good stays available. Half or more is enough
- * support that the honest ceiling is Hard. The whole verse on screen is not recall at
- * all, whatever it felt like, and grades as a lapse.
- */
-const HINT_GRADE_CEILING: Record<number, number> = { 0: 5, 1: 4, 2: 3, 3: 3, 4: 1 };
-const ceilingFor = (hintLevel: number) => HINT_GRADE_CEILING[hintLevel] ?? 5;
+function sortVersesList(
+  list: Verse[],
+  order: SortOrder,
+  randomKeys: Map<string, number>
+): Verse[] {
+  const copy = [...list];
+  const now = new Date();
+  copy.sort((a, b) => {
+    if (order === 'bible-asc') {
+      const refA = parseReference(a.ref);
+      const refB = parseReference(b.ref);
+      if (refA.bookIndex !== refB.bookIndex) return refA.bookIndex - refB.bookIndex;
+      if (refA.chapter !== refB.chapter) return refA.chapter - refB.chapter;
+      return refA.verse - refB.verse;
+    }
+    if (order === 'random') {
+      return (randomKeys.get(a.id) ?? 0) - (randomKeys.get(b.id) ?? 0);
+    }
+    if (order === 'smart') {
+      const aDue = isDue(a.sm2, now) ? 0 : 1;
+      const bDue = isDue(b.sm2, now) ? 0 : 1;
+      if (aDue !== bDue) return aDue - bDue;
+      const efactorDiff = (a.sm2?.efactor ?? 2.5) - (b.sm2?.efactor ?? 2.5);
+      if (Math.abs(efactorDiff) > 0.01) return efactorDiff;
+      return (a.sm2?.repetition ?? 0) - (b.sm2?.repetition ?? 0);
+    }
+    if (order === 'date-asc') {
+      return new Date(a.addedDate || 0).getTime() - new Date(b.addedDate || 0).getTime();
+    }
+    if (order === 'date-desc') {
+      return new Date(b.addedDate || 0).getTime() - new Date(a.addedDate || 0).getTime();
+    }
+    return a.ref.localeCompare(b.ref);
+  });
+  return copy;
+}
 
 export const Practice: React.FC = () => {
   useWakeLock();
-  
+
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  // Verses vs. Chapters — the same screen and the same SM2 grading loop, pointed
-  // at a different kind of recall. Chapters renders an entirely separate
-  // component (AnchorDrill) rather than trying to thread a second item type
-  // through the verse-specific mode machinery below (ReadMode, EraserMode, TTS
-  // auto-play, the cross-verse selection state) — that machinery is real
-  // complexity earned by verses specifically, and generalizing all of it was a
-  // materially larger, riskier change than this screen's other moves for the
-  // value it would add over a clean second branch.
-  //
-  // A navigation can arrive already asking for Chapters — the testament browser's
-  // "Test me on these N" button, or a due-chapter empty-state redirect elsewhere —
-  // via location.state, the same channel Guides.tsx already uses for
-  // scrollToMemorySentence.
-  const navState = location.state as { subject?: Subject; sweepBookIds?: string[]; focusBookId?: string } | null;
-  const [subject, setSubject] = useState<Subject>(navState?.subject || 'verse');
-  const sweepBookIds = navState?.sweepBookIds;
-  // Consumed on the first render, like sweepBookIds — the effect below clears navState
-  // so returning to this route later does not silently re-narrow the day to one book.
-  const [focusBookId] = useState(navState?.focusBookId);
+  const navState = location.state as {
+    subject?: Subject;
+    sweepBookIds?: string[];
+    focusBookId?: string;
+    randomSortKeys?: Iterable<[string, number]>;
+  } | null;
 
-  // The workshop opens on a mode that can be scored.
-  //
-  // It used to land on Read, which is the one mode with no scoring block at all — so the
-  // tab labelled "Practice" opened a screen where practising produced no record of any
-  // kind. Type is the strongest default available: it is the only mode besides Recite
-  // that can measure an attempt rather than ask about it, which is what makes the grade
-  // worth anything. Read is still one tap away, and is still the right thing for looking
-  // at a verse you are not yet trying to produce.
-  const [activeMode, setActiveMode] = useState<PracticeMode>('typing');
-  const isImmersed = activeMode === 'immersed';
-  const lastNonImmersedMode = React.useRef<PracticeMode>('typing');
-  React.useEffect(() => {
+  const [subject, setSubject] = useState<Subject>(navState?.subject || 'verse');
+  const [sweepBookIds] = useState<string[] | undefined>(navState?.sweepBookIds);
+  const [focusBookId] = useState<string | undefined>(navState?.focusBookId);
+
+  const modeParam = searchParams.get('mode');
+  const targetId = searchParams.get('id');
+  const topicParam = searchParams.get('topic');
+  const isWorkshop = Boolean(targetId) || modeParam === 'free';
+
+  const [chooseActivity, setChooseActivity] = useState<boolean>(() => !targetId);
+  const [activeMode, setActiveMode] = useState<PracticeModeKey>('read');
+  const lastNonImmersedMode = useRef<PracticeModeKey>('read');
+
+  useEffect(() => {
     if (activeMode !== 'immersed') {
       lastNonImmersedMode.current = activeMode;
     }
   }, [activeMode]);
-  const handleExitImmersed = React.useCallback(() => {
+
+  const handleExitImmersed = useCallback(() => {
     setActiveMode(lastNonImmersedMode.current);
   }, []);
-  const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
-  
-  const [isAutoPlaying, setIsAutoPlaying] = useState(state.settings.ttsEnabled);
 
-  // Sync with global TTS setting
-  React.useEffect(() => {
-    setIsAutoPlaying(state.settings.ttsEnabled);
-  }, [state.settings.ttsEnabled]);
-
-  // Consume the incoming subject/sweep request once, then clear it — otherwise
-  // it would sit in browser history and silently re-trigger a testament sweep the
-  // next time something merely navigates back to /practice.
-  React.useEffect(() => {
-    if (navState) navigate(location.pathname + location.search, { replace: true, state: {} });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const [hintLevel, setHintLevel] = useState(0);
-
-  /**
-   * Two activities live behind this one route, and until now they were not distinguished.
-   *
-   * The day's work is bounded, mixed and self-terminating, and it is what the reader
-   * should meet by default. Free practice on a single verse is a genuinely different
-   * thing — deliberate, occasional, chosen — and worth keeping, but it is not a daily
-   * habit and it should be entered on purpose rather than landed in.
-   *
-   * Every route into this screen already had the right shape except the tab itself: the
-   * dashboard's "Start Session" asks for the day's work, a verse card asks for that one
-   * verse, and the guides ask for a specific drill. Only a bare /practice — the second
-   * item in the navigation, the most prominent entry in the app — opened the workshop,
-   * over the whole library, in a mode that recorded nothing. That is the split being
-   * closed here: the tab now means the same thing the Today button means, and the
-   * workshop keeps its own address.
-   */
-  const modeParam = searchParams.get('mode');
-  const targetId = searchParams.get('id');
-  const topicParam = searchParams.get('topic');
-  const isWorkshop = !!targetId || modeParam === 'free';
-
-  // The workshop always works against the whole library — it is a place to pick something
-  // up deliberately, so filtering it to what happens to be due would defeat the point.
-  // The day's-work path builds its own plan and never reads this.
   const [activeTopicFilter, setActiveTopicFilter] = useState<string | null>(topicParam);
-  const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
-
-  const [randomSortKeys] = useState(() => {
-    if (navState && 'randomSortKeys' in navState && navState.randomSortKeys) {
-      return new Map<string, number>(navState.randomSortKeys as Iterable<[string, number]>);
+  const [practiceDueOnly, setPracticeDueOnly] = useState(false);
+  const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
+  const [verseOrder, setVerseOrder] = useState<SortOrder>(state.sortOrder || 'smart');
+  const [randomSortKeys, setRandomSortKeys] = useState<Map<string, number>>(() => {
+    if (navState?.randomSortKeys) {
+      return new Map<string, number>(navState.randomSortKeys);
     }
     const keys = new Map<string, number>();
     state.verses.forEach(v => keys.set(v.id, Math.random()));
     return keys;
   });
 
-  // The workshop works against the whole library or a filtered topic, sorted by user preference
-  const verses = React.useMemo(() => {
-    const generalTopic = (state.topics || []).find(t => t.name.toLowerCase() === 'general');
-    const base = activeTopicFilter
-      ? activeTopicFilter === '__general__' || (generalTopic && activeTopicFilter === generalTopic.id)
-        ? state.verses.filter(v => !v.topicIds || v.topicIds.length === 0 || (generalTopic && v.topicIds.includes(generalTopic.id)))
-        : state.verses.filter(v => v.topicIds?.includes(activeTopicFilter))
-      : [...state.verses];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [assistedIds, setAssistedIds] = useState<Set<string>>(() => new Set());
+  const [immersiveExposedIds, setImmersiveExposedIds] = useState<Set<string>>(() => new Set());
+  const [firstLetterSeenByVerse, setFirstLetterSeenByVerse] = useState<
+    Record<string, { seen: number[]; total: number }>
+  >({});
 
-    const now = new Date();
-    base.sort((a, b) => {
-      if (state.sortOrder === 'smart') {
-        const isADue = isDue(a.sm2, now);
-        const isBDue = isDue(b.sm2, now);
-        if (isADue && !isBDue) return -1;
-        if (!isADue && isBDue) return 1;
-        return (a.sm2.repetition || 0) - (b.sm2.repetition || 0);
-      }
-      if (state.sortOrder === 'bible-asc' || state.sortOrder === 'bible-desc') {
-        const aParsed = parseReference(a.ref);
-        const bParsed = parseReference(b.ref);
-        let diff = aParsed.bookIndex - bParsed.bookIndex;
-        if (diff === 0) diff = aParsed.chapter - bParsed.chapter;
-        if (diff === 0) diff = aParsed.verse - bParsed.verse;
-        return state.sortOrder === 'bible-asc' ? diff : -diff;
-      }
-      if (state.sortOrder === 'random') {
-        const valA = randomSortKeys.get(a.id) || 0;
-        const valB = randomSortKeys.get(b.id) || 0;
-        return valA - valB;
-      }
-      return 0;
-    });
-
-    return base;
-  }, [state.verses, activeTopicFilter, state.sortOrder, randomSortKeys]);
-
-  const initialIndex = React.useMemo(() => {
-    if (targetId) {
-      const idx = verses.findIndex(v => v.id === targetId);
-      return idx >= 0 ? idx : 0;
-    }
-    return 0;
-  }, [verses, targetId]);
-
-  const [activeVerseIndex, setActiveVerseIndex] = useState(initialIndex);
-
-  React.useEffect(() => {
-    setActiveVerseIndex(initialIndex);
-  }, [initialIndex]);
-
-  React.useEffect(() => {
-    setActiveVerseIndex(0);
-  }, [activeTopicFilter]);
-
-  // Chrome (fixed header + bottom verse-nav) visibility — tap-to-toggle, the same
-  // rule the chapter reader and the guide pages use: a tap on empty space toggles,
-  // a tap on anything interactive only ever reveals, so answering a prompt or
-  // switching mode never feels like it also yanked the navigation away.
-  const [chromeVisible, setChromeVisible] = useState(true);
-  const headerRef = React.useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
-
-  const handlePracticeContentClick = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (target.closest('button, a, input, select, textarea, [role="button"]')) {
-      setChromeVisible(true);
-    } else {
-      setChromeVisible(v => !v);
-    }
-  };
-
-  // Keep the content clear of the fixed header — its height shifts with the verse
-  // reference wrapping, so it's measured rather than hardcoded.
-  React.useEffect(() => {
-    const el = headerRef.current;
-    if (!el) return;
-    const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    measure();
-    return () => observer.disconnect();
-  }, [activeVerseIndex, isImmersed]);
-
-  // Objective accuracy from whichever mode can measure it (Typing, Recite). Null in
-  // the modes that genuinely can't know — Read and Erase have no ground truth to
-  // compare against, so those stay purely self-graded.
   const [modeAccuracy, setModeAccuracy] = useState<number | null>(null);
-  // What the reader actually wrote or said, kept alongside the number so the review
-  // history can hold the attempt itself. A percentage tells you an attempt went badly;
-  // the words tell you why, which is what makes a leech worth rewording rather than
-  // simply repeating.
   const [modeCommitted, setModeCommitted] = useState<string | null>(null);
+  const [hintRevealedRatio, setHintRevealedRatio] = useState<number | null>(null);
+  const [eraserHiddenRatio, setEraserHiddenRatio] = useState<number | null>(null);
+  const [scrambleAccuracy, setScrambleAccuracy] = useState<number | null>(null);
+  const [lastReviewMessage, setLastReviewMessage] = useState<string | null>(null);
+  const [attemptVersion, setAttemptVersion] = useState(0);
 
-  const handleAttempt = React.useCallback((attempt: { accuracy: number; committed: string }) => {
-    setModeAccuracy(attempt.accuracy);
-    setModeCommitted(attempt.committed);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+  const targetAppliedRef = useRef(false);
+
+  // Consume one-shot navigation state without re-triggering on back navigation.
+  useEffect(() => {
+    if (navState) {
+      navigate(location.pathname + location.search, { replace: true, state: {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reset hint and any measured accuracy when changing verses or modes
-  React.useEffect(() => {
-    setHintLevel(0);
+  // Sync URL topic filter if route search param changes explicitly.
+  useEffect(() => {
+    if (topicParam !== null) {
+      setActiveTopicFilter(topicParam);
+      setActiveIndex(0);
+      setIsFinished(false);
+    }
+  }, [topicParam]);
+
+  const stopSpeech = useCallback(() => {
+    setIsAutoPlaying(false);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
+  useEffect(() => () => stopSpeech(), [stopSpeech]);
+
+  const collectionPool = useMemo(() => {
+    const generalTopic = (state.topics || []).find(
+      t => t.name.toLowerCase() === 'general'
+    );
+    if (!activeTopicFilter) return [...state.verses];
+    if (
+      activeTopicFilter === '__general__' ||
+      (generalTopic && activeTopicFilter === generalTopic.id)
+    ) {
+      return state.verses.filter(
+        v =>
+          !v.topicIds ||
+          v.topicIds.length === 0 ||
+          (generalTopic && v.topicIds.includes(generalTopic.id))
+      );
+    }
+    return state.verses.filter(v => v.topicIds?.includes(activeTopicFilter));
+  }, [state.verses, state.topics, activeTopicFilter]);
+
+  const dueCount = useMemo(
+    () => collectionPool.filter(v => isDue(v.sm2)).length,
+    [collectionPool]
+  );
+
+  const verses = useMemo(() => {
+    const scoped =
+      practiceDueOnly && dueCount > 0 && !targetId
+        ? collectionPool.filter(v => isDue(v.sm2))
+        : collectionPool;
+    return sortVersesList(scoped, verseOrder, randomSortKeys);
+  }, [collectionPool, practiceDueOnly, dueCount, targetId, verseOrder, randomSortKeys]);
+
+  // Jump to requested `?id=` once verses are available.
+  useEffect(() => {
+    if (targetId && !targetAppliedRef.current && verses.length > 0) {
+      const idx = verses.findIndex(v => v.id === targetId);
+      if (idx >= 0) {
+        setActiveIndex(idx);
+        setChooseActivity(false);
+        targetAppliedRef.current = true;
+      }
+    }
+  }, [targetId, verses]);
+
+  const safeIndex = Math.min(activeIndex, Math.max(0, verses.length - 1));
+  const currentVerse = verses[safeIndex];
+
+  const resetAttempt = useCallback(() => {
+    setIsRevealed(false);
     setModeAccuracy(null);
     setModeCommitted(null);
-  }, [activeVerseIndex, activeMode]);
+    setHintRevealedRatio(null);
+    setEraserHiddenRatio(null);
+    setScrambleAccuracy(null);
+    setAttemptVersion(v => v + 1);
+  }, []);
 
-  const safeVerseIndex = activeVerseIndex >= verses.length ? Math.max(0, verses.length - 1) : activeVerseIndex;
-  const currentVerse = verses[safeVerseIndex];
-
-  const collectionTitle = React.useMemo(() => {
-    if (!activeTopicFilter) return 'All';
-    if (activeTopicFilter === '__general__') return 'General';
-    const topic = state.topics?.find(t => t.id === activeTopicFilter);
-    if (topic) {
-      return topic.name.toLowerCase() === 'well_known' || topic.name.toLowerCase() === '75 well-known'
-        ? 'Well-Known'
-        : topic.name;
-    }
-    return 'Review';
-  }, [activeTopicFilter, state.topics]);
-
-  const retentionStage = React.useMemo(() => {
-    if (!currentVerse) return 'Learning';
-    if (currentVerse.keyword && currentVerse.keyword.trim().length > 0) {
-      return currentVerse.keyword.trim();
-    }
-    const interval = currentVerse.sm2?.interval || 0;
-    const repetition = currentVerse.sm2?.repetition || 0;
-    if (interval >= 30 || repetition >= 6) return 'Forever';
-    if (repetition >= 2 || interval >= 6) return 'Review';
-    return 'Learning';
-  }, [currentVerse]);
-
-  const handleToggleTTS = () => {
-    if (isAutoPlaying) {
-      window.speechSynthesis.cancel();
-      setIsAutoPlaying(false);
-    } else {
-      setIsAutoPlaying(true);
-    }
-  };
-
-  // Handle Auto Play Logic — available while reading, including immersive reading
-  React.useEffect(() => {
-    if (activeMode !== 'read' && activeMode !== 'immersed') {
-      if (isAutoPlaying) {
-        setIsAutoPlaying(false);
-        window.speechSynthesis.cancel();
+  const handleSelectOrder = useCallback(
+    (nextOrder: SortOrder) => {
+      if (nextOrder === 'random') {
+        const nextKeys = new Map<string, number>();
+        state.verses.forEach(v => nextKeys.set(v.id, Math.random()));
+        setRandomSortKeys(nextKeys);
       }
+      setVerseOrder(nextOrder);
+      dispatch({ type: 'SET_SORT_ORDER', payload: nextOrder });
+      setActiveIndex(0);
+      setIsFinished(false);
+      resetAttempt();
+    },
+    [state.verses, dispatch, resetAttempt]
+  );
+
+  const handleChangeMode = useCallback(
+    (nextMode: PracticeModeKey) => {
+      stopSpeech();
+      setActiveMode(nextMode);
+      resetAttempt();
+    },
+    [stopSpeech, resetAttempt]
+  );
+
+  const advanceVerse = useCallback(() => {
+    stopSpeech();
+    resetAttempt();
+    if (safeIndex < verses.length - 1) {
+      setActiveIndex(safeIndex + 1);
+    } else {
+      setIsFinished(true);
+    }
+  }, [stopSpeech, resetAttempt, safeIndex, verses.length]);
+
+  const handlePrev = useCallback(() => {
+    if (safeIndex <= 0) return;
+    stopSpeech();
+    resetAttempt();
+    setActiveIndex(safeIndex - 1);
+  }, [safeIndex, stopSpeech, resetAttempt]);
+
+  const handleNext = useCallback(() => {
+    if (safeIndex >= verses.length - 1) return;
+    stopSpeech();
+    resetAttempt();
+    setActiveIndex(safeIndex + 1);
+  }, [safeIndex, verses.length, stopSpeech, resetAttempt]);
+
+  const cleanText = useMemo(
+    () => (currentVerse ? practicePassage(currentVerse.text).text : ''),
+    [currentVerse]
+  );
+
+  const isEnglishText = useMemo(() => {
+    const ver = currentVerse?.translation || state.settings.bibleVersion;
+    return ver !== 'TBSI' && ver !== 'TELIRV';
+  }, [currentVerse?.translation, state.settings.bibleVersion]);
+
+  // Speak active verse in ImmersedReader mode.
+  const handleToggleTTS = useCallback(() => {
+    if (!currentVerse) return;
+    if (isAutoPlaying) {
+      stopSpeech();
       return;
     }
-
-    if (isAutoPlaying && currentVerse) {
-      window.speechSynthesis.cancel();
-      const textToSpeak = `${currentVerse.ref}. ${currentVerse.text}`;
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
-      
-      utterance.onend = () => {
-        if (activeVerseIndex < verses.length - 1) {
-          // Short pause before advancing to the next verse
-          setTimeout(() => {
-            setActiveVerseIndex(i => i + 1);
-          }, 800);
-        } else {
-          setIsAutoPlaying(false);
-        }
-      };
-      
-      window.speechSynthesis.speak(utterance);
+    if (!('speechSynthesis' in window)) {
+      showToast('Text-to-speech is unavailable in this browser.', 'error');
+      return;
     }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = isEnglishText ? 'en-US' : 'te-IN';
+    utterance.onend = () => setIsAutoPlaying(false);
+    utterance.onerror = () => setIsAutoPlaying(false);
+    setIsAutoPlaying(true);
+    window.speechSynthesis.speak(utterance);
+  }, [currentVerse, isAutoPlaying, stopSpeech, cleanText, isEnglishText, showToast]);
 
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, [activeVerseIndex, isAutoPlaying, currentVerse, verses.length, activeMode]);
+  const currentCollectionTitle = useMemo(() => {
+    if (!activeTopicFilter) return 'All verses';
+    if (activeTopicFilter === '__general__') return 'General';
+    return (
+      state.topics?.find(t => t.id === activeTopicFilter)?.name || 'Collection'
+    );
+  }, [activeTopicFilter, state.topics]);
 
-  const handleNext = () => {
-    if (activeVerseIndex < verses.length - 1) setActiveVerseIndex(i => i + 1);
-  };
+  const isCurrentAssisted = useMemo(() => {
+    if (!currentVerse) return false;
+    if (IS_LEARNING_MODE[activeMode]) return true;
+    if (assistedIds.has(currentVerse.id)) return true;
+    if (immersiveExposedIds.has(currentVerse.id)) return true;
+    const fl = firstLetterSeenByVerse[currentVerse.id];
+    return Boolean(fl && fl.seen.length > 0);
+  }, [currentVerse, activeMode, assistedIds, immersiveExposedIds, firstLetterSeenByVerse]);
 
-  const handlePrev = () => {
-    if (activeVerseIndex > 0) setActiveVerseIndex(i => i - 1);
-  };
+  const gradeCeiling = useMemo(() => {
+    if (isCurrentAssisted) return 1;
+    if (activeMode === 'typing' || activeMode === 'speech') {
+      if (modeAccuracy === null) return 5;
+      const base = suggestedScore(modeAccuracy);
+      return modeAccuracy < 100 && base === 5 ? 4 : base;
+    }
+    if (activeMode === 'eraser' && eraserHiddenRatio !== null) {
+      if (eraserHiddenRatio >= 0.75) return 5;
+      if (eraserHiddenRatio >= 0.5) return 4;
+      if (eraserHiddenRatio >= 0.25) return 3;
+      return 1;
+    }
+    if (activeMode === 'scramble' && scrambleAccuracy !== null) {
+      if (scrambleAccuracy >= 0.9) return 5;
+      if (scrambleAccuracy >= 0.75) return 4;
+      if (scrambleAccuracy >= 0.5) return 3;
+      return 1;
+    }
+    if (hintRevealedRatio !== null) {
+      if (hintRevealedRatio <= 0.05) return 5;
+      if (hintRevealedRatio <= 0.25) return 4;
+      if (hintRevealedRatio <= 0.75) return 3;
+      return 1;
+    }
+    return 5;
+  }, [
+    isCurrentAssisted,
+    activeMode,
+    modeAccuracy,
+    eraserHiddenRatio,
+    scrambleAccuracy,
+    hintRevealedRatio,
+  ]);
 
-  const handleScore = (rawScore: number) => {
-    // Capped, not just discouraged. The buttons above the ceiling are disabled too, so
-    // this should never actually bite — but the grade that reaches the scheduler is the
-    // one that matters, and it must not depend on the UI having behaved.
-    const score = Math.min(rawScore, ceilingFor(hintLevel));
-    const { newSM2, newStatus } = evaluateSM2(currentVerse.sm2, score, 'verse', state.settings.intervalScale ?? 1);
-    
-    const updatedVerse: Verse = {
-      ...currentVerse,
-      sm2: newSM2,
-      status: newStatus,
-      attempts: (currentVerse.attempts || 0) + 1
-    };
-    
-    dispatch({ type: 'UPDATE_VERSE', payload: updatedVerse });
-    // The only surface in the app that can currently measure an attempt rather than ask
-    // about it. `modeAccuracy` is real ground truth from Type and Recite; recording it
-    // next to the grade the reader chose is what makes the honesty gap computable.
+  const handleGrade = useCallback(
+    (score: number) => {
+      if (!currentVerse) return;
+      const { newSM2, newStatus } = evaluateSM2(
+        currentVerse.sm2,
+        score,
+        'verse',
+        state.settings.intervalScale ?? 1
+      );
+      dispatch({
+        type: 'UPDATE_VERSE',
+        payload: { ...currentVerse, sm2: newSM2, status: newStatus },
+      });
+      dispatch({
+        type: 'RECORD_REVIEW',
+        payload: buildReviewEvent({
+          itemKind: 'verse',
+          itemId: currentVerse.id,
+          gradeSubmitted: score,
+          before: currentVerse.sm2,
+          after: newSM2,
+          mode: MODE_TO_LOG[activeMode] || 'reveal',
+          cueLevel: cueLevelToNumber(cueForRepetition(currentVerse.sm2?.repetition || 0)),
+          ...(modeAccuracy !== null ? { accuracy: modeAccuracy } : {}),
+          ...(modeCommitted !== null ? { committed: modeCommitted } : {}),
+        }),
+      });
+      dispatch({ type: 'RECORD_ACTIVITY' });
+      const msg = `Saved ${currentVerse.ref} · next review in ${formatInterval(
+        newSM2.interval
+      )}.`;
+      setLastReviewMessage(msg);
+      showToast(msg, 'success');
+      advanceVerse();
+    },
+    [
+      currentVerse,
+      state.settings.intervalScale,
+      dispatch,
+      activeMode,
+      modeAccuracy,
+      modeCommitted,
+      showToast,
+      advanceVerse,
+    ]
+  );
+
+  const handleSaveAssisted = useCallback(() => {
+    if (!currentVerse) return;
     dispatch({
       type: 'RECORD_REVIEW',
       payload: buildReviewEvent({
-        itemKind: 'verse', itemId: currentVerse.id, gradeSubmitted: score,
-        before: currentVerse.sm2, after: newSM2,
-        mode: MODE_TO_LOG[activeMode] ?? 'reveal',
-        // A hint level is a cue level. First-letter mode carries a standing cue of its
-        // own even with no hint pressed, so the recorded cue is whichever is stronger.
-        cueLevel: Math.max(hintLevel, activeMode === 'first-letter' ? 2 : 0) as 0 | 1 | 2 | 3 | 4,
-        gradeCeiling: ceilingFor(hintLevel),
-        measuredAccuracy: modeAccuracy,
-        committed: modeCommitted,
+        itemKind: 'verse',
+        itemId: currentVerse.id,
+        gradeSubmitted: 1,
+        before: currentVerse.sm2,
+        after: currentVerse.sm2,
+        mode: 'assisted',
+        cueLevel: 4,
       }),
     });
-    // The streak action existed in the reducer with nothing in the app ever
-    // dispatching it, so the flame on Today and in the shell header had shown
-    // zero for every session. This is where it actually starts counting.
     dispatch({ type: 'RECORD_ACTIVITY' });
-    setIsEvaluationOpen(false);
-    // formatInterval, not raw days: this said "Next review in 63 days" where every other
-    // grading surface in the app says "2 mo". It is also now the only place the interval
-    // appears at all, the grade buttons having stopped advertising what each one buys.
-    showToast(`Score logged. Next review in ${formatInterval(newSM2.interval)}.`, 'success');
-  };
+    const msg = `Saved ${currentVerse.ref} (with help) · schedule unchanged.`;
+    setLastReviewMessage(msg);
+    showToast('Assisted practice saved', 'info');
+    advanceVerse();
+  }, [currentVerse, dispatch, showToast, advanceVerse]);
 
-  const handleHintClick = () => {
-    if (hintLevel >= 4) {
-      setHintLevel(0);
-    } else {
-      setHintLevel(h => h + 1);
-    }
-  };
+  const handleSaveReferencePractice = useCallback(
+    (score: number) => {
+      if (!currentVerse) return;
+      dispatch({
+        type: 'RECORD_REVIEW',
+        payload: buildReviewEvent({
+          itemKind: 'verse',
+          itemId: currentVerse.id,
+          gradeSubmitted: score,
+          before: currentVerse.sm2,
+          after: currentVerse.sm2,
+          mode: 'reference',
+          cueLevel: 0,
+        }),
+      });
+      dispatch({ type: 'RECORD_ACTIVITY' });
+      const msg = `Reference practice saved for ${currentVerse.ref}.`;
+      setLastReviewMessage(msg);
+      showToast('Reference practice saved', 'success');
+      advanceVerse();
+    },
+    [currentVerse, dispatch, showToast, advanceVerse]
+  );
 
-  const renderProgressiveHint = () => {
-    if (hintLevel === 0) return null;
-    
-    const totalWords = currentVerse.text.split(/\s+/).filter(w => w.trim().length > 0);
-    const wordsToReveal = Math.ceil(totalWords.length * (hintLevel * 0.25));
-    
-    let revealedCount = 0;
-    const tokens = currentVerse.text.split(/(\s+)/);
-    
-    return (
-      <div className="mb-6 p-4 rounded-xl bg-accent/10 border border-accent/20 text-secondary text-lg leading-relaxed relative">
-        <div className="absolute -top-2 -left-2 bg-accent text-white text-[0.625rem] font-bold px-2 py-0.5 rounded-full shadow-sm">
-          HINT {hintLevel < 4 ? `${hintLevel}/4` : '(Full)'}
-        </div>
-        {tokens.map((token, i) => {
-          if (!token.trim()) return <span key={i}>{token}</span>; // whitespace
-          
-          revealedCount++;
-          if (revealedCount <= wordsToReveal) {
-            return <span key={i} className="text-primary font-medium">{token}</span>;
-          } else {
-            return <span key={i} className="opacity-40 blur-[4px] select-none transition-all">{token}</span>;
-          }
-        })}
-      </div>
-    );
-  };
-
-  // Hint for tap-to-toggle discoverability
-  React.useEffect(() => {
-    const hasSeenHint = localStorage.getItem('remora_tap_hint');
-    if (!hasSeenHint && isImmersed) {
-      showToast('Tap anywhere to read fullscreen', 'info');
-      localStorage.setItem('remora_tap_hint', 'true');
-    }
-  }, [isImmersed, showToast]);
-
-  // Render the current mode's workspace (immersive reading renders separately)
-  const renderWorkspace = () => {
-    switch (activeMode) {
-      case 'read':
-        return <ReadMode key={currentVerse.id} text={currentVerse.text} />;
-      case 'eraser':
-        return <EraserMode key={currentVerse.id} text={currentVerse.text} />;
-      case 'first-letter':
-        return <FirstLetterMode key={currentVerse.id} text={currentVerse.text} />;
-      case 'scramble':
-        return (
-          <ScrambleMode
-            key={currentVerse.id}
-            text={currentVerse.text}
-            onComplete={() => handleScore(4)}
-          />
-        );
-      case 'listen':
-        return (
-          <ListenMode
-            key={currentVerse.id}
-            text={currentVerse.text}
-            isEnglish={true}
-            onPrev={handlePrev}
-            onNext={handleNext}
-          />
-        );
-      case 'typing':
-        return <TypingMode key={currentVerse.id} text={currentVerse.text} onAttempt={handleAttempt} />;
-      case 'speech':
-        return <SpeechMode key={currentVerse.id} text={currentVerse.text} onAttempt={handleAttempt} />;
-      default:
-        return null;
-    }
-  };
-
-  // Global Navigation: Keyboard, Swipe, and Immersed Taps
-  //
-  // Bound only while the verse workspace is the thing on screen. The early returns for
-  // Session, ThemeDrill and AnchorDrill sit below every hook, so without this guard
-  // these window listeners stayed live underneath them — an arrow key or a swipe during
-  // a chain drill silently moved activeVerseIndex in a screen the reader could not see,
-  // and they would come back to a different verse than they left.
-  const verseNavActive = subject === 'verse' && isWorkshop && !!currentVerse;
-  React.useEffect(() => {
-    if (!verseNavActive) return;
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    const handlePrevVerse = () => {
-      setActiveVerseIndex(i => (i > 0 ? i - 1 : i));
-    };
-
-    const handleNextVerse = () => {
-      setActiveVerseIndex(i => (i < verses.length - 1 ? i + 1 : i));
-    };
-
-    // Keyboard navigation
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === 'ArrowLeft') handlePrevVerse();
-      if (e.key === 'ArrowRight') handleNextVerse();
-    };
-
-    // Swipe navigation
-    // A drag that starts on a control belongs to that control, not to verse navigation.
-    //
-    // The keydown handler above has always ignored events from inputs; this one never
-    // did, so any horizontal drag anywhere flipped the verse — including dragging
-    // EraserMode's "Hide Words" range slider, which is operated by exactly this gesture
-    // and therefore could not be used without changing the verse underneath it.
-    const IGNORED = 'input, textarea, select, button, a, [role="slider"], [role="button"]';
-    let ignoring = false;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      const target = e.target as HTMLElement | null;
-      ignoring = !!target?.closest?.(IGNORED);
-      if (ignoring) return;
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (ignoring) { ignoring = false; return; }
-      const touchEndX = e.changedTouches[0].screenX;
-      const touchEndY = e.changedTouches[0].screenY;
-
-      const swipeX = touchEndX - touchStartX;
-      const swipeY = touchEndY - touchStartY;
-
-      // Ensure it's a deliberate horizontal swipe (not just scrolling)
-      if (Math.abs(swipeX) > 50 && Math.abs(swipeX) > Math.abs(swipeY) * 1.5) {
-        if (swipeX > 0) handlePrevVerse();
-        else handleNextVerse();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [verses.length, verseNavActive]);
-
-  // Switches the whole screen to the chapter-anchor drill — see the Subject type
-  // note above. Placed ahead of the verse empty-states below so choosing it from
-  // either of their "drill chapters instead" buttons actually leaves verse-land
-  // rather than merely offering to.
+  // Subject routing comes only AFTER all React hooks.
   if (subject === 'theme') {
-    return <ThemeDrill onExit={() => { setSubject('verse'); navigate('/'); }} />;
+    return (
+      <ThemeDrill
+        onExit={() => {
+          setSubject('verse');
+          navigate('/');
+        }}
+      />
+    );
   }
 
   if (subject === 'anchor') {
-    return <AnchorDrill onExit={() => setSubject('verse')} sweepBookIds={sweepBookIds} />;
+    return (
+      <AnchorDrill
+        onExit={() => setSubject('verse')}
+        sweepBookIds={sweepBookIds}
+      />
+    );
   }
 
-  // The day's work — everything that is not an explicit request for the workshop. That
-  // now includes the Practice tab itself, which is the point: two loops meant two habits
-  // and two sets of records, and the one that was bounded and self-terminating was the
-  // one hidden behind a button on another tab.
-  //
-  // Everything below stays exactly as it was, reachable at /practice?id=… from a verse
-  // card and at /practice?mode=free from the session's own empty state.
   if (!isWorkshop) {
     return (
       <Session
@@ -577,265 +501,566 @@ export const Practice: React.FC = () => {
 
   const dueChapter = dueChapters(state.chapterProgress)[0];
 
-  // If there are no verses, show empty state
   if (state.verses.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
-        <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center mb-4">
+      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20 gap-4">
+        <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center">
           <BookOpen className="w-8 h-8 text-muted" />
         </div>
-        <h2 className="text-xl font-bold text-primary mb-2">No Verse Selected</h2>
-        <p className="text-secondary mb-6 max-w-sm">Pick a verse from the dashboard list or add a new one to practice.</p>
-        {dueChapter ? (
-          <Button onClick={() => setSubject('anchor')}>Drill Chapter Anchors Instead</Button>
-        ) : (
-          <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
-        )}
-      </div>
-    );
-  }
-
-  if (!currentVerse) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20">
-        <h2 className="text-xl font-bold text-primary mb-2">You're All Caught Up!</h2>
-        <p className="text-secondary mb-6">
-          {dueChapter ? 'No verses due — but a chapter anchor is.' : 'No verses are currently due for review.'}
+        <h2 className="text-xl font-heading font-bold text-primary">
+          Your practice starts here
+        </h2>
+        <p className="text-sm text-secondary max-w-sm">
+          Add verses from Today or the Bible reader to begin.
         </p>
-        {dueChapter ? (
-          <Button onClick={() => setSubject('anchor')}>Drill Chapter Anchors</Button>
-        ) : (
-          <Button onClick={() => navigate('/')}>Go to Dashboard</Button>
-        )}
+        <div className="flex flex-col sm:flex-row gap-2.5">
+          <Button onClick={() => navigate('/')}>Back to Today</Button>
+          {dueChapter && (
+            <Button variant="secondary" onClick={() => setSubject('anchor')}>
+              Practice chapter anchors
+            </Button>
+          )}
+        </div>
       </div>
     );
   }
 
-  if (isImmersed) {
+  if (isFinished || !currentVerse) {
+    return (
+      <div className="max-w-xl mx-auto w-full px-5 py-6 flex flex-col gap-5">
+        <PracticeHeader
+          title="Practice"
+          subtitle="A little practice, every day."
+          index={0}
+          total={0}
+          onExit={() => navigate('/')}
+          exitLabel="Back to Today"
+        />
+
+        <div className="rounded-2xl bg-card border border-card-border p-6 flex flex-col gap-3">
+          <h2 className="text-2xl font-heading font-bold text-primary">
+            {verses.length === 0 ? 'Nothing due in this scope' : 'Practice complete'}
+          </h2>
+          <p className="text-sm text-secondary">
+            {verses.length === 0
+              ? 'Switch to Whole collection or add verses to continue practicing.'
+              : 'You finished this practice queue.'}
+          </p>
+          {lastReviewMessage && (
+            <p className="text-xs font-medium text-accent">{lastReviewMessage}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2.5">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+          >
+            Back to Today
+          </button>
+          {collectionPool.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setPracticeDueOnly(false);
+                setIsFinished(false);
+                setActiveIndex(0);
+                resetAttempt();
+              }}
+              className="w-full min-h-[48px] rounded-2xl bg-card border border-card-border text-primary font-semibold text-sm hover:border-accent/50"
+            >
+              Practice again
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => navigate('/guides')}
+            className="w-full min-h-[48px] rounded-2xl border border-card-border text-secondary hover:text-primary font-semibold text-sm"
+          >
+            Browse Bible
+          </button>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <button
+              type="button"
+              onClick={() => setSubject('anchor')}
+              className="text-xs font-semibold text-accent hover:underline"
+            >
+              Practice chapter anchors
+            </button>
+            <button
+              type="button"
+              onClick={() => setSubject('theme')}
+              className="text-xs font-semibold text-accent hover:underline"
+            >
+              Practice book themes
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (activeMode === 'immersed') {
     return (
       <ImmersedReader
         verse={currentVerse}
-        index={activeVerseIndex}
+        index={safeIndex}
         total={verses.length}
         onPrev={handlePrev}
         onNext={handleNext}
         onExit={handleExitImmersed}
         isAutoPlaying={isAutoPlaying}
         onToggleAutoPlay={handleToggleTTS}
+        onExposure={() => {
+          setImmersiveExposedIds(prev => {
+            if (prev.has(currentVerse.id)) return prev;
+            const next = new Set(prev);
+            next.add(currentVerse.id);
+            return next;
+          });
+        }}
+        verseOrder={verseOrder}
+        onChangeVerseOrder={handleSelectOrder}
+        bibleVersion={currentVerse.translation || state.settings.bibleVersion}
       />
     );
   }
 
-  return (
-      <div
-        className="relative flex flex-col h-full w-full pb-6 lg:pb-8"
-        style={{ paddingTop: headerHeight ? `${headerHeight + 16}px` : 'calc(env(safe-area-inset-top, 0px) + 5rem)' }}
-        onClick={handlePracticeContentClick}
-      >
+  if (chooseActivity) {
+    return (
+      <div className="max-w-xl mx-auto w-full px-5 py-6 flex flex-col gap-5">
+        <PracticeHeader
+          title="Practice"
+          subtitle={currentCollectionTitle}
+          index={safeIndex}
+          total={verses.length}
+          onExit={() => navigate('/')}
+          exitLabel="Exit to Today"
+        />
 
-      {/* Fixed Header matching Mockup 2 & 3 */}
-      <div
-        ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-40 bg-[#14120E] border-b border-[#2C2720] transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}`}
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
-      >
-        <div className="max-w-4xl mx-auto w-full px-4 sm:px-8 pb-3 flex flex-col gap-2.5">
-          {/* Top Bar Row: Close ✕ | Centered Title & Subtitle | Right Spacer */}
-          <div className="flex items-center justify-between relative">
-            <button
-              onClick={() => navigate('/')}
-              className="p-2 -ml-2 rounded-full hover:bg-white/5 text-[#A89F91] hover:text-[#F5F2EB] transition-colors"
-              title="Exit review"
-              aria-label="Close"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="flex flex-col items-center justify-center text-center">
-              <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#F5F2EB] leading-tight">
-                {currentVerse.ref}
-              </h2>
-              <span className="text-xs text-[#A89F91] font-medium mt-0.5">
-                {collectionTitle} · {safeVerseIndex + 1} of {verses.length} · {retentionStage}
-              </span>
-            </div>
-
-            <div className="w-8" />
+        <div className="rounded-2xl bg-card border border-card-border p-5 flex flex-col gap-4">
+          <div>
+            <h2 className="text-2xl font-heading font-bold text-primary">
+              Choose your practice
+            </h2>
+            <p className="text-sm text-secondary mt-1">
+              Recall from memory, learn with help, or listen at your pace.
+            </p>
           </div>
 
-          {/* Mode Selector Horizontal Scrollable Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-            {[
-              { id: 'first-letter', label: 'First letters' },
-              { id: 'eraser', label: 'Blanks' },
-              { id: 'scramble', label: 'Puzzle' },
-              { id: 'typing', label: 'Type' },
-              { id: 'speech', label: 'Recite' },
-              { id: 'listen', label: 'Listen' },
-              { id: 'immersed', label: 'Immerse' },
-            ].map((mode) => {
-              const isSelected = activeMode === mode.id;
+          <div className="flex flex-col gap-2.5">
+            <button
+              type="button"
+              onClick={() => {
+                setChooseActivity(false);
+                handleChangeMode('read');
+              }}
+              className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+            >
+              Recall
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setChooseActivity(false);
+                handleChangeMode('build');
+              }}
+              className="w-full min-h-[48px] rounded-2xl bg-card-elevated border border-card-border text-primary font-semibold text-sm hover:border-accent/50 transition-colors"
+            >
+              Learn
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setChooseActivity(false);
+                handleChangeMode('listen');
+              }}
+              className="w-full min-h-[48px] rounded-2xl border border-card-border text-secondary hover:text-primary font-semibold text-sm transition-colors"
+            >
+              Listen
+            </button>
+          </div>
+
+          <p className="text-xs text-muted">
+            Your place is saved. Changing the order starts at passage 1.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-card-border">
+            <button
+              type="button"
+              disabled={dueCount === 0}
+              onClick={() => {
+                setPracticeDueOnly(true);
+                setActiveIndex(0);
+              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors disabled:opacity-40 ${
+                practiceDueOnly
+                  ? 'bg-accent/15 border-accent text-accent'
+                  : 'border-card-border text-secondary hover:text-primary'
+              }`}
+            >
+              Due for review · {dueCount}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setPracticeDueOnly(false);
+                setActiveIndex(0);
+              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                !practiceDueOnly
+                  ? 'bg-accent/15 border-accent text-accent'
+                  : 'border-card-border text-secondary hover:text-primary'
+              }`}
+            >
+              Whole collection · {collectionPool.length}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsTopicModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-card-border text-xs font-semibold text-secondary hover:text-primary"
+            >
+              <Filter className="w-3.5 h-3.5" />
+              <span>{currentCollectionTitle}</span>
+            </button>
+          </div>
+
+          <div className="pt-1">
+            <PracticeOrderMenu
+              order={verseOrder}
+              onSelect={handleSelectOrder}
+              disabled={verses.length <= 1}
+            />
+          </div>
+        </div>
+
+        <Modal
+          isOpen={isTopicModalOpen}
+          onClose={() => setIsTopicModalOpen(false)}
+          title="Filter by Collection"
+        >
+          <div className="flex flex-col gap-2.5">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTopicFilter(null);
+                setActiveIndex(0);
+                setIsTopicModalOpen(false);
+              }}
+              className={`px-4 py-3 rounded-xl border text-left text-sm font-medium flex justify-between items-center ${
+                !activeTopicFilter
+                  ? 'bg-accent/15 border-accent text-accent'
+                  : 'bg-card border-card-border text-primary'
+              }`}
+            >
+              <span>All Verses</span>
+              <span className="text-xs font-bold">{state.verses.length}</span>
+            </button>
+            {state.topics?.map(topic => {
+              const count = state.verses.filter(v =>
+                v.topicIds?.includes(topic.id)
+              ).length;
+              if (count === 0) return null;
               return (
                 <button
-                  key={mode.id}
-                  onClick={() => setActiveMode(mode.id as PracticeMode)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-                    isSelected
-                      ? 'bg-[#D4A359] text-[#14120E] shadow-sm'
-                      : 'bg-[#1E1B17] border border-[#332D24] text-[#A89F91] hover:text-[#F5F2EB]'
+                  key={topic.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTopicFilter(topic.id);
+                    setActiveIndex(0);
+                    setIsTopicModalOpen(false);
+                  }}
+                  className={`px-4 py-3 rounded-xl border text-left text-sm font-medium flex justify-between items-center ${
+                    activeTopicFilter === topic.id
+                      ? 'bg-accent/15 border-accent text-accent'
+                      : 'bg-card border-card-border text-primary'
                   }`}
                 >
-                  {mode.label}
+                  <span>{topic.name}</span>
+                  <span className="text-xs font-bold">{count}</span>
                 </button>
               );
             })}
           </div>
+        </Modal>
+      </div>
+    );
+  }
 
-          {/* Segmented Dash Progress Bar (directly under mode pills) */}
-          {verses.length > 0 && (
-            <div className="flex items-center gap-1.5 w-full pt-1">
-              {verses.map((_, idx) => (
-                <div
-                  key={`dash-${idx}`}
-                  className={`h-1 flex-1 rounded-full transition-colors ${
-                    idx <= safeVerseIndex ? 'bg-[#D4A359]' : 'bg-[#2C2720]'
-                  }`}
-                />
-              ))}
+  return (
+    <div className="max-w-xl mx-auto w-full px-5 py-6 flex flex-col gap-4 pb-24">
+      <PracticeHeader
+        title="Verse practice"
+        subtitle={`${currentCollectionTitle} · Passages`}
+        index={safeIndex}
+        total={verses.length}
+        onExit={() => {
+          stopSpeech();
+          setChooseActivity(true);
+        }}
+        exitLabel="Practice choices"
+      />
+
+      {lastReviewMessage && (
+        <p className="text-xs font-medium text-accent">{lastReviewMessage}</p>
+      )}
+
+      {/* Passage Reference + Quick Prev/Next */}
+      {activeMode !== 'reference' && (
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-baseline gap-2.5 min-w-0">
+            <h2 className="text-2xl font-heading font-bold text-primary truncate">
+              {currentVerse.ref}
+            </h2>
+            <span className="text-xs font-semibold uppercase tracking-wider text-secondary shrink-0">
+              {currentVerse.translation || state.settings.bibleVersion}
+            </span>
+          </div>
+
+          {verses.length > 1 && !isRevealed && (
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                disabled={safeIndex <= 0}
+                onClick={handlePrev}
+                aria-label="Previous passage"
+                className="w-9 h-9 rounded-full bg-card border border-card-border flex items-center justify-center text-secondary hover:text-primary disabled:opacity-35"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                disabled={safeIndex >= verses.length - 1}
+                onClick={handleNext}
+                aria-label="Next passage"
+                className="w-9 h-9 rounded-full bg-card border border-card-border flex items-center justify-center text-secondary hover:text-primary disabled:opacity-35"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           )}
         </div>
+      )}
+
+      {/* Mode Picker & Order Menu */}
+      <div className="flex flex-wrap items-center gap-2">
+        <PracticeModePicker
+          mode={activeMode}
+          onSelect={handleChangeMode}
+          disabled={isRevealed}
+        />
+        <PracticeOrderMenu
+          order={verseOrder}
+          onSelect={handleSelectOrder}
+          disabled={verses.length <= 1 || isRevealed}
+        />
       </div>
 
-      <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
+      {/* Main Practice Canvas */}
+      <div className="pt-1">
+        {isRevealed && activeMode !== 'listen' ? (
+          <ReviewAnswer
+            text={cleanText}
+            submitted={modeCommitted}
+            accuracy={modeAccuracy}
+            showWordDiff={activeMode === 'typing' || activeMode === 'speech'}
+          />
+        ) : (
+          <React.Fragment key={`${currentVerse.id}-${activeMode}-${attemptVersion}`}>
+            {activeMode === 'build' && (
+              <BuildPassageMode
+                text={cleanText}
+                onComplete={() => setIsRevealed(true)}
+              />
+            )}
 
-        {/* Free-Flow Display Workspace (Unboxed canvas) */}
-        <div className={`relative flex-1 flex flex-col ${activeMode === 'listen' ? '' : 'p-4 sm:p-6 mb-6'}`}>
-          <div className="flex-1 flex flex-col">
+            {activeMode === 'reference' && (
+              <ReferenceRecallMode
+                verse={currentVerse}
+                text={cleanText}
+                onSave={handleSaveReferencePractice}
+              />
+            )}
+
+            {activeMode === 'first-letter' && (
+              <FirstLetterMode
+                interactive
+                text={cleanText}
+                previouslySeen={firstLetterSeenByVerse[currentVerse.id]?.seen || []}
+                onSeenChanged={(seen, total) =>
+                  setFirstLetterSeenByVerse(prev => ({
+                    ...prev,
+                    [currentVerse.id]: { seen, total },
+                  }))
+                }
+                onComplete={ratio => {
+                  setHintRevealedRatio(ratio);
+                  setIsRevealed(true);
+                }}
+              />
+            )}
+
+            {activeMode === 'eraser' && (
+              <EraserMode
+                text={cleanText}
+                onComplete={ratio => {
+                  setEraserHiddenRatio(ratio);
+                  setIsRevealed(true);
+                }}
+              />
+            )}
+
+            {activeMode === 'scramble' && (
+              <ScrambleMode
+                text={cleanText}
+                onComplete={acc => {
+                  setScrambleAccuracy(acc);
+                  setIsRevealed(true);
+                }}
+              />
+            )}
+
+            {activeMode === 'typing' && (
+              <TypingMode
+                text={cleanText}
+                onAttempt={({ accuracy, committed }) => {
+                  setModeAccuracy(accuracy);
+                  setModeCommitted(committed);
+                  setIsRevealed(true);
+                }}
+              />
+            )}
+
+            {activeMode === 'speech' && (
+              <SpeechMode
+                text={cleanText}
+                isEnglish={isEnglishText}
+                onAttempt={({ accuracy, committed }) => {
+                  setModeAccuracy(accuracy);
+                  setModeCommitted(committed);
+                  setIsRevealed(true);
+                }}
+              />
+            )}
+
+            {activeMode === 'listen' && (
+              <ListenMode
+                text={cleanText}
+                isEnglish={isEnglishText}
+                onPrev={handlePrev}
+                onNext={handleNext}
+                canGoPrev={safeIndex > 0}
+                canGoNext={safeIndex < verses.length - 1}
+                onComplete={handleSaveAssisted}
+              />
+            )}
+
             {activeMode === 'read' && (
-              <button 
-                onClick={() => setActiveMode('immersed')} 
-                className="absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 rounded-full flex items-center justify-center bg-[#D4A359]/10 text-[#D4A359] hover:bg-[#D4A359] hover:text-[#14120E] transition-all shadow-sm active:scale-95"
-                title="Immerse Reading"
-              >
-                <Maximize className="w-5 h-5" />
-              </button>
-            )}
-
-            {activeMode !== 'read' && activeMode !== 'listen' && (
-              <button
-                onClick={handleHintClick}
-                className={`absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm active:scale-95
-                  ${hintLevel > 0 ? 'bg-[#D4A359] text-[#14120E]' : 'bg-[#1E1B17] border border-[#332D24] text-[#A89F91] hover:text-[#F5F2EB]'}`}
-                title={hintLevel === 0 ? 'Show Hint' : hintLevel < 4 ? 'More Hint' : 'Hide Hint'}
-              >
-                <HelpCircle className="w-5 h-5" />
-              </button>
-            )}
-
-            <div className="mt-2">
-              {activeMode !== 'read' && activeMode !== 'listen' && renderProgressiveHint()}
-            </div>
-
-            <div key={activeMode} className="flex-1 animate-[fadeScaleIn_0.2s_ease-out] flex flex-col justify-start mt-4">
-              {renderWorkspace()}
-            </div>
-          </div>
-        </div>
-
-        {/* Inline Scoring Block (Docked, hidden in Read / Listen mode) */}
-        {activeMode !== 'read' && activeMode !== 'listen' && (
-          <div className="w-full flex justify-center mb-6">
-            {!isEvaluationOpen ? (
-              <button
-                onClick={() => setIsEvaluationOpen(true)}
-                className="flex items-center justify-center gap-2 w-full max-w-md py-3.5 rounded-[18px] bg-[#D4A359] text-[#14120E] font-bold text-base hover:bg-[#E2B773] transition-all active:scale-95 shadow-md"
-              >
-                <Check className="w-5 h-5" /> Done Reciting — Check Recall
-              </button>
-            ) : (
-              <div className="max-w-md w-full bg-card-elevated border border-card-border rounded-lg p-5 flex flex-col gap-4 animate-[fadeScaleIn_0.2s_ease-out] shadow-sm">
-                {/* When the mode measured the attempt, say so and point at the grade that
-                    matches — but never grade for the user. The suggestion is a ring around
-                    one button, not a pre-submitted answer: they may know they were guessing,
-                    or that a "wrong" word was a synonym the diff can't forgive. */}
-                {modeAccuracy !== null ? (
-                  <div className="text-center flex flex-col gap-1">
-                    <p className="font-semibold text-primary">
-                      <span className="tabular-nums">{modeAccuracy}%</span> of the words matched
-                    </p>
-                    <p className="text-xs text-muted">
-                      Suggested: <span className="font-bold text-accent">{SUGGESTED_LABEL[suggestedScore(modeAccuracy)]}</span> — change it if that's not right
-                    </p>
-                  </div>
-                ) : (
-                  <p className="text-center font-semibold text-primary">How well did you remember it?</p>
-                )}
-                {hintLevel > 0 && (
-                  <p className="text-center text-[0.6875rem] text-muted -mt-1">
-                    {hintLevel >= 4
-                      ? 'You revealed the whole verse — this counts as a blank.'
-                      : `Hint used — best available grade is ${SUGGESTED_LABEL[ceilingFor(hintLevel)]}.`}
+              <div className="flex flex-col gap-4 pt-2">
+                <div className="rounded-2xl bg-card border border-card-border p-5">
+                  <p className="text-base text-secondary leading-relaxed">
+                    Recall the passage aloud or quietly. Take the time you need.
                   </p>
-                )}
-                <div className="grid grid-cols-4 gap-3">
-                  <button onClick={() => handleScore(1)} disabled={1 > ceilingFor(hintLevel)} title={1 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 1 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
-                    <span className="text-sm font-bold leading-tight">Blank</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsRevealed(true)}
+                  className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+                >
+                  Show passage
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAssistedIds(prev => {
+                      const next = new Set(prev);
+                      next.add(currentVerse.id);
+                      return next;
+                    });
+                    setIsRevealed(true);
+                  }}
+                  className="self-start text-sm font-semibold text-accent hover:underline"
+                >
+                  I need to read it first
+                </button>
+
+                <div className="flex flex-wrap items-center gap-4 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => handleChangeMode('typing')}
+                    className="text-xs font-semibold text-secondary hover:text-primary"
+                  >
+                    Type instead
                   </button>
-                  <button onClick={() => handleScore(3)} disabled={3 > ceilingFor(hintLevel)} title={3 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 3 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
-                    <span className="text-sm font-bold leading-tight">Hard</span>
-                  </button>
-                  <button onClick={() => handleScore(4)} disabled={4 > ceilingFor(hintLevel)} title={4 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 4 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
-                    <span className="text-sm font-bold leading-tight">Good</span>
-                  </button>
-                  <button onClick={() => handleScore(5)} disabled={5 > ceilingFor(hintLevel)} title={5 > ceilingFor(hintLevel) ? 'Not available after using hints' : undefined} className={`py-3 flex items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 disabled:opacity-25 disabled:pointer-events-none ${modeAccuracy !== null && suggestedScore(modeAccuracy) === 5 ? 'ring-2 ring-accent ring-offset-2 ring-offset-card-elevated' : ''}`}>
-                    <span className="text-sm font-bold leading-tight">Easy</span>
+                  <button
+                    type="button"
+                    onClick={() => handleChangeMode('speech')}
+                    className="text-xs font-semibold text-secondary hover:text-primary"
+                  >
+                    Speak instead
                   </button>
                 </div>
-                <button onClick={() => setIsEvaluationOpen(false)} className="text-muted text-sm font-medium hover:text-primary transition-colors py-1">Cancel</button>
               </div>
             )}
-          </div>
+          </React.Fragment>
         )}
-
-        <div className="pb-8" />
       </div>
 
-      <Modal isOpen={isNavigatorOpen} onClose={() => setIsNavigatorOpen(false)} title="Filter by Group">
-        <div className="flex flex-col gap-3">
-          <button
-            onClick={() => {
-              setActiveTopicFilter(null);
-              setIsNavigatorOpen(false);
-            }}
-            className={`px-4 py-3 rounded-lg border text-left font-medium transition-colors ${!activeTopicFilter ? 'bg-accent/15 border-accent text-accent' : 'bg-card border-card-border hover:border-accent/50 text-primary'}`}
-          >
-            All Verses ({state.verses.length})
-          </button>
-          
-          {state.topics?.map(topic => {
-            const count = state.verses.filter(v => v.topicIds?.includes(topic.id)).length;
-            if (count === 0) return null; // Only show groups that actually have verses
-            
-            return (
+      {/* Grading or Assisted Practice Completion */}
+      {isRevealed && activeMode !== 'listen' && (
+        <div className="pt-2 border-t border-card-border flex flex-col gap-3">
+          {isCurrentAssisted ? (
+            <div className="flex flex-col gap-3">
+              <h3 className="text-base font-bold text-primary">
+                Practiced with help
+              </h3>
+              <p className="text-xs sm:text-sm text-secondary">
+                A later review will check what you remember without help. This practice will not increase your recall grade.
+              </p>
               <button
-                key={topic.id}
-                onClick={() => {
-                  setActiveTopicFilter(topic.id);
-                  setIsNavigatorOpen(false);
-                }}
-                className={`px-4 py-3 rounded-lg border text-left font-medium transition-colors flex justify-between items-center ${activeTopicFilter === topic.id ? 'bg-accent/15 border-accent text-accent' : 'bg-card border-card-border hover:border-accent/50 text-primary'}`}
+                type="button"
+                onClick={handleSaveAssisted}
+                className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
               >
-                <span>{topic.name}</span>
-                <span className={`text-xs font-bold px-2 py-1 rounded-md ${activeTopicFilter === topic.id ? 'bg-accent/20' : 'bg-card-elevated text-secondary'}`}>
-                  {count}
-                </span>
+                Save practice and continue
               </button>
-            );
-          })}
+              <button
+                type="button"
+                onClick={() => {
+                  setAssistedIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(currentVerse.id);
+                    return next;
+                  });
+                  setImmersiveExposedIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(currentVerse.id);
+                    return next;
+                  });
+                  setFirstLetterSeenByVerse(prev => {
+                    const copy = { ...prev };
+                    delete copy[currentVerse.id];
+                    return copy;
+                  });
+                  handleChangeMode('read');
+                }}
+                className="self-start text-xs font-semibold text-accent hover:underline"
+              >
+                Try without hints
+              </button>
+            </div>
+          ) : (
+            <ReviewGrades ceiling={gradeCeiling} onGrade={handleGrade} />
+          )}
         </div>
-      </Modal>
+      )}
     </div>
   );
 };
-

@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, Search, Trash2, X, BookOpen, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, Search, Settings, Trash2, X, BookOpen, Plus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getBookName } from '../utils/localization';
 import { isDue } from '../utils/sm2';
 import { useNow } from '../utils/useNow';
 import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
+import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
 import { useToast } from '../context/ToastContext';
 import type { Verse } from '../types/models';
 import { OT_BOOKS } from '../data/otBooks';
@@ -13,6 +14,9 @@ import { NT_BOOKS } from '../data/ntBooks';
 import { useMastery } from '../utils/mastery';
 import { SEED_VERSES } from '../data/seed';
 import { TOP_100_VERSES } from '../data/top100';
+import { BIBLE_VERSION_LABELS } from '../data/bibleMap';
+import { loadReaderPosition } from '../utils/readerPosition';
+import { readerPath } from '../utils/readerRoute';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 const DEFAULT_GENERAL_COLLECTION_ID = '__general__';
@@ -43,11 +47,13 @@ export const Dashboard: React.FC = () => {
 
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
   const [reviewOrder, setReviewOrder] = useState<ReviewOrderKey>('weakest');
+  const [showReviewOptions, setShowReviewOptions] = useState(false);
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isOrderOpen, setIsOrderOpen] = useState(false);
 
   const [inspectingCollectionId, setInspectingCollectionId] = useState<string | null>(null);
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
+  const [isManageTopicsOpen, setIsManageTopicsOpen] = useState(false);
   const [isNewCollectionOpen, setIsNewCollectionOpen] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState('');
 
@@ -81,13 +87,7 @@ export const Dashboard: React.FC = () => {
       // Curated collections only exist when added with verses
       if ((isTop100 || isWellKnown || isKeyVerses) && versesInTopic.length === 0) continue;
 
-      const totalCount = isTop100
-        ? Math.max(100, versesInTopic.length)
-        : isWellKnown
-        ? Math.max(75, versesInTopic.length)
-        : isKeyVerses
-        ? Math.max(206, versesInTopic.length)
-        : versesInTopic.length;
+      const totalCount = versesInTopic.length;
       const dueCount = versesInTopic.filter(v => isDue(v.sm2, now)).length;
       const learnedCount = versesInTopic.filter(v => (v.sm2?.repetition || 0) >= 6).length;
 
@@ -227,172 +227,266 @@ export const Dashboard: React.FC = () => {
     });
   }, [bookSearchQuery, testamentFilter, state.settings.bibleVersion]);
 
+  const readerPos = loadReaderPosition();
+  const readingBook = ALL_BOOKS.find(b => b.id === readerPos.bookId) || ALL_BOOKS[0];
+  const readingVersion = state.settings.bibleVersion || 'LSB';
+  const readingBookName = getBookName(readingBook.id, readingBook.name, readingVersion);
+  const readingVersionLabel = BIBLE_VERSION_LABELS[readingVersion] || readingVersion;
+
   return (
     <div className="flex flex-col gap-6 max-w-xl mx-auto w-full pb-16">
-      {/* Header Row: "Today" on left, "X-day streak" pill on right */}
+      {/* Header Row: "Today" on left, "X-day streak" pill + Settings on right */}
       <div className="flex items-center justify-between pt-2">
         <h1 className="text-4xl font-heading font-bold text-primary tracking-tight">Today</h1>
-        <button
-          onClick={() => navigate('/retention')}
-          className="px-4 py-1.5 rounded-full bg-card border border-card-border text-sm font-medium text-primary hover:border-accent/50 transition-colors"
-        >
-          {state.streak || 0}-day streak
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate('/retention')}
+            className="px-4 py-1.5 rounded-full bg-card border border-card-border text-sm font-medium text-primary hover:border-accent/50 transition-colors"
+          >
+            {state.streak || 0}-day streak
+          </button>
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event('remora:open-settings'))}
+            aria-label="Settings"
+            title="Settings"
+            className="p-2 rounded-full bg-card border border-card-border text-secondary hover:text-primary hover:border-accent/50 transition-colors"
+          >
+            <Settings className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* 1. Hero REVIEW Card */}
       <div className="rounded-2xl bg-card border border-card-border p-5 flex flex-col">
         <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-accent">
-          REVIEW
+          {state.verses.length === 0 ? 'BEGIN' : 'REVIEW'}
         </span>
 
         <h2 className="text-3xl font-heading font-bold text-primary mt-2.5 tracking-tight">
-          {displayDue > 0
-            ? `${displayDue} ${displayDue === 1 ? 'verse is' : 'verses are'} due`
-            : state.verses.length === 0
-            ? '0 verses are due'
+          {state.verses.length === 0
+            ? 'A small beginning'
+            : displayDue > 0
+            ? `${displayDue} ${displayDue === 1 ? 'verse' : 'verses'} ready`
             : 'All caught up'}
         </h2>
 
-        <p className="text-sm text-secondary mt-1.5">
-          {displayDue > 0
+        <p className="text-sm text-secondary mt-1.5 leading-relaxed">
+          {state.verses.length === 0
+            ? 'Add a verse or a curated collection below to begin daily spaced-repetition review.'
+            : displayDue > 0
             ? `About ${estimatedMinutes} ${estimatedMinutes === 1 ? 'minute' : 'minutes'}. ${currentOrderMeta.hint}`
-            : state.verses.length === 0
-            ? 'Add verses or a collection below to start memorizing.'
-            : `No verses due right now. ${currentOrderMeta.hint}`}
+            : `No verses due right now${selectedCollection ? ` in ${selectedCollection.name}` : ''}. ${currentOrderMeta.hint}`}
         </p>
 
-        {/* Two Side-by-Side Dropdowns: From & Order */}
-        <div className="grid grid-cols-2 gap-2.5 mt-5">
-          {/* From Dropdown */}
-          <div className="relative">
+        {state.verses.length > 0 && (
+          <div className="mt-4">
             <button
               type="button"
               onClick={() => {
-                setIsFromOpen(v => !v);
+                setShowReviewOptions(v => !v);
+                setIsFromOpen(false);
                 setIsOrderOpen(false);
               }}
-              className="w-full flex items-center justify-between px-3.5 py-3 rounded-[10px] bg-card-elevated border border-card-border text-sm font-medium text-primary hover:border-card-border-hover transition-colors"
+              aria-expanded={showReviewOptions}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-[12px] bg-card-elevated/60 border border-card-border text-xs font-semibold text-secondary hover:text-primary hover:border-card-border-hover transition-colors"
             >
-              <span className="truncate">From: {selectedCollection ? selectedCollection.name : 'All'}</span>
-              <ChevronDown className="w-4 h-4 text-secondary shrink-0 ml-1" />
+              <span className="flex items-center gap-2 min-w-0">
+                <span className="text-primary">Review options</span>
+                {!showReviewOptions && (
+                  <span className="text-muted font-normal truncate">
+                    · {selectedCollection ? selectedCollection.name : 'All'} · {currentOrderMeta.label}
+                  </span>
+                )}
+              </span>
+              <ChevronDown
+                className={`w-4 h-4 text-secondary shrink-0 transition-transform ${showReviewOptions ? 'rotate-180' : ''}`}
+              />
             </button>
 
-            {isFromOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsFromOpen(false)} />
-                <div className="absolute left-0 right-0 top-full mt-1.5 bg-card-elevated border border-card-border rounded-[10px] shadow-lg z-50 overflow-hidden max-h-60 overflow-y-auto">
+            {showReviewOptions && (
+              <div className="flex flex-col gap-2.5 mt-2.5">
+                {/* From Dropdown (Stacked) */}
+                <div className="relative">
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedCollectionId(null);
+                      setIsFromOpen(v => !v);
+                      setIsOrderOpen(false);
+                    }}
+                    className="w-full flex items-center justify-between px-3.5 py-3 rounded-[10px] bg-card-elevated border border-card-border text-sm font-medium text-primary hover:border-card-border-hover transition-colors"
+                  >
+                    <span className="truncate">From: {selectedCollection ? selectedCollection.name : 'All'}</span>
+                    <ChevronDown className="w-4 h-4 text-secondary shrink-0 ml-1" />
+                  </button>
+
+                  {isFromOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setIsFromOpen(false)} />
+                      <div className="absolute left-0 right-0 top-full mt-1.5 bg-card-elevated border border-card-border rounded-[10px] shadow-lg z-50 overflow-hidden max-h-60 overflow-y-auto">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedCollectionId(null);
+                            setIsFromOpen(false);
+                          }}
+                          className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover ${
+                            selectedCollectionId === null ? 'text-accent font-semibold' : 'text-primary'
+                          }`}
+                        >
+                          All
+                        </button>
+                        {collections.map(col => (
+                          <button
+                            key={col.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedCollectionId(col.id);
+                              setIsFromOpen(false);
+                            }}
+                            className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover truncate ${
+                              selectedCollectionId === col.id ? 'text-accent font-semibold' : 'text-primary'
+                            }`}
+                          >
+                            {col.name}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Order Dropdown (Stacked) */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsOrderOpen(v => !v);
                       setIsFromOpen(false);
                     }}
-                    className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover ${
-                      selectedCollectionId === null ? 'text-accent font-semibold' : 'text-primary'
-                    }`}
+                    className="w-full flex items-center justify-between px-3.5 py-3 rounded-[10px] bg-card-elevated border border-card-border text-sm font-medium text-primary hover:border-card-border-hover transition-colors"
                   >
-                    All
+                    <span className="truncate">Order: {currentOrderMeta.label}</span>
+                    <ChevronDown className="w-4 h-4 text-secondary shrink-0 ml-1" />
                   </button>
-                  {collections.map(col => (
-                    <button
-                      key={col.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedCollectionId(col.id);
-                        setIsFromOpen(false);
-                      }}
-                      className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover truncate ${
-                        selectedCollectionId === col.id ? 'text-accent font-semibold' : 'text-primary'
-                      }`}
-                    >
-                      {col.name}
-                    </button>
-                  ))}
+
+                  {isOrderOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setIsOrderOpen(false)} />
+                      <div className="absolute left-0 right-0 top-full mt-1.5 bg-card-elevated border border-card-border rounded-[10px] shadow-lg z-50 overflow-hidden">
+                        {REVIEW_ORDERS.map(orderOpt => (
+                          <button
+                            key={orderOpt.key}
+                            type="button"
+                            onClick={() => {
+                              setReviewOrder(orderOpt.key);
+                              setIsOrderOpen(false);
+                            }}
+                            className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover ${
+                              reviewOrder === orderOpt.key ? 'text-accent font-semibold' : 'text-primary'
+                            }`}
+                          >
+                            {orderOpt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
-              </>
+              </div>
             )}
           </div>
+        )}
 
-          {/* Order Dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => {
-                setIsOrderOpen(v => !v);
-                setIsFromOpen(false);
-              }}
-              className="w-full flex items-center justify-between px-3.5 py-3 rounded-[10px] bg-card-elevated border border-card-border text-sm font-medium text-primary hover:border-card-border-hover transition-colors"
-            >
-              <span className="truncate">Order: {currentOrderMeta.label}</span>
-              <ChevronDown className="w-4 h-4 text-secondary shrink-0 ml-1" />
-            </button>
-
-            {isOrderOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsOrderOpen(false)} />
-                <div className="absolute left-0 right-0 top-full mt-1.5 bg-card-elevated border border-card-border rounded-[10px] shadow-lg z-50 overflow-hidden">
-                  {REVIEW_ORDERS.map(orderOpt => (
-                    <button
-                      key={orderOpt.key}
-                      type="button"
-                      onClick={() => {
-                        setReviewOrder(orderOpt.key);
-                        setIsOrderOpen(false);
-                      }}
-                      className={`w-full text-left px-3.5 py-2.5 text-sm transition-colors hover:bg-card-hover ${
-                        reviewOrder === orderOpt.key ? 'text-accent font-semibold' : 'text-primary'
-                      }`}
-                    >
-                      {orderOpt.label}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Start review solid gold CTA */}
+        {/* Primary Hero CTA */}
         <button
           type="button"
-          onClick={() => handleStartReview(selectedCollectionId)}
-          className="mt-3.5 w-full h-12 rounded-[18px] bg-accent hover:opacity-95 text-[#141414] font-bold text-[15px] transition-opacity flex items-center justify-center shadow-sm"
+          onClick={() =>
+            state.verses.length === 0 ? navigate('?add=true') : handleStartReview(selectedCollectionId)
+          }
+          className="mt-4 w-full h-12 rounded-[18px] bg-accent hover:opacity-95 text-[#141414] font-bold text-[15px] transition-opacity flex items-center justify-center shadow-sm"
         >
-          Start review
+          {state.verses.length === 0 ? 'Add verses' : 'Start review'}
         </button>
       </div>
 
+      {/* 1.5 ReadingCard: Continue reading / Read Scripture */}
+      <button
+        type="button"
+        onClick={() => {
+          const target = readerPath(readingBook.id, readerPos.chapter);
+          if (target) navigate(target);
+        }}
+        className="w-full text-left rounded-2xl bg-card border border-card-border px-5 py-4 flex items-center justify-between gap-4 hover:border-card-border-hover transition-colors"
+      >
+        <div className="min-w-0 flex-1">
+          <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-accent">
+            READ
+          </span>
+          <h3 className="text-xl font-heading font-bold text-primary mt-1 truncate">
+            {readerPos.hasOpened ? 'Continue reading' : 'Read Scripture'}
+          </h3>
+          <p className="text-sm text-secondary mt-0.5 truncate">
+            {readerPos.hasOpened
+              ? `${readingBookName} ${readerPos.chapter} · ${readingVersionLabel}`
+              : `${readingBookName} ${readerPos.chapter} · ${readingVersionLabel} with chapter recall`}
+          </p>
+        </div>
+        <span className="shrink-0 inline-flex items-center gap-1 px-4 py-2 rounded-[22px] border border-accent/65 text-accent text-sm font-semibold">
+          {readerPos.hasOpened ? 'Resume' : 'Read'}
+          <ChevronRight className="w-4 h-4" />
+        </span>
+      </button>
+
       {/* 2. Collections Section (No individual verse cards on Today) */}
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <h2 className="text-[22px] font-heading font-bold text-primary">Collections</h2>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3.5 shrink-0">
             <button
               type="button"
               onClick={() => navigate('?add=true')}
-              className="text-sm font-semibold text-accent hover:opacity-85 transition-opacity"
+              className="text-sm font-semibold text-accent hover:opacity-85 transition-opacity inline-flex items-center gap-1"
             >
+              <Plus className="w-4 h-4" />
               Add verses
             </button>
             <button
               type="button"
-              onClick={() => setIsNewCollectionOpen(true)}
-              className="text-sm font-semibold text-accent hover:opacity-85 transition-opacity"
+              onClick={() => setIsManageTopicsOpen(true)}
+              className="text-sm font-semibold text-secondary hover:text-primary transition-colors"
             >
-              New
+              Manage collections
             </button>
           </div>
         </div>
 
         {/* Dynamic User Verse Collections */}
+        {collections.length === 0 && (
+          <div className="rounded-[14px] bg-card border border-card-border p-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-primary">No verse collections yet</p>
+              <p className="text-xs text-secondary mt-0.5">
+                Start with a custom collection or load a curated starter pack.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsNewCollectionOpen(true)}
+              className="shrink-0 px-4 py-2 rounded-[22px] border border-accent/65 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
+            >
+              New collection
+            </button>
+          </div>
+        )}
+
         {collections.map(item => {
           const subtitle = item.isPreset
             ? `${item.dueCount} due · ${item.learnedCount} of ${item.totalCount} learned`
             : `${item.dueCount} due · ${item.totalCount} ${item.totalCount === 1 ? 'verse' : 'verses'}`;
           const learnedRatio = item.totalCount > 0 ? item.learnedCount / item.totalCount : 0;
-          const fallbackRatio = item.totalCount > 0 ? item.dueCount / item.totalCount : 0;
-          const progressPct = Math.min(100, Math.max(0, (learnedRatio > 0 ? learnedRatio : fallbackRatio) * 100));
+          const progressPct = Math.min(100, Math.max(0, learnedRatio * 100));
 
           return (
             <div
@@ -512,6 +606,17 @@ export const Dashboard: React.FC = () => {
                     <Trash2 className="w-4 h-4" />
                   </button>
                 )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setInspectingCollectionId(null);
+                    navigate('?add=true');
+                  }}
+                  className="px-3 py-1.5 rounded-[22px] bg-card-elevated border border-card-border text-xs font-semibold text-primary hover:border-accent/50 transition-colors inline-flex items-center gap-1"
+                >
+                  <Plus className="w-3.5 h-3.5 text-accent" />
+                  Add verses
+                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -785,6 +890,11 @@ export const Dashboard: React.FC = () => {
           />
         );
       })()}
+
+      {/* Manage Collections Modal */}
+      {isManageTopicsOpen && (
+        <ManageTopicsModal onClose={() => setIsManageTopicsOpen(false)} />
+      )}
     </div>
   );
 };

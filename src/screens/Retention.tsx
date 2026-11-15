@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { retentionByInterval, honestyGap, firstTryRetention, wasRecalled } from '../utils/reviewLog';
 import { leeches, activeDays } from '../utils/leeches';
@@ -47,6 +47,7 @@ export const Retention: React.FC = () => {
   const coldChecks = state.coldChecks || [];
   const lastCold = coldChecks[coldChecks.length - 1];
   const [checking, setChecking] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const scale = state.settings.intervalScale ?? 1;
   // Only offered when the curve has actually asked for it: a dial that is always on
   // screen invites fiddling with the schedule on a hunch, which is the opposite of
@@ -121,98 +122,6 @@ export const Retention: React.FC = () => {
               </span>
             )}
           </div>
-
-          {/* The forgetting curve — the diagnostic the scheduler has never had. */}
-          <section className="flex flex-col gap-3">
-            <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">How long it holds</h2>
-            <div className="flex items-end gap-2 h-32" role="img" aria-label={
-              `Retention by interval: ${curve.filter(b => b.rate !== null)
-                .map(b => `${pct(b.rate)} at ${b.label}`).join(', ') || 'not enough data yet'}`
-            }>
-              {curve.map(b => (
-                <div key={b.label} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                  <span className="text-[0.625rem] text-muted tabular-nums">{pct(b.rate)}</span>
-                  <div
-                    className={`w-full rounded-t-sm ${b.rate === null ? 'bg-card-border' : b.rate >= 0.85 ? 'bg-emerald-500/70' : b.rate >= 0.7 ? 'bg-gold/70' : 'bg-red-500/60'}`}
-                    style={{ height: `${Math.max(4, (b.rate ?? 0) * 100)}%` }}
-                  />
-                  <span className="text-[0.625rem] text-muted">{b.label}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-secondary leading-relaxed">
-              {curveRead(curve)}
-            </p>
-
-            {/* The dial that answers the measurement.
-                SM-2 assumes a forgetting curve; the chart above is the first thing in this
-                app able to say whether this reader matches it. When it says intervals run
-                past what they hold, the honest response is to shorten every interval a
-                little — not to grade harder, which corrupts the record, and not to review
-                more often, which is the same schedule with more effort spent on it.
-                Offered only when the curve has actually asked for it. */}
-            {needsShortening && (
-              <div className="flex flex-col gap-2 border border-orange-400/30 bg-orange-400/5 rounded-md p-4">
-                <p className="text-sm text-secondary leading-relaxed">
-                  You're forgetting faster than the schedule assumes. Shortening every
-                  interval brings reviews forward across the board.
-                </p>
-                <div className="flex items-center gap-2 flex-wrap">
-                  {[0.7, 0.85, 1].map(v => (
-                    <button
-                      key={v}
-                      onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { intervalScale: v } })}
-                      aria-pressed={scale === v}
-                      className={`px-3 py-1.5 rounded-md border text-xs font-bold transition-colors ${
-                        scale === v
-                          ? 'bg-accent text-white border-accent'
-                          : 'border-card-border text-secondary hover:text-primary'
-                      }`}
-                    >
-                      {v === 1 ? 'Normal' : `${Math.round((1 - v) * 100)}% shorter`}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-[0.6875rem] text-muted">
-                  Applies to intervals as they're earned. Nothing already scheduled moves.
-                </p>
-              </div>
-            )}
-          </section>
-
-          {/* The honesty gap: what was claimed against what was produced. */}
-          {gap && (
-            <section className="flex flex-col gap-2 border border-card-border rounded-md p-4">
-              <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Are your grades honest?</h2>
-              <p className="text-sm text-secondary leading-relaxed">
-                {gap.gap >= 0.5
-                  ? `You grade yourself about ${gap.gap.toFixed(1)} of a grade above what you actually
-                     typed, across ${gap.n} measured attempts. Intervals are running longer than the
-                     recall behind them.`
-                  : gap.gap <= -0.5
-                  ? `You grade yourself harder than the words you produced, across ${gap.n} measured
-                     attempts. Nothing is broken — you may just be scoring on meaning rather than
-                     wording.`
-                  : `Your grades match what you actually produced, across ${gap.n} measured attempts.`}
-              </p>
-            </section>
-          )}
-
-          {/* Retention per layer, not counts per layer. */}
-          <section className="flex flex-col gap-3">
-            <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">By layer</h2>
-            <div className="flex flex-col divide-y divide-card-border border-y border-card-border">
-              {byLayer.map(l => (
-                <div key={l.kind} className="flex items-baseline justify-between py-2.5">
-                  <span className="text-sm text-primary font-medium">{l.label}</span>
-                  <span className="flex items-baseline gap-3">
-                    <span className="text-sm font-bold text-primary tabular-nums">{pct(l.rate)}</span>
-                    <span className="text-xs text-muted tabular-nums w-16 text-right">{l.attempts} reviews</span>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
         </>
       )}
 
@@ -250,69 +159,181 @@ export const Retention: React.FC = () => {
         )}
       </section>
 
-      {/* Adherence — the guardrail on everything else. */}
-      {a.started > 0 && (
-        <section className="flex flex-col gap-3">
-          <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Are you finishing?</h2>
-          <div className="flex flex-col divide-y divide-card-border border-y border-card-border">
-            <div className="flex items-baseline justify-between py-2.5">
-              <span className="text-sm text-primary font-medium">Sessions finished</span>
-              <span className="text-sm font-bold text-primary tabular-nums">
-                {completionRate === null ? '—' : `${Math.round(completionRate * 100)}%`}
-                <span className="text-xs text-muted font-normal"> of {a.started}</span>
-              </span>
-            </div>
-            {meanMinutes !== null && (
-              <div className="flex items-baseline justify-between py-2.5">
-                <span className="text-sm text-primary font-medium">Typical session</span>
-                <span className="text-sm font-bold text-primary tabular-nums">{meanMinutes} min</span>
-              </div>
-            )}
-            {meanAbandonAt !== null && (
-              <div className="flex items-baseline justify-between py-2.5">
-                <span className="text-sm text-primary font-medium">When you stop early</span>
-                <span className="text-sm font-bold text-primary tabular-nums">item {meanAbandonAt}</span>
-              </div>
-            )}
-          </div>
-          {completionRate !== null && completionRate < 0.6 && (
-            <p className="text-sm text-orange-400 leading-relaxed">
-              More than a third of sessions go unfinished. If that started recently, the day's
-              work has probably become too long or too hard — shorten it before trusting any
-              retention number above.
-            </p>
-          )}
-        </section>
-      )}
-
       {checking && <ColdCheck onClose={() => setChecking(false)} />}
 
-      {/* The leech list — the only place the app suggests changing the material rather
-          than reviewing it harder. Omitted entirely when empty: an absent problem should
-          be absent, not shown as a hopeful empty state. */}
-      {worst.length > 0 && (
-        <section className="flex flex-col gap-3">
-          <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Costing you the most</h2>
-          <ul className="flex flex-col divide-y divide-card-border border-y border-card-border">
-            {worst.map(l => (
-              <li key={l.key} className="flex items-baseline justify-between py-2.5 gap-3">
-                <span className="text-sm text-primary truncate">{l.label}</span>
-                <span className="text-xs text-muted tabular-nums whitespace-nowrap">
-                  {l.lapses} lapses · {l.attempts} reviews
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p className="text-sm text-secondary leading-relaxed">
-            These keep slipping. Reword the hook, split the passage, or set it aside —
-            more repetitions is the one thing that reliably won't help.
-          </p>
-        </section>
-      )}
+      <button
+        type="button"
+        onClick={() => setShowDetails(s => !s)}
+        aria-expanded={showDetails}
+        className="w-full py-2.5 px-4 rounded-lg border border-card-border bg-card hover:bg-card-elevated text-sm font-medium text-accent flex items-center justify-center gap-2 transition-colors"
+      >
+        {showDetails ? (
+          <>
+            <ChevronUp className="w-4 h-4" />
+            Hide detailed statistics
+          </>
+        ) : (
+          <>
+            <ChevronDown className="w-4 h-4" />
+            Show detailed statistics
+          </>
+        )}
+      </button>
 
-      <p className="text-sm text-muted">
-        Reviewed on <span className="font-semibold text-secondary tabular-nums">{active}</span> of the last 45 days.
-      </p>
+      {showDetails && (
+        <>
+          {!tooEarly && (
+            <>
+              {/* The forgetting curve — the diagnostic the scheduler has never had. */}
+              <section className="flex flex-col gap-3">
+                <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">How long it holds</h2>
+                <div className="flex items-end gap-2 h-32" role="img" aria-label={
+                  `Retention by interval: ${curve.filter(b => b.rate !== null)
+                    .map(b => `${pct(b.rate)} at ${b.label}`).join(', ') || 'not enough data yet'}`
+                }>
+                  {curve.map(b => (
+                    <div key={b.label} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+                      <span className="text-[0.625rem] text-muted tabular-nums">{pct(b.rate)}</span>
+                      <div
+                        className={`w-full rounded-t-sm ${b.rate === null ? 'bg-card-border' : b.rate >= 0.85 ? 'bg-emerald-500/70' : b.rate >= 0.7 ? 'bg-gold/70' : 'bg-red-500/60'}`}
+                        style={{ height: `${Math.max(4, (b.rate ?? 0) * 100)}%` }}
+                      />
+                      <span className="text-[0.625rem] text-muted">{b.label}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-secondary leading-relaxed">
+                  {curveRead(curve)}
+                </p>
+
+                {needsShortening && (
+                  <div className="flex flex-col gap-2 border border-orange-400/30 bg-orange-400/5 rounded-md p-4">
+                    <p className="text-sm text-secondary leading-relaxed">
+                      You're forgetting faster than the schedule assumes. Shortening every
+                      interval brings reviews forward across the board.
+                    </p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {[0.7, 0.85, 1].map(v => (
+                        <button
+                          key={v}
+                          onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { intervalScale: v } })}
+                          aria-pressed={scale === v}
+                          className={`px-3 py-1.5 rounded-md border text-xs font-bold transition-colors ${
+                            scale === v
+                              ? 'bg-accent text-white border-accent'
+                              : 'border-card-border text-secondary hover:text-primary'
+                          }`}
+                        >
+                          {v === 1 ? 'Normal' : `${Math.round((1 - v) * 100)}% shorter`}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[0.6875rem] text-muted">
+                      Applies to intervals as they're earned. Nothing already scheduled moves.
+                    </p>
+                  </div>
+                )}
+              </section>
+
+              {/* The honesty gap: what was claimed against what was produced. */}
+              {gap && (
+                <section className="flex flex-col gap-2 border border-card-border rounded-md p-4">
+                  <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Are your grades honest?</h2>
+                  <p className="text-sm text-secondary leading-relaxed">
+                    {gap.gap >= 0.5
+                      ? `You grade yourself about ${gap.gap.toFixed(1)} of a grade above what you actually
+                         typed, across ${gap.n} measured attempts. Intervals are running longer than the
+                         recall behind them.`
+                      : gap.gap <= -0.5
+                      ? `You grade yourself harder than the words you produced, across ${gap.n} measured
+                         attempts. Nothing is broken — you may just be scoring on meaning rather than
+                         wording.`
+                      : `Your grades match what you actually produced, across ${gap.n} measured attempts.`}
+                  </p>
+                </section>
+              )}
+
+              {/* Retention per layer, not counts per layer. */}
+              <section className="flex flex-col gap-3">
+                <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">By layer</h2>
+                <div className="flex flex-col divide-y divide-card-border border-y border-card-border">
+                  {byLayer.map(l => (
+                    <div key={l.kind} className="flex items-baseline justify-between py-2.5">
+                      <span className="text-sm text-primary font-medium">{l.label}</span>
+                      <span className="flex items-baseline gap-3">
+                        <span className="text-sm font-bold text-primary tabular-nums">{pct(l.rate)}</span>
+                        <span className="text-xs text-muted tabular-nums w-16 text-right">{l.attempts} reviews</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
+
+          {/* Adherence — the guardrail on everything else. */}
+          {a.started > 0 && (
+            <section className="flex flex-col gap-3">
+              <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Are you finishing?</h2>
+              <div className="flex flex-col divide-y divide-card-border border-y border-card-border">
+                <div className="flex items-baseline justify-between py-2.5">
+                  <span className="text-sm text-primary font-medium">Sessions finished</span>
+                  <span className="text-sm font-bold text-primary tabular-nums">
+                    {completionRate === null ? '—' : `${Math.round(completionRate * 100)}%`}
+                    <span className="text-xs text-muted font-normal"> of {a.started}</span>
+                  </span>
+                </div>
+                {meanMinutes !== null && (
+                  <div className="flex items-baseline justify-between py-2.5">
+                    <span className="text-sm text-primary font-medium">Typical session</span>
+                    <span className="text-sm font-bold text-primary tabular-nums">{meanMinutes} min</span>
+                  </div>
+                )}
+                {meanAbandonAt !== null && (
+                  <div className="flex items-baseline justify-between py-2.5">
+                    <span className="text-sm text-primary font-medium">When you stop early</span>
+                    <span className="text-sm font-bold text-primary tabular-nums">item {meanAbandonAt}</span>
+                  </div>
+                )}
+              </div>
+              {completionRate !== null && completionRate < 0.6 && (
+                <p className="text-sm text-orange-400 leading-relaxed">
+                  More than a third of sessions go unfinished. If that started recently, the day's
+                  work has probably become too long or too hard — shorten it before trusting any
+                  retention number above.
+                </p>
+              )}
+            </section>
+          )}
+
+          {/* The leech list — the only place the app suggests changing the material rather
+              than reviewing it harder. Omitted entirely when empty: an absent problem should
+              be absent, not shown as a hopeful empty state. */}
+          {worst.length > 0 && (
+            <section className="flex flex-col gap-3">
+              <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Costing you the most</h2>
+              <ul className="flex flex-col divide-y divide-card-border border-y border-card-border">
+                {worst.map(l => (
+                  <li key={l.key} className="flex items-baseline justify-between py-2.5 gap-3">
+                    <span className="text-sm text-primary truncate">{l.label}</span>
+                    <span className="text-xs text-muted tabular-nums whitespace-nowrap">
+                      {l.lapses} lapses · {l.attempts} reviews
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-sm text-secondary leading-relaxed">
+                These keep slipping. Reword the hook, split the passage, or set it aside —
+                more repetitions is the one thing that reliably won't help.
+              </p>
+            </section>
+          )}
+
+          <p className="text-sm text-muted">
+            Reviewed on <span className="font-semibold text-secondary tabular-nums">{active}</span> of the last 45 days.
+          </p>
+        </>
+      )}
     </div>
   );
 };

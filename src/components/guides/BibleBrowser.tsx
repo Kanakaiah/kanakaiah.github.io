@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import { BookOpen, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { getBookName } from '../../utils/localization';
+import { readerPath } from '../../utils/readerRoute';
+import { GalleryViewMenu, galleryGridClass, useGalleryColumns } from '../../utils/galleryView';
 import { useApp } from '../../context/AppContext';
 import { NT_BOOKS, NT_SECTIONS, type NTBook } from '../../data/ntBooks';
 import { OT_BOOKS, OT_SECTIONS, type OTBook } from '../../data/otBooks';
@@ -24,17 +27,52 @@ export const BookCard: React.FC<{
   const [imgLoaded, setImgLoaded] = useState(false);
   const division = divisionForSection(book.section);
   const { state } = useApp();
+  const navigate = useNavigate();
   const displayName = getBookName(book.id, book.name, state.settings.bibleVersion);
+  const firstChapterPath = readerPath(book.id, 1);
+
+  if (coversOnly) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="group flex flex-col w-full overflow-hidden rounded-lg text-left bg-card focus:outline-none focus:ring-2 focus:ring-accent transition-colors duration-150 border border-card-border hover:border-card-border-hover"
+      >
+        <div className="relative aspect-[4/3] w-full bg-card-elevated overflow-hidden">
+          {!imgLoaded && !imgErr && <div className="absolute inset-0 skeleton" />}
+          {!imgErr ? (
+            <img
+              src={book.image}
+              alt=""
+              loading="lazy"
+              onLoad={() => setImgLoaded(true)}
+              onError={() => { setImgErr(true); setImgLoaded(true); }}
+              className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-6xl font-heading font-black opacity-10 select-none tracking-widest text-muted">{book.themeWord.charAt(0)}</span>
+            </div>
+          )}
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-4 pt-8 pb-3">
+            <span className="font-heading font-bold uppercase tracking-wide text-sm text-white drop-shadow">{book.themeWord}</span>
+          </div>
+        </div>
+      </button>
+    );
+  }
 
   return (
-    <button
-      onClick={onClick}
-      className="group flex flex-col w-full overflow-hidden rounded-lg text-left bg-card focus:outline-none focus:ring-2 focus:ring-accent transition-colors duration-150 border border-card-border hover:border-card-border-hover"
-    >
-      {/* Plate — mirrors ChapterAnchorCard's image treatment (Guides.tsx) so a book's
+    <div className="group flex flex-col w-full overflow-hidden rounded-xl text-left bg-card transition-colors duration-150 border border-card-border hover:border-card-border-hover">
+      {/* Plate — mirrors ChapterAnchorCard's image treatment so a book's
           illustration reads the same way its own chapters' do: art on top, caption below
           on the card's normal background, rather than text overlaid on the image. */}
-      <div className="relative aspect-[4/3] bg-card-elevated overflow-hidden">
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`Open ${displayName} book guide`}
+        className="relative aspect-[4/3] w-full bg-card-elevated overflow-hidden focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
+      >
         {!imgLoaded && !imgErr && (
           <div className="absolute inset-0 skeleton" />
         )}
@@ -42,7 +80,7 @@ export const BookCard: React.FC<{
         {!imgErr ? (
           <img
             src={book.image}
-            alt={coversOnly ? '' : displayName}
+            alt={displayName}
             loading="lazy"
             onLoad={() => setImgLoaded(true)}
             onError={() => { setImgErr(true); setImgLoaded(true); }}
@@ -53,35 +91,44 @@ export const BookCard: React.FC<{
             <span className="text-6xl font-heading font-black opacity-10 select-none tracking-widest text-muted">{book.themeWord.charAt(0)}</span>
           </div>
         )}
+      </button>
 
-        {coversOnly && (
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-4 pt-8 pb-3">
-            <span className="font-heading font-bold uppercase tracking-wide text-sm text-white drop-shadow">{book.themeWord}</span>
-          </div>
-        )}
+      {/* Caption — title, subtitle, and the meta line, all off the image */}
+      <div className="p-4 flex-1 flex flex-col gap-1.5">
+        <span className="font-heading font-semibold uppercase tracking-wide text-[0.6875rem] text-accent">
+          {book.keyWord} · {book.themeWord} · {book.chapters} chapters
+        </span>
+        <h3 className="text-primary font-heading font-semibold text-xl leading-tight">{displayName}</h3>
+        <p className="text-secondary text-sm italic font-serif leading-snug line-clamp-2">{book.subtitle}</p>
+
+        <div className="mt-auto pt-3 flex flex-wrap items-center gap-2">
+          {firstChapterPath && (
+            <button
+              type="button"
+              onClick={() => navigate(firstChapterPath)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              Read
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onClick}
+            className="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent/10 transition-colors"
+          >
+            Open book guide
+          </button>
+        </div>
       </div>
 
-      {!coversOnly && (
-        <>
-          {/* Caption — title, subtitle, and the meta line, all off the image now */}
-          <div className="p-5 flex flex-col gap-1.5">
-            <span className="font-heading font-semibold uppercase tracking-wide text-xs text-accent">{book.keyWord} · {book.themeWord} · {book.chapters} chapters</span>
-            <h3 className="text-primary font-heading font-semibold text-2xl leading-tight">{displayName}</h3>
-            <p className="text-secondary text-sm italic font-serif leading-snug">{book.subtitle}</p>
-          </div>
-          {/* A hairline rule, filled to the share of chapters graded secure, tinted
-              by the book's canon division — replaces the old "Guide" badge, which
-              every book has satisfied since every book has a guide now and so had
-              stopped communicating anything. This moves with the reader instead. */}
-          <div className="h-[3px] bg-card-elevated" aria-hidden="true">
-            <div
-              className={`h-full ${division.color.bg} transition-[width] duration-300`}
-              style={{ width: `${Math.round((mastery?.securePct ?? 0) * 100)}%` }}
-            />
-          </div>
-        </>
-      )}
-    </button>
+      <div className="h-[3px] bg-card-elevated" aria-hidden="true">
+        <div
+          className={`h-full ${division.color.bg} transition-[width] duration-300`}
+          style={{ width: `${Math.round((mastery?.securePct ?? 0) * 100)}%` }}
+        />
+      </div>
+    </div>
   );
 };
 
@@ -103,6 +150,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
   const testament: 'OT' | 'NT' = initialTestament ?? 'NT';
   const [view] = useState<View>('book-grid');
   const [searchQuery, setSearchQuery] = useState('');
+  const [columns, setColumns] = useGalleryColumns('remora_gallery_books', 2);
 
   const handleSelectBook = (book: Book) => {
     onOpenGuide(book.id);
@@ -128,9 +176,12 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
           now in the host's fixed header, so they stay put instead of scrolling away
           and aren't rendered twice. Only the count caption remains for context. */}
       <div className="flex flex-col gap-4 mb-2">
-        <p className="text-secondary text-sm">
-          {testament === 'NT' ? '27 books' : '39 books'} — tap any to explore
-        </p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-secondary text-sm">
+            {testament === 'NT' ? '27 books' : '39 books'} — tap any to explore
+          </p>
+          <GalleryViewMenu columns={columns} onChange={setColumns} />
+        </div>
 
         {/* Search Bar */}
         <div className="relative mt-2">
@@ -157,7 +208,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
               <p className="text-xs font-bold text-muted uppercase tracking-widest border-b border-card-border pb-1">
                 {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} across all books
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className={galleryGridClass(columns)}>
                 {searchResults.map(book => (
                   <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                 ))}
@@ -184,7 +235,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
                   <p className={`text-xs font-bold uppercase tracking-widest ${divisionForSection(section).color.text}`}>{section}</p>
                   <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className={galleryGridClass(columns)}>
                   {books.map(book => (
                     <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                   ))}
@@ -212,7 +263,7 @@ export const BibleBrowser: React.FC<BibleBrowserProps> = ({ onOpenGuide, initial
                   <p className={`text-xs font-bold uppercase tracking-widest ${divisionForSection(section).color.text}`}>{section}</p>
                   <span className="text-[0.625rem] text-muted">· {books.length} book{books.length !== 1 ? 's' : ''}</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className={galleryGridClass(columns)}>
                   {books.map(book => (
                     <BookCard key={book.id} book={book} onClick={() => handleSelectBook(book)} mastery={mastery[book.id]} />
                   ))}

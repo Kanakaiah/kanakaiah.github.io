@@ -1,98 +1,177 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { studyThoughts } from '../../utils/studyText';
 
 interface EraserModeProps {
   text: string;
+  onComplete?: (hiddenRatio: number) => void;
 }
 
-export const EraserMode: React.FC<EraserModeProps> = ({ text }) => {
-  const [sliderValue, setSliderValue] = useState(0);
-  const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
+const PRESETS = [
+  { value: 25, label: 'Some words' },
+  { value: 50, label: 'One thought' },
+  { value: 100, label: 'Whole passage' },
+] as const;
 
-  // Tokenize text into words preserving spaces
-  const words = useMemo(() => text.split(/(\s+)/), [text]);
-  const wordIndices = useMemo(() => {
-    const indices: number[] = [];
-    words.forEach((w, i) => {
-      if (w.trim().length > 0) indices.push(i);
-    });
-    return indices;
-  }, [words]);
+export const EraserMode: React.FC<EraserModeProps> = ({ text, onComplete }) => {
+  const words = useMemo(
+    () =>
+      text
+        .trim()
+        .split(/\s+/)
+        .filter(w => w.length > 0),
+    [text]
+  );
 
-  // Stable shuffled indices for this text
-  const shuffledIndices = useMemo(() => {
-    return [...wordIndices].sort(() => 0.5 - Math.random());
-  }, [wordIndices]);
+  // Longer words make a practical initial scaffold without claiming semantic weight.
+  const longestFirstIndices = useMemo(
+    () => words.map((_, i) => i).sort((a, b) => words[b].length - words[a].length),
+    [words]
+  );
 
-  // Handle slider change to recalculate random hidden indices
+  const [sliderValue, setSliderValue] = useState(25);
+  const [manualOverrides, setManualOverrides] = useState<Record<number, boolean>>({});
+
   useEffect(() => {
-    const hideCount = Math.round((sliderValue / 100) * wordIndices.length);
-    setHiddenIndices(new Set(shuffledIndices.slice(0, hideCount)));
-  }, [sliderValue, wordIndices.length, shuffledIndices]);
+    setSliderValue(25);
+    setManualOverrides({});
+  }, [text]);
 
-  const toggleWord = (idx: number) => {
-    setHiddenIndices(prev => {
-      const next = new Set(prev);
-      if (next.has(idx)) {
-        next.delete(idx);
-      } else {
-        next.add(idx);
+  const sliderHiddenSet = useMemo(() => {
+    if (sliderValue === 50) {
+      const thoughts = studyThoughts(text);
+      let bestIdx = 0;
+      thoughts.forEach((t, i) => {
+        if (t.length > (thoughts[bestIdx]?.length || 0)) bestIdx = i;
+      });
+      let start = 0;
+      for (let i = 0; i < bestIdx; i++) {
+        start += thoughts[i]
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean).length;
       }
-      return next;
-    });
-  };
-
-  // Sync slider roughly with manual toggles
-  useEffect(() => {
-    const pct = Math.round((hiddenIndices.size / wordIndices.length) * 100);
-    if (Math.abs(pct - sliderValue) > 5) {
-      // Avoid infinite loop by only updating if difference is significant
-      // Actually it's better to NOT sync the slider when manual clicking happens, or just update local state without triggering the random reshuffle.
-      // For simplicity, we just leave the slider as is, or update a visual label.
+      const count = (thoughts[bestIdx] || '')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean).length;
+      const set = new Set<number>();
+      for (let idx = start; idx < start + count && idx < words.length; idx++) {
+        set.add(idx);
+      }
+      return set;
     }
-  }, [hiddenIndices, wordIndices.length, sliderValue]);
+    const hideCount = Math.min(
+      words.length,
+      Math.max(0, Math.round((sliderValue / 100) * words.length))
+    );
+    return new Set(longestFirstIndices.slice(0, hideCount));
+  }, [sliderValue, text, words.length, longestFirstIndices]);
+
+  const isWordHidden = (index: number) =>
+    manualOverrides[index] !== undefined
+      ? manualOverrides[index]
+      : sliderHiddenSet.has(index);
+
+  const totalHiddenCount = words.reduce((n, _, i) => n + (isWordHidden(i) ? 1 : 0), 0);
+  const hiddenRatio = words.length > 0 ? totalHiddenCount / words.length : 0;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4 bg-card-elevated p-4 rounded-md border border-card-border">
-        <span className="text-sm font-medium text-secondary whitespace-nowrap">Hide Words:</span>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={sliderValue}
-          onChange={(e) => setSliderValue(parseInt(e.target.value))}
-          className="flex-1 accent-accent"
-        />
-        <span className="text-sm font-bold text-primary w-12 text-right">{sliderValue}%</span>
+    <div className="flex flex-col gap-5 w-full">
+      <div className="rounded-2xl bg-card-elevated border border-card-border p-4 flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-base font-bold text-primary">Blanks</h3>
+          <span className="text-xs font-medium text-secondary">Practice with help</span>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {PRESETS.map(p => (
+            <button
+              key={p.value}
+              type="button"
+              onClick={() => {
+                setSliderValue(p.value);
+                setManualOverrides({});
+              }}
+              className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-colors ${
+                sliderValue === p.value
+                  ? 'bg-accent border-accent text-[#141414]'
+                  : 'bg-card border-card-border text-secondary hover:text-primary'
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={sliderValue}
+            onChange={e => {
+              setSliderValue(Number(e.target.value));
+              setManualOverrides({});
+            }}
+            aria-label="Percentage of words hidden"
+            className="flex-1 accent-accent"
+          />
+          <span className="text-xs font-bold text-primary tabular-nums w-10 text-right">
+            {sliderValue}%
+          </span>
+        </div>
+
+        <div className="text-xs text-secondary flex flex-col gap-0.5">
+          <span>Tap any word to reveal or hide</span>
+          <span className="text-muted">Recall the gaps, then try without help.</span>
+        </div>
       </div>
 
-      <div className="text-lg leading-relaxed text-primary whitespace-pre-wrap">
+      <div className="flex flex-wrap gap-2 py-1">
         {words.map((word, idx) => {
-          if (word.trim().length === 0) {
-            return <span key={idx}>{word}</span>;
-          }
-          const isHidden = hiddenIndices.has(idx);
-          // A button, not a span with a click handler. These are the only way to operate
-          // this mode, and as spans they were unreachable by keyboard and announced as
-          // nothing — the whole exercise was mouse-or-touch only. `aria-pressed` carries
-          // the hidden/shown state that the background colour carries visually.
+          const hidden = isWordHidden(idx);
           return (
             <button
+              key={`${idx}-${word}`}
               type="button"
-              key={idx}
-              onClick={() => toggleWord(idx)}
-              aria-pressed={isHidden}
-              aria-label={isHidden ? `${word} — hidden, activate to reveal` : `${word} — activate to hide`}
-              className={`cursor-pointer transition-all duration-200 px-1 rounded hover:bg-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                isHidden ? 'text-transparent select-none' : ''
+              onClick={() =>
+                setManualOverrides(prev => ({
+                  ...prev,
+                  [idx]: !hidden,
+                }))
+              }
+              aria-pressed={hidden}
+              aria-label={
+                hidden
+                  ? 'Hidden word, tap to reveal'
+                  : `${word}, activate to hide`
+              }
+              className={`min-h-[44px] px-2.5 py-1.5 rounded-lg font-serif text-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                hidden
+                  ? 'bg-card-elevated border border-card-border text-secondary tracking-widest'
+                  : 'border border-transparent text-primary hover:bg-card-elevated'
               }`}
-              style={isHidden ? { backgroundColor: 'var(--text-muted)' } : {}}
             >
-              {word}
+              {hidden ? '•••' : word}
             </button>
           );
         })}
       </div>
+
+      {onComplete && (
+        <div className="flex flex-col gap-2 pt-2">
+          <p className="text-xs text-secondary text-center">
+            Recite the verse filling in the erased gaps from memory
+          </p>
+          <button
+            type="button"
+            onClick={() => onComplete(hiddenRatio)}
+            className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+          >
+            Check passage
+          </button>
+        </div>
+      )}
     </div>
   );
 };

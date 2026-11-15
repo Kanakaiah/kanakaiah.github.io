@@ -899,7 +899,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-57",
-    "ref": "1:21",
+    "ref": "Job 1:21",
     "text": "The LORD gave and the LORD has taken away — blessed be the name of the LORD",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -915,7 +915,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-58",
-    "ref": "19:25",
+    "ref": "Job 19:25",
     "text": "I know that my Redeemer lives — and at the last he will stand upon the earth",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -931,7 +931,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-59",
-    "ref": "38:4",
+    "ref": "Job 38:4",
     "text": "Where were you when I laid the earth's foundation?",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -947,7 +947,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-60",
-    "ref": "42:5",
+    "ref": "Job 42:5",
     "text": "My ears had heard of you but now my eyes have seen you",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -963,7 +963,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-61",
-    "ref": "1:2",
+    "ref": "Psalms 1:2",
     "text": "His delight is in the law of the LORD and in his law he meditates day and night",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -979,7 +979,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-62",
-    "ref": "22:1",
+    "ref": "Psalms 22:1",
     "text": "My God, my God, why have you forsaken me?",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -995,7 +995,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-63",
-    "ref": "23:1",
+    "ref": "Psalms 23:1",
     "text": "The LORD is my shepherd — I shall not want",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1011,7 +1011,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-64",
-    "ref": "51:10",
+    "ref": "Psalms 51:10",
     "text": "Create in me a clean heart, O God — renew a right spirit within me",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1027,7 +1027,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-65",
-    "ref": "119:11",
+    "ref": "Psalms 119:11",
     "text": "I have hidden your word in my heart that I might not sin against you",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1043,7 +1043,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-66",
-    "ref": "1:7",
+    "ref": "Proverbs 1:7",
     "text": "The fear of the LORD is the beginning of wisdom — fools despise wisdom and instruction",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1059,7 +1059,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-67",
-    "ref": "3:5-6",
+    "ref": "Proverbs 3:5-6",
     "text": "Trust in the LORD with all your heart — in all your ways submit to him",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1075,7 +1075,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-68",
-    "ref": "4:23",
+    "ref": "Proverbs 4:23",
     "text": "Above all else, guard your heart — for everything you do flows from it",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1091,7 +1091,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-69",
-    "ref": "31:30",
+    "ref": "Proverbs 31:30",
     "text": "Charm is deceptive and beauty is fleeting — but a woman who fears the LORD is to be praised",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1107,7 +1107,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-70",
-    "ref": "1:2",
+    "ref": "Ecclesiastes 1:2",
     "text": "Vanity of vanities — all is vanity",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1123,7 +1123,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-71",
-    "ref": "3:11",
+    "ref": "Ecclesiastes 3:11",
     "text": "He has made everything beautiful in its time — he has set eternity in the human heart",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1139,7 +1139,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-72",
-    "ref": "12:13",
+    "ref": "Ecclesiastes 12:13",
     "text": "Fear God and keep his commandments — this is the duty of all mankind",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1155,7 +1155,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-73",
-    "ref": "2:4",
+    "ref": "Song of Solomon 2:4",
     "text": "He has brought me to his banqueting table — his banner over me is love",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1171,7 +1171,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-74",
-    "ref": "2:16",
+    "ref": "Song of Solomon 2:16",
     "text": "My beloved is mine and I am his — he browses among the lilies",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1187,7 +1187,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-75",
-    "ref": "8:6-7",
+    "ref": "Song of Solomon 8:6-7",
     "text": "Place me like a seal over your heart — love is as strong as death — many waters cannot quench love",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1203,7 +1203,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-76",
-    "ref": "6:8",
+    "ref": "Isaiah 6:8",
     "text": "\"Here am I — send me\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1219,7 +1219,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-77",
-    "ref": "9:6",
+    "ref": "Isaiah 9:6",
     "text": "\"For to us a child is born — Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1235,7 +1235,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-78",
-    "ref": "40:31",
+    "ref": "Isaiah 40:31",
     "text": "\"Those who hope in the LORD will renew their strength — they will soar on wings like eagles\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1251,7 +1251,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-79",
-    "ref": "53:5",
+    "ref": "Isaiah 53:5",
     "text": "\"He was pierced for our transgressions — by his wounds we are healed\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1267,7 +1267,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-80",
-    "ref": "55:11",
+    "ref": "Isaiah 55:11",
     "text": "\"My word will not return to me empty — it will accomplish what I desire\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1283,7 +1283,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-81",
-    "ref": "1:5",
+    "ref": "Jeremiah 1:5",
     "text": "\"Before I formed you in the womb I knew you — before you were born I set you apart\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1299,7 +1299,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-82",
-    "ref": "29:11",
+    "ref": "Jeremiah 29:11",
     "text": "\"I know the plans I have for you — plans to prosper you and not to harm you\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1315,7 +1315,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-83",
-    "ref": "31:33",
+    "ref": "Jeremiah 31:33",
     "text": "\"I will put my law in their minds and write it on their hearts — I will be their God and they will be my people\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1331,7 +1331,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-84",
-    "ref": "33:3",
+    "ref": "Jeremiah 33:3",
     "text": "\"Call to me and I will answer you and tell you great and unsearchable things\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1347,7 +1347,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-85",
-    "ref": "3:22–23",
+    "ref": "Lamentations 3:22–23",
     "text": "\"Because of the LORD's great love we are not consumed — his mercies are new every morning\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1363,7 +1363,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-86",
-    "ref": "3:40",
+    "ref": "Lamentations 3:40",
     "text": "\"Let us examine our ways and test them — and let us return to the LORD\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1379,7 +1379,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-87",
-    "ref": "5:21",
+    "ref": "Lamentations 5:21",
     "text": "\"Restore us to yourself, LORD, that we may return — renew our days as of old\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1395,7 +1395,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-88",
-    "ref": "1:28",
+    "ref": "Ezekiel 1:28",
     "text": "\"This was the appearance of the likeness of the glory of the LORD — when I saw it I fell facedown\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1411,7 +1411,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-89",
-    "ref": "36:26",
+    "ref": "Ezekiel 36:26",
     "text": "\"I will give you a new heart and put a new spirit in you — I will remove your heart of stone\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1427,7 +1427,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-90",
-    "ref": "37:3",
+    "ref": "Ezekiel 37:3",
     "text": "\"Son of man, can these bones live?\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1443,7 +1443,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-91",
-    "ref": "48:35",
+    "ref": "Ezekiel 48:35",
     "text": "\"The name of the city from that time on will be: THE LORD IS THERE\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1459,7 +1459,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-92",
-    "ref": "2:44",
+    "ref": "Daniel 2:44",
     "text": "\"The God of heaven will set up a kingdom that will never be destroyed — it will crush all those kingdoms and bring them to an end, but it will itself endure forever\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1475,7 +1475,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-93",
-    "ref": "3:17–18",
+    "ref": "Daniel 3:17–18",
     "text": "\"The God we serve is able to save us — but even if he does not, we will not serve your gods\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1491,7 +1491,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-94",
-    "ref": "7:13–14",
+    "ref": "Daniel 7:13–14",
     "text": "\"One like a Son of Man coming with the clouds of heaven — he was given authority, glory, and sovereign power — his dominion is an everlasting dominion\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1507,7 +1507,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-95",
-    "ref": "9:19",
+    "ref": "Daniel 9:19",
     "text": "\"Lord, listen! Lord, forgive! Lord, hear and act! For your sake do not delay\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1523,7 +1523,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-96",
-    "ref": "12:3",
+    "ref": "Daniel 12:3",
     "text": "\"Those who are wise will shine like the brightness of the heavens — those who lead many to righteousness like the stars forever\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1539,7 +1539,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-97",
-    "ref": "2:23",
+    "ref": "Hosea 2:23",
     "text": "\"I will say to those called 'Not my people' — you are my people — and they will say you are my God\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1555,7 +1555,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-98",
-    "ref": "6:6",
+    "ref": "Hosea 6:6",
     "text": "\"I desire mercy not sacrifice — and acknowledgment of God rather than burnt offerings\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1571,7 +1571,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-99",
-    "ref": "11:1",
+    "ref": "Hosea 11:1",
     "text": "\"When Israel was a child I loved him — out of Egypt I called my son\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1587,7 +1587,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-100",
-    "ref": "14:4",
+    "ref": "Hosea 14:4",
     "text": "\"I will heal their waywardness and love them freely — my anger has turned away from them\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1603,7 +1603,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-101",
-    "ref": "2:13",
+    "ref": "Joel 2:13",
     "text": "\"Return to the LORD your God — for he is gracious and compassionate, slow to anger and abounding in love\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1619,7 +1619,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-102",
-    "ref": "2:28",
+    "ref": "Joel 2:28",
     "text": "\"I will pour out my Spirit on all people — your sons and daughters will prophesy\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1635,7 +1635,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-103",
-    "ref": "3:14",
+    "ref": "Joel 3:14",
     "text": "\"Multitudes, multitudes in the valley of decision — for the day of the LORD is near\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1651,7 +1651,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-104",
-    "ref": "3:7",
+    "ref": "Amos 3:7",
     "text": "\"Surely the Sovereign LORD does nothing without revealing his plan to his servants the prophets\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1667,7 +1667,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-105",
-    "ref": "5:24",
+    "ref": "Amos 5:24",
     "text": "\"Let justice roll on like a river — righteousness like a never-failing stream\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1683,7 +1683,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-106",
-    "ref": "7:8",
+    "ref": "Amos 7:8",
     "text": "\"I will set a plumb line among my people Israel — I will spare them no longer\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1699,7 +1699,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-107",
-    "ref": "9:11",
+    "ref": "Amos 9:11",
     "text": "\"In that day I will restore David's fallen shelter — I will rebuild its ruins\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1715,7 +1715,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-108",
-    "ref": "1:15",
+    "ref": "Obadiah 1:15",
     "text": "\"The day of the LORD is near for all nations — as you have done it will be done to you — your deeds will return on your own head\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1731,7 +1731,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-109",
-    "ref": "2:9",
+    "ref": "Jonah 2:9",
     "text": "\"Salvation comes from the LORD\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1747,7 +1747,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-110",
-    "ref": "3:10",
+    "ref": "Jonah 3:10",
     "text": "\"When God saw what they did and how they turned from their evil ways he relented\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1763,7 +1763,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-111",
-    "ref": "4:2",
+    "ref": "Jonah 4:2",
     "text": "\"I knew you are a gracious and compassionate God — slow to anger — that is why I fled\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1779,7 +1779,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-112",
-    "ref": "5:2",
+    "ref": "Micah 5:2",
     "text": "\"But you, Bethlehem Ephrathah — out of you will come for me one who will be ruler over Israel\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1795,7 +1795,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-113",
-    "ref": "6:8",
+    "ref": "Micah 6:8",
     "text": "\"Act justly, love mercy, walk humbly with your God\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1811,7 +1811,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-114",
-    "ref": "7:18",
+    "ref": "Micah 7:18",
     "text": "\"Who is a God like you who pardons sin and forgives the transgression of the remnant — you will again have compassion on us\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1827,7 +1827,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-115",
-    "ref": "1:3",
+    "ref": "Nahum 1:3",
     "text": "\"The LORD is slow to anger but great in power — the LORD will not leave the guilty unpunished\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1843,7 +1843,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-116",
-    "ref": "1:7",
+    "ref": "Nahum 1:7",
     "text": "\"The LORD is good — a refuge in times of trouble — he cares for those who trust in him\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1859,7 +1859,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-117",
-    "ref": "2:4",
+    "ref": "Habakkuk 2:4",
     "text": "\"The righteous person will live by his faithfulness\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1875,7 +1875,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-118",
-    "ref": "2:14",
+    "ref": "Habakkuk 2:14",
     "text": "\"The earth will be filled with the knowledge of the glory of the LORD as the waters cover the sea\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1891,7 +1891,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-119",
-    "ref": "3:17–18",
+    "ref": "Habakkuk 3:17–18",
     "text": "\"Though the fig tree does not bud — yet I will rejoice in the LORD\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1907,7 +1907,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-120",
-    "ref": "1:7",
+    "ref": "Zephaniah 1:7",
     "text": "\"Be silent before the Sovereign LORD for the day of the LORD is near\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1923,7 +1923,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-121",
-    "ref": "2:3",
+    "ref": "Zephaniah 2:3",
     "text": "\"Seek the LORD, all you humble of the land — perhaps you will be sheltered on the day\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1939,7 +1939,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-122",
-    "ref": "3:17",
+    "ref": "Zephaniah 3:17",
     "text": "\"He will rejoice over you with singing\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1955,7 +1955,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-123",
-    "ref": "1:7",
+    "ref": "Haggai 1:7",
     "text": "\"Give careful thought to your ways\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1971,7 +1971,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-124",
-    "ref": "2:9",
+    "ref": "Haggai 2:9",
     "text": "\"The glory of this present house will be greater than the glory of the former house — and in this place I will grant peace\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -1987,7 +1987,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-125",
-    "ref": "2:23",
+    "ref": "Haggai 2:23",
     "text": "\"I will make you like my signet ring — for I have chosen you\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2003,7 +2003,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-126",
-    "ref": "4:6",
+    "ref": "Zechariah 4:6",
     "text": "\"Not by might nor by power but by my Spirit says the LORD Almighty\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2019,7 +2019,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-127",
-    "ref": "9:9",
+    "ref": "Zechariah 9:9",
     "text": "\"Rejoice greatly, Daughter Zion — your king comes to you — humble and mounted on a donkey\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2035,7 +2035,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-128",
-    "ref": "12:10",
+    "ref": "Zechariah 12:10",
     "text": "\"They will look on me the one they have pierced — and they will mourn\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2051,7 +2051,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-129",
-    "ref": "14:9",
+    "ref": "Zechariah 14:9",
     "text": "\"The LORD will be king over the whole earth — on that day there will be one LORD and his name the only name\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2067,7 +2067,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-130",
-    "ref": "3:1",
+    "ref": "Malachi 3:1",
     "text": "\"I will send my messenger who will prepare the way before me\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2083,7 +2083,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-131",
-    "ref": "3:6",
+    "ref": "Malachi 3:6",
     "text": "\"I the LORD do not change — so you, the descendants of Jacob, are not destroyed\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2099,7 +2099,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-132",
-    "ref": "3:10",
+    "ref": "Malachi 3:10",
     "text": "\"Bring the whole tithe into the storehouse — test me in this and see if I will not throw open the floodgates of heaven\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2115,7 +2115,7 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-133",
-    "ref": "4:2",
+    "ref": "Malachi 4:2",
     "text": "\"For you who revere my name the sun of righteousness will rise with healing in its rays\"",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
@@ -2947,8 +2947,8 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-185",
-    "ref": "Philemon 1:10, 16",
-    "text": "I appeal to you for my child Onesimus... no longer as a slave, but more than a slave, a beloved brother, especially to me, but how much more to you, both in the flesh and in the Lord.",
+    "ref": "Philemon 1:10",
+    "text": "I appeal to you for my child Onesimus, whom I have begotten in my imprisonment,",
     "translation": "LSB",
     "addedDate": "2026-10-29T21:47:07.868Z",
     "status": "learning",
@@ -2963,6 +2963,22 @@ export const ALL_KEY_VERSES: Verse[] = [
   },
   {
     "id": "keyall-186",
+    "ref": "Philemon 1:16",
+    "text": "no longer as a slave, but more than a slave, a beloved brother, especially to me, but how much more to you, both in the flesh and in the Lord.",
+    "translation": "LSB",
+    "addedDate": "2026-10-29T21:47:07.868Z",
+    "status": "learning",
+    "sm2": {
+      "interval": 0,
+      "repetition": 0,
+      "efactor": 2.5,
+      "nextDueDate": "2026-10-31T21:47:07.868Z"
+    },
+    "streak": 0,
+    "attempts": 0
+  },
+  {
+    "id": "keyall-187",
     "ref": "Hebrews 1:1-2",
     "text": "God, after He spoke long ago to the fathers in the prophets in many portions and in many ways, in these last days has spoken to us in His Son, whom He appointed heir of all things, through whom also He made the worlds.",
     "translation": "LSB",
@@ -2978,7 +2994,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-187",
+    "id": "keyall-188",
     "ref": "Hebrews 4:12",
     "text": "For the word of God is living and active and sharper than any two-edged sword, and piercing as far as the division of soul and spirit, of both joints and marrow, and able to judge the thoughts and intentions of the heart.",
     "translation": "LSB",
@@ -2994,7 +3010,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-188",
+    "id": "keyall-189",
     "ref": "Hebrews 12:2",
     "text": "Fixing our eyes on Jesus, the author and perfecter of faith, who for the joy set before Him endured the cross, despising the shame, and has sat down at the right hand of the throne of God.",
     "translation": "LSB",
@@ -3010,7 +3026,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-189",
+    "id": "keyall-190",
     "ref": "James 1:22",
     "text": "But prove yourselves doers of the word, and not merely hearers who delude themselves.",
     "translation": "LSB",
@@ -3026,7 +3042,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-190",
+    "id": "keyall-191",
     "ref": "James 2:17",
     "text": "Even so faith, if it has no works, is dead, being by itself.",
     "translation": "LSB",
@@ -3042,7 +3058,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-191",
+    "id": "keyall-192",
     "ref": "James 5:16",
     "text": "Therefore, confess your sins to one another, and pray for one another so that you may be healed. The effective prayer of a righteous man can accomplish much.",
     "translation": "LSB",
@@ -3058,7 +3074,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-192",
+    "id": "keyall-193",
     "ref": "1 Peter 1:3",
     "text": "Blessed be the God and Father of our Lord Jesus Christ, who according to His great mercy has caused us to be born again to a living hope through the resurrection of Jesus Christ from the dead.",
     "translation": "LSB",
@@ -3074,7 +3090,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-193",
+    "id": "keyall-194",
     "ref": "1 Peter 2:9",
     "text": "But you are a chosen family, a royal priesthood, a holy nation, a people for God's own possession, so that you may proclaim the excellencies of Him who has called you out of darkness into His marvelous light.",
     "translation": "LSB",
@@ -3090,7 +3106,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-194",
+    "id": "keyall-195",
     "ref": "1 Peter 5:7",
     "text": "Casting all your anxiety on Him, because He cares for you.",
     "translation": "LSB",
@@ -3106,7 +3122,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-195",
+    "id": "keyall-196",
     "ref": "2 Peter 1:3",
     "text": "Seeing that His divine power has granted to us everything pertaining to life and godliness, through the true knowledge of Him who called us by His own glory and excellence.",
     "translation": "LSB",
@@ -3122,7 +3138,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-196",
+    "id": "keyall-197",
     "ref": "2 Peter 1:21",
     "text": "For no prophecy was ever made by an act of human will, but men moved by the Holy Spirit spoke from God.",
     "translation": "LSB",
@@ -3138,7 +3154,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-197",
+    "id": "keyall-198",
     "ref": "2 Peter 3:9",
     "text": "The Lord is not slow about His promise, as some count slowness, but is patient toward you, not wishing for any to perish but for all to come to repentance.",
     "translation": "LSB",
@@ -3154,7 +3170,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-198",
+    "id": "keyall-199",
     "ref": "1 John 1:9",
     "text": "If we confess our sins, He is faithful and righteous to forgive us our sins and to cleanse us from all unrighteousness.",
     "translation": "LSB",
@@ -3170,7 +3186,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-199",
+    "id": "keyall-200",
     "ref": "1 John 4:8",
     "text": "The one who does not love does not know God, for God is love.",
     "translation": "LSB",
@@ -3186,7 +3202,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-200",
+    "id": "keyall-201",
     "ref": "1 John 5:13",
     "text": "These things I have written to you who believe in the name of the Son of God, so that you may know that you have eternal life.",
     "translation": "LSB",
@@ -3202,7 +3218,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-201",
+    "id": "keyall-202",
     "ref": "2 John 1:8",
     "text": "Watch yourselves, that you do not lose what we have accomplished, but that you may receive a full reward.",
     "translation": "LSB",
@@ -3218,7 +3234,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-202",
+    "id": "keyall-203",
     "ref": "3 John 1:4",
     "text": "I have no greater joy than this, to hear of my children walking in the truth.",
     "translation": "LSB",
@@ -3234,7 +3250,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-203",
+    "id": "keyall-204",
     "ref": "Jude 1:24-25",
     "text": "Now to Him who is able to keep you from stumbling, and to make you stand in the presence of His glory blameless with great joy, to the only God our Savior, through Jesus Christ our Lord, be glory, majesty, dominion and authority, before all time and now and forever. Amen.",
     "translation": "LSB",
@@ -3250,7 +3266,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-204",
+    "id": "keyall-205",
     "ref": "Revelation 1:19",
     "text": "Therefore write the things which you have seen, and the things which are, and the things which will take place after these things.",
     "translation": "LSB",
@@ -3266,7 +3282,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-205",
+    "id": "keyall-206",
     "ref": "Revelation 5:9",
     "text": "And they sang a new song, saying, 'Worthy are You to take the scroll and to break its seals; for You were slain, and purchased for God with Your blood people from every tribe and tongue and people and nation.'",
     "translation": "LSB",
@@ -3282,7 +3298,7 @@ export const ALL_KEY_VERSES: Verse[] = [
     "attempts": 0
   },
   {
-    "id": "keyall-206",
+    "id": "keyall-207",
     "ref": "Revelation 21:5",
     "text": "And He who sits on the throne said, 'Behold, I am making all things new.' And He said, 'Write, for these words are faithful and true.'",
     "translation": "LSB",

@@ -1,5 +1,6 @@
 import { BOLLS_BIBLE_MAP } from '../data/bibleMap';
 import { fromVerseIndex } from './verseConnections';
+import { memoryVerseText } from './studyText';
 
 // Shared "quote a verse in the reader's version" helpers, used anywhere the app shows
 // verse text outside the chapter reader itself (guide key verses, cross-references,
@@ -19,10 +20,104 @@ interface BollsVerse {
 }
 
 const BOOK_ALIASES: Record<string, string> = {
+  gen: 'genesis',
+  ge: 'genesis',
+  ex: 'exodus',
+  exod: 'exodus',
+  lev: 'leviticus',
+  num: 'numbers',
+  deut: 'deuteronomy',
+  deu: 'deuteronomy',
+  josh: 'joshua',
+  judg: 'judges',
+  jdg: 'judges',
+  '1sam': '1samuel',
+  '1sa': '1samuel',
+  '2sam': '2samuel',
+  '2sa': '2samuel',
+  '1kgs': '1kings',
+  '1ki': '1kings',
+  '2kgs': '2kings',
+  '2ki': '2kings',
+  '1chr': '1chronicles',
+  '1ch': '1chronicles',
+  '2chr': '2chronicles',
+  '2ch': '2chronicles',
+  neh: 'nehemiah',
+  est: 'esther',
+  ps: 'psalms',
+  psa: 'psalms',
   psalm: 'psalms',
+  prov: 'proverbs',
+  pro: 'proverbs',
+  eccl: 'ecclesiastes',
+  eccles: 'ecclesiastes',
+  ecc: 'ecclesiastes',
   song: 'songofsolomon',
   songofsongs: 'songofsolomon',
+  sng: 'songofsolomon',
   canticles: 'songofsolomon',
+  isa: 'isaiah',
+  jer: 'jeremiah',
+  lam: 'lamentations',
+  ezek: 'ezekiel',
+  ezk: 'ezekiel',
+  dan: 'daniel',
+  hos: 'hosea',
+  obad: 'obadiah',
+  oba: 'obadiah',
+  jon: 'jonah',
+  mic: 'micah',
+  nah: 'nahum',
+  nam: 'nahum',
+  hab: 'habakkuk',
+  zeph: 'zephaniah',
+  zep: 'zephaniah',
+  hag: 'haggai',
+  zech: 'zechariah',
+  zec: 'zechariah',
+  mal: 'malachi',
+  matt: 'matthew',
+  mat: 'matthew',
+  mk: 'mark',
+  mrk: 'mark',
+  lk: 'luke',
+  luk: 'luke',
+  jn: 'john',
+  jhn: 'john',
+  act: 'acts',
+  rom: 'romans',
+  '1cor': '1corinthians',
+  '1co': '1corinthians',
+  '2cor': '2corinthians',
+  '2co': '2corinthians',
+  gal: 'galatians',
+  eph: 'ephesians',
+  phil: 'philippians',
+  php: 'philippians',
+  col: 'colossians',
+  '1thess': '1thessalonians',
+  '1th': '1thessalonians',
+  '2thess': '2thessalonians',
+  '2th': '2thessalonians',
+  '1tim': '1timothy',
+  '1ti': '1timothy',
+  '2tim': '2timothy',
+  '2ti': '2timothy',
+  tit: 'titus',
+  philem: 'philemon',
+  phm: 'philemon',
+  heb: 'hebrews',
+  jas: 'james',
+  '1pet': '1peter',
+  '1pe': '1peter',
+  '2pet': '2peter',
+  '2pe': '2peter',
+  '1jn': '1john',
+  '2jn': '2john',
+  '3jn': '3john',
+  jud: 'jude',
+  rev: 'revelation',
   revelations: 'revelation',
 };
 
@@ -30,6 +125,29 @@ const normalizeBookName = (name: string) => {
   const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
   return BOOK_ALIASES[key] || key;
 };
+
+export interface ParsedChapterRef {
+  bookId: string;
+  bollsId: number;
+  chapter: number;
+}
+
+/** Parses a chapter-only reference like "John 3" or "Gen 1" (ignores refs with ":verse"). */
+export function parseChapterRef(ref: string, fallbackBookId?: string): ParsedChapterRef | null {
+  if (!ref || ref.includes(':')) return null;
+  const match = ref.trim().match(/^(?:(.+?)\s+)?(\d+)$/);
+  if (!match) return null;
+
+  const [, bookName, chapterStr] = match;
+  const bookKey = bookName ? normalizeBookName(bookName) : normalizeBookName(fallbackBookId || '');
+  const bollsId = BOLLS_BIBLE_MAP[bookKey];
+  if (!bollsId) return null;
+
+  const chapter = parseInt(chapterStr, 10);
+  if (!chapter) return null;
+
+  return { bookId: bookKey, bollsId, chapter };
+}
 
 // Guards against a typo like "3:1-999" pulling half a chapter into a key-verse card.
 const MAX_RANGE_LENGTH = 12;
@@ -78,7 +196,7 @@ const localBookCache = new Map<string, Promise<Record<string, BollsVerse[]>>>();
 // Chapter-level cache for all translations
 const chapterCache = new Map<string, Promise<BollsVerse[]>>();
 
-function fetchChapter(version: string, bollsId: number, chapter: number, _bookId?: string): Promise<BollsVerse[]> {
+function fetchChapter(version: string, bollsId: number, chapter: number): Promise<BollsVerse[]> {
   const cacheKey = `${version}:${bollsId}:${chapter}`;
   const cached = chapterCache.get(cacheKey);
   if (cached) return cached;
@@ -117,34 +235,93 @@ function fetchChapter(version: string, bollsId: number, chapter: number, _bookId
   return pending;
 }
 
-function toPlainText(html: string): string {
-  const stripped = html
-    .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
-    .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
-    .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
-    .replace(/<S>\d+<\/S>/gi, '')
-    .replace(/<sup\b[^>]*>.*?<\/sup>/gi, '')
-    .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<\/p>/gi, ' ')
-    .replace(/<[^>]*>/g, '');
+function toPlainText(html: string, bookId?: string | number, verse?: number, version?: string): string {
+  return memoryVerseText(html, bookId, verse, version);
+}
 
-  const decoder = document.createElement('textarea');
-  decoder.innerHTML = stripped;
+export interface PlainChapterVerse {
+  verse: number;
+  text: string;
+}
 
-  return decoder.value
-    .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
-    .replace(/\s+/g, ' ')
-    .trim();
+/** Fetches every verse in a chapter with clean plain text for the selected version. */
+export async function fetchChapterVerses(
+  version: string,
+  bollsId: number,
+  chapter: number
+): Promise<PlainChapterVerse[]> {
+  const chapterData = await fetchChapter(version, bollsId, chapter);
+  return chapterData
+    .map(v => ({
+      verse: v.verse,
+      text: toPlainText(v.text, bollsId, v.verse, version),
+    }))
+    .filter(v => Boolean(v.text));
+}
+
+export interface BibleSearchHit {
+  bollsId: number;
+  chapter: number;
+  verse: number;
+  text: string;
+}
+
+/** Searches Bolls full-text index (falling back to BSB/WEB index for offline Telugu/Tamil scripts before translating each hit). */
+export async function searchBibleByKeyword(version: string, query: string, limit = 30): Promise<BibleSearchHit[]> {
+  const cleanQuery = query.trim();
+  if (!cleanQuery) return [];
+  const vUpper = version.toUpperCase();
+  const isLocalOnly = vUpper === 'TELIRV' || vUpper === 'TBSI';
+  let indexVersion = isLocalOnly ? 'WEB' : vUpper;
+
+  let res = await fetch(`https://bolls.life/search/${indexVersion}/?search=${encodeURIComponent(cleanQuery)}`);
+  if (!res.ok && indexVersion !== 'WEB') {
+    indexVersion = 'WEB';
+    res = await fetch(`https://bolls.life/search/WEB/?search=${encodeURIComponent(cleanQuery)}`);
+  }
+  if (!res.ok) throw new Error('Keyword search is currently unavailable.');
+  const rows: Array<{ book: number; chapter: number; verse: number; text: string }> = await res.json();
+  const sliced = rows.slice(0, limit);
+
+  if (indexVersion === vUpper) {
+    return sliced.map(r => ({
+      bollsId: r.book,
+      chapter: r.chapter,
+      verse: r.verse,
+      text: toPlainText(r.text, r.book, r.verse, version),
+    }));
+  }
+
+  return Promise.all(
+    sliced.map(async (r) => {
+      try {
+        const text = await fetchVerseText(version, {
+          bookId: '',
+          bollsId: r.book,
+          chapter: r.chapter,
+          verses: [r.verse],
+        });
+        return { bollsId: r.book, chapter: r.chapter, verse: r.verse, text };
+      } catch {
+        return {
+          bollsId: r.book,
+          chapter: r.chapter,
+          verse: r.verse,
+          text: toPlainText(r.text, r.book, r.verse, indexVersion),
+        };
+      }
+    })
+  );
 }
 
 /** Fetches the referenced verses in `version` and joins them into one quotable line. */
 export async function fetchVerseText(version: string, ref: ParsedVerseRef): Promise<string> {
-  const chapterData = await fetchChapter(version, ref.bollsId, ref.chapter, ref.bookId);
+  const chapterData = await fetchChapter(version, ref.bollsId, ref.chapter);
 
   const text = ref.verses
     .map(n => chapterData.find(v => v.verse === n))
     .filter((v): v is BollsVerse => Boolean(v))
-    .map(v => toPlainText(v.text))
+    .map(v => toPlainText(v.text, ref.bollsId, v.verse, version))
     .filter(Boolean)
     .join(' ');
 
@@ -190,7 +367,7 @@ export async function fetchPassageRangeSnippet(
     const coord = fromVerseIndex(vid);
     const key = `${coord.bollsId}:${coord.chapter}`;
     if (!chapterMap.has(key)) {
-      chapterMap.set(key, fetchChapter(version, coord.bollsId, coord.chapter, coord.bookId));
+      chapterMap.set(key, fetchChapter(version, coord.bollsId, coord.chapter));
     }
   }
 
@@ -206,7 +383,7 @@ export async function fetchPassageRangeSnippet(
       bookName: coord.bookName,
       chapter: coord.chapter,
       verse: coord.verse,
-      text: found ? toPlainText(found.text) : '',
+      text: found ? toPlainText(found.text, coord.bollsId, coord.verse, version) : '',
     });
   }
 

@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { FirstLetterMode } from './FirstLetterMode';
+import React, { useState } from 'react';
+import { scoreAttempt } from '../../utils/cue';
+import { ReviewAnswer } from './PracticeFeedback';
 
 export interface TypingAttempt {
   /** Percentage of the verse's words typed correctly. */
@@ -15,111 +16,62 @@ interface TypingModeProps {
   onAttempt?: (attempt: TypingAttempt) => void;
 }
 
-const normalize = (word: string) => word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-
 /**
- * Type the verse from memory, then find out how it went.
- *
- * This component used to print the entire verse above the input for the whole attempt,
- * greying out words and turning them green as they were matched. That is transcription,
- * not recall: the answer was on screen throughout, so a perfect score meant only that
- * the reader could copy. Worse, it was the app's one source of *measured* accuracy, so
- * the single number capable of checking whether self-grading is honest was itself
- * measuring nothing about memory.
- *
- * Two changes fix that, and they are the same change: the target is withheld until the
- * reader commits, and the word-by-word diff arrives with it rather than during. Feedback
- * that lands mid-attempt turns retrieval into guided copying — the colour of one word
- * tells you whether to trust the next — and retrieval practice needs the attempt to be
- * finished before it is corrected.
- *
- * What stays on screen is a first-letter cue, which is a real cue and is recorded as
- * one. Getting stuck is answered by committing what you have, not by revealing the text
- * and then rating yourself against it.
+ * Type the verse from memory, then see aligned word-by-word comparison via DP edit-distance.
+ * Both target text and cues are withheld during the attempt so the test measures genuine recall.
  */
 export const TypingMode: React.FC<TypingModeProps> = ({ text, onAttempt }) => {
   const [input, setInput] = useState('');
   const [checked, setChecked] = useState(false);
 
-  const targetWords = useMemo(() => text.split(/(\s+)/).filter(w => w.trim().length > 0), [text]);
-  const typedWords = useMemo(() => input.split(/\s+/).filter(w => w.trim().length > 0), [input]);
-
-  const correctCount = useMemo(
-    () => targetWords.reduce(
-      (n, word, i) => n + (typedWords[i] && normalize(typedWords[i]) === normalize(word) ? 1 : 0), 0),
-    [targetWords, typedWords]
-  );
-  const accuracy = targetWords.length ? Math.round((correctCount / targetWords.length) * 100) : 0;
-
   const check = () => {
-    if (checked) return;
+    if (checked || !input.trim()) return;
+    const computed = scoreAttempt(text, input);
     setChecked(true);
-    onAttempt?.({ accuracy, committed: input });
+    onAttempt?.({ accuracy: computed.accuracy, committed: input });
   };
 
   if (!checked) {
     return (
-      <div className="flex flex-col gap-5">
-        {/* The cue, not the answer. Enough to place the verse and start recall. */}
-        <div className="text-base leading-relaxed text-secondary">
-          <FirstLetterMode text={text} />
-        </div>
+      <div className="flex flex-col gap-4 w-full">
+        <p className="text-sm sm:text-base text-primary font-medium">
+          Type from memory. Check when you finish.
+        </p>
 
         <textarea
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type the verse from memory…"
-          aria-label="Type the verse from memory"
-          className="w-full min-h-[150px] p-5 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors duration-200 text-primary placeholder:text-muted/60 resize-none text-lg shadow-sm"
+          onChange={e => setInput(e.target.value.slice(0, 20000))}
+          placeholder="Type the verse from memory"
+          aria-label="Your answer"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
+          className="w-full min-h-[150px] p-4 rounded-xl bg-card-elevated border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted/70 resize-y text-base sm:text-lg shadow-sm"
         />
 
         <button
+          type="button"
           onClick={check}
-          className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          disabled={!input.trim()}
+          className="w-full min-h-[48px] py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
         >
-          Check
+          Check answer
         </button>
-        <p className="text-center text-[0.6875rem] text-muted -mt-2">
-          You'll see the verse once you've committed to an answer
+
+        <p className="text-xs text-secondary text-center">
+          Capitalization and punctuation do not count against you.
         </p>
       </div>
     );
   }
 
+  const computed = scoreAttempt(text, input);
   return (
-    <div className="flex flex-col gap-5">
-      <p className="text-sm font-semibold text-primary tabular-nums">
-        {correctCount} of {targetWords.length} words matched
-      </p>
-
-      {/* The diff, once. Missed words are named rather than merely counted — knowing
-          which words failed is worth considerably more than a percentage. */}
-      <div
-        className="text-lg leading-relaxed whitespace-pre-wrap"
-        role="status"
-        aria-live="polite"
-      >
-        {targetWords.map((word, idx) => {
-          const target = normalize(word);
-          const typed = typedWords[idx] ? normalize(typedWords[idx]) : null;
-          const ok = typed !== null && typed === target;
-          return (
-            <React.Fragment key={idx}>
-              <span className={ok ? 'text-primary' : 'text-red-500 underline decoration-red-500/50 underline-offset-4'}>
-                {word}
-              </span>
-              {' '}
-            </React.Fragment>
-          );
-        })}
-      </div>
-
-      {input.trim() && (
-        <div className="rounded-md border border-card-border bg-card-elevated p-4">
-          <p className="text-[0.625rem] font-bold uppercase tracking-widest text-muted mb-1.5">What you wrote</p>
-          <p className="text-sm text-secondary whitespace-pre-wrap">{input}</p>
-        </div>
-      )}
-    </div>
+    <ReviewAnswer
+      text={text}
+      submitted={input}
+      accuracy={computed.accuracy}
+      showWordDiff
+    />
   );
 };

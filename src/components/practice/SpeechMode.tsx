@@ -1,162 +1,226 @@
-import React, { useState, useEffect } from 'react';
-import { Mic, MicOff } from 'lucide-react';
-import { FirstLetterMode } from './FirstLetterMode';
+import React, { useEffect, useRef, useState } from 'react';
+import { Mic, Square } from 'lucide-react';
+import { scoreAttempt } from '../../utils/cue';
+import { ReviewAnswer } from './PracticeFeedback';
 
 interface SpeechModeProps {
   text: string;
-  /** Fires as the transcript arrives. Unlike TypingMode this cannot easily be deferred —
-   * speech recognition streams, and there is no keystroke to hold back — but it also
-   * doesn't need to be: the reader is speaking, not reading the screen, so the target
-   * text below is a check afterwards rather than something to copy from mid-attempt. */
+  isEnglish?: boolean;
   onAttempt?: (attempt: { accuracy: number; committed: string }) => void;
 }
 
-const normalize = (word: string) => word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-
-export const SpeechMode: React.FC<SpeechModeProps> = ({ text, onAttempt }) => {
+export const SpeechMode: React.FC<SpeechModeProps> = ({
+  text,
+  isEnglish = true,
+  onAttempt,
+}) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [reviewingTranscript, setReviewingTranscript] = useState(false);
+  const [compared, setCompared] = useState(false);
   const [error, setError] = useState('');
+  const [isSupported, setIsSupported] = useState(true);
 
-  // Speech Recognition setup (Web Speech API)
-  const recognitionRef = React.useRef<any>(null);
-  // The recognizer's onresult closure is built once, on mount, so it would otherwise
-  // capture whichever callback the parent happened to pass on that first render.
-  // Same for the target text: Practice remounts this component per verse via `key`,
-  // but BlockDrillModal reuses one instance across different anchor chains, so the
-  // closure must not hold whichever string happened to be current at mount.
-  const onAttemptRef = React.useRef(onAttempt);
-  const textRef = React.useRef(text);
-  useEffect(() => { onAttemptRef.current = onAttempt; }, [onAttempt]);
-  useEffect(() => { textRef.current = text; }, [text]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recognitionRef = useRef<any>(null);
+  const transcriptRef = useRef('');
 
   useEffect(() => {
-    if ('webkitSpeechRecognition' in window) {
-      // @ts-ignore
-      recognitionRef.current = new webkitSpeechRecognition();
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
+    transcriptRef.current = transcript;
+  }, [transcript]);
 
-      recognitionRef.current.onresult = (event: any) => {
-        let currentTranscript = '';
-        for (let i = 0; i < event.results.length; i++) {
-          currentTranscript += event.results[i][0].transcript;
-        }
-        setTranscript(currentTranscript);
+  useEffect(() => {
+    setIsListening(false);
+    setTranscript('');
+    setReviewingTranscript(false);
+    setCompared(false);
+    setError('');
+  }, [text]);
 
-        const spoken = currentTranscript.split(/\s+/).filter((w: string) => w.trim().length > 0);
-        const target = textRef.current.split(/\s+/).filter(w => w.trim().length > 0);
-        const correct = target.reduce(
-          (n, word, i) => n + (spoken[i] && normalize(spoken[i]) === normalize(word) ? 1 : 0), 0);
-        onAttemptRef.current?.({
-          accuracy: target.length ? Math.round((correct / target.length) * 100) : 0,
-          committed: currentTranscript,
-        });
-      };
-
-      recognitionRef.current.onerror = (event: any) => {
-        setError('Error occurred in recognition: ' + event.error);
-        setIsListening(false);
-      };
-
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-      };
-    } else {
-      setError('Speech recognition not supported in this browser.');
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+    const SpeechRec = win.SpeechRecognition || win.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      setIsSupported(false);
+      return;
     }
 
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
+    const rec = new SpeechRec();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = isEnglish ? 'en-US' : 'te-IN';
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rec.onresult = (event: any) => {
+      let currentTranscript = '';
+      for (let i = 0; i < event.results.length; i++) {
+        currentTranscript += event.results[i][0].transcript;
+      }
+      setTranscript(currentTranscript);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rec.onerror = (event: any) => {
+      setError(`Speech recognition error: ${event.error}`);
+      setIsListening(false);
+    };
+
+    rec.onend = () => {
+      setIsListening(false);
+      if (transcriptRef.current.trim()) {
+        setReviewingTranscript(true);
       }
     };
-  }, []);
 
-  const toggleListen = () => {
-    if (!recognitionRef.current && 'webkitSpeechRecognition' in window) {
-       // @ts-ignore
-      recognitionRef.current = new webkitSpeechRecognition();
-      // configure again if re-init is needed, simplified for brevity
-    }
-
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-    } else {
-      setError('');
-      setTranscript('');
+    recognitionRef.current = rec;
+    return () => {
       try {
-        recognitionRef.current?.start();
-        setIsListening(true);
-      } catch (e) {
-        console.error(e);
+        rec.stop();
+      } catch {
+        // Ignore stop errors during cleanup.
       }
+    };
+  }, [isEnglish]);
+
+  const startReciting = () => {
+    setError('');
+    setTranscript('');
+    setReviewingTranscript(false);
+    setCompared(false);
+    try {
+      recognitionRef.current?.start();
+      setIsListening(true);
+    } catch {
+      setError('Could not start microphone recognition.');
     }
   };
 
-  // Simple diff rendering like TypingMode
-  const targetWords = text.split(/(\s+)/).filter(w => w.trim().length > 0);
-  const spokenWords = transcript.split(/\s+/).filter(w => w.trim().length > 0);
+  const stopReciting = () => {
+    try {
+      recognitionRef.current?.stop();
+    } catch {
+      // Ignore stop errors.
+    }
+    setIsListening(false);
+    if (transcriptRef.current.trim()) {
+      setReviewingTranscript(true);
+    }
+  };
+
+  if (compared) {
+    const score = scoreAttempt(text, transcript);
+    return (
+      <ReviewAnswer
+        text={text}
+        submitted={transcript}
+        accuracy={score.accuracy}
+        showWordDiff
+      />
+    );
+  }
+
+  if (reviewingTranscript && !isListening) {
+    return (
+      <div className="flex flex-col gap-3.5 w-full">
+        <h3 className="text-base font-bold text-primary">Check what was heard</h3>
+        <p className="text-xs sm:text-sm text-secondary">
+          Correct recognition mistakes before comparing with the passage.
+        </p>
+
+        <textarea
+          value={transcript}
+          onChange={e => setTranscript(e.target.value.slice(0, 20000))}
+          aria-label="Recognized words"
+          className="w-full min-h-[130px] p-4 rounded-xl bg-card-elevated border border-card-border text-primary text-sm sm:text-base focus:outline-none focus:border-accent"
+        />
+
+        <button
+          type="button"
+          disabled={!transcript.trim()}
+          onClick={() => {
+            const score = scoreAttempt(text, transcript);
+            setCompared(true);
+            onAttempt?.({ accuracy: score.accuracy, committed: transcript });
+          }}
+          className="w-full min-h-[48px] py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
+        >
+          Compare transcript
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setReviewingTranscript(false);
+            setTranscript('');
+          }}
+          className="self-start text-xs font-semibold text-accent hover:underline"
+        >
+          Record again
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-6 items-center">
-      {/* The verse is withheld until the recitation stops.
-          It used to sit here in full for the whole attempt, colouring word by word as
-          you spoke — so the reader could simply read it aloud, and the accuracy this
-          mode reports (the app's only measured signal, now also the basis for checking
-          whether self-grading is honest) would have been measuring reading. First
-          letters stay up as a real cue; the diff waits until there is an attempt to
-          diff. */}
-      {isListening || !transcript ? (
-        <div className="w-full text-base leading-relaxed text-secondary mb-4 text-center">
-          <FirstLetterMode text={text} />
-        </div>
+    <div className="flex flex-col gap-4 w-full">
+      <h3 className="text-base font-bold text-primary">Say it from memory</h3>
+      <p className="text-sm text-primary">
+        The passage stays hidden while you speak. You can check the transcript before comparing.
+      </p>
+      <p className="text-xs sm:text-sm text-secondary">
+        Your device&apos;s speech service may require an internet connection. Use Recall for self-check without the microphone.
+      </p>
+
+      {!isSupported ? (
+        <p className="text-sm text-secondary rounded-xl bg-card border border-card-border p-4">
+          Speech recognition is unavailable in this browser.
+        </p>
       ) : (
-      <div className="w-full text-lg leading-relaxed whitespace-pre-wrap mb-4 text-center">
-        {targetWords.map((word, idx) => {
-          const cleanTarget = word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-          const cleanSpoken = spokenWords[idx] ? spokenWords[idx].replace(/[^a-zA-Z0-9]/g, '').toLowerCase() : null;
-          
-          let colorClass = 'text-muted opacity-50';
-          
-          if (cleanSpoken !== null) {
-             if (cleanSpoken === cleanTarget) {
-               colorClass = 'text-green-500 font-bold';
-             } else {
-               colorClass = 'text-red-500 line-through opacity-70';
-             }
-          }
-          return (
-            <React.Fragment key={idx}>
-              <span className={`transition-colors ${colorClass}`}>{word}</span>
-              {' '}
-            </React.Fragment>
-          );
-        })}
-      </div>
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={isListening ? stopReciting : startReciting}
+            className={`w-full min-h-[48px] px-4 py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-colors ${
+              isListening
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-accent text-[#141414] hover:opacity-95'
+            }`}
+          >
+            {isListening ? (
+              <>
+                <Square className="w-4 h-4 fill-current" />
+                <span>Finish speaking</span>
+              </>
+            ) : (
+              <>
+                <Mic className="w-4 h-4" />
+                <span>Start reciting</span>
+              </>
+            )}
+          </button>
+
+          <p className="text-xs text-secondary text-center">
+            {isListening
+              ? 'Listening…'
+              : 'Speak the verse, then finish when you are ready.'}
+          </p>
+        </div>
       )}
 
-      <button
-        onClick={toggleListen}
-        disabled={!!error && !isListening}
-        className={`rounded-full w-20 h-20 flex items-center justify-center text-white transition-colors disabled:opacity-50 disabled:pointer-events-none active:scale-95 ${
-          isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-accent hover:bg-accent-hover'
-        }`}
-      >
-        {isListening ? <MicOff className="w-8 h-8" /> : <Mic className="w-8 h-8" />}
-      </button>
+      {error && <p className="text-xs text-red-400">{error}</p>}
 
-      {isListening && (
-        <span className="text-accent animate-pulse font-medium">Listening...</span>
+      {transcript.trim() && (
+        <div className="rounded-xl bg-card-elevated border border-card-border p-4 flex flex-col gap-1.5">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            Live transcript
+          </span>
+          <p className="text-sm text-primary">{transcript}</p>
+          <span className="text-[11px] text-secondary">
+            Only the final transcript is checked.
+          </span>
+        </div>
       )}
-      
-      {error && <span className="text-red-500 text-sm mt-2">{error}</span>}
-
-      <div className="w-full mt-4 p-4 rounded-md bg-card-elevated border border-card-border min-h-[100px]">
-        <p className="text-secondary text-sm font-medium mb-2">Live Transcript:</p>
-        <p className="text-primary italic">{transcript || "Waiting for speech..."}</p>
-      </div>
     </div>
   );
 };

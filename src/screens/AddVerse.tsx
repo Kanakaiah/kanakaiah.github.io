@@ -12,6 +12,17 @@ import { SEED_VERSES } from '../data/seed';
 import { TOP_100_VERSES } from '../data/top100';
 import { ALL_KEY_VERSES } from '../data/allKeyVerses';
 import { TRANSLATION_OPTIONS } from '../data/bibleMap';
+import { OT_BOOKS } from '../data/otBooks';
+import { NT_BOOKS } from '../data/ntBooks';
+import {
+  parseVerseRef,
+  fetchVerseText,
+  fetchChapterVerses,
+  searchBibleByKeyword,
+  formatVerseNumbers,
+} from '../utils/verseText';
+
+const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
 
 interface AddVerseProps {
   onVerseAdded?: () => void;
@@ -44,47 +55,89 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       setIsAddingGroup(false);
     }
   };
+  const defaultTranslation = state.settings.bibleVersion || 'LSB';
+
   // Search Tab State
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchTranslation, setSearchTranslation] = useState('WEB');
+  const [searchTranslation, setSearchTranslation] = useState<string>(defaultTranslation);
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchError, setSearchError] = useState<string | null>(null);
 
   // Manual Tab State
+  const [usePicker, setUsePicker] = useState(false);
+  const [pickerBookId, setPickerBookId] = useState(ALL_BOOKS[0].id);
+  const [pickerChapter, setPickerChapter] = useState('1');
+  const [pickerVerse, setPickerVerse] = useState('1');
+  const [pickerEndVerse, setPickerEndVerse] = useState('');
+  const [isFetchingPicker, setIsFetchingPicker] = useState(false);
   const [manualRef, setManualRef] = useState('');
   const [manualText, setManualText] = useState('');
-  const [manualTranslation, setManualTranslation] = useState('NIV');
+  const [manualTranslation, setManualTranslation] = useState<string>(defaultTranslation);
 
   const handleSearch = async (overrideQuery?: string) => {
-    const queryToUse = (typeof overrideQuery === 'string' ? overrideQuery : searchQuery) || searchQuery;
-    if (!queryToUse.trim()) return;
+    const queryToUse = ((typeof overrideQuery === 'string' ? overrideQuery : searchQuery) || searchQuery).trim();
+    if (!queryToUse) return;
     setIsLoading(true);
     setSearchError(null);
     setSearchResults([]);
 
-    const isBolls = ['LSB', 'NASB', 'NLT', 'ESV'].includes(searchTranslation);
-    const parseTranslation = isBolls ? 'WEB' : searchTranslation;
     const rawQueries = queryToUse.replace(/[\u2013\u2014]/g, '-').split(';').map(q => q.trim()).filter(Boolean);
-    const queries = [];
+
+    // Keyword search when query has no digits or semicolons
+    if (rawQueries.length === 1 && !/\d/.test(queryToUse)) {
+      try {
+        const hits = await searchBibleByKeyword(searchTranslation, queryToUse, 25);
+        if (hits.length === 0) {
+          setSearchError(`No verses matched "${queryToUse}".`);
+        } else {
+          setSearchResults(
+            hits.map(hit => {
+              const bookName = ALL_BOOKS[hit.bollsId - 1]?.name || `Book ${hit.bollsId}`;
+              return {
+                reference: `${bookName} ${hit.chapter}:${hit.verse}`,
+                text: hit.text,
+                translation_name: searchTranslation,
+                verses: [{ book_name: bookName, chapter: hit.chapter, verse: hit.verse, text: hit.text }],
+              };
+            })
+          );
+        }
+      } catch (err: any) {
+        setSearchError(err.message || `Failed to search for "${queryToUse}".`);
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    let lastBookId: string | undefined;
     let currentBook = '';
     const refPattern = /^([1-3]?\s*[A-Za-z]+(?:\s+[A-Za-z]+)*)?\s*(\d.*)$/;
 
+    const queries: Array<{ normalizedQuery: string; parsed: ReturnType<typeof parseVerseRef> }> = [];
     for (const part of rawQueries) {
-      const match = part.match(refPattern);
-      if (match) {
-        const book = match[1];
-        // Normalize spaces between verse numbers to commas so the API can parse them.
-        // e.g. "11:1 13" → "11:1,13" and "6:41 43" → "6:41,43"
-        const rest = match[2].replace(/(\d)\s+(?=\d)/g, '$1,');
-        if (book) {
-          currentBook = book.trim();
-        }
-        queries.push(currentBook ? `${currentBook} ${rest}` : part);
+      const normalizedRest = part.replace(/(\d)\s+(?=\d)/g, '$1,');
+      const parsed = parseVerseRef(normalizedRest, lastBookId);
+      if (parsed) {
+        lastBookId = parsed.bookId;
+        const bookName = ALL_BOOKS[parsed.bollsId - 1]?.name || parsed.bookId;
+        currentBook = bookName;
+        queries.push({ normalizedQuery: `${bookName} ${parsed.chapter}:${formatVerseNumbers(parsed.verses)}`, parsed });
       } else {
-        queries.push(part);
+        const match = normalizedRest.match(refPattern);
+        if (match) {
+          if (match[1]) currentBook = match[1].trim();
+          queries.push({ normalizedQuery: currentBook ? `${currentBook} ${match[2]}` : normalizedRest, parsed: null });
+        } else {
+          queries.push({ normalizedQuery: normalizedRest, parsed: null });
+        }
       }
     }
+
+    const usesRemoteChapterFetch = ['LSB', 'NASB', 'NLT', 'ESV', 'BSB', 'TELIRV', 'TBSI'].includes(searchTranslation);
+    const parseTranslation = usesRemoteChapterFetch ? 'WEB' : searchTranslation;
+
     const fetchWithRetry = async (url: string, retries = 3) => {
       for (let attempt = 0; attempt <= retries; attempt++) {
         try {
@@ -105,39 +158,51 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       return fetch(url);
     };
 
-    const baseDelay = queries.length > 20 ? 800 : 400; // longer delay for massive batches
+    const baseDelay = queries.length > 20 ? 350 : 120;
 
     for (let i = 0; i < queries.length; i++) {
-      const query = queries[i];
+      const { normalizedQuery: query, parsed } = queries[i];
       try {
-        if (i > 0) await new Promise(res => setTimeout(res, baseDelay)); // prevent rate limits on bulk queries
-        
+        if (parsed) {
+          const chapterVerses = await fetchChapterVerses(searchTranslation, parsed.bollsId, parsed.chapter);
+          const bookName = ALL_BOOKS[parsed.bollsId - 1]?.name || parsed.bookId;
+          const individualVerses = parsed.verses
+            .map(vNum => chapterVerses.find(cv => cv.verse === vNum))
+            .filter((cv): cv is { verse: number; text: string } => Boolean(cv))
+            .map(cv => ({ book_name: bookName, chapter: parsed.chapter, verse: cv.verse, text: cv.text }));
+
+          if (individualVerses.length === 0) {
+            throw new Error(`Verse reference not found: '${query}'`);
+          }
+          setSearchResults(prev => [
+            ...prev,
+            {
+              reference: `${bookName} ${parsed.chapter}:${formatVerseNumbers(parsed.verses)}`,
+              text: individualVerses.map(v => v.text).join(' ').trim(),
+              translation_name: searchTranslation,
+              verses: individualVerses,
+            },
+          ]);
+          continue;
+        }
+
+        if (i > 0) await new Promise(res => setTimeout(res, baseDelay));
         const response = await fetchWithRetry(`https://bible-api.com/${encodeURIComponent(query)}?translation=${parseTranslation}`);
-        
+
         if (!response.ok) {
-          throw new Error(response.status === 429 
-            ? `Rate limit exceeded while fetching '${query}'. Try adding fewer verses.` 
+          throw new Error(response.status === 429
+            ? `Rate limit exceeded while fetching '${query}'. Try adding fewer verses.`
             : `Verse reference not found: '${query}'`);
         }
-        
+
         const data = await response.json();
 
-        if (isBolls) {
+        if (usesRemoteChapterFetch) {
           const bookName = data.verses[0].book_name;
           let normalName = bookName.toLowerCase().replace(/[^a-z0-9]/g, '');
           if (normalName === 'songofsongs') normalName = 'songofsolomon';
-          
-          const BOLLS_BOOKS = [
-            "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", 
-            "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", 
-            "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea", "Joel", 
-            "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi", 
-            "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", 
-            "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", 
-            "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation"
-          ];
-          
-          const bollsId = BOLLS_BOOKS.findIndex(b => b.toLowerCase().replace(/[^a-z0-9]/g, '') === normalName) + 1;
+          const matchedBook = ALL_BOOKS.find(b => b.id === normalName);
+          const bollsId = matchedBook ? ALL_BOOKS.indexOf(matchedBook) + 1 : 0;
           if (!bollsId) throw new Error(`Could not map book '${bookName}' to API.`);
 
           const versesByChapter: Record<number, number[]> = {};
@@ -149,44 +214,30 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           const individualVerses: any[] = [];
           let combinedText = '';
           for (const [chStr, vNums] of Object.entries(versesByChapter)) {
-            const ch = parseInt(chStr);
-            const bollsRes = await fetchWithRetry(`https://bolls.life/get-text/${searchTranslation}/${bollsId}/${ch}/`);
-            if (!bollsRes.ok) throw new Error(`Could not fetch ${searchTranslation} translation.`);
-            
-            const chapterData = await bollsRes.json();
-            const requestedVerses = chapterData.filter((v: any) => vNums.includes(v.verse));
-            
-            const textChunk = requestedVerses.map((v: any) => {
-              const cleanText = v.text
-                .replace(/<b\b[^>]*>.*?<\/b>/gi, '')
-                .replace(/<h[1-6]\b[^>]*>.*?<\/h[1-6]>/gi, '')
-                .replace(/<div\b[^>]*class="[^"]*heading[^"]*"[^>]*>.*?<\/div>/gi, '')
-                .replace(/<br\s*\/?>/gi, ' ')
-                .replace(/<\/p>/gi, ' ')
-                .replace(/<[^>]*>/g, '')
-                .trim();
-                
+            const ch = parseInt(chStr, 10);
+            const chapterVerses = await fetchChapterVerses(searchTranslation, bollsId, ch);
+            const requestedVerses = chapterVerses.filter(v => vNums.includes(v.verse));
+            for (const rv of requestedVerses) {
               individualVerses.push({
-                book_name: data.verses[0].book_name,
+                book_name: bookName,
                 chapter: ch,
-                verse: v.verse,
-                text: cleanText
+                verse: rv.verse,
+                text: rv.text,
               });
-              
-              return cleanText;
-            }).join(' ');
-            
-            combinedText += textChunk + ' ';
-            await new Promise(res => setTimeout(res, 250)); // stagger bolls requests slightly
+            }
+            combinedText += requestedVerses.map(rv => rv.text).join(' ') + ' ';
+            await new Promise(res => setTimeout(res, 150));
           }
 
-          const resultObj = {
-            reference: data.reference,
-            text: combinedText.trim(),
-            translation_name: searchTranslation,
-            verses: individualVerses
-          };
-          setSearchResults(prev => [...prev, resultObj]);
+          setSearchResults(prev => [
+            ...prev,
+            {
+              reference: data.reference,
+              text: combinedText.trim(),
+              translation_name: searchTranslation,
+              verses: individualVerses,
+            },
+          ]);
         } else {
           setSearchResults(prev => [...prev, data]);
         }
@@ -196,10 +247,10 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
         } else {
           setSearchError(err.message || `Failed to search for verse: ${query}`);
         }
-        break; // Stop processing but keep the ones we got
+        break;
       }
     }
-    
+
     setIsLoading(false);
   };
 
@@ -249,6 +300,65 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
         navigate('/');
       }
     }
+  };
+
+  const currentPickerBook = ALL_BOOKS.find(b => b.id === pickerBookId) || ALL_BOOKS[0];
+  const parsedPickerChapter = parseInt(pickerChapter, 10);
+  const parsedPickerStart = parseInt(pickerVerse, 10);
+  const parsedPickerEnd = pickerEndVerse.trim() ? parseInt(pickerEndVerse, 10) : null;
+  const pickerValidChapter = Number.isFinite(parsedPickerChapter) && parsedPickerChapter >= 1 && parsedPickerChapter <= currentPickerBook.chapters;
+  const pickerValidVerse = Number.isFinite(parsedPickerStart) && parsedPickerStart >= 1;
+  const pickerValidEnd = parsedPickerEnd === null || (Number.isFinite(parsedPickerEnd) && parsedPickerEnd >= parsedPickerStart);
+
+  const handlePickerAdd = async () => {
+    if (!pickerValidChapter || !pickerValidVerse || !pickerValidEnd) {
+      showToast('Choose a valid chapter and verse range.', 'error');
+      return;
+    }
+    const verseSpec = parsedPickerEnd && parsedPickerEnd > parsedPickerStart
+      ? `${parsedPickerStart}-${parsedPickerEnd}`
+      : `${parsedPickerStart}`;
+    const parsed = parseVerseRef(`${currentPickerBook.id} ${parsedPickerChapter}:${verseSpec}`);
+    if (!parsed) {
+      showToast('Maximum range is 12 verses at once.', 'error');
+      return;
+    }
+
+    setIsFetchingPicker(true);
+    try {
+      const text = await fetchVerseText(manualTranslation, parsed);
+      const displayRef = `${currentPickerBook.name} ${parsedPickerChapter}:${verseSpec}`;
+      addVerseToLibrary(displayRef, text, manualTranslation);
+    } catch (err: any) {
+      showToast(err?.message || `Could not fetch ${currentPickerBook.name} ${parsedPickerChapter}:${verseSpec}.`, 'error');
+    } finally {
+      setIsFetchingPicker(false);
+    }
+  };
+
+  const hydrateStarterPack = (packVerses: Verse[], topicName: string, unitLabel: string) => {
+    const existingTopic = (state.topics || []).find(t => t.name === topicName);
+    const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
+    if (!existingTopic) {
+      dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: topicName } });
+    }
+    const existingKeys = new Set(
+      state.verses.map(v => `${v.ref.toLowerCase()}-${(v.translation || 'lsb').toLowerCase()}`)
+    );
+    const addedCount = packVerses.filter(
+      v => !existingKeys.has(`${v.ref.toLowerCase()}-${(v.translation || 'lsb').toLowerCase()}`)
+    ).length;
+
+    const versesWithTopic = packVerses.map(v => ({ ...v, topicIds: [topicId] }));
+    dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
+    showToast(
+      addedCount > 0
+        ? `Added ${addedCount} ${unitLabel} to '${topicName}' group!`
+        : `Updated '${topicName}' tags on your existing passages!`,
+      'success'
+    );
+    if (onVerseAdded) onVerseAdded();
+    else navigate('/');
   };
 
   return (
@@ -527,40 +637,123 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
       {/* MANUAL TAB */}
       {activeTab === 'manual' && (
         <div className="flex flex-col gap-5">
-          <Input 
-            label="Reference"
-            placeholder="e.g. Genesis 1:1"
-            value={manualRef}
-            onChange={(e) => setManualRef(e.target.value)}
-          />
-          <Input 
-            label="Translation Version"
-            placeholder="e.g. NIV, ESV, LSB"
-            value={manualTranslation}
-            onChange={(e) => setManualTranslation(e.target.value)}
-          />
-          <div className="flex flex-col gap-1.5 w-full">
-            <label className="text-sm font-medium text-secondary ml-1">Verse Text</label>
-            <textarea
-              className="w-full min-h-[120px] p-4 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted resize-none"
-              placeholder="Type or paste the verse text here..."
-              value={manualText}
-              onChange={(e) => setManualText(e.target.value)}
-            />
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-semibold text-secondary">
+              {usePicker ? 'Pick book, chapter & verse:' : 'Enter a reference:'}
+            </span>
+            <button
+              type="button"
+              onClick={() => setUsePicker(p => !p)}
+              className="text-xs font-semibold text-accent hover:underline"
+            >
+              {usePicker ? 'Switch to Text Input' : 'Pick from Bible Dropdown'}
+            </button>
           </div>
-          
-          <Button 
-            onClick={() => {
-              if (!manualRef || !manualText) {
-                showToast('Reference and Text are required.', 'error');
-                return;
-              }
-              addVerseToLibrary(manualRef, manualText, manualTranslation || 'Custom');
-            }} 
-            className="w-full mt-4 h-14 text-lg"
-          >
-            Add Verse
-          </Button>
+
+          {usePicker ? (
+            <>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-secondary ml-1">Book</label>
+                <CustomSelect
+                  value={pickerBookId}
+                  onChange={(val) => {
+                    setPickerBookId(val);
+                    setPickerChapter('1');
+                    setPickerVerse('1');
+                    setPickerEndVerse('');
+                  }}
+                  options={ALL_BOOKS.map(b => ({ value: b.id, label: b.name }))}
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <Input
+                  label={`Chapter (1-${currentPickerBook.chapters})`}
+                  type="number"
+                  min={1}
+                  max={currentPickerBook.chapters}
+                  value={pickerChapter}
+                  onChange={(e) => setPickerChapter(e.target.value.replace(/\D/g, ''))}
+                />
+                <Input
+                  label="Start Verse"
+                  type="number"
+                  min={1}
+                  value={pickerVerse}
+                  onChange={(e) => setPickerVerse(e.target.value.replace(/\D/g, ''))}
+                />
+                <Input
+                  label="End (opt)"
+                  type="number"
+                  min={1}
+                  placeholder="—"
+                  value={pickerEndVerse}
+                  onChange={(e) => setPickerEndVerse(e.target.value.replace(/\D/g, ''))}
+                />
+              </div>
+
+              {pickerChapter && !pickerValidChapter && (
+                <p className="text-xs text-red-400">
+                  {currentPickerBook.name} has {currentPickerBook.chapters} chapter{currentPickerBook.chapters === 1 ? '' : 's'}.
+                </p>
+              )}
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-secondary ml-1">Translation</label>
+                <CustomSelect
+                  value={manualTranslation}
+                  onChange={setManualTranslation}
+                  options={TRANSLATION_OPTIONS}
+                />
+              </div>
+
+              <Button
+                onClick={handlePickerAdd}
+                isLoading={isFetchingPicker}
+                disabled={!pickerValidChapter || !pickerValidVerse || !pickerValidEnd}
+                className="w-full mt-2 h-14 text-lg"
+              >
+                <Plus className="w-5 h-5 mr-2" /> Fetch &amp; Add Verse
+              </Button>
+            </>
+          ) : (
+            <>
+              <Input 
+                label="Reference"
+                placeholder="e.g. Genesis 1:1"
+                value={manualRef}
+                onChange={(e) => setManualRef(e.target.value)}
+              />
+              <Input 
+                label="Translation Version"
+                placeholder="e.g. LSB, ESV, NASB"
+                value={manualTranslation}
+                onChange={(e) => setManualTranslation(e.target.value)}
+              />
+              <div className="flex flex-col gap-1.5 w-full">
+                <label className="text-sm font-medium text-secondary ml-1">Verse Text</label>
+                <textarea
+                  className="w-full min-h-[120px] p-4 rounded-md bg-card border border-card-border focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors text-primary placeholder:text-muted resize-none"
+                  placeholder="Type or paste the verse text here..."
+                  value={manualText}
+                  onChange={(e) => setManualText(e.target.value)}
+                />
+              </div>
+
+              <Button 
+                onClick={() => {
+                  if (!manualRef || !manualText) {
+                    showToast('Reference and Text are required.', 'error');
+                    return;
+                  }
+                  addVerseToLibrary(manualRef, manualText, manualTranslation || 'Custom');
+                }} 
+                className="w-full mt-4 h-14 text-lg"
+              >
+                Add Verse
+              </Button>
+            </>
+          )}
         </div>
       )}
 
@@ -577,26 +770,15 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
                 <span>📖</span> Key Verses (All 66 Books)
               </h3>
               <span className="text-[11px] font-bold uppercase tracking-wider text-accent bg-accent/15 px-2.5 py-1 rounded-full">
-                206 Verses · 66 Books
+                {ALL_KEY_VERSES.length} Verses · 66 Books
               </span>
             </div>
             <p className="text-sm text-muted">The complete key verses for each of the 66 books of the Bible (all canonical key verses per book, including Genesis 1:1, 3:15, 12:3, 50:20, etc.).</p>
             <Button
-              onClick={() => {
-                const existingTopic = (state.topics || []).find(t => t.name === 'Key Verses (66 Books)');
-                const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
-                if (!existingTopic) {
-                  dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Key Verses (66 Books)' } });
-                }
-                const versesWithTopic = ALL_KEY_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
-                dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
-                showToast(`Added 206 key verses to 'Key Verses (66 Books)' group!`, 'success');
-                if (onVerseAdded) onVerseAdded();
-                else navigate('/');
-              }}
+              onClick={() => hydrateStarterPack(ALL_KEY_VERSES, 'Key Verses (66 Books)', 'key verses')}
               className="mt-2"
             >
-              <Plus className="w-4 h-4 mr-2" /> Add All Key Verses (206 Verses)
+              <Plus className="w-4 h-4 mr-2" /> Add All Key Verses ({ALL_KEY_VERSES.length} Verses)
             </Button>
           </div>
 
@@ -604,18 +786,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             <h3 className="font-heading font-bold text-lg text-primary">Top 100 Verses</h3>
             <p className="text-sm text-muted">The 100 most popular Bible verses according to global search data.</p>
             <Button
-              onClick={() => {
-                const existingTopic = (state.topics || []).find(t => t.name === 'Top 100');
-                const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
-                if (!existingTopic) {
-                  dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Top 100' } });
-                }
-                const versesWithTopic = TOP_100_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
-                dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
-                showToast(`Added 100 passages to 'Top 100' group!`, 'success');
-                if (onVerseAdded) onVerseAdded();
-                else navigate('/');
-              }}
+              onClick={() => hydrateStarterPack(TOP_100_VERSES, 'Top 100', 'passages')}
               className="mt-2"
             >
               <Plus className="w-4 h-4 mr-2" /> Add Top 100
@@ -626,18 +797,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
             <h3 className="font-heading font-bold text-lg text-primary">75 Well-Known Verses</h3>
             <p className="text-sm text-muted">A hand-picked selection of deeply encouraging and essential scriptures.</p>
             <Button
-              onClick={() => {
-                const existingTopic = (state.topics || []).find(t => t.name === 'Well-Known');
-                const topicId = existingTopic ? existingTopic.id : crypto.randomUUID();
-                if (!existingTopic) {
-                  dispatch({ type: 'ADD_TOPIC', payload: { id: topicId, name: 'Well-Known' } });
-                }
-                const versesWithTopic = SEED_VERSES.map(v => ({ ...v, topicIds: [topicId] }));
-                dispatch({ type: 'HYDRATE_VERSES', payload: versesWithTopic });
-                showToast(`Added ${SEED_VERSES.length} passages to 'Well-Known' group!`, 'success');
-                if (onVerseAdded) onVerseAdded();
-                else navigate('/');
-              }}
+              onClick={() => hydrateStarterPack(SEED_VERSES, 'Well-Known', 'passages')}
               className="mt-2"
               variant="secondary"
             >

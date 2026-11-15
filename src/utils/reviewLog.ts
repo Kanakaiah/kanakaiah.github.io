@@ -133,6 +133,7 @@ export function retentionByInterval(
 
   for (const e of log) {
     if (!withinDays(e, windowDays, now)) continue;
+    if (e.mode === 'assisted' || e.mode === 'reference') continue;
     // A first sight has no interval behind it and so says nothing about retention.
     if (e.intervalBefore <= 0) continue;
     const bucket = buckets.find(b => e.intervalBefore <= b.maxDays);
@@ -189,7 +190,9 @@ export function firstTryRetention(
   windowDays = 30,
   now: Date = new Date(),
 ): { attempts: number; recalled: number; rate: number | null } {
-  const eligible = log.filter(e => withinDays(e, windowDays, now) && e.cueLevel <= 1 && e.intervalBefore > 0);
+  const eligible = log.filter(
+    e => withinDays(e, windowDays, now) && e.cueLevel <= 1 && e.intervalBefore > 0 && e.mode !== 'assisted' && e.mode !== 'reference'
+  );
   const recalled = eligible.filter(wasRecalled).length;
   return {
     attempts: eligible.length,

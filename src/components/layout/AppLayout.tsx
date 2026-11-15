@@ -15,6 +15,12 @@ export const AppLayout: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
+    const handleOpenSettings = () => setIsSettingsOpen(true);
+    window.addEventListener('remora:open-settings', handleOpenSettings);
+    return () => window.removeEventListener('remora:open-settings', handleOpenSettings);
+  }, []);
+
+  useEffect(() => {
     if (searchParams.get('add') === 'true') {
       setIsAddVerseOpen(true);
       setSearchParams(prev => {
@@ -35,6 +41,7 @@ export const AppLayout: React.FC = () => {
   const isPracticePage = location.pathname === '/practice';
   const isBibleRoot = location.pathname === '/guides';
   const isFullscreenView = isReadingPage || isPracticePage || isGuidePage || isBibleRoot;
+  const hasOwnTopHeader = location.pathname === '/' || location.pathname === '/lookup';
 
   // Tap-to-toggle, the same rule every screen below the tab roots uses: a tap on
   // empty space toggles the header and tab bar, a tap on anything interactive only
@@ -150,12 +157,12 @@ export const AppLayout: React.FC = () => {
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        {/* GLOBAL HEADER (All Screens, Mobile Only) */}
+        {/* GLOBAL HEADER (Mobile Only, omitted on screens with dedicated top bar) */}
         <header className={`
           absolute top-0 left-0 w-full px-5 sm:px-8 pb-3 z-40 lg:hidden
           transition-transform duration-300 ease-in-out bg-background/95
           ${chromeVisible ? 'translate-y-0' : '-translate-y-full'}
-          ${isFullscreenView ? 'hidden' : ''}
+          ${(isFullscreenView || hasOwnTopHeader) ? 'hidden' : ''}
         `}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.25rem)' }}
         >
@@ -208,6 +215,8 @@ export const AppLayout: React.FC = () => {
             // was effectively being counted twice).
             paddingTop: isFullscreenView
               ? '0px'
+              : hasOwnTopHeader
+              ? 'calc(env(safe-area-inset-top, 0px) + 0.75rem)'
               : 'calc(env(safe-area-inset-top, 0px) + 5rem)',
             paddingBottom: isFullscreenView
               ? '0px'

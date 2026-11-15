@@ -1,32 +1,43 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { evaluateSM2, formatInterval } from '../../utils/sm2';
 import { buildReviewEvent } from '../../utils/reviewLog';
 import { dueChapters } from '../../utils/mastery';
-import { chapterProgressKey } from '../../types/models';
-import type { ChapterProgress } from '../../types/models';
+import {
+  judgeByDirection,
+  type AnchorDirection,
+  type AnchorJudgement,
+} from '../../utils/anchorAnswer';
+import { getBookName } from '../../utils/localization';
+import { chapterProgressKey, type ChapterProgress } from '../../types/models';
 import { OT_BOOKS } from '../../data/otBooks';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_STUDY_GUIDES } from '../../data/otGuides';
 import { NT_STUDY_GUIDES } from '../../data/guides';
-import { CustomSelect } from '../ui/CustomSelect';
 import { hasChapterArt } from '../../data/chapterArt';
+import { PracticeHeader, ReviewGrades } from './PracticeFeedback';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
-const ALL_GUIDES = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES];
-const DEFAULT_SM2 = { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ALL_GUIDES: any[] = [...OT_STUDY_GUIDES, ...NT_STUDY_GUIDES];
+const DEFAULT_SM2 = {
+  interval: 0,
+  repetition: 0,
+  efactor: 2.5,
+  nextDueDate: new Date().toISOString(),
+};
 
 type Direction = 'number-to-word' | 'word-to-number' | 'plate-to-word';
 
-const DIRECTIONS: { id: Direction; label: string; prompt: string }[] = [
-  { id: 'number-to-word', label: 'Number → Word', prompt: 'What anchors this chapter?' },
-  { id: 'word-to-number', label: 'Word → Number', prompt: 'Which chapter is this?' },
-  { id: 'plate-to-word', label: 'Plate → Word', prompt: 'What anchors this chapter?' },
+const DIRECTIONS: { id: Direction; label: string }[] = [
+  { id: 'number-to-word', label: 'Number → Word' },
+  { id: 'word-to-number', label: 'Word → Number' },
+  { id: 'plate-to-word', label: 'Plate → Word' },
 ];
 
-const DIRECTION_TO_LOG: Record<Direction, 'n2w' | 'w2n' | 'p2w'> = {
+const DIRECTION_TO_LOG: Record<Direction, AnchorDirection> = {
   'number-to-word': 'n2w',
   'word-to-number': 'w2n',
   'plate-to-word': 'p2w',
@@ -38,138 +49,154 @@ interface QueueItem {
   chapter: number;
   word: string;
   scene: string;
+  siblings: { ch: number; word: string }[];
 }
 
-// Practice's Verses/Chapters subject switch. This is the "Chapters" side: three
-// self-graded drill directions run against the same anchor data the book guide's
-// grid teaches, using the same SM2 loop and the same GRADE_CHAPTER_PROGRESS record
-// every other recall surface writes to — a session started here shows up as
-// progress on the book guide, the shape meter, and the next due queue alike.
+function buildBookQueue(bookId: string, bibleVersion: string): QueueItem[] {
+  const guide = ALL_GUIDES.find(g => g.id === bookId);
+  const book = ALL_BOOKS.find(b => b.id === bookId);
+  if (!guide?.anchors?.length || !book) return [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isVerseBased = Boolean(guide.architecture?.some((b: any) => b.unit === 'verse'));
+  if (isVerseBased) return [];
+  const bookName = getBookName(book.id, book.name, bibleVersion);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const siblings = guide.anchors.map((a: any) => ({ ch: Number(a.ch), word: a.word }));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return guide.anchors.map((a: any) => ({
+    bookId: book.id,
+    bookName,
+    chapter: Number(a.ch),
+    word: a.word,
+    scene: a.scene,
+    siblings,
+  }));
+}
+
 export const AnchorDrill: React.FC<{
   onExit: () => void;
-  /** A whole testament (or any book list) to sweep through in order, passed via
-   * navigation state from the testament browser's "Test me on these N" button.
-   * Takes priority over the due queue below it: choosing a sweep is a deliberate
-   * request for that specific set, not a fallback for having nothing else to do. */
   sweepBookIds?: string[];
 }> = ({ onExit, sweepBookIds }) => {
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
 
-  const [pickedBookId, setPickedBookId] = useState<string | null>(null);
+  const [pickedBookId, setPickedBookId] = useState<string | null>(() =>
+    sweepBookIds?.length === 1 ? sweepBookIds[0] : null
+  );
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>('number-to-word');
+  const [typedInput, setTypedInput] = useState('');
   const [revealed, setRevealed] = useState(false);
-  const [isGrading, setIsGrading] = useState(false);
+  const [judgement, setJudgement] = useState<AnchorJudgement | null>(null);
+  const [isFinished, setIsFinished] = useState(false);
   const [imgErr, setImgErr] = useState(false);
 
-  // A deliberately requested testament (or other book list) sweep — every chapter
-  // of every listed book, in canonical order. Skips verse-based single-chapter
-  // books and any book with no anchors authored yet, same as the picker below.
+  const [bookMenuOpen, setBookMenuOpen] = useState(false);
+  const [directionMenuOpen, setDirectionMenuOpen] = useState(false);
+
   const sweepQueue: QueueItem[] = useMemo(() => {
     if (!sweepBookIds?.length) return [];
-    return sweepBookIds.flatMap(bookId => {
-      const guide: any = ALL_GUIDES.find(g => g.id === bookId);
-      const book = ALL_BOOKS.find(b => b.id === bookId);
-      if (!guide?.anchors?.length || !book) return [];
-      const isVerseBased = !!guide.architecture?.some((b: any) => b.unit === 'verse');
-      if (isVerseBased) return [];
-      return guide.anchors.map((a: any) => ({ bookId: book.id, bookName: book.name, chapter: Number(a.ch), word: a.word, scene: a.scene }));
-    });
-  }, [sweepBookIds]);
+    const version = state.settings.bibleVersion || 'LSB';
+    return sweepBookIds.flatMap(bookId =>
+      buildBookQueue(bookId, version)
+    );
+  }, [sweepBookIds, state.settings.bibleVersion]);
 
-  // Chapters already due, most-overdue first — the same review queue a verse
-  // session opens to. Capped so a reader with a large, neglected library doesn't
-  // get a queue that never ends.
   const dueQueue: QueueItem[] = useMemo(() => {
     return dueChapters(state.chapterProgress)
       .slice(0, 30)
       .map(d => {
-        const guide: any = ALL_GUIDES.find(g => g.id === d.bookId);
+        const guide = ALL_GUIDES.find(g => g.id === d.bookId);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const anchor = guide?.anchors?.find((a: any) => Number(a.ch) === d.chapter);
         const book = ALL_BOOKS.find(b => b.id === d.bookId);
-        return anchor && book
-          ? { bookId: d.bookId, bookName: book.name, chapter: d.chapter, word: anchor.word, scene: anchor.scene }
-          : null;
+        if (!anchor || !book) return null;
+        return {
+          bookId: d.bookId,
+          bookName: getBookName(book.id, book.name, state.settings.bibleVersion),
+          chapter: d.chapter,
+          word: anchor.word,
+          scene: anchor.scene,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          siblings: guide.anchors.map((a: any) => ({ ch: Number(a.ch), word: a.word })),
+        };
       })
-      .filter((x): x is QueueItem => !!x);
-  }, [state.chapterProgress]);
+      .filter((x): x is QueueItem => Boolean(x));
+  }, [state.chapterProgress, state.settings.bibleVersion]);
 
-  // Nothing due — fall back to a book the reader picks, drilling its whole chain
-  // in order. Single-chapter books (Obadiah, Philemon, Jude, 2–3 John) are excluded
-  // from the picker below: their "anchors" are verse ranges, not chapters, so there
-  // is nothing here to drill by chapter number.
-  const pickedGuide: any = pickedBookId ? ALL_GUIDES.find(g => g.id === pickedBookId) : null;
   const pickedBookQueue: QueueItem[] = useMemo(() => {
-    if (!pickedBookId || !pickedGuide?.anchors) return [];
-    const book = ALL_BOOKS.find(b => b.id === pickedBookId);
-    if (!book) return [];
-    return pickedGuide.anchors.map((a: any) => ({
-      bookId: book.id, bookName: book.name, chapter: Number(a.ch), word: a.word, scene: a.scene,
-    }));
-  }, [pickedBookId, pickedGuide]);
+    if (!pickedBookId) return [];
+    return buildBookQueue(pickedBookId, state.settings.bibleVersion || 'LSB');
+  }, [pickedBookId, state.settings.bibleVersion]);
 
-  // An explicitly picked book outranks the due queue.
-  //
-  // The order used to be sweep → due → picked, and the picker only rendered when the
-  // resolved queue was empty — so as long as a single chapter anywhere was due, the
-  // picker was unreachable and "I want to work on Exodus today" was not expressible.
-  // Choosing a book is a deliberate request for that book, exactly as a sweep is.
-  const resolvedQueue = sweepQueue.length > 0
-    ? sweepQueue
-    : pickedBookQueue.length > 0
+  const resolvedQueue =
+    pickedBookQueue.length > 0
       ? pickedBookQueue
+      : sweepQueue.length > 0
+      ? sweepQueue
       : dueQueue;
 
-  // The work list is frozen once grading starts, rather than read live on every render.
-  //
-  // dueQueue is memoized on chapterProgress, and grading pushes nextDueDate into the
-  // future — a minimum of +1 day even for a score of 1 — so the graded item dropped
-  // straight out of the queue and every later item shifted left one place. handleGrade
-  // then *also* advanced the index, and the two moves compounded: a ten-item queue
-  // graded five and declared itself finished.
-  //
-  // The snapshot is taken inside handleGrade (below) at the moment it first matters,
-  // not in an effect — before the first grade there is nothing to protect and a live
-  // queue is the more truthful thing to show.
   const [sessionQueue, setSessionQueue] = useState<QueueItem[] | null>(null);
   const queue = sessionQueue ?? resolvedQueue;
   const current = queue[index];
 
-  useEffect(() => { setRevealed(false); setIsGrading(false); }, [index, direction]);
-  useEffect(() => { setIndex(0); }, [pickedBookId]);
-  useEffect(() => { setImgErr(false); }, [current?.bookId, current?.chapter]);
+  useEffect(() => {
+    setTypedInput('');
+    setRevealed(false);
+    setJudgement(null);
+    setImgErr(false);
+  }, [index, direction, current?.bookId, current?.chapter]);
 
-  const bookOptions = useMemo(() => ALL_BOOKS
-    .filter(b => {
-      const guide: any = ALL_GUIDES.find(g => g.id === b.id);
-      const isVerseBased = !!guide?.architecture?.some((blk: any) => blk.unit === 'verse');
-      return guide?.anchors?.length && !isVerseBased;
-    })
-    .map(b => ({ value: b.id, label: b.name })), []);
+  const bookOptions = useMemo(
+    () =>
+      ALL_BOOKS.filter(b => {
+        const guide = ALL_GUIDES.find(g => g.id === b.id);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const isVerseBased = Boolean(guide?.architecture?.some((blk: any) => blk.unit === 'verse'));
+        return Boolean(guide?.anchors?.length && !isVerseBased);
+      }).map(b => ({
+        id: b.id,
+        label: getBookName(b.id, b.name, state.settings.bibleVersion),
+      })),
+    [state.settings.bibleVersion]
+  );
 
-  const existing = current ? state.chapterProgress[chapterProgressKey(current.bookId, current.chapter)] : undefined;
-
-  // Whether this chapter actually has art, decided before the card renders rather than by
-  // an <img> failing to load.
-  //
-  // The onError fallback draws the chapter numeral — which *is* the number-to-word
-  // question — while the review history went on recording plate-to-word. Seventeen books
-  // have no art at all and Numbers stops at chapter 13, so for a quarter of the canon the
-  // direction field was saying the opposite of what had been asked. The session was fixed
-  // for this; this drill was missed, and it is the surface where the reader can choose the
-  // plate direction on purpose.
-  const plateAvailable = !!current && hasChapterArt(current.bookId, current.chapter);
-  // Fall back to the cold question rather than silently mislabelling the easy one.
+  const plateAvailable = Boolean(
+    current && hasChapterArt(current.bookId, current.chapter)
+  );
   const effectiveDirection: Direction =
     direction === 'plate-to-word' && !plateAvailable ? 'number-to-word' : direction;
 
+  const handleCheckAnswer = () => {
+    if (!current || !typedInput.trim()) return;
+    const res = judgeByDirection(typedInput, {
+      direction: DIRECTION_TO_LOG[effectiveDirection],
+      word: current.word,
+      chapter: current.chapter,
+      siblings: current.siblings,
+    });
+    setJudgement(res);
+    setRevealed(true);
+  };
+
+  const handleReveal = () => {
+    setJudgement(null);
+    setRevealed(true);
+  };
+
   const handleGrade = (score: number) => {
     if (!current) return;
-    // Freeze the work list on the first grade of this session — see sessionQueue above.
     const workList = sessionQueue ?? queue;
     if (!sessionQueue) setSessionQueue(workList);
-    const { newSM2, newStatus } = evaluateSM2(existing?.sm2 || DEFAULT_SM2, score, 'anchor', state.settings.intervalScale ?? 1);
+
+    const key = chapterProgressKey(current.bookId, current.chapter);
+    const existing = state.chapterProgress[key];
+    const { newSM2, newStatus } = evaluateSM2(
+      existing?.sm2 || DEFAULT_SM2,
+      score,
+      'anchor',
+      state.settings.intervalScale ?? 1
+    );
     const updated: ChapterProgress = {
       bookId: current.bookId,
       chapter: current.chapter,
@@ -186,193 +213,313 @@ export const AnchorDrill: React.FC<{
       type: 'RECORD_REVIEW',
       payload: buildReviewEvent({
         itemKind: 'anchor',
-        itemId: chapterProgressKey(current.bookId, current.chapter),
+        itemId: key,
         gradeSubmitted: score,
-        before: existing?.sm2, after: newSM2,
-        mode: 'reveal', cueLevel: 0,
-        // Which way round the question was asked. Worth recording because the three
-        // directions are not equally hard, and until now nothing distinguished a chapter
-        // known cold from one only ever recognised off its plate.
+        before: existing?.sm2,
+        after: newSM2,
+        mode: typedInput.trim() ? 'type' : 'reveal',
+        cueLevel: 0,
         direction: DIRECTION_TO_LOG[effectiveDirection],
       }),
     });
     if (state.settings.streakIncludesChapters !== false) {
       dispatch({ type: 'RECORD_ACTIVITY' });
     }
-    showToast(`Score logged. Next review in ${formatInterval(newSM2.interval)}.`, 'success');
+    showToast(
+      `Score logged. Next review in ${formatInterval(newSM2.interval)}.`,
+      'success'
+    );
+
     if (index < workList.length - 1) {
       setIndex(i => i + 1);
     } else {
-      // End of the list. Drop the snapshot so the next pass is rebuilt from whatever
-      // is genuinely due now, rather than replaying the list this session started with.
-      setIndex(0);
+      setIsFinished(true);
       setSessionQueue(null);
-      if (dueQueue.length === 0) setPickedBookId(null);
     }
   };
 
-  const directionMeta = DIRECTIONS.find(d => d.id === effectiveDirection)!;
-  const imgPath = current ? `/chapters/${current.bookId}/ch${current.chapter}.png` : '';
+  const handleRestart = () => {
+    setIsFinished(false);
+    setSessionQueue(null);
+    setIndex(0);
+    setTypedInput('');
+    setRevealed(false);
+    setJudgement(null);
+  };
 
-  // One plate, used as the prompt in plate-to-word and as part of the answer in the
-  // other two. The 18 books with no art yet fall back to the large numeral, which
-  // still reads as a plate-shaped thing rather than a broken image.
+  const selectedBookLabel =
+    bookOptions.find(b => b.id === pickedBookId)?.label || 'All books';
+  const selectedDirLabel =
+    DIRECTIONS.find(d => d.id === direction)?.label || 'Number → Word';
+
+  const imgPath = current ? `/chapters/${current.bookId}/ch${current.chapter}.png` : '';
   const plateEl = (
-    <div className="w-52 aspect-[4/3] rounded-lg overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center flex-shrink-0">
+    <div className="w-full max-w-[420px] aspect-[1.7] rounded-2xl overflow-hidden bg-card-elevated border border-card-border flex items-center justify-center">
       {!imgErr ? (
-        <img src={imgPath} alt="" onError={() => setImgErr(true)} className="w-full h-full object-cover object-top" />
+        <img
+          src={imgPath}
+          alt={revealed ? `${current?.bookName} ${current?.chapter}` : 'Chapter illustration cue'}
+          onError={() => setImgErr(true)}
+          className="w-full h-full object-cover object-top"
+        />
       ) : (
-        <span className="text-5xl font-heading font-bold text-muted/25">{current?.chapter}</span>
+        <span className="text-5xl font-heading font-bold text-muted/30">
+          {current?.chapter}
+        </span>
       )}
     </div>
   );
 
-  // Book picker — shown whenever there's nothing due and nothing picked yet.
-  if (!current) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center px-4 pt-20 gap-4">
-        <h2 className="text-xl font-bold text-primary">
-          {dueQueue.length === 0 && !pickedBookId ? 'No chapter anchors due' : "You're all caught up"}
-        </h2>
-        <p className="text-secondary max-w-sm">Pick a book to drill its whole chapter chain instead.</p>
-        <div className="w-full max-w-xs">
-          <CustomSelect
-            value={pickedBookId || ''}
-            onChange={(v) => { setPickedBookId(v); setSessionQueue(null); }}
-            options={[{ value: '', label: 'Choose a book…' }, ...bookOptions]}
-          />
-        </div>
-        <button onClick={onExit} className="text-sm font-medium text-muted hover:text-primary transition-colors mt-2">
-          Back to Verses
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative flex flex-col h-full w-full pb-6 lg:pb-8">
-      {queue.length > 1 && (
-        <div className="reading-progress" style={{ width: `${((index + 1) / queue.length) * 100}%` }} />
-      )}
+    <div className="max-w-xl mx-auto w-full px-5 py-6 flex flex-col gap-4 pb-20">
+      <PracticeHeader
+        title="Chapter anchors"
+        subtitle="Connect each chapter with its anchor word."
+        index={index}
+        total={isFinished ? 0 : queue.length}
+        onExit={onExit}
+        exitLabel="Back to verse practice"
+      />
 
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 pt-6 pb-4">
-        <button onClick={onExit} className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors" aria-label="Back to Verses">
-          <ArrowLeft className="w-5 h-5 text-secondary" />
+      {/* Book Selector Dropdown */}
+      <div className="relative self-start">
+        <button
+          type="button"
+          onClick={() => {
+            setBookMenuOpen(o => !o);
+            setDirectionMenuOpen(false);
+          }}
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-card-border bg-card text-xs sm:text-sm font-semibold text-primary hover:border-accent/60"
+        >
+          <span>Book: {selectedBookLabel}</span>
+          <ChevronDown className="w-4 h-4 text-secondary" />
         </button>
-        <div className="flex flex-col items-center">
-          <span className="font-heading font-bold text-lg text-primary">{current.bookName} {current.chapter}</span>
-          <span className="text-[0.6875rem] text-muted uppercase tracking-widest">
-            {sweepQueue.length > 0 ? 'Sweep' : pickedBookQueue.length > 0 ? 'Chosen book' : 'Due for review'} &middot; {index + 1} of {queue.length}
-          </span>
-        </div>
-        <div className="w-9" />
-      </div>
 
-      {/* Book picker, always present — not only in the empty state it used to hide in.
-          Clearing it hands the session back to whatever is due. */}
-      <div className="px-5 pb-3 flex items-center gap-2 max-w-md mx-auto w-full">
-        <CustomSelect
-          value={pickedBookId || ''}
-          onChange={(v) => { setPickedBookId(v); setSessionQueue(null); setIndex(0); }}
-          options={[{ value: '', label: 'Whatever is due' }, ...bookOptions]}
-        />
-      </div>
-
-      {/* Direction switcher */}
-      <div className="flex justify-center gap-2 px-5 pb-4 flex-wrap">
-        {DIRECTIONS.map(d => (
-          <button
-            key={d.id}
-            onClick={() => setDirection(d.id)}
-            className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-colors ${
-              direction === d.id ? 'bg-accent text-white' : 'text-muted hover:text-primary border border-card-border'
-            }`}
-          >
-            {d.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Prompt card */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
-        <p className="text-xs font-sans text-muted italic">{directionMeta.prompt}</p>
-
-        {effectiveDirection === 'plate-to-word' && plateEl}
-
-        {effectiveDirection === 'number-to-word' && (
-          <span className="text-6xl font-heading font-bold text-accent">{current.chapter}</span>
+        {bookMenuOpen && (
+          <>
+            <div className="fixed inset-0 z-40" onClick={() => setBookMenuOpen(false)} />
+            <div className="absolute left-0 top-full mt-1.5 z-50 min-w-[220px] max-h-72 overflow-y-auto rounded-xl bg-card-elevated border border-card-border shadow-xl">
+              <button
+                type="button"
+                onClick={() => {
+                  setPickedBookId(null);
+                  setSessionQueue(null);
+                  setIsFinished(false);
+                  setIndex(0);
+                  setBookMenuOpen(false);
+                }}
+                className={`w-full text-left px-3.5 py-2.5 text-sm hover:bg-card-hover ${
+                  !pickedBookId ? 'text-accent font-semibold' : 'text-primary'
+                }`}
+              >
+                All books
+              </button>
+              {bookOptions.map(b => (
+                <button
+                  key={b.id}
+                  type="button"
+                  onClick={() => {
+                    setPickedBookId(b.id);
+                    setSessionQueue(null);
+                    setIsFinished(false);
+                    setIndex(0);
+                    setBookMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-3.5 py-2.5 text-sm hover:bg-card-hover ${
+                    pickedBookId === b.id ? 'text-accent font-semibold' : 'text-primary'
+                  }`}
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          </>
         )}
+      </div>
 
-        {effectiveDirection === 'word-to-number' && (
-          <span className="text-3xl font-heading font-bold text-accent text-center">{current.word}</span>
-        )}
-
-        {!revealed ? (
-          <button
-            onClick={() => setRevealed(true)}
-            className="px-6 py-3 rounded-md border border-dashed border-card-border-hover text-sm font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
-          >
-            Tap to reveal
-          </button>
-        ) : (
-          <div className="flex flex-col items-center gap-3 text-center max-w-sm">
-            {/* The answer arrives with its picture, in every direction — not only in
-                plate-to-word, where the image was the prompt. Pairing the word with an
-                image is the strongest lever available for learning an arbitrary
-                number↔word association, and 48 books of purpose-drawn chapter art were
-                being withheld from the two directions people actually drill. */}
-            {effectiveDirection !== 'plate-to-word' && plateEl}
-            {effectiveDirection === 'word-to-number' ? (
-              <span className="text-4xl font-heading font-bold text-primary">Chapter {current.chapter}</span>
-            ) : (
-              <span className="text-2xl font-heading font-bold text-primary">{current.word}</span>
+      {isFinished || !current ? (
+        <div className="rounded-2xl bg-card border border-card-border p-6 flex flex-col gap-4 text-center items-center mt-2">
+          <h2 className="text-2xl font-heading font-bold text-primary">
+            {queue.length === 0 ? 'No chapter anchors due' : 'Anchor practice complete'}
+          </h2>
+          <p className="text-sm text-secondary max-w-sm">
+            Pick a book above to drill its chapter chain, or return to verses.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2.5 w-full">
+            {queue.length > 0 && (
+              <button
+                type="button"
+                onClick={handleRestart}
+                className="flex-1 min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+              >
+                Practice again
+              </button>
             )}
-            <span className="text-sm text-muted italic">{current.scene}</span>
+            <button
+              type="button"
+              onClick={onExit}
+              className="flex-1 min-h-[48px] rounded-2xl border border-card-border text-secondary hover:text-primary font-semibold text-sm"
+            >
+              Back to verses
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {/* Direction Selector */}
+          <div className="relative self-start">
+            <button
+              type="button"
+              disabled={revealed}
+              onClick={() => {
+                setDirectionMenuOpen(o => !o);
+                setBookMenuOpen(false);
+              }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-card-elevated border border-card-border text-xs font-semibold text-primary hover:border-accent/60 disabled:opacity-50"
+            >
+              <span>{selectedDirLabel}</span>
+              <ChevronDown className="w-3.5 h-3.5 text-secondary" />
+            </button>
 
-      {/* Grading */}
-      <div className="px-5 pb-4">
-        {!revealed ? null : !isGrading ? (
-          <button
-            onClick={() => setIsGrading(true)}
-            className="w-full max-w-md mx-auto flex items-center justify-center gap-2 py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
-          >
-            <Check className="w-4 h-4" /> Score My Recall
-          </button>
-        ) : (
-          <div className="max-w-md w-full mx-auto bg-card-elevated border border-card-border rounded-lg p-4 flex flex-col gap-3 animate-[fadeScaleIn_0.2s_ease-out]">
-            <p className="text-center text-sm font-semibold text-primary">How well did you know it?</p>
-            <div className="grid grid-cols-4 gap-2">
-              <button onClick={() => handleGrade(1)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95">
-                <span className="text-xs font-bold">Blank</span>
+            {directionMenuOpen && !revealed && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setDirectionMenuOpen(false)}
+                />
+                <div className="absolute left-0 top-full mt-1.5 z-50 min-w-[180px] rounded-xl bg-card-elevated border border-card-border shadow-xl overflow-hidden">
+                  {DIRECTIONS.map(d => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      onClick={() => {
+                        setDirection(d.id);
+                        setDirectionMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-2.5 text-sm hover:bg-card-hover ${
+                        direction === d.id ? 'text-accent font-semibold' : 'text-primary'
+                      }`}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-sm font-medium text-secondary">{current.bookName}</span>
+            <h2 className="text-3xl font-heading font-bold text-primary">
+              {effectiveDirection === 'word-to-number'
+                ? current.word
+                : `Chapter ${current.chapter}`}
+            </h2>
+            <p className="text-sm text-primary">
+              {effectiveDirection === 'word-to-number'
+                ? 'Which chapter has this anchor word?'
+                : 'What is this chapter’s anchor word?'}
+            </p>
+          </div>
+
+          {effectiveDirection === 'plate-to-word' && !revealed && (
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
+                Chapter cue
+              </span>
+              {plateEl}
+            </div>
+          )}
+
+          {!revealed ? (
+            <div className="flex flex-col gap-3">
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-semibold text-secondary">
+                  {effectiveDirection === 'word-to-number'
+                    ? 'Chapter number'
+                    : 'Anchor word'}
+                </span>
+                <input
+                  type="text"
+                  inputMode={
+                    effectiveDirection === 'word-to-number' ? 'numeric' : 'text'
+                  }
+                  value={typedInput}
+                  onChange={e => setTypedInput(e.target.value.slice(0, 120))}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && typedInput.trim()) {
+                      handleCheckAnswer();
+                    }
+                  }}
+                  placeholder={
+                    effectiveDirection === 'word-to-number' ? 'e.g. 12' : 'Type anchor word'
+                  }
+                  className="w-full px-3.5 py-3 rounded-xl bg-card-elevated border border-card-border text-sm sm:text-base text-primary placeholder:text-muted focus:outline-none focus:border-accent"
+                />
+              </label>
+
+              <button
+                type="button"
+                disabled={!typedInput.trim()}
+                onClick={handleCheckAnswer}
+                className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
+              >
+                Check answer
               </button>
-              <button onClick={() => handleGrade(3)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95">
-                <span className="text-xs font-bold">Hard</span>
-              </button>
-              <button onClick={() => handleGrade(4)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95">
-                <span className="text-xs font-bold">Good</span>
-              </button>
-              <button onClick={() => handleGrade(5)} className="py-2.5 flex flex-col items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95">
-                <span className="text-xs font-bold">Easy</span>
+
+              <button
+                type="button"
+                onClick={handleReveal}
+                className="w-full min-h-[48px] rounded-2xl border border-card-border text-primary font-semibold text-sm hover:border-accent/50 transition-colors"
+              >
+                Show anchor
               </button>
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {judgement && (
+                <p
+                  className={`text-sm font-bold ${
+                    judgement.verdict === 'correct'
+                      ? 'text-emerald-400'
+                      : judgement.verdict === 'near'
+                      ? 'text-amber-400'
+                      : 'text-red-400'
+                  }`}
+                >
+                  {judgement.verdict === 'correct'
+                    ? 'Correct answer'
+                    : judgement.verdict === 'near'
+                    ? 'Close — compare your answer below'
+                    : judgement.confusedWith
+                    ? `That anchor belongs to Chapter ${judgement.confusedWith.chapter}: ${judgement.confusedWith.word}`
+                    : 'Review the anchor below'}
+                </p>
+              )}
 
-      {/* Manual skip — matches the verse session's Prev/Next, minus Prev: this
-          queue is a work list, not a browsable sequence. */}
-      {!isGrading && (
-        <div className="flex justify-center pb-2">
-          <button
-            onClick={() => { if (index < queue.length - 1) setIndex(i => i + 1); else setIndex(0); }}
-            className="flex items-center gap-1 text-xs font-medium text-muted hover:text-primary transition-colors px-3 py-2"
-          >
-            Skip <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+              <div className="rounded-2xl bg-card-elevated border border-card-border p-5 flex flex-col gap-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-accent">
+                  Chapter {current.chapter}
+                </span>
+                <p className="text-2xl font-heading font-extrabold text-primary">
+                  {current.word}
+                </p>
+                <p className="text-sm text-secondary italic font-serif">
+                  {current.scene}
+                </p>
+              </div>
+
+              {plateEl}
+
+              {typedInput.trim() && (
+                <p className="text-sm text-secondary">
+                  Your answer: <span className="text-primary font-medium">{typedInput}</span>
+                </p>
+              )}
+
+              <ReviewGrades ceiling={5} onGrade={handleGrade} />
+            </div>
+          )}
         </div>
       )}
     </div>

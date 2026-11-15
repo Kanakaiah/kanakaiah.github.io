@@ -11,6 +11,8 @@
  * chosen per-session by the person whose judgement is the thing being tested.
  */
 
+import { practicePassage } from './studyText';
+
 /** How much of the text is visible. Ordered most help to least. */
 export type CueLevel = 'full' | 'first-letters' | 'sparse' | 'none';
 
@@ -145,49 +147,108 @@ export function cueString(text: string, level: CueLevel): string {
     // 'sparse' leaves every third word standing in full and removes the rest entirely;
     // 'first-letters' keeps the opening character of every word.
     if (level === 'sparse' && wordIndex % 3 === 0) return token;
-    return token.split('').map((ch, i) => {
-      if (!/[a-zA-Z0-9]/.test(ch)) return ch;
+    let letterSeen = false;
+    return Array.from(token).map((ch) => {
+      if (!/[\p{L}\p{N}]/u.test(ch)) {
+        if (/[\p{M}]/u.test(ch) && level !== 'sparse' && !letterSeen) return ch;
+        if (/[\p{M}]/u.test(ch)) return '';
+        return ch;
+      }
       if (level === 'sparse') return '_';
-      return i === 0 ? ch : '_';
+      if (!letterSeen) {
+        letterSeen = true;
+        return ch;
+      }
+      return '_';
     }).join('');
   }).join('');
 }
 
-const normalizeWord = (w: string) => w.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+export const normalizeWord = (w: string): string =>
+  (w || '').normalize('NFC').toLowerCase().replace(/[^\p{L}\p{M}\p{N}]/gu, '');
 
-export interface AttemptWord { word: string; ok: boolean }
+export interface AttemptWord {
+  word: string;
+  ok: boolean;
+  missing?: boolean;
+}
+
 export interface AttemptScore {
   matched: number;
   total: number;
   /** 0–100. */
   accuracy: number;
   words: AttemptWord[];
+  addedWords: string[];
 }
 
 /**
- * Compares what the reader produced against the passage, word by word and in order.
- *
- * Shared by every surface that collects a typed or spoken attempt, so the number shown
- * on screen, the number the grade is suggested from, and the number the review history
- * audits self-grading against are all the same number. Punctuation and case are ignored:
- * the goal is the words, and marking someone wrong for a missing comma would make the
- * measurement useless as a proxy for memory.
+ * Compares what the reader produced against the passage using DP edit-distance alignment
+ * so a single omitted or inserted word never shifts every subsequent word out of place.
  */
 export function scoreAttempt(target: string, typed: string): AttemptScore {
-  const targetWords = (target || '').split(/\s+/).filter(Boolean);
-  const typedWords = (typed || '').split(/\s+/).filter(Boolean);
+  const cleanTarget = practicePassage(target || '').scoringText;
+  const targetWords = cleanTarget.split(/\s+/).filter(w => normalizeWord(w).length > 0);
+  const typedWords = (typed || '').trim().split(/\s+/).filter(w => normalizeWord(w).length > 0);
 
-  const words = targetWords.map((word, i) => ({
-    word,
-    ok: !!typedWords[i] && normalizeWord(typedWords[i]) === normalizeWord(word),
-  }));
+  if (targetWords.length === 0) {
+    return { matched: 0, total: 0, accuracy: 0, words: [], addedWords: [] };
+  }
+
+  const targetNormalized = targetWords.map(normalizeWord);
+  const typedNormalized = typedWords.map(normalizeWord);
+  const width = typedWords.length + 1;
+  const trace: Uint8Array[] = Array.from({ length: targetWords.length + 1 }, () => new Uint8Array(width));
+  let previous = Array.from({ length: width }, (_, idx) => idx);
+
+  for (let i = 1; i <= targetWords.length; i++) {
+    const current = new Array<number>(width).fill(0);
+    current[0] = i;
+    trace[i][0] = 1;
+    for (let j = 1; j <= typedWords.length; j++) {
+      const diagonal = previous[j - 1] + (targetNormalized[i - 1] === typedNormalized[j - 1] ? 0 : 1);
+      const missing = previous[j] + 1;
+      const added = current[j - 1] + 1;
+      const best = Math.min(diagonal, missing, added);
+      current[j] = best;
+      trace[i][j] = best === diagonal ? 0 : best === missing ? 1 : 2;
+    }
+    previous = current;
+  }
+
+  const words: AttemptWord[] = targetWords.map(word => ({ word, ok: false, missing: true }));
+  const extras: string[] = [];
+  let i = targetWords.length;
+  let j = typedWords.length;
+
+  while (i > 0 || j > 0) {
+    if (i === 0 || (j > 0 && trace[i][j] === 2)) {
+      extras.push(typedWords[--j]);
+    } else if (j === 0 || trace[i][j] === 1) {
+      i--;
+    } else {
+      i--;
+      j--;
+      words[i] = {
+        word: targetWords[i],
+        ok: targetNormalized[i] === typedNormalized[j],
+        missing: false,
+      };
+    }
+  }
+
   const matched = words.filter(w => w.ok).length;
+  const accuracy =
+    matched === targetWords.length && extras.length === 0
+      ? 100
+      : Math.min(99, Math.round((matched / (targetWords.length + extras.length)) * 100));
 
   return {
     matched,
     total: targetWords.length,
-    accuracy: targetWords.length ? Math.round((matched / targetWords.length) * 100) : 0,
+    accuracy,
     words,
+    addedWords: extras.reverse(),
   };
 }
 
@@ -203,7 +264,7 @@ export function cueAriaLabel(text: string, level: CueLevel): string {
     return `Every third word: ${shown.join(', ')}`;
   }
   const letters = words
-    .map(w => (w.match(/[a-zA-Z0-9]/) || [''])[0])
+    .map(w => (w.match(/[\p{L}\p{N}]/u) || [''])[0])
     .filter(Boolean);
   return `First letters: ${letters.join(', ')}`;
 }

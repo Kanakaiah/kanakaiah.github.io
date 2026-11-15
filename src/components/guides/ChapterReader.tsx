@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, Plus, X, Copy, Trash2, BookOpen, RotateCw, Check } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, X, Copy, Trash2, BookOpen, RotateCw, Check, MoreVertical, Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { OT_BOOKS } from '../../data/otBooks';
 import { CrossReferenceModal } from './CrossReferenceModal';
+import { CommentaryModal, hasCommentaryForBook } from './StudyToolsSheet';
+import { ImmersedReader } from '../practice/ImmersedReader';
+import { ReviewGrades } from '../practice/PracticeFeedback';
+import { Modal } from '../ui/Modal';
+import { saveReaderPosition } from '../../utils/readerPosition';
 import { getBookName } from '../../utils/localization';
 import {
   CrossReferenceIndex,
@@ -21,7 +26,7 @@ import { OT_STUDY_GUIDES } from '../../data/otGuides';
 import { evaluateSM2 } from '../../utils/sm2';
 import { buildReviewEvent } from '../../utils/reviewLog';
 import { chapterProgressKey } from '../../types/models';
-import type { ChapterProgress } from '../../types/models';
+import type { ChapterProgress, UserSettings, Verse as MemoryVerse } from '../../types/models';
 import { divisionForSection } from '../../data/palette';
 import { useMastery } from '../../utils/mastery';
 
@@ -186,68 +191,157 @@ function extractHeadings(verses: Verse[]): Record<number, string[]> {
 
 const HEADING_CLASSES = 'mt-10 first-of-type:mt-0 mb-4 text-xs font-bold tracking-[0.14em] text-accent uppercase not-italic leading-snug break-words w-full block';
 
-// End-of-chapter recall card. A local component (not its own file) for the same
-// reason ChapterAnchorCard lives inside Guides.tsx — it exists only to answer the
-// one question this reader asks, and has no reason to be reused anywhere else.
+function stripHtmlTags(raw: string): string {
+  return raw
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function readerFontFamilyCss(family?: UserSettings['fontFamily']): string {
+  if (family === 'system') return '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  if (family === 'merriweather' || family === 'serif') return "'Merriweather', Georgia, serif";
+  if (family === 'atkinson' || family === 'hyper') return "'Atkinson Hyperlegible', sans-serif";
+  if (family === 'mono') return "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+  return "'Inter', sans-serif";
+}
+
+function readerLineHeightMultiplier(spacing?: UserSettings['lineSpacing']): number {
+  if (spacing === 'tight' || spacing === 'compact') return 1.3;
+  if (spacing === 'roomy' || spacing === 'spacious') return 2.05;
+  if (spacing === 'relaxed') return 1.85;
+  return 1.65;
+}
+
+function bionicBoldLength(wordLength: number, intensity?: UserSettings['bionicIntensity']): number {
+  const ratio =
+    intensity === 'light' || intensity === 'low'
+      ? 0.35
+      : intensity === 'strong' || intensity === 'high'
+      ? 0.62
+      : 0.48;
+  return Math.min(wordLength, Math.max(1, Math.ceil(wordLength * ratio)));
+}
+
+const PREVIEW_PALETTE: Record<string, { bg: string; border: string; text: string }> = {
+  black: { bg: '#0c0b09', border: '#27231e', text: '#f5efe3' },
+  dark: { bg: '#191612', border: '#332d25', text: '#f3ede2' },
+  sepia: { bg: '#f4ecd8', border: '#d8ccb0', text: '#3a2c1c' },
+  white: { bg: '#ffffff', border: '#e5e0d8', text: '#1c1917' },
+};
+
+// Inline end-of-chapter recall card — flows at the foot of the chapter column so
+// finishing a chapter prompts anchor retrieval right above Next chapter without
+// covering the scripture text.
 const RecallCard: React.FC<{
   bookId: string;
   chapter: number;
   anchor: { word: string; scene: string };
   revealed: boolean;
+  graded: boolean;
+  nextLabel: string | null;
   onReveal: () => void;
   onGrade: (score: number) => void;
   onDismiss: () => void;
-  chromeVisible: boolean;
-}> = ({ bookId, chapter, anchor, revealed, onReveal, onGrade, onDismiss, chromeVisible }) => {
+  onNextChapter: () => void;
+}> = ({ bookId, chapter, anchor, revealed, graded, nextLabel, onReveal, onGrade, onDismiss, onNextChapter }) => {
   const [imgErr, setImgErr] = useState(false);
   const imgPath = `/chapters/${bookId}/ch${chapter}.png`;
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-20 bg-card border-t border-card-border shadow-[0_-8px_24px_rgba(0,0,0,0.12)] transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}
-      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 4.75rem)' }}
+      className="mt-10 rounded-2xl border border-card-border bg-card p-5 shadow-sm flex flex-col gap-4"
+      onClick={(e) => e.stopPropagation()}
     >
-      <div className="max-w-2xl mx-auto w-full px-5 pt-4 pb-3 flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <span className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">What anchors this chapter?</span>
-          <button onClick={onDismiss} className="p-1 -mr-1 rounded-full hover:bg-card-hover transition-colors" aria-label="Dismiss">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[0.6875rem] font-bold text-accent uppercase tracking-widest">
+          What anchors chapter {chapter}?
+        </span>
+        {!graded && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="p-1 -mr-1 rounded-full hover:bg-card-hover transition-colors"
+            aria-label="Dismiss recall prompt"
+          >
             <X className="w-4 h-4 text-muted" />
           </button>
-        </div>
+        )}
+      </div>
 
-        <div className="flex items-center gap-3">
-          <div className="relative w-16 h-16 rounded-md overflow-hidden bg-card-elevated flex-shrink-0 border border-card-border">
-            {!imgErr ? (
-              <img src={imgPath} alt="" loading="lazy" onError={() => setImgErr(true)} className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity ${revealed ? 'opacity-100' : 'opacity-100 blur-[6px]'}`} />
+      {graded ? (
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+            <Check className="w-4 h-4 text-green-500 shrink-0" />
+            <span>Chapter recall logged · {anchor.word}</span>
+          </div>
+          {nextLabel && (
+            <button
+              type="button"
+              onClick={onNextChapter}
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-bold text-white hover:opacity-90 transition-opacity"
+            >
+              <span>Next chapter ({nextLabel})</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          <div className="flex items-center gap-3.5">
+            <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-card-elevated flex-shrink-0 border border-card-border">
+              {!imgErr ? (
+                <img
+                  src={imgPath}
+                  alt=""
+                  loading="lazy"
+                  onError={() => setImgErr(true)}
+                  className={`absolute inset-0 w-full h-full object-cover object-top transition-all ${revealed ? '' : 'blur-[6px] scale-105'}`}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-lg font-heading font-bold text-muted/40">
+                  {chapter}
+                </div>
+              )}
+            </div>
+
+            {!revealed ? (
+              <button
+                type="button"
+                onClick={onReveal}
+                className="flex-1 text-left px-4 py-3 rounded-xl border border-dashed border-card-border-hover text-sm font-semibold text-accent hover:border-accent/60 transition-colors"
+              >
+                Reveal anchor
+              </button>
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-lg font-heading font-bold text-muted/40">{chapter}</div>
+              <div className="flex-1 flex flex-col gap-1 min-w-0">
+                <span className="font-heading font-bold text-accent text-base">{anchor.word}</span>
+                <span className="text-xs text-secondary italic leading-snug">{anchor.scene}</span>
+              </div>
             )}
           </div>
 
-          {!revealed ? (
-            <button
-              onClick={onReveal}
-              className="flex-1 text-left px-4 py-3 rounded-md border border-dashed border-card-border-hover text-sm font-semibold text-secondary hover:text-primary hover:border-accent/40 transition-colors"
-            >
-              Tap to reveal
-            </button>
-          ) : (
-            <div className="flex-1 flex flex-col gap-0.5">
-              <span className="font-bold text-accent text-base">{anchor.word}</span>
-              <span className="text-xs text-muted italic leading-snug">{anchor.scene}</span>
+          {revealed && <ReviewGrades onGrade={onGrade} />}
+
+          {nextLabel && (
+            <div className="pt-1 border-t border-card-border/60 flex justify-end">
+              <button
+                type="button"
+                onClick={onNextChapter}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline"
+              >
+                <span>Next chapter · {nextLabel}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             </div>
           )}
-        </div>
-
-        {revealed && (
-          <div className="grid grid-cols-4 gap-2 mt-1">
-            <button onClick={() => onGrade(1)} className="py-2 flex items-center justify-center rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors border border-red-500/20 active:scale-95 text-xs font-bold">Blank</button>
-            <button onClick={() => onGrade(3)} className="py-2 flex items-center justify-center rounded-md bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 transition-colors border border-orange-500/20 active:scale-95 text-xs font-bold">Hard</button>
-            <button onClick={() => onGrade(4)} className="py-2 flex items-center justify-center rounded-md bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors border border-blue-500/20 active:scale-95 text-xs font-bold">Good</button>
-            <button onClick={() => onGrade(5)} className="py-2 flex items-center justify-center rounded-md bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors border border-green-500/20 active:scale-95 text-xs font-bold">Easy</button>
-          </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };
@@ -310,16 +404,97 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const [newGroupName, setNewGroupName] = useState('');
 
   const [showOptions, setShowOptions] = useState(false);
+  const [showOverflowMenu, setShowOverflowMenu] = useState(false);
+  const [showCommentaryModal, setShowCommentaryModal] = useState(false);
+  const [immerseChapterOpen, setImmerseChapterOpen] = useState(false);
+  const [immerseVerseIdx, setImmerseVerseIdx] = useState(0);
+  const [isSpeakingChapter, setIsSpeakingChapter] = useState(false);
+  const [advancedReadingOptionsOpen, setAdvancedReadingOptionsOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const stopChapterSpeech = useCallback(() => {
+    try {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    } catch {
+      // Ignore speech synthesis errors on unsupported runtimes.
+    }
+    setIsSpeakingChapter(false);
+  }, []);
+
+  useEffect(() => {
+    saveReaderPosition(bookId, chapter);
+  }, [bookId, chapter]);
+
+  useEffect(() => {
+    return () => {
+      stopChapterSpeech();
+    };
+  }, [stopChapterSpeech]);
+
   useEffect(() => { 
     setShowOptions(false);
+    setShowOverflowMenu(false);
+    setShowCommentaryModal(false);
+    setImmerseChapterOpen(false);
+    setImmerseVerseIdx(0);
+    stopChapterSpeech();
     setScrollProgress(0);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
     }
-  }, [bookId, chapter]);
+  }, [bookId, chapter, stopChapterSpeech]);
   const { state, dispatch } = useApp();
   const bibleVersion = state.settings.bibleVersion || 'LSB';
   const { showToast } = useToast();
+
+  const chapterMemoryVerses = useMemo<MemoryVerse[]>(() => {
+    const localizedBook = getBookName(bookId, bookTitle, bibleVersion);
+    const nowIso = new Date().toISOString();
+    return verses.map((v) => ({
+      id: `${bookId}-${chapter}-${v.verse}`,
+      ref: `${localizedBook} ${chapter}:${v.verse}`,
+      text: stripHtmlTags(v.text),
+      translation: bibleVersion,
+      addedDate: nowIso,
+      status: 'learning',
+      sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: nowIso },
+      streak: 0,
+      attempts: 0,
+    }));
+  }, [verses, bookId, bookTitle, bibleVersion, chapter]);
+
+  const speakChapterFrom = useCallback(
+    (startIndex = 0) => {
+      if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+        showToast('Speech synthesis is not available on this device.', 'error');
+        return;
+      }
+      if (chapterMemoryVerses.length === 0) return;
+      window.speechSynthesis.cancel();
+      const textToRead = chapterMemoryVerses
+        .slice(startIndex)
+        .map((mv) => mv.text)
+        .join(' ');
+      if (!textToRead.trim()) return;
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.rate = 0.95;
+      utterance.onend = () => setIsSpeakingChapter(false);
+      utterance.onerror = () => setIsSpeakingChapter(false);
+      setIsSpeakingChapter(true);
+      window.speechSynthesis.speak(utterance);
+    },
+    [chapterMemoryVerses, showToast],
+  );
+
+  const toggleSpeakChapter = useCallback(() => {
+    if (isSpeakingChapter) {
+      stopChapterSpeech();
+    } else {
+      speakChapterFrom(0);
+    }
+  }, [isSpeakingChapter, stopChapterSpeech, speakChapterFrom]);
   
   const handleCreateGroup = (e: React.FormEvent) => {
     e.preventDefault();
@@ -379,13 +554,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // (anchorReveal === 'always') and capped at two dismissals per session so a
   // reader who isn't interested isn't nagged on every chapter for the rest of
   // their visit.
-  const [showRecallCard, setShowRecallCard] = useState(false);
+  // Clean up redundant popup trigger state now that RecallCard renders inline at
+  // the end of the chapter column.
   const [recallCardShownThisVisit, setRecallCardShownThisVisit] = useState(false);
   const [recallRevealed, setRecallRevealed] = useState(false);
+  const [recallGradedOnVisit, setRecallGradedOnVisit] = useState(false);
+  const [recallDismissedOnVisit, setRecallDismissedOnVisit] = useState(false);
   useEffect(() => {
-    setShowRecallCard(false);
     setRecallCardShownThisVisit(false);
     setRecallRevealed(false);
+    setRecallGradedOnVisit(false);
+    setRecallDismissedOnVisit(false);
   }, [bookId, chapter]);
 
   // Reading is counted, never graded, and no longer feeds the streak.
@@ -436,13 +615,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     if (state.settings.streakIncludesChapters !== false) {
       dispatch({ type: 'RECORD_ACTIVITY' });
     }
-    setShowRecallCard(false);
+    setRecallGradedOnVisit(true);
     showToast('Chapter recall logged.', 'success');
   };
 
   const dismissRecallCard = () => {
     recallCardDismissCount += 1;
-    setShowRecallCard(false);
+    setRecallDismissedOnVisit(true);
   };
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
   const [showAddOptions, setShowAddOptions] = useState(false);
@@ -467,8 +646,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // state (see that effect for why nulling it causes a self-cancellation bug).
   const consumedHighlightRef = useRef<{ book: string; chapter: number; verse: number } | null>(null);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
-
   // Chrome (top header + bottom nav) visibility — tap-to-toggle, replacing the
   // old scroll-direction heuristic. Visible on entry/navigation for orientation;
   // a tap on empty space toggles it, a tap on a verse/word always reveals it
@@ -484,12 +661,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   useEffect(() => {
     if (!chromeVisible) {
       setShowOptions(false);
+      setShowOverflowMenu(false);
     }
   }, [chromeVisible]);
 
   const handleContentClick = (e: React.MouseEvent) => {
-    if (showOptions) {
+    if (showOptions || showOverflowMenu) {
       setShowOptions(false);
+      setShowOverflowMenu(false);
       return;
     }
     const target = e.target as HTMLElement;
@@ -527,6 +706,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (showOptions) setShowOptions(false);
+    if (showOverflowMenu) setShowOverflowMenu(false);
 
     const target = e.currentTarget;
     const totalHeight = target.scrollHeight - target.clientHeight;
@@ -534,15 +714,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     const progress = (target.scrollTop / totalHeight) * 100;
     setScrollProgress(progress);
 
-    // Reaching the bottom is both "this chapter was read" and the moment to offer
-    // the recall card — the best-primed instant available, and the only one this
-    // reader gets for free. Guarded to fire once per chapter visit.
+    // Reaching the bottom is when "this chapter was read" is logged. Guarded to fire once per chapter visit.
     if (progress >= 98 && !recallCardShownThisVisit) {
       setRecallCardShownThisVisit(true);
       markChapterRead();
-      if (chapterAnchor && anchorReveal !== 'always' && recallCardDismissCount < 2) {
-        setShowRecallCard(true);
-      }
     }
   };
 
@@ -561,14 +736,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       if (totalHeight <= 0) {
         setRecallCardShownThisVisit(true);
         markChapterRead();
-        if (chapterAnchor && anchorReveal !== 'always' && recallCardDismissCount < 2) {
-          setShowRecallCard(true);
-        }
       }
     }, 150); // Short delay to ensure DOM is fully laid out
     
     return () => clearTimeout(timer);
-  }, [loading, verses, recallCardShownThisVisit, markChapterRead, chapterAnchor, anchorReveal, recallCardDismissCount]);
+  }, [loading, verses, recallCardShownThisVisit, markChapterRead]);
 
   // Compute prev/next labels for the navigation bar
   const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
@@ -656,7 +828,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // Any of these overlays sit on top of the reader as React children, so their
   // touch events bubble up to the swipe handlers below unless explicitly guarded —
   // otherwise swiping inside e.g. the chapter navigator silently changes the chapter underneath it.
-  const isOverlayOpen = showOptions || showNavigator || !!showCrossReferences || showAddOptions;
+  const isOverlayOpen =
+    showOptions ||
+    showOverflowMenu ||
+    showCommentaryModal ||
+    immerseChapterOpen ||
+    showNavigator ||
+    !!showCrossReferences ||
+    showAddOptions;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (isOverlayOpen) return;
@@ -1264,10 +1443,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       // Apply Bionic Reading safely (only to text outside HTML tags)
       if (state.settings.bionicReading) {
         text = text.replace(/([a-zA-Z\u00C0-\u024F]+)(?![^<]*>)/g, (word) => {
-          if (word.length <= 1) return `<strong class="font-bold">${word}</strong>`;
-          if (word.length <= 3) return `<strong class="font-bold">${word.substring(0, 1)}</strong>${word.substring(1)}`;
-          const half = Math.ceil(word.length / 2);
-          return `<strong class="font-bold">${word.substring(0, half)}</strong>${word.substring(half)}`;
+          const cut = bionicBoldLength(word.length, state.settings.bionicIntensity);
+          return `<strong class="font-bold">${word.substring(0, cut)}</strong>${word.substring(cut)}`;
         });
       }
 
@@ -1340,8 +1517,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
     return html;
   }, [verses, borrowedHeadings, selectedVerses, memorizedVerses, state.settings.bionicReading,
-      state.settings.showSectionHeadings, state.settings.showVerseNumbers, state.settings.showParagraphMarks,
-      state.settings.showCrossRefMarkers, crossRefIndex, bookTitle,
+      state.settings.bionicIntensity, state.settings.showSectionHeadings, state.settings.showVerseNumbers,
+      state.settings.showParagraphMarks, state.settings.showCrossRefMarkers, crossRefIndex, bookTitle,
       bookId, chapter, paragraphBreaks, flashVerse]);
 
   const hasRefs = !crossRefIndex || selectedVerses.some(v => {
@@ -1394,9 +1571,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             )}
           </div>
 
-          <div className="absolute right-0 top-1 flex items-center gap-1">
+          <div className="absolute right-0 top-1 flex items-center gap-1.5">
             <button
-              onClick={() => setShowOptions(!showOptions)}
+              type="button"
+              onClick={() => {
+                setShowOverflowMenu(false);
+                setShowOptions((v) => !v);
+              }}
               className={`w-9 h-9 rounded-full border border-card-border flex items-center justify-center font-bold text-sm transition-colors ${showOptions ? 'bg-accent/20 border-accent text-accent' : 'bg-card text-accent hover:border-accent'}`}
               title="Reading Settings"
               aria-label="Reading settings"
@@ -1404,237 +1585,395 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               Aa
             </button>
 
-            {showOptions && (
-              <>
-                <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px]" onClick={() => setShowOptions(false)} onTouchStart={() => setShowOptions(false)} />
-                <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-[#191714] border border-[#332f29] rounded-2xl shadow-2xl z-50 overflow-hidden p-5 flex flex-col gap-4 animate-[fadeScaleIn_0.15s_ease-out]">
-                  {/* Header: Title + Reset */}
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold font-serif text-[#f5efe3]">Reading settings</h3>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowOptions(false);
+                  setShowOverflowMenu((v) => !v);
+                }}
+                aria-label="Reader actions"
+                aria-haspopup="menu"
+                aria-expanded={showOverflowMenu}
+                className={`w-9 h-9 rounded-full border border-card-border flex items-center justify-center transition-colors ${showOverflowMenu ? 'bg-accent/20 border-accent text-accent' : 'bg-card text-secondary hover:text-primary hover:border-accent/50'}`}
+              >
+                <MoreVertical className="w-4 h-4" />
+              </button>
+
+              {showOverflowMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowOverflowMenu(false)}
+                    onTouchStart={() => setShowOverflowMenu(false)}
+                  />
+                  <div
+                    role="menu"
+                    className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-card-border bg-card shadow-xl z-50 p-1.5 flex flex-col gap-0.5 animate-[fadeScaleIn_0.12s_ease-out]"
+                  >
                     <button
                       type="button"
+                      role="menuitem"
                       onClick={() => {
-                        dispatch({
-                          type: 'UPDATE_SETTINGS',
-                          payload: {
-                            fontSize: 1.0,
-                            fontFamily: 'inter',
-                            lineSpacing: 'normal',
-                            bionicReading: false,
-                            showVerseNumbers: true
-                          }
-                        });
-                        dispatch({ type: 'SET_THEME', payload: 'dark' });
+                        setShowOverflowMenu(false);
+                        toggleSpeakChapter();
                       }}
-                      className="text-xs font-bold text-accent hover:opacity-80 transition-opacity"
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-primary hover:bg-card-hover transition-colors"
                     >
-                      Reset
+                      {isSpeakingChapter ? (
+                        <VolumeX className="w-4 h-4 text-accent" />
+                      ) : (
+                        <Volume2 className="w-4 h-4 text-accent" />
+                      )}
+                      <span>{isSpeakingChapter ? 'Stop listening' : 'Listen'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setShowOverflowMenu(false);
+                        if (chapterMemoryVerses.length > 0) {
+                          setImmerseVerseIdx(0);
+                          setImmerseChapterOpen(true);
+                        }
+                      }}
+                      disabled={chapterMemoryVerses.length === 0}
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-primary hover:bg-card-hover disabled:opacity-40 transition-colors"
+                    >
+                      <Sparkles className="w-4 h-4 text-accent" />
+                      <span>Immerse Reading</span>
+                    </button>
+
+                    {hasCommentaryForBook(bookId) && (
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                          setShowOverflowMenu(false);
+                          setShowCommentaryModal(true);
+                        }}
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-primary hover:bg-card-hover transition-colors"
+                      >
+                        <BookOpen className="w-4 h-4 text-accent" />
+                        <span>Commentary</span>
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setShowOverflowMenu(false);
+                        setChromeVisible(false);
+                      }}
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                      <span>Hide controls</span>
                     </button>
                   </div>
-
-                  {/* Preview Box */}
-                  <div
-                    className="p-3.5 bg-[#12100d] border border-[#2b2722] rounded-xl text-[#f3ede2] transition-[font-size,line-height] duration-75"
-                    style={{
-                      fontSize: `${Math.round(14 * (state.settings.fontSize || 1))}px`,
-                      lineHeight: state.settings.lineSpacing === 'tight' ? 1.3 : state.settings.lineSpacing === 'roomy' ? 2.05 : 1.65,
-                      fontFamily: state.settings.fontFamily === 'system'
-                        ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                        : (state.settings.fontFamily === 'merriweather' || state.settings.fontFamily === 'serif')
-                        ? "'Merriweather', Georgia, serif"
-                        : (state.settings.fontFamily === 'atkinson' || state.settings.fontFamily === 'hyper')
-                        ? "'Atkinson Hyperlegible', sans-serif"
-                        : "'Inter', sans-serif"
-                    }}
-                  >
-                    <sup className="text-accent text-[10px] font-bold mr-1.5 align-super">12</sup>
-                    <span className="font-bold">Sample</span> text <span className="font-bold">stands</span> in <span className="font-bold">for</span> scripture so the <span className="font-bold">layout</span> can be <span className="font-bold">judged</span>.
-                  </div>
-
-                  {/* Text Size */}
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">TEXT SIZE</span>
-                    <div className="flex items-center gap-3 px-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const current = state.settings.fontSize || 1;
-                          const next = Math.max(0.82, Math.round((current - 0.15) * 100) / 100);
-                          dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: next } });
-                        }}
-                        className="text-xs text-[#a89f91] font-serif hover:text-accent transition-colors p-1"
-                        aria-label="Decrease text size"
-                      >
-                        A
-                      </button>
-                      <input
-                        type="range"
-                        min={0.82}
-                        max={1.60}
-                        step={0.01}
-                        value={state.settings.fontSize || 1}
-                        onChange={(e) => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: parseFloat(e.target.value) } })}
-                        className="w-full accent-accent cursor-pointer h-1.5 bg-[#2b2722] rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const current = state.settings.fontSize || 1;
-                          const next = Math.min(1.60, Math.round((current + 0.15) * 100) / 100);
-                          dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: next } });
-                        }}
-                        className="text-base text-[#a89f91] font-serif hover:text-accent transition-colors p-1"
-                        aria-label="Increase text size"
-                      >
-                        A
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Font */}
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">FONT</span>
-                    <div className="grid grid-cols-4 gap-1.5">
-                      {[
-                        { id: 'inter', label: 'Inter' },
-                        { id: 'merriweather', label: 'Merriweather' },
-                        { id: 'atkinson', label: 'Atkinson' },
-                        { id: 'system', label: 'System' },
-                      ].map(f => {
-                        const isSelected = (state.settings.fontFamily || 'inter') === f.id;
-                        return (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: f.id as any } })}
-                            className={`py-1.5 px-1 rounded-full text-xs font-semibold text-center transition-all border ${
-                              isSelected
-                                ? 'bg-accent text-[#14120f] border-accent font-bold'
-                                : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
-                            }`}
-                          >
-                            {f.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Line Spacing */}
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">LINE SPACING</span>
-                    <div className="flex items-center gap-2">
-                      {[
-                        { id: 'tight', label: 'Tight' },
-                        { id: 'normal', label: 'Normal' },
-                        { id: 'roomy', label: 'Roomy' }
-                      ].map(spacing => {
-                        const isSelected = (state.settings.lineSpacing || 'normal') === spacing.id;
-                        return (
-                          <button
-                            key={spacing.id}
-                            type="button"
-                            onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { lineSpacing: spacing.id as any } })}
-                            className={`flex-1 py-1.5 px-2 rounded-full text-xs font-semibold transition-all border ${
-                              isSelected
-                                ? 'bg-accent text-[#14120f] border-accent font-bold'
-                                : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
-                            }`}
-                          >
-                            {spacing.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Theme */}
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-[#a89f91]">THEME</span>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[
-                        { id: 'dark', label: 'Dark' },
-                        { id: 'black', label: 'Black' },
-                        { id: 'sepia', label: 'Sepia' },
-                        { id: 'white', label: 'Light' },
-                      ].map(t => {
-                        const isSelected = (state.theme || 'dark') === t.id;
-                        return (
-                          <button
-                            key={t.id}
-                            type="button"
-                            onClick={() => dispatch({ type: 'SET_THEME', payload: t.id as any })}
-                            className={`py-1.5 px-1 rounded-full text-xs font-semibold text-center transition-all border ${
-                              isSelected
-                                ? 'bg-accent text-[#14120f] border-accent font-bold'
-                                : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29] hover:border-accent/40'
-                            }`}
-                          >
-                            {t.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Bionic reading */}
-                  <div className="flex flex-col gap-2 pt-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-[#f5efe3]">Bionic reading</span>
-                      <input
-                        type="checkbox"
-                        checked={state.settings.bionicReading}
-                        onChange={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { bionicReading: !state.settings.bionicReading } })}
-                        className="w-4 h-4 rounded accent-accent cursor-pointer"
-                      />
-                    </div>
-                    {state.settings.bionicReading && (
-                      <div className="flex items-center gap-2">
-                        {['Light', 'Medium', 'Strong'].map((intensity, idx) => {
-                          const isSelected = idx === 1;
-                          return (
-                            <button
-                              key={intensity}
-                              type="button"
-                              className={`flex-1 py-1 rounded-full text-[11px] font-semibold transition-all border ${
-                                isSelected
-                                  ? 'bg-accent text-[#14120f] border-accent font-bold'
-                                  : 'bg-[#211e19] text-[#e0d8cc] border-[#332f29]'
-                              }`}
-                            >
-                              {intensity}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Verse numbers */}
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-xs font-semibold text-[#f5efe3]">Verse numbers</span>
-                    <input
-                      type="checkbox"
-                      checked={state.settings.showVerseNumbers !== false}
-                      onChange={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { showVerseNumbers: state.settings.showVerseNumbers === false } })}
-                      className="w-4 h-4 rounded accent-accent cursor-pointer"
-                    />
-                  </div>
-
-                  {/* Done button */}
-                  <button
-                    type="button"
-                    onClick={() => setShowOptions(false)}
-                    className="w-full mt-2 py-2.5 rounded-xl bg-accent hover:opacity-95 text-[#14120f] font-bold text-sm shadow-md transition-all text-center"
-                  >
-                    Done
-                  </button>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Redesigned Reading settings Bottom Sheet */}
+      <Modal
+        isOpen={showOptions}
+        onClose={() => setShowOptions(false)}
+        variant="sheet"
+        size="md"
+        title="Reading settings"
+        subtitle="These settings apply to reading and Immerse. The palette also changes the app theme."
+      >
+        <div className="flex flex-col gap-5">
+          {/* Live Preview Card */}
+          {(() => {
+            const palette = PREVIEW_PALETTE[state.theme || 'black'] || PREVIEW_PALETTE.black;
+            const sampleWords = ['Sample', 'text', 'stands', 'in', 'for', 'scripture', 'so', 'the', 'layout', 'can', 'be', 'judged.'];
+            return (
+              <div
+                className="rounded-2xl border p-4 transition-all"
+                style={{
+                  backgroundColor: palette.bg,
+                  borderColor: palette.border,
+                  color: palette.text,
+                  fontSize: `${Math.round(16 * (state.settings.fontSize || 1))}px`,
+                  lineHeight: readerLineHeightMultiplier(state.settings.lineSpacing),
+                  fontFamily: readerFontFamilyCss(state.settings.fontFamily),
+                }}
+              >
+                {state.settings.showVerseNumbers !== false && (
+                  <sup className="text-accent text-[0.65em] font-bold mr-1.5 align-super">12</sup>
+                )}
+                {sampleWords.map((word, idx) => {
+                  const cut = state.settings.bionicReading
+                    ? bionicBoldLength(word.length, state.settings.bionicIntensity)
+                    : 0;
+                  return (
+                    <React.Fragment key={idx}>
+                      {idx > 0 && ' '}
+                      {cut > 0 ? (
+                        <>
+                          <strong className="font-bold">{word.slice(0, cut)}</strong>
+                          {word.slice(cut)}
+                        </>
+                      ) : (
+                        word
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
+          {/* Scripture text size */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-bold text-primary">Scripture text size</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: 'Small', value: 0.88 },
+                { label: 'Default', value: 1.0 },
+                { label: 'Large', value: 1.15 },
+                { label: 'Extra Large', value: 1.3 },
+                { label: 'Huge', value: 1.5 },
+              ].map((size) => {
+                const current = state.settings.fontSize || 1.0;
+                const isSelected = Math.abs(current - size.value) < 0.05;
+                return (
+                  <button
+                    key={size.label}
+                    type="button"
+                    onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: size.value } })}
+                    className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      isSelected
+                        ? 'border-accent bg-accent text-white'
+                        : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
+                    }`}
+                  >
+                    {size.label}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-muted">Interface text size follows your device settings.</p>
+          </div>
+
+          {/* Typeface */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-bold text-primary">Typeface</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: 'inter', label: 'Inter' },
+                { id: 'merriweather', label: 'Merriweather' },
+                { id: 'atkinson', label: 'Atkinson' },
+                { id: 'mono', label: 'Monospace' },
+                { id: 'system', label: 'System' },
+              ].map((f) => {
+                const isSelected = (state.settings.fontFamily || 'inter') === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: f.id as UserSettings['fontFamily'] } })}
+                    className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      isSelected
+                        ? 'border-accent bg-accent text-white'
+                        : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Line spacing */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-bold text-primary">Line spacing</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: 'tight', label: 'Tight' },
+                { id: 'normal', label: 'Normal' },
+                { id: 'roomy', label: 'Roomy' },
+              ].map((spacing) => {
+                const isSelected = (state.settings.lineSpacing || 'normal') === spacing.id;
+                return (
+                  <button
+                    key={spacing.id}
+                    type="button"
+                    onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { lineSpacing: spacing.id as UserSettings['lineSpacing'] } })}
+                    className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                      isSelected
+                        ? 'border-accent bg-accent text-white'
+                        : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
+                    }`}
+                  >
+                    {spacing.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Palette */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-bold text-primary">Palette</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: 'black', label: 'Midnight' },
+                { id: 'dark', label: 'Walnut' },
+                { id: 'sepia', label: 'Sepia' },
+                { id: 'white', label: 'Paper' },
+              ].map((t) => {
+                const isSelected = (state.theme || 'black') === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => dispatch({ type: 'SET_THEME', payload: t.id as 'black' | 'dark' | 'sepia' | 'white' })}
+                    className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                      isSelected
+                        ? 'border-accent bg-accent text-white'
+                        : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Verse numbers switch */}
+          <label className="flex items-center justify-between gap-3 py-1 cursor-pointer">
+            <span className="text-sm font-medium text-primary">Verse numbers</span>
+            <input
+              type="checkbox"
+              checked={state.settings.showVerseNumbers !== false}
+              onChange={() =>
+                dispatch({
+                  type: 'UPDATE_SETTINGS',
+                  payload: { showVerseNumbers: state.settings.showVerseNumbers === false },
+                })
+              }
+              className="h-4 w-4 accent-accent cursor-pointer"
+            />
+          </label>
+
+          {/* Collapsible Advanced reading options */}
+          <div className="border-t border-card-border pt-2 flex flex-col gap-3">
+            <button
+              type="button"
+              onClick={() => setAdvancedReadingOptionsOpen((v) => !v)}
+              className="inline-flex items-center gap-1.5 self-start text-xs font-semibold text-accent hover:underline"
+            >
+              <span>{advancedReadingOptionsOpen ? 'Hide advanced reading options' : 'Advanced reading options'}</span>
+              {advancedReadingOptionsOpen ? (
+                <ChevronUp className="w-3.5 h-3.5" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5" />
+              )}
+            </button>
+
+            {advancedReadingOptionsOpen && (
+              <div className="flex flex-col gap-3 rounded-xl border border-card-border bg-card-elevated/40 p-3.5">
+                <label className="flex items-center justify-between gap-3 cursor-pointer">
+                  <span className="text-sm font-medium text-primary">Bionic reading</span>
+                  <input
+                    type="checkbox"
+                    checked={Boolean(state.settings.bionicReading)}
+                    onChange={() =>
+                      dispatch({
+                        type: 'UPDATE_SETTINGS',
+                        payload: { bionicReading: !state.settings.bionicReading },
+                      })
+                    }
+                    className="h-4 w-4 accent-accent cursor-pointer"
+                  />
+                </label>
+
+                {state.settings.bionicReading && (
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-semibold text-secondary">Bionic intensity</span>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { id: 'light', label: 'Light' },
+                        { id: 'medium', label: 'Medium' },
+                        { id: 'strong', label: 'Strong' },
+                      ].map((lvl) => {
+                        const current = state.settings.bionicIntensity || 'medium';
+                        const isSelected =
+                          current === lvl.id ||
+                          (lvl.id === 'light' && current === 'low') ||
+                          (lvl.id === 'strong' && current === 'high');
+                        return (
+                          <button
+                            key={lvl.id}
+                            type="button"
+                            onClick={() =>
+                              dispatch({
+                                type: 'UPDATE_SETTINGS',
+                                payload: { bionicIntensity: lvl.id as UserSettings['bionicIntensity'] },
+                              })
+                            }
+                            className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+                              isSelected
+                                ? 'border-accent bg-accent text-white'
+                                : 'border-card-border bg-card text-secondary hover:text-primary'
+                            }`}
+                          >
+                            {lvl.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <p className="text-xs text-muted">
+            Reset restores text size, typeface, spacing, palette, bionic reading and verse numbers.
+          </p>
+
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({
+                  type: 'UPDATE_SETTINGS',
+                  payload: {
+                    fontSize: 1.0,
+                    fontFamily: 'inter',
+                    lineSpacing: 'normal',
+                    bionicReading: false,
+                    bionicIntensity: 'medium',
+                    showVerseNumbers: true,
+                  },
+                });
+                dispatch({ type: 'SET_THEME', payload: 'black' });
+              }}
+              className="text-xs font-semibold text-accent hover:underline"
+            >
+              Reset reading settings
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowOptions(false)}
+              className="rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <div
         ref={scrollContainerRef}
@@ -1700,22 +2039,49 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             style={{
               fontSize: `${1.25 * (state.settings.fontSize || 1)}rem`,
               maxWidth: READING_MEASURE,
-              fontFamily: state.settings.fontFamily === 'system'
-                ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                : (state.settings.fontFamily === 'merriweather' || state.settings.fontFamily === 'serif')
-                ? "'Merriweather', Georgia, serif"
-                : (state.settings.fontFamily === 'atkinson' || state.settings.fontFamily === 'hyper')
-                ? "'Atkinson Hyperlegible', sans-serif"
-                : "'Inter', sans-serif"
+              fontFamily: readerFontFamilyCss(state.settings.fontFamily),
             }}
             onClick={handleVerseClick}
             onKeyDown={handleVerseKeyDown}
           >
             <div
               className="tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0"
-              style={{ lineHeight: `${1.9 * (state.settings.fontSize || 1)}rem` }}
+              style={{ lineHeight: readerLineHeightMultiplier(state.settings.lineSpacing) }}
               dangerouslySetInnerHTML={{ __html: chapterHtml }}
             />
+
+            {chapterAnchor &&
+              anchorReveal !== 'always' &&
+              !recallDismissedOnVisit &&
+              (recallCardDismissCount < 2 || recallGradedOnVisit) && (
+                <RecallCard
+                  bookId={bookId}
+                  chapter={chapter}
+                  anchor={chapterAnchor}
+                  revealed={recallRevealed}
+                  graded={recallGradedOnVisit}
+                  nextLabel={nextLabel}
+                  onReveal={() => setRecallRevealed(true)}
+                  onGrade={gradeChapterRecall}
+                  onDismiss={dismissRecallCard}
+                  onNextChapter={handleNextChapter}
+                />
+              )}
+
+            {nextLabel &&
+              (!chapterAnchor || anchorReveal === 'always' || recallDismissedOnVisit || recallCardDismissCount >= 2) &&
+              !recallGradedOnVisit && (
+                <div className="mt-10 flex justify-end" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    type="button"
+                    onClick={handleNextChapter}
+                    className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+                  >
+                    <span>Next chapter · {nextLabel}</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
           </div>
         )}
       </div>
@@ -1948,23 +2314,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             </div>
           </div>
         </div>
-      )}
-
-      {/* End-of-chapter recall card — slides in once handleScroll crosses ~98%.
-          The best-primed moment this reader gets for free: the reader has just
-          finished the chapter this anchor belongs to. Sits above the bottom nav
-          bar rather than replacing it, so paging away is still one tap. */}
-      {showRecallCard && chapterAnchor && (
-        <RecallCard
-          bookId={bookId}
-          chapter={chapter}
-          anchor={chapterAnchor}
-          revealed={recallRevealed}
-          onReveal={() => setRecallRevealed(true)}
-          onGrade={gradeChapterRecall}
-          onDismiss={dismissRecallCard}
-          chromeVisible={chromeVisible}
-        />
       )}
 
       {/* Bottom Chapter Navigation Bar — hidden while the "Go back to..." return
@@ -2278,6 +2627,41 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           </div>
         );
       })()}
+      <CommentaryModal
+        isOpen={showCommentaryModal}
+        onClose={() => setShowCommentaryModal(false)}
+        bookId={bookId}
+        bookName={getBookName(bookId, bookTitle, state.settings.bibleVersion)}
+      />
+
+      {immerseChapterOpen && chapterMemoryVerses.length > 0 && (
+        <ImmersedReader
+          verse={chapterMemoryVerses[Math.min(immerseVerseIdx, chapterMemoryVerses.length - 1)]}
+          index={Math.min(immerseVerseIdx, chapterMemoryVerses.length - 1)}
+          total={chapterMemoryVerses.length}
+          onPrev={() => {
+            stopChapterSpeech();
+            setImmerseVerseIdx((i) => Math.max(0, i - 1));
+          }}
+          onNext={() => {
+            stopChapterSpeech();
+            setImmerseVerseIdx((i) => Math.min(chapterMemoryVerses.length - 1, i + 1));
+          }}
+          onExit={() => {
+            stopChapterSpeech();
+            setImmerseChapterOpen(false);
+          }}
+          isAutoPlaying={isSpeakingChapter}
+          onToggleAutoPlay={() => {
+            if (isSpeakingChapter) {
+              stopChapterSpeech();
+            } else {
+              speakChapterFrom(Math.min(immerseVerseIdx, chapterMemoryVerses.length - 1));
+            }
+          }}
+          bibleVersion={bibleVersion}
+        />
+      )}
     </div>
   );
 };
