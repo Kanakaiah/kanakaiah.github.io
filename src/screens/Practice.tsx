@@ -10,7 +10,7 @@ import { cueForRepetition, cueLevelToNumber } from '../utils/cue';
 import { buildReviewEvent } from '../utils/reviewLog';
 import { practicePassage } from '../utils/studyText';
 import type { ReviewEvent, SortOrder, Verse } from '../types/models';
-import { useWakeLock } from '../hooks/useWakeLock';
+import { useKeepImmerseAwake, useWakeLock } from '../hooks/useWakeLock';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 
@@ -91,8 +91,7 @@ function sortVersesList(
 }
 
 export const Practice: React.FC = () => {
-  useWakeLock();
-
+  const [keepImmerseAwake] = useKeepImmerseAwake();
   const { state, dispatch } = useApp();
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -117,6 +116,7 @@ export const Practice: React.FC = () => {
 
   const [chooseActivity, setChooseActivity] = useState<boolean>(() => !targetId);
   const [activeMode, setActiveMode] = useState<PracticeModeKey>('read');
+  useWakeLock(activeMode !== 'immersed' || keepImmerseAwake);
   const lastNonImmersedMode = useRef<PracticeModeKey>('read');
 
   useEffect(() => {

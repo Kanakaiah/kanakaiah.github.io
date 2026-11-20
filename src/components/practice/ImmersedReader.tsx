@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Eye,
   EyeOff,
+  Loader2,
   Maximize2,
   Minimize2,
   Square,
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 import type { SortOrder, Verse } from '../../types/models';
 import { practicePassage, studyThoughts } from '../../utils/studyText';
+import { useKeepImmerseAwake, useWakeLock } from '../../hooks/useWakeLock';
 
 const IMMERSE_APPEARANCE_KEY = 'remora_immerse_appearance';
 
@@ -108,6 +110,15 @@ export interface ImmersedReaderProps {
   verseOrder?: SortOrder;
   onChangeVerseOrder?: (order: SortOrder) => void;
   bibleVersion?: string;
+  previousAvailable?: boolean;
+  nextAvailable?: boolean;
+  boundaryLabel?: string | null;
+  isLoadingChapter?: boolean;
+  chapterError?: string | null;
+  onRetryChapter?: () => void;
+  backgroundPlayback?: boolean;
+  continueChapters?: boolean;
+  onContinueChaptersChange?: (enabled: boolean) => void;
 }
 
 export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
@@ -123,7 +134,22 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
   verseOrder,
   onChangeVerseOrder,
   bibleVersion,
+  previousAvailable,
+  nextAvailable,
+  boundaryLabel,
+  isLoadingChapter = false,
+  chapterError = null,
+  onRetryChapter,
+  backgroundPlayback = false,
+  continueChapters,
+  onContinueChaptersChange,
 }) => {
+  const [keepAwake, setKeepAwake] = useKeepImmerseAwake();
+  useWakeLock(keepAwake);
+
+  const canPrev = previousAvailable ?? (total > 1 && index > 0);
+  const canNext = nextAvailable ?? (total > 1 && index < total - 1);
+
   const [appearance, setAppearance] = useState<ImmerseAppearanceSettings>(loadAppearance);
   const [controlsVisible, setControlsVisible] = useState(true);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
@@ -183,9 +209,9 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
       }
       if (e.key === 'Escape') {
         onExit();
-      } else if (e.key === 'ArrowLeft' && total > 1 && index > 0) {
+      } else if (e.key === 'ArrowLeft' && canPrev && !isLoadingChapter) {
         onPrev();
-      } else if (e.key === 'ArrowRight' && total > 1 && index < total - 1) {
+      } else if (e.key === 'ArrowRight' && canNext && !isLoadingChapter) {
         onNext();
       } else if (e.key === ' ') {
         const tag = (e.target as HTMLElement | null)?.tagName;
@@ -197,7 +223,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [appearanceOpen, index, total, onExit, onPrev, onNext, onToggleAutoPlay]);
+  }, [appearanceOpen, canPrev, canNext, isLoadingChapter, onExit, onPrev, onNext, onToggleAutoPlay]);
 
   const themeClasses = useMemo(() => {
     if (appearance.theme === 'paper') {
@@ -494,17 +520,35 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
         </div>
       </main>
 
+      {(isLoadingChapter || chapterError || boundaryLabel) && (
+        <div className={`shrink-0 px-4 sm:px-6 pt-2 flex items-center justify-center gap-2 text-xs ${themeClasses.muted}`}>
+          {isLoadingChapter && <Loader2 className="w-3.5 h-3.5 animate-spin text-accent shrink-0" />}
+          <span className={`truncate ${chapterError ? 'text-red-400 font-medium' : ''}`}>
+            {isLoadingChapter ? 'Loading chapter…' : chapterError || boundaryLabel}
+          </span>
+          {chapterError && onRetryChapter && (
+            <button
+              type="button"
+              onClick={onRetryChapter}
+              className="text-accent font-semibold hover:underline shrink-0"
+            >
+              Retry
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Bottom Bar (keeps slot layout stable when Focus Mode hides outer controls) */}
       <footer className="shrink-0 px-4 sm:px-6 h-20 flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={onPrev}
-          disabled={!controlsVisible || total <= 1 || index <= 0}
-          aria-hidden={!controlsVisible || total <= 1}
+          disabled={!controlsVisible || !canPrev || isLoadingChapter}
+          aria-hidden={!controlsVisible || !(total > 1 || canPrev || canNext)}
           aria-label="Previous verse"
           className={`w-11 h-11 rounded-full flex items-center justify-center border transition-opacity disabled:opacity-30 ${
             themeClasses.surface
-          } ${hiddenControlClass(controlsVisible && total > 1)}`}
+          } ${hiddenControlClass(controlsVisible && (total > 1 || canPrev || canNext))}`}
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -513,12 +557,12 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
           <button
             type="button"
             onClick={onToggleAutoPlay}
-            disabled={!controlsVisible && !isAutoPlaying}
+            disabled={(!controlsVisible && !isAutoPlaying) || (!isAutoPlaying && isLoadingChapter)}
             aria-label={isAutoPlaying ? 'Stop reading aloud' : 'Read aloud'}
             className={`px-5 h-11 rounded-full font-semibold text-sm inline-flex items-center gap-2 transition-all ${
               isAutoPlaying
                 ? 'bg-accent text-[#141414] shadow-sm'
-                : `${themeClasses.surface} border hover:border-accent/60`
+                : `${themeClasses.surface} border hover:border-accent/60 disabled:opacity-40`
             } ${hiddenControlClass(controlsVisible || isAutoPlaying)}`}
           >
             {isAutoPlaying ? (
@@ -529,7 +573,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
             ) : (
               <>
                 <Volume2 className="w-4 h-4" />
-                <span>Listen</span>
+                <span>{backgroundPlayback && !onChangeVerseOrder ? 'Listen from here' : 'Listen'}</span>
               </>
             )}
           </button>
@@ -583,12 +627,12 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
         <button
           type="button"
           onClick={onNext}
-          disabled={!controlsVisible || total <= 1 || index >= total - 1}
-          aria-hidden={!controlsVisible || total <= 1}
+          disabled={!controlsVisible || !canNext || isLoadingChapter}
+          aria-hidden={!controlsVisible || !(total > 1 || canPrev || canNext)}
           aria-label="Next verse"
           className={`w-11 h-11 rounded-full flex items-center justify-center border transition-opacity disabled:opacity-30 ${
             themeClasses.surface
-          } ${hiddenControlClass(controlsVisible && total > 1)}`}
+          } ${hiddenControlClass(controlsVisible && (total > 1 || canPrev || canNext))}`}
         >
           <ChevronRight className="w-5 h-5" />
         </button>
@@ -614,6 +658,33 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
                 Done
               </button>
             </div>
+
+            <label className="flex items-center justify-between gap-3 cursor-pointer py-1">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">Keep Immerse awake</span>
+                <span className={`text-xs ${themeClasses.muted}`}>While Immerse is on screen</span>
+              </div>
+              <input
+                type="checkbox"
+                checked={keepAwake}
+                onChange={(e) => setKeepAwake(e.target.checked)}
+                aria-label="Keep Immerse awake"
+                className="h-4 w-4 accent-[var(--accent)] cursor-pointer"
+              />
+            </label>
+
+            {continueChapters !== undefined && onContinueChaptersChange !== undefined && (
+              <label className="flex items-center justify-between gap-3 cursor-pointer py-1">
+                <span className="text-sm font-medium">Continue chapters</span>
+                <input
+                  type="checkbox"
+                  checked={continueChapters}
+                  onChange={(e) => onContinueChaptersChange(e.target.checked)}
+                  aria-label="Continue chapters"
+                  className="h-4 w-4 accent-[var(--accent)] cursor-pointer"
+                />
+              </label>
+            )}
 
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between text-sm font-medium">

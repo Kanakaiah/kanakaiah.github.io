@@ -19,7 +19,7 @@
 // rather than pre-cached: there are well over a thousand plates and pre-caching them
 // would mean a very large download for images most readers will never open.
 
-const VERSION = 'v10';
+const VERSION = 'v11';
 const SHELL_CACHE = `remora-shell-${VERSION}`;
 const CONTENT_CACHE = `remora-content-${VERSION}`;
 // Keep updated Deuteronomy plates separate from previously cached artwork, without

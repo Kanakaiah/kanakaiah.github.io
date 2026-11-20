@@ -415,7 +415,7 @@ export const Dashboard: React.FC = () => {
       <button
         type="button"
         onClick={() => {
-          const target = readerPath(readingBook.id, readerPos.chapter);
+          const target = readerPath(readingBook.id, readerPos.chapter, readerPos.verse);
           if (target) navigate(target);
         }}
         className="w-full text-left rounded-2xl bg-card border border-card-border px-5 py-4 flex items-center justify-between gap-4 hover:border-card-border-hover transition-colors"

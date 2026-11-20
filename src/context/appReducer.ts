@@ -43,6 +43,7 @@ export const initialState: AppState = {
     anchorReveal: 'tap',
     dailyChapterTarget: 3,
     streakIncludesChapters: true,
+    continueChapters: true,
   }
 };
 

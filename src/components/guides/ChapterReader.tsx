@@ -9,6 +9,11 @@ import { ImmersedReader } from '../practice/ImmersedReader';
 import { ReviewGrades } from '../practice/PracticeFeedback';
 import { Modal } from '../ui/Modal';
 import { saveReaderPosition } from '../../utils/readerPosition';
+import {
+  adjacentReadingChapter,
+  mergeReadingWindow,
+} from '../../utils/readerContinuation';
+import { useKeepImmerseAwake } from '../../hooks/useWakeLock';
 import { getBookName } from '../../utils/localization';
 import {
   CrossReferenceIndex,
@@ -352,53 +357,263 @@ function renderHeading(text: string, _borrowed = false): string {
   return `<div class="${HEADING_CLASSES}">${text}</div>`;
 }
 
+interface StreamChapter {
+  key: string;
+  bookId: string;
+  chapter: number;
+  verses: Verse[];
+}
+
+function getMemorizedSetForChapter(
+  savedVerses: MemoryVerse[],
+  targetBookId: string,
+  targetChapter: number,
+  version: string,
+): Set<number> {
+  const memSet = new Set<number>();
+  const englishBookName = ALL_BOOKS.find(b => b.id === targetBookId)?.name || targetBookId;
+  const localizedBookName = getBookName(targetBookId, englishBookName, version);
+  const validPrefixes = [
+    `${englishBookName} ${targetChapter}:`,
+    `${localizedBookName} ${targetChapter}:`,
+  ];
+
+  savedVerses.forEach(v => {
+    const normalizedRef = (v.ref || '').replace(/[–—]/g, '-').trim();
+    for (const prefix of validPrefixes) {
+      if (normalizedRef.startsWith(prefix)) {
+        const versePart = normalizedRef.substring(prefix.length).trim();
+        if (versePart.includes('-')) {
+          const [start, end] = versePart.split('-').map(n => parseInt(n.trim(), 10));
+          if (!isNaN(start) && !isNaN(end)) {
+            for (let i = start; i <= end; i++) memSet.add(i);
+          }
+        } else if (versePart.includes(',')) {
+          versePart.split(',').forEach(n => {
+            const num = parseInt(n.trim(), 10);
+            if (!isNaN(num)) memSet.add(num);
+          });
+        } else {
+          const num = parseInt(versePart, 10);
+          if (!isNaN(num)) memSet.add(num);
+        }
+        break;
+      }
+    }
+  });
+
+  return memSet;
+}
+
+function buildChapterHtml(params: {
+  bookId: string;
+  chapter: number;
+  verses: Verse[];
+  borrowedHeadings: Record<number, string[]> | null;
+  selectedVerses: number[];
+  memorizedVerses: Set<number>;
+  flashVerse: number | null;
+  activeTtsVerse: number | null;
+  settings: UserSettings;
+  crossRefIndex: CrossReferenceIndex | null;
+  paragraphBreaks: Record<string, Record<string, number[]>> | null;
+}): string {
+  const {
+    bookId,
+    chapter,
+    verses,
+    borrowedHeadings,
+    selectedVerses,
+    memorizedVerses,
+    flashVerse,
+    activeTtsVerse,
+    settings,
+    crossRefIndex,
+    paragraphBreaks,
+  } = params;
+  let html = '';
+  const display = readingDisplay(settings);
+  const bollsId = BOLLS_BIBLE_MAP[bookId];
+  let quoteLevel = 0;
+
+  verses.forEach((v) => {
+    let text = v.text;
+
+    let heading = '';
+    let hasHeading = false;
+    text = text.replace(/<b>(.*?)<\/b>/gi, (_, hText) => {
+      hasHeading = true;
+      if (display.showSectionHeadings) heading += renderHeading(hText);
+      return '';
+    });
+
+    if (!hasHeading && borrowedHeadings) {
+      for (const borrowed of borrowedHeadings[v.verse] || []) {
+        hasHeading = true;
+        if (display.showSectionHeadings) heading += renderHeading(borrowed, true);
+      }
+    }
+
+    const hasLeadingBr = /^\s*<br\s*\/?>/i.test(text);
+    text = text.replace(/^(?:\s*<br\s*\/?>\s*)+/gi, '');
+    text = text.replace(/(?:\s*<br\s*\/?>\s*)+$/gi, '');
+
+    const isOtQuoteVerse = otQuotes[bollsId]?.[chapter]?.includes(v.verse);
+    if (isOtQuoteVerse) {
+      const parts = text.split(/([\u201c\u201d\u2018\u2019]|(?<!\w)\u2019|\u2019(?!\w))/);
+      let newText = '';
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (!part) continue;
+        if (part === '"') {
+          if (quoteLevel > 0) quoteLevel--;
+          else quoteLevel++;
+          newText += part;
+        } else if (part === '\u201c' || part === '\u2018') {
+          quoteLevel++;
+          newText += part;
+        } else if (part === '\u201d' || part === '\u2019') {
+          quoteLevel = Math.max(0, quoteLevel - 1);
+          newText += part;
+        } else if (quoteLevel > 0 && part.trim().length > 0) {
+          newText += `<span class="uppercase">${part}</span>`;
+        } else {
+          newText += part;
+        }
+      }
+      text = newText;
+    } else {
+      quoteLevel = 0;
+    }
+
+    let psalmTitle = '';
+    if (bookId === 'psalms' && v.verse === 1) {
+      const titleMatch = text.match(/^([\s\S]*?[a-z]\.)([A-Z][\s\S]*)$/);
+      if (titleMatch) {
+        psalmTitle = `<div class="text-sm font-medium text-muted italic mb-2 tracking-wide leading-relaxed">${titleMatch[1]}</div>`;
+        text = titleMatch[2];
+      }
+    }
+
+    text = text.replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2');
+    text = text.replace(/<S>\d+<\/S>/gi, '');
+    text = text.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
+    text = text.replace(/<i>(.*?)<\/i>/gi, '<span class="opacity-60 italic">$1</span>');
+
+    if (settings.bionicReading) {
+      text = text.replace(/([a-zA-Z\u00C0-\u024F]+)(?![^<]*>)/g, (word) => {
+        const cut = bionicBoldLength(word.length, settings.bionicIntensity);
+        return `<strong class="font-bold">${word.substring(0, cut)}</strong>${word.substring(cut)}`;
+      });
+    }
+
+    const chapterBreaks = paragraphBreaks?.[bookId]?.[String(chapter)];
+    const isFirstVerseOfChapter = verses.length > 0 && v.verse === verses[0].verse;
+    const isParagraphStart = !isFirstVerseOfChapter && (
+      chapterBreaks ? chapterBreaks.includes(v.verse) : (hasHeading || hasLeadingBr)
+    );
+
+    if (heading) {
+      html += heading;
+    } else if (isParagraphStart) {
+      html += `<div class="block w-full h-5"></div>`;
+    }
+    if (psalmTitle) {
+      html += psalmTitle;
+    }
+
+    const inLibrary = memorizedVerses.has(v.verse);
+    const isSelected = selectedVerses.includes(v.verse);
+    const isSpeaking = activeTtsVerse === v.verse;
+
+    let extraClass = '';
+    if (v.verse === flashVerse) {
+      extraClass = 'bg-green-500/30 rounded px-1 -mx-1 transition-colors duration-1000';
+    } else if (isSelected) {
+      extraClass = 'bg-accent/20 text-primary underline decoration-accent underline-offset-4 decoration-2 rounded px-1 -mx-1';
+    } else if (isSpeaking) {
+      extraClass = 'bg-accent/15 rounded px-1 -mx-1';
+    } else if (inLibrary) {
+      extraClass = 'verse-memorized rounded px-1 -mx-1';
+    }
+
+    const pilcrowHtml = isParagraphStart && display.showParagraphMarks
+      ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>`
+      : '';
+    const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
+    const vid = toVerseIndex(bookId, chapter, v.verse);
+    const hasCrossRefs = vid !== null && !!crossRefIndex?.hasConnections(vid, 4);
+    const crossRefMarker = hasCrossRefs && display.showCrossRefMarkers
+      ? `<sup class="xref-marker text-[0.5em] text-accent/70 hover:text-accent ml-0.5 cursor-pointer align-super transition-colors" data-xref-book="${bookId}" data-xref-chapter="${chapter}" data-xref-verse="${v.verse}" role="button" tabindex="0" aria-label="Cross references for verse ${v.verse}">✻</sup>`
+      : '';
+    const verseNumHtml = display.showVerseNumbers
+      ? `<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup>`
+      : '';
+
+    const bookNum = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
+    const ariaLabel = `Verse ${v.verse}${isSelected ? ', selected' : ''}${inLibrary ? ', in your library' : ''}`;
+    html += `<span class="inline verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse-book="${bookId}" data-verse-chapter="${chapter}" data-verse="${v.verse}" data-verse-ref="${bookNum}-${chapter}-${v.verse}" tabindex="0" role="button" aria-pressed="${isSelected}" aria-label="${ariaLabel}">${pilcrowHtml}${verseNumHtml}<span class="inline pointer-events-none">${text}</span>${crossRefMarker} </span>`;
+  });
+
+  return html;
+}
+
 export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClose }: ChapterReaderProps) {
   const [verses, setVerses] = useState<Verse[]>([]);
-  // LSB headings for the loaded chapter, kept separate from `verses` so they never leak
-  // into copied or memorized text. Null when reading the LSB itself (its own headings
-  // are already inline) or when the extra request failed.
+  const [chapterWindow, setChapterWindow] = useState<StreamChapter[]>([]);
+  const [prefetchedHeadings, setPrefetchedHeadings] = useState<Record<string, Record<number, string[]> | null>>({});
+  const [nextPrefetchLoading, setNextPrefetchLoading] = useState(false);
+  const [nextPrefetchError, setNextPrefetchError] = useState<string | null>(null);
+  const nextPrefetchKeyRef = useRef<string | null>(null);
+
   const [borrowedHeadings, setBorrowedHeadings] = useState<Record<number, string[]> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // A single verse to scroll-to and briefly flash once its chapter is loaded and on
-  // screen. Component state (not a URL param) so it's fully under our control — every
-  // consumer below is required to set it explicitly, and it's consumed (cleared) the
-  // instant it fires, so it can never resurface during later, unrelated navigation the
-  // way a lingering URL param could.
   const [pendingHighlight, setPendingHighlight] = useState<{ book: string; chapter: number; verse: number } | null>(null);
-  // The verse currently flashing green, if any. Baked directly into the html-building
-  // memo below (alongside the selected/memorized/paragraph classes) instead of being
-  // applied via an out-of-band `el.classList.add(...)` DOM mutation — that used to be
-  // silently wiped whenever the memo recomputed for an unrelated reason (e.g. the
-  // one-time paragraphBreaks fetch resolving) mid-flash, since dangerouslySetInnerHTML
-  // replaces the whole subtree wholesale. Being real state, it now survives any such
-  // recompute automatically.
-  const [flashVerse, setFlashVerse] = useState<number | null>(null);
-  // Cross-reference "back" trail — a real stack (push on every cross-reference jump,
-  // pop on "Go back"), not a single slot, so jumping through several cross-references
-  // in a row doesn't silently discard earlier stops. Cleared on any navigation that
-  // isn't itself a cross-reference jump or a "Go back" (Next/Prev/Navigator), so a
-  // stale trail can't reappear pointing somewhere that no longer makes sense.
+  const [flashVerse, setFlashVerse] = useState<{ book: string; chapter: number; verse: number } | null>(null);
   const [returnStack, setReturnStack] = useState<{ book: string; chapter: number; verse: number }[]>([]);
-  // Set only when the current cross-reference session was opened via the return pill's
-  // own "Refs" peek (viewing references *for the return target*, without actually
-  // navigating there). In that case the verse-group a clicked reference came from is
-  // the peeked verse, not the user's actual physical position — pushing that as the
-  // "source" would duplicate the stack's current top instead of recording where the
-  // user really was, e.g. "Go back" from the new verse would land back on the same
-  // peeked verse a second time instead of returning to the chapter they'd actually
-  // been reading.
   const [crossRefPeekSource, setCrossRefPeekSource] = useState<{ book: string; chapter: number } | null>(null);
   const navigate = useNavigate();
 
-  // Every move between chapters goes through here. `replace` for jumps that shouldn't
-  // become their own history entry (cross-references, the book navigator, "go back"),
-  // push for the ordinary next/previous walk so the browser's back button retraces it.
-  const goToChapter = (targetBookId: string, targetChapter: number, replace = false) => {
-    const path = readerPath(targetBookId, targetChapter);
-    if (path) navigate(path, { replace });
-  };
-  
+  const { state, dispatch } = useApp();
+  const bibleVersion = state.settings.bibleVersion || 'LSB';
+  const continueChapters = state.settings.continueChapters !== false;
+  const { showToast } = useToast();
+  const [keepImmerseAwake, setKeepImmerseAwake] = useKeepImmerseAwake();
+
+  const [activeStreamPos, setActiveStreamPos] = useState<{ bookId: string; chapter: number; verse: number }>({
+    bookId,
+    chapter,
+    verse: initialVerse || 1,
+  });
+
+  const activeBookId = activeStreamPos.bookId;
+  const activeChapterNum = activeStreamPos.chapter;
+  const activeBookObj = useMemo(() => ALL_BOOKS.find(b => b.id === activeBookId) || null, [activeBookId]);
+  const activeBookTitle = activeBookObj?.name || bookTitle;
+
+  const activeWindowEntry = useMemo(
+    () => chapterWindow.find(c => c.bookId === activeBookId && c.chapter === activeChapterNum) || null,
+    [chapterWindow, activeBookId, activeChapterNum]
+  );
+  const activeVerses = activeWindowEntry ? activeWindowEntry.verses : verses;
+
+  // Refs to coordinate seamless cross-chapter navigation inside Immerse and TTS without tearing them down.
+  const preserveModeOnRouteChangeRef = useRef(false);
+  const immerseContinuationTargetRef = useRef<'first' | 'last' | null>(null);
+  const immerseOpenRef = useRef(false);
+  const continueChaptersRef = useRef(continueChapters);
+  const bibleVersionRef = useRef(bibleVersion);
+  const activeStreamPosRef = useRef(activeStreamPos);
+  const programmaticScrollUntilRef = useRef(0);
+  const isUnmountedRef = useRef(false);
+
+  useEffect(() => {
+    continueChaptersRef.current = continueChapters;
+    bibleVersionRef.current = bibleVersion;
+    activeStreamPosRef.current = activeStreamPos;
+  }, [continueChapters, bibleVersion, activeStreamPos]);
+
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
@@ -409,10 +624,47 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   const [immerseChapterOpen, setImmerseChapterOpen] = useState(false);
   const [immerseVerseIdx, setImmerseVerseIdx] = useState(0);
   const [isSpeakingChapter, setIsSpeakingChapter] = useState(false);
+  const [activeTtsVerse, setActiveTtsVerse] = useState<{ bookId: string; chapter: number; verse: number } | null>(null);
+  const [followAudio, setFollowAudio] = useState(true);
+  const followAudioRef = useRef(true);
+  const speechIdRef = useRef(0);
+
   const [advancedReadingOptionsOpen, setAdvancedReadingOptionsOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
+  const [selectionScope, setSelectionScope] = useState<{ bookId: string; chapter: number }>({
+    bookId,
+    chapter,
+  });
+  const [showAddOptions, setShowAddOptions] = useState(false);
+  const [asOnePassage, setAsOnePassage] = useState(true);
+  const [memoryHookText, setMemoryHookText] = useState('');
+  const [startLearningNow, setStartLearningNow] = useState(true);
+  const [showNavigator, setShowNavigator] = useState(false);
+  const [showVersionPicker, setShowVersionPicker] = useState(false);
+  const [navigatorBook, setNavigatorBook] = useState(bookId);
+  const chapterGridRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const versesChapterRef = useRef<string>('');
+  const consumedHighlightRef = useRef<{ book: string; chapter: number; verse: number } | null>(null);
+
+  useEffect(() => {
+    immerseOpenRef.current = immerseChapterOpen;
+  }, [immerseChapterOpen]);
+
+  useEffect(() => {
+    followAudioRef.current = followAudio;
+  }, [followAudio]);
+
+  const goToChapter = useCallback((targetBookId: string, targetChapter: number, replace = false) => {
+    const path = readerPath(targetBookId, targetChapter);
+    if (path) navigate(path, { replace });
+  }, [navigate]);
+
   const stopChapterSpeech = useCallback(() => {
+    speechIdRef.current += 1;
     try {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -421,80 +673,234 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       // Ignore speech synthesis errors on unsupported runtimes.
     }
     setIsSpeakingChapter(false);
+    setActiveTtsVerse(null);
   }, []);
 
   useEffect(() => {
-    saveReaderPosition(bookId, chapter);
-  }, [bookId, chapter]);
-
-  useEffect(() => {
+    isUnmountedRef.current = false;
     return () => {
+      isUnmountedRef.current = true;
       stopChapterSpeech();
     };
   }, [stopChapterSpeech]);
 
-  useEffect(() => { 
+  useEffect(() => {
+    saveReaderPosition(activeBookId, activeChapterNum, activeStreamPos.verse);
+  }, [activeBookId, activeChapterNum, activeStreamPos.verse]);
+
+  useEffect(() => {
     setShowOptions(false);
     setShowOverflowMenu(false);
     setShowCommentaryModal(false);
+    setNextPrefetchError(null);
+    nextPrefetchKeyRef.current = null;
+
+    if (preserveModeOnRouteChangeRef.current) {
+      preserveModeOnRouteChangeRef.current = false;
+      setActiveStreamPos(prev => ({
+        bookId,
+        chapter,
+        verse: immerseContinuationTargetRef.current === 'last' ? Math.max(1, prev.verse) : (initialVerse || 1),
+      }));
+      return;
+    }
+
     setImmerseChapterOpen(false);
     setImmerseVerseIdx(0);
+    immerseContinuationTargetRef.current = null;
     stopChapterSpeech();
     setScrollProgress(0);
+    setActiveStreamPos({ bookId, chapter, verse: initialVerse || 1 });
+    setSelectionScope({ bookId, chapter });
+    setSelectedVerses([]);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
     }
-  }, [bookId, chapter, stopChapterSpeech]);
-  const { state, dispatch } = useApp();
-  const bibleVersion = state.settings.bibleVersion || 'LSB';
-  const { showToast } = useToast();
+  }, [bookId, chapter, initialVerse, stopChapterSpeech]);
 
-  const chapterMemoryVerses = useMemo<MemoryVerse[]>(() => {
-    const localizedBook = getBookName(bookId, bookTitle, bibleVersion);
-    const nowIso = new Date().toISOString();
-    return verses.map((v) => ({
-      id: `${bookId}-${chapter}-${v.verse}`,
-      ref: `${localizedBook} ${chapter}:${v.verse}`,
-      text: stripHtmlTags(v.text),
-      translation: bibleVersion,
-      addedDate: nowIso,
-      status: 'learning',
-      sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: nowIso },
-      streak: 0,
-      attempts: 0,
-    }));
-  }, [verses, bookId, bookTitle, bibleVersion, chapter]);
+  const buildMemoryVersesForChapter = useCallback(
+    (targetBookId: string, targetChapter: number, targetVerses: Verse[]): MemoryVerse[] => {
+      const targetEnglish = ALL_BOOKS.find(b => b.id === targetBookId)?.name || targetBookId;
+      const localizedBook = getBookName(targetBookId, targetEnglish, bibleVersion);
+      const nowIso = new Date().toISOString();
+      return targetVerses.map((v) => ({
+        id: `${targetBookId}-${targetChapter}-${v.verse}`,
+        ref: `${localizedBook} ${targetChapter}:${v.verse}`,
+        text: stripHtmlTags(v.text),
+        translation: bibleVersion,
+        addedDate: nowIso,
+        status: 'learning',
+        sm2: { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: nowIso },
+        streak: 0,
+        attempts: 0,
+      }));
+    },
+    [bibleVersion]
+  );
 
-  const speakChapterFrom = useCallback(
-    (startIndex = 0) => {
+  const chapterMemoryVerses = useMemo<MemoryVerse[]>(
+    () => buildMemoryVersesForChapter(activeBookId, activeChapterNum, activeVerses),
+    [buildMemoryVersesForChapter, activeBookId, activeChapterNum, activeVerses]
+  );
+
+  const speakChapterQueue = useCallback(
+    (
+      targetBookId: string,
+      targetChapter: number,
+      targetVerses: Verse[],
+      startIndex: number,
+      boundedSelection: boolean,
+    ) => {
       if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
         showToast('Speech synthesis is not available on this device.', 'error');
         return;
       }
-      if (chapterMemoryVerses.length === 0) return;
+      if (targetVerses.length === 0) return;
+
+      const mySpeechId = ++speechIdRef.current;
       window.speechSynthesis.cancel();
-      const textToRead = chapterMemoryVerses
-        .slice(startIndex)
-        .map((mv) => mv.text)
-        .join(' ');
-      if (!textToRead.trim()) return;
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.rate = 0.95;
-      utterance.onend = () => setIsSpeakingChapter(false);
-      utterance.onerror = () => setIsSpeakingChapter(false);
       setIsSpeakingChapter(true);
-      window.speechSynthesis.speak(utterance);
+      setFollowAudio(true);
+      followAudioRef.current = true;
+
+      const speakAt = (pos: number, queueBookId: string, queueChapter: number, queueVerses: Verse[]) => {
+        if (isUnmountedRef.current || speechIdRef.current !== mySpeechId) return;
+
+        if (pos >= queueVerses.length) {
+          if (!boundedSelection && continueChaptersRef.current) {
+            const nextCoord = adjacentReadingChapter(ALL_BOOKS, queueBookId, queueChapter, 1);
+            if (nextCoord) {
+              const bollsId = BOLLS_BIBLE_MAP[nextCoord.bookId];
+              const version = bibleVersionRef.current;
+              if (bollsId) {
+                fetchChapterText(version, bollsId, nextCoord.chapter)
+                  .then((nextVerses) => {
+                    if (isUnmountedRef.current || speechIdRef.current !== mySpeechId || nextVerses.length === 0) {
+                      return;
+                    }
+                    const nextKey = `${nextCoord.bookId}:${nextCoord.chapter}`;
+                    const nextEntry: StreamChapter = {
+                      key: nextKey,
+                      bookId: nextCoord.bookId,
+                      chapter: nextCoord.chapter,
+                      verses: nextVerses,
+                    };
+                    if (immerseOpenRef.current) {
+                      preserveModeOnRouteChangeRef.current = true;
+                      immerseContinuationTargetRef.current = 'first';
+                      goToChapter(nextCoord.bookId, nextCoord.chapter, true);
+                    } else if (followAudioRef.current) {
+                      setChapterWindow(prev => mergeReadingWindow(prev, nextEntry, nextCoord, ALL_BOOKS));
+                    }
+                    setActiveStreamPos({
+                      bookId: nextCoord.bookId,
+                      chapter: nextCoord.chapter,
+                      verse: nextVerses[0].verse,
+                    });
+                    speakAt(0, nextCoord.bookId, nextCoord.chapter, nextVerses);
+                  })
+                  .catch(() => {
+                    if (speechIdRef.current === mySpeechId) {
+                      setIsSpeakingChapter(false);
+                      setActiveTtsVerse(null);
+                      showToast("Couldn't load next chapter for audio.", 'error');
+                    }
+                  });
+                return;
+              }
+            }
+          }
+          setIsSpeakingChapter(false);
+          setActiveTtsVerse(null);
+          return;
+        }
+
+        const item = queueVerses[pos];
+        const plain = stripHtmlTags(item.text);
+        if (!plain.trim()) {
+          speakAt(pos + 1, queueBookId, queueChapter, queueVerses);
+          return;
+        }
+
+        setActiveTtsVerse({ bookId: queueBookId, chapter: queueChapter, verse: item.verse });
+        if (immerseOpenRef.current) {
+          setActiveStreamPos(prev =>
+            prev.bookId === queueBookId && prev.chapter === queueChapter
+              ? { ...prev, verse: item.verse }
+              : { bookId: queueBookId, chapter: queueChapter, verse: item.verse }
+          );
+          setImmerseVerseIdx(pos);
+        } else if (followAudioRef.current) {
+          setActiveStreamPos({ bookId: queueBookId, chapter: queueChapter, verse: item.verse });
+          programmaticScrollUntilRef.current = performance.now() + 700;
+          requestAnimationFrame(() => {
+            const el = document.querySelector(
+              `[data-verse-book="${queueBookId}"][data-verse-chapter="${queueChapter}"][data-verse="${item.verse}"]`
+            );
+            el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+        }
+
+        const utterance = new SpeechSynthesisUtterance(plain);
+        utterance.rate = 0.95;
+        utterance.onend = () => {
+          if (speechIdRef.current !== mySpeechId) return;
+          speakAt(pos + 1, queueBookId, queueChapter, queueVerses);
+        };
+        utterance.onerror = () => {
+          if (speechIdRef.current === mySpeechId) {
+            setIsSpeakingChapter(false);
+            setActiveTtsVerse(null);
+          }
+        };
+        window.speechSynthesis.speak(utterance);
+      };
+
+      const clampedStart = Math.max(0, Math.min(startIndex, targetVerses.length - 1));
+      speakAt(clampedStart, targetBookId, targetChapter, targetVerses);
     },
-    [chapterMemoryVerses, showToast],
+    [goToChapter, showToast]
+  );
+
+  const speakChapterFrom = useCallback(
+    (startIndex = 0) => {
+      speakChapterQueue(activeBookId, activeChapterNum, activeVerses, startIndex, false);
+    },
+    [speakChapterQueue, activeBookId, activeChapterNum, activeVerses]
   );
 
   const toggleSpeakChapter = useCallback(() => {
     if (isSpeakingChapter) {
       stopChapterSpeech();
-    } else {
-      speakChapterFrom(0);
+      return;
     }
-  }, [isSpeakingChapter, stopChapterSpeech, speakChapterFrom]);
+    if (!immerseChapterOpen && selectedVerses.length > 0) {
+      const targetEntry = chapterWindow.find(
+        c => c.bookId === selectionScope.bookId && c.chapter === selectionScope.chapter
+      );
+      const sourceVerses = targetEntry ? targetEntry.verses : activeVerses;
+      const ordered = [...selectedVerses].sort((a, b) => a - b);
+      const selectedQueue = sourceVerses.filter(v => ordered.includes(v.verse));
+      if (selectedQueue.length > 0) {
+        speakChapterQueue(selectionScope.bookId, selectionScope.chapter, selectedQueue, 0, true);
+        return;
+      }
+    }
+    const startIdx = Math.max(0, activeVerses.findIndex(v => v.verse >= activeStreamPos.verse));
+    speakChapterQueue(activeBookId, activeChapterNum, activeVerses, startIdx, false);
+  }, [
+    isSpeakingChapter,
+    stopChapterSpeech,
+    immerseChapterOpen,
+    selectedVerses,
+    chapterWindow,
+    selectionScope,
+    activeVerses,
+    activeStreamPos.verse,
+    activeBookId,
+    activeChapterNum,
+    speakChapterQueue,
+  ]);
   
   const handleCreateGroup = (e: React.FormEvent) => {
     e.preventDefault();
@@ -514,10 +920,10 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // moment a reader leaves that page. Guides key anchors by chapter number only, so
   // this doesn't apply to single-chapter books where the guide's "chapters" are
   // really verse ranges.
-  const currentGuide: any = useMemo(() => ALL_GUIDES.find((g: any) => g.id === bookId), [bookId]);
+  const currentGuide: any = useMemo(() => ALL_GUIDES.find((g: any) => g.id === activeBookId), [activeBookId]);
   const chapterAnchor = useMemo(() => {
-    return currentGuide?.anchors?.find((a: any) => Number(a.ch) === chapter) || null;
-  }, [currentGuide, chapter]);
+    return currentGuide?.anchors?.find((a: any) => Number(a.ch) === activeChapterNum) || null;
+  }, [currentGuide, activeChapterNum]);
   // The neighboring chapters' own anchors, so paging becomes a repetition of the
   // chain instead of a bare number — "‹ STEW 25" tells you what's back there without
   // having to go look. Only meaningful within the same book (a book boundary already
@@ -525,37 +931,22 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   // for single-chapter books, whose "anchors" are verse ranges, not chapter numbers.
   const neighborAnchors = useMemo(() => {
     if (!currentGuide?.anchors) return { prev: null as string | null, next: null as string | null };
-    // 'never' opts out of anchors appearing inline anywhere they weren't asked
-    // for, which includes the paging hints, not just the header chip.
     if (state.settings.anchorReveal === 'never') return { prev: null, next: null };
     const isVerseBased = !!currentGuide.architecture?.some((b: any) => b.unit === 'verse');
     if (isVerseBased) return { prev: null, next: null };
     const find = (ch: number) => currentGuide.anchors!.find((a: any) => Number(a.ch) === ch)?.word || null;
-    return { prev: find(chapter - 1), next: find(chapter + 1) };
-  }, [currentGuide, chapter, state.settings.anchorReveal]);
+    return { prev: find(activeChapterNum - 1), next: find(activeChapterNum + 1) };
+  }, [currentGuide, activeChapterNum, state.settings.anchorReveal]);
   const [showCrossReferences, setShowCrossReferences] = useState<string[] | null>(null);
   const [crossRefInitialSection, setCrossRefInitialSection] = useState<'references' | 'referenced-by' | 'same-word' | undefined>(undefined);
   const [crossRefIndex, setCrossRefIndex] = useState<CrossReferenceIndex | null>(getCrossReferenceIndexIfLoaded);
   const [paragraphBreaks, setParagraphBreaks] = useState<Record<string, Record<string, number[]>> | null>(cachedParagraphBreaks);
 
-  // Anchor reveal preference — 'tap' (default) hides the word until the reader taps
-  // for it, matching the header chip's own toggle below; 'always' restores the old
-  // always-visible behavior; 'never' hides it everywhere but the end-of-chapter card.
   const anchorReveal = state.settings.anchorReveal || 'tap';
 
-  // This chapter's own recall/read record, if any — read to show "read N times" and
-  // to seed the recall card's grading with whatever SM2 state already exists.
-  const chapterKey = useMemo(() => chapterProgressKey(bookId, chapter), [bookId, chapter]);
+  const chapterKey = useMemo(() => chapterProgressKey(activeBookId, activeChapterNum), [activeBookId, activeChapterNum]);
   const chapterRecord = state.chapterProgress[chapterKey];
 
-  // End-of-chapter recall card — fires once per chapter visit when the reader
-  // scrolls to the bottom, the same moment handleScroll already detects for the
-  // reading-progress rule. Suppressed once the anchor is already shown inline
-  // (anchorReveal === 'always') and capped at two dismissals per session so a
-  // reader who isn't interested isn't nagged on every chapter for the rest of
-  // their visit.
-  // Clean up redundant popup trigger state now that RecallCard renders inline at
-  // the end of the chapter column.
   const [recallCardShownThisVisit, setRecallCardShownThisVisit] = useState(false);
   const [recallRevealed, setRecallRevealed] = useState(false);
   const [recallGradedOnVisit, setRecallGradedOnVisit] = useState(false);
@@ -565,30 +956,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     setRecallRevealed(false);
     setRecallGradedOnVisit(false);
     setRecallDismissedOnVisit(false);
-  }, [bookId, chapter]);
+  }, [activeBookId, activeChapterNum]);
 
-  // Reading is counted, never graded, and no longer feeds the streak.
-  //
-  // Crossing 98% scroll used to dispatch RECORD_ACTIVITY, which meant the flame on
-  // Today — the app's primary motivator — was fully maintainable by scrolling, with
-  // zero retrieval. The recall card that would have made the read count is dismissable
-  // and stops appearing after two dismissals per session, so this was not a rare path.
-  // ChapterProgress already states the invariant this restores: conflating "read" with
-  // "recalled" lets scrolling inflate apparent mastery.
-  //
-  // Reading is still worth surfacing — as its own number beside the streak, not inside
-  // it. That display lands with the session-summary work; for now readCount keeps
-  // accruing here and simply doesn't claim to be recall.
   const markChapterRead = useCallback(() => {
-    dispatch({ type: 'MARK_CHAPTER_READ', payload: { bookId, chapter } });
-  }, [dispatch, bookId, chapter]);
+    dispatch({ type: 'MARK_CHAPTER_READ', payload: { bookId: activeBookId, chapter: activeChapterNum } });
+  }, [dispatch, activeBookId, activeChapterNum]);
 
   const gradeChapterRecall = (score: number) => {
     const base = chapterRecord?.sm2 || { interval: 0, repetition: 0, efactor: 2.5, nextDueDate: new Date().toISOString() };
     const { newSM2, newStatus } = evaluateSM2(base, score, 'anchor', state.settings.intervalScale ?? 1);
     const updated: ChapterProgress = {
-      bookId,
-      chapter,
+      bookId: activeBookId,
+      chapter: activeChapterNum,
       sm2: newSM2,
       status: newStatus,
       attempts: (chapterRecord?.attempts || 0) + 1,
@@ -598,10 +977,6 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       lastReadDate: chapterRecord?.lastReadDate || null,
     };
     dispatch({ type: 'GRADE_CHAPTER_PROGRESS', payload: updated });
-    // The eighth and last grading surface to start recording history. The end-of-chapter
-    // card is the one retrieval a reader meets without going looking for it, so leaving
-    // it out would have biased the record toward deliberate drilling and away from
-    // recall that happens in the course of ordinary reading.
     dispatch({
       type: 'RECORD_REVIEW',
       payload: buildReviewEvent({
@@ -623,37 +998,12 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     recallCardDismissCount += 1;
     setRecallDismissedOnVisit(true);
   };
-  const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
-  const [showAddOptions, setShowAddOptions] = useState(false);
-  const [asOnePassage, setAsOnePassage] = useState(true);
-  const [memoryHookText, setMemoryHookText] = useState('');
-  const [startLearningNow, setStartLearningNow] = useState(true);
-  const [showNavigator, setShowNavigator] = useState(false);
-  const [showVersionPicker, setShowVersionPicker] = useState(false);
-  const [navigatorBook, setNavigatorBook] = useState(bookId);
-  const chapterGridRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [retryCount, setRetryCount] = useState(0);
-  // Which "book-chapter" the current `verses` state actually holds data for. A ref, not
-  // state: it must be visible to the pendingHighlight effect below within the *same*
-  // commit that a chapter change starts a new fetch, and sibling effects in one commit
-  // still see each other's pre-update state snapshot — only a ref mutates in place in
-  // time for that. See the fetch effect and the pendingHighlight effect for how this
-  // prevents a cross-chapter jump from flashing against the outgoing chapter's verses.
-  const versesChapterRef = useRef<string>('');
-  // Marks which pendingHighlight object has already been scheduled to fire, so the
-  // highlight effect can recognize "already handled" without nulling pendingHighlight
-  // state (see that effect for why nulling it causes a self-cancellation bug).
-  const consumedHighlightRef = useRef<{ book: string; chapter: number; verse: number } | null>(null);
 
-  // Chrome (top header + bottom nav) visibility — tap-to-toggle, replacing the
-  // old scroll-direction heuristic. Visible on entry/navigation for orientation;
-  // a tap on empty space toggles it, a tap on a verse/word always reveals it
-  // (never hides it) so selecting/looking up a word never feels like it also
-  // yanked the chrome away.
+  // Chrome (top header + bottom nav) visibility
   const [chromeVisible, setChromeVisible] = useState(true);
   const headerRef = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const scrollAnchorSnapshotRef = useRef<{ key: string; top: number; prevFirstKey: string } | null>(null);
 
   const revealChrome = useCallback(() => setChromeVisible(true), []);
   const toggleChrome = useCallback(() => setChromeVisible(v => !v), []);
@@ -680,23 +1030,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     }
   };
 
-  // Reorient the reader after any navigation (button, swipe, or jump-to),
-  // regardless of whether chrome happened to be hidden beforehand.
   useEffect(() => {
     setChromeVisible(true);
   }, [bookId, chapter]);
 
-  // Keep the scroll container's top padding in sync with the fixed header's
-  // actual rendered height (varies slightly with the translation badge text),
-  // so verse 1 never starts out hidden underneath it.
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
-    // getBoundingClientRect (not ResizeObserver's contentRect) — contentRect
-    // excludes the element's own padding, which here includes
-    // env(safe-area-inset-top): on an iPhone with a notch/Dynamic Island that's
-    // 47-59px alone, so contentRect undercounted the header's true height by
-    // that much and left the first line or two of verse 1 hidden underneath it.
     const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
     const observer = new ResizeObserver(measure);
     observer.observe(el);
@@ -704,46 +1044,151 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     return () => observer.disconnect();
   }, []);
 
+  React.useLayoutEffect(() => {
+    const snap = scrollAnchorSnapshotRef.current;
+    scrollAnchorSnapshotRef.current = null;
+    if (!snap || !scrollContainerRef.current) return;
+    if (chapterWindow[0]?.key === snap.prevFirstKey) return;
+    const el = scrollContainerRef.current.querySelector(`[data-chapter-key="${snap.key}"]`) as HTMLElement | null;
+    if (!el) return;
+    const delta = el.getBoundingClientRect().top - snap.top;
+    if (Math.abs(delta) > 1) {
+      scrollContainerRef.current.scrollTop += delta;
+    }
+  }, [chapterWindow]);
+
+  const prefetchNextStreamChapter = useCallback((retry = false) => {
+    if (!continueChapters || loading || nextPrefetchLoading) return;
+    const tail = chapterWindow[chapterWindow.length - 1] || { key: `${bookId}:${chapter}`, bookId, chapter, verses };
+    const nextCoord = adjacentReadingChapter(ALL_BOOKS, tail.bookId, tail.chapter, 1);
+    if (!nextCoord) return;
+    const nextKey = `${nextCoord.bookId}:${nextCoord.chapter}`;
+    if (chapterWindow.some(c => c.key === nextKey)) return;
+    if (!retry && nextPrefetchError && nextPrefetchKeyRef.current === nextKey) return;
+
+    const currentFocusIdx = chapterWindow.findIndex(
+      c => c.bookId === activeStreamPosRef.current.bookId && c.chapter === activeStreamPosRef.current.chapter
+    );
+    if (currentFocusIdx >= 0 && chapterWindow.length - 1 - currentFocusIdx >= 2) return;
+
+    const bollsId = BOLLS_BIBLE_MAP[nextCoord.bookId];
+    if (!bollsId) return;
+
+    nextPrefetchKeyRef.current = nextKey;
+    setNextPrefetchLoading(true);
+    setNextPrefetchError(null);
+
+    fetchChapterText(bibleVersion, bollsId, nextCoord.chapter)
+      .then((nextVerses) => {
+        if (isUnmountedRef.current || nextPrefetchKeyRef.current !== nextKey) return;
+        const lsbHeadings = bibleVersion === 'LSB'
+          ? null
+          : chapterTextSettled.get(chapterCacheKey('LSB', bollsId, nextCoord.chapter));
+        if (lsbHeadings) {
+          setPrefetchedHeadings(prev => ({ ...prev, [nextKey]: extractHeadings(lsbHeadings) }));
+        }
+        const focus = activeStreamPosRef.current;
+        const container = scrollContainerRef.current;
+        if (container && chapterWindow.length >= 5) {
+          const activeKey = `${focus.bookId}:${focus.chapter}`;
+          const activeEl = container.querySelector(`[data-chapter-key="${activeKey}"]`) as HTMLElement | null;
+          if (activeEl) {
+            scrollAnchorSnapshotRef.current = {
+              key: activeKey,
+              top: activeEl.getBoundingClientRect().top,
+              prevFirstKey: chapterWindow[0]?.key || '',
+            };
+          }
+        }
+        const loaded: StreamChapter = {
+          key: nextKey,
+          bookId: nextCoord.bookId,
+          chapter: nextCoord.chapter,
+          verses: nextVerses,
+        };
+        setChapterWindow(prev => mergeReadingWindow(prev, loaded, focus, ALL_BOOKS));
+      })
+      .catch(() => {
+        if (isUnmountedRef.current || nextPrefetchKeyRef.current !== nextKey) return;
+        setNextPrefetchError(`Couldn't load the next chapter.`);
+      })
+      .finally(() => {
+        if (!isUnmountedRef.current) setNextPrefetchLoading(false);
+      });
+  }, [continueChapters, loading, nextPrefetchLoading, nextPrefetchError, chapterWindow, bookId, chapter, verses, bibleVersion]);
+
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (showOptions) setShowOptions(false);
     if (showOverflowMenu) setShowOverflowMenu(false);
 
+    if (isSpeakingChapter && performance.now() > programmaticScrollUntilRef.current) {
+      setFollowAudio(false);
+    }
+
     const target = e.currentTarget;
     const totalHeight = target.scrollHeight - target.clientHeight;
-    if (totalHeight <= 0) return;
-    const progress = (target.scrollTop / totalHeight) * 100;
-    setScrollProgress(progress);
+    if (totalHeight > 0) {
+      const progress = (target.scrollTop / totalHeight) * 100;
+      setScrollProgress(progress);
 
-    // Reaching the bottom is when "this chapter was read" is logged. Guarded to fire once per chapter visit.
-    if (progress >= 98 && !recallCardShownThisVisit) {
-      setRecallCardShownThisVisit(true);
-      markChapterRead();
-    }
-  };
-
-  // If a chapter is very short (e.g. Psalm 117) and fits entirely on screen,
-  // the user will never scroll, so handleScroll will never fire.
-  // We check for this case after the chapter renders.
-  useEffect(() => {
-    if (loading || verses.length === 0 || recallCardShownThisVisit) return;
-    
-    const timer = setTimeout(() => {
-      const target = scrollContainerRef.current;
-      if (!target) return;
-      
-      const totalHeight = target.scrollHeight - target.clientHeight;
-      // If the content fits entirely in the viewport, it's already "read"
-      if (totalHeight <= 0) {
+      if (progress >= 98 && !recallCardShownThisVisit) {
         setRecallCardShownThisVisit(true);
         markChapterRead();
       }
-    }, 150); // Short delay to ensure DOM is fully laid out
-    
-    return () => clearTimeout(timer);
-  }, [loading, verses, recallCardShownThisVisit, markChapterRead]);
+    }
 
-  // Compute prev/next labels for the navigation bar
-  const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
+    // Detect active chapter & reading verse at the reading line below header.
+    const readingLineY = (headerHeight || 80) + 28;
+    const verseSpans = target.querySelectorAll('.verse-span');
+    let hitSpan: Element | null = null;
+    for (let i = 0; i < verseSpans.length; i++) {
+      const rect = verseSpans[i].getBoundingClientRect();
+      if (rect.bottom >= readingLineY) {
+        hitSpan = verseSpans[i];
+        break;
+      }
+    }
+    if (hitSpan) {
+      const hBook = hitSpan.getAttribute('data-verse-book');
+      const hCh = parseInt(hitSpan.getAttribute('data-verse-chapter') || '', 10);
+      const hVerse = parseInt(hitSpan.getAttribute('data-verse') || '', 10);
+      if (hBook && Number.isFinite(hCh) && Number.isFinite(hVerse)) {
+        setActiveStreamPos(prev =>
+          prev.bookId === hBook && prev.chapter === hCh && prev.verse === hVerse
+            ? prev
+            : { bookId: hBook, chapter: hCh, verse: hVerse }
+        );
+      }
+    }
+
+    // Prefetch next chapter when nearing the bottom in continuous mode.
+    if (continueChapters && target.scrollHeight - target.scrollTop - target.clientHeight < 650) {
+      prefetchNextStreamChapter(false);
+    }
+  };
+
+  useEffect(() => {
+    if (loading || verses.length === 0) return;
+
+    const timer = setTimeout(() => {
+      const target = scrollContainerRef.current;
+      if (!target) return;
+
+      const totalHeight = target.scrollHeight - target.clientHeight;
+      if (totalHeight <= 0 && !recallCardShownThisVisit) {
+        setRecallCardShownThisVisit(true);
+        markChapterRead();
+      }
+      if (continueChapters && totalHeight < 650) {
+        prefetchNextStreamChapter(false);
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [loading, verses, chapterWindow.length, recallCardShownThisVisit, markChapterRead, continueChapters, prefetchNextStreamChapter]);
+
+  // Compute prev/next labels for the navigation bar using active stream chapter
+  const bookIndex = ALL_BOOKS.findIndex(b => b.id === activeBookId);
   const currentBook = bookIndex !== -1 ? ALL_BOOKS[bookIndex] : null;
 
   let prevLabel: string | null = null;
@@ -752,10 +1197,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   let nextAbbrLabel: string | null = null;
 
   const getAbbr = (name: string) => {
-    // String truncation breaks complex scripts (abrogates combining marks)
-    // and they don't have established 3-letter abbreviations anyway.
     if (state.settings.bibleVersion === 'TELIRV' || state.settings.bibleVersion === 'TBSI') return name;
-
     if (name.length <= 4) return name;
     if (name.startsWith('1 ') || name.startsWith('2 ') || name.startsWith('3 ')) {
       return name.substring(0, 5).replace(' ', '');
@@ -764,25 +1206,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   };
 
   if (currentBook) {
-    // Within the same book, lead the label with the neighboring chapter's own
-    // anchor word — "STEW 25" instead of a bare number — so paging becomes a
-    // repetition of the chain rather than a wayfinding control that teaches
-    // nothing. Crossing a book boundary has no anchor to show (that chapter
-    // belongs to a different guide) and falls back to the plain book/chapter form.
-    if (chapter > 1) {
+    if (activeChapterNum > 1) {
       const anchorPrefix = neighborAnchors.prev ? `${neighborAnchors.prev} · ` : '';
-      prevLabel = `${anchorPrefix}${getBookName(bookId, bookTitle, state.settings.bibleVersion)} ${chapter - 1}`;
-      prevAbbrLabel = neighborAnchors.prev ? `${neighborAnchors.prev} ${chapter - 1}` : `${getAbbr(getBookName(bookId, bookTitle, state.settings.bibleVersion))} ${chapter - 1}`;
+      prevLabel = `${anchorPrefix}${getBookName(activeBookId, activeBookTitle, state.settings.bibleVersion)} ${activeChapterNum - 1}`;
+      prevAbbrLabel = neighborAnchors.prev ? `${neighborAnchors.prev} ${activeChapterNum - 1}` : `${getAbbr(getBookName(activeBookId, activeBookTitle, state.settings.bibleVersion))} ${activeChapterNum - 1}`;
     } else if (bookIndex > 0) {
       const prev = ALL_BOOKS[bookIndex - 1];
       prevLabel = `${getBookName(prev.id, prev.name, state.settings.bibleVersion)} ${prev.chapters}`;
       prevAbbrLabel = `${getAbbr(getBookName(prev.id, prev.name, state.settings.bibleVersion))} ${prev.chapters}`;
     }
 
-    if (chapter < currentBook.chapters) {
+    if (activeChapterNum < currentBook.chapters) {
       const anchorSuffix = neighborAnchors.next ? ` · ${neighborAnchors.next}` : '';
-      nextLabel = `${getBookName(bookId, bookTitle, state.settings.bibleVersion)} ${chapter + 1}${anchorSuffix}`;
-      nextAbbrLabel = neighborAnchors.next ? `${chapter + 1} ${neighborAnchors.next}` : `${getAbbr(getBookName(bookId, bookTitle, state.settings.bibleVersion))} ${chapter + 1}`;
+      nextLabel = `${getBookName(activeBookId, activeBookTitle, state.settings.bibleVersion)} ${activeChapterNum + 1}${anchorSuffix}`;
+      nextAbbrLabel = neighborAnchors.next ? `${activeChapterNum + 1} ${neighborAnchors.next}` : `${getAbbr(getBookName(activeBookId, activeBookTitle, state.settings.bibleVersion))} ${activeChapterNum + 1}`;
     } else if (bookIndex < ALL_BOOKS.length - 1) {
       nextLabel = `${getBookName(ALL_BOOKS[bookIndex + 1].id, ALL_BOOKS[bookIndex + 1].name, state.settings.bibleVersion)} 1`;
       nextAbbrLabel = `${getAbbr(getBookName(ALL_BOOKS[bookIndex + 1].id, ALL_BOOKS[bookIndex + 1].name, state.settings.bibleVersion))} 1`;
@@ -790,36 +1227,21 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   }
 
   const handleNextChapter = () => {
-    const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
-    if (bookIndex === -1) return;
-    const currentBook = ALL_BOOKS[bookIndex];
-    // Normal navigation invalidates any cross-reference "back" trail and pending
-    // highlight — otherwise either could resurface later pointing somewhere that no
-    // longer relates to how the reader actually got to the new chapter.
+    const nextCoord = adjacentReadingChapter(ALL_BOOKS, activeBookId, activeChapterNum, 1);
+    if (!nextCoord) return;
     setReturnStack([]);
     setPendingHighlight(null);
     setCrossRefPeekSource(null);
-
-    if (chapter < currentBook.chapters) {
-      goToChapter(bookId, chapter + 1);
-    } else if (bookIndex < ALL_BOOKS.length - 1) {
-      goToChapter(ALL_BOOKS[bookIndex + 1].id, 1);
-    }
+    goToChapter(nextCoord.bookId, nextCoord.chapter);
   };
 
   const handlePrevChapter = () => {
-    const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId);
-    if (bookIndex === -1) return;
+    const prevCoord = adjacentReadingChapter(ALL_BOOKS, activeBookId, activeChapterNum, -1);
+    if (!prevCoord) return;
     setReturnStack([]);
     setPendingHighlight(null);
     setCrossRefPeekSource(null);
-
-    if (chapter > 1) {
-      goToChapter(bookId, chapter - 1);
-    } else if (bookIndex > 0) {
-      const prevBook = ALL_BOOKS[bookIndex - 1];
-      goToChapter(prevBook.id, prevBook.chapters);
-    }
+    goToChapter(prevCoord.bookId, prevCoord.chapter);
   };
 
   const [touchStartPos, setTouchStartPos] = useState<{x: number, y: number} | null>(null);
@@ -910,14 +1332,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
   }, [navigatorBook, showNavigator]);
 
   useEffect(() => {
-    // `cancelled` guards every setState below so a chapter left before its request
-    // settles can't write over the one that replaced it. The request itself is owned by
-    // the module-level cache rather than this effect, so React StrictMode's dev-only
-    // double-invoke (mount -> cleanup -> mount) now shares one in-flight promise instead
-    // of aborting the first fetch and flashing a spurious timeout error.
     let cancelled = false;
-    // Cleared synchronously (before any await) so it's already invalidated by the time
-    // the pendingHighlight effect below runs later in this same commit.
     versesChapterRef.current = '';
 
     const bollsId = BOLLS_BIBLE_MAP[bookId];
@@ -926,18 +1341,37 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       setVerses(data);
       setBorrowedHeadings(lsbData ? extractHeadings(lsbData) : null);
       versesChapterRef.current = `${bookId}-${chapter}`;
-      setSelectedVerses([]); // Clear any previous selection when loading a new chapter
+      setSelectedVerses([]);
+      setSelectionScope({ bookId, chapter });
+
+      const initialStreamEntry: StreamChapter = {
+        key: `${bookId}:${chapter}`,
+        bookId,
+        chapter,
+        verses: data,
+      };
+      setChapterWindow([initialStreamEntry]);
+
+      const contTarget = immerseContinuationTargetRef.current;
+      if (contTarget) {
+        immerseContinuationTargetRef.current = null;
+        const targetIdx = contTarget === 'last' ? Math.max(0, data.length - 1) : 0;
+        setImmerseVerseIdx(targetIdx);
+        setActiveStreamPos({
+          bookId,
+          chapter,
+          verse: data[targetIdx]?.verse || 1,
+        });
+      }
     };
 
-    // Already read this session: render straight from the cache, so paging back to a
-    // chapter doesn't put a loading skeleton over text that's already in hand.
     if (bollsId) {
       const cachedData = chapterTextSettled.get(chapterCacheKey(bibleVersion, bollsId, chapter));
       const cachedLsb = bibleVersion === 'LSB'
         ? null
         : chapterTextSettled.get(chapterCacheKey('LSB', bollsId, chapter)) ?? null;
 
-      if (cachedData && (bibleVersion === 'LSB' || cachedLsb)) {
+      if (cachedData) {
         setError(null);
         setLoading(false);
         applyChapter(cachedData, cachedLsb);
@@ -953,16 +1387,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           throw new Error('Book not found in Bible API map.');
         }
 
-        // Requested in parallel, so a version without its own headings costs the slower
-        // of the two round trips rather than their sum. A failed LSB request only costs
-        // the headings — the chapter itself still renders.
-        const [data, lsbData] = await Promise.all([
-          fetchChapterText(bibleVersion, bollsId, chapter),
-          bibleVersion === 'LSB' ? Promise.resolve(null) : fetchChapterText('LSB', bollsId, chapter).catch(() => null),
-        ]);
+        // Load only the selected edition without substituting another translation or requiring LSB headings.
+        const data = await fetchChapterText(bibleVersion, bollsId, chapter);
+        const lsbCached = bibleVersion === 'LSB'
+          ? null
+          : chapterTextSettled.get(chapterCacheKey('LSB', bollsId, chapter)) ?? null;
 
         if (cancelled) return;
-        applyChapter(data, lsbData);
+        applyChapter(data, lsbCached);
       } catch (err: any) {
         if (cancelled) return;
         if (err.name === 'AbortError') {
@@ -979,133 +1411,94 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     return () => { cancelled = true; };
   }, [bookId, chapter, retryCount, bibleVersion]);
 
-  // A link that names a verse (/bible/HAB.1.4) hands it to the same highlight machinery
-  // cross-references use, which already knows to wait until that chapter is really on
-  // screen. This is what the old ?highlightVerse= param was meant to do; nothing read it.
   useEffect(() => {
     if (initialVerse) {
       setPendingHighlight({ book: bookId, chapter, verse: initialVerse });
     }
   }, [bookId, chapter, initialVerse]);
 
-  // Single home for every "jump to a verse and flash it" request in this component
-  // (cross-references, Strong's occurrences, "Go back"). Waits until the *target*
-  // chapter is actually the one loaded and on screen before doing anything — without
-  // that guard, a cross-chapter jump could transiently fire against the previous
-  // chapter's still-mounted DOM in the render before the new chapter's fetch resolves,
-  // consuming the request before the correct chapter ever got its highlight.
-  //
-  // Checks versesChapterRef, self-contained against pendingHighlight's own book/chapter
-  // (not bookId/chapter props): on the very render where bookId/chapter change, the
-  // fetch effect above (which runs first in the same commit) resets versesChapterRef
-  // synchronously, so it's visible immediately to this effect within the same commit —
-  // but bookId/chapter props themselves may lag pendingHighlight by a render (this
-  // router wraps navigation in React.startTransition), so gating on versesChapterRef
-  // alone avoids depending on that timing relationship ever holding.
-  //
-  // "One-shot" consumption is tracked via consumedHighlightRef, not by nulling
-  // pendingHighlight state: pendingHighlight is in this effect's own dependency array,
-  // so calling setPendingHighlight(null) from inside it triggers this same effect's
-  // cleanup on the very next render — which clearTimeout'd the 300ms flash before it
-  // ever fired, silently swallowing every cross-reference-jump highlight. Comparing
-  // against a ref instead avoids that self-cancellation entirely.
   useEffect(() => {
     if (!pendingHighlight) return;
-    if (pendingHighlight === consumedHighlightRef.current) return; // already scheduled
-    if (versesChapterRef.current !== `${pendingHighlight.book}-${pendingHighlight.chapter}`) return;
+    if (pendingHighlight === consumedHighlightRef.current) return;
+    const isLoadedInWindow =
+      versesChapterRef.current === `${pendingHighlight.book}-${pendingHighlight.chapter}` ||
+      chapterWindow.some(c => c.bookId === pendingHighlight.book && c.chapter === pendingHighlight.chapter);
+    if (!isLoadedInWindow) return;
 
     consumedHighlightRef.current = pendingHighlight;
-    const targetVerse = pendingHighlight.verse;
+    const targetFlash = pendingHighlight;
 
     const timeoutId = setTimeout(() => {
-      // Driven by state (flashVerse), not an imperative el.classList mutation: the
-      // verse spans are rendered via dangerouslySetInnerHTML, and a direct DOM mutation
-      // there gets silently wiped the instant that html memo recomputes for *any*
-      // unrelated reason (e.g. the one-time paragraphBreaks fetch resolving) — which
-      // was the actual cause of the flash intermittently not appearing at all. Baking
-      // flashVerse into the same memo that already decides selected/memorized styling
-      // means it's regenerated correctly on every recompute instead of being an
-      // out-of-band mutation those recomputes can clobber.
-      setFlashVerse(targetVerse);
-      setTimeout(() => setFlashVerse(prev => (prev === targetVerse ? null : prev)), 4000);
+      setFlashVerse(targetFlash);
+      setTimeout(
+        () =>
+          setFlashVerse(prev =>
+            prev &&
+            prev.book === targetFlash.book &&
+            prev.chapter === targetFlash.chapter &&
+            prev.verse === targetFlash.verse
+              ? null
+              : prev
+          ),
+        4000
+      );
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [pendingHighlight, verses, loading]);
+  }, [pendingHighlight, verses, loading, chapterWindow]);
 
-  // Scrolls the flashing verse into view once it actually exists in the DOM — separate
-  // from the effect above because the html memo (and therefore the real data-verse
-  // element) only regenerates *after* setFlashVerse's render commits, so scrollIntoView
-  // has to run in its own effect keyed on flashVerse, not inline in the same tick.
-  //
-  // verse 0 is the "peeked from the return pill" sentinel (see crossRefPeekSource) —
-  // it means "somewhere in this chapter, exact position not tracked," not a real verse
-  // number, so `[data-verse="0"]` never matches anything. That used to make "Go back"
-  // to one of these stops a complete no-op — no scroll, no visible feedback at all,
-  // especially confusing when the target chapter is also the one already on screen.
-  // Falling back to the first verse in the chapter gives it a sensible, visible target.
   useEffect(() => {
     if (flashVerse === null) return;
-    const selector = flashVerse === 0 ? '.verse-span, .alpha-verse-span' : `[data-verse="${flashVerse}"]`;
+    const selector =
+      flashVerse.verse === 0
+        ? `[data-chapter-key="${flashVerse.book}:${flashVerse.chapter}"] .verse-span, .verse-span, .alpha-verse-span`
+        : `[data-verse-book="${flashVerse.book}"][data-verse-chapter="${flashVerse.chapter}"][data-verse="${flashVerse.verse}"]`;
     const el = document.querySelector(selector);
-    el?.scrollIntoView({ behavior: 'smooth', block: flashVerse === 0 ? 'start' : 'center' });
+    el?.scrollIntoView({ behavior: 'smooth', block: flashVerse.verse === 0 ? 'start' : 'center' });
   }, [flashVerse]);
 
-  const memorizedVerses = useMemo(() => {
-    const memSet = new Set<number>();
-    const englishBookName = ALL_BOOKS.find(b => b.id === bookId)?.name || bookTitle;
-    const localizedBookName = getBookName(bookId, bookTitle, bibleVersion);
-    const validPrefixes = [
-      `${bookTitle} ${chapter}:`,
-      `${englishBookName} ${chapter}:`,
-      `${localizedBookName} ${chapter}:`
-    ];
+  const memorizedVerses = useMemo(
+    () => getMemorizedSetForChapter(state.verses, selectionScope.bookId, selectionScope.chapter, bibleVersion),
+    [state.verses, selectionScope.bookId, selectionScope.chapter, bibleVersion]
+  );
 
-    state.verses.forEach(v => {
-      const normalizedRef = (v.ref || '').replace(/[–—]/g, '-').trim();
-      for (const prefix of validPrefixes) {
-        if (normalizedRef.startsWith(prefix)) {
-          const versePart = normalizedRef.substring(prefix.length).trim();
-          if (versePart.includes('-')) {
-            const [start, end] = versePart.split('-').map(n => parseInt(n.trim(), 10));
-            if (!isNaN(start) && !isNaN(end)) {
-              for (let i = start; i <= end; i++) memSet.add(i);
-            }
-          } else if (versePart.includes(',')) {
-            versePart.split(',').forEach(n => {
-              const num = parseInt(n.trim(), 10);
-              if (!isNaN(num)) memSet.add(num);
-            });
-          } else {
-            const num = parseInt(versePart, 10);
-            if (!isNaN(num)) memSet.add(num);
-          }
-          break;
-        }
-      }
-    });
-    return memSet;
-  }, [state.verses, bookTitle, bookId, chapter, bibleVersion]);
+  const selectionEnglishBookTitle = useMemo(
+    () => ALL_BOOKS.find(b => b.id === selectionScope.bookId)?.name || activeBookTitle,
+    [selectionScope.bookId, activeBookTitle]
+  );
 
-  const toggleVerseSelection = useCallback((verseNum: number) => {
+  const selectionChapterVerses = useMemo(() => {
+    const found = chapterWindow.find(
+      c => c.bookId === selectionScope.bookId && c.chapter === selectionScope.chapter
+    );
+    return found ? found.verses : activeVerses;
+  }, [chapterWindow, selectionScope.bookId, selectionScope.chapter, activeVerses]);
+
+  const toggleVerseSelection = useCallback((verseNum: number, scopeBookId = activeBookId, scopeChapter = activeChapterNum) => {
+    if (selectionScope.bookId !== scopeBookId || selectionScope.chapter !== scopeChapter) {
+      setSelectionScope({ bookId: scopeBookId, chapter: scopeChapter });
+      setSelectedVerses([verseNum]);
+      return;
+    }
     setSelectedVerses(prev =>
       prev.includes(verseNum)
         ? prev.filter(v => v !== verseNum)
         : [...prev, verseNum].sort((a, b) => a - b)
     );
-  }, []);
+  }, [selectionScope.bookId, selectionScope.chapter, activeBookId, activeChapterNum]);
 
   const handleVerseClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
 
-    // The marker sits inside the verse span, so it has to be claimed first or the tap
-    // would just toggle selection like any other part of the verse.
     const marker = target.closest('.xref-marker');
     if (marker) {
       const markerVerse = marker.getAttribute('data-xref-verse');
+      const markerBook = marker.getAttribute('data-xref-book') || activeBookId;
+      const markerChapter = parseInt(marker.getAttribute('data-xref-chapter') || String(activeChapterNum), 10);
+      const markerBookTitle = ALL_BOOKS.find(b => b.id === markerBook)?.name || activeBookTitle;
       if (markerVerse) {
         setCrossRefPeekSource(null);
         setCrossRefInitialSection(undefined);
-        setShowCrossReferences([`${bookTitle.toLowerCase()} ${chapter}:${markerVerse}`]);
+        setShowCrossReferences([`${markerBookTitle.toLowerCase()} ${markerChapter}:${markerVerse}`]);
         return;
       }
     }
@@ -1113,7 +1506,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     const verseSpan = target.closest('.verse-span');
     if (verseSpan) {
       const verseNumStr = verseSpan.getAttribute('data-verse');
-      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
+      const verseBook = verseSpan.getAttribute('data-verse-book') || activeBookId;
+      const verseCh = parseInt(verseSpan.getAttribute('data-verse-chapter') || String(activeChapterNum), 10);
+      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10), verseBook, verseCh);
     }
   };
 
@@ -1124,7 +1519,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     if (verseSpan) {
       e.preventDefault();
       const verseNumStr = verseSpan.getAttribute('data-verse');
-      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10));
+      const verseBook = verseSpan.getAttribute('data-verse-book') || activeBookId;
+      const verseCh = parseInt(verseSpan.getAttribute('data-verse-chapter') || String(activeChapterNum), 10);
+      if (verseNumStr) toggleVerseSelection(parseInt(verseNumStr, 10), verseBook, verseCh);
     }
   };
 
@@ -1140,30 +1537,32 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     let skippedCount = 0;
     const nextDue = startLearningNow ? new Date().toISOString() : new Date(Date.now() + 86400000).toISOString();
     const hookKeyword = memoryHookText.trim() || undefined;
-    
+    const selCh = selectionScope.chapter;
+    const selBook = selectionEnglishBookTitle;
+
     if (mode === 'individual') {
       selectedVerses.forEach(verseNum => {
-        const v = verses.find(x => x.verse === verseNum);
+        const v = selectionChapterVerses.find(x => x.verse === verseNum);
         if (v) {
           const cleanText = v.text
-            .replace(/<b>.*?<\/b>/gi, '')       // Remove section headings
-            .replace(/<br\s*\/?>/gi, '\n')       // Line breaks → newlines
-            .replace(/<[^>]+>/g, '')              // Strip remaining tags (<i>, etc.)
+            .replace(/<b>.*?<\/b>/gi, '')
+            .replace(/<br\s*\/?>/gi, '\n')
+            .replace(/<[^>]+>/g, '')
             .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
             .replace(/[ \t]+/g, ' ')
             .trim();
-          const ref = `${bookTitle} ${chapter}:${verseNum}`;
-          
+          const ref = `${selBook} ${selCh}:${verseNum}`;
+
           if (state.verses.some(verse => verse.ref === ref)) {
             skippedCount++;
             return;
           }
-          
+
           dispatch({
             type: 'ADD_VERSE',
             payload: {
               id: crypto.randomUUID(),
-              ref: ref,
+              ref,
               text: cleanText,
               translation: bibleVersion,
               addedDate: new Date().toISOString(),
@@ -1179,15 +1578,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         }
       });
     } else {
-      // Group contiguous verses
       const sorted = [...selectedVerses].sort((a, b) => a - b);
       if (sorted.length === 0) return;
-      
+
       const groups: number[][] = [];
       let currentGroup = [sorted[0]];
-      
+
       for (let i = 1; i < sorted.length; i++) {
-        if (sorted[i] === sorted[i-1] + 1) {
+        if (sorted[i] === sorted[i - 1] + 1) {
           currentGroup.push(sorted[i]);
         } else {
           groups.push(currentGroup);
@@ -1195,38 +1593,38 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         }
       }
       groups.push(currentGroup);
-      
+
       groups.forEach(group => {
         const textParts: string[] = [];
         group.forEach(verseNum => {
-          const v = verses.find(x => x.verse === verseNum);
+          const v = selectionChapterVerses.find(x => x.verse === verseNum);
           if (v) {
             textParts.push(
               v.text
-                .replace(/<b>.*?<\/b>/gi, '')       // Remove section headings
-                .replace(/<br\s*\/?>/gi, '\n')       // Line breaks → newlines
-                .replace(/<[^>]+>/g, '')              // Strip remaining tags (<i>, etc.)
+                .replace(/<b>.*?<\/b>/gi, '')
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/<[^>]+>/g, '')
                 .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
                 .replace(/[ \t]+/g, ' ')
                 .trim()
             );
           }
         });
-        
+
         const combinedText = textParts.join(' ');
         const refStr = group.length === 1 ? `${group[0]}` : `${group[0]}-${group[group.length - 1]}`;
-        const ref = `${bookTitle} ${chapter}:${refStr}`;
-        
+        const ref = `${selBook} ${selCh}:${refStr}`;
+
         if (state.verses.some(verse => verse.ref === ref)) {
           skippedCount++;
           return;
         }
-        
+
         dispatch({
           type: 'ADD_VERSE',
           payload: {
             id: crypto.randomUUID(),
-            ref: ref,
+            ref,
             text: combinedText,
             translation: bibleVersion,
             addedDate: new Date().toISOString(),
@@ -1241,17 +1639,17 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         addedCount++;
       });
     }
-    
+
     const actionObj = {
       label: 'Go to Library',
       onClick: () => {
         setTimeout(() => {
           onClose();
-          navigate(`/?search=${encodeURIComponent(bookTitle + ' ' + chapter + ':')}`);
+          navigate(`/?search=${encodeURIComponent(selBook + ' ' + selCh + ':')}`);
         }, 300);
       }
     };
-    
+
     if (addedCount > 0 && skippedCount > 0) {
       showToast(`Added ${addedCount} ${addedCount === 1 ? 'entry' : 'entries'} (${skippedCount} skipped as duplicate)`, 'success', actionObj);
     } else if (addedCount > 0) {
@@ -1259,28 +1657,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     } else if (skippedCount > 0) {
       showToast(`${skippedCount} ${skippedCount === 1 ? 'entry' : 'entries'} already in your library!`, 'info', actionObj);
     }
-    
+
     setSelectedVerses([]);
     setShowAddOptions(false);
   };
 
   const handleDeleteSelected = () => {
-    const prefix = `${bookTitle} ${chapter}:`;
-    
-    // Find all verses in the library that overlap with the selected verses
+    const prefix = `${selectionEnglishBookTitle} ${selectionScope.chapter}:`;
+
     const versesToDelete = state.verses.filter(v => {
       if (!v.ref.startsWith(prefix)) return false;
       const versePart = v.ref.substring(prefix.length);
-      let memSet = new Set<number>();
+      const memSet = new Set<number>();
       if (versePart.includes('-')) {
-        const [start, end] = versePart.split('-').map(n => parseInt(n, 10));
+        const [start, end] = versePart.split('-').map(n => parseInt(n.trim(), 10));
         for (let i = start; i <= end; i++) memSet.add(i);
       } else if (versePart.includes(',')) {
-        versePart.split(',').forEach(n => memSet.add(parseInt(n, 10)));
+        versePart.split(',').forEach(n => memSet.add(parseInt(n.trim(), 10)));
       } else {
         memSet.add(parseInt(versePart, 10));
       }
-      
+
       return selectedVerses.some(sv => memSet.has(sv));
     });
 
@@ -1290,7 +1687,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       });
       showToast(`Removed ${versesToDelete.length} ${versesToDelete.length === 1 ? 'entry' : 'entries'} from your library.`, 'success');
     }
-    
+
     setSelectedVerses([]);
     setShowAddOptions(false);
   };
@@ -1300,14 +1697,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
     const sorted = [...selectedVerses].sort((a, b) => a - b);
     const textParts: string[] = [];
-    
+
     sorted.forEach(verseNum => {
-      const v = verses.find(x => x.verse === verseNum);
+      const v = selectionChapterVerses.find(x => x.verse === verseNum);
       if (v) {
         const plainText = v.text
-          .replace(/<b>.*?<\/b>/gi, '')       // Remove section headings
-          .replace(/<br\s*\/?>/gi, '\n')       // Line breaks → newlines
-          .replace(/<[^>]+>/g, '')              // Strip remaining tags (<i>, etc.)
+          .replace(/<b>.*?<\/b>/gi, '')
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<[^>]+>/g, '')
           .replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2')
           .replace(/[ \t]+/g, ' ')
           .trim();
@@ -1316,11 +1713,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     });
 
     const combinedText = textParts.join(' ');
-    
-    // Format the reference
     let refStr = '';
     const isContiguous = sorted.length > 1 && (sorted[sorted.length - 1] - sorted[0] === sorted.length - 1);
-    
+
     if (sorted.length === 1) {
       refStr = `${sorted[0]}`;
     } else if (isContiguous) {
@@ -1329,7 +1724,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       refStr = sorted.join(',');
     }
 
-    const finalString = `'${combinedText}'\n\n${bookTitle} ${chapter}:${refStr} (${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion})`;
+    const finalString = `'${combinedText}'\n\n${selectionEnglishBookTitle} ${selectionScope.chapter}:${refStr} (${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion})`;
 
     navigator.clipboard.writeText(finalString).then(() => {
       showToast('Copied to clipboard!', 'success');
@@ -1339,190 +1734,75 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
     });
   };
 
-  const chapterHtml = useMemo(() => {
-    let html = '';
-    const display = readingDisplay(state.settings);
-    
-    // The chapter title is already shown in the sticky header, no need to duplicate it here.
+  const renderedChapters = useMemo<StreamChapter[]>(() => {
+    const primary: StreamChapter = { key: `${bookId}:${chapter}`, bookId, chapter, verses };
+    if (!continueChapters) {
+      if (activeBookId !== bookId || activeChapterNum !== chapter) {
+        const found = chapterWindow.find(c => c.bookId === activeBookId && c.chapter === activeChapterNum);
+        return found ? [found] : [primary];
+      }
+      return [primary];
+    }
+    if (chapterWindow.length > 0) return chapterWindow;
+    return [primary];
+  }, [continueChapters, chapterWindow, bookId, chapter, verses, activeBookId, activeChapterNum]);
 
-    const bollsId = BOLLS_BIBLE_MAP[bookId];
-    let quoteLevel = 0; // Track quote nesting across verses
+  const renderedChapterHtmls = useMemo(() => {
+    const out: Record<string, string> = {};
+    for (const entry of renderedChapters) {
+      const entryMemorized = getMemorizedSetForChapter(state.verses, entry.bookId, entry.chapter, bibleVersion);
+      const entryHeadings =
+        entry.bookId === bookId && entry.chapter === chapter
+          ? borrowedHeadings
+          : prefetchedHeadings[entry.key] ?? null;
+      const entrySelected =
+        selectionScope.bookId === entry.bookId && selectionScope.chapter === entry.chapter
+          ? selectedVerses
+          : [];
+      const entryFlash =
+        flashVerse && flashVerse.book === entry.bookId && flashVerse.chapter === entry.chapter
+          ? flashVerse.verse
+          : null;
+      const entryTtsVerse =
+        activeTtsVerse && activeTtsVerse.bookId === entry.bookId && activeTtsVerse.chapter === entry.chapter
+          ? activeTtsVerse.verse
+          : null;
 
-    verses.forEach((v) => {
-      let text = v.text;
-      
-      // === Fix #5 & #2: Extract section headings (<b>) BEFORE OT quote processing ===
-      // This prevents heading text from confusing the quote-level tracker.
-      // Only <b> tags exist in the API (no <S>, <h1-6>, or <div> headings).
-      // Extracted even when hidden: the <b> has to come out of the verse text either
-      // way, and whether a heading exists still marks a paragraph start below.
-      let heading = '';
-      let hasHeading = false;
-      text = text.replace(/<b>(.*?)<\/b>/gi, (_, hText) => {
-        hasHeading = true;
-        if (display.showSectionHeadings) heading += renderHeading(hText);
-        return '';
+      out[entry.key] = buildChapterHtml({
+        bookId: entry.bookId,
+        chapter: entry.chapter,
+        verses: entry.verses,
+        borrowedHeadings: entryHeadings,
+        selectedVerses: entrySelected,
+        memorizedVerses: entryMemorized,
+        flashVerse: entryFlash,
+        activeTtsVerse: entryTtsVerse,
+        settings: state.settings,
+        crossRefIndex,
+        paragraphBreaks,
       });
-
-      // NASB95 and NLT carry no headings of their own, so the LSB's stand in here.
-      // Guarded on the version having produced none itself, so a version that does
-      // ship headings can never end up showing two at the same verse.
-      if (!hasHeading && borrowedHeadings) {
-        for (const borrowed of borrowedHeadings[v.verse] || []) {
-          hasHeading = true;
-          if (display.showSectionHeadings) heading += renderHeading(borrowed, true);
-        }
-      }
-
-      // === Fix #3: Strip leading AND trailing <br/> tags ===
-      // Leading <br/> after heading extraction would strand the verse number on its own line.
-      // Trailing <br/> would add unwanted whitespace.
-      const hasLeadingBr = /^\s*<br\s*\/?>/i.test(text);
-      
-      text = text.replace(/^(?:\s*<br\s*\/?>\s*)+/gi, '');
-      text = text.replace(/(?:\s*<br\s*\/?>\s*)+$/gi, '');
-
-      // === OT Quote uppercasing (now runs after headings are safely removed) ===
-      const isOtQuoteVerse = otQuotes[bollsId]?.[chapter]?.includes(v.verse);
-      if (isOtQuoteVerse) {
-        // Split by quote characters. 
-        // We use lookarounds for the right single quote \u2019 so we don't accidentally split on apostrophes (like "Abraham's")
-        let parts = text.split(/([\u201c\u201d\u2018\u2019]|(?<!\w)\u2019|\u2019(?!\w))/);
-        let newText = '';
-
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          if (!part) continue; // skip empty strings from split
-
-          if (part === '"') {
-            if (quoteLevel > 0) quoteLevel--; else quoteLevel++;
-            newText += part;
-          } else if (part === '\u201c' || part === '\u2018') {
-            quoteLevel++;
-            newText += part;
-          } else if (part === '\u201d' || part === '\u2019') {
-            quoteLevel = Math.max(0, quoteLevel - 1);
-            newText += part;
-          } else {
-            // It's text content. If we're inside a quote, uppercase it.
-            if (quoteLevel > 0 && part.trim().length > 0) {
-              newText += `<span class="uppercase">${part}</span>`;
-            } else {
-              newText += part;
-            }
-          }
-        }
-        text = newText;
-      } else {
-        // If we exit an OT quote block, reset the quote level to prevent bleeding into non-OT verses
-        quoteLevel = 0;
-      }
-      
-      // === Fix #4: Parse Psalm titles (robust) ===
-      let psalmTitle = '';
-      if (bookId === 'psalms' && v.verse === 1) {
-        const titleMatch = text.match(/^([\s\S]*?[a-z]\.)([A-Z][\s\S]*)$/);
-        if (titleMatch) {
-          psalmTitle = `<div class="text-sm font-medium text-muted italic mb-2 tracking-wide leading-relaxed">${titleMatch[1]}</div>`;
-          text = titleMatch[2]; // The rest of the verse
-        }
-      }
-      
-      // Fix missing spaces after punctuation globally in the text (like "Of David.Yahweh")
-      text = text.replace(/([a-z][.?!;:,])([A-Z])/g, '$1 $2');
-
-      // Strip Strong's tags and translator footnotes from KJV texts
-      text = text.replace(/<S>\d+<\/S>/gi, '');
-      text = text.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
-
-      // === Fix #1: Style <i> tags as translator-supplied words ===
-      // The LSB uses <i> to mark words added by the translator for English readability.
-      // Render them with reduced opacity so readers can distinguish original from supplied text.
-      text = text.replace(/<i>(.*?)<\/i>/gi, '<span class="opacity-60 italic">$1</span>');
-
-      // Apply Bionic Reading safely (only to text outside HTML tags)
-      if (state.settings.bionicReading) {
-        text = text.replace(/([a-zA-Z\u00C0-\u024F]+)(?![^<]*>)/g, (word) => {
-          const cut = bionicBoldLength(word.length, state.settings.bionicIntensity);
-          return `<strong class="font-bold">${word.substring(0, cut)}</strong>${word.substring(cut)}`;
-        });
-      }
-
-      const chapterBreaks = paragraphBreaks?.[bookId]?.[String(chapter)];
-      const isFirstVerseOfChapter = verses.length > 0 && v.verse === verses[0].verse;
-      const isParagraphStart = !isFirstVerseOfChapter && (
-        chapterBreaks ? chapterBreaks.includes(v.verse) : (hasHeading || hasLeadingBr)
-      );
-
-      // Append in correct order
-      if (heading) {
-        html += heading;
-      } else if (isParagraphStart) {
-        // If it's a paragraph start but there's no heading taking up space, inject a line break
-        html += `<div class="block w-full h-5"></div>`;
-      }
-
-      if (psalmTitle) {
-        html += psalmTitle;
-      }
-
-      // Add verse number and text
-      const inLibrary = memorizedVerses.has(v.verse);
-      const isSelected = selectedVerses.includes(v.verse);
-      
-      // Flash takes priority over — and replaces, rather than layers on top of — the
-      // selected/library background: two classes touching the same CSS property
-      // (background-color) get resolved by their position in Tailwind's *generated*
-      // stylesheet, not by string/DOM order, so layering risked losing the flash
-      // unpredictably against an already-memorized verse's gold background. Only one
-      // background class is ever emitted per verse now, so there's nothing to conflict.
-      let extraClass = '';
-      if (v.verse === flashVerse) {
-        extraClass = 'bg-green-500/30 rounded px-1 -mx-1 transition-colors duration-1000';
-      } else if (isSelected) {
-        extraClass = 'bg-accent/20 text-primary underline decoration-accent underline-offset-4 decoration-2 rounded px-1 -mx-1';
-      } else if (inLibrary) {
-        extraClass = 'verse-memorized rounded px-1 -mx-1';
-      }
-
-      // Prefer the real paragraph-break dataset (sourced from NASB95) when we have it for
-      // this chapter; fall back to the heading/<br/> heuristic otherwise (mainly poetry,
-      // where paragraph breaks aren't meaningful at the verse level). Either way, never mark
-      // the chapter's very first verse — it's trivially a "new paragraph" already, and
-      // marking it is redundant with the section heading (matches Blue Letter Bible's own
-      // convention, which never shows a paragraph mark on a chapter's opening verse).
-      const pilcrowHtml = isParagraphStart && display.showParagraphMarks
-        ? `<span class="text-accent/40 font-sans mr-0.5 select-none pointer-events-none">¶ </span>`
-        : '';
-      const verseNumClass = isParagraphStart ? 'font-bold text-foreground' : 'font-normal text-muted';
-      // Hidden verse numbers leave the verse span itself intact, so tapping to select,
-      // copy or memorize still works exactly the same on prose-only reading.
-      // A verse's cross-references were invisible until you selected it and noticed the
-      // "Refs" action, so the only way to find them was to already suspect they existed.
-      // This marks the verses that have any (outgoing OR incoming at default >= 4 votes),
-      // the way a print Bible does.
-      const vid = toVerseIndex(bookId, chapter, v.verse);
-      const hasCrossRefs = vid !== null && !!crossRefIndex?.hasConnections(vid, 4);
-      const crossRefMarker = hasCrossRefs && display.showCrossRefMarkers
-        ? `<sup class="xref-marker text-[0.5em] text-accent/70 hover:text-accent ml-0.5 cursor-pointer align-super transition-colors" data-xref-verse="${v.verse}" role="button" tabindex="0" aria-label="Cross references for verse ${v.verse}">✻</sup>`
-        : '';
-      const verseNumHtml = display.showVerseNumbers
-        ? `<sup class="text-[0.55em] ${verseNumClass} ml-0.5 mr-1.5 relative -top-[0.4em] select-none pointer-events-none">${v.verse}</sup>`
-        : '';
-
-      const bookIndex = ALL_BOOKS.findIndex(b => b.id === bookId) + 1;
-      const ariaLabel = `Verse ${v.verse}${isSelected ? ', selected' : ''}${inLibrary ? ', in your library' : ''}`;
-      html += `<span class="inline verse-span cursor-pointer transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${extraClass}" data-verse="${v.verse}" data-verse-ref="${bookIndex}-${chapter}-${v.verse}" tabindex="0" role="button" aria-pressed="${isSelected}" aria-label="${ariaLabel}">${pilcrowHtml}${verseNumHtml}<span class="inline pointer-events-none">${text}</span>${crossRefMarker} </span>`;
-    });
-
-    return html;
-  }, [verses, borrowedHeadings, selectedVerses, memorizedVerses, state.settings.bionicReading,
-      state.settings.bionicIntensity, state.settings.showSectionHeadings, state.settings.showVerseNumbers,
-      state.settings.showParagraphMarks, state.settings.showCrossRefMarkers, crossRefIndex, bookTitle,
-      bookId, chapter, paragraphBreaks, flashVerse]);
+    }
+    return out;
+  }, [
+    renderedChapters,
+    state.verses,
+    state.settings,
+    bibleVersion,
+    bookId,
+    chapter,
+    borrowedHeadings,
+    prefetchedHeadings,
+    selectionScope.bookId,
+    selectionScope.chapter,
+    selectedVerses,
+    flashVerse,
+    activeTtsVerse,
+    crossRefIndex,
+    paragraphBreaks,
+  ]);
 
   const hasRefs = !crossRefIndex || selectedVerses.some(v => {
-    const vid = toVerseIndex(bookId, chapter, v);
+    const vid = toVerseIndex(selectionScope.bookId, selectionScope.chapter, v);
     return vid !== null && crossRefIndex.hasConnections(vid, -Infinity);
   });
 
@@ -1557,7 +1837,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           <div className="flex flex-col items-center justify-center pt-1 px-12">
             <div className="flex items-center justify-center gap-2.5 flex-wrap">
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading">
-                {getBookName(bookId, bookTitle, state.settings.bibleVersion)} {chapter}
+                {getBookName(activeBookId, activeBookTitle, state.settings.bibleVersion)} {activeChapterNum}
               </h2>
               <span className="text-xs font-bold tracking-widest uppercase px-2.5 py-1 rounded-full transition-colors text-accent bg-accent/10 border border-accent/25">
                 {BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}
@@ -1634,7 +1914,14 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       onClick={() => {
                         setShowOverflowMenu(false);
                         if (chapterMemoryVerses.length > 0) {
-                          setImmerseVerseIdx(0);
+                          const targetVerse = selectedVerses.length > 0
+                            ? Math.min(...selectedVerses)
+                            : activeStreamPos.verse;
+                          const startIdx = Math.max(
+                            0,
+                            activeVerses.findIndex(v => v.verse >= targetVerse)
+                          );
+                          setImmerseVerseIdx(startIdx);
                           setImmerseChapterOpen(true);
                         }
                       }}
@@ -1645,7 +1932,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       <span>Immerse Reading</span>
                     </button>
 
-                    {hasCommentaryForBook(bookId) && (
+                    {hasCommentaryForBook(activeBookId) && (
                       <button
                         type="button"
                         role="menuitem"
@@ -1866,6 +2153,43 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             />
           </label>
 
+          {/* Keep Immerse awake switch */}
+          <label className="flex items-center justify-between gap-3 py-1 cursor-pointer">
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-primary">Keep Immerse awake</span>
+              <span className="text-xs text-muted">While Immerse is on screen</span>
+            </div>
+            <input
+              type="checkbox"
+              checked={keepImmerseAwake}
+              onChange={(e) => setKeepImmerseAwake(e.target.checked)}
+              aria-label="Keep Immerse awake"
+              className="h-4 w-4 accent-accent cursor-pointer"
+            />
+          </label>
+
+          {/* Continue chapters switch */}
+          <div className="flex flex-col gap-1 py-1">
+            <label className="flex items-center justify-between gap-3 cursor-pointer">
+              <span className="text-sm font-medium text-primary">Continue chapters</span>
+              <input
+                type="checkbox"
+                checked={continueChapters}
+                onChange={(e) =>
+                  dispatch({
+                    type: 'UPDATE_SETTINGS',
+                    payload: { continueChapters: e.target.checked },
+                  })
+                }
+                aria-label="Continue chapters"
+                className="h-4 w-4 accent-accent cursor-pointer"
+              />
+            </label>
+            <p className="text-xs text-muted">
+              Scroll or listen into the next chapter. Immerse continues when you tap Next.
+            </p>
+          </div>
+
           {/* Collapsible Advanced reading options */}
           <div className="border-t border-card-border pt-2 flex flex-col gap-3">
             <button
@@ -1956,6 +2280,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     bionicReading: false,
                     bionicIntensity: 'medium',
                     showVerseNumbers: true,
+                    continueChapters: true,
                   },
                 });
                 dispatch({ type: 'SET_THEME', payload: 'black' });
@@ -2031,7 +2356,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             </div>
           </div>
         ) : (
-          /* Normal reading mode (selected Bible version) */
+          /* Normal reading mode (selected Bible version, continuous bounded stream) */
           <div
             className="mx-auto pb-32 select-text"
             // fontSize lives on this wrapper (not the inner div) so the `ch` unit in
@@ -2044,44 +2369,92 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             onClick={handleVerseClick}
             onKeyDown={handleVerseKeyDown}
           >
-            <div
-              className="tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0"
-              style={{ lineHeight: readerLineHeightMultiplier(state.settings.lineSpacing) }}
-              dangerouslySetInnerHTML={{ __html: chapterHtml }}
-            />
+            {renderedChapters.map((entry, entryIndex) => {
+              const entryBookObj = ALL_BOOKS.find(b => b.id === entry.bookId);
+              const entryBookTitle = getBookName(entry.bookId, entryBookObj?.name || entry.bookId, bibleVersion);
+              const isLastStreamEntry = entryIndex === renderedChapters.length - 1;
+              const entryNext = adjacentReadingChapter(ALL_BOOKS, entry.bookId, entry.chapter, 1);
 
-            {chapterAnchor &&
-              anchorReveal !== 'always' &&
-              !recallDismissedOnVisit &&
-              (recallCardDismissCount < 2 || recallGradedOnVisit) && (
-                <RecallCard
-                  bookId={bookId}
-                  chapter={chapter}
-                  anchor={chapterAnchor}
-                  revealed={recallRevealed}
-                  graded={recallGradedOnVisit}
-                  nextLabel={nextLabel}
-                  onReveal={() => setRecallRevealed(true)}
-                  onGrade={gradeChapterRecall}
-                  onDismiss={dismissRecallCard}
-                  onNextChapter={handleNextChapter}
-                />
-              )}
+              return (
+                <section
+                  key={entry.key}
+                  data-chapter-key={entry.key}
+                  className={entryIndex > 0 ? 'mt-12 pt-8 border-t border-card-border/60' : ''}
+                >
+                  {entryIndex > 0 && (
+                    <h3 className="font-heading font-bold text-2xl text-primary mb-5 tracking-tight">
+                      {entryBookTitle} {entry.chapter}
+                    </h3>
+                  )}
 
-            {nextLabel &&
-              (!chapterAnchor || anchorReveal === 'always' || recallDismissedOnVisit || recallCardDismissCount >= 2) &&
-              !recallGradedOnVisit && (
-                <div className="mt-10 flex justify-end" onClick={(e) => e.stopPropagation()}>
-                  <button
-                    type="button"
-                    onClick={handleNextChapter}
-                    className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
-                  >
-                    <span>Next chapter · {nextLabel}</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
+                  <div
+                    className="tracking-[-0.01em] text-primary/95 [&>div:first-child]:mt-0"
+                    style={{ lineHeight: readerLineHeightMultiplier(state.settings.lineSpacing) }}
+                    dangerouslySetInnerHTML={{ __html: renderedChapterHtmls[entry.key] || '' }}
+                  />
+
+                  {entry.bookId === activeBookId &&
+                    entry.chapter === activeChapterNum &&
+                    chapterAnchor &&
+                    anchorReveal !== 'always' &&
+                    !recallDismissedOnVisit &&
+                    (recallCardDismissCount < 2 || recallGradedOnVisit) && (
+                      <RecallCard
+                        bookId={activeBookId}
+                        chapter={activeChapterNum}
+                        anchor={chapterAnchor}
+                        revealed={recallRevealed}
+                        graded={recallGradedOnVisit}
+                        nextLabel={nextLabel}
+                        onReveal={() => setRecallRevealed(true)}
+                        onGrade={gradeChapterRecall}
+                        onDismiss={dismissRecallCard}
+                        onNextChapter={handleNextChapter}
+                      />
+                    )}
+
+                  {isLastStreamEntry && !continueChapters && nextLabel && (
+                    (!chapterAnchor || anchorReveal === 'always' || recallDismissedOnVisit || recallCardDismissCount >= 2) &&
+                    !recallGradedOnVisit
+                  ) && (
+                    <div className="mt-10 flex justify-end" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        type="button"
+                        onClick={handleNextChapter}
+                        className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+                      >
+                        <span>Next chapter · {nextLabel}</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+
+                  {isLastStreamEntry && continueChapters && (
+                    <div className="mt-8 pt-4 flex items-center justify-center gap-2 text-xs text-muted" onClick={(e) => e.stopPropagation()}>
+                      {nextPrefetchLoading ? (
+                        <>
+                          <RotateCw className="w-3.5 h-3.5 animate-spin text-accent" />
+                          <span>Loading next chapter…</span>
+                        </>
+                      ) : nextPrefetchError ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-400">{nextPrefetchError}</span>
+                          <button
+                            type="button"
+                            onClick={() => prefetchNextStreamChapter(true)}
+                            className="text-accent font-semibold hover:underline"
+                          >
+                            Retry next chapter
+                          </button>
+                        </div>
+                      ) : !entryNext ? (
+                        <span>End of Bible</span>
+                      ) : null}
+                    </div>
+                  )}
+                </section>
+              );
+            })}
           </div>
         )}
       </div>
@@ -2114,9 +2487,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                 <button
                   onClick={() => {
                     const sorted = [...selectedVerses].sort((a, b) => a - b);
-                    setCrossRefPeekSource(null); // this is the reader's real position, not a peek
+                    setCrossRefPeekSource(null);
                     setCrossRefInitialSection(undefined);
-                    setShowCrossReferences(sorted.map(v => `${bookTitle.toLowerCase()} ${chapter}:${v}`));
+                    setShowCrossReferences(sorted.map(v => `${selectionEnglishBookTitle.toLowerCase()} ${selectionScope.chapter}:${v}`));
                   }}
                   className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
                 >
@@ -2152,8 +2525,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               <h3 className="text-2xl font-serif font-bold text-[#F5F2EB] leading-tight">Add to memory</h3>
               <p className="text-sm font-medium text-[#A89F91] mt-1">
                 {selectedVerses.length > 1 
-                  ? `${bookTitle} ${chapter}:${[...selectedVerses].sort((a, b) => a - b)[0]}–${[...selectedVerses].sort((a, b) => a - b).slice(-1)[0]}`
-                  : `${bookTitle} ${chapter}:${selectedVerses[0] || ''}`}
+                  ? `${selectionEnglishBookTitle} ${selectionScope.chapter}:${[...selectedVerses].sort((a, b) => a - b)[0]}–${[...selectedVerses].sort((a, b) => a - b).slice(-1)[0]}`
+                  : `${selectionEnglishBookTitle} ${selectionScope.chapter}:${selectedVerses[0] || ''}`}
               </p>
             </div>
 
@@ -2316,6 +2689,36 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         </div>
       )}
 
+      {isSpeakingChapter && !followAudio && !immerseChapterOpen && selectedVerses.length === 0 && returnStack.length === 0 && (
+        <button
+          type="button"
+          onClick={() => {
+            setFollowAudio(true);
+            followAudioRef.current = true;
+            if (activeTtsVerse) {
+              programmaticScrollUntilRef.current = performance.now() + 700;
+              const inWindow = renderedChapters.some(
+                c => c.bookId === activeTtsVerse.bookId && c.chapter === activeTtsVerse.chapter
+              );
+              if (inWindow) {
+                requestAnimationFrame(() => {
+                  document
+                    .querySelector(`[data-verse-book="${activeTtsVerse.bookId}"][data-verse-chapter="${activeTtsVerse.chapter}"][data-verse="${activeTtsVerse.verse}"]`)
+                    ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+              } else {
+                preserveModeOnRouteChangeRef.current = true;
+                goToChapter(activeTtsVerse.bookId, activeTtsVerse.chapter, true);
+              }
+            }
+          }}
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 rounded-full bg-accent px-4 py-2 text-xs font-bold text-white shadow-lg flex items-center gap-1.5 hover:opacity-95 transition-opacity"
+        >
+          <Volume2 className="w-3.5 h-3.5" />
+          <span>Return to audio</span>
+        </button>
+      )}
+
       {/* Bottom Chapter Navigation Bar — hidden while the "Go back to..." return
           pill is showing (below), since both are fixed to the bottom edge and
           would otherwise stack on top of each other. */}
@@ -2334,11 +2737,11 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             </button>
 
             <button
-              onClick={() => { setNavigatorBook(bookId); setShowNavigator(true); }}
+              onClick={() => { setNavigatorBook(activeBookId); setShowNavigator(true); }}
               className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
               aria-label="Jump to a different book or chapter"
             >
-              Ch {chapter}
+              Ch {activeChapterNum}
               <ChevronDown className="w-3 h-3" />
             </button>
 
@@ -2479,7 +2882,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       >
                         <div className="grid grid-cols-7 gap-1.5 max-w-xs mx-auto">
                           {Array.from({ length: selectedBookData.chapters }, (_, j) => j + 1).map(ch => {
-                            const isCurrent = navigatorBook === bookId && ch === chapter;
+                            const isCurrent = navigatorBook === activeBookId && ch === activeChapterNum;
                             return (
                               <button
                                 key={ch}
@@ -2541,7 +2944,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               const parsed = parseVerseRefString(fromRef);
               const sourceEntry = parsed
                 ? { book: parsed.bookId, chapter: parsed.chapter, verse: parsed.verse }
-                : { book: bookId, chapter, verse: 0 }; // best-effort fallback; shouldn't normally happen
+                : { book: activeBookId, chapter: activeChapterNum, verse: 0 }; // best-effort fallback; shouldn't normally happen
 
               // Never record a "stop" for a jump that doesn't actually go anywhere —
               // landing on the verse you're already reading would otherwise leave a
@@ -2603,7 +3006,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   <div className="w-[1px] h-4 bg-card-border" />
                   <button
                     onClick={() => {
-                      setCrossRefPeekSource({ book: bookId, chapter });
+                      setCrossRefPeekSource({ book: activeBookId, chapter: activeChapterNum });
                       setShowCrossReferences([`${topReturnBookEnglish.toLowerCase()} ${topReturn.chapter}:${topReturn.verse}`]);
                     }}
                     className="text-[15px] font-medium transition-colors flex items-center gap-2 hover:text-accent"
@@ -2630,38 +3033,85 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       <CommentaryModal
         isOpen={showCommentaryModal}
         onClose={() => setShowCommentaryModal(false)}
-        bookId={bookId}
-        bookName={getBookName(bookId, bookTitle, state.settings.bibleVersion)}
+        bookId={activeBookId}
+        bookName={getBookName(activeBookId, activeBookTitle, state.settings.bibleVersion)}
       />
 
-      {immerseChapterOpen && chapterMemoryVerses.length > 0 && (
-        <ImmersedReader
-          verse={chapterMemoryVerses[Math.min(immerseVerseIdx, chapterMemoryVerses.length - 1)]}
-          index={Math.min(immerseVerseIdx, chapterMemoryVerses.length - 1)}
-          total={chapterMemoryVerses.length}
-          onPrev={() => {
-            stopChapterSpeech();
-            setImmerseVerseIdx((i) => Math.max(0, i - 1));
-          }}
-          onNext={() => {
-            stopChapterSpeech();
-            setImmerseVerseIdx((i) => Math.min(chapterMemoryVerses.length - 1, i + 1));
-          }}
-          onExit={() => {
-            stopChapterSpeech();
-            setImmerseChapterOpen(false);
-          }}
-          isAutoPlaying={isSpeakingChapter}
-          onToggleAutoPlay={() => {
-            if (isSpeakingChapter) {
+      {immerseChapterOpen && chapterMemoryVerses.length > 0 && (() => {
+        const safeIdx = Math.min(immerseVerseIdx, chapterMemoryVerses.length - 1);
+        const prevCoord = adjacentReadingChapter(ALL_BOOKS, activeBookId, activeChapterNum, -1);
+        const nextCoord = adjacentReadingChapter(ALL_BOOKS, activeBookId, activeChapterNum, 1);
+        const nextBookObj = nextCoord ? ALL_BOOKS.find(b => b.id === nextCoord.bookId) : null;
+        const nextShortBoundary = nextCoord
+          ? getBookName(nextCoord.bookId, BOOK_SHORT[nextCoord.bookId] || nextBookObj?.name || nextCoord.bookId, bibleVersion)
+          : null;
+        const boundaryLabel = safeIdx === chapterMemoryVerses.length - 1
+          ? !nextCoord
+            ? 'End of Bible'
+            : continueChapters && nextShortBoundary
+            ? `Next · ${nextShortBoundary} ${nextCoord!.chapter}:1`
+            : 'End of chapter'
+          : null;
+
+        return (
+          <ImmersedReader
+            verse={chapterMemoryVerses[safeIdx]}
+            index={safeIdx}
+            total={chapterMemoryVerses.length}
+            onPrev={() => {
               stopChapterSpeech();
-            } else {
-              speakChapterFrom(Math.min(immerseVerseIdx, chapterMemoryVerses.length - 1));
-            }
-          }}
-          bibleVersion={bibleVersion}
-        />
-      )}
+              if (safeIdx > 0) {
+                const nextIdx = safeIdx - 1;
+                setImmerseVerseIdx(nextIdx);
+                const vNum = activeVerses[nextIdx]?.verse;
+                if (vNum) setActiveStreamPos(prev => ({ ...prev, verse: vNum }));
+              } else if (continueChapters && prevCoord) {
+                preserveModeOnRouteChangeRef.current = true;
+                immerseContinuationTargetRef.current = 'last';
+                goToChapter(prevCoord.bookId, prevCoord.chapter, true);
+              }
+            }}
+            onNext={() => {
+              stopChapterSpeech();
+              if (safeIdx < chapterMemoryVerses.length - 1) {
+                const nextIdx = safeIdx + 1;
+                setImmerseVerseIdx(nextIdx);
+                const vNum = activeVerses[nextIdx]?.verse;
+                if (vNum) setActiveStreamPos(prev => ({ ...prev, verse: vNum }));
+              } else if (continueChapters && nextCoord) {
+                preserveModeOnRouteChangeRef.current = true;
+                immerseContinuationTargetRef.current = 'first';
+                goToChapter(nextCoord.bookId, nextCoord.chapter, true);
+              }
+            }}
+            onExit={() => {
+              stopChapterSpeech();
+              immerseContinuationTargetRef.current = null;
+              setImmerseChapterOpen(false);
+            }}
+            isAutoPlaying={isSpeakingChapter}
+            onToggleAutoPlay={() => {
+              if (isSpeakingChapter) {
+                stopChapterSpeech();
+              } else {
+                speakChapterFrom(safeIdx);
+              }
+            }}
+            bibleVersion={bibleVersion}
+            previousAvailable={safeIdx > 0 || (continueChapters && Boolean(prevCoord))}
+            nextAvailable={safeIdx < chapterMemoryVerses.length - 1 || (continueChapters && Boolean(nextCoord))}
+            boundaryLabel={boundaryLabel}
+            isLoadingChapter={loading}
+            chapterError={error}
+            onRetryChapter={() => setRetryCount(c => c + 1)}
+            backgroundPlayback={true}
+            continueChapters={continueChapters}
+            onContinueChaptersChange={(enabled) => {
+              dispatch({ type: 'UPDATE_SETTINGS', payload: { continueChapters: enabled } });
+            }}
+          />
+        );
+      })()}
     </div>
   );
 };

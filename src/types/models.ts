@@ -76,6 +76,7 @@ export interface UserSettings {
    * more effort. This is the one dial that answers the measurement. */
   intervalScale?: number;
   streakIncludesChapters?: boolean;
+  continueChapters?: boolean;
 }
 
 export type SortOrder = 'smart' | 'bible-asc' | 'bible-desc' | 'date-asc' | 'date-desc' | 'random';
