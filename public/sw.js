@@ -27,6 +27,8 @@ const CONTENT_CACHE = `remora-content-${VERSION}`;
 const DEUTERONOMY_ART_CACHE = 'remora-deuteronomy-art-v1';
 // Genesis also has a newly approved image set; isolate it from older shell art.
 const GENESIS_ART_CACHE = 'remora-genesis-art-v1';
+// Exodus artwork is refreshed independently so other offline content is preserved.
+const EXODUS_ART_CACHE = 'remora-exodus-art-v1';
 
 // Only the entry point is pre-cached. Hashed bundles are picked up on first visit by
 // the fetch handler below — listing them here would mean editing this file on every
@@ -75,7 +77,7 @@ self.addEventListener('activate', event => {
         names
           .filter(n =>
             LEGACY_CACHES.includes(n) ||
-            (n.startsWith('remora-') && n !== SHELL_CACHE && n !== CONTENT_CACHE && n !== DEUTERONOMY_ART_CACHE && n !== GENESIS_ART_CACHE))
+            (n.startsWith('remora-') && n !== SHELL_CACHE && n !== CONTENT_CACHE && n !== DEUTERONOMY_ART_CACHE && n !== GENESIS_ART_CACHE && n !== EXODUS_ART_CACHE))
           .map(n => caches.delete(n))
       ))
       .then(() => self.clients.claim())
@@ -149,6 +151,10 @@ self.addEventListener('fetch', event => {
   }
   if (url.origin === self.location.origin && /^\/chapters\/genesis\/ch\d+\.(png|jpg)$/.test(url.pathname)) {
     event.respondWith(cacheFirst(request, GENESIS_ART_CACHE));
+    return;
+  }
+  if (url.origin === self.location.origin && /^\/chapters\/exodus\/ch\d+\.(png|jpg)$/.test(url.pathname)) {
+    event.respondWith(cacheFirst(request, EXODUS_ART_CACHE));
     return;
   }
 
