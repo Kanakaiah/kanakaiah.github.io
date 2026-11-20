@@ -1,160 +1,93 @@
-# Image prompts for Revelation — all chapters
+# Revelation — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/revelation/`.
+Reviewed against the bundled BSB text (book 66) and existing app memory keywords. Illustrations are representative memory cues, not exhaustive pictures of every event or definitive interpretations of apocalyptic imagery. No chapter labels or readable writing in artwork.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 22 chapters.
+Corrections: one principal moment per image; chapter 2 emphasizes the four letters (four scrolls are an illustrative convention); chapter 3 removes the unspecified latch and cup; chapter 8 emphasizes incense; chapter 10 has only one scroll; chapter 11 shows only one moment of the witnesses; chapter 15 emphasizes the song; chapter 20 depicts binding rather than combining events separated by a thousand years. Chapter 21 excludes a temple and sea. Chapter 22 does not force monthly fruitfulness into a literal simultaneous botanical display.
 
-### Chapter 1 — ROBE
-**Filename:** `ch1.png`
+### Revelation 1 — ROBE
 
-```
-A dramatic, cinematic biblical illustration of Christ in a long robe — eyes like fire. Symbolizes 'ROBE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 1 illustration. Memory keyword ROBE (do not print). John lies overcome on the rocky shore of Patmos before the glorious Son of Man in a long white robe with gold chest sash, white hair, blazing eyes and bronze-like feet. Exactly seven separate golden lampstands surround Him, seven stars in His right hand, a sharp sword-shaped ray proceeds from His mouth. Majestic, not grotesque. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 2 — LETTERS
-**Filename:** `ch2.png`
+### Revelation 2 — LETTERS
 
-```
-A dramatic, cinematic biblical illustration of Four letters — Ephesus, Smyrna, Pergamum, Thyatira. Symbolizes 'LETTERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 2 illustration. Memory keyword LETTERS (do not print). John prepares four rolled letters on a low writing table in a first-century room, representing the messages to Ephesus, Smyrna, Pergamum and Thyatira. Four scrolls clearly visible with written surfaces rolled inward; a modest oil lamp illuminates his focused face. This is an illustrative memory cue for the letters, not a scene claiming four physical scrolls are specified in the text. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 3 — DOOR
-**Filename:** `ch3.png`
+### Revelation 3 — DOOR
 
-```
-A dramatic, cinematic biblical illustration of Three letters — 'Behold I stand at the door and knock'. Symbolizes 'DOOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 3 illustration. Memory keyword DOOR (do not print). Christ stands at an ancient wooden door and knocks, conveying the invitation of Revelation 3:20. One closed door and His raised knocking hand are the main cues. Do not invent a visible inside-only latch, lukewarm cup, or neighboring open doorway. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 4 — THRONE
-**Filename:** `ch4.png`
+### Revelation 4 — THRONE
 
-```
-A dramatic, cinematic biblical illustration of Throne room — four living creatures, 24 elders. Symbolizes 'THRONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 4 illustration. Memory keyword THRONE (do not print). A luminous heavenly throne encircled by an emerald rainbow above a crystal sea. The One seated is veiled by jasper-and-carnelian radiance, without a human face. Twenty-four white-robed crowned elders surround the throne. Four living creatures, lion-like, calf-like, human-faced and eagle-like, have six wings each. Seven flaming torches stand before the throne. Ordered panoramic composition. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 5 — LAMB
-**Filename:** `ch5.png`
+### Revelation 5 — LAMB
 
-```
-A dramatic, cinematic biblical illustration of The slain Lamb takes the scroll — worthy to open it. Symbolizes 'LAMB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 5 illustration. Memory keyword LAMB (do not print). The living Lamb, bearing a small healed wound as the sign of having been slain, stands before the radiant throne beside a closed scroll with exactly seven wax seals. The Lamb has seven short horns and seven eyes as described by John's vision, rendered reverently not grotesquely. Elders bow with harps and golden bowls of incense. No human face on the throne; no gore. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 6 — HORSE
-**Filename:** `ch6.png`
+### Revelation 6 — HORSE
 
-```
-A dramatic, cinematic biblical illustration of Four horsemen — white, red, black, pale. Symbolizes 'HORSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 6 illustration. Memory keyword HORSE (do not print). Exactly four mounted riders ride through a dramatic landscape: white horse with crowned bow-bearing rider, red horse with sword-bearing rider, black horse with rider holding balance scales, pale green horse with a shadowy rider representing Death. Four distinct horse colors and attributes, no extra horses or riders. Do not add the later sixth-seal celestial events. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 7 — SEALED
-**Filename:** `ch7.png`
+### Revelation 7 — SEALED
 
-```
-A dramatic, cinematic biblical illustration of 144,000 sealed — great multitude no one can number. Symbolizes 'SEALED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 7 illustration. Memory keyword SEALED (do not print). An angel holding a seal marks the forehead of a servant of God while a great assembly of other servants waits calmly. Four angels stand far behind holding back wind across still land and sea; trees remain motionless. The sealing action is the primary cue. Forehead is turned obliquely; no invented legible mark, number, or modern symbol. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 8 — INCENSE
-**Filename:** `ch8.png`
+### Revelation 8 — INCENSE
 
-```
-A dramatic, cinematic biblical illustration of Golden censer of incense — silence in heaven. Symbolizes 'INCENSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 8 illustration. Memory keyword INCENSE (do not print). An angel stands at a golden heavenly altar holding a golden censer, with fragrant incense smoke rising toward a radiant throne. Seven angels holding trumpets wait quietly behind. The censer and rising incense dominate; no simultaneous burning mountain, meteor or plagues. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 9 — LOCUSTS
-**Filename:** `ch9.png`
+### Revelation 9 — LOCUSTS
 
-```
-A dramatic, cinematic biblical illustration of Demonic locusts from the abyss. Symbolizes 'LOCUSTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 9 illustration. Memory keyword LOCUSTS (do not print). Armored visionary locusts emerge from a deep smoky abyss that darkens the sky. They resemble horses prepared for battle, with human-like faces, long hair, lion-like teeth, iron-like breastplates, golden crown-like crests and unmistakable curved scorpion tails. Focus on a few large readable creatures with the swarm behind. No injured people, no separate Euphrates cavalry scene. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 10 — SCROLL
-**Filename:** `ch10.png`
+### Revelation 10 — SCROLL
 
-```
-A dramatic, cinematic biblical illustration of Little scroll — sweet in the mouth, bitter in the stomach. Symbolizes 'SCROLL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 10 illustration. Memory keyword SCROLL (do not print). John eats the edge of one small open scroll at the shore, while a mighty cloud-wrapped angel stands with his right foot on the sea and his left on land. The angel's face shines like the sun, a rainbow above his head, legs like pillars of fire. John holds the only scroll; no duplicate scroll remaining in the angel's hand. Scroll writing faces away. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 11 — WITNESSES
-**Filename:** `ch11.png`
+### Revelation 11 — WITNESSES
 
-```
-A dramatic, cinematic biblical illustration of Two witnesses — killed, raised, ascend. Symbolizes 'WITNESSES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 11 illustration. Memory keyword WITNESSES (do not print). Exactly two sackcloth-clad witnesses ascend together into a luminous cloud above a city street, while terrified onlookers watch below. Depict this single moment after their resurrection, no duplicate standing or dead versions of the witnesses and no additional temple vignette. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 12 — DRAGON
-**Filename:** `ch12.png`
+### Revelation 12 — DRAGON
 
-```
-A dramatic, cinematic biblical illustration of Red dragon pursues the woman and her child. Symbolizes 'DRAGON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 12 illustration. Memory keyword DRAGON (do not print). A huge red dragon with exactly seven distinct heads, seven crowns on the heads, and ten horns total confronts a fully clothed pregnant woman radiant with sunlight, the moon under her feet and twelve stars in her crown. Both form one coherent visionary composition. No infant being attacked, no birth detail, no battle inset. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 13 — BEAST
-**Filename:** `ch13.png`
+### Revelation 13 — BEAST
 
-```
-A dramatic, cinematic biblical illustration of Beast from the sea — 666, mark of the beast. Symbolizes 'BEAST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 13 illustration. Memory keyword BEAST (do not print). A monstrous beast rises from a dark sea: seven heads, ten horns crowned with ten diadems, leopard-patterned body, bear-like feet and lion-like mouths. On the shore a smaller separate beast with two lamb-like horns directs a distant crowd toward it. Keep these two beasts anatomically separate and countable. No numbers, marks, names or modern political imagery. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 14 — HARVEST
-**Filename:** `ch14.png`
+### Revelation 14 — HARVEST
 
-```
-A dramatic, cinematic biblical illustration of The Lamb on Mount Zion — the great harvest. Symbolizes 'HARVEST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 14 illustration. Memory keyword HARVEST (do not print). One like the Son of Man sits on a white cloud wearing a golden crown and holding a large sharp sickle extended over ripe golden fields, illustrating the harvest of the earth. An angel near the heavenly temple calls toward Him. One harvest scene; no blood flood, winepress montage or separate Lamb on Zion. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 15 — SONG
-**Filename:** `ch15.png`
+### Revelation 15 — SONG
 
-```
-A dramatic, cinematic biblical illustration of Song of Moses and the Lamb. Symbolizes 'SONG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 15 illustration. Memory keyword SONG (do not print). Victorious worshipers sing with harps beside a sea of glass mixed with fiery reflections. Their joyful faces and harps are prominent, expressing the song of Moses and the Lamb. A smoke-filled heavenly sanctuary recedes behind them. Do not add a separate bowl-pouring scene. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 16 — ARMAGEDDON
-**Filename:** `ch16.png`
+### Revelation 16 — ARMAGEDDON
 
-```
-A dramatic, cinematic biblical illustration of Seven bowls poured — kings gathered at Armageddon. Symbolizes 'ARMAGEDDON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 16 illustration. Memory keyword ARMAGEDDON (do not print). Kings and their ancient armies gather for battle on a wide plain after crossing the dried bed of the Euphrates, illustrating the gathering at Armageddon. Above the river an angel tips a golden bowl, linking the scene to the sixth bowl. Distant banners have no emblems or lettering. No claim to modern geography, no modern weapons, no montage of all seven plagues. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 17 — HARLOT
-**Filename:** `ch17.png`
+### Revelation 17 — HARLOT
 
-```
-A dramatic, cinematic biblical illustration of Harlot Babylon riding the scarlet beast. Symbolizes 'HARLOT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 17 illustration. Memory keyword HARLOT (do not print). A woman fully dressed in richly jeweled purple and scarlet robes holds a golden cup while seated on a scarlet beast in a wilderness. The beast has seven clearly distinct heads and ten horns total. John and an angel watch from a rocky foreground edge. The woman and cup dominate. No nudity, no forehead text, no named modern city. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 18 — SMOKE
-**Filename:** `ch18.png`
+### Revelation 18 — SMOKE
 
-```
-A dramatic, cinematic biblical illustration of Babylon falls — merchants weep, smoke rises. Symbolizes 'SMOKE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 18 illustration. Memory keyword SMOKE (do not print). Merchants and shipmasters stand far from a burning ancient coastal city, grieving beside abandoned luxury cargo and anchored ships as a vast column of smoke rises. Emphasize the smoke and observers' distance. No modern skyline and no separate millstone-throwing scene. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 19 — SWORD
-**Filename:** `ch19.png`
+### Revelation 19 — SWORD
 
-```
-A dramatic, cinematic biblical illustration of Rider on a white horse — sword from His mouth. Symbolizes 'SWORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 19 illustration. Memory keyword SWORD (do not print). A majestic rider on a white horse emerges from open heaven, eyes blazing, many diadems on his head, robe deep crimson as if dipped in blood. A sharp sword-shaped ray proceeds distinctly from his mouth, not from his hands. White-robed armies follow on white horses. No readable names or lettering, no gore or birds eating bodies. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 20 — CHAINS
-**Filename:** `ch20.png`
+### Revelation 20 — CHAINS
 
-```
-A dramatic, cinematic biblical illustration of Satan bound in chains — great white throne judgment. Symbolizes 'CHAINS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 20 illustration. Memory keyword CHAINS (do not print). An angel descends with a large key and a heavy chain and binds a great serpent-dragon at the mouth of a dark abyss. The chain and key dominate the foreground, the serpent subdued. Illustrate the binding in Revelation 20:1-3 only; no simultaneous later white-throne judgment. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 21 — CITY
-**Filename:** `ch21.png`
+### Revelation 21 — CITY
 
-```
-A dramatic, cinematic biblical illustration of New Jerusalem descends — no more tears, no more death. Symbolizes 'CITY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Create a Revelation chapter 21 illustration. Memory keyword CITY (do not print). The radiant New Jerusalem descends from heaven over a renewed land. Its foursquare outline, high jasper walls, jewel-colored foundations and pearl gates glow with transparent gold. Show three gates on each of the two visible walls, with the unseen sides implied. No temple, sun, moon, sea, oversized divine hand or modern skyline. John and an angel with a measuring rod watch from a high mountain. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
 
-### Chapter 22 — RIVER
-**Filename:** `ch22.png`
+### Revelation 22 — RIVER
 
-```
-A dramatic, cinematic biblical illustration of River of life — tree of life — 'Come, Lord Jesus'. Symbolizes 'RIVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
-
+Create a Revelation chapter 22 illustration. Memory keyword RIVER (do not print). A crystal-clear river flows from a distant radiant throne of God and the Lamb along the golden city's main street, with luxuriant fruit-bearing trees of life on both banks. People peacefully walk nearby under pervasive divine light; no sun, moon, lamps or night. Fruit and healing leaves are abundant but do not force twelve different fruits into a botanical diagram. No forehead writing or visible human face on the throne. Classical realistic biblical oil painting consistent with the Genesis and Exodus series. 4:3 landscape, full bleed, rich earth tones and luminous gold, atmospheric chiaroscuro with clear main action readable on a phone. One coherent scene, no insets, panels, collage, borders, floating secondary vignettes. Ancient garments and objects. NO text, letters, numbers, captions, logos, watermarks or signatures anywhere. Chapter numbers and keywords are supplied by the app outside the artwork. This is an artistic illustration of a symbolic vision, not a photographic reconstruction.
