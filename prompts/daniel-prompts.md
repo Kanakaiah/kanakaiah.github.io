@@ -1,90 +1,78 @@
-# Image prompts for Daniel — all chapters
+# Daniel — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/daniel/`.
+Reviewed against the bundled BSB text (book 27) and the existing web and Android memory keywords. One representative scene per chapter; chapter numbers and keywords remain in the app UI, not the image. Symbolic visions are artistic interpretations rather than exhaustive or definitive reconstructions.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 12 chapters.
+Corrections: chapter 2's stone becomes a mountain after impact; chapter 3 shows four unbound figures; chapter 4 focuses on the tree dream; chapter 5 obscures the writing and omits Daniel before he is summoned; chapter 6 stays inside the sealed den at night; chapter 7 focuses on the approach to the heavenly throne; chapter 8 distinguishes the unequal ram horns from the goat's single horn; chapter 9 avoids importing the open-window motif; chapter 10 emphasizes the strengthening touch; chapter 11 avoids ships on a desert battlefield; chapter 12 emphasizes awakening without combining the later river scene.
 
-### Chapter 1 — VEGETABLES
-**Filename:** `ch1.png`
+### Daniel 1 — VEGETABLES
 
-```
-A dramatic, cinematic biblical illustration of Daniel refuses the king's food — after ten days looks healthier than all. Symbolizes 'VEGETABLES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Daniel 1:8–16.
 
-### Chapter 2 — STATUE
-**Filename:** `ch2.png`
+Daniel chapter 1, memory keyword VEGETABLES (do not print). Daniel and his three young Judean companions sit together at a plain low table in the Babylonian palace, with bowls of vegetables, lentils and cups of water. All four look healthy and composed as the steward observes them after their ten-day test. A richer royal meal is visible at a separate table deeper in the room. Focus on the four youths and their modest meal, without modern vegetables or utensils. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
-```
-A dramatic, cinematic biblical illustration of Nebuchadnezzar's dream of the great statue — Daniel interprets — "a rock cut without hands. Symbolizes 'STATUE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Daniel 2 — STATUE
 
-### Chapter 3 — FURNACE
-**Filename:** `ch3.png`
+Reference: Daniel 2:31–35.
 
-```
-A dramatic, cinematic biblical illustration of Three friends in the fiery furnace — "a fourth man walking — like a son of the gods. Symbolizes 'FURNACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Daniel chapter 2, memory keyword STATUE (do not print). A single towering statue in Nebuchadnezzar's dream: gold head, silver chest AND arms, bronze belly AND thighs, iron lower legs, and feet visibly made of mixed iron and clay. Show the whole figure and all material divisions clearly. A rough stone not cut by human hands strikes the feet, cracking them and throwing fragments outward as the statue begins to fall. The stone is a boulder at this moment, NOT already mountain-sized. No second statue, no human workers. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
-### Chapter 4 — TREE
-**Filename:** `ch4.png`
+### Daniel 3 — FURNACE
 
-```
-A dramatic, cinematic biblical illustration of Nebuchadnezzar's dream of the great tree cut down — driven to eat grass like cattle. Symbolizes 'TREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Daniel 3:19–27.
 
-### Chapter 5 — WALL
-**Filename:** `ch5.png`
+Daniel chapter 3, memory keyword FURNACE (do not print). Inside a deep Babylonian brick furnace, exactly three Judean men in intact robes and a fourth luminous humanlike figure walk freely and unharmed among blazing flames. Their hands are unbound. Four distinct full figures, no extra person within the furnace. Outside the mouth, the Babylonian king looks in astonishment from a safe distance. Focus on the miraculous four figures, omit distant idol and musicians and dying guards. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
-```
-A dramatic, cinematic biblical illustration of The handwriting on the wall — MENE MENE TEKEL PARSIN — that very night Belshazzar dies. Symbolizes 'WALL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Daniel 4 — TREE
 
-### Chapter 6 — LIONS
-**Filename:** `ch6.png`
+Reference: Daniel 4:10–17.
 
-```
-A dramatic, cinematic biblical illustration of Daniel in the lions' den — the stone sealed — at dawn the king runs to the den. Symbolizes 'LIONS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Daniel chapter 4, memory keyword TREE (do not print). Nebuchadnezzar's dream of the great tree at the moment it is cut down: an enormous leafy fruit-bearing tree trunk severed close to the ground, its great crown falling diagonally, animals fleeing its shade and birds taking flight from the branches. The rooted stump remains in dew-covered grass with a visible band of dark iron and warm bronze encircling it. A holy watcher in the upper sky announces the decree. A coherent dream landscape, NOT a montage with the king eating grass; no literal bird-man transformation. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
-### Chapter 7 — CLOUDS
-**Filename:** `ch7.png`
+### Daniel 5 — WALL
 
-```
-A dramatic, cinematic biblical illustration of One like a Son of Man coming with the clouds of heaven — given authority, glory, and sovereign power. Symbolizes 'CLOUDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Daniel 5:1–12.
 
-### Chapter 8 — RAM
-**Filename:** `ch8.png`
+Daniel chapter 5, memory keyword WALL (do not print). Belshazzar's banquet suddenly interrupted: the fingers of a human hand appear at the plaster wall next to a lampstand, beginning the mysterious writing as the terrified king recoils with trembling knees. Gold and silver temple cups sit on the banquet table, guests stare at the wall. Use an oblique view and the hand's bright glow to obscure the writing so no legible letters or invented symbols appear. The hand, plaster wall, lampstand and frightened king must be unmistakable. Daniel is not yet present in this initial moment. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
-```
-A dramatic, cinematic biblical illustration of The ram and the goat — Medo-Persia and Greece — the little horn. Symbolizes 'RAM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Daniel 6 — LIONS
 
-### Chapter 9 — PRAYER
-**Filename:** `ch9.png`
+Reference: Daniel 6:16–23.
 
-```
-A dramatic, cinematic biblical illustration of Daniel's great prayer of confession — the seventy weeks revealed. Symbolizes 'PRAYER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Daniel chapter 6, memory keyword LIONS (do not print). An elderly Daniel with gray beard stands unharmed in a DEEP enclosed stone lions' den at night, surrounded by several powerful adult lions whose mouths are closed. An angelic humanlike messenger stands beside him, expressing calm protection without physically wrestling or grabbing the lions. High sheer rock walls extend far above Daniel; no steps, ledges or easy escape. The entrance is high overhead and closed by a heavy stone. Soft heavenly illumination within the den. One interior viewpoint; omit the king and dawn rescue. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
-### Chapter 10 — TOUCH
-**Filename:** `ch10.png`
+### Daniel 7 — CLOUDS
 
-```
-A dramatic, cinematic biblical illustration of The heavenly messenger touches Daniel — "you are greatly loved — do not be afraid. Symbolizes 'TOUCH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Daniel 7:9–14.
 
-### Chapter 11 — SOUTH
-**Filename:** `ch11.png`
+Daniel chapter 7, memory keyword CLOUDS (do not print). Daniel's heavenly vision: one like a Son of Man comes with sweeping luminous clouds toward the Ancient of Days seated on a throne of flame with fiery wheels. The Son of Man approaches the throne, NOT descends to earth. The enthroned Ancient of Days has white clothing and wool-white hair, features softened by radiant light. A river of fire flows from the throne; a vast heavenly court recedes into the distance. The cloud-borne approach and reception of dominion are the single central action. Do not combine the four beasts into this later court scene. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
-```
-A dramatic, cinematic biblical illustration of The detailed prophecy of the kings of the South and North — Antiochus Epiphanes foreshadowed. Symbolizes 'SOUTH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Daniel 8 — RAM
 
-### Chapter 12 — AWAKE
-**Filename:** `ch12.png`
+Reference: Daniel 8:1–7.
 
-```
-A dramatic, cinematic biblical illustration of Multitudes who sleep in the dust of the earth will awake — some to everlasting life. Symbolizes 'AWAKE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Daniel chapter 8, memory keyword RAM (do not print). Beside the Ulai canal in Daniel's vision, a powerful ram with exactly TWO long horns, one visibly taller than the other, faces a charging shaggy goat with exactly ONE prominent horn centered between its eyes. The goat rushes forward with all four hooves off the ground, just before impact. Both animals and their horns are clearly visible in distinct side-three-quarter silhouettes. Ancient Susa landscape beyond the water. No angel in the sky or added horns, no gore. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
+
+### Daniel 9 — PRAYER
+
+Reference: Daniel 9:2–3,20–23.
+
+Daniel chapter 9, memory keyword PRAYER (do not print). Elderly Daniel kneels in sackcloth and ashes in a modest ancient room, praying earnestly with bowed head and open hands. Rolled sacred scrolls lie beside him with written surfaces turned inward. Gabriel, appearing as a man, has just arrived and stands near Daniel to give understanding. Warm evening light marks the hour of the evening sacrifice. No burning altar, brazier or temple sacrifice in the room. Prayer is the focus, no visible Jerusalem skyline, no added open-window motif, no seventy-week diagram or writing. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
+
+### Daniel 10 — TOUCH
+
+Reference: Daniel 10:4–10,18–19.
+
+Daniel chapter 10, memory keyword TOUCH (do not print). On the bank of the Tigris, an elderly Daniel trembles on his hands and knees while a heavenly messenger in human likeness gently touches and steadies his shoulder, helping restore his strength. The visible contact between hand and shoulder is the focal point. Daniel's face shows exhaustion giving way to reassurance. The messenger wears luminous linen; soft reflected gold light over the flowing river. Two figures only, no second Daniel or separate fainting episode, no modern objects. The messenger is not given a specific identity. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
+
+### Daniel 11 — SOUTH
+
+Reference: Daniel 11:11–15,25,40.
+
+Daniel chapter 11, memory keyword SOUTH (do not print). A representative scene of the conflict between the kings of the South and North in Daniel's prophecy: two opposing ancient armies face each other across a dry Near Eastern plain, each with a royal commander, ranks of spearmen and horse-drawn chariots. Distinct formations approach from opposing directions, dust and tension rather than graphic combat. Ancient Hellenistic-style equipment, no medieval armor, no modern national symbols. No ships on land, no inset temple idol or unrelated scenes. This illustrates the chapter's recurring conflict, not a claim to reconstruct every predicted battle. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
+
+### Daniel 12 — AWAKE
+
+Reference: Daniel 12:2–3.
+
+Daniel chapter 12, memory keyword AWAKE (do not print). A reverent symbolic vision of Daniel 12:2–3: men and women in simple ancient garments awaken and rise from the dusty earth beneath a vast star-filled sky. The wise in the foreground stand in gentle radiant light like the brightness of the heavens, with others farther away in shadow suggesting the passage's contrasting outcomes. Dignified whole human bodies, no zombies, exposed bones or graveyard horror. Awakening and star-like radiance are the clear focus; no floating disembodied heads, no unrelated river angel or scroll inset. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting, consistent with the Genesis, Exodus and Revelation series. Landscape 4:3, full-bleed with no border, warm atmospheric light, strong chiaroscuro, rich earth tones and luminous gold. One coherent scene with a clear main action readable at phone thumbnail size. Historically plausible ancient clothes and objects. No text, letters, numbers, labels, captions, logos, signatures or watermarks. App UI supplies the chapter number and keyword outside the image. Prophetic scenes are artistic memory cues, not definitive interpretations.
 
