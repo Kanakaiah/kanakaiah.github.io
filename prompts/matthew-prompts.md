@@ -1,202 +1,180 @@
-# Image prompts for Matthew — all chapters
+# Matthew — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/matthew/`.
+Reviewed against the bundled BSB text (book 40) and existing web/Android memory keywords. Chapter numbers and keywords remain in the UI. Images illustrate one representative scene or teaching from each chapter, not every event. Metaphorical props are explicitly identified as artistic memory cues rather than claims about historical objects.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 28 chapters.
+Corrections: no specified number or royal status for the Magi; no modern salt shaker; no staffs for Matthew 10's mission; no literal physical handover of keys; no giant needle or supposed needle-eye gate; the colt carries Jesus with its mother alongside; the ten women are shown at a single moment before going for oil; the Bethany anointing is on Jesus' head and Matthew does not describe breaking the jar; the torn curtain is not combined with post-resurrection appearances. Several scene choices emphasize the app's established keywords: prayer, centurion, harvest, child, jar and curtain. EAGLES remains the existing mnemonic, while the BSB translates the bird term in 24:28 as vultures. The source Downloads file is preserved.
 
-### Chapter 1 — GENEALOGY
-**Filename:** `ch1.png`
+### Matthew 1 — GENEALOGY
 
-```
-A dramatic, cinematic biblical illustration of 'Son of David, Son of Abraham' — the royal line. Symbolizes 'GENEALOGY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 1:18–25.
 
-### Chapter 2 — STAR
-**Filename:** `ch2.png`
+Matthew chapter 1. Memory keyword GENEALOGY (do not print). Joseph sleeps on a simple pallet in a modest first-century Judean home. An angel of the Lord appears to him in a luminous dream, reassuring him about Mary and the child. A few carpenter tools rest on a low bench, unobtrusive. Focus on the sleeping Joseph and the angel's reassuring gesture. No literal family tree with people in branches, no kings, no baby already born. This depicts the dream in the chapter that introduces the genealogy. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Magi follow the star — Herod slaughters the innocents. Symbolizes 'STAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 2 — STAR
 
-### Chapter 3 — DOVE
-**Filename:** `ch3.png`
+Reference: Matthew 2:9–12.
 
-```
-A dramatic, cinematic biblical illustration of Baptism — Spirit descends like a dove. Symbolizes 'DOVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 2. Memory keyword STAR (do not print). Magi from the east bow before the young Jesus beside Mary inside a humble house, opening gifts of gold, frankincense and myrrh. Several travelers are visible without implying the text specifies their total number. Eastern scholarly travelers in fine ancient robes, not crowned European kings. The guiding star is visible through the doorway. A small toddler approximately 12–18 months old, held safely on Mary's lap; no school-aged child, no newborn manger, stable, shepherds or distant Herod inset. Reverent faces and the three kinds of gifts are the focal point. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 4 — DESERT
-**Filename:** `ch4.png`
+### Matthew 3 — DOVE
 
-```
-A dramatic, cinematic biblical illustration of Temptation in the desert — 'It is written' three times. Symbolizes 'DESERT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 3:13–17.
 
-### Chapter 5 — BEATITUDES
-**Filename:** `ch5.png`
+Matthew chapter 3. Memory keyword DOVE (do not print). Jesus has just come up from baptism in the Jordan, water flowing from his simple light garment. John the Baptist in camel-hair clothing stands beside him. A single dove descends through the opened heavens toward Jesus, bathed in light. One intimate river scene with a few distant witnesses. No axe, snakes, brush fire or separate sermon symbols. The dove and baptism are unmistakable. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Blessed are the poor in spirit — salt and light. Symbolizes 'BEATITUDES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 4 — DESERT
 
-### Chapter 6 — PRAYER
-**Filename:** `ch6.png`
+Reference: Matthew 4:1–4.
 
-```
-A dramatic, cinematic biblical illustration of The Lord's Prayer — treasures in heaven. Symbolizes 'PRAYER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 4. Memory keyword DESERT (do not print). Jesus, visibly weary from fasting yet resolute, faces the tempter in the stony Judean wilderness. The tempter, a shadowed humanlike figure without cartoon horns, gestures toward ordinary stones, tempting Jesus to turn them into bread. Jesus refuses with a firm composed gesture. The stones remain stones. One temptation only; no temple pinnacle, kingdom montage, floating bread or angels arriving before the tempter leaves. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 7 — ROCK
-**Filename:** `ch7.png`
+### Matthew 5 — BEATITUDES
 
-```
-A dramatic, cinematic biblical illustration of Build on the rock — two gates, two trees, two builders. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 5:1–12.
 
-### Chapter 8 — CENTURION
-**Filename:** `ch8.png`
+Matthew chapter 5. Memory keyword BEATITUDES (do not print). Jesus sits on a Galilean hillside teaching the Beatitudes. His disciples sit close around him while a diverse gathering of ordinary first-century men and women listens attentively beyond them. Warm humane expressions, a grieving listener comforted by a companion, humble people receiving hope. The seated teacher and the listening hillside crowd are central. No floating lights, modern salt shaker, staged lamp or distant separate parable scenes. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of 'I have not found such faith in Israel'. Symbolizes 'CENTURION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 6 — PRAYER
 
-### Chapter 9 — HARVEST
-**Filename:** `ch9.png`
+Reference: Matthew 6:5–13.
 
-```
-A dramatic, cinematic biblical illustration of 'The harvest is plentiful but workers are few'. Symbolizes 'HARVEST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 6. Memory keyword PRAYER (do not print). Illustrate Jesus' teaching on private prayer: an ordinary first-century disciple kneels alone inside a quiet small stone room with its wooden door closed, head bowed and open hands lifted modestly in prayer. A small high window admits soft daylight onto a simple loaf on a low table, an understated cue to daily bread. Intimate and peaceful, not a public spectacle. No additional Jesus figure, no king's court, lilies montage, visible divine face, writing or captions. This is an illustration of the teaching, not a specifically named historical person. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 10 — SWORD
-**Filename:** `ch10.png`
+### Matthew 7 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of 'I came not to bring peace but a sword' — mission discourse. Symbolizes 'SWORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 7:24–27.
 
-### Chapter 11 — YOKE
-**Filename:** `ch11.png`
+Matthew chapter 7. Memory keyword ROCK (do not print). Illustrate the two builders in one storm-swept landscape. A modest ancient stone house on a clearly exposed solid rock foundation withstands driving rain and rushing floodwater. Across the ravine a similar house on loose sand collapses as its sandy foundation washes away. Make both foundations and their contrasting outcomes easy to see. Real ancient construction, no modern buildings. No narrow gate or unrelated teaching props. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of 'Come to me… my yoke is easy, my burden is light'. Symbolizes 'YOKE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 8 — CENTURION
 
-### Chapter 12 — SIGN
-**Filename:** `ch12.png`
+Reference: Matthew 8:5–13.
 
-```
-A dramatic, cinematic biblical illustration of No sign given except the sign of Jonah. Symbolizes 'SIGN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 8. Memory keyword CENTURION (do not print). On a street in Capernaum, a Roman centurion humbly appeals directly to Jesus for his paralyzed servant. The officer has removed his helmet and holds it at his side; his earnest open hand and deferential posture express faith in Jesus' word. Jesus responds with surprised admiration; disciples watch. Modest Galilean stone houses. No injured soldier, bedside healing, sea storm or battle; the servant is healed at a distance and not pictured. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 13 — SOWER
-**Filename:** `ch13.png`
+### Matthew 9 — HARVEST
 
-```
-A dramatic, cinematic biblical illustration of Sower, wheat and tares, mustard seed — seven parables. Symbolizes 'SOWER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 9:35–38.
 
-### Chapter 14 — WAVES
-**Filename:** `ch14.png`
+Matthew chapter 9. Memory keyword HARVEST (do not print). Jesus looks with compassion at a large tired crowd gathered near a Galilean village and speaks to his disciples. Beyond them a broad ripe golden grain field stretches into the distance with only a few workers visible, a natural visual illustration of his saying that the harvest is plentiful but workers are few. The crowd is human, not literal sheep. Emphasize compassionate Jesus, the many people and expansive harvest; no tax-booth feast montage. The field setting is an illustrative memory cue. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Peter walks on water — then sinks. Symbolizes 'WAVES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 10 — SWORD
 
-### Chapter 15 — CRUMBS
-**Filename:** `ch15.png`
+Reference: Matthew 10:1–16,34–39.
 
-```
-A dramatic, cinematic biblical illustration of Canaanite woman — 'even dogs eat the crumbs'. Symbolizes 'CRUMBS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 10. Memory keyword SWORD (do not print). Jesus commissions his twelve disciples on a dusty road beside a Galilean village. Exactly twelve disciples form a clearly readable group around Jesus, listening earnestly before departure. He speaks soberly of the demanding mission and opposition they will face. Simple tunics, no travel staffs, spare clothes, money bags or weapons. No literal sword in Jesus' hand: the chapter's sword saying concerns division and is not a command to violence. No literal wolves, sheep, snakes or multiple departure scenes. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 16 — KEYS
-**Filename:** `ch16.png`
+### Matthew 11 — YOKE
 
-```
-A dramatic, cinematic biblical illustration of 'You are Peter… I will give you the keys of the kingdom'. Symbolizes 'KEYS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 11:28–30.
 
-### Chapter 17 — CLOUD
-**Filename:** `ch17.png`
+Matthew chapter 11. Memory keyword YOKE (do not print). A gentle Jesus welcomes weary laborers who have set heavy ordinary work bundles on the ground. An ancient smooth wooden ox-yoke rests naturally beside the path as an illustrative cue to his easy yoke; no human is bound in it. His open hand, the relieved faces and the contrast between burdens and rest carry the scene. Warm pastoral Galilean landscape. No claim that this staged yoke was literally present in the passage, no floating symbols or extra vignette. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Transfiguration — voice from the cloud: 'Listen to Him'. Symbolizes 'CLOUD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 12 — SIGN
 
-### Chapter 18 — CHILD
-**Filename:** `ch18.png`
+Reference: Matthew 12:9–14.
 
-```
-A dramatic, cinematic biblical illustration of 'Unless you become like a child' — community discourse. Symbolizes 'CHILD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 12. Memory keyword SIGN (do not print). Inside a modest first-century synagogue, Jesus tells a man to stretch out his hand. The man extends a clearly restored natural hand, examining it with wonder, while several religious observers watch the Sabbath healing. Jesus and the man are the focus, ordinary diverse human expressions without caricature. No simultaneous sheep rescue outside, no supernatural light beam from the hand, no modern furnishings. A representative chapter miracle; the app's broader chapter keyword remains SIGN. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 19 — CAMEL
-**Filename:** `ch19.png`
+### Matthew 13 — SOWER
 
-```
-A dramatic, cinematic biblical illustration of Camel through the eye of a needle — rich young ruler. Symbolizes 'CAMEL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 13:3–9.
 
-### Chapter 20 — LAST
-**Filename:** `ch20.png`
+Matthew chapter 13. Memory keyword SOWER (do not print). Illustrate the parable in a single coherent ancient farm landscape: a sower walks with a seed pouch scattering a visible arc of small seeds. Along a trodden path birds pick up fallen seed; nearby shallow rocky soil has scorched seedlings; thorn bushes crowd out other plants; rich earth bears healthy golden grain. Show four distinct natural ground conditions without panels or labels. The stages of growth are a parable illustration. No second scene of Jesus teaching from a boat. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of 'The last shall be first' — workers in the vineyard. Symbolizes 'LAST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 14 — WAVES
 
-### Chapter 21 — DONKEY
-**Filename:** `ch21.png`
+Reference: Matthew 14:25–33.
 
-```
-A dramatic, cinematic biblical illustration of Triumphal entry — temple cleansed, fig tree cursed. Symbolizes 'DONKEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 14. Memory keyword WAVES (do not print). Before dawn on the wind-tossed Sea of Galilee, Peter is beginning to sink, water up to his chest, crying out and reaching toward Jesus. Jesus stands firmly on the surface and immediately takes hold of Peter's forearm with a secure anatomically natural grip. A fishing boat with frightened disciples is nearby behind them. One Peter and one Jesus, both clearly visible. Storm and rescue, not multiple stages of stepping out and sinking. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 22 — WEDDING
-**Filename:** `ch22.png`
+### Matthew 15 — CRUMBS
 
-```
-A dramatic, cinematic biblical illustration of Wedding banquet parable — 'Many called, few chosen'. Symbolizes 'WEDDING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 15:21–28.
 
-### Chapter 23 — WOES
-**Filename:** `ch23.png`
+Matthew chapter 15. Memory keyword CRUMBS (do not print). A Canaanite woman kneels before Jesus and makes her earnest appeal, with disciples quietly observing. In the same simple courtyard a small dog beneath a low household table eats a few fallen bread crumbs, an explicitly illustrative visual echo of her reply. Focus on her determined faith and Jesus' attentive response; no demon figure or separate daughter-healing scene. The table and dog are a metaphor made visible for memory, not a claim they were literally present. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Seven woes to the Pharisees — 'Blind guides!'. Symbolizes 'WOES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 16 — KEYS
 
-### Chapter 24 — EAGLES
-**Filename:** `ch24.png`
+Reference: Matthew 16:13–20.
 
-```
-A dramatic, cinematic biblical illustration of Olivet Discourse — signs of the end. Symbolizes 'EAGLES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 16. Memory keyword KEYS (do not print). Peter stands before Jesus in the rocky countryside of the Caesarea Philippi region, confessing his faith. Jesus affirms Peter with a calm gesture; other disciples listen behind them. In the close foreground a small pair of ordinary ancient iron keys rests on a rock as an explicitly symbolic memory cue to the promised keys of the kingdom. The keys are NOT being physically handed over as a historical event, do not glow or float. No modern keys, church building or enormous cave gate. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 25 — OIL
-**Filename:** `ch25.png`
+### Matthew 17 — CLOUD
 
-```
-A dramatic, cinematic biblical illustration of Ten virgins — five with oil, five without. Symbolizes 'OIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 17:1–6.
 
-### Chapter 26 — JAR
-**Filename:** `ch26.png`
+Matthew chapter 17. Memory keyword CLOUD (do not print). On a high mountain, Jesus is transfigured with sun-bright face and brilliantly white clothes. Exactly two ancient figures, Moses and Elijah, stand conversing with him. Exactly three disciples, Peter, James and John, bow facedown in awe in the foreground as a bright cloud envelops the scene. Six human figures total. Jesus wears entirely luminous WHITE garments, including the outer mantle, overriding the shared red-mantle style. Moses has no blank tablets or invented prop; Elijah has no modern objects. No fish, coin, lakeshore or lower panel. The enveloping cloud and radiant central Jesus are essential. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Woman breaks alabaster jar — Last Supper, Gethsemane. Symbolizes 'JAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Matthew 18 — CHILD
 
-### Chapter 27 — CURTAIN
-**Filename:** `ch27.png`
+Reference: Matthew 18:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Curtain torn — darkness, earthquake, 'Son of God!'. Symbolizes 'CURTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Matthew chapter 18. Memory keyword CHILD (do not print). Jesus has invited a little child to stand in the midst of his adult disciples. In an intimate Galilean courtyard, the child stands safely beside Jesus while he lowers himself toward the child's height and teaches the surrounding disciples about humility. Adults listen reflectively. Eye-level warm composition centered on the child, no throne, strangling servant, millstone or drowning imagery, no extra moralizing scenes. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
 
-### Chapter 28 — MOUNTAIN
-**Filename:** `ch28.png`
+### Matthew 19 — CAMEL
 
-```
-A dramatic, cinematic biblical illustration of Great Commission on the mountain — 'Go therefore'. Symbolizes 'MOUNTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Matthew 19:16–26.
 
+Matthew chapter 19. Memory keyword CAMEL (do not print). A richly dressed young man walks away sorrowfully from Jesus, looking down while clutching the edge of his fine cloak. Jesus and the astonished disciples remain behind him on an ancient road. A loaded camel stands beside the roadside as an understated illustrative cue to the teaching that follows. No giant needle in the sky and no invented needle-eye city gate; no simultaneous child-blessing scene. The man's painful choice between wealth and discipleship is central. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 20 — LAST
+
+Reference: Matthew 20:1–16.
+
+Matthew chapter 20. Memory keyword LAST (do not print). In the vineyard parable at evening, the owner's foreman hands one small silver denarius to a newly hired worker, while another late worker already holds exactly one coin with grateful surprise. Earlier laborers, dusty from a full day's work, show frustration while holding the same single-coin wage. The owner stands nearby addressing them calmly. Ancient vines and harvest baskets in sunset light. Equal wages must be visually clear, no piles of coins in individual palms, no written coin legends readable. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 21 — DONKEY
+
+Reference: Matthew 21:1–11.
+
+Matthew chapter 21. Memory keyword DONKEY (do not print). Jesus enters Jerusalem seated naturally on a young donkey colt, with its mother walking beside it. Both animals are visible but Jesus rides only the colt, over laid cloaks, never straddling two animals. Crowds spread cloaks and cut leafy branches on the road and welcome him joyfully. First-century Jerusalem walls ahead, olive hills behind. No modern flags or writing. Use leafy branches without claiming Matthew names their species; no separate temple-cleansing scene. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 22 — WEDDING
+
+Reference: Matthew 22:1–14.
+
+Matthew chapter 22. Memory keyword WEDDING (do not print). In the royal wedding banquet parable, a king pauses beside one speechless guest who lacks wedding attire. The man wears plain travel clothing while the surrounding hall is filled with other guests dressed for the feast. The king asks him a question with a restrained gesture. Full banquet tables, lamps and warm colors. No empty reserved rows, no wedding execution, no halos or Jesus physically placed in the parable. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 23 — WOES
+
+Reference: Matthew 23:23–39.
+
+Matthew chapter 23. Memory keyword WOES (do not print). Jesus delivers his serious rebuke of hypocrisy to religious teachers before a listening crowd in first-century Jerusalem. Several whitewashed stone tombs are visible beyond an opening at the edge of the composition as a symbolic visual comparison, bright outside with a shadowed open doorway, no graphic remains. Depict people as individuals, no ethnic caricatures, exaggerated noses or demonic expressions. No hen-and-chicks montage, swallowing camel, literal snakes or multiple Jesus figures. The tomb placement illustrates the metaphor, not a reconstruction of its location. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 24 — EAGLES
+
+Reference: Matthew 24:1–3,27–32.
+
+Matthew chapter 24. Memory keyword EAGLES (do not print). Jesus sits privately with his disciples on the Mount of Olives, teaching about the coming trials as they look across the valley toward the Jerusalem temple and its great stone buildings. A few distant scavenging birds circle high above the valley as a restrained memory cue to 24:28; the chapter keyword EAGLES is retained from the app, while translations differ on the bird term. No visible carcass, disappearing people, modern skyline, destruction already happening or definitive end-times timeline. One contemplative teaching scene. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 25 — OIL
+
+Reference: Matthew 25:1–9.
+
+Matthew chapter 25. Memory keyword OIL (do not print). At midnight in the parable, exactly TEN adult young women have awakened and are preparing their small ancient clay oil lamps. Five on one side have bright burning lamps and separate little reserve-oil flasks; five on the other side have sputtering or dark lamps and NO reserve flasks, looking concerned and asking for oil. Make the two groups of five legible with separate faces and bodies, ten total. One moment before departure to buy oil; no bridegroom already inside a shut door, no extra crowd, glass lanterns, candles or modern lamps. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 26 — JAR
+
+Reference: Matthew 26:6–13.
+
+Matthew chapter 26. Memory keyword JAR (do not print). In Bethany at Simon the Leper's house, an unnamed woman pours a thin stream of costly perfume from an alabaster jar onto Jesus' HEAD while he reclines naturally beside a low meal table. Disciples nearby react with concern at the expense; Jesus remains calm and honors her act. Clearly visible pale stone jar and perfume reaching his hair. Do not switch to anointing feet, wiping with hair, naming the woman or showing a shattered jar. No Last Supper or Gethsemane inset. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 27 — CURTAIN
+
+Reference: Matthew 27:50–51.
+
+Matthew chapter 27. Memory keyword CURTAIN (do not print). Inside the Jerusalem temple, the immense woven sanctuary curtain is tearing from TOP TO BOTTOM without human hands, the two heavy halves separating along a visibly ragged vertical seam. Trembling floor stones and a fallen small vessel suggest the earthquake. Solemn dramatic shaft of light beyond the curtain, no visible figure of God or speculative ark inside. No person cutting the fabric, no modern church, cross montage, risen saints or tomb scenes. Focus on the torn curtain at Jesus' death. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+### Matthew 28 — MOUNTAIN
+
+Reference: Matthew 28:16–20.
+
+Matthew chapter 28. Memory keyword MOUNTAIN (do not print). On a Galilean mountain, the risen Jesus stands on the ground addressing exactly ELEVEN disciples in the Great Commission. Arrange all eleven with distinct readable heads and bodies, some kneeling in worship and others standing thoughtfully. Jesus makes an open commissioning gesture. Broad natural horizon and distant roads suggest the mission beyond the mountain without literal crowds of future nations. Twelve human figures total including Jesus. No ascension, levitation, extra angels, globe or flags. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching the Daniel, Revelation and Exodus series. 4:3 landscape, full bleed, warm atmospheric glow, strong chiaroscuro, rich earth tones with clear human expressions and a main action readable on a phone. One coherent composition, no panels, collage, labels or border. Jesus, when present, is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or earth-colored mantle. No text, letters, numbers, captions, logos, watermarks or signatures. Chapter numbers and keywords are supplied by the app outside the image. Parable and metaphor scenes are illustrative memory cues, not literal historical reconstructions.
+
+## Final visual corrections
+
+- Chapter 2: Replaced the school-aged child with a small toddler safely held on Mary's lap.
+- Chapter 10: Removed one extra back-row disciple; verified Jesus plus twelve disciples.
+- Chapter 17: Changed Jesus' outer mantle to luminous white, matching the Transfiguration passage.
+- Chapter 28: Removed one extra back-row disciple; verified Jesus plus eleven disciples.
