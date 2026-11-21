@@ -1,41 +1,33 @@
-# Image prompts for 1 John — all chapters
+# 1 John — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1john/`.
+Reviewed against the bundled BSB scripture (book 62). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 5 chapters.
+### 1 John 1 — DARKNESS
 
-### Chapter 1 — DARKNESS
-**Filename:** `ch1.png`
+Reference: 1 John 1:5–7.
 
-```
-A dramatic, cinematic biblical illustration of 'If we say we have fellowship with Him but walk in darkness we lie'. Symbolizes 'DARKNESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 John chapter 1. Reference 1 John 1:5–7. Two believers step together from a dark ancient passage into warm daylight, offering each other a steady helping hand. Fellowship and truthful living conveyed by one clear path from shadow to light. No skin-color symbolism, glowing bodies, magical gate or darkness portrayed as a racial group. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — WORLD
-**Filename:** `ch2.png`
+### 1 John 2 — WORLD
 
-```
-A dramatic, cinematic biblical illustration of 'Do not love the world — the world is passing away'. Symbolizes 'WORLD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 John 2:15–17.
 
-### Chapter 3 — MURDER
-**Filename:** `ch3.png`
+1 John chapter 2. Reference 1 John 2:15–17. An ancient person turns away from a lavish display of garments, coins and self-important status objects toward a nearby neighbor needing companionship. Objects fade into a shadowed background while the compassionate encounter is warmly lit. Transient desire versus enduring love, no contempt for creation, poverty romanticization or burning city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'Whoever hates his brother is a murderer' — Cain as warning. Symbolizes 'MURDER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 John 3 — MURDER
 
-### Chapter 4 — FIRST
-**Filename:** `ch4.png`
+Reference: 1 John 3:11–18.
 
-```
-A dramatic, cinematic biblical illustration of 'We love because He first loved us'. Symbolizes 'FIRST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 John chapter 3. Reference 1 John 3:11–18. Two adult brothers stand in a field at a moment of choice: one unclenches his angry fist and accepts bread offered by his brother. A discarded ordinary field stone lies safely aside as a subtle Cain warning. Love in action overcoming hatred, no murder shown, blood, weapon attack or claim this depicts a recorded reconciliation of Cain and Abel. Explicit illustrative moral scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — WATER
-**Filename:** `ch5.png`
+### 1 John 4 — FIRST
 
-```
-A dramatic, cinematic biblical illustration of 'This is He who came by water and blood — Jesus Christ'. Symbolizes 'WATER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 John 4:9–11, 19.
 
+1 John chapter 4. Reference 1 John 4:9–11, 19. A compassionate Christ figure first extends a welcoming hand toward a hesitant adult, who then turns with an open hand toward a needy neighbor in the same coherent setting. Quiet chain of received and shared love, natural proportions and dignity. Symbolic explanation, not a named miracle, no romantic embrace, heart icons or magical light connecting hands. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 John 5 — WATER
+
+Reference: 1 John 5:6–8.
+
+1 John chapter 5. Reference 1 John 5:6–8. A restrained symbolic composition: clear water flows gently in the foreground below a plain wooden cross, with a small dark-red cloth draped at its base and soft luminous sky above. Water and sacrificial blood are distinct cues pointing to Christ, not a doctrinal diagram. No blood river, gore, multiple Christs, literal Spirit creature or invented readable labels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
