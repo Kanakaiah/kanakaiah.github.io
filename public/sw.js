@@ -35,6 +35,7 @@ const MATTHEW_ART_CACHE = 'remora-matthew-art-v1';
 const MARK_ART_CACHE = 'remora-mark-art-v1';
 const LUKE_ART_CACHE = 'remora-luke-art-v1';
 const JOHN_ART_CACHE = 'remora-john-art-v1';
+const ART_2PETER_CACHE = 'remora-2peter-art-v1';
 const ART_1PETER_CACHE = 'remora-1peter-art-v1';
 const ART_JAMES_CACHE = 'remora-james-art-v1';
 const ART_HEBREWS_CACHE = 'remora-hebrews-art-v1';
@@ -99,7 +100,7 @@ self.addEventListener('activate', event => {
         names
           .filter(n =>
             LEGACY_CACHES.includes(n) ||
-            (n.startsWith('remora-') && n !== SHELL_CACHE && n !== CONTENT_CACHE && n !== DEUTERONOMY_ART_CACHE && n !== GENESIS_ART_CACHE && n !== EXODUS_ART_CACHE && n !== REVELATION_ART_CACHE && n !== DANIEL_ART_CACHE && n !== MATTHEW_ART_CACHE && n !== MARK_ART_CACHE && n !== LUKE_ART_CACHE && n !== JOHN_ART_CACHE && n !== ART_1PETER_CACHE && n !== ART_JAMES_CACHE && n !== ART_HEBREWS_CACHE && n !== ART_PHILEMON_CACHE && n !== ART_TITUS_CACHE && n !== ART_2TIMOTHY_CACHE && n !== ART_1TIMOTHY_CACHE && n !== ART_2THESSALONIANS_CACHE && n !== ART_1THESSALONIANS_CACHE && n !== ART_COLOSSIANS_CACHE && n !== ART_PHILIPPIANS_CACHE && n !== ART_EPHESIANS_CACHE && n !== ART_GALATIANS_CACHE && n !== ART_2CORINTHIANS_CACHE && n !== ART_1CORINTHIANS_CACHE && n !== ART_ACTS_CACHE))
+            (n.startsWith('remora-') && n !== SHELL_CACHE && n !== CONTENT_CACHE && n !== DEUTERONOMY_ART_CACHE && n !== GENESIS_ART_CACHE && n !== EXODUS_ART_CACHE && n !== REVELATION_ART_CACHE && n !== DANIEL_ART_CACHE && n !== MATTHEW_ART_CACHE && n !== MARK_ART_CACHE && n !== LUKE_ART_CACHE && n !== JOHN_ART_CACHE && n !== ART_2PETER_CACHE && n !== ART_1PETER_CACHE && n !== ART_JAMES_CACHE && n !== ART_HEBREWS_CACHE && n !== ART_PHILEMON_CACHE && n !== ART_TITUS_CACHE && n !== ART_2TIMOTHY_CACHE && n !== ART_1TIMOTHY_CACHE && n !== ART_2THESSALONIANS_CACHE && n !== ART_1THESSALONIANS_CACHE && n !== ART_COLOSSIANS_CACHE && n !== ART_PHILIPPIANS_CACHE && n !== ART_EPHESIANS_CACHE && n !== ART_GALATIANS_CACHE && n !== ART_2CORINTHIANS_CACHE && n !== ART_1CORINTHIANS_CACHE && n !== ART_ACTS_CACHE))
           .map(n => caches.delete(n))
       ))
       .then(() => self.clients.claim())
@@ -287,6 +288,11 @@ self.addEventListener('fetch', event => {
 
   if (url.origin === self.location.origin && /^\/chapters\/1peter\/ch\d+\.(png|jpg)$/.test(url.pathname)) {
     event.respondWith(cacheFirst(request, ART_1PETER_CACHE));
+    return;
+  }
+
+  if (url.origin === self.location.origin && /^\/chapters\/2peter\/ch\d+\.(png|jpg)$/.test(url.pathname)) {
+    event.respondWith(cacheFirst(request, ART_2PETER_CACHE));
     return;
   }
 

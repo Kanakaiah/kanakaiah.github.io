@@ -1,27 +1,21 @@
-# Image prompts for 2 Peter — all chapters
+# 2 Peter — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/2peter/`.
+Reviewed against the bundled BSB scripture (book 61). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 3 chapters.
+### 2 Peter 1 — LADDER
 
-### Chapter 1 — LADDER
-**Filename:** `ch1.png`
+Reference: 2 Peter 1:5–8.
 
-```
-A dramatic, cinematic biblical illustration of Add to faith: virtue → knowledge → self-control → steadfastness → godliness → love. Symbolizes 'LADDER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Peter chapter 1. Reference 2 Peter 1:5–8. A sturdy ancient wooden ladder leans securely against a low garden wall, its rungs leading upward toward a bright productive orchard. An adult carefully climbs with secure hands and feet. Explicit visual mnemonic for growing qualities of faith, not a ladder physically reaching heaven or earning salvation. No labels, broken rungs, impossible height or angels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — DOG
-**Filename:** `ch2.png`
+### 2 Peter 2 — DOG
 
-```
-A dramatic, cinematic biblical illustration of 'The dog returns to its vomit — the sow to the mud' — false teachers. Symbolizes 'DOG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Peter 2:20–22.
 
-### Chapter 3 — THIEF
-**Filename:** `ch3.png`
+2 Peter chapter 2. Reference 2 Peter 2:20–22. A restrained proverb illustration in an ancient farmyard: a dog turns back toward a soiled patch of ground while a recently washed sow steps back into a muddy wallow nearby. Natural animals and clear returning movement. No close-up vomit, disgust spectacle, animal injury or people transformed into animals. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'The Day of the Lord will come like a thief — the heavens will pass away with a roar'. Symbolizes 'THIEF'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Peter 3 — THIEF
 
+Reference: 2 Peter 3:10–13.
+
+2 Peter chapter 3. Reference 2 Peter 3:10–13. A symbolic vast sky changes from dark turbulent clouds at one horizon to fresh clear dawn over a renewed green landscape, an alert ancient believer watching from safe ground. Expectation of the Day and hope of a new creation, not a dated prediction. No nuclear weapons, collapsing modern cities, people incinerated or Jesus dressed as a thief. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
