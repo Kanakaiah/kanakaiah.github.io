@@ -1,160 +1,135 @@
-# Image prompts for 1 Kings — all chapters
+# 1 Kings — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1kings/`.
+Reviewed against the bundled BSB scripture (book 11). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 22 chapters.
+### 1 Kings 1 — ANOINTING
 
-### Chapter 1 — ANOINTING
-**Filename:** `ch1.png`
+Reference: 1 Kings 1:38–40.
 
-```
-A dramatic, cinematic biblical illustration of Adonijah's attempted coup — Solomon anointed at Gihon spring. Symbolizes 'ANOINTING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 1. Reference 1 Kings 1:38–40. At Gihon spring Zadok anoints young Solomon with oil from a horn while Nathan and Benaiah stand beside him. King David's mule waits nearby; ram horn and joyful flute players mark the public coronation. No Adonijah banquet in the same frame. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — THRONE
-**Filename:** `ch2.png`
+### 1 Kings 2 — THRONE
 
-```
-A dramatic, cinematic biblical illustration of Solomon establishes his rule — deals with Adonijah, Joab, Shimei. Symbolizes 'THRONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Kings 2:10–12.
 
-### Chapter 3 — DREAM
-**Filename:** `ch3.png`
+1 Kings chapter 2. Reference 1 Kings 2:10–12. Solomon sits solemnly on the inherited royal throne in Jerusalem after David's death, officials standing respectfully before him. Early established kingship, restrained ancient palace rather than a fantasy empire. No executions or simultaneous rival plots. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Solomon's dream at Gibeon — "Ask for whatever you want. Symbolizes 'DREAM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Kings 3 — DREAM
 
-### Chapter 4 — TABLE
-**Filename:** `ch4.png`
+Reference: 1 Kings 3:5–12.
 
-```
-A dramatic, cinematic biblical illustration of Solomon's daily provision — 30 cors of flour, 60 of meal per day. Symbolizes 'TABLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 3. Reference 1 Kings 3:5–12. Young adult Solomon sleeps at Gibeon in a simple royal chamber, gentle warm light falling across his peaceful face and open hands as a visual cue to the dream in which he asks for wisdom. No visible face of God, speech bubbles, floating crown or piles of desired treasure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — CEDAR
-**Filename:** `ch5.png`
+### 1 Kings 4 — TABLE
 
-```
-A dramatic, cinematic biblical illustration of Hiram of Tyre sends cedar logs for the temple. Symbolizes 'CEDAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Kings 4:22–28.
 
-### Chapter 6 — TEMPLE
-**Filename:** `ch6.png`
+1 Kings chapter 4. Reference 1 Kings 4:22–28. Solomon's household stewards arrange abundant daily provisions beside long dining tables: large sacks of flour and grain, bread, fruit and baskets brought by provincial suppliers. A bustling orderly ancient palace kitchen court, not a modern buffet or an exact diagram of quantities. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Seven years to build — dimensions, gold overlay, cherubim. Symbolizes 'TEMPLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Kings 5 — CEDAR
 
-### Chapter 7 — PILLARS
-**Filename:** `ch7.png`
+Reference: 1 Kings 5:8–10.
 
-```
-A dramatic, cinematic biblical illustration of Jachin and Boaz — the two great bronze pillars at the entrance. Symbolizes 'PILLARS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 5. Reference 1 Kings 5:8–10. Phoenician timber workers guide great cedar logs bound into rafts along the Mediterranean shore, preparing delivery for Solomon's temple. Lebanon's wooded slopes beyond; ropes and ancient boats, no modern cranes or trucks. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — GLORY
-**Filename:** `ch8.png`
+### 1 Kings 6 — TEMPLE
 
-```
-A dramatic, cinematic biblical illustration of God's glory fills the temple — Solomon's magnificent prayer. Symbolizes 'GLORY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Kings 6:18–22.
 
-### Chapter 9 — TWICE
-**Filename:** `ch9.png`
+1 Kings chapter 6. Reference 1 Kings 6:18–22. Temple craftsmen apply thin gold overlay to carved cedar panels with gourds and flowers in Solomon's nearly finished sanctuary. Wooden scaffolding, warm glowing gold interior and small human figures show scale. No exposed ark being handled, no later cathedral arches. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of God appears to Solomon a second time — "If you turn aside.... Symbolizes 'TWICE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Kings 7 — PILLARS
 
-### Chapter 10 — QUEEN
-**Filename:** `ch10.png`
+Reference: 1 Kings 7:15–22.
 
-```
-A dramatic, cinematic biblical illustration of Queen of Sheba visits — "The half was never told me. Symbolizes 'QUEEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 7. Reference 1 Kings 7:15–22. Two monumental bronze pillars stand at the temple porch, each topped with lily-shaped capitals and bands of pomegranate decoration. A craftsman and priest look upward to emphasize scale. Exactly two main pillars, no written Jachin/Boaz labels or Greek columns. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — WIVES
-**Filename:** `ch11.png`
+### 1 Kings 8 — GLORY
 
-```
-A dramatic, cinematic biblical illustration of 700 wives, 300 concubines — Solomon's heart turns away. Symbolizes 'WIVES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Kings 8:10–12.
 
-### Chapter 12 — CALVES
-**Filename:** `ch12.png`
+1 Kings chapter 8. Reference 1 Kings 8:10–12. Priests step back from the sanctuary entrance as a dense luminous cloud fills Solomon's temple during dedication. Gathering worshippers pause in awe; cloud and temple dominate. No giant face, human God or fire destroying the building. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jeroboam's two golden calves — "Here are your gods, O Israel. Symbolizes 'CALVES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Kings 9 — TWICE
 
-### Chapter 13 — LION
-**Filename:** `ch13.png`
+Reference: 1 Kings 9:1–9.
 
-```
-A dramatic, cinematic biblical illustration of The man of God from Judah disobeys — a lion kills him on the road. Symbolizes 'LION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 9. Reference 1 Kings 9:1–9. Mature Solomon alone in his completed cedar palace listens solemnly to God's renewed promise and warning, with the completed temple visible through an opening. Subtle luminous stillness indicates divine encounter; no depicted deity or duplicated Solomon. Later setting clearly differs from the youthful dream at Gibeon. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — FEET
-**Filename:** `ch14.png`
+### 1 Kings 10 — QUEEN
 
-```
-A dramatic, cinematic biblical illustration of Jeroboam's wife at Ahijah's feet — her son will die at the doorstep. Symbolizes 'FEET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Kings 10:1–9.
 
-### Chapter 15 — HEART
-**Filename:** `ch15.png`
+1 Kings chapter 10. Reference 1 Kings 10:1–9. The queen of Sheba converses thoughtfully with Solomon in his court while attendants present spice jars, precious stones and gold; camels of her caravan visible beyond the courtyard. Dignified southern Arabian queen in ancient garments, no European crown, romance or modern flags. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Asa's heart fully devoted — unlike his father Abijam. Symbolizes 'HEART'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Kings 11 — WIVES
 
-### Chapter 16 — MUD
-**Filename:** `ch16.png`
+Reference: 1 Kings 11:1–8.
 
-```
-A dramatic, cinematic biblical illustration of Six kings in rapid succession — Israel sinking in the mud of idolatry. Symbolizes 'MUD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 11. Reference 1 Kings 11:1–8. Aged Solomon stands with several richly dressed royal wives at an incense-burning foreign shrine on a hill east of Jerusalem, his conflicted face and idol altar showing his divided loyalty. Modest clothing, no harem eroticism, no infant sacrifice or attempt to count a thousand women. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — RAVENS
-**Filename:** `ch17.png`
+### 1 Kings 12 — CALVES
 
-```
-A dramatic, cinematic biblical illustration of Elijah fed by ravens at Cherith — widow's oil and flour never run out. Symbolizes 'RAVENS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Kings 12:28–30.
 
-### Chapter 18 — FIRE
-**Filename:** `ch18.png`
+1 Kings chapter 12. Reference 1 Kings 12:28–30. Jeroboam presents one golden calf statue at the shrine of Bethel to gathered northern Israelites. The second calf belongs in distant Dan and is not placed beside it. One coherent shrine scene; golden calf clearly an idol, no Moses or Sinai tablets. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Elijah on Carmel — "The God who answers by fire is God. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Kings 13 — LION
 
-### Chapter 19 — STILL
-**Filename:** `ch19.png`
+Reference: 1 Kings 13:24–28.
 
-```
-A dramatic, cinematic biblical illustration of The still small voice — God meets exhausted Elijah under the broom tree. Symbolizes 'STILL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 13. Reference 1 Kings 13:24–28. A lion and a donkey stand quietly beside the fallen fully clothed man of God on a lonely road, travelers watching from far away. The body is intact without wounds or blood; strange restraint of the animals is the main cue. No lion eating the man or attacking the donkey. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — ARROW
-**Filename:** `ch20.png`
+### 1 Kings 14 — FEET
 
-```
-A dramatic, cinematic biblical illustration of Ben-Hadad defeated twice — a prophet rebukes Ahab for mercy. Symbolizes 'ARROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Kings 14:1–6.
 
-### Chapter 21 — VINEYARD
-**Filename:** `ch21.png`
+1 Kings chapter 14. Reference 1 Kings 14:1–6. Disguised Jeroboam's wife steps across the threshold into blind elderly Ahijah's modest house, carrying a basket of bread and a small honey jar. The prophet turns toward the sound of her feet. No dead child present or literal feet worship. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Naboth's vineyard — Jezebel's letter — an innocent man murdered. Symbolizes 'VINEYARD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Kings 15 — HEART
 
-### Chapter 22 — ARROW
-**Filename:** `ch22.png`
+Reference: 1 Kings 15:11–15.
 
-```
-A dramatic, cinematic biblical illustration of A random arrow between the armor joints kills Ahab. Symbolizes 'ARROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Kings chapter 15. Reference 1 Kings 15:11–15. King Asa oversees workers cutting down an Asherah pole in the Kidron Valley, broken wooden idol pieces ready for burning. His determined stance conveys devotion and reform. No anatomically glowing heart, burning people or temple destruction. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### 1 Kings 16 — MUD
+
+Reference: 1 Kings 16:29–33.
+
+1 Kings chapter 16. Reference 1 Kings 16:29–33. Ahab and Jezebel stand before a newly established Baal altar in Samaria, attendants carrying incense. Foreground wet rutted earth serves only as a subtle metaphor for moral decline, not people physically sinking. No six-king montage; focus on the chapter's culmination in Ahab's idolatry. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Kings 17 — RAVENS
+
+Reference: 1 Kings 17:2–6.
+
+1 Kings chapter 17. Reference 1 Kings 17:2–6. Elijah rests beside the narrow Brook Cherith as black ravens bring small pieces of bread and meat to a stone beside him. Rough prophet's cloak, rocky ravine and flowing water clearly visible. No widow, flour jar or different miracle in this scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Kings 18 — FIRE
+
+Reference: 1 Kings 18:30–39.
+
+1 Kings chapter 18. Reference 1 Kings 18:30–39. Fire descends onto Elijah's rebuilt stone altar on Mount Carmel, consuming the drenched offering as the surrounding people fall in awe. Elijah stands aside in prayer; wet trench and water jars remain visible at the edge. No people burning or gore; flame obscures sacrificial details. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Kings 19 — STILL
+
+Reference: 1 Kings 19:11–13.
+
+1 Kings chapter 19. Reference 1 Kings 19:11–13. Elijah stands at the mouth of a cave on Horeb, wrapping his face in his mantle and listening to a quiet whisper after the storm. Still air, softened light and cracked rocks. This is at the cave, not under the earlier broom tree; no visible deity. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Kings 20 — ARROW
+
+Reference: 1 Kings 20:38–43.
+
+1 Kings chapter 20. Reference 1 Kings 20:38–43. A prophet by the road removes a cloth bandage from his eyes to reveal himself and confront King Ahab returning from battle. Ahab looks sullen beside his chariot. Focus on the prophetic rebuke after releasing Ben-hadad; no arrow striking Ahab, which belongs in chapter 22. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Kings 21 — VINEYARD
+
+Reference: 1 Kings 21:17–20.
+
+1 Kings chapter 21. Reference 1 Kings 21:17–20. Elijah confronts Ahab among the vines of Naboth's seized vineyard, pointing toward the inherited land while the king recoils. Ripe grapes, stone boundary and palace beyond make the vineyard unmistakable. No simultaneous letter-writing or stoning scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Kings 22 — ARROW
+
+Reference: 1 Kings 22:34–36.
+
+1 Kings chapter 22. Reference 1 Kings 22:34–36. In battle near Ramoth-gilead, disguised Ahab slumps in his chariot as an arrow catches the gap between his armor pieces, his charioteer urgently turning away. Small visible arrow shaft without exposed wound or blood; no crown identifying him to the distant archer. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
