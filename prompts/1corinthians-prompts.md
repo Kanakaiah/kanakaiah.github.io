@@ -1,118 +1,99 @@
-# Image prompts for 1 Corinthians — all chapters
+# 1 Corinthians — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1corinthians/`.
+Reviewed against the bundled BSB scripture (book 46). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 16 chapters.
+### 1 Corinthians 1 — CROSS
 
-### Chapter 1 — CROSS
-**Filename:** `ch1.png`
+Reference: 1 Corinthians 1:18–25.
 
-```
-A dramatic, cinematic biblical illustration of 'The message of the cross is foolishness to those perishing'. Symbolizes 'CROSS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Corinthians chapter 1. Reference 1 Corinthians 1:18–25. Symbolic illustration of the message of the cross: a plain weathered wooden cross dominates a rocky rise at dawn, while a small diverse group of ordinary people look toward it with hope and a few richly dressed philosophers linger skeptically farther away. Human responses to one cross, no crucified body, no caricatures or humiliating stereotypes, no claim of a particular historical gathering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SPIRIT
-**Filename:** `ch2.png`
+### 1 Corinthians 2 — SPIRIT
 
-```
-A dramatic, cinematic biblical illustration of 'The Spirit searches all things — even the depths of God'. Symbolizes 'SPIRIT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Corinthians 2:9–13.
 
-### Chapter 3 — FIRE
-**Filename:** `ch3.png`
+1 Corinthians chapter 2. Reference 1 Corinthians 2:9–13. A symbolic moment of spiritual understanding: an ancient believer sits quietly with an open parchment scroll as warm light enters a dark stone room and illuminates the attentive face and hands. Subtle faded manuscript texture, no readable words. Depth beyond the open doorway suggests discovery without depicting God or a visible Spirit creature. No Pentecost flames, glowing brain, magical orb or modern book. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Each builder's work tested by fire — gold or straw. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Corinthians 3 — FIRE
 
-### Chapter 4 — FOOLS
-**Filename:** `ch4.png`
+Reference: 1 Corinthians 3:10–15.
 
-```
-A dramatic, cinematic biblical illustration of 'We are fools for Christ' — apostles as spectacle. Symbolizes 'FOOLS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Corinthians chapter 3. Reference 1 Corinthians 3:10–15. Visual metaphor of work tested by fire: on a single solid stone foundation a small construction of durable stone and gold-toned metal remains intact as a straw-and-wood addition is consumed by controlled flames. A builder watches safely from a distance. Clear foundation, enduring masonry and burning straw, no people harmed, no city catastrophe, no claim that salvation can be purchased with gold. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — YEAST
-**Filename:** `ch5.png`
+### 1 Corinthians 4 — FOOLS
 
-```
-A dramatic, cinematic biblical illustration of A little yeast leavens the whole lump. Symbolizes 'YEAST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Corinthians 4:9–13.
 
-### Chapter 6 — TEMPLE
-**Filename:** `ch6.png`
+1 Corinthians chapter 4. Reference 1 Corinthians 4:9–13. Apostolic humility illustrated by two weary plainly clothed missionaries at the end of an ancient public procession. Some bystanders mock with restrained dismissive gestures while the missionaries answer gently, helping one another carry their small belongings. Dignity amid public dishonor. No clown costumes, jester hats, circus, executions or graphic abuse; representative metaphor rather than an invented specific arrest. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'Your body is a temple of the Holy Spirit'. Symbolizes 'TEMPLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Corinthians 5 — YEAST
 
-### Chapter 7 — MARRIED
-**Filename:** `ch7.png`
+Reference: 1 Corinthians 5:6–8.
 
-```
-A dramatic, cinematic biblical illustration of Marriage, divorce, and singleness. Symbolizes 'MARRIED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Corinthians chapter 5. Reference 1 Corinthians 5:6–8. Close visual metaphor in an ancient bakery: a small piece of fermented starter dough rests beside a much larger risen batch in a wooden kneading trough, a baker's flour-dusted hands indicating how a little leaven affects the whole. Rough stone table, simple clay vessels, warm light. No modern yeast packets, scientific diagram, written labels or moral condemnation of bread itself. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — IDOL
-**Filename:** `ch8.png`
+### 1 Corinthians 6 — TEMPLE
 
-```
-A dramatic, cinematic biblical illustration of Food sacrificed to idols — knowledge puffs up. Symbolizes 'IDOL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Corinthians 6:19–20.
 
-### Chapter 9 — RACE
-**Filename:** `ch9.png`
+1 Corinthians chapter 6. Reference 1 Corinthians 6:19–20. Symbolic illustration of honoring God with one's body: a fully clothed ordinary believer stands prayerfully in warm light, palms open, within a quiet colonnaded stone space. The living human being is the focus, temple-like architecture a secondary visual echo. No human body transformed into a building, anatomical cutaway, sexual content, glowing chest cavity or idol statue. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'Run in such a way as to win the prize'. Symbolizes 'RACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Corinthians 7 — MARRIED
 
-### Chapter 10 — ROCK
-**Filename:** `ch10.png`
+Reference: 1 Corinthians 7:7–9, 32–35.
 
-```
-A dramatic, cinematic biblical illustration of The rock that followed them was Christ. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Corinthians chapter 7. Reference 1 Corinthians 7:7–9, 32–35. A modest first-century married couple sit side by side with joined hands, listening respectfully alongside an unmarried adult and an older widow in a small household gathering. Equal dignity for marriage and singleness, quiet mutual care and devotion. No wedding spectacle, modern rings close-up, divorce courtroom, intimate bedroom scene or suggestion that unmarried believers are lesser. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — TABLE
-**Filename:** `ch11.png`
+### 1 Corinthians 8 — IDOL
 
-```
-A dramatic, cinematic biblical illustration of Lord's Supper abused — 'examine yourselves'. Symbolizes 'TABLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Corinthians 8:9–13.
 
-### Chapter 12 — BODY
-**Filename:** `ch12.png`
+1 Corinthians chapter 8. Reference 1 Corinthians 8:9–13. In an ancient Corinthian courtyard near a distant pagan shrine, a believer gently sets aside a plate of cooked meat out of consideration for a troubled companion at the table. The companion's conscience and their caring conversation are central; a small classical idol is only a distant contextual feature. No idol coming alive, animal sacrifice, gore or aggressive condemnation of the companion. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of One body, many members. Symbolizes 'BODY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Corinthians 9 — RACE
 
-### Chapter 13 — LOVE
-**Filename:** `ch13.png`
+Reference: 1 Corinthians 9:24–27.
 
-```
-A dramatic, cinematic biblical illustration of 'If I have not love I am nothing' — love never fails. Symbolizes 'LOVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Corinthians chapter 9. Reference 1 Corinthians 9:24–27. A disciplined runner in a modest ancient athletic tunic races purposefully toward the finish of a Greek stadium track, other runners behind. A simple leafy victor's wreath is held by a waiting official at the side. Athletic effort and self-control, natural running anatomy, no nudity, modern shoes, numbered jerseys, medals or text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — TONGUE
-**Filename:** `ch14.png`
+### 1 Corinthians 10 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of Tongues and prophecy — 'all things decently and in order'. Symbolizes 'TONGUE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Corinthians 10:1–4.
 
-### Chapter 15 — SEED
-**Filename:** `ch15.png`
+1 Corinthians chapter 10. Reference 1 Corinthians 10:1–4. Representative wilderness scene recalling Israel: fresh water flows from a large rugged rock while thirsty ancient Israelite families fill clay jars and drink gratefully in an arid landscape. Rock and living water prominent, natural human scale. No rock physically walking, no face of Christ carved into stone, no second Exodus sea scene or modern fountain. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Resurrection body like a seed — 'O death, where is your sting?'. Symbolizes 'SEED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Corinthians 11 — TABLE
 
-### Chapter 16 — DOOR
-**Filename:** `ch16.png`
+Reference: 1 Corinthians 11:20–29.
 
-```
-A dramatic, cinematic biblical illustration of 'A great door of effective work has opened'. Symbolizes 'DOOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Corinthians chapter 11. Reference 1 Corinthians 11:20–29. A first-century house-church supper where the central table holds shared bread and a simple wine cup. A well-dressed attendee pauses reflectively and offers bread toward a poorly clothed hungry neighbor who had been left at the edge. Convey self-examination and restored consideration. Not the historical Last Supper, no Jesus sitting at this Corinthian table, no drunken caricature or ornate chalice. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### 1 Corinthians 12 — BODY
+
+Reference: 1 Corinthians 12:14–27.
+
+1 Corinthians chapter 12. Reference 1 Corinthians 12:14–27. A diverse household community cooperates in serving a meal: different adults carry bread, pour water, steady an older person and make room for a neighbor with limited mobility. One connected group with each contribution visibly valued, warm unity and interdependence. A visual interpretation of one body with many members; no disembodied limbs, giant anatomical collage or one person treated as dispensable. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Corinthians 13 — LOVE
+
+Reference: 1 Corinthians 13:4–8.
+
+1 Corinthians chapter 13. Reference 1 Corinthians 13:4–8. A quiet act of patient enduring love: a young adult listens tenderly while supporting the hands of a frail older neighbor, offering water without hurry or self-display. A humble ancient doorway with warm light, calm faces and natural hand anatomy. Love expressed as kindness rather than romance. No heart icons, wedding scene, grand donation spectacle or text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Corinthians 14 — TONGUE
+
+Reference: 1 Corinthians 14:26–33.
+
+1 Corinthians chapter 14. Reference 1 Corinthians 14:26–33. An orderly first-century house-church gathering: one seated speaker addresses the group while a nearby interpreter listens ready to explain; everyone else attends patiently in a loose semicircle. Peaceful shared understanding and turn-taking. No tongues protruding from mouths, Pentecost fire, speech bubbles, chaotic simultaneous shouting or modern microphones. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Corinthians 15 — SEED
+
+Reference: 1 Corinthians 15:35–38.
+
+1 Corinthians chapter 15. Reference 1 Corinthians 15:35–38. Symbolic resurrection seed illustration: an ancient farmer's open palm holds a few wheat grains just above rich soil, with one young wheat shoot emerging nearby and mature wheat softly visible farther into the same field. Seed and transformed living plant are clearly distinct yet related. Natural field composition, no labeled stages, split-screen timeline, skeletons, buried human bodies or literal people growing from seeds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Corinthians 16 — DOOR
+
+Reference: 1 Corinthians 16:8–9.
+
+1 Corinthians chapter 16. Reference 1 Corinthians 16:8–9. A wide open wooden doorway in ancient Ephesus reveals a sunlit courtyard of people ready to hear a teacher. Paul approaches the threshold with a parchment roll under one arm while a few skeptical observers remain outside at the edge. The open door is a visual metaphor for effective work, not a supernatural portal. No Christian sign, modern church or glowing doorway in empty space. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
