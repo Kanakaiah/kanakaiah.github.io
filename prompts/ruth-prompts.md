@@ -1,34 +1,27 @@
-# Image prompts for Ruth — all chapters
+# Ruth — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/ruth/`.
+Reviewed against the bundled BSB scripture (book 8). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 4 chapters.
+### Ruth 1 — RETURN
 
-### Chapter 1 — RETURN
-**Filename:** `ch1.png`
+Reference: Ruth 1:14–18.
 
-```
-A dramatic, cinematic biblical illustration of Where you go I will go — your God shall be my God. Symbolizes 'RETURN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ruth chapter 1. Reference Ruth 1:14–18. Ruth clings affectionately to her elderly mother-in-law Naomi on the road from Moab, both fully clothed and carrying small travel bundles. Orpah walks away in the far distance after farewell. Focus on Ruth's determined loyalty and Naomi's sorrow, no readable oath, romantic pose or supernatural wings. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — GLEANING
-**Filename:** `ch2.png`
+### Ruth 2 — GLEANING
 
-```
-A dramatic, cinematic biblical illustration of Ruth gleans behind the harvesters — Boaz notices and protects her. Symbolizes 'GLEANING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ruth 2:8–12.
 
-### Chapter 3 — THRESHING FLOOR
-**Filename:** `ch3.png`
+Ruth chapter 2. Reference Ruth 2:8–12. Ruth gathers fallen barley stalks behind the harvesters in Boaz's field while Boaz speaks kindly to her and gestures toward the safe work area and water jars. She stands with dignity holding her small gathered bundle; other women work nearby. No romance dominating the scene, modern combine or wealth spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Ruth uncovers Boaz's feet at night — "Spread your wing over me. Symbolizes 'THRESHING FLOOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ruth 3 — THRESHING FLOOR
 
-### Chapter 4 — SANDAL
-**Filename:** `ch4.png`
+Reference: Ruth 3:7–10.
 
-```
-A dramatic, cinematic biblical illustration of The nearer kinsman removes his sandal — Boaz redeems Ruth. Symbolizes 'SANDAL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ruth chapter 3. Reference Ruth 3:7–10. At night on the threshing floor, Boaz wakes and sits partly upright beside a grain heap, speaking quietly with Ruth who lies or sits respectfully at his uncovered FEET. Both are fully clothed, his outer garment folded back only at the feet. Clear physical separation and modest posture, no woman lying on his torso, sexual contact, exposed body or modern bed. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Ruth 4 — SANDAL
+
+Reference: Ruth 4:7–11.
+
+Ruth chapter 4. Reference Ruth 4:7–11. At Bethlehem's gate the nearer kinsman removes his sandal and hands it to Boaz before attentive seated elders, confirming the redemption transaction. The single exchanged sandal and natural hands dominate. Ruth and Naomi may watch quietly at a distance. No wedding ceremony, money buying a woman, modern contract or readable signage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
