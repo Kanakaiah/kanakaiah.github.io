@@ -1,27 +1,21 @@
-# Image prompts for 2 Thessalonians — all chapters
+# 2 Thessalonians — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/2thessalonians/`.
+Reviewed against the bundled BSB scripture (book 53). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 3 chapters.
+### 2 Thessalonians 1 — FIRE
 
-### Chapter 1 — FIRE
-**Filename:** `ch1.png`
+Reference: 2 Thessalonians 1:6–10.
 
-```
-A dramatic, cinematic biblical illustration of 'The Lord Jesus revealed from heaven in flaming fire — taking vengeance on those who do not know God'. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Thessalonians chapter 1. Reference 2 Thessalonians 1:6–10. Symbolic vision of Christ revealed in blazing heavenly light with mighty angels, while suffering believers below look up in relief and awe. Fire surrounds the heavenly revelation without burning people. Dignified distant figures, no targeted modern religious or ethnic group, torture, graphic punishment, political identification or apocalyptic chart. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — RESTRAINER
-**Filename:** `ch2.png`
+### 2 Thessalonians 2 — RESTRAINER
 
-```
-A dramatic, cinematic biblical illustration of 'The one who restrains will be taken out of the way — then the lawless one will be revealed'. Symbolizes 'RESTRAINER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Thessalonians 2:6–9.
 
-### Chapter 3 — BREAD
-**Filename:** `ch3.png`
+2 Thessalonians chapter 2. Reference 2 Thessalonians 2:6–9. An explicitly symbolic restraint scene: a massive closed ancient gate holds back a dark turbulent passage, its strong crossbar still in place while a thin line of light marks the threshold. Do not identify the mysterious restrainer as a specific person, government or angel, and do not portray a current leader as the lawless one. No readable symbols, monsters or invented prophetic timeline. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'If anyone is not willing to work let him not eat' — Paul worked for his own bread. Symbolizes 'BREAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Thessalonians 3 — BREAD
 
+Reference: 2 Thessalonians 3:7–12.
+
+2 Thessalonians chapter 3. Reference 2 Thessalonians 3:7–12. Paul quietly stitches heavy tent cloth at a workbench in the evening, a modest loaf and water cup beside his tools. Honest labor supporting daily bread, concentrated hands and calm dignity. No withholding food from a disabled or vulnerable person, no idle-person caricature, modern machine or wealthy overseer. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
