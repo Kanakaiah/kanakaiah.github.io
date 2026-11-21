@@ -1,27 +1,21 @@
-# Image prompts for Titus — all chapters
+# Titus — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/titus/`.
+Reviewed against the bundled BSB scripture (book 56). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 3 chapters.
+### Titus 1 — CRETE
 
-### Chapter 1 — CRETE
-**Filename:** `ch1.png`
+Reference: Titus 1:5–9.
 
-```
-A dramatic, cinematic biblical illustration of 'Cretans are always liars, evil beasts, lazy gluttons' — appoint elders anyway. Symbolizes 'CRETE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Titus chapter 1. Reference Titus 1:5–9. Titus meets mature trustworthy local believers in a modest Cretan coastal town courtyard, discussing service and appointing elders. Hospitable families and the Mediterranean landscape provide context. Represent Cretans respectfully; no lazy-glutton stereotype, animal comparisons, drunken caricatures or modern map labels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — ADORNING
-**Filename:** `ch2.png`
+### Titus 2 — ADORNING
 
-```
-A dramatic, cinematic biblical illustration of 'Adorn the doctrine of God our Savior in everything'. Symbolizes 'ADORNING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Titus 2:10–12.
 
-### Chapter 3 — BATH
-**Filename:** `ch3.png`
+Titus chapter 2. Reference Titus 2:10–12. An ordinary ancient worker returns a small entrusted purse honestly to its owner while fellow believers observe kindly. Integrity and self-control make the teaching attractive through conduct. No ornate clothing or jewelry as spiritual virtue, no romanticized slavery, coercion, humiliation or prosperous reward spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'He saved us through the washing of regeneration and renewing of the Holy Spirit'. Symbolizes 'BATH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Titus 3 — BATH
 
+Reference: Titus 3:4–7.
+
+Titus chapter 3. Reference Titus 3:4–7. A symbolic renewal scene: clear water flows gently from a plain clay pitcher into a wide stone basin, reflecting fresh dawn light while a modestly clothed adult washes their hands gratefully nearby. Mercy and new life, not a claim that handwashing earns salvation. No nude bath, luxury spa, magical bodily transformation or visible Spirit figure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
