@@ -1,174 +1,147 @@
-# Image prompts for Joshua — all chapters
+# Joshua — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/joshua/`.
+Reviewed against the bundled BSB scripture (book 6). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 24 chapters.
+### Joshua 1 — STRONG
 
-### Chapter 1 — STRONG
-**Filename:** `ch1.png`
+Reference: Joshua 1:6–9.
 
-```
-A dramatic, cinematic biblical illustration of Be strong and courageous — do not be terrified" × 4. Symbolizes 'STRONG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 1. Reference Joshua 1:6–9. Joshua stands resolutely at the edge of Israel's camp facing the Jordan valley, one hand resting on a partly unrolled Book of the Law on a simple stone table. Elders listen as he accepts leadership with courage. The law and steady posture are the cues, no readable slogan, Moses alive beside him or fantasy divine warrior portrait. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SCARLET
-**Filename:** `ch2.png`
+### Joshua 2 — SCARLET
 
-```
-A dramatic, cinematic biblical illustration of Rahab's scarlet cord hung in the window — the spies escape. Symbolizes 'SCARLET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 2:15–21.
 
-### Chapter 3 — PRIESTS
-**Filename:** `ch3.png`
+Joshua chapter 2. Reference Joshua 2:15–21. After the spies have departed, Rahab ties a vivid scarlet cord in the window of her home built into Jericho's city wall. The sturdy escape rope lies separately coiled nearby, distant hills beyond. One exact moment; do not make a thin scarlet thread bear a man's weight, no simultaneous dangling spies or seductive clothing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Priests carry the ark — feet touch the Jordan — it stops. Symbolizes 'PRIESTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 3 — PRIESTS
 
-### Chapter 4 — STONES
-**Filename:** `ch4.png`
+Reference: Joshua 3:13–17.
 
-```
-A dramatic, cinematic biblical illustration of Twelve stones lifted from the riverbed — a memorial. Symbolizes 'STONES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 3. Reference Joshua 3:13–17. Priests stand firmly on the dry Jordan riverbed carrying the ark with long shoulder poles while Israelites cross behind them. The ark is respectfully covered for transport, no bare hands on its chest. Water has stopped upstream rather than two towering Red Sea walls. Muddy riverbanks and harvest vegetation, no boat or bridge. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — KNIFE
-**Filename:** `ch5.png`
+### Joshua 4 — STONES
 
-```
-A dramatic, cinematic biblical illustration of Circumcision at Gilgal — manna ceases — flint knives used. Symbolizes 'KNIFE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 4:4–8.
 
-### Chapter 6 — WALLS
-**Filename:** `ch6.png`
+Joshua chapter 4. Reference Joshua 4:4–8. At the Israelite camp a group finishes setting down exactly TWELVE substantial river stones in a compact low memorial pile, all twelve distinguishable. Several men have just lowered stones from their shoulders, children watch with curiosity. The Jordan flows in the distance. No twelve identical polished cubes, engraved labels or Stonehenge circle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jericho's walls collapse after seven days of marching. Symbolizes 'WALLS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 5 — KNIFE
 
-### Chapter 7 — TENT
-**Filename:** `ch7.png`
+Reference: Joshua 5:2–3.
 
-```
-A dramatic, cinematic biblical illustration of Achan hides plunder under his tent — Israel defeated at Ai. Symbolizes 'TENT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 5. Reference Joshua 5:2–3. On a folded linen cloth lies a small group of freshly shaped FLINT knives with sharp chipped stone edges, Joshua's hands carefully arranging them beside a simple basin near quiet tents at Gilgal. A restrained object-focused cue for covenant circumcision. No exposed bodies, operation, blood, steel scalpels, simultaneous manna or angel scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — AMBUSH
-**Filename:** `ch8.png`
+### Joshua 6 — WALLS
 
-```
-A dramatic, cinematic biblical illustration of Ambush at Ai — the city burned. Symbolizes 'AMBUSH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 6:16–20.
 
-### Chapter 9 — BREAD
-**Filename:** `ch9.png`
+Joshua chapter 6. Reference Joshua 6:16–20. Jericho's stone and mudbrick wall collapses in dust as Israelite priests sound ram's horns outside it and the people shout from a safe distance. The covered ark is carried on poles behind the priests. The falling wall is the dominant action. No modern siege engines, explosives, injured civilians or medieval castle towers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Gibeonites show stale bread — Israel fooled into a treaty. Symbolizes 'BREAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 7 — TENT
 
-### Chapter 10 — SUN
-**Filename:** `ch10.png`
+Reference: Joshua 7:21–23.
 
-```
-A dramatic, cinematic biblical illustration of Sun stands still over Gibeon — the longest day. Symbolizes 'SUN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 7. Reference Joshua 7:21–23. Messengers lift a beautiful folded Babylonian-style cloak from a shallow hiding place in the floor of Achan's tent, revealing weighed silver and a single gold bar underneath. A worried adult stands in the background. Focus on discovery of concealed plunder, no execution, modern coins, treasure chest or labels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — WATERS
-**Filename:** `ch11.png`
+### Joshua 8 — AMBUSH
 
-```
-A dramatic, cinematic biblical illustration of Northern coalition defeated at the waters of Merom. Symbolizes 'WATERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 8:18–19.
 
-### Chapter 12 — KINGS
-**Filename:** `ch12.png`
+Joshua chapter 8. Reference Joshua 8:18–19. Joshua extends his battle lance toward distant Ai as concealed Israelite fighters rise from behind a rocky ridge and move toward the city. Smoke begins far beyond the walls. A clear ambush signal moment, no gruesome combat, bodies, modern tactics diagram or duplicated Joshua. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Thirty-one defeated kings listed. Symbolizes 'KINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 9 — BREAD
 
-### Chapter 13 — REMAINING
-**Filename:** `ch13.png`
+Reference: Joshua 9:12–15.
 
-```
-A dramatic, cinematic biblical illustration of Much land still remains to be taken — Joshua grows old. Symbolizes 'REMAINING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 9. Reference Joshua 9:12–15. Gibeonite envoys display dry moldy bread, cracked wineskins and worn sandals before Joshua and Israelite leaders. One envoy holds a piece of visibly stale bread close to the foreground while Joshua considers it. The deceptive provisions are the cue, no readable treaty, caricatured ethnicity or supernatural villain face. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — CALEB
-**Filename:** `ch14.png`
+### Joshua 10 — SUN
 
-```
-A dramatic, cinematic biblical illustration of Give me this mountain" — Caleb at 85 claims Hebron. Symbolizes 'CALEB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 10:12–14.
 
-### Chapter 15 — BOUNDARY
-**Filename:** `ch15.png`
+Joshua chapter 10. Reference Joshua 10:12–14. Joshua raises one hand in prayer beneath a brilliant sun high over the hills near Gibeon, with a faint moon visible over a distant valley and Israel's army small below. A dramatic single daylight scene representing the prolonged day. No multiple suns, stopped clock, astrology diagram, orbital explanation or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Judah's detailed boundary lines. Symbolizes 'BOUNDARY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 11 — WATERS
 
-### Chapter 16 — EPHRAIM
-**Filename:** `ch16.png`
+Reference: Joshua 11:5–8.
 
-```
-A dramatic, cinematic biblical illustration of Ephraim's inheritance — but they do not drive out the Canaanites. Symbolizes 'EPHRAIM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 11. Reference Joshua 11:5–8. Israelite forces led by Joshua approach the northern coalition's camp beside the waters of Merom, with ancient wooden chariots stationed near the shore. Water and the unexpected approach dominate, weapons lowered in the foreground before close combat. No injured horses, horse mutilation, bodies or Roman charioteers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — DAUGHTERS
-**Filename:** `ch17.png`
+### Joshua 12 — KINGS
 
-```
-A dramatic, cinematic biblical illustration of Zelophehad's daughters receive their inheritance. Symbolizes 'DAUGHTERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 12:7–8,24.
 
-### Chapter 18 — LOTS
-**Filename:** `ch18.png`
+Joshua chapter 12. Reference Joshua 12:7–8,24. A reflective representative scene of Joshua reviewing the record of conquered kings: a scribe unrolls a long list with fine indistinct marks while several empty ancient royal seats and surrendered standards stand in the background. Explicit memory illustration, not a claim a throne collection occurred. No thirty-one severed heads, readable names or numbered crowns. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Seven remaining tribes receive land by lot at Shiloh. Symbolizes 'LOTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 13 — REMAINING
 
-### Chapter 19 — SIMEON
-**Filename:** `ch19.png`
+Reference: Joshua 13:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Simeon's lot falls inside Judah's territory. Symbolizes 'SIMEON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 13. Reference Joshua 13:1–3. An aged Joshua with gray hair leans on a walking staff and looks over a broad landscape whose distant territory remains unsettled by Israel. A few tribal elders stand beside him, attentive to unfinished responsibility. Quiet sense of work remaining, no triumphant total-conquest panorama or modern boundary lines. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — REFUGE
-**Filename:** `ch20.png`
+### Joshua 14 — CALEB
 
-```
-A dramatic, cinematic biblical illustration of Six cities of refuge — for accidental killing. Symbolizes 'REFUGE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 14:10–12.
 
-### Chapter 21 — FULFILLED
-**Filename:** `ch21.png`
+Joshua chapter 14. Reference Joshua 14:10–12. The elderly yet vigorous Caleb points decisively toward the rugged fortified hill country of Hebron while speaking to Joshua. Caleb has weathered features and a strong upright stance, not a young warrior. One inheritance request moment, no written age, giant people, mountain carried in hands or battle montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Levitical cities assigned — "Not one word of promise failed. Symbolizes 'FULFILLED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 15 — BOUNDARY
 
-### Chapter 22 — ALTAR
-**Filename:** `ch22.png`
+Reference: Joshua 15:1–4.
 
-```
-A dramatic, cinematic biblical illustration of Eastern tribes build a memorial altar — almost causes civil war. Symbolizes 'ALTAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Joshua chapter 15. Reference Joshua 15:1–4. Representatives of Judah mark out their allotted southern land with a measuring cord and natural boundary stones in a dry landscape near the Salt Sea. A representative survey scene for the chapter's boundary account, not a named recorded expedition. No modern surveying tripod, map labels, nation flags or imaginary giant border wall. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — OLD
-**Filename:** `ch23.png`
+### Joshua 16 — EPHRAIM
 
-```
-A dramatic, cinematic biblical illustration of Joshua's first farewell — "The LORD has fought for you. Symbolizes 'OLD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Joshua 16:5–10.
 
-### Chapter 24 — CHOOSE
-**Filename:** `ch24.png`
+Joshua chapter 16. Reference Joshua 16:5–10. Families of Ephraim settle among cultivated hills while the old fortified town of Gezer remains inhabited in the distance, showing an inheritance with unresolved occupation. Foreground elders discuss the land quietly beside simple household belongings. No forced-labor spectacle, ethnic caricatures, modern flag or claim every resident was expelled. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Choose this day whom you will serve — as for me and my house. Symbolizes 'CHOOSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Joshua 17 — DAUGHTERS
 
+Reference: Joshua 17:3–6.
+
+Joshua chapter 17. Reference Joshua 17:3–6. Exactly five adult daughters of Zelophehad receive an inheritance decision from Joshua and Eleazar, who gesture toward the family land beyond their assembly. All five sisters are individually visible, one responds gratefully. This fulfills the earlier request in Numbers. No Moses present, sixth daughter, modern deed or marriage scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Joshua 18 — LOTS
+
+Reference: Joshua 18:8–10.
+
+Joshua chapter 18. Reference Joshua 18:8–10. Joshua casts simple ancient lots into a shallow bowl before the tabernacle at Shiloh while representatives of the remaining tribes wait. A surveying document lies partly rolled nearby with indistinct ink. The allocation by lot is the main cue, no gambling table, dice with modern numerals or labeled territory map. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Joshua 19 — SIMEON
+
+Reference: Joshua 19:1–9.
+
+Joshua chapter 19. Reference Joshua 19:1–9. A Simeonite family is welcomed into a modest town amid Judah's wider settled countryside, with hosts sharing the available living space and pointing toward nearby fields. Representative scene of Simeon's inheritance within Judah. No modern borders, separate island, conflict or readable tribe labels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Joshua 20 — REFUGE
+
+Reference: Joshua 20:2–6.
+
+Joshua chapter 20. Reference Joshua 20:2–6. At a city gate an exhausted traveler states his case to seated elders, who open a place of refuge for him while a distant pursuer waits outside. A sober hearing and protective welcome, not an acquittal already decided. No execution, blood, modern jail or claim deliberate murder is excused. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Joshua 21 — FULFILLED
+
+Reference: Joshua 21:43–45.
+
+Joshua chapter 21. Reference Joshua 21:43–45. Israelite families and Levite households rest peacefully near their allotted homes and pasturelands, children playing safely and adults sharing an ordinary meal. Calm completed settlement illustrates fulfilled promises. No luxury palace, wealth raining down, every city in one collage or implication there were never later challenges. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Joshua 22 — ALTAR
+
+Reference: Joshua 22:24–28.
+
+Joshua chapter 22. Reference Joshua 22:24–28. Representatives of the eastern tribes explain a large unlit memorial altar beside the Jordan to Phinehas and the western delegation. Open conciliatory gestures replace suspicion, the river visible beyond. The altar is a witness and has NO fire, sacrifice, blood or idol. No civil battle or competing temple. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Joshua 23 — OLD
+
+Reference: Joshua 23:1–6.
+
+Joshua chapter 23. Reference Joshua 23:1–6. Very elderly Joshua sits on a low seat addressing Israel's assembled elders and leaders, his hands resting beside a worn law scroll and walking staff. Faces listen earnestly to his final warning and remembered victories. No deathbed, throne, miraculous youth or readable speech banner. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Joshua 24 — CHOOSE
+
+Reference: Joshua 24:14–15,26–27.
+
+Joshua chapter 24. Reference Joshua 24:14–15,26–27. Joshua stands beside a large witness stone under an oak at Shechem and calls the assembled households to choose faithful service. Families respond with sober commitment; the sanctuary setting remains simple. The stone has no carved text, no crossroads sign, idol-smashing violence or modern church. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
