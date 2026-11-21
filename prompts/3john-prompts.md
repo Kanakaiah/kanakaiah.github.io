@@ -1,13 +1,9 @@
-# Image prompts for 3 John — all chapters
+# 3 John — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/3john/`.
+Reviewed against the bundled BSB scripture (book 64). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 1 chapters.
+### 3 John 1 — FIRST
 
-### Chapter 1 — FIRST
-**Filename:** `ch1.png`
+Reference: 3 John 1:9–11.
 
-```
-A dramatic, cinematic biblical illustration of 'Diotrephes who likes to put himself first does not acknowledge our authority' (v.9). Symbolizes 'FIRST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
-
+3 John chapter 1. Reference 3 John 1:9–11. Inside a house gathering a self-important leader occupies the best seat and blocks the welcome of two traveling believers at the doorway, while another member looks ready to offer hospitality. Clear critique of pride and exclusion; no grotesque villain, modern politician, royal throne or violent ejection. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
