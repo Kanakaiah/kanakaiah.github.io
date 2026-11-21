@@ -1,41 +1,33 @@
-# Image prompts for 1 Thessalonians — all chapters
+# 1 Thessalonians — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1thessalonians/`.
+Reviewed against the bundled BSB scripture (book 52). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 5 chapters.
+### 1 Thessalonians 1 — THUNDER
 
-### Chapter 1 — THUNDER
-**Filename:** `ch1.png`
+Reference: 1 Thessalonians 1:6–8.
 
-```
-A dramatic, cinematic biblical illustration of 'Our gospel came to you not in word only but in power — you became an example to all Macedonia'. Symbolizes 'THUNDER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Thessalonians chapter 1. Reference 1 Thessalonians 1:6–8. Joyful believers in ancient Thessalonica share their message with travelers departing along a road toward other Macedonian towns, city and hills receding behind. A single connected scene of faith spreading through people. The keyword THUNDER is a mnemonic for the message ringing out, not a literal storm: no lightning striking anyone, loudspeaker or written map. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — MOTHER
-**Filename:** `ch2.png`
+### 1 Thessalonians 2 — MOTHER
 
-```
-A dramatic, cinematic biblical illustration of 'We were gentle among you like a nursing mother caring for her children'. Symbolizes 'MOTHER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Thessalonians 2:7–9.
 
-### Chapter 3 — CROWN
-**Filename:** `ch3.png`
+1 Thessalonians chapter 2. Reference 1 Thessalonians 2:7–9. A tender metaphor of pastoral care: a modestly clothed ancient mother cradles her infant close under a shawl, sheltering the child with gentle hands. Quiet domestic light, intimate maternal care, no exposed breast required. No Paul depicted as a woman, magical halo around the child or claim of a particular named family. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'You are our glory and joy — our crown' — Timothy's good report. Symbolizes 'CROWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Thessalonians 3 — CROWN
 
-### Chapter 4 — TRUMPET
-**Filename:** `ch4.png`
+Reference: 1 Thessalonians 3:6–9.
 
-```
-A dramatic, cinematic biblical illustration of 'The Lord will descend with a trumpet call — the dead in Christ rise first'. Symbolizes 'TRUMPET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Thessalonians chapter 3. Reference 1 Thessalonians 3:6–9. Timothy returns to Paul with encouraging news of the Thessalonians faith and love; the older apostle greets the traveler with grateful joy, a small satchel beside them. Exactly two main men in modest lodging. Preserve the app keyword CROWN, but depict chapter 3 good report rather than moving chapter 2 crown language into a literal coronation. No crown worn by either man. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — THIEF
-**Filename:** `ch5.png`
+### 1 Thessalonians 4 — TRUMPET
 
-```
-A dramatic, cinematic biblical illustration of 'The Day of the Lord comes like a thief in the night — but you are children of light'. Symbolizes 'THIEF'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Thessalonians 4:13–18.
 
+1 Thessalonians chapter 4. Reference 1 Thessalonians 4:13–18. A reverent symbolic resurrection hope scene: Christ descends in luminous clouds, an angelic herald with a simple ancient trumpet nearby, and fully clothed restored believers rise toward the welcoming light. Calm hope for grieving people, no corpses, torn graves, skeletons, modern airplanes, dated end-times charts or horror spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Thessalonians 5 — THIEF
+
+Reference: 1 Thessalonians 5:2–8.
+
+1 Thessalonians chapter 5. Reference 1 Thessalonians 5:2–8. An alert household watchkeeper holds an oil lamp at a doorway before dawn while the street is still dark. A distant indistinct trespasser-like shadow serves only as a subtle unexpected-arrival metaphor, not Jesus portrayed as a criminal. Dawn begins beyond the roofs, readiness and sobriety rather than panic. No burglary violence, clocks or prediction dates. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.

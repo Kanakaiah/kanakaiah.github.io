@@ -35,6 +35,7 @@ const MATTHEW_ART_CACHE = 'remora-matthew-art-v1';
 const MARK_ART_CACHE = 'remora-mark-art-v1';
 const LUKE_ART_CACHE = 'remora-luke-art-v1';
 const JOHN_ART_CACHE = 'remora-john-art-v1';
+const ART_1THESSALONIANS_CACHE = 'remora-1thessalonians-art-v1';
 const ART_COLOSSIANS_CACHE = 'remora-colossians-art-v1';
 const ART_PHILIPPIANS_CACHE = 'remora-philippians-art-v1';
 const ART_EPHESIANS_CACHE = 'remora-ephesians-art-v1';
@@ -90,7 +91,7 @@ self.addEventListener('activate', event => {
         names
           .filter(n =>
             LEGACY_CACHES.includes(n) ||
-            (n.startsWith('remora-') && n !== SHELL_CACHE && n !== CONTENT_CACHE && n !== DEUTERONOMY_ART_CACHE && n !== GENESIS_ART_CACHE && n !== EXODUS_ART_CACHE && n !== REVELATION_ART_CACHE && n !== DANIEL_ART_CACHE && n !== MATTHEW_ART_CACHE && n !== MARK_ART_CACHE && n !== LUKE_ART_CACHE && n !== JOHN_ART_CACHE && n !== ART_COLOSSIANS_CACHE && n !== ART_PHILIPPIANS_CACHE && n !== ART_EPHESIANS_CACHE && n !== ART_GALATIANS_CACHE && n !== ART_2CORINTHIANS_CACHE && n !== ART_1CORINTHIANS_CACHE && n !== ART_ACTS_CACHE))
+            (n.startsWith('remora-') && n !== SHELL_CACHE && n !== CONTENT_CACHE && n !== DEUTERONOMY_ART_CACHE && n !== GENESIS_ART_CACHE && n !== EXODUS_ART_CACHE && n !== REVELATION_ART_CACHE && n !== DANIEL_ART_CACHE && n !== MATTHEW_ART_CACHE && n !== MARK_ART_CACHE && n !== LUKE_ART_CACHE && n !== JOHN_ART_CACHE && n !== ART_1THESSALONIANS_CACHE && n !== ART_COLOSSIANS_CACHE && n !== ART_PHILIPPIANS_CACHE && n !== ART_EPHESIANS_CACHE && n !== ART_GALATIANS_CACHE && n !== ART_2CORINTHIANS_CACHE && n !== ART_1CORINTHIANS_CACHE && n !== ART_ACTS_CACHE))
           .map(n => caches.delete(n))
       ))
       .then(() => self.clients.claim())
@@ -233,6 +234,11 @@ self.addEventListener('fetch', event => {
 
   if (url.origin === self.location.origin && /^\/chapters\/colossians\/ch\d+\.(png|jpg)$/.test(url.pathname)) {
     event.respondWith(cacheFirst(request, ART_COLOSSIANS_CACHE));
+    return;
+  }
+
+  if (url.origin === self.location.origin && /^\/chapters\/1thessalonians\/ch\d+\.(png|jpg)$/.test(url.pathname)) {
+    event.respondWith(cacheFirst(request, ART_1THESSALONIANS_CACHE));
     return;
   }
 
