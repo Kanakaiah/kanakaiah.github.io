@@ -1,48 +1,39 @@
-# Image prompts for 1 Timothy — all chapters
+# 1 Timothy — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1timothy/`.
+Reviewed against the bundled BSB scripture (book 54). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 6 chapters.
+### 1 Timothy 1 — BLASPHEMER
 
-### Chapter 1 — BLASPHEMER
-**Filename:** `ch1.png`
+Reference: 1 Timothy 1:12–16.
 
-```
-A dramatic, cinematic biblical illustration of 'I was a blasphemer, persecutor, violent man — but I received mercy'. Symbolizes 'BLASPHEMER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Timothy chapter 1. Reference 1 Timothy 1:12–16. Paul kneels in humble thankful prayer, an abandoned restraint chain lying off to one side as a symbolic memory of his former persecution. Warm light on a remorseful yet hopeful face. Mercy and transformation, no simultaneous violent past reenactment, no blasphemous text or self-punishment. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — HANDS
-**Filename:** `ch2.png`
+### 1 Timothy 2 — HANDS
 
-```
-A dramatic, cinematic biblical illustration of 'I desire men to pray lifting holy hands'. Symbolizes 'HANDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Timothy 2:8.
 
-### Chapter 3 — HOUSEHOLD
-**Filename:** `ch3.png`
+1 Timothy chapter 2. Reference 1 Timothy 2:8. Several ordinary adult men in an ancient house gathering pray with open lifted hands, reconciled expressions and peaceful spacing. Hands clearly natural and empty, no anger or factional arguing. No military salute, magical energy or exaggerated ecstatic poses. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'If a man cannot manage his own household how can he care for God's church?'. Symbolizes 'HOUSEHOLD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Timothy 3 — HOUSEHOLD
 
-### Chapter 4 — GYMNASIUM
-**Filename:** `ch4.png`
+Reference: 1 Timothy 3:4–5.
 
-```
-A dramatic, cinematic biblical illustration of 'Train yourself for godliness'. Symbolizes 'GYMNASIUM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Timothy chapter 3. Reference 1 Timothy 3:4–5. A prospective elder and his spouse guide their children kindly at a modest shared meal while welcoming a guest. Order, hospitality and mutual dignity in an ancient home. No authoritarian punishment, fearful children, luxury palace or modern nuclear-family portrait styling. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — LIST
-**Filename:** `ch5.png`
+### 1 Timothy 4 — GYMNASIUM
 
-```
-A dramatic, cinematic biblical illustration of The widow's list — qualifications for enrollment. Symbolizes 'LIST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Timothy 4:7–8.
 
-### Chapter 6 — ROOTS
-**Filename:** `ch6.png`
+1 Timothy chapter 4. Reference 1 Timothy 4:7–8. A symbolic training comparison in one ancient courtyard: an adult believer studies a scripture scroll with steady discipline while simple athletic training weights rest unused to one side. Focus on repeated attentive practice for godliness, no claim exercise is sinful. No modern gym equipment, bodybuilder, scoreboard or religious achievement medal. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'Love of money is a root of all kinds of evil'. Symbolizes 'ROOTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Timothy 5 — LIST
 
+Reference: 1 Timothy 5:9–10.
+
+1 Timothy chapter 5. Reference 1 Timothy 5:9–10. An elderly widow is welcomed and respectfully assisted by a house-church community while a steward records provision on a small parchment list. Bread and a cloth bundle are offered without spectacle. The list has faint small ink marks, no readable names. No demeaning queue, identity number, modern paperwork or young widow caricature. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Timothy 6 — ROOTS
+
+Reference: 1 Timothy 6:9–10.
+
+1 Timothy chapter 6. Reference 1 Timothy 6:9–10. Symbolic warning about love of money: a clenched hand grips a small coin purse above roots that entangle a path, while an open sunlit route remains visible beyond. Coins are ordinary, the grasping attachment is the focus. No literal money tree promising wealth, roots piercing flesh, demonized poor people or assertion that money itself is evil. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
