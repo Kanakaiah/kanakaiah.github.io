@@ -1,209 +1,177 @@
-# Image prompts for 1 Chronicles — all chapters
+# 1 Chronicles — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1chronicles/`.
+Reviewed against the bundled BSB scripture (book 13). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 29 chapters.
+### 1 Chronicles 1 — ADAM
 
-### Chapter 1 — ADAM
-**Filename:** `ch1.png`
+Reference: 1 Chronicles 1:1–4, 27–28.
 
-```
-A dramatic, cinematic biblical illustration of Genealogy begins at Adam — the whole human story anchored. Symbolizes 'ADAM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 1. Reference 1 Chronicles 1:1–4, 27–28. A representative genealogical memory scene: an ancient family elder teaches children beneath a vast branching tree, an opened ancestral scroll across his knees with indistinct manuscript marks. Deep roots and many branches evoke the human line beginning with Adam and continuing to Abraham. Not a literal meeting of ancestors from different ages; no named labels or modern family-tree diagram. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — JUDAH
-**Filename:** `ch2.png`
+### 1 Chronicles 2 — JUDAH
 
-```
-A dramatic, cinematic biblical illustration of Judah's genealogy expanded — the royal line highlighted. Symbolizes 'JUDAH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 2:1–4, 13–15.
 
-### Chapter 3 — DAVID
-**Filename:** `ch3.png`
+1 Chronicles chapter 2. Reference 1 Chronicles 2:1–4, 13–15. Representative portrait of Judah's continuing family line: a family elder in an ancient Judean courtyard shares an ancestral scroll with sons and grandchildren. A shepherd boy's staff beside the youngest listener subtly anticipates David in Jesse's line. One household, not all historical generations physically together; no crown on Judah. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The sons of David — the royal line through the exile. Symbolizes 'DAVID'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 3 — DAVID
 
-### Chapter 4 — JABEZ
-**Filename:** `ch4.png`
+Reference: 1 Chronicles 3:1–5, 17–19.
 
-```
-A dramatic, cinematic biblical illustration of Oh that you would bless me and enlarge my territory" — Jabez's prayer. Symbolizes 'JABEZ'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 3. Reference 1 Chronicles 3:1–5, 17–19. A later Judean scribe carefully preserves David's royal genealogy on a long parchment in a modest room, with a simple royal seal impression and a resting unoccupied wooden chair as memory cues to the dynasty. Indistinct manuscript texture, no readable names; representative record-keeping, not David meeting post-exilic descendants. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — EAST
-**Filename:** `ch5.png`
+### 1 Chronicles 4 — JABEZ
 
-```
-A dramatic, cinematic biblical illustration of Reuben, Gad, and half-Manasseh — tribes east of the Jordan. Symbolizes 'EAST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 4:9–10.
 
-### Chapter 6 — SINGERS
-**Filename:** `ch6.png`
+1 Chronicles chapter 4. Reference 1 Chronicles 4:9–10. Jabez kneels praying on the edge of cultivated land, hands open toward heaven, family fields and a simple home behind. Humble dependence rather than greed or a prosperity spectacle. No giant hands from clouds, magical expanding borders or text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Levitical singers — Heman, Asaph, Ethan — appointed by David. Symbolizes 'SINGERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 5 — EAST
 
-### Chapter 7 — WARRIORS
-**Filename:** `ch7.png`
+Reference: 1 Chronicles 5:18–22.
 
-```
-A dramatic, cinematic biblical illustration of Genealogies of the northern warrior tribes. Symbolizes 'WARRIORS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 5. Reference 1 Chronicles 5:18–22. Warriors from the eastern tribes of Reuben, Gad and half-Manasseh pray together before moving through broad pasturelands east of the Jordan. Shields, bows and nearby herds identify their life and strength; river valley below. No modern map or exaggerated battle carnage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — BENJAMIN
-**Filename:** `ch8.png`
+### 1 Chronicles 6 — SINGERS
 
-```
-A dramatic, cinematic biblical illustration of Benjamin's genealogy — Saul's family line. Symbolizes 'BENJAMIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 6:31–33, 39–44.
 
-### Chapter 9 — GATEKEEPERS
-**Filename:** `ch9.png`
+1 Chronicles chapter 6. Reference 1 Chronicles 6:31–33, 39–44. Heman leads a small group of Levitical singers with Asaph at one side and Ethan at the other before the tent sanctuary. Fathers and sons sing with lyres and cymbals in ordered worship. Davidic tent setting, not Solomon's finished stone temple. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Temple gatekeepers and servants — the returning community. Symbolizes 'GATEKEEPERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 7 — WARRIORS
 
-### Chapter 10 — SKULL
-**Filename:** `ch10.png`
+Reference: 1 Chronicles 7:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Saul's skull on the wall of Beth Shan — "He was unfaithful. Symbolizes 'SKULL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 7. Reference 1 Chronicles 7:1–5. Representatives of northern tribal families stand with shields and spears while a scribe records their genealogical muster on parchment. Fathers and adult sons together in a village court, dignified readiness. Representative enrollment, no giant army count or readable roster. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — MIGHTY
-**Filename:** `ch11.png`
+### 1 Chronicles 8 — BENJAMIN
 
-```
-A dramatic, cinematic biblical illustration of David's mighty men and the capture of Jerusalem. Symbolizes 'MIGHTY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 8:29–33.
 
-### Chapter 12 — WARRIORS
-**Filename:** `ch12.png`
+1 Chronicles chapter 8. Reference 1 Chronicles 8:29–33. An elder of Benjamin explains a family lineage to younger relatives in a Gibeon household courtyard; a tall young man with a spear and a boy with a bow evoke Saul's family as artistic cues. No throne, named labels or historically impossible gathering of every generation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Warriors who join David — "lion-faced men," men of Issachar. Symbolizes 'WARRIORS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 9 — GATEKEEPERS
 
-### Chapter 13 — CART
-**Filename:** `ch13.png`
+Reference: 1 Chronicles 9:17–19, 26–29.
 
-```
-A dramatic, cinematic biblical illustration of Uzzah touches the ark on a cart — struck dead. Symbolizes 'CART'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 9. Reference 1 Chronicles 9:17–19, 26–29. Levitical gatekeepers open heavy sanctuary doors at dawn while colleagues count worship vessels and check storeroom jars. Careful service and vigilance, restored community setting. No modern keys, locks or security uniforms. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — BALSAM
-**Filename:** `ch14.png`
+### 1 Chronicles 10 — SKULL
 
-```
-A dramatic, cinematic biblical illustration of Attack when you hear the sound of marching in the balsam trees. Symbolizes 'BALSAM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 10:9–12.
 
-### Chapter 15 — LEVITES
-**Filename:** `ch15.png`
+1 Chronicles chapter 10. Reference 1 Chronicles 10:9–12. After Saul's defeat, men of Jabesh reverently bury fully wrapped remains beneath a large oak tree. Empty royal armor and a shrouded small bundle provide restrained cues of the king's death. No visible skull, severed head or gore; correct burial scene rather than falsely displaying his head on Beth-shan's wall. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Levites carry the ark properly — David dances with all his might. Symbolizes 'LEVITES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 11 — MIGHTY
 
-### Chapter 16 — SONG
-**Filename:** `ch16.png`
+Reference: 1 Chronicles 11:15–19.
 
-```
-A dramatic, cinematic biblical illustration of David's song of thanksgiving — "Give thanks to the LORD. Symbolizes 'SONG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 11. Reference 1 Chronicles 11:15–19. Three mighty men return to David at the cave stronghold with water from Bethlehem's well. David pours the precious water onto the ground in reverence, recognizing their risk. Exactly three foreground warriors, no heroic portrait collage or modern canteen. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — HOUSE
-**Filename:** `ch17.png`
+### 1 Chronicles 12 — WARRIORS
 
-```
-A dramatic, cinematic biblical illustration of God's covenant — "I will build you a house" — Nathan's oracle. Symbolizes 'HOUSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 12:38–40.
 
-### Chapter 18 — SHIELDS
-**Filename:** `ch18.png`
+1 Chronicles chapter 12. Reference 1 Chronicles 12:38–40. Warriors from many tribes arrive at Hebron to pledge loyalty to David, their neighbors bringing bread, figs, raisins and wine on pack animals for a joyful shared meal. Human faces only: lion-like courage is metaphorical, not animal-headed soldiers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David's victories — gold shields from Hadadezer. Symbolizes 'SHIELDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 13 — CART
 
-### Chapter 19 — AMMON
-**Filename:** `ch19.png`
+Reference: 1 Chronicles 13:7–10.
 
-```
-A dramatic, cinematic biblical illustration of Joab's double-front battle against Ammon and Aram. Symbolizes 'AMMON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 13. Reference 1 Chronicles 13:7–10. The oxen pulling the ark on a new cart stumble near a threshing floor, and Uzzah reaches toward the golden chest as the celebrating procession abruptly stops in alarm. Freeze before contact, no visible electrocution, corpse or gore. Cart is crucial to this unsuccessful transport. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — GIANT
-**Filename:** `ch20.png`
+### 1 Chronicles 14 — BALSAM
 
-```
-A dramatic, cinematic biblical illustration of Giants of Gath defeated — including a man with six fingers. Symbolizes 'GIANT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 14:14–16.
 
-### Chapter 21 — THRESHING FLOOR
-**Filename:** `ch21.png`
+1 Chronicles chapter 14. Reference 1 Chronicles 14:14–16. David and his troops wait concealed near a grove of balsam trees, heads turned upward to listen for the sound in the treetops before advancing. Subtle movement in foliage, tense restraint; no literal army walking on branches. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David's census sin — angel with drawn sword — site purchased. Symbolizes 'THRESHING FLOOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 15 — LEVITES
 
-### Chapter 22 — CEDAR
-**Filename:** `ch22.png`
+Reference: 1 Chronicles 15:14–16.
 
-```
-A dramatic, cinematic biblical illustration of David prepares cedar, iron, and bronze for Solomon's temple. Symbolizes 'CEDAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 15. Reference 1 Chronicles 15:14–16. Consecrated Levites carry the covered ark securely on their shoulders using long poles while singers and musicians accompany the procession into Jerusalem. Clear shoulder-bearing construction, no cart, no hands directly holding the chest. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — LEVITES
-**Filename:** `ch23.png`
+### 1 Chronicles 16 — SONG
 
-```
-A dramatic, cinematic biblical illustration of Levites organized into divisions for temple service. Symbolizes 'LEVITES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 16:4–8.
 
-### Chapter 24 — PRIESTS
-**Filename:** `ch24.png`
+1 Chronicles chapter 16. Reference 1 Chronicles 16:4–8. Asaph leads thanksgiving with cymbals before the tent sanctuary while fellow Levites play harps and lyres and priests sound trumpets. Joyful ordered worship after the ark's arrival; no modern orchestra, sheet music or microphones. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Twenty-four priestly divisions assigned by lot. Symbolizes 'PRIESTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 17 — HOUSE
 
-### Chapter 25 — MUSICIANS
-**Filename:** `ch25.png`
+Reference: 1 Chronicles 17:10–14.
 
-```
-A dramatic, cinematic biblical illustration of 288 musicians trained and assigned for temple worship. Symbolizes 'MUSICIANS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 17. Reference 1 Chronicles 17:10–14. Nathan delivers God's covenant promise to David in a cedar room, David seated humbly listening beside a simple royal chair. A child's small wooden seat near the king serves as a restrained dynasty cue. No finished temple or literal house descending from heaven. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — GATEKEEPERS
-**Filename:** `ch26.png`
+### 1 Chronicles 18 — SHIELDS
 
-```
-A dramatic, cinematic biblical illustration of Gatekeepers organized — east, west, north, south. Symbolizes 'GATEKEEPERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 18:7–8.
 
-### Chapter 27 — COMMANDERS
-**Filename:** `ch27.png`
+1 Chronicles chapter 18. Reference 1 Chronicles 18:7–8. David's officers unload captured golden shields and bronze vessels in Jerusalem, bringing the dedicated spoils to royal stewards. Golden shields dominate foreground; no active battle or completed bronze Sea made later by Solomon. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Twelve monthly military commanders and tribal officers. Symbolizes 'COMMANDERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Chronicles 19 — AMMON
 
-### Chapter 28 — PLAN
-**Filename:** `ch28.png`
+Reference: 1 Chronicles 19:10–13.
 
-```
-A dramatic, cinematic biblical illustration of David hands Solomon the detailed temple plans — "Be strong and do it. Symbolizes 'PLAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Chronicles chapter 19. Reference 1 Chronicles 19:10–13. Joab and Abishai clasp forearms before dividing their troops to face enemy lines on two sides near an Ammonite town. One coherent battlefield vantage, formations visible ahead and across the flank. No wounds or modern tactical arrows. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — GOLD
-**Filename:** `ch29.png`
+### 1 Chronicles 20 — GIANT
 
-```
-A dramatic, cinematic biblical illustration of The great freewill offering — David's prayer — Solomon anointed. Symbolizes 'GOLD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Chronicles 20:6–8.
 
+1 Chronicles chapter 20. Reference 1 Chronicles 20:6–8. Jonathan son of Shimei faces a very tall Philistine warrior at Gath before combat. The warrior raises one open hand with exactly six clearly separated fingers, a specific chapter cue; his other hand holds a spear. Human proportions aside from great stature, no fantasy monster or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 21 — THRESHING FLOOR
+
+Reference: 1 Chronicles 21:15–18.
+
+1 Chronicles chapter 21. Reference 1 Chronicles 21:15–18. David and elders in sackcloth fall facedown near Ornan's threshing floor as an angelic messenger with a drawn sword stands above Jerusalem. Threshing sledges and grain visible below, solemn plea for mercy. No dead citizens, giant human face of God or modern city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 22 — CEDAR
+
+Reference: 1 Chronicles 22:2–5.
+
+1 Chronicles chapter 22. Reference 1 Chronicles 22:2–5. Aged David inspects great stacks of cedar logs, prepared stone, iron fittings and bronze for the future temple while young adult Solomon listens. Workers organize materials in an open yard. No finished temple or David personally building it. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 23 — LEVITES
+
+Reference: 1 Chronicles 23:27–32.
+
+1 Chronicles chapter 23. Reference 1 Chronicles 23:27–32. Levites carefully prepare bread and measures of fine flour, cleanse vessels and organize sanctuary service under elders' direction. Representative practical duties in a tent sanctuary court before the future temple, no modern laboratory or industrial bakery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 24 — PRIESTS
+
+Reference: 1 Chronicles 24:5–6.
+
+1 Chronicles chapter 24. Reference 1 Chronicles 24:5–6. Priestly family heads cast lots into a simple bowl before David, Zadok and a scribe who records their assigned divisions. Ordered fair allocation, parchment with indistinct marks; no gambling dice, numbered chart or attempt to show all twenty-four divisions at once. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 25 — MUSICIANS
+
+Reference: 1 Chronicles 25:6–8.
+
+1 Chronicles chapter 25. Reference 1 Chronicles 25:6–8. Older skilled Levitical musicians teach younger singers and lyre players in a shaded sanctuary courtyard; cymbals and harps nearby. Shared learning and worship, small representative group of the 288 musicians. No modern notation, piano or conductor's baton. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 26 — GATEKEEPERS
+
+Reference: 1 Chronicles 26:12–16.
+
+1 Chronicles chapter 26. Reference 1 Chronicles 26:12–16. Gatekeeper family heads draw lots for their responsibilities at a sanctuary entrance while an elder indicates different gate approaches. Heavy doors, storage jars and watch posts as cues; representative arrangement, no compass labels or four-panel layout. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 27 — COMMANDERS
+
+Reference: 1 Chronicles 27:1–2.
+
+1 Chronicles chapter 27. Reference 1 Chronicles 27:1–2. One monthly division of David's troops changes duty at a city gate, the arriving commander receiving a roster from the departing officer. Rows of spears and orderly soldiers behind. Representative rotating service, no modern calendar or twelve copies of a commander. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 28 — PLAN
+
+Reference: 1 Chronicles 28:11–12, 19–20.
+
+1 Chronicles chapter 28. Reference 1 Chronicles 28:11–12, 19–20. Very elderly David hands young adult Solomon a parchment bearing a simple architectural sketch of the planned temple, with indistinct lines and no readable labels. David's encouraging hand rests on Solomon's shoulder; no finished temple in background. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Chronicles 29 — GOLD
+
+Reference: 1 Chronicles 29:6–9.
+
+1 Chronicles chapter 29. Reference 1 Chronicles 29:6–9. Israel's leaders willingly bring gold, silver, bronze and precious stones into baskets and weighed heaps for the future temple while aged David rejoices. Generosity expressed in faces and open hands, no modern coins or later coronation in the same scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
