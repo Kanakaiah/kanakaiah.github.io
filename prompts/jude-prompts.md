@@ -1,13 +1,9 @@
-# Image prompts for Jude — all chapters
+# Jude — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/jude/`.
+Reviewed against the bundled BSB scripture (book 65). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 1 chapters.
+### Jude 1 — CREPT
 
-### Chapter 1 — CREPT
-**Filename:** `ch1.png`
+Reference: Jude 1:3–4, 20–23.
 
-```
-A dramatic, cinematic biblical illustration of 'Certain people have crept in unnoticed — who long ago were designated for condemnation' (v.4). Symbolizes 'CREPT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
-
+Jude chapter 1. Reference Jude 1:3–4, 20–23. A house-church gathering listens as a smooth confident visitor quietly enters and begins drawing a few people aside, while a mature believer gently calls the group back to attentive shared prayer. Subtle discernment about corrupt teaching, not a masked burglar scene. Equal human dignity, no racial markers of evil, demon disguise, readable false doctrine or violent confrontation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
