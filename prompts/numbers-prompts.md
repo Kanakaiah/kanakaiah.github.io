@@ -1,258 +1,219 @@
-# Image prompts for Numbers — all chapters
+# Numbers — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/numbers/`.
+Reviewed against the bundled BSB scripture (book 4). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 36 chapters.
+### Numbers 1 — CENSUS
 
-### Chapter 1 — CENSUS
-**Filename:** `ch1.png`
+Reference: Numbers 1:1–4.
 
-```
-A dramatic, cinematic biblical illustration of First census — 603,550 fighting men counted. Symbolizes 'CENSUS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 1. Reference Numbers 1:1–4. Moses and Aaron oversee the first census in the wilderness of Sinai. Tribal representatives record adult men in orderly groups on small scrolls at a plain table before desert tents. Mountainous dry setting, serious organization rather than a battle. Fine indistinct writing, no printed totals, modern clipboard or crowd literally numbering hundreds of thousands. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — CAMP
-**Filename:** `ch2.png`
+### Numbers 2 — CAMP
 
-```
-A dramatic, cinematic biblical illustration of Tribes arranged around the tabernacle in formation. Symbolizes 'CAMP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 2:1–3.
 
-### Chapter 3 — LEVITES
-**Filename:** `ch3.png`
+Numbers chapter 2. Reference Numbers 2:1–3. Elevated view of Israel's desert encampment arranged in orderly groups on four sides around the central fabric tabernacle, leaving a clear respectful open space around the sanctuary. Small simple family standards with no writing mark the groups. The camp plan is the dominant cue; no medieval castle, modern military camp or twelve separate tabernacles. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Levites counted separately — they belong to God. Symbolizes 'LEVITES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 3 — LEVITES
 
-### Chapter 4 — KOHATH
-**Filename:** `ch4.png`
+Reference: Numbers 3:5–10.
 
-```
-A dramatic, cinematic biblical illustration of Duties of each Levite clan for transporting the tabernacle. Symbolizes 'KOHATH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 3. Reference Numbers 3:5–10. Moses presents a group of adult Levites to Aaron before the Tent of Meeting. Levites prepare folded fabric, ropes and sanctuary service equipment in an orderly group, emphasizing their assigned service. Aaron is the priest receiving them, not every Levite dressed as high priest. No modern ceremony or readable name badges. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — JEALOUSY
-**Filename:** `ch5.png`
+### Numbers 4 — KOHATH
 
-```
-A dramatic, cinematic biblical illustration of Test for a wife suspected of unfaithfulness. Symbolizes 'JEALOUSY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 4:5–6,15.
 
-### Chapter 6 — NAZIRITE
-**Filename:** `ch6.png`
+Numbers chapter 4. Reference Numbers 4:5–6,15. Kohathite Levites carry the ark on long wooden poles resting on their shoulders as the camp prepares to move. The ark is completely covered by an outer solid blue cloth, its sacred surfaces concealed; hands steady the poles only. No uncovered golden ark, cart, wheels, exposed tablets or hand touching the covered chest itself. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Nazirite vow + the Aaronic blessing — "The LORD bless you. Symbolizes 'NAZIRITE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 5 — JEALOUSY
 
-### Chapter 7 — WAGONS
-**Filename:** `ch7.png`
+Reference: Numbers 5:16–19.
 
-```
-A dramatic, cinematic biblical illustration of Twelve leaders bring offerings on wagons for twelve days. Symbolizes 'WAGONS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 5. Reference Numbers 5:16–19. At the sanctuary a priest holds a plain clay vessel of water while an adult woman with loosened hair stands holding a shallow barley offering, her husband a respectful distance away. A sober historical depiction of the jealousy procedure before any outcome. The woman's innocence or guilt is not asserted. No bodily injury, poisoned collapse, sexual imagery, humiliation or modern endorsement of trial by ordeal. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — LAMPS
-**Filename:** `ch8.png`
+### Numbers 6 — NAZIRITE
 
-```
-A dramatic, cinematic biblical illustration of Aaron lights the seven lamps of the menorah. Symbolizes 'LAMPS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 6:2–5.
 
-### Chapter 9 — CLOUD
-**Filename:** `ch9.png`
+Numbers chapter 6. Reference Numbers 6:2–5. A fully clothed adult Nazirite with naturally long uncut hair calmly declines a cup of wine offered during an ancient meal, an open hand making the choice clear. A small grape cluster remains untouched on the table. Personal dedication and self-restraint, not drunkenness or contempt for others. No Samson battle, haircut or simultaneous priestly blessing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Second Passover kept + the guiding cloud moves. Symbolizes 'CLOUD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 7 — WAGONS
 
-### Chapter 10 — TRUMPET
-**Filename:** `ch10.png`
+Reference: Numbers 7:2–9.
 
-```
-A dramatic, cinematic biblical illustration of Silver trumpets made — the cloud lifts — Israel marches. Symbolizes 'TRUMPET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 7. Reference Numbers 7:2–9. The tribal leaders present exactly SIX covered wooden ox carts in two clearly separated rows of three before the tabernacle. Each cart has exactly TWO oxen yoked to it, twelve oxen total. Wide elevated angle to make the teams countable, first team nearest, other five distinct behind. No twelve carts, horses, modern wagon wheels, no ark on a cart. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — FIRE
-**Filename:** `ch11.png`
+### Numbers 8 — LAMPS
 
-```
-A dramatic, cinematic biblical illustration of Fire burns the edge of camp — quail piled high — plague. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 8:1–4.
 
-### Chapter 12 — MIRIAM
-**Filename:** `ch12.png`
+Numbers chapter 8. Reference Numbers 8:1–4. Aaron adjusts the small olive-oil lamps on one hammered-gold lampstand so their light shines toward its front. Exactly SEVEN lamps on one central stem and three paired branches, all visible. Close sanctuary view with a blue-purple woven curtain behind. No candles, nine-branched lampstand or separate Levite ceremony. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Miriam opposes Moses — struck with leprosy. Symbolizes 'MIRIAM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 9 — CLOUD
 
-### Chapter 13 — GRAPES
-**Filename:** `ch13.png`
+Reference: Numbers 9:15–18.
 
-```
-A dramatic, cinematic biblical illustration of Twelve spies return with a massive cluster of grapes. Symbolizes 'GRAPES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 9. Reference Numbers 9:15–18. A dense luminous cloud rests immediately above the tabernacle in a wide desert camp during daylight; families wait beside their packed belongings, ready to move only when it lifts. The cloud and sanctuary are the clear central cue. One daytime moment, no split day/night image, fire column in another panel or Passover meal montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — NIGHT
-**Filename:** `ch14.png`
+### Numbers 10 — TRUMPET
 
-```
-A dramatic, cinematic biblical illustration of People weep all night — "Let us go back to Egypt. Symbolizes 'NIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 10:1–8.
 
-### Chapter 15 — TASSELS
-**Filename:** `ch15.png`
+Numbers chapter 10. Reference Numbers 10:1–8. Exactly two linen-robed priests sound two long straight hammered-silver trumpets before the Tent of Meeting, calling the tribes to assemble. Groups of Israelites begin gathering behind them. Silver instruments clearly distinct from curved ram horns; no modern valves, marching brass band or medieval heraldic banners. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Tassels on garments to remember God's commands. Symbolizes 'TASSELS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 11 — FIRE
 
-### Chapter 16 — EARTH
-**Filename:** `ch16.png`
+Reference: Numbers 11:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Korah's rebellion — earth opens and swallows them. Symbolizes 'EARTH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 11. Reference Numbers 11:1–3. Fire burns at the distant outer edge of Israel's camp while Moses prays urgently in the foreground and worried adults turn toward him. Flames are confined to the outskirts, people safely separated from them. One Taberah event, no quail heaps, plague bodies, burning people or collage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — ROD
-**Filename:** `ch17.png`
+### Numbers 12 — MIRIAM
 
-```
-A dramatic, cinematic biblical illustration of Aaron's rod buds and produces almonds overnight. Symbolizes 'ROD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 12:10–15.
 
-### Chapter 18 — TITHE
-**Filename:** `ch18.png`
+Numbers chapter 12. Reference Numbers 12:10–15. Miriam sits dignified and fully clothed outside the camp with a restrained pale patch on her exposed hand; Moses prays for her from nearby while Aaron looks concerned. The waiting camp remains visible beyond. Show care and intercession during her exclusion, no grotesque wounds, racial symbolism, spitting or humiliating crowd. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The tithe given to the Levites as their inheritance. Symbolizes 'TITHE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 13 — GRAPES
 
-### Chapter 19 — ASHES
-**Filename:** `ch19.png`
+Reference: Numbers 13:23–27.
 
-```
-A dramatic, cinematic biblical illustration of Red heifer — purification ashes for the unclean. Symbolizes 'ASHES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 13. Reference Numbers 13:23–27. Two Israelite scouts carry one abundant cluster of grapes suspended from a single pole between their shoulders as they return to Moses and the camp. Other scouts follow with figs and pomegranates. The cluster is large but made of normal-sized grapes, both carriers and the pole clearly readable. No giant grapes the size of people or Roman soldiers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — ROCK
-**Filename:** `ch20.png`
+### Numbers 14 — NIGHT
 
-```
-A dramatic, cinematic biblical illustration of Moses strikes the rock twice — disqualified from entering Canaan. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 14:1–4.
 
-### Chapter 21 — SERPENT
-**Filename:** `ch21.png`
+Numbers chapter 14. Reference Numbers 14:1–4. At night frightened Israelite families sit beside their tents weeping after the scouts' report, small oil lamps illuminating worried faces. Moses and Aaron are visible farther away near the sanctuary. Quiet collective grief and doubt, no festival, battlefield, Egyptian pyramids in the camp or written speech bubbles. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Bronze serpent on a pole — look and live. Symbolizes 'SERPENT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 15 — TASSELS
 
-### Chapter 22 — DONKEY
-**Filename:** `ch22.png`
+Reference: Numbers 15:37–40.
 
-```
-A dramatic, cinematic biblical illustration of Balaam's donkey sees the angel and speaks. Symbolizes 'DONKEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 15. Reference Numbers 15:37–40. Close view of an adult Israelite carefully tying a BLUE cord into the tassel at the corner of a woven garment while a younger family member watches. Other garment corners have simple tassels. The tangible reminder of the commandments is the focus. No printed prayer shawl lettering, modern sewing machine or fantasy glowing thread. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — ORACLE
-**Filename:** `ch23.png`
+### Numbers 16 — EARTH
 
-```
-A dramatic, cinematic biblical illustration of Balaam's first oracle — "I cannot curse what God has blessed. Symbolizes 'ORACLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 16:28–34.
 
-### Chapter 24 — STAR
-**Filename:** `ch24.png`
+Numbers chapter 16. Reference Numbers 16:28–34. The desert ground splits into a deep dark fissure beside the rebels' tents while Moses and the surrounding assembly stand well back. Dust and collapsing tent stakes convey the catastrophe without showing bodies, children or possessions falling in. One moment of the judgment on the rebellion, no lava, demons, human mouths in earth or modern earthquake buildings. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of A star will come out of Jacob — a scepter out of Israel. Symbolizes 'STAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 17 — ROD
 
-### Chapter 25 — SPEAR
-**Filename:** `ch25.png`
+Reference: Numbers 17:6–10.
 
-```
-A dramatic, cinematic biblical illustration of Phinehas drives a spear through the sin — plague stopped. Symbolizes 'SPEAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 17. Reference Numbers 17:6–10. Moses displays Aaron's single wooden staff bearing fresh almond buds, delicate blossoms and ripe almonds to astonished tribal leaders. Other plain staffs rest nearby without blooms. Focus tightly on the miraculous living branch, no full rooted tree, twelve flowering rods, written labels or magical wand sparks. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — CENSUS
-**Filename:** `ch26.png`
+### Numbers 18 — TITHE
 
-```
-A dramatic, cinematic biblical illustration of Second census — 601,730 men — slightly fewer than before. Symbolizes 'CENSUS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 18:21–24.
 
-### Chapter 27 — DAUGHTERS
-**Filename:** `ch27.png`
+Numbers chapter 18. Reference Numbers 18:21–24. Israelite households bring baskets of grain and produce to Levites serving beside the tabernacle. A Levite accepts the provision with gratitude while another arranges it for the community's service. A concrete scene of the tithe as support, no coins raining from heaven, prosperity spectacle, modern donation box or land estate granted to Levi. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Daughters of Zelophehad claim their inheritance. Symbolizes 'DAUGHTERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 19 — ASHES
 
-### Chapter 28 — OFFERINGS
-**Filename:** `ch28.png`
+Reference: Numbers 19:17–19.
 
-```
-A dramatic, cinematic biblical illustration of Daily, Sabbath, monthly, and festival offerings listed. Symbolizes 'OFFERINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 19. Reference Numbers 19:17–19. A ceremonially clean man mixes a small portion of gray sacrificial ashes with fresh water in a clay jar, with hyssop ready beside him and an adult awaiting purification. Ashes and water in natural vessels dominate. No burning living heifer, corpse, exposed body, modern medicine or magical instant transformation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — TRUMPETS
-**Filename:** `ch29.png`
+### Numbers 20 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of Feast of Trumpets and Day of Atonement offerings. Symbolizes 'TRUMPETS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 20:8–12.
 
-### Chapter 30 — VOWS
-**Filename:** `ch30.png`
+Numbers chapter 20. Reference Numbers 20:8–12. Moses has just struck a large desert rock with his wooden staff; abundant water gushes from it as the congregation and livestock gather to drink. His tense expression contrasts with the people's relief. Depict one visible strike moment without duplicated arms, no claim the striking was commanded here, no modern fountain or carved spout. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Laws about women's vows — a father or husband may annul. Symbolizes 'VOWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 21 — SERPENT
 
-### Chapter 31 — MIDIAN
-**Filename:** `ch31.png`
+Reference: Numbers 21:8–9.
 
-```
-A dramatic, cinematic biblical illustration of War against Midian — vengeance for Baal Peor. Symbolizes 'MIDIAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 21. Reference Numbers 21:8–9. A bronze serpent is mounted high on a simple wooden pole in the wilderness camp. Several distressed but fully clothed Israelites look toward it with renewed hope, Moses standing nearby. One bronze snake, no wings or paired medical caduceus, no Christian cross shape, no bite close-ups or worshiping the object as a deity. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 32 — JORDAN
-**Filename:** `ch32.png`
+### Numbers 22 — DONKEY
 
-```
-A dramatic, cinematic biblical illustration of Reuben and Gad request land east of the Jordan. Symbolizes 'JORDAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 22:27–32.
 
-### Chapter 33 — STAGES
-**Filename:** `ch33.png`
+Numbers chapter 22. Reference Numbers 22:27–32. Balaam bows facedown beside his donkey, which has stopped low on a narrow path between vineyard walls, as he finally sees the angel standing ahead with a drawn sword. The angel's blade points away from the animal and no blow is happening. Donkey alive and unharmed, no talking human mouth on the donkey or duplicated Balaam. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Forty-two stages of the wilderness journey listed. Symbolizes 'STAGES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 23 — ORACLE
 
-### Chapter 34 — BOUNDARY
-**Filename:** `ch34.png`
+Reference: Numbers 23:7–12.
 
-```
-A dramatic, cinematic biblical illustration of Borders of the Promised Land defined. Symbolizes 'BOUNDARY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Numbers chapter 23. Reference Numbers 23:7–12. On a rocky Moabite height Balaam gestures in blessing over Israel's distant tents while King Balak responds with frustrated surprise. A small ancient altar stands nearby, the people below remain peaceful. Clear contrast between intended curse and spoken blessing. No written oracle, magic spell beam, attacking king or modern crown. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 35 — CITIES
-**Filename:** `ch35.png`
+### Numbers 24 — STAR
 
-```
-A dramatic, cinematic biblical illustration of Six cities of refuge established. Symbolizes 'CITIES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Numbers 24:15–19.
 
-### Chapter 36 — DAUGHTERS
-**Filename:** `ch36.png`
+Numbers chapter 24. Reference Numbers 24:15–19. A symbolic vision illustrating Balaam's oracle: one radiant star shines above the distant tents of Israel and a simple royal scepter rests prominently in the rocky foreground as Balaam gazes toward the horizon. Explicit prophetic visual metaphor, not a claim a physical scepter appeared or a literal star event happened then. No Nativity scene, zodiac, diagram or modern flag. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Zelophehad's daughters must marry within their tribe. Symbolizes 'DAUGHTERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Numbers 25 — SPEAR
 
+Reference: Numbers 25:7–13.
+
+Numbers chapter 25. Reference Numbers 25:7–13. Phinehas stands solemnly at the edge of the Israelite assembly holding a spear upright and motionless; a closed tent and mournful camp form the background. A restrained aftermath memory cue for the chapter's judgment and covenant of peace. No impalement, bodies, sexual scene, triumphal grin or violence against viewers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 26 — CENSUS
+
+Reference: Numbers 26:1–4.
+
+Numbers chapter 26. Reference Numbers 26:1–4. The elderly Moses and Eleazar oversee a second census of a new generation of adult Israelite men on the green plains of Moab, the Jordan and distant Jericho visible beyond. A scribe records family groups at a table. Distinguish this from Sinai by the river landscape; Aaron is not present, no printed population totals. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 27 — DAUGHTERS
+
+Reference: Numbers 27:1–7.
+
+Numbers chapter 27. Reference Numbers 27:1–7. Exactly FIVE adult daughters of Zelophehad stand together before Moses and Eleazar at the entrance to the Tent of Meeting, one speaking confidently while her four sisters support her. Moses listens attentively to their inheritance claim. All five individually visible, dignified and fully clothed. No sixth daughter, modern courtroom or written land deed. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 28 — OFFERINGS
+
+Reference: Numbers 28:1–8.
+
+Numbers chapter 28. Reference Numbers 28:1–8. At dawn a priest prepares the regular morning offering beside the bronze altar: one healthy year-old lamb stands nearby and a bowl of fine flour with olive oil and a small drink-offering vessel are arranged neatly. One morning moment of daily worship. No simultaneous sunset lamb, slaughter detail, overflowing feast or modern calendar. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 29 — TRUMPETS
+
+Reference: Numbers 29:1–6.
+
+Numbers chapter 29. Reference Numbers 29:1–6. An Israelite sacred assembly gathers on the first day of the seventh month as priests sound trumpets beside the sanctuary. Offerings are prepared discreetly in the background, attentive people cease ordinary work. A single Feast of Trumpets scene, no montage of every festival, modern New Year symbols or caption. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 30 — VOWS
+
+Reference: Numbers 30:1–5.
+
+Numbers chapter 30. Reference Numbers 30:1–5. A young adult woman speaks a solemn vow in her family's tent while her father listens carefully in silence, a respectful elder nearby. Natural attentive gestures convey the gravity of keeping one's word and the household law. No forced marriage, angry domination, modern signature contract, child bride or implication all women lack agency. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 31 — MIDIAN
+
+Reference: Numbers 31:21–24.
+
+Numbers chapter 31. Reference Numbers 31:21–24. After the Midian campaign, Eleazar instructs returning Israelite soldiers outside camp as metal vessels are carefully purified in a controlled fire and a water jar stands nearby. Worn ancient gear and sober expressions, weapons laid aside. Focus on purification after war, no captives, abuse, bodies, celebration of massacre or modern furnace. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 32 — JORDAN
+
+Reference: Numbers 32:1–5.
+
+Numbers chapter 32. Reference Numbers 32:1–5. Representatives of Reuben and Gad point out broad grazing lands EAST of the Jordan to Moses and Eleazar, with their large flocks and herds behind them. The river winds beyond the pasture and distant hill country. A request for suitable livestock land, no crossing into Canaan yet, labeled modern map or fence dividing nations. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 33 — STAGES
+
+Reference: Numbers 33:1–3.
+
+Numbers chapter 33. Reference Numbers 33:1–3. Moses sits at a low traveling table recording the stages of the wilderness journey on a long partly unrolled scroll, with an Israelite caravan and winding desert route behind him. One reflective writing moment, small indistinct manuscript marks. No forty-two numbered signs, map captions, montage of all stations or modern journal. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 34 — BOUNDARY
+
+Reference: Numbers 34:1–6.
+
+Numbers chapter 34. Reference Numbers 34:1–6. Moses instructs tribal leaders about the boundaries of Canaan while standing in the Israelite camp east of the Jordan. A simple outline of coastal land traced in sand between them is a representative visual aid, not a recorded map from the text. Natural ridge and river in the distance, no Mediterranean coastline visible from Moab, no modern borders, country flags, readable map labels or claim Moses physically entered Canaan. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 35 — CITIES
+
+Reference: Numbers 35:9–15.
+
+Numbers chapter 35. Reference Numbers 35:9–15. A frightened adult traveler reaches the open gate of a city of refuge, where elders calmly receive him for a fair hearing. Pursuers remain far down the road; no immediate attack. The gate and protective welcome dominate, one city represents the six appointed places. No claim intentional murder is automatically pardoned, no gore or modern police. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Numbers 36 — DAUGHTERS
+
+Reference: Numbers 36:10–12.
+
+Numbers chapter 36. Reference Numbers 36:10–12. The five adult daughters of Zelophehad stand with their husbands and relatives in a modest ancestral courtyard, the family's fields visible beyond. A representative family scene after marriages within Manasseh preserved the inheritance, not a claim all weddings happened together. Dignified equal standing, ancient garments, no modern wedding gowns, forced coupling or land-title text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
