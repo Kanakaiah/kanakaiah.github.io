@@ -1,41 +1,33 @@
-# Image prompts for James — all chapters
+# James — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/james/`.
+Reviewed against the bundled BSB scripture (book 59). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 5 chapters.
+### James 1 — MIRROR
 
-### Chapter 1 — MIRROR
-**Filename:** `ch1.png`
+Reference: James 1:22–25.
 
-```
-A dramatic, cinematic biblical illustration of Hear the word and do it — don't be like a man who forgets his face in a mirror. Symbolizes 'MIRROR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+James chapter 1. Reference James 1:22–25. An ancient person lowers a small polished bronze mirror and turns immediately to help a neighbor lift a dropped basket. One connected moment in a humble doorway, mirror reflecting a natural fragment of the face. Hearing expressed in action rather than forgetting. No modern glass bathroom, split-person reflection, written checklist or judgment score. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — RING
-**Filename:** `ch2.png`
+### James 2 — RING
 
-```
-A dramatic, cinematic biblical illustration of Man with gold rings welcomed — poor man told to sit on the floor. Symbolizes 'RING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: James 2:1–4.
 
-### Chapter 3 — FIRE
-**Filename:** `ch3.png`
+James chapter 2. Reference James 2:1–4. At a house gathering a richly dressed visitor with a visible GOLD RING is offered an honored seat while a poor visitor in worn clothing is left standing at the side. Another attendee notices with concern. Clear visual criticism of favoritism, equal human dignity, no humiliating grotesque poverty or claim that wealth itself proves wrongdoing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The tongue — a small fire that sets a great forest ablaze. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### James 3 — FIRE
 
-### Chapter 4 — FOG
-**Filename:** `ch4.png`
+Reference: James 3:3–6.
 
-```
-A dramatic, cinematic biblical illustration of 'You are a mist that appears for a little while then vanishes'. Symbolizes 'FOG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+James chapter 3. Reference James 3:3–6. A tiny spark ignites dry grass at the edge of a wooded hillside, with the small start and spreading flame both visible in one landscape. Far in the foreground two figures pause a tense conversation as a restrained thematic cue to harmful speech. No literal burning tongue, mouth on fire, injured people, instructions for arson or enormous apocalypse. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — RAIN
-**Filename:** `ch5.png`
+### James 4 — FOG
 
-```
-A dramatic, cinematic biblical illustration of Be patient like the farmer waiting for the early and late rains. Symbolizes 'RAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: James 4:13–15.
 
+James chapter 4. Reference James 4:13–15. Morning mist lifts from a valley as an ancient merchant pauses on a path with a small travel pack, reflecting on the uncertain journey ahead. Fragile vapor and dawn dominate, humble human scale. No person dissolving, death spectacle, guaranteed destination, modern business charts or clock. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### James 5 — RAIN
+
+Reference: James 5:7–8.
+
+James chapter 5. Reference James 5:7–8. A patient ancient farmer stands beside newly sprouting rows as gentle rain begins to darken the soil, face relieved and hopeful, hands resting on a simple wooden hoe. One season and one coherent weather moment, no simultaneous spring and autumn panels, no flood, modern irrigation or instant miraculous crop. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
