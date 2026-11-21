@@ -1,174 +1,147 @@
-# Image prompts for 2 Samuel — all chapters
+# 2 Samuel — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/2samuel/`.
+Reviewed against the bundled BSB scripture (book 10). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 24 chapters.
+### 2 Samuel 1 — LAMENT
 
-### Chapter 1 — LAMENT
-**Filename:** `ch1.png`
+Reference: 2 Samuel 1:17–27.
 
-```
-A dramatic, cinematic biblical illustration of David's lament over Saul and Jonathan — "How the mighty have fallen. Symbolizes 'LAMENT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 1. Reference 2 Samuel 1:17–27. David in torn mourning garments sings his lament for Saul and Jonathan before grieving companions. A resting bow and shield beside him evoke the fallen warriors as symbolic props, not bodies present. Quiet grief, no victorious celebration. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — THRONE
-**Filename:** `ch2.png`
+### 2 Samuel 2 — THRONE
 
-```
-A dramatic, cinematic biblical illustration of David anointed king over Judah in Hebron. Symbolizes 'THRONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 2:1–4.
 
-### Chapter 3 — ABNER
-**Filename:** `ch3.png`
+2 Samuel chapter 2. Reference 2 Samuel 2:1–4. The elders of Judah anoint David king at Hebron in a simple stone courtyard. David seated humbly as oil is poured on his head, families and men of Judah gathered; early local kingship, no vast imperial throne. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Abner defects to David — Joab murders him at the gate. Symbolizes 'ABNER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 3 — ABNER
 
-### Chapter 4 — BED
-**Filename:** `ch4.png`
+Reference: 2 Samuel 3:31–34.
 
-```
-A dramatic, cinematic biblical illustration of Ish-bosheth assassinated while napping on his bed. Symbolizes 'BED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 3. Reference 2 Samuel 3:31–34. King David walks weeping behind Abner's funeral bier as mourners approach a rock-cut tomb at Hebron. The bier fully shrouded; Joab stands apart, tension without murder imagery. Clear funeral procession, no exposed remains. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — JERUSALEM
-**Filename:** `ch5.png`
+### 2 Samuel 4 — BED
 
-```
-A dramatic, cinematic biblical illustration of David captures Zion — Jerusalem becomes the City of David. Symbolizes 'JERUSALEM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 4:5–7.
 
-### Chapter 6 — DANCING
-**Filename:** `ch6.png`
+2 Samuel chapter 4. Reference 2 Samuel 4:5–7. A suspenseful but nongraphic moment at midday: Ish-bosheth sleeps fully clothed on a couch while two conspirators enter the doorway carrying grain sacks as a pretext. Sunlit courtyard beyond, dark room within. No stabbing, blood, severed head or wounds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David dances before the ark — Michal despises him. Symbolizes 'DANCING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 5 — JERUSALEM
 
-### Chapter 7 — HOUSE
-**Filename:** `ch7.png`
+Reference: 2 Samuel 5:6–10.
 
-```
-A dramatic, cinematic biblical illustration of God refuses David's temple offer — promises instead to build David a house. Symbolizes 'HOUSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 5. Reference 2 Samuel 5:6–10. David and his men enter the captured stone fortress of Zion overlooking compact ancient Jerusalem. David surveys the stronghold and hillside buildings; no later Solomon temple, Islamic shrine, modern skyline or medieval castle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — SHIELDS
-**Filename:** `ch8.png`
+### 2 Samuel 6 — DANCING
 
-```
-A dramatic, cinematic biblical illustration of David's military victories — gold shields taken from Hadadezer. Symbolizes 'SHIELDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 6:12–16.
 
-### Chapter 9 — LAME
-**Filename:** `ch9.png`
+2 Samuel chapter 6. Reference 2 Samuel 6:12–16. David dances joyfully in a modest full-coverage linen ephod and tunic before the ark borne on shoulders with long carrying poles into Jerusalem. Musicians sound ram horns, people rejoice; Michal watches from an upper window. No cart, no exposed body. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Mephibosheth — "Is there still anyone left of Saul's house?. Symbolizes 'LAME'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 7 — HOUSE
 
-### Chapter 10 — BEARDS
-**Filename:** `ch10.png`
+Reference: 2 Samuel 7:8–16.
 
-```
-A dramatic, cinematic biblical illustration of David's ambassadors humiliated — beards shaved — war follows. Symbolizes 'BEARDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 7. Reference 2 Samuel 7:8–16. Nathan speaks God's promise of a lasting dynasty to King David in a cedar-paneled room. David listens humbly, simple royal seat behind him and tent sanctuary glimpsed outside. House means dynasty: no finished temple or giant heavenly palace. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — ROOF
-**Filename:** `ch11.png`
+### 2 Samuel 8 — SHIELDS
 
-```
-A dramatic, cinematic biblical illustration of David sees Bathsheba from the roof — sends for her. Symbolizes 'ROOF'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 8:7–12.
 
-### Chapter 12 — LAMB
-**Filename:** `ch12.png`
+2 Samuel chapter 8. Reference 2 Samuel 8:7–12. David's officers bring captured gold shields and bronze vessels into Jerusalem for dedication. David receives them solemnly in a courtyard; the gold shields are dominant and distinct. No money piles resembling modern coins, no active battle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Nathan's parable — the little ewe lamb — "You are the man. Symbolizes 'LAMB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 9 — LAME
 
-### Chapter 13 — CLOAK
-**Filename:** `ch13.png`
+Reference: 2 Samuel 9:7–13.
 
-```
-A dramatic, cinematic biblical illustration of Amnon tears Tamar's ornamented cloak — Absalom broods in silence. Symbolizes 'CLOAK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 9. Reference 2 Samuel 9:7–13. Mephibosheth shares a meal at David's royal table, welcomed as family. He is a dignified adult seated comfortably, his walking supports resting beside his chair; David warmly offers bread. Disability treated respectfully, no caricature or pity spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — WOMAN
-**Filename:** `ch14.png`
+### 2 Samuel 10 — BEARDS
 
-```
-A dramatic, cinematic biblical illustration of The wise woman of Tekoa persuades David to restore Absalom. Symbolizes 'WOMAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 10:4–5.
 
-### Chapter 15 — DONKEY
-**Filename:** `ch15.png`
+2 Samuel chapter 10. Reference 2 Samuel 10:4–5. David's humiliated envoys arrive at Jericho with exactly half of each man's beard shaved, covered modestly in replacement cloaks over their damaged garments. A messenger reassures them at the gate. Visible beard asymmetry, no exposed buttocks or public stripping. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Absalom's rebellion — David weeps and flees barefoot. Symbolizes 'DONKEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 11 — ROOF
 
-### Chapter 16 — STONES
-**Filename:** `ch16.png`
+Reference: 2 Samuel 11:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Shimei throws stones and curses David on the road. Symbolizes 'STONES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 11. Reference 2 Samuel 11:1–5. Evening on the roof of David's palace: David stands near the parapet, looking troubled toward a neighboring enclosed courtyard largely hidden below. A messenger awaits his command. Rooftop and misuse of power are the cues; Bathsheba is not shown naked or sexualized. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — COUNSEL
-**Filename:** `ch17.png`
+### 2 Samuel 12 — LAMB
 
-```
-A dramatic, cinematic biblical illustration of Ahithophel's counsel rejected — he goes home and hangs himself. Symbolizes 'COUNSEL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 12:1–7.
 
-### Chapter 18 — OAK
-**Filename:** `ch18.png`
+2 Samuel chapter 12. Reference 2 Samuel 12:1–7. Illustrate Nathan's parable itself: a poor ancient household tenderly shelters its single small ewe lamb in the father's arms beside the family meal, while a richly dressed neighbor and his many sheep are visible beyond the doorway. One coherent village moment; no slaughter. This is the story Nathan tells, not a literal lamb in David's throne room. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Absalom's hair caught in an oak tree — Joab drives three spears through him. Symbolizes 'OAK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 13 — CLOAK
 
-### Chapter 19 — CROSSING
-**Filename:** `ch19.png`
+Reference: 2 Samuel 13:18–20.
 
-```
-A dramatic, cinematic biblical illustration of David restored — crossing the Jordan back to Jerusalem. Symbolizes 'CROSSING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 13. Reference 2 Samuel 13:18–20. Tamar sits in sorrow outside a closed doorway, fully covered by her richly colored outer robe with a torn edge over an intact modest undergarment. Ashes on her head and hand raised to her head convey grief. She herself tore her robe; no assailant tearing it, no assault depiction or exposed body. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — WALL
-**Filename:** `ch20.png`
+### 2 Samuel 14 — WOMAN
 
-```
-A dramatic, cinematic biblical illustration of Sheba's head thrown over the wall — the revolt ends. Symbolizes 'WALL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 14:4–11.
 
-### Chapter 21 — BONES
-**Filename:** `ch21.png`
+2 Samuel chapter 14. Reference 2 Samuel 14:4–11. The wise woman of Tekoa pleads her case before seated King David, one open hand raised and a mourning veil framing her expressive face. David listens intently, attendants standing back; no sons fighting physically in this scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Saul's bones properly buried — the famine ends. Symbolizes 'BONES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 15 — DONKEY
 
-### Chapter 22 — ROCK
-**Filename:** `ch22.png`
+Reference: 2 Samuel 15:30–32.
 
-```
-A dramatic, cinematic biblical illustration of David's psalm — "The LORD is my rock, my fortress, my deliverer. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Samuel chapter 15. Reference 2 Samuel 15:30–32. David ascends the Mount of Olives barefoot, head covered, weeping with his departing household. Jerusalem recedes below across the valley. Focus on humble bare feet on the rocky path and grief; no riding donkey because the passage describes walking. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — MIGHTY
-**Filename:** `ch23.png`
+### 2 Samuel 16 — STONES
 
-```
-A dramatic, cinematic biblical illustration of David's last words — the thirty mighty men and their exploits. Symbolizes 'MIGHTY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Samuel 16:5–13.
 
-### Chapter 24 — THRESHING FLOOR
-**Filename:** `ch24.png`
+2 Samuel chapter 16. Reference 2 Samuel 16:5–13. On the road near Bahurim, Shimei hurls stones and dust from a ridge toward David's passing company. David restrains an angry armed companion with a calm open hand. Stones fall short or strike ground, no injuries; David chooses restraint. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David's census sin — he buys Araunah's threshing floor — the temple site. Symbolizes 'THRESHING FLOOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Samuel 17 — COUNSEL
 
+Reference: 2 Samuel 17:7–14.
+
+2 Samuel chapter 17. Reference 2 Samuel 17:7–14. In Absalom's council chamber, Hushai explains his advice with measured gestures as Absalom and elders favor him; Ahithophel sits apart, visibly disappointed. Political counsel in a single room, no suicide scene or battle montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Samuel 18 — OAK
+
+Reference: 2 Samuel 18:9–10.
+
+2 Samuel chapter 18. Reference 2 Samuel 18:9–10. Absalom's head and thick hair become caught in the low dense fork of a large oak as his mule walks on beneath him. His hands brace the branches, robes intact; imminent peril before any attack. Head caught in branches, no hanging rope, gore or spear wounds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Samuel 19 — CROSSING
+
+Reference: 2 Samuel 19:31–39.
+
+2 Samuel chapter 19. Reference 2 Samuel 19:31–39. At the Jordan bank, restored King David embraces elderly white-haired Barzillai in farewell while the returning royal company finishes crossing shallow water behind them. Warm gratitude, no miraculous parting of the river or modern bridge. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Samuel 20 — WALL
+
+Reference: 2 Samuel 20:15–22.
+
+2 Samuel chapter 20. Reference 2 Samuel 20:15–22. A wise woman leans from the fortified wall of Abel-beth-maacah to negotiate with Joab below. Siege ramp and resting soldiers show the threatened city; her raised hand calls for a halt. No severed head or assault, emphasis on wisdom saving the city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Samuel 21 — BONES
+
+Reference: 2 Samuel 21:12–14.
+
+2 Samuel chapter 21. Reference 2 Samuel 21:12–14. Men respectfully carry small fully wrapped funerary bundles into the ancestral tomb of Kish at Zela while David's representatives oversee burial. Somber daylight returning after famine, no exposed bones or hanged bodies. Burial and restitution are the cues. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Samuel 22 — ROCK
+
+Reference: 2 Samuel 22:1–7.
+
+2 Samuel chapter 22. Reference 2 Samuel 22:1–7. A poetic illustration of David's song: David stands safely on a high rugged rock beside an ancient stone stronghold, praying as dark storm clouds open to warm light. Rock as refuge is dominant; no literal human-shaped God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Samuel 23 — MIGHTY
+
+Reference: 2 Samuel 23:14–17.
+
+2 Samuel chapter 23. Reference 2 Samuel 23:14–17. Three weary mighty warriors present water to David at his wilderness stronghold, and he reverently pours it on the ground as an offering rather than drinks. Their dusty equipment and expressions convey the danger they braved; clearly three warriors. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Samuel 24 — THRESHING FLOOR
+
+Reference: 2 Samuel 24:18–25.
+
+2 Samuel chapter 24. Reference 2 Samuel 24:18–25. On Araunah's open hilltop threshing floor, David pays weighed silver to its owner beside wooden threshing sledges, oxen and winnowed grain. A humble stone altar is being prepared nearby; no completed Solomon temple. Payment rather than free gift is central. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
