@@ -1,97 +1,81 @@
-# Image prompts for Hebrews — all chapters
+# Hebrews — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/hebrews/`.
+Reviewed against the bundled BSB scripture (book 58). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 13 chapters.
+### Hebrews 1 — SON
 
-### Chapter 1 — SON
-**Filename:** `ch1.png`
+Reference: Hebrews 1:1–4.
 
-```
-A dramatic, cinematic biblical illustration of 'In these last days He has spoken to us by His Son'. Symbolizes 'SON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hebrews chapter 1. Reference Hebrews 1:1–4. A symbolic portrait of the exalted Son: Jesus in simple luminous white robes sits in serene dignity amid warm heavenly light, the visible human face clear and compassionate. Subtle distant angelic attendants remain secondary. No second visible portrait of the invisible Father, no literal universe held as a toy, no medieval king costume or readable heavenly decree. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — TASTE
-**Filename:** `ch2.png`
+### Hebrews 2 — TASTE
 
-```
-A dramatic, cinematic biblical illustration of Jesus tasted death for everyone. Symbolizes 'TASTE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hebrews 2:9–10.
 
-### Chapter 3 — HOUSE
-**Filename:** `ch3.png`
+Hebrews chapter 2. Reference Hebrews 2:9–10. A restrained symbolic close view of a plain wooden cross against a dawn sky, a thorn crown and folded linen at its base, with a small hopeful group beyond. The costly death of Christ and glory beyond suffering, no literal tasting of blood or food, no graphic wounds, no body gore or resurrection montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Moses faithful as a servant in God's house — Jesus as Son over the house. Symbolizes 'HOUSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hebrews 3 — HOUSE
 
-### Chapter 4 — REST
-**Filename:** `ch4.png`
+Reference: Hebrews 3:3–6.
 
-```
-A dramatic, cinematic biblical illustration of A Sabbath rest remains for the people of God. Symbolizes 'REST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hebrews chapter 3. Reference Hebrews 3:3–6. An explicitly symbolic household: Christ stands welcoming at the entrance of a substantial ancient stone home, with a community gathering inside. A humble older servant tends the doorway as a visual echo of Moses faithful service, without pretending to show a historical meeting. Son and household theme, no bodies made of bricks or Moses portrayed as rejected or evil. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — MILK
-**Filename:** `ch5.png`
+### Hebrews 4 — REST
 
-```
-A dramatic, cinematic biblical illustration of You need milk not solid food. Symbolizes 'MILK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hebrews 4:9–11.
 
-### Chapter 6 — ANCHOR
-**Filename:** `ch6.png`
+Hebrews chapter 4. Reference Hebrews 4:9–11. A weary ancient traveler rests peacefully in the shade beside a quiet garden stream, work tools and a travel pack set aside. Open welcoming landscape, relaxed hands and trusting expression. Symbolic Sabbath rest, no laziness caricature, calendar, sleeping through danger or claim that a particular landscape is heaven. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Hope as an anchor for the soul — firm and secure. Symbolizes 'ANCHOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hebrews 5 — MILK
 
-### Chapter 7 — MELCHIZEDEK
-**Filename:** `ch7.png`
+Reference: Hebrews 5:12–14.
 
-```
-A dramatic, cinematic biblical illustration of Priest forever — greater than Abraham and Levi. Symbolizes 'MELCHIZEDEK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hebrews chapter 5. Reference Hebrews 5:12–14. On a simple ancient table a clay cup of milk stands beside a wholesome loaf and a bowl of solid food, while an adult learner listens attentively to a teacher beyond. A visual metaphor for growing from basic teaching to mature discernment. No adult drinking from a baby bottle, no ridicule, no modern food packaging or nutritional diagram. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — COPY
-**Filename:** `ch8.png`
+### Hebrews 6 — ANCHOR
 
-```
-A dramatic, cinematic biblical illustration of Earthly tabernacle is a shadow and copy of the heavenly. Symbolizes 'COPY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hebrews 6:18–20.
 
-### Chapter 9 — BLOOD
-**Filename:** `ch9.png`
+Hebrews chapter 6. Reference Hebrews 6:18–20. A strong ancient iron anchor grips solid rock beneath clear shallow water, its thick rope taut toward a small vessel safely held against choppy water beyond. Warm light on the secure anchor. Explicit metaphor of steadfast hope, not a literal diagram of the heavenly sanctuary; no anchor floating unsupported, broken rope, drowning sailors or maritime text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Without the shedding of blood there is no forgiveness. Symbolizes 'BLOOD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hebrews 7 — MELCHIZEDEK
 
-### Chapter 10 — ONCE
-**Filename:** `ch10.png`
+Reference: Hebrews 7:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Christ offered once for all — sit down, work is finished. Symbolizes 'ONCE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hebrews chapter 7. Reference Hebrews 7:1–3. Melchizedek, king of Salem and priest, stands with an open blessing gesture toward Abraham, who bows respectfully after returning from conflict. Simple ancient Near Eastern royal-priestly robes and a modest offering bundle nearby. Dignified peaceful encounter, no medieval bishop hat, no claim about Melchizedek biological origins, no visible genealogy scroll, battle gore or Christ duplicated beside him. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — FAITH
-**Filename:** `ch11.png`
+### Hebrews 8 — COPY
 
-```
-A dramatic, cinematic biblical illustration of Faith Hall of Fame — Abel to the prophets. Symbolizes 'FAITH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hebrews 8:4–6.
 
-### Chapter 12 — RACE
-**Filename:** `ch12.png`
+Hebrews chapter 8. Reference Hebrews 8:4–6. The earthly tabernacle stands in a quiet wilderness camp, its carefully made curtains and courtyard casting a clear shadow while warm light opens beyond it. Explicit visual metaphor for copy and heavenly reality, no second giant floating tabernacle presented as a literal blueprint, no modern temple or Christian church, no workers building in the sky. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Run with endurance — fix your eyes on Jesus. Symbolizes 'RACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hebrews 9 — BLOOD
 
-### Chapter 13 — GATE
-**Filename:** `ch13.png`
+Reference: Hebrews 9:11–14, 22.
 
-```
-A dramatic, cinematic biblical illustration of Jesus suffered outside the gate — go to him there. Symbolizes 'GATE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hebrews chapter 9. Reference Hebrews 9:11–14, 22. Symbolic sacrificial redemption: a plain wooden cross is seen through the parted curtain of a dim sanctuary-like space, a small deep-red textile on a stone ledge providing the BLOOD mnemonic without gore. Warm light beyond, solemn completed sacrifice. No animals killed, blood bath, literal Jesus carrying a bowl of his blood, or claim that temple and Golgotha shared one physical location. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Hebrews 10 — ONCE
+
+Reference: Hebrews 10:10–14.
+
+Hebrews chapter 10. Reference Hebrews 10:10–14. The risen Christ sits at rest in serene glory, a single plain cross distant behind as a symbolic reminder of the once-for-all offering. Quiet finished-work composition, no ongoing sacrifice, multiple crucifixions, injured body, visible Father figure or repeated ritual procession. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Hebrews 11 — FAITH
+
+Reference: Hebrews 11:1–3, 8–10.
+
+Hebrews chapter 11. Reference Hebrews 11:1–3, 8–10. Abraham and Sarah travel faithfully with a small household caravan toward an unfamiliar horizon, tents and animals moving through an ancient dry landscape under a hopeful sky. One representative example from the chapter of faith, no collage of every biblical hero, no labeled hall of fame, destination map or already completed heavenly city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Hebrews 12 — RACE
+
+Reference: Hebrews 12:1–3.
+
+Hebrews chapter 12. Reference Hebrews 12:1–3. A determined runner in a modest ancient tunic continues along a long uneven racecourse, a discarded heavy travel bundle safely off the path and distant spectators encouraging him. His gaze stays toward a sunlit plain cross at the far end as an explicit spiritual metaphor. Endurance, not winning over others; no modern race numbers, bodies in the clouds or literal chain around his legs. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Hebrews 13 — GATE
+
+Reference: Hebrews 13:11–14.
+
+Hebrews chapter 13. Reference Hebrews 13:11–14. A few plainly clothed followers walk through an ancient city gate toward a simple cross on the rocky ground outside the walls. Gate and outward movement prominent, sober courage and belonging beyond status. Symbolic willingness to bear reproach with Christ, no crucified gore, violent expulsion or modern political border. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
