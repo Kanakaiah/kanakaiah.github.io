@@ -1,48 +1,39 @@
-# Image prompts for Galatians — all chapters
+# Galatians — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/galatians/`.
+Reviewed against the bundled BSB scripture (book 48). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 6 chapters.
+### Galatians 1 — CURSE
 
-### Chapter 1 — CURSE
-**Filename:** `ch1.png`
+Reference: Galatians 1:6–9.
 
-```
-A dramatic, cinematic biblical illustration of Any gospel other than Paul's — 'let him be accursed'. Symbolizes 'CURSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Galatians chapter 1. Reference Galatians 1:6–9. Paul addresses a small gathering firmly yet compassionately, one hand protecting an opened scripture scroll on a table while he refuses a second offered scroll with a calm raised palm. A visual interpretation of rejecting a distorted gospel; both scrolls have fine indistinct ink texture. No literal curse spell, burning person, lightning punishment, evil ethnic caricature or visible false angel. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — FACE
-**Filename:** `ch2.png`
+### Galatians 2 — FACE
 
-```
-A dramatic, cinematic biblical illustration of Paul opposed Peter to his face at Antioch. Symbolizes 'FACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Galatians 2:11–14.
 
-### Chapter 3 — ABRAHAM
-**Filename:** `ch3.png`
+Galatians chapter 2. Reference Galatians 2:11–14. At a shared meal in Antioch Paul confronts Peter face to face about withdrawing from Gentile believers. Paul gestures openly toward the excluded diners while Peter listens seriously, an empty place at the common table visible. Dignified firm disagreement, no physical aggression, no caricature of either group, no modern courtroom or duel. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Were you justified by faith or works? Ask Abraham. Symbolizes 'ABRAHAM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Galatians 3 — ABRAHAM
 
-### Chapter 4 — HAGAR
-**Filename:** `ch4.png`
+Reference: Galatians 3:6–9.
 
-```
-A dramatic, cinematic biblical illustration of Two covenants — Hagar (Sinai) vs. Sarah (promise). Symbolizes 'HAGAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Galatians chapter 3. Reference Galatians 3:6–9. Abraham, an elderly bearded ancient Near Eastern patriarch in simple robes, stands outside his tent under a vast star-filled sky, gazing upward in trusting wonder. His open hands and peaceful face suggest faith in God's promise. The star scene recalls the faith discussed in the chapter, not a meeting between Abraham and Paul. No literal family tree, written genealogy, modern astronomy or idols. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — FRUIT
-**Filename:** `ch5.png`
+### Galatians 4 — HAGAR
 
-```
-A dramatic, cinematic biblical illustration of Fruit of the Spirit vs. works of the flesh. Symbolizes 'FRUIT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Galatians 4:22–28.
 
-### Chapter 6 — CROSS
-**Filename:** `ch6.png`
+Galatians chapter 4. Reference Galatians 4:22–28. A symbolic domestic tableau recalls Abraham's two sons: Hagar with her older boy stands near a travel bundle at the edge of an ancient tent courtyard, while Sarah holds her younger child nearby. Both mothers and children are dignified human beings in modest clothing. The scene serves Paul's covenant comparison, not a literal meeting at Mount Sinai. No villainous Hagar, racial hierarchy, chained child, floating heavenly city or blended adult/baby child anatomy. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'May I never boast except in the cross'. Symbolizes 'CROSS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Galatians 5 — FRUIT
 
+Reference: Galatians 5:22–25.
+
+Galatians chapter 5. Reference Galatians 5:22–25. A healthy fruit-bearing tree in a peaceful ancient garden shelters people sharing fruit kindly and patiently, one adult helping a child reach a low branch. Abundant natural fruit and gentle human conduct communicate the fruit of the Spirit. Not nine labeled fruits or nine separate panels; no literal Spirit creature, magic fruit, written virtues or contrasting violence montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Galatians 6 — CROSS
+
+Reference: Galatians 6:14–15.
+
+Galatians chapter 6. Reference Galatians 6:14–15. Paul kneels humbly before a plain wooden cross on a quiet rocky rise in warm dawn light, travel belongings resting behind him. The cross dominates, Paul's posture expresses dependence rather than personal achievement. Explicit symbolic illustration of boasting only in Christ's cross, not a claim Paul stood at the crucifixion. No trophies, royal crown, military victory or crucified body. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
