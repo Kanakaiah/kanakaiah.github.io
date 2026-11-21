@@ -1,34 +1,27 @@
-# Image prompts for Philippians — all chapters
+# Philippians — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/philippians/`.
+Reviewed against the bundled BSB scripture (book 50). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 4 chapters.
+### Philippians 1 — CHAINS
 
-### Chapter 1 — CHAINS
-**Filename:** `ch1.png`
+Reference: Philippians 1:12–14.
 
-```
-A dramatic, cinematic biblical illustration of 'My chains have advanced the gospel' — to die is gain. Symbolizes 'CHAINS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Philippians chapter 1. Reference Philippians 1:12–14. Paul speaks warmly with a Roman guard and a visiting believer in modest guarded lodging, a short chain visible at his wrist. The guard listens attentively; gospel opportunity despite confinement. No prison escape, triumphal parade or execution. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — KNEE
-**Filename:** `ch2.png`
+### Philippians 2 — KNEE
 
-```
-A dramatic, cinematic biblical illustration of Every knee shall bow — Christ emptied Himself. Symbolizes 'KNEE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Philippians 2:6–11.
 
-### Chapter 3 — RUBBISH
-**Filename:** `ch3.png`
+Philippians chapter 2. Reference Philippians 2:6–11. Symbolic scene of people from many ancient nations kneeling humbly before the exalted Christ, who stands in quiet radiant dignity above them. Christ is a Jewish man in simple white robes, not a jeweled earthly conqueror. One coherent reverent composition, no forced submission, suffering bodies or simultaneous manger and crucifixion montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'I count everything as rubbish compared to knowing Christ'. Symbolizes 'RUBBISH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Philippians 3 — RUBBISH
 
-### Chapter 4 — CONTENT
-**Filename:** `ch4.png`
+Reference: Philippians 3:7–9.
 
-```
-A dramatic, cinematic biblical illustration of 'I have learned in all circumstances to be content'. Symbolizes 'CONTENT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Philippians chapter 3. Reference Philippians 3:7–9. Paul leaves a small bundle of costly garments and status symbols at the edge of a road and turns toward a plain cross on a sunlit rise. A symbolic valuation of knowing Christ above former advantages, not a historical episode. No literal manure, burning sacred scrolls, hatred of his heritage or claim that learning itself is worthless. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Philippians 4 — CONTENT
+
+Reference: Philippians 4:11–13.
+
+Philippians chapter 4. Reference Philippians 4:11–13. Paul sits contentedly in a modest room with a small piece of bread, water cup and worn travel cloak. Calm grateful face under warm light, simple sufficient provisions. No wealth suddenly appearing, athletic victory slogan, starvation spectacle or split-screen rich and poor versions. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
