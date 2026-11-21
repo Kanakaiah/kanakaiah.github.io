@@ -1,34 +1,27 @@
-# Image prompts for 2 Timothy — all chapters
+# 2 Timothy — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/2timothy/`.
+Reviewed against the bundled BSB scripture (book 55). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 4 chapters.
+### 2 Timothy 1 — FLAME
 
-### Chapter 1 — FLAME
-**Filename:** `ch1.png`
+Reference: 2 Timothy 1:6–7.
 
-```
-A dramatic, cinematic biblical illustration of 'Fan into flame the gift of God' — guard the good deposit. Symbolizes 'FLAME'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Timothy chapter 1. Reference 2 Timothy 1:6–7. A young adult believer carefully fans glowing embers in a small safe hearth until a steady flame grows, warm light illuminating a purposeful face. Explicit visual metaphor for nurturing the gift with courage, love and self-control. No person on fire, giant blaze or branded tools. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SOLDIER
-**Filename:** `ch2.png`
+### 2 Timothy 2 — SOLDIER
 
-```
-A dramatic, cinematic biblical illustration of Soldier, athlete, farmer — suffer hardship with Christ. Symbolizes 'SOLDIER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Timothy 2:3–7.
 
-### Chapter 3 — SCROLL
-**Filename:** `ch3.png`
+2 Timothy chapter 2. Reference 2 Timothy 2:3–7. A disciplined first-century soldier stands watch faithfully through a cold dawn, equipment maintained and posture steady, weapon sheathed. Endurance and undivided service as a metaphor; no battle or human enemy. Do not combine athlete and farmer into a collage, no crusader emblem or modern armor. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'All Scripture is breathed out by God' — sacred writings. Symbolizes 'SCROLL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Timothy 3 — SCROLL
 
-### Chapter 4 — CROWN
-**Filename:** `ch4.png`
+Reference: 2 Timothy 3:14–17.
 
-```
-A dramatic, cinematic biblical illustration of 'I have fought the good fight… the crown of righteousness awaits me'. Symbolizes 'CROWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Timothy chapter 3. Reference 2 Timothy 3:14–17. Timothy studies an unrolled sacred scripture scroll at a plain wooden table under lamplight, with older mentors listening nearby. Scroll has fine manuscript ink texture rather than blank parchment, no readable captions. Serious learning equipping good work, not a magical scroll emitting flames or a modern printed Bible. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### 2 Timothy 4 — CROWN
+
+Reference: 2 Timothy 4:6–8.
+
+2 Timothy chapter 4. Reference 2 Timothy 4:6–8. An older Paul rests prayerfully in modest guarded lodging, peaceful after a faithful life; a simple leafy victor wreath lies in warm light on a nearby table as a symbolic promise. No crown already placed on his head, no execution, boxing match, jeweled monarchy or claim that the crown is physical payment. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
