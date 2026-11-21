@@ -1,153 +1,129 @@
-# Image prompts for Judges — all chapters
+# Judges — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/judges/`.
+Reviewed against the bundled BSB scripture (book 7). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 21 chapters.
+### Judges 1 — THUMBS
 
-### Chapter 1 — THUMBS
-**Filename:** `ch1.png`
+Reference: Judges 1:5–7.
 
-```
-A dramatic, cinematic biblical illustration of Adoni-bezek's thumbs and big toes cut off — partial conquest. Symbolizes 'THUMBS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Judges chapter 1. Reference Judges 1:5–7. The defeated Adoni-bezek sits under guard in a sober ancient camp, his hands and feet discreetly wrapped in clean linen so no injury is visible. A discarded small royal headband lies near his lowered head. A restrained aftermath cue to the loss of his thumbs and great toes and his recognition of repayment. No amputation action, exposed wound, blood or triumphant mockery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — ANGEL
-**Filename:** `ch2.png`
+### Judges 2 — ANGEL
 
-```
-A dramatic, cinematic biblical illustration of Angel of the LORD rebukes at Bokim — the cycle announced. Symbolizes 'ANGEL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Judges 2:1–5.
 
-### Chapter 3 — GOAD
-**Filename:** `ch3.png`
+Judges chapter 2. Reference Judges 2:1–5. The angel of the LORD addresses the assembled Israelites at Bochim, who bow their heads and weep in remorse. A luminous but human-scale messenger stands against a natural rocky landscape, no gigantic deity face. One covenant rebuke scene, no battle, cartoon crying or simultaneous burial of Joshua. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Ehud kills Eglon — Shamgar kills 600 with an oxgoad. Symbolizes 'GOAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Judges 3 — GOAD
 
-### Chapter 4 — TENT PEG
-**Filename:** `ch4.png`
+Reference: Judges 3:31.
 
-```
-A dramatic, cinematic biblical illustration of Jael drives a tent peg through sleeping Sisera's temple. Symbolizes 'TENT PEG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Judges chapter 3. Reference Judges 3:31. Shamgar stands resolutely holding a long wooden oxgoad beside an agricultural field, an ox nearby showing the tool's ordinary use. Distant hostile fighters retreat beyond the ridge. A single memory cue to deliverance with an unlikely implement, no pile of bodies, six hundred figures, blood or separate Ehud assassination. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — SONG
-**Filename:** `ch5.png`
+### Judges 4 — TENT PEG
 
-```
-A dramatic, cinematic biblical illustration of Deborah and Barak's victory song — "Stars fought from heaven. Symbolizes 'SONG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Judges 4:21–22.
 
-### Chapter 6 — FLEECE
-**Filename:** `ch6.png`
+Judges chapter 4. Reference Judges 4:21–22. Jael stands at her tent entrance and gestures for the arriving Barak to enter. A heavy tent peg and wooden mallet lie prominently near the threshold; the tent interior stays dark and Sisera's body is not visible. A restrained aftermath cue, no penetration, head wound, blood, seductive pose or attack in progress. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Gideon tests God twice with a fleece — wet then dry. Symbolizes 'FLEECE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Judges 5 — SONG
 
-### Chapter 7 — JARS
-**Filename:** `ch7.png`
+Reference: Judges 5:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Gideon's 300 — jars, torches, and trumpets rout the Midianites. Symbolizes 'JARS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Judges chapter 5. Reference Judges 5:1–3. Deborah and Barak sing praise before a relieved Israelite gathering after deliverance. Deborah leads with a lifted open hand, Barak beside her; listeners respond with gratitude. One victory-song scene in an ancient landscape, no modern microphone, printed music, stars firing weapons or battle montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — EPHOD
-**Filename:** `ch8.png`
+### Judges 6 — FLEECE
 
-```
-A dramatic, cinematic biblical illustration of Gideon makes a golden ephod — it becomes an idol. Symbolizes 'EPHOD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Judges 6:37–38.
 
-### Chapter 9 — MILLSTONE
-**Filename:** `ch9.png`
+Judges chapter 6. Reference Judges 6:37–38. At dawn Gideon wrings a soaked sheep's fleece over a plain bowl, a visible stream of water falling into it while the surrounding threshing-floor ground is dry. Exactly one fleece and one first-test moment. No rain falling, dry-fleece second test mixed in, magic glowing wool or modern bucket. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Abimelech's skull crushed by a millstone dropped by a woman. Symbolizes 'MILLSTONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Judges 7 — JARS
 
-### Chapter 10 — GODS
-**Filename:** `ch10.png`
+Reference: Judges 7:19–22.
 
-```
-A dramatic, cinematic biblical illustration of Israel serves seven foreign gods — twenty-three years oppressed. Symbolizes 'GODS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Judges chapter 7. Reference Judges 7:19–22. Gideon and a small foreground group stand on a ridge at night with broken clay jars at their feet, flaming torches in their LEFT hands and ram horns in their RIGHT hands. More points of torchlight encircle the distant Midianite camp, which falls into confusion. No attempt to show exactly three hundred close figures, modern trumpets or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — VOW
-**Filename:** `ch11.png`
+### Judges 8 — EPHOD
 
-```
-A dramatic, cinematic biblical illustration of Jephthah's rash vow — his daughter walks out to greet him. Symbolizes 'VOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Judges 8:24–27.
 
-### Chapter 12 — SHIBBOLETH
-**Filename:** `ch12.png`
+Judges chapter 8. Reference Judges 8:24–27. In Ophrah a richly worked golden ephod stands on a simple support while Israelites turn toward it in misplaced reverence; Gideon watches soberly nearby. Several donated gold earrings on a cloth show its material origin. It is a priestly garment-shaped object, not a giant golden human statue, modern jewelry display or approved act of worship. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Ephraimites caught at the ford by their pronunciation. Symbolizes 'SHIBBOLETH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Judges 9 — MILLSTONE
 
-### Chapter 13 — FLAME
-**Filename:** `ch13.png`
+Reference: Judges 9:52–54.
 
-```
-A dramatic, cinematic biblical illustration of Angel ascends in the altar flame — Samson's birth announced. Symbolizes 'FLAME'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Judges chapter 9. Reference Judges 9:52–54. From the parapet of an ancient defensive tower, an adult woman releases a small upper millstone toward the ground below as Abimelech approaches the entrance far beneath. Freeze the stone high in its fall, no contact with anyone. Tense protective action, no crushed skull, blood, enormous boulder or modern artillery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — HONEY
-**Filename:** `ch14.png`
+### Judges 10 — GODS
 
-```
-A dramatic, cinematic biblical illustration of Samson finds honey in the lion's carcass — "Out of the eater. Symbolizes 'HONEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Judges 10:6–10.
 
-### Chapter 15 — JAWBONE
-**Filename:** `ch15.png`
+Judges chapter 10. Reference Judges 10:6–10. Troubled Israelite families kneel in repentant prayer with several neglected foreign household idols set aside behind them, and oppressive armed patrols distant on the road. The forsaking of God and renewed plea for help are the cues. No written years; the oppression in this passage was eighteen years, not twenty-three. No ethnic caricature or gleeful idol worship. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Samson kills 1,000 Philistines with a donkey's jawbone. Symbolizes 'JAWBONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Judges 11 — VOW
 
-### Chapter 16 — HAIR
-**Filename:** `ch16.png`
+Reference: Judges 11:34–35.
 
-```
-A dramatic, cinematic biblical illustration of Delilah cuts Samson's hair — he is blinded and bound. Symbolizes 'HAIR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Judges chapter 11. Reference Judges 11:34–35. Jephthah returns home and recoils in grief as his only daughter, portrayed as a fully clothed young adult, comes out joyfully with a tambourine. He tears the outer edge of his robe, recognizing the consequences of his rash vow. One homecoming moment, no sacrifice, threatened child, altar, execution or romantic framing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — SILVER
-**Filename:** `ch17.png`
+### Judges 12 — SHIBBOLETH
 
-```
-A dramatic, cinematic biblical illustration of Micah's silver idol — he hires a Levite as personal priest. Symbolizes 'SILVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Judges 12:5–6.
 
-### Chapter 18 — DAN
-**Filename:** `ch18.png`
+Judges chapter 12. Reference Judges 12:5–6. At a shallow Jordan ford, Gileadite guards question a weary adult traveler and listen closely to his reply. One guard raises a calm questioning hand, the crossing and its control clearly visible. A tense pronunciation-test moment, no written Shibboleth, speech bubbles, execution, throat cutting or modern checkpoint. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Tribe of Dan steals Micah's idols on their way north. Symbolizes 'DAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Judges 13 — FLAME
 
-### Chapter 19 — CONCUBINE
-**Filename:** `ch19.png`
+Reference: Judges 13:19–20.
 
-```
-A dramatic, cinematic biblical illustration of The Levite's concubine brutalized in Gibeah all night. Symbolizes 'CONCUBINE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Judges chapter 13. Reference Judges 13:19–20. An angel ascends in the flame rising from a simple rock altar while Manoah and his wife fall facedown nearby in awe. The messenger is surrounded by radiant light without appearing injured or burning. One announcement-sign moment, no baby Samson present, human sacrifice or modern church altar. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — CIVIL WAR
-**Filename:** `ch20.png`
+### Judges 14 — HONEY
 
-```
-A dramatic, cinematic biblical illustration of Israel attacks Benjamin — 65,000 dead in three days. Symbolizes 'CIVIL WAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Judges 14:8–9.
 
-### Chapter 21 — WIVES
-**Filename:** `ch21.png`
+Judges chapter 14. Reference Judges 14:8–9. Samson, a strong long-haired adult, leans beside the dry skeletal remains of a lion partly concealed in tall grass, taking a small piece of honeycomb as bees hover nearby. The honey and his curious gesture dominate. No fresh carcass, decay close-up, gore, live lion fight or honey from a tree. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Wives seized at Shiloh for the surviving Benjaminites. Symbolizes 'WIVES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Judges 15 — JAWBONE
 
+Reference: Judges 15:14–17.
+
+Judges chapter 15. Reference Judges 15:14–17. Samson stands with broken ropes hanging loosely from his wrists and holds a donkey's jawbone low at his side, spent but resolute after the confrontation. Distant opponents retreat across a dusty landscape. Clear ordinary animal jawbone, no human skull, blood, bodies piled high, superhero armor or weapon swinging at a person. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Judges 16 — HAIR
+
+Reference: Judges 16:18–21.
+
+Judges chapter 16. Reference Judges 16:18–21. Samson sleeps fully clothed with his head resting on Delilah's lap while a separate adult male attendant carefully cuts the long braids of his hair. Delilah watches and directs; she is NOT the person holding the cutting tool. Sober betrayal, no erotic pose, exposed body, blinding, blood or multiple later events. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Judges 17 — SILVER
+
+Reference: Judges 17:1–5.
+
+Judges chapter 17. Reference Judges 17:1–5. Micah and his mother stand in a humble house while a silversmith shapes a small silver household idol at a simple bench. Weighed silver pieces lie nearby, and a small private shrine is visible behind. A depiction of their misguided use of silver, no giant statue, modern coin faces, approval halo or later theft. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Judges 18 — DAN
+
+Reference: Judges 18:18–20.
+
+Judges chapter 18. Reference Judges 18:18–20. Danite travelers carry Micah's small household idols and ephod out of his shrine as the young Levite priest willingly joins them. The objects are portable and ordinary, his conflicted but pleased expression visible. No violence, burning city, giant idol, invented modern tribal flags or merged conquest scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Judges 19 — CONCUBINE
+
+Reference: Judges 19:25–27.
+
+Judges chapter 19. Reference Judges 19:25–27. At the first gray light of dawn, a fully clothed adult woman lies exhausted and motionless at a closed house doorway with her hands resting on the threshold. An empty ancient street and closed doors convey abandonment and tragedy. Treat her with dignity; no exposed body, sexual act, attackers, wounds, blood, dismemberment or voyeuristic camera angle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Judges 20 — CIVIL WAR
+
+Reference: Judges 20:20–28.
+
+Judges chapter 20. Reference Judges 20:20–28. Israelite warriors sit weeping and fasting before the sanctuary at Bethel after the heavy losses of civil war, their swords laid aside. Phinehas stands nearby and the ark is screened respectfully within the sanctuary space. Communal grief rather than triumph, no numeric casualty caption, bodies, ethnic villain coding or battle collage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Judges 21 — WIVES
+
+Reference: Judges 21:19–23.
+
+Judges chapter 21. Reference Judges 21:19–23. A sober wide view near Shiloh: adult women in modest garments gather at the edge of a festival while armed Benjaminites wait concealed among nearby vines. Unease and distance convey the impending forced seizure without showing physical contact. A critical depiction of a troubling episode, no romantic wedding mood, celebratory abduction, sexual imagery or children. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
