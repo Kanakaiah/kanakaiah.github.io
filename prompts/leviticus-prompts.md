@@ -1,195 +1,165 @@
-# Image prompts for Leviticus — all chapters
+# Leviticus — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/leviticus/`.
+Reviewed against the bundled BSB scripture (book 3). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 27 chapters.
+### Leviticus 1 — BURNT
 
-### Chapter 1 — BURNT
-**Filename:** `ch1.png`
+Reference: Leviticus 1:3–9.
 
-```
-A dramatic, cinematic biblical illustration of Burnt offering — total surrender, completely consumed. Symbolizes 'BURNT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 1. Reference Leviticus 1:3–9. A linen-clad priest tends the bronze altar in the desert tabernacle courtyard as a burnt offering is consumed in a steady fire. Smoke rises in a single column, arranged wood visible, animal remains obscured by flame and altar rim. Focus on the complete offering, no living animal on fire or gore. Rectangular bronze altar with four corner horns, fabric sanctuary behind; no stone temple. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — GRAIN
-**Filename:** `ch2.png`
+### Leviticus 2 — GRAIN
 
-```
-A dramatic, cinematic biblical illustration of Grain offering — devotion and gratitude. Symbolizes 'GRAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 2:1–3.
 
-### Chapter 3 — PEACE
-**Filename:** `ch3.png`
+Leviticus chapter 2. Reference Leviticus 2:1–3. An Israelite worshiper brings a shallow bowl of fine flour while a priest pours a small stream of olive oil over it; a little frankincense rests nearby. Close view of natural hands and grain textures in the tabernacle courtyard. No bread alone replacing flour, no modern bottle, no slaughter. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Fellowship/peace offering — communion with God. Symbolizes 'PEACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 3 — PEACE
 
-### Chapter 4 — SIN
-**Filename:** `ch4.png`
+Reference: Leviticus 3:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Sin offering — covering for unintentional sin. Symbolizes 'SIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 3. Reference Leviticus 3:1–5. One Israelite worshiper lays a hand gently on the head of a healthy ox at the entrance to the Tent of Meeting, a priest waiting beside them. The peaceful offering presentation before sacrifice, calm community behind. No slaughter or living creature on an altar, no modern church. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — GUILT
-**Filename:** `ch5.png`
+### Leviticus 4 — SIN
 
-```
-A dramatic, cinematic biblical illustration of Guilt offering — restitution required. Symbolizes 'GUILT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 4:13–21.
 
-### Chapter 6 — FIRE
-**Filename:** `ch6.png`
+Leviticus chapter 4. Reference Leviticus 4:13–21. Several elders of Israel stand together and lay their hands on the head of one young bull before the fabric Tent of Meeting, visibly solemn about the congregation's unintentional wrongdoing. Collective responsibility is the clear cue. No individual only, no blood spectacle, no text tablets. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The fire on the altar must never go out. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 5 — GUILT
 
-### Chapter 7 — FAT
-**Filename:** `ch7.png`
+Reference: Leviticus 5:14–16.
 
-```
-A dramatic, cinematic biblical illustration of Fat and blood belong exclusively to God. Symbolizes 'FAT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 5. Reference Leviticus 5:14–16. A penitent worshiper presents an unblemished ram on a lead and places measured pieces of silver before a priest as restitution. A small ancient balance and extra silver portion convey repayment with an addition, without printed arithmetic. Silver by weight, no modern coins or price tag. One presentation moment, no claim money purchases innocence. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — OIL
-**Filename:** `ch8.png`
+### Leviticus 6 — FIRE
 
-```
-A dramatic, cinematic biblical illustration of Aaron anointed with oil — the priesthood consecrated. Symbolizes 'OIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 6:8–13.
 
-### Chapter 9 — GLORY
-**Filename:** `ch9.png`
+Leviticus chapter 6. Reference Leviticus 6:8–13. At first light a priest in simple linen adds fresh wood to the still-burning bronze altar after its fire has lasted through the night. Embers and fresh wood dominate, a modest ash vessel beside the altar. No extinguished fire, no second altar, no human sacrifice, no ornate royal costume. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of God's glory appears — fire consumes the offering. Symbolizes 'GLORY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 7 — FAT
 
-### Chapter 10 — STRANGE
-**Filename:** `ch10.png`
+Reference: Leviticus 7:22–27; 7:30–31.
 
-```
-A dramatic, cinematic biblical illustration of Nadab and Abihu offer unauthorized fire — they die instantly. Symbolizes 'STRANGE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 7. Reference Leviticus 7:22–27; 7:30–31. A priest reverently carries a small reserved portion of pale animal fat in a bronze dish toward the altar fire; an Israelite family waits at a respectful distance. A restrained non-graphic visual cue that this portion belongs to the offering, not the household meal. No raw organs, blood pools or modern packaged fat. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — CLEAN
-**Filename:** `ch11.png`
+### Leviticus 8 — OIL
 
-```
-A dramatic, cinematic biblical illustration of Clean and unclean animals — what may be eaten. Symbolizes 'CLEAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 8:6–12.
 
-### Chapter 12 — BLOOD
-**Filename:** `ch12.png`
+Leviticus chapter 8. Reference Leviticus 8:6–12. Moses pours a small stream of anointing oil onto Aaron's head before the tabernacle. Aaron wears a blue robe, woven ephod, breastpiece with twelve stones arranged four rows of three, and a linen turban with a small gold forehead plate whose writing is too small to read. Aaron's sons wait behind in plain linen. Natural scale and one consecration moment, no crown or bishop hat. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Purification after childbirth — the mother's blood. Symbolizes 'BLOOD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 9 — GLORY
 
-### Chapter 13 — SKIN
-**Filename:** `ch13.png`
+Reference: Leviticus 9:22–24.
 
-```
-A dramatic, cinematic biblical illustration of Diagnosis of leprosy — the priest examines the skin. Symbolizes 'SKIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 9. Reference Leviticus 9:22–24. A bright flame streams from the presence at the Tent of Meeting to consume the offering on the bronze altar while the assembled Israelites fall facedown in awe. Moses and Aaron stand to the side, not inside the flames. Divine presence shown as light, no human face in clouds, no lightning striking people. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — BIRD
-**Filename:** `ch14.png`
+### Leviticus 10 — STRANGE
 
-```
-A dramatic, cinematic biblical illustration of Two birds ritual — one killed, one set free. Symbolizes 'BIRD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 10:1–3.
 
-### Chapter 15 — DISCHARGE
-**Filename:** `ch15.png`
+Leviticus chapter 10. Reference Leviticus 10:1–3. Nadab and Abihu, exactly two adult priests, approach the sanctuary with separate bronze censers containing unauthorized fire. A sudden intense glow from the sanctuary evokes the grave consequence while Aaron stands in stunned silence farther back. Show the moment before any bodily injury; no charred bodies, gore or people aflame. No claim every incense offering was forbidden. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Bodily discharges and their purification. Symbolizes 'DISCHARGE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 11 — CLEAN
 
-### Chapter 16 — GOAT
-**Filename:** `ch16.png`
+Reference: Leviticus 11:1–8.
 
-```
-A dramatic, cinematic biblical illustration of Day of Atonement — two goats, one slain, one sent away. Symbolizes 'GOAT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 11. Reference Leviticus 11:1–8. In an ancient livestock enclosure an Israelite teacher points out a sheep's clearly split hoof to attentive adults, while a camel stands apart beyond a low wooden barrier. A coherent practical teaching scene about distinctions among animals. Natural animals, no diagram, labels, modern zoological equipment or judgment about the people themselves. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — BLOOD
-**Filename:** `ch17.png`
+### Leviticus 12 — BLOOD
 
-```
-A dramatic, cinematic biblical illustration of The life of the flesh is in the blood. Symbolizes 'BLOOD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 12:6–8.
 
-### Chapter 18 — NAKED
-**Filename:** `ch18.png`
+Leviticus chapter 12. Reference Leviticus 12:6–8. A modestly dressed mother holds her safely swaddled infant and presents a small open basket containing exactly two living turtledoves to a priest at the Tent of Meeting entrance. Focus on her respectful offering after childbirth. No childbirth scene, blood, exposed body, modern hospital or implication the infant is guilty. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Laws against sexual immorality. Symbolizes 'NAKED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 13 — SKIN
 
-### Chapter 19 — LOVE
-**Filename:** `ch19.png`
+Reference: Leviticus 13:1–8.
 
-```
-A dramatic, cinematic biblical illustration of Love your neighbor as yourself" — holiness in daily life. Symbolizes 'LOVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 13. Reference Leviticus 13:1–8. A priest gently examines a small pale patch on an adult person's exposed forearm in daylight outside a tent. The person remains fully clothed apart from the forearm, calm and dignified, a waiting family nearby. No gruesome wounds, medical certainty that all biblical skin disease is modern leprosy, stigmatizing crowd or modern instruments. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — STONES
-**Filename:** `ch20.png`
+### Leviticus 14 — BIRD
 
-```
-A dramatic, cinematic biblical illustration of Capital punishments — stoning for serious violations. Symbolizes 'STONES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 14:4–7.
 
-### Chapter 21 — BLEMISH
-**Filename:** `ch21.png`
+Leviticus chapter 14. Reference Leviticus 14:4–7. A priest releases one living bird into a wide open field while a newly cleansed adult watches gratefully. A clay bowl, cedar sliver, scarlet yarn and hyssop rest beside them as discreet ritual cues. One release moment, no second flying bird, dead bird close-up, magical healing beams or wounds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Priests must be without physical defect. Symbolizes 'BLEMISH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 15 — DISCHARGE
 
-### Chapter 22 — ACCEPTABLE
-**Filename:** `ch22.png`
+Reference: Leviticus 15:13–15.
 
-```
-A dramatic, cinematic biblical illustration of Offerings must be without blemish to be acceptable. Symbolizes 'ACCEPTABLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 15. Reference Leviticus 15:13–15. A fully clothed recovered man washes a spare linen garment in fresh flowing water beside a simple basin, clean folded clothes nearby. The washing and return to ordinary life are the visual cue to purification after discharge. No visible bodily fluids, nudity, bathing body, humiliating inspection or modern soap branding. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — FEASTS
-**Filename:** `ch23.png`
+### Leviticus 16 — GOAT
 
-```
-A dramatic, cinematic biblical illustration of Seven appointed feasts of Israel — the sacred calendar. Symbolizes 'FEASTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 16:20–22.
 
-### Chapter 24 — LAMPSTAND
-**Filename:** `ch24.png`
+Leviticus chapter 16. Reference Leviticus 16:20–22. An appointed man leads one living goat away from the distant Israelite camp into a solitary wilderness valley. The goat is unharmed, the open empty landscape clearly separates it from the camp. The sending-away moment of the Day of Atonement. No goat pushed off a cliff, no demon Azazel figure, no paired simultaneous sacrifice scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Oil for the lamps — blasphemer stoned. Symbolizes 'LAMPSTAND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 17 — BLOOD
 
-### Chapter 25 — JUBILEE
-**Filename:** `ch25.png`
+Reference: Leviticus 17:10–14.
 
-```
-A dramatic, cinematic biblical illustration of The fiftieth year — liberty proclaimed throughout the land. Symbolizes 'JUBILEE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Leviticus chapter 17. Reference Leviticus 17:10–14. An ancient Israelite hunter kneels and carefully covers a small dark reddish stain on earth with dust, a plain hunting bow laid safely beside him. The covered ground rather than a dead animal is the main cue to respecting blood as life. No gore, carcass close-up, drinking blood or modern equipment. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — WALK
-**Filename:** `ch26.png`
+### Leviticus 18 — NAKED
 
-```
-A dramatic, cinematic biblical illustration of Blessings for obedience — curses for persistent rebellion. Symbolizes 'WALK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Leviticus 18:1–6.
 
-### Chapter 27 — VOWS
-**Filename:** `ch27.png`
+Leviticus chapter 18. Reference Leviticus 18:1–6. Moses solemnly teaches an attentive group of fully clothed adults outside the Israelite tents about maintaining holy conduct and family boundaries. Families stand respectfully apart, restrained sober expressions. A representative instruction scene for the chapter's sexual-boundary laws, no nudity, sexual acts, seductive poses, invented guilty couple or modern morality signs. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Consecration and redemption of vows. Symbolizes 'VOWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Leviticus 19 — LOVE
 
+Reference: Leviticus 19:9–18.
+
+Leviticus chapter 19. Reference Leviticus 19:9–18. An Israelite farmer leaves an uncut edge of golden grain while poor neighbors and a traveler gather the remaining stalks there with dignity. The farmer gestures welcomingly toward the generous field margin. One harvest scene illustrating neighbor-love in action. No charity spectacle, ethnic caricatures or modern machinery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 20 — STONES
+
+Reference: Leviticus 20:1–8.
+
+Leviticus chapter 20. Reference Leviticus 20:1–8. A solemn assembly of Israelite elders listens to Moses beside a stretch of stony ground outside the camp. A few loose stones in the foreground serve as a restrained memory cue to the chapter's grave penalties; everyone keeps hands open and empty. Representative teaching scene, no invented accused person, execution, threatened child, stone throwing or violence. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 21 — BLEMISH
+
+Reference: Leviticus 21:21–23.
+
+Leviticus chapter 21. Reference Leviticus 21:21–23. An adult man from a priestly family who uses a simple walking support shares sacred bread respectfully with fellow priests in a modest sanctuary-side courtyard, away from the altar. Show inclusion in the permitted food and human dignity while the altar remains distant. No caricature, punishment, rejection gesture or claim disability is personal moral failure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 22 — ACCEPTABLE
+
+Reference: Leviticus 22:17–25.
+
+Leviticus chapter 22. Reference Leviticus 22:17–25. A priest and worshiper carefully inspect a healthy unblemished ram in daylight before presenting the offering. Full natural animal anatomy visible, fleece and sound limbs clear, calm handling. No wounded comparison animal, deformed creature, slaughter, modern veterinary equipment or price tag. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 23 — FEASTS
+
+Reference: Leviticus 23:39–43.
+
+Leviticus chapter 23. Reference Leviticus 23:39–43. Israelite families celebrate the Feast of Booths among temporary shelters made of leafy branches, palm boughs and willow. Adults and children share gathered produce joyfully beneath the foliage. One feast chosen to represent the chapter's appointed festivals, no montage of seven feasts, modern decorations or labeled calendar. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 24 — LAMPSTAND
+
+Reference: Leviticus 24:1–4.
+
+Leviticus chapter 24. Reference Leviticus 24:1–4. Aaron carefully tends small oil lamps on one seven-branched golden lampstand inside the fabric sanctuary, pouring olive oil from a small clay jug. Exactly seven lit lamps: one central stem and three paired branches. Woven curtain behind, warm intimate light. No nine-branched Hanukkah lamp, candles, modern candelabra or simultaneous stoning scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 25 — JUBILEE
+
+Reference: Leviticus 25:8–13.
+
+Leviticus chapter 25. Reference Leviticus 25:8–13. A man sounds a ram's-horn trumpet from a low rise while a family returns along a path to its ancestral fields and home. Joyful reunion and release in the Jubilee year, fields resting rather than being plowed. No metal trumpet, written year number, chains on children or modern property deeds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 26 — WALK
+
+Reference: Leviticus 26:3–13.
+
+Leviticus chapter 26. Reference Leviticus 26:3–13. An Israelite family walks upright along a peaceful path through fruitful fields toward the distant tabernacle, with a broken wooden yoke lying off the path as a memory of release from slavery. Symbolic picture of covenant blessing and God's dwelling among the people. No visible human God walking beside them, wealth spectacle or claim hardship proves disobedience. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Leviticus 27 — VOWS
+
+Reference: Leviticus 27:30–33.
+
+Leviticus chapter 27. Reference Leviticus 27:30–33. A shepherd counts sheep passing one at a time beneath a plain wooden rod at a narrow fold entrance, setting apart a sheep for the sacred tithe while a priest watches. Natural flock, careful counting gesture, no painted numerals on animals or modern tags. A single concrete example of the chapter's consecrated gifts and vows. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
