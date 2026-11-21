@@ -1,118 +1,103 @@
-# Image prompts for Mark — all chapters
+# Mark — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/mark/`.
+Reviewed against the bundled BSB text (book 41). The supplied scene choices are preserved while removing mixed moments and unsupported details. Existing web/Android chapter keywords remain unchanged; some label a different event in the same chapter, explicitly noted below. Images and chapter labels remain separate. Illustrations are representative memory cues, not exhaustive historical reconstructions.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 16 chapters.
+Corrections: wild-animal species are unspecified; chapter 2 has four friends; chapter 3 has twelve appointees plus Jesus; chapter 4 uses one night scene rather than a growth chart; chapter 5 depicts the man once; chapter 6 separates blessing from the later leftovers; chapter 7 shows one healing gesture with two hands; chapter 8 avoids literal walking trees; chapter 10's crowd is encouraging him once Jesus calls; chapter 11 does not import John's whip; chapter 13 has one time of night; chapter 14's unidentified fleeing follower is an adult depicted with modest occlusion; chapter 15 omits Simon's sons and an unmentioned cross-transfer incident; chapter 16 has three women and one white-robed young man seated on the right. Source Downloads file preserved.
 
-### Chapter 1 — IMMEDIATELY
-**Filename:** `ch1.png`
+Final visual corrections: chapter 3 has twelve disciples plus Jesus; chapter 6 has exactly five loaves and two fish; chapter 7 places the far hand around the head toward the far ear; chapter 15 has no completed crosses on the destination hill while Simon is still carrying the beam.
 
-```
-A dramatic, cinematic biblical illustration of Baptism → temptation → calling → healing — all in one chapter. Symbolizes 'IMMEDIATELY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Mark 1 — IMMEDIATELY
 
-### Chapter 2 — ROOF
-**Filename:** `ch2.png`
+Reference: Mark 1:12–13.
 
-```
-A dramatic, cinematic biblical illustration of Four friends tear through a roof to lower the paralyzed man. Symbolizes 'ROOF'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Mark chapter 1. Existing chapter keyword IMMEDIATELY (never print). Jesus is alone in the Judean wilderness, weary from fasting yet composed, with wild animals at a respectful distance and two angelic messengers ministering to him. A lion and a small wild canid may serve as representative local wildlife; species and behavior are artistic choices because Mark does not specify them. Rocky arid landscape, quiet spiritual intensity. No simultaneous baptism scene, river, second Jesus or specific temptations imported from another Gospel. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-### Chapter 3 — FAMILY
-**Filename:** `ch3.png`
+### Mark 2 — ROOF
 
-```
-A dramatic, cinematic biblical illustration of Jesus' family thinks He is out of His mind. Symbolizes 'FAMILY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Mark 2:1–12.
 
-### Chapter 4 — STORM
-**Filename:** `ch4.png`
+Mark chapter 2. Existing chapter keyword ROOF (never print). Inside a packed first-century Capernaum house, a paralyzed adult man lies on a woven mat being lowered through a freshly opened earthen-and-reed roof. Exactly FOUR friends are clearly visible above around the opening, one at each corner, controlling four ropes securely attached to the mat. Jesus stands below responding compassionately as listeners make space. Dust catches the shaft of daylight. Realistic roof beams and clay, not modern ceiling tiles. One man on the mat; he is not also pictured healed or walking. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Jesus asleep in the boat — 'Peace, be still!'. Symbolizes 'STORM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Mark 3 — FAMILY
 
-### Chapter 5 — PIGS
-**Filename:** `ch5.png`
+Reference: Mark 3:13–19.
 
-```
-A dramatic, cinematic biblical illustration of Legion cast into pigs — man clothed and in his right mind. Symbolizes 'PIGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Mark chapter 3. Existing chapter keyword FAMILY (never print). Jesus appoints twelve disciples on a Galilean hillside. Exactly TWELVE distinct adult men are gathered in a loose semicircle before him, faces and bodies readable, listening solemnly to their call to accompany him and be sent out. Jesus is a thirteenth person. Wide view of a rocky mountain slope at dawn, not a crowded indoor meal. No lakeshore boat-ready scene or family waiting at a second location. This represents the appointment within chapter 3; FAMILY remains the app's established chapter mnemonic. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-### Chapter 6 — PLATE
-**Filename:** `ch6.png`
+### Mark 4 — STORM
 
-```
-A dramatic, cinematic biblical illustration of John the Baptist's head brought on a plate. Symbolizes 'PLATE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Mark 4:26–29.
 
-### Chapter 7 — FINGERS
-**Filename:** `ch7.png`
+Mark chapter 4. Existing chapter keyword STORM (never print). Illustrate Mark's growing-seed parable in one quiet night scene: a farmer sleeps on a simple pallet visible through an open doorway of his humble house, while an abundant grain field grows outside beneath moonlight. A few plants at the field's edge show developing ears and mature grain naturally among the crop, not a numbered growth chart. An ancient curved sickle rests beside the door, awaiting harvest. Emphasize life growing while the farmer rests. No giant mustard tree, multiple suns or panels. This is the parable in chapter 4; STORM remains the app's broader chapter mnemonic. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Jesus puts fingers in the deaf man's ears — 'Ephphatha'. Symbolizes 'FINGERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Mark 5 — PIGS
 
-### Chapter 8 — EYES
-**Filename:** `ch8.png`
+Reference: Mark 5:1–13.
 
-```
-A dramatic, cinematic biblical illustration of Blind man healed in two stages — then Peter sees who Jesus is. Symbolizes 'EYES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Mark chapter 5. Existing chapter keyword PIGS (never print). On a steep lakeside hillside near rock-cut tombs, Jesus confronts the afflicted man as a large herd of pigs rushes down the slope toward the sea. Depict the man only ONCE, kneeling before Jesus in a distressed yet hopeful state, with broken shackles and chain fragments nearby. A robe covers his body, no visible self-inflicted wounds, no grotesque demon shapes, no second later healed version of him. Pigs follow a continuous steep descent; avoid animal gore or a mass of floating carcasses. The liberation is the narrative focus. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-### Chapter 9 — CLOUD
-**Filename:** `ch9.png`
+### Mark 6 — PLATE
 
-```
-A dramatic, cinematic biblical illustration of Transfiguration — cloud overshadows. Symbolizes 'CLOUD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Mark 6:35–44.
 
-### Chapter 10 — CLOAK
-**Filename:** `ch10.png`
+Mark chapter 6. Existing chapter keyword PLATE (never print). On vivid green grass near the Sea of Galilee, Jesus looks up and blesses exactly FIVE small round barley-colored loaves and TWO whole fish arranged distinctly on a large shallow woven tray held by a disciple. Crowds sit in orderly groups across the slope, with clear grassy paths between groups. Other disciples wait to distribute the food. One moment BEFORE distribution, no twelve baskets of leftovers yet, no duplicating meals or extra fish on the tray. The feeding is a representative scene from chapter 6; PLATE remains the app's existing mnemonic for another event in the chapter. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Blind Bartimaeus throws off his cloak and runs to Jesus. Symbolizes 'CLOAK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Mark 7 — FINGERS
 
-### Chapter 11 — LEAVES
-**Filename:** `ch11.png`
+Reference: Mark 7:31–35.
 
-```
-A dramatic, cinematic biblical illustration of Fig tree cursed — all leaves, no fruit; temple cleansed. Symbolizes 'LEAVES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Mark chapter 7. Existing chapter keyword FINGERS (never print). Jesus has taken a deaf man aside privately from the crowd. In a compassionate close three-quarter view, he gently places an index finger at each of the man's ears, exactly TWO hands in a natural anatomical pose. The man's expression is expectant and trusting. A quiet outdoor place in the Decapolis, distant people out of focus. Show this single action, not simultaneous tongue-touching, spitting, restored speech and fingers in ears. No extra hands, no medical instruments or theatrical energy beams. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-### Chapter 12 — COIN
-**Filename:** `ch12.png`
+### Mark 8 — EYES
 
-```
-A dramatic, cinematic biblical illustration of Coin of Caesar — 'Render to Caesar… render to God'. Symbolizes 'COIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Mark 8:22–25.
 
-### Chapter 13 — WATCHMAN
-**Filename:** `ch13.png`
+Mark chapter 8. Existing chapter keyword EYES (never print). Outside Bethsaida, the formerly blind man has just received the FIRST touch and looks out with uncertain, partly opened eyes while Jesus asks what he can see. Jesus stands close with his hands lowered after the touch. A few ordinary human figures in the background are softly blurred as a visual cue to incomplete sight, but no literal tree-people or wooden limbs. Keep both main faces sharp. Only one Jesus and one man, no before/after split, no simultaneous second touch. This illustrates the first stage of the two-stage healing. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Olivet Discourse — 'Watch! You do not know when'. Symbolizes 'WATCHMAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Mark 9 — CLOUD
 
-### Chapter 14 — JAR
-**Filename:** `ch14.png`
+Reference: Mark 9:14–27.
 
-```
-A dramatic, cinematic biblical illustration of Woman breaks alabaster jar — Last Supper, Gethsemane, Peter denies. Symbolizes 'JAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Mark chapter 9. Existing chapter keyword CLOUD (never print). At the foot of a Galilean mountain, an anguished father appeals earnestly to Jesus, expressing belief and asking help for his unbelief. His fully clothed young son sits or lies safely beside him, exhausted and supported by his father's nearby arm. A gathered crowd and disciples have paused their dispute and watch. Emphasize the father's honest emotion and Jesus' attention, without levitating child, visible demon, flames or graphic convulsions. This scene belongs to chapter 9; CLOUD remains the app's mnemonic for the Transfiguration earlier in the chapter. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-### Chapter 15 — CURTAIN
-**Filename:** `ch15.png`
+### Mark 10 — CLOAK
 
-```
-A dramatic, cinematic biblical illustration of Crucifixion — curtain torn; centurion: 'Truly this was the Son of God'. Symbolizes 'CURTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Mark 10:46–52.
 
-### Chapter 16 — STONE
-**Filename:** `ch16.png`
+Mark chapter 10. Existing chapter keyword CLOAK (never print). Bartimaeus, an adult blind beggar beside the road leaving Jericho, throws his outer cloak behind him and springs to his feet when Jesus calls him. Keep him fully clothed in a simple tunic beneath the cloak. Jesus has stopped ahead and turns toward him; nearby people now encourage him to come. Palms and Jericho's walls in the background. One energetic moment, discarded cloak clearly visible in motion, no healed duplicate of Bartimaeus and no one still physically restraining him. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
 
-```
-A dramatic, cinematic biblical illustration of Stone rolled away — 'He is risen, He is not here'. Symbolizes 'STONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Mark 11 — LEAVES
 
+Reference: Mark 11:15–19.
+
+Mark chapter 11. Existing chapter keyword LEAVES (never print). Jesus overturns a money-changer's table in the Jerusalem temple court; coins scatter naturally across the paving and merchants recoil. Dove sellers' cages and startled doves are visible nearby, linking the temple trade to the scene. His authority is firm rather than a graphic assault. First-century temple architecture, no modern church. Do not add a whip from John's Gospel, fig tree growing inside the temple, soldiers or a separate vessel-stopping episode. LEAVES remains the chapter mnemonic for the linked fig-tree account. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
+
+### Mark 12 — COIN
+
+Reference: Mark 12:41–44.
+
+Mark chapter 12. Existing chapter keyword COIN (never print). A poor widow in simple worn ancient clothing is about to place exactly TWO tiny copper coins into a temple offering receptacle. Her open palm is clearly visible with only two small coins, while wealthier worshipers with larger offerings are farther behind. Jesus sits opposite with a few disciples, watching thoughtfully rather than interrupting her. Human dignity and quiet generosity, no caricature of the donors. No readable coin legends or labels, no modern donation slot or cash. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
+
+### Mark 13 — WATCHMAN
+
+Reference: Mark 13:32–37.
+
+Mark chapter 13. Existing chapter keyword WATCHMAN (never print). Illustrate the watchful doorkeeper parable: an alert adult servant stands at the gate of an ancient household at NIGHT, holding a small clay oil lamp and looking attentively down a quiet road for his master's return. A single moonlit sky, a closed stout wooden door, a distant horizon. No simultaneous sunset, sunrise and midnight; no clock, four-panel timeline, collapsing temple or returning master already visible. The sustained watch is the clear central idea. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
+
+### Mark 14 — JAR
+
+Reference: Mark 14:43–52.
+
+Mark chapter 14. Existing chapter keyword JAR (never print). Mark's distinctive garden-arrest detail: an explicitly ADULT young man escapes toward the dark olive trees after a member of the arresting crowd has seized his single linen wrap. The captor holds the abandoned pale cloth; the fleeing man's back and bare shoulders are visible, while an olive trunk and deep shadow completely obscure his pelvis and buttocks. No frontal nudity or sexualization. In the mid-distance, Jesus is being seized by men with torches, swords and clubs; other followers flee. One coherent night scene. The escaping man's identity is unspecified; do not identify him as Mark. JAR remains the app's chapter mnemonic for the earlier anointing. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
+
+### Mark 15 — CURTAIN
+
+Reference: Mark 15:20–22.
+
+Mark chapter 15. Existing chapter keyword CURTAIN (never print). Simon of Cyrene, a strong ordinary traveler arriving from the country, is compelled by a Roman soldier to shoulder the heavy wooden crossbeam on the road to Golgotha. Jesus, exhausted from mistreatment, walks nearby under guard, clothed for the journey; restrained signs of injury, no graphic wounds. Simon bears the beam's weight with a believable posture. First-century street, onlookers step aside. Do not include two boys identified as Alexander and Rufus or invent a transfer from Jesus falling under the beam. The road scene is within chapter 15; CURTAIN remains the existing chapter mnemonic. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
+
+### Mark 16 — STONE
+
+Reference: Mark 16:1–8.
+
+Mark chapter 16. Existing chapter keyword STONE (never print). At early morning just after sunrise, exactly THREE women carrying small spice jars have entered the rock-cut tomb and face a young man in a plain WHITE robe seated on the RIGHT side of the chamber. Compose from behind the women looking inward, so the seated messenger is clearly on the viewer's right. The burial place is empty and a large rolled-away entrance stone is visible at the edge. Awe and trembling, not horror. No body of Jesus, no second angel, no Roman guards from Matthew, no obvious wings. Ancient tomb, gentle dawn light. Use case: illustration-story. Asset: Bible chapter gallery. Classical realistic biblical oil painting matching Matthew, Daniel and Revelation. 4:3 LANDSCAPE, full bleed with no frame, warm atmospheric glow, rich earth tones, strong chiaroscuro, clear main action readable at phone size. One coherent scene, no panels or collage. Jesus when shown is a first-century Jewish man in his early thirties with olive-brown skin, dark wavy hair and beard, simple cream tunic and muted red or brown mantle. Avoid repeating unrelated props from earlier images. No text, letters, chapter numbers, captions, signage, logos, watermarks or signatures anywhere. The app supplies chapter number and keyword outside the artwork. These are representative artistic memory scenes, not exhaustive reconstructions.
