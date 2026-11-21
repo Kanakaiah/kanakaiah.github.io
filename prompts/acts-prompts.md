@@ -1,202 +1,171 @@
-# Image prompts for Acts — all chapters
+# Acts — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/acts/`.
+Reviewed against the bundled BSB scripture (book 44). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 28 chapters.
+### Acts 1 — CLOUD
 
-### Chapter 1 — CLOUD
-**Filename:** `ch1.png`
+Reference: Acts 1:9–11.
 
-```
-A dramatic, cinematic biblical illustration of Jesus ascends into a cloud. Symbolizes 'CLOUD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 1. Reference Acts 1:9–11. On the Mount of Olives the disciples look upward as a luminous cloud receives the ascending Jesus, his upper body disappearing naturally into the cloud. Wide sky and quiet awe, first-century Jerusalem distant below. Depict the ascension moment, not the later conversation with two messengers. No visible throne, no wings on Jesus, no rocket-like beam. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — FIRE
-**Filename:** `ch2.png`
+### Acts 2 — FIRE
 
-```
-A dramatic, cinematic biblical illustration of Tongues of fire — 3,000 saved at Pentecost. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 2:1–4.
 
-### Chapter 3 — GATE
-**Filename:** `ch3.png`
+Acts chapter 2. Reference Acts 2:1–4. Pentecost inside a modest Jerusalem house: a gathered group of adult men and women are filled with wonder as small distinct tongues LIKE fire rest above each visible person's head. Faces show joy and astonishment, room filled with warm light, clothing and building not burning. A cropped portion of a larger gathering, no claim of exactly twelve participants. No mass baptism or street sermon montage, no enormous flames, no dove added. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Lame man healed at the Beautiful Gate. Symbolizes 'GATE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 3 — GATE
 
-### Chapter 4 — PRISON
-**Filename:** `ch4.png`
+Reference: Acts 3:2–8.
 
-```
-A dramatic, cinematic biblical illustration of Peter and John arrested and imprisoned. Symbolizes 'PRISON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 3. Reference Acts 3:2–8. At the imposing ancient temple gate called Beautiful, Peter takes a formerly lame adult man by his RIGHT hand and helps him rise from beside his worn begging mat. John stands nearby in amazement. The man's ankles now support him firmly; one coherent transition to standing. Gate architecture prominent, three main men, no Jesus physically present, no coins handed over, no duplicate leaping man. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — FEET
-**Filename:** `ch5.png`
+### Acts 4 — PRISON
 
-```
-A dramatic, cinematic biblical illustration of Ananias and Sapphira fall dead at the apostles' feet. Symbolizes 'FEET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 4:1–3.
 
-### Chapter 6 — TABLE
-**Filename:** `ch6.png`
+Acts chapter 4. Reference Acts 4:1–3. Peter and John sit together in a dim ancient stone holding cell at evening, composed and quietly encouraging each other after being arrested for teaching. A temple guard is visible beyond a heavy wooden barred door. Two apostles, simple first-century clothes, shaft of fading daylight. No angel, no escape, no earthquake, no modern prison uniforms or steel jail cage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Seven deacons chosen to serve tables. Symbolizes 'TABLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 5 — FEET
 
-### Chapter 7 — STONES
-**Filename:** `ch7.png`
+Reference: Acts 5:1–6.
 
-```
-A dramatic, cinematic biblical illustration of Stephen stoned — first martyr. Symbolizes 'STONES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 5. Reference Acts 5:1–6. A solemn non-graphic scene just after Ananias collapses in the gathering: Peter stands grave and sorrowful, a small money pouch lies near his feet, and two young men kneel to cover and lift the still fully clothed body of Ananias. No visible injury or blood. Sapphira is NOT present because she arrives hours later. No lightning striking anyone, no simultaneous deaths, no Jesus figure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — ROAD
-**Filename:** `ch8.png`
+### Acts 6 — TABLE
 
-```
-A dramatic, cinematic biblical illustration of Philip on the desert road — Ethiopian eunuch baptized. Symbolizes 'ROAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 6:1–6.
 
-### Chapter 9 — LIGHT
-**Filename:** `ch9.png`
+Acts chapter 6. Reference Acts 6:1–6. Seven adult men chosen for the daily distribution stand together beside a simple table holding bread baskets and food bowls as two apostles pray over them. Exactly SEVEN appointees in one clear group, plus TWO older apostles; nine men total, no extra spectators. A humble Jerusalem gathering place, compassionate service and shared responsibility. No modern clergy collars, no medieval ordination regalia, no coin-counting scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Saul blinded by light on the Damascus road. Symbolizes 'LIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 7 — STONES
 
-### Chapter 10 — SHEET
-**Filename:** `ch10.png`
+Reference: Acts 7:58–60.
 
-```
-A dramatic, cinematic biblical illustration of Peter's vision — sheet of unclean animals. Symbolizes 'SHEET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 7. Reference Acts 7:58–60. Outside the city Stephen kneels with eyes lifted, praying with compassion amid the threat of stoning. A few men with stones stand at a distance; stones lie on the dusty ground, but show no impact or wounds. Young Saul stands to one side beside the witnesses' outer garments. Dignified restrained martyrdom scene, no gore, no triumphant violence, no graphic injuries or literal giant face in the sky. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — ANTIOCH
-**Filename:** `ch11.png`
+### Acts 8 — ROAD
 
-```
-A dramatic, cinematic biblical illustration of First called 'Christians' at Antioch. Symbolizes 'ANTIOCH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 8:35–38.
 
-### Chapter 12 — CHAINS
-**Filename:** `ch12.png`
+Acts chapter 8. Reference Acts 8:35–38. Beside the desert road to Gaza, Philip baptizes an Ethiopian court official in a natural pool of water. Both adult men are fully modestly clothed in simple tunics, standing in waist-deep water; the official is a dignified dark-skinned African traveler. A stopped first-century horse-drawn chariot and scroll case are visible on the dry road behind. One baptism moment only, no simultaneous reading scene or disappearing Philip. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Peter in chains — angel frees him. Symbolizes 'CHAINS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 9 — LIGHT
 
-### Chapter 13 — SAIL
-**Filename:** `ch13.png`
+Reference: Acts 9:3–8.
 
-```
-A dramatic, cinematic biblical illustration of First missionary journey begins — Paul and Barnabas sail. Symbolizes 'SAIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 9. Reference Acts 9:3–8. On the road near Damascus Saul has fallen to the dusty ground under a brilliant surrounding heavenly light, shielding his eyes with one forearm. His traveling companions stand speechless nearby. Sparse road and distant city, divine encounter conveyed by light without a visible speaking Jesus. No horse or falling-from-horse scene, no weapons battle, no lightning burns, no duplicated Saul. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — GODS
-**Filename:** `ch14.png`
+### Acts 10 — SHEET
 
-```
-A dramatic, cinematic biblical illustration of Crowd tries to worship Paul and Barnabas as gods. Symbolizes 'GODS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 10:9–16.
 
-### Chapter 15 — COUNCIL
-**Filename:** `ch15.png`
+Acts chapter 10. Reference Acts 10:9–16. Peter kneels on a flat rooftop in Joppa at midday, looking in wonder at a vast cloth lowered from the luminous sky by FOUR lifted corners. The sheet holds a small representative assortment of distinct four-footed animals, reptiles and birds, natural species anatomy and realistic supporting folds. The scene is a vision, not a physical rooftop zoo; no hybrid creatures, no animals eating each other, no slaughter. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jerusalem Council — circumcision debate settled. Symbolizes 'COUNCIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 11 — ANTIOCH
 
-### Chapter 16 — EARTHQUAKE
-**Filename:** `ch16.png`
+Reference: Acts 11:22–26.
 
-```
-A dramatic, cinematic biblical illustration of Philippian jailer — midnight earthquake. Symbolizes 'EARTHQUAKE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 11. Reference Acts 11:22–26. Barnabas and Saul teach a warmly gathered community of Jewish and Gentile believers in an ordinary house courtyard in ancient Antioch. Diverse adult listeners share a welcoming circle with simple bread and water nearby. Show the formation of a united learning community, not a ceremony assigning names. No sign reading Christians, no church steeple, cross banner, baptism montage or Roman imperial palace. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — ALTAR
-**Filename:** `ch17.png`
+### Acts 12 — CHAINS
 
-```
-A dramatic, cinematic biblical illustration of Athens — 'To the Unknown God' altar. Symbolizes 'ALTAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 12:6–8.
 
-### Chapter 18 — TENT
-**Filename:** `ch18.png`
+Acts chapter 12. Reference Acts 12:6–8. In a stone prison at night, a radiant human-form angel in simple pale clothing wakes Peter as two loosened chains fall from his wrists. Two soldiers sleep nearby, one on each side. Light fills the cell but remains calm; Peter is dressed in a modest tunic, reaching to rise. Exactly one Peter and one angel, two sleeping guards; no simultaneous city gate escape, no wings required, no modern handcuffs. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Corinth — Paul the tentmaker with Aquila and Priscilla. Symbolizes 'TENT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 13 — SAIL
 
-### Chapter 19 — RIOT
-**Filename:** `ch19.png`
+Reference: Acts 13:4–5.
 
-```
-A dramatic, cinematic biblical illustration of Ephesus riot — 'Great is Artemis!'. Symbolizes 'RIOT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 13. Reference Acts 13:4–5. Paul and Barnabas with their young adult helper John Mark stand aboard a small first-century Mediterranean merchant vessel leaving Seleucia for Cyprus. A broad square sail catches the wind above them, coast receding, crew handling ropes. Hopeful missionary departure, prominent sail and believable rigging. No storm, Viking longship, modern yacht, map labels, decorative ship cross or duplicate travelers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — WINDOW
-**Filename:** `ch20.png`
+### Acts 14 — GODS
 
-```
-A dramatic, cinematic biblical illustration of Eutychus falls from a window — Paul raises him. Symbolizes 'WINDOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 14:11–18.
 
-### Chapter 21 — BOUND
-**Filename:** `ch21.png`
+Acts chapter 14. Reference Acts 14:11–18. At Lystra's city gate Paul and Barnabas urgently refuse worship with open raised palms and torn outer garments that still cover them modestly. A priest approaches with two garlanded bulls, and a crowd looks surprised. The apostles' expressions clearly reject sacrifice and divine status. No actual sacrifice or animal injury, no glowing halos, no gods appearing, no later stoning montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Agabus binds Paul's hands — prophecy of arrest. Symbolizes 'BOUND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 15 — COUNCIL
 
-### Chapter 22 — CROWD
-**Filename:** `ch22.png`
+Reference: Acts 15:6–13.
 
-```
-A dramatic, cinematic biblical illustration of Paul's defense to the Jerusalem crowd. Symbolizes 'CROWD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 15. Reference Acts 15:6–13. The Jerusalem council in a plain stone meeting room: Peter stands speaking while apostles and elders sit in an attentive semicircle, with Paul and Barnabas listening among them. Respectful serious discussion, open gestures, no hostile shouting. A rolled parchment on a low table as a secondary detail, not a modern parliamentary council. No medieval bishops, mitres, Christian altar, literal circumcision or surgery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — PLOT
-**Filename:** `ch23.png`
+### Acts 16 — EARTHQUAKE
 
-```
-A dramatic, cinematic biblical illustration of 40 men plot to kill Paul — nephew uncovers it. Symbolizes 'PLOT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 16:25–29.
 
-### Chapter 24 — FELIX
-**Filename:** `ch24.png`
+Acts chapter 16. Reference Acts 16:25–29. In the Philippian prison at midnight, an earthquake has opened the cell doors and loosened the prisoners' chains. Paul and Silas remain inside, alert and reassuring, while a shaken jailer approaches with a lamp. Dust falls from a cracked lintel, open doors and dropped chains clearly visible, all people safe. No collapsed building crushing people, no angel from Peter's different escape, no self-harm attempt depicted. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Paul before Governor Felix. Symbolizes 'FELIX'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 17 — ALTAR
 
-### Chapter 25 — CAESAR
-**Filename:** `ch25.png`
+Reference: Acts 17:22–25.
 
-```
-A dramatic, cinematic biblical illustration of 'I appeal to Caesar!' — Paul before Festus. Symbolizes 'CAESAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 17. Reference Acts 17:22–25. A thematic scene in ancient Athens: Paul stands beside a small weathered stone altar and gestures thoughtfully as philosophers listen, with classical columns and the rocky Areopagus in the distance. The altar has small worn chiseled inscription strokes, too distant to read, indicating an inscribed dedication rather than a blank plinth. This illustrates Paul's reference to the altar, not a claim he moved it into the council. No idol identified as God, no sacrifice, no modern typography. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — KING
-**Filename:** `ch26.png`
+### Acts 18 — TENT
 
-```
-A dramatic, cinematic biblical illustration of Paul before King Agrippa. Symbolizes 'KING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Acts 18:1–4.
 
-### Chapter 27 — SHIPWRECK
-**Filename:** `ch27.png`
+Acts chapter 18. Reference Acts 18:1–4. In a humble Corinthian tentmaking workshop Paul, Aquila and Priscilla work together on heavy woven tent fabric spread over a low workbench. Hands stitch and measure seams with simple needles and cord; a partially assembled tent canopy demonstrates their trade. Exactly three adult craftspeople, Priscilla participates actively. No modern sewing machine, scissors or dressmaking boutique, no leather armor workshop. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Storm and shipwreck on the way to Rome. Symbolizes 'SHIPWRECK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Acts 19 — RIOT
 
-### Chapter 28 — HOUSE
-**Filename:** `ch28.png`
+Reference: Acts 19:28–31.
 
-```
-A dramatic, cinematic biblical illustration of Paul under house arrest in Rome — preaching freely. Symbolizes 'HOUSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Acts chapter 19. Reference Acts 19:28–31. The ancient theatre of Ephesus fills with a shouting agitated crowd while Gaius and Aristarchus are brought into the gathering. Wide amphitheatre stone seating, forceful gestures but no graphic violence. PAUL IS NOT IN THE THEATRE: his friends prevented him from entering. No central apostle preaching heroically on stage, no modern protest signs or burning buildings. Atmospheric confusion, not a battle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Acts 20 — WINDOW
+
+Reference: Acts 20:7–12.
+
+Acts chapter 20. Reference Acts 20:7–12. At night below a THREE-STORY house, Paul kneels embracing and supporting Eutychus alive after the fall, while relieved people bring lamps around them. An open upper window on the third floor is clearly visible high above, establishing the chapter's WINDOW cue. One rescued young man on the ground, no duplicate falling body, no wounds, blood or broken limbs, no floating resurrection ghost. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 21 — BOUND
+
+Reference: Acts 21:10–14.
+
+Acts chapter 21. Reference Acts 21:10–14. Inside a Caesarea home the prophet Agabus demonstrates his prophecy by binding HIS OWN wrists and ankles with Paul's long cloth belt. Agabus sits low with the belt visibly connecting his bound hands and feet, while Paul stands nearby unbound, listening resolutely as friends look concerned. Two distinct men. Do not bind Paul in this scene; no chains, arresting soldiers or physical struggle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 22 — CROWD
+
+Reference: Acts 22:1–5; 21:40.
+
+Acts chapter 22. Reference Acts 22:1–5; 21:40. Paul stands on the stone steps leading to the Jerusalem barracks, addressing a dense crowd below with a raised open hand. Roman guards stand behind and beside him, simple wrist restraints visible, the crowd quieting to listen. Clear elevated speaking position and ancient temple precinct architecture. No emperor, no courtroom trial, no Damascus conversion inset, no fight or physical punishment. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 23 — PLOT
+
+Reference: Acts 23:16–22.
+
+Acts chapter 23. Reference Acts 23:16–22. Paul's young adult nephew privately informs a Roman commander about the assassination plot. The commander has drawn him aside in a barracks courtyard and listens intently, one hand gently guiding his arm. Close two-person confidential scene, a centurion waiting out of focus nearby. No fabricated exact group of forty conspirators, no assassination occurring, no child spy caricature or written speech bubbles. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 24 — FELIX
+
+Reference: Acts 24:10–16.
+
+Acts chapter 24. Reference Acts 24:10–16. Paul calmly makes his defense before Governor Felix at Caesarea. Felix sits on a Roman magistrate's chair, with legal attendants and a few accusers at the sides; Paul stands in simple worn clothes with restrained hands, speaking with dignity. Cool formal stone hall, composed direct eye contact. Felix wears Roman civic dress, not a royal crown; no Caesar, no medieval court or modern gavel. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 25 — CAESAR
+
+Reference: Acts 25:9–12.
+
+Acts chapter 25. Reference Acts 25:9–12. Paul stands firmly before Governor Festus and his council at Caesarea, raising one open hand as he appeals to Caesar. Festus turns toward an adviser in consultation, formal Roman tribunal with scrolls on a side table. Paul remains a prisoner but confident. CAESAR IS NOT PRESENT; no emperor seated on a throne, no gladiator arena, no execution scene, no written appeal caption. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 26 — KING
+
+Reference: Acts 26:1–3; 25:23.
+
+Acts chapter 26. Reference Acts 26:1–3; 25:23. Paul extends his hand in defense before King Agrippa II and Bernice, with Governor Festus beside them in a formal Caesarea audience hall. Agrippa wears restrained regional royal dress and a simple diadem, Bernice elegant ancient garments, Festus Roman civic robes. Contrast Paul's plain clothing and modest chain with ceremonial splendor. No medieval crown, no European palace, no Caesar or Damascus flashback montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 27 — SHIPWRECK
+
+Reference: Acts 27:39–44.
+
+Acts chapter 27. Reference Acts 27:39–44. At daylight off a rocky Mediterranean shore, an ancient grain ship is grounded with its bow stuck fast on a sandbar and its stern breaking under pounding waves. Survivors make for the sandy bay, some swimming and some supported on broad wooden planks, with people already helping others ashore. Paul among survivors, no need to single him out. No drowning corpses, no burning ship, no modern lifeboats or nighttime lightning spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Acts 28 — HOUSE
+
+Reference: Acts 28:16, 30–31.
+
+Acts chapter 28. Reference Acts 28:16, 30–31. In Paul's modest rented house in Rome he welcomes a small group and teaches freely while one Roman soldier keeps watch nearby. Warm light through an open doorway, simple table, parchment rolls and ordinary chairs, one light chain visible at Paul's wrist as a custody cue. Hopeful calm ending, house rather than dungeon. No throne, no execution, no snakebite or Malta beach montage, no medieval church. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
