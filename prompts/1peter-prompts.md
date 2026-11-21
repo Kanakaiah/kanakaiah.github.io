@@ -1,41 +1,33 @@
-# Image prompts for 1 Peter — all chapters
+# 1 Peter — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1peter/`.
+Reviewed against the bundled BSB scripture (book 60). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 5 chapters.
+### 1 Peter 1 — GOLD
 
-### Chapter 1 — GOLD
-**Filename:** `ch1.png`
+Reference: 1 Peter 1:6–7.
 
-```
-A dramatic, cinematic biblical illustration of Faith more precious than gold refined by fire. Symbolizes 'GOLD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Peter chapter 1. Reference 1 Peter 1:6–7. An ancient goldsmith carefully watches a small crucible of molten gold in a controlled furnace, warm reflected light on a focused face. Purification through testing as a visual metaphor for precious faith. No person placed in fire, no riches spilling over, modern industrial machinery or claim that hardship earns salvation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — STONE
-**Filename:** `ch2.png`
+### 1 Peter 2 — STONE
 
-```
-A dramatic, cinematic biblical illustration of Jesus the living cornerstone — you are a chosen people, a royal priesthood. Symbolizes 'STONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Peter 2:4–6.
 
-### Chapter 3 — ARK
-**Filename:** `ch3.png`
+1 Peter chapter 2. Reference 1 Peter 2:4–6. A sturdy cornerstone joins two rising ancient masonry walls while varied workers carefully fit other stones around it. Life and community suggested by cooperative faces, strong foundation clear. Explicit metaphor of living stones, no arch keystone, human bodies petrified, literal Jesus carved into rock or superiority of one ethnic group. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Eight people saved through water — baptism now saves you. Symbolizes 'ARK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Peter 3 — ARK
 
-### Chapter 4 — FIERY
-**Filename:** `ch4.png`
+Reference: 1 Peter 3:20–22.
 
-```
-A dramatic, cinematic biblical illustration of 'Do not be surprised at the fiery trial'. Symbolizes 'FIERY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Peter chapter 3. Reference 1 Peter 3:20–22. Noah ark floats safely on receding floodwaters, with exactly EIGHT fully clothed people visible together at its protected side opening: four adult men and four adult women. Human faces individually distinguishable, ark large enough for its purpose, calm hopeful light. No ninth person, no drowning victims, no modern ship, no simultaneous baptism pool. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — LION
-**Filename:** `ch5.png`
+### 1 Peter 4 — FIERY
 
-```
-A dramatic, cinematic biblical illustration of 'Your adversary the devil prowls like a roaring lion'. Symbolizes 'LION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Peter 4:12–13.
 
+1 Peter chapter 4. Reference 1 Peter 4:12–13. Believers comfort one another in a dim ancient room while a small controlled brazier glows nearby, its fire a symbolic cue to trial rather than actual torture. Calm endurance and shared hope, worn clothing but dignity. No people burning, forced smiles, claim every suffering is deserved or modern persecutor labels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Peter 5 — LION
+
+Reference: 1 Peter 5:8–9.
+
+1 Peter chapter 5. Reference 1 Peter 5:8–9. A watchful traveler stands safely on a lit rocky path while a powerful lion prowls at a distance in the shadowed brush, clearly separated from the person. Alertness and steadfastness, lion natural and realistic. Explicit adversary simile, no human attacked, gore, horned lion or literal devil portrait. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
