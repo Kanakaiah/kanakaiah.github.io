@@ -1,34 +1,27 @@
-# Image prompts for Colossians — all chapters
+# Colossians — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/colossians/`.
+Reviewed against the bundled BSB scripture (book 51). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 4 chapters.
+### Colossians 1 — IMAGE
 
-### Chapter 1 — IMAGE
-**Filename:** `ch1.png`
+Reference: Colossians 1:15–17.
 
-```
-A dramatic, cinematic biblical illustration of 'He is the image of the invisible God — firstborn over all creation'. Symbolizes 'IMAGE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Colossians chapter 1. Reference Colossians 1:15–17. A symbolic Christ-centered landscape: Jesus stands serenely in the foreground, fully human and dignified, with mountains, sea, plants, birds and an immense dawn sky forming one harmonious natural world around him. Express the Son sustaining creation, not a literal portrait of the invisible Father. No giant disembodied face, collage of planets, duplicated deity or infant suggesting first created being. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SHADOW
-**Filename:** `ch2.png`
+### Colossians 2 — SHADOW
 
-```
-A dramatic, cinematic biblical illustration of Old rituals are shadows — the substance belongs to Christ. Symbolizes 'SHADOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Colossians 2:16–19.
 
-### Chapter 3 — ABOVE
-**Filename:** `ch3.png`
+Colossians chapter 2. Reference Colossians 2:16–19. Symbolic contrast of shadow and substance: a simple table with ceremonial vessels casts long shadows across a stone floor, while a living Christ figure stands clearly in warm light beyond. The vessels remain respectful ordinary objects; focus on the living person rather than the shadow. No discarded sacred writings, demonized Jewish worship, calendar labels or angel worship. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of 'Set your minds on things above' — put off the old self. Symbolizes 'ABOVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Colossians 3 — ABOVE
 
-### Chapter 4 — SALT
-**Filename:** `ch4.png`
+Reference: Colossians 3:1–4.
 
-```
-A dramatic, cinematic biblical illustration of 'Let your speech always be gracious, seasoned with salt'. Symbolizes 'SALT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Colossians chapter 3. Reference Colossians 3:1–4. An ordinary ancient believer pauses on a hill path and lifts a thoughtful gaze toward a bright open sky, travel belongings resting at the feet. Quiet reorientation of attention, earthly work not despised. Symbolic scene, no floating head, abandoned family, visible map of heaven or body leaving its skin. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Colossians 4 — SALT
+
+Reference: Colossians 4:5–6.
+
+Colossians chapter 4. Reference Colossians 4:5–6. At a household meal, two adults converse graciously while one adds a small pinch of salt to a shared dish. A little clay salt bowl is prominent near their hands. Kind attentive expressions connect seasoned food to gracious speech. No salt poured into mouths, speech bubbles, literal salty tongue or modern shaker. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
