@@ -1,153 +1,133 @@
-# Image prompts for John — all chapters
+# John — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/john/`.
+Reviewed against the bundled BSB text, book 43. Existing chapter keywords remain unchanged. One coherent scene per image, 4:3 landscape, with chapter number and keyword supplied by the app outside the artwork. Parables and metaphors are representative illustrations, not historical or geographic reconstructions. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 21 chapters.
+Corrections: Cana has six stone jars; Nicodemus comes at night without an invented sneaking action; feeding has five loaves and two fish; John 8 woman stands while Jesus writes indistinctly on the ground; healing precedes washing; Lazarus remains wrapped as helpers approach; one donkey; foot washing includes the towel; house and vine are metaphors; promised Advocate is not Pentecost; empty tomb has separate head cloth; Peter restoration follows breakfast.
 
-### Chapter 1 — WORD
-**Filename:** `ch1.png`
+Final visual corrections: John 15 uses an ordinary older vineyard worker; John 19 removes the outer mantle at the crucifixion while retaining a modest waist cloth.
 
-```
-A dramatic, cinematic biblical illustration of 'In the beginning was the Word'. Symbolizes 'WORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### John 1 — WORD
 
-### Chapter 2 — WINE
-**Filename:** `ch2.png`
+Reference: John 1:1–5, 14.
 
-```
-A dramatic, cinematic biblical illustration of Water jars at Cana. Symbolizes 'WINE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+John chapter 1; reference John 1:1–5, 14. A symbolic image of the Word becoming flesh and light shining in darkness: Jesus, a fully human first-century Jewish man, walks among ordinary people in a humble village at dawn. Warm light surrounds his path and reaches faces emerging from deep architectural shadows. Quiet presence rather than spectacle, embodied compassion and hope. No written words, floating book, disembodied cosmic face, modern city or creation collage. This is a thematic illustration, not a claimed specific event. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-### Chapter 3 — NIGHT
-**Filename:** `ch3.png`
+### John 2 — WINE
 
-```
-A dramatic, cinematic biblical illustration of Nicodemus sneaks in at night. Symbolizes 'NIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: John 2:6–10.
 
-### Chapter 4 — WELL
-**Filename:** `ch4.png`
+John chapter 2; reference John 2:6–10. At the wedding in Cana, exactly SIX large pale STONE purification water jars stand visibly in a row and staggered pair grouping, all six countable. A servant draws deep red wine with a small plain dipper from one jar while another brings a cup to the banquet steward; Jesus watches quietly. Warm ancient courtyard, guests softly behind. Jars are large limestone vessels, not terracotta amphorae. No more than six jars, no fountain of wine, no text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Woman at the well. Symbolizes 'WELL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### John 3 — NIGHT
 
-### Chapter 5 — MAT
-**Filename:** `ch5.png`
+Reference: John 3:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Paralyzed man — 'Take up your mat'. Symbolizes 'MAT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+John chapter 3; reference John 3:1–3. Nicodemus, an older Jewish teacher in dignified robes, sits facing Jesus in a quiet stone courtyard at NIGHT. A small clay oil lamp lights their thoughtful faces against a dark blue sky. Intimate serious conversation and attentive posture. No claim that he is sneaking, no modern rooftop skyline, no infant rebirth illustration, no giant moon or artificial electric light. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-### Chapter 6 — BREAD
-**Filename:** `ch6.png`
+### John 4 — WELL
 
-```
-A dramatic, cinematic biblical illustration of 5,000 fed + Bread of Life. Symbolizes 'BREAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: John 4:5–10.
 
-### Chapter 7 — FEAST
-**Filename:** `ch7.png`
+John chapter 4; reference John 4:5–10. At Jacob well near Sychar under midday sun, weary Jesus sits on the stone well rim speaking kindly to an adult Samaritan woman holding a water jar. Rope and bucket nearby, dry hills and distant town. The two face each other with mutual dignity, quiet conversational gestures. Disciples are away buying food, no crowd, no romantic posing, no literal magical water fountain. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Feast of Tabernacles — crowds divided. Symbolizes 'FEAST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### John 5 — MAT
 
-### Chapter 8 — GROUND
-**Filename:** `ch8.png`
+Reference: John 5:2–9.
 
-```
-A dramatic, cinematic biblical illustration of Woman thrown to the ground + 'I AM the Light'. Symbolizes 'GROUND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+John chapter 5; reference John 5:2–9. By the pool of Bethesda beneath ancient stone colonnades, a newly healed adult man stands upright and begins walking with his rolled woven sleeping mat firmly under one arm, looking in amazed gratitude toward Jesus. Other waiting people remain in the soft background near water. Mat is prominent, one man only, no duplicate sick version, no angel stirring the pool, no hospital bed or wheelchair. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-### Chapter 9 — MUD
-**Filename:** `ch9.png`
+### John 6 — BREAD
 
-```
-A dramatic, cinematic biblical illustration of Mud on the blind man's eyes. Symbolizes 'MUD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: John 6:8–11.
 
-### Chapter 10 — SHEEP
-**Filename:** `ch10.png`
+John chapter 6; reference John 6:8–11. Before the feeding, a boy presents a shallow woven basket containing exactly FIVE small barley loaves and TWO small whole fish to Jesus, with Andrew beside them. A large crowd sits in groups on grass across the distant hillside by the lake. All five loaves distinct and countable, both fish visible and separate from bread. No extra food in the foreground, no leftover baskets yet, no bread-of-life sermon montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Good Shepherd + 'my sheep hear my voice'. Symbolizes 'SHEEP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### John 7 — FEAST
 
-### Chapter 11 — TOMB
-**Filename:** `ch11.png`
+Reference: John 7:37–44.
 
-```
-A dramatic, cinematic biblical illustration of Lazarus — stone rolled away. Symbolizes 'TOMB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+John chapter 7; reference John 7:37–44. On the final great day of the Feast of Tabernacles Jesus stands in the Jerusalem temple court addressing a gathered crowd. Some listeners lean forward in belief, others exchange skeptical glances; diverse responses without caricature. Ancient stone columns and festive leafy decorations at the edges subtly suggest the feast. No literal streams pouring from human bodies, no anachronistic church, no Pentecost flames, no arrest in this scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-### Chapter 12 — DONKEY
-**Filename:** `ch12.png`
+### John 8 — GROUND
 
-```
-A dramatic, cinematic biblical illustration of Triumphal entry into Jerusalem. Symbolizes 'DONKEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: John 8:3–9.
 
-### Chapter 13 — TOWEL
-**Filename:** `ch13.png`
+John chapter 8; reference John 8:3–9. In the temple courtyard Jesus bends down and traces indistinct marks in the dust with one finger. An adult woman stands nearby fully clothed, anxious but dignified; older accusers begin turning away. Focus on his compassionate calm and the hand at the ground. The writing must remain indistinct, no invented readable words. The woman is STANDING, never thrown down or sexualized. No stones being thrown, no violent assault, no simultaneous light-of-the-world spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jesus washes feet. Symbolizes 'TOWEL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### John 9 — MUD
 
-### Chapter 14 — HOUSE
-**Filename:** `ch14.png`
+Reference: John 9:6–7.
 
-```
-A dramatic, cinematic biblical illustration of 'My Father's house has many rooms'. Symbolizes 'HOUSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+John chapter 9; reference John 9:6–7. Jesus gently finishes applying a little damp earth to the closed eyelids of a seated adult man blind from birth. Tight compassionate two-person scene in an ancient Jerusalem lane, a small patch of damp earth nearby, natural careful hand anatomy. Eyes closed, no mud entering open eyeballs. Depict only this moment before washing: no simultaneous pool scene, no duplicate healed man, no spit midair or theatrical magic. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-### Chapter 15 — VINE
-**Filename:** `ch15.png`
+### John 10 — SHEEP
 
-```
-A dramatic, cinematic biblical illustration of 'I am the True Vine'. Symbolizes 'VINE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: John 10:3–5, 11–16.
 
-### Chapter 16 — WIND
-**Filename:** `ch16.png`
+John chapter 10; reference John 10:3–5, 11–16. Symbolic Good Shepherd illustration: Jesus walks ahead of a peaceful flock of sheep leaving an ancient low stone sheepfold through its open gate, turning his head to call them gently. The sheep follow close behind his recognizable voice, warm dawn over a Judean pasture. A simple shepherd staff, no lamb posed like an accessory, no attacking wolf or hired-hand montage, no literal labels or supernatural animal anatomy. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Holy Spirit promised — the Helper comes. Symbolizes 'WIND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### John 11 — TOMB
 
-### Chapter 17 — PRAYER
-**Filename:** `ch17.png`
+Reference: John 11:38–44.
 
-```
-A dramatic, cinematic biblical illustration of High Priestly Prayer — Jesus prays for us. Symbolizes 'PRAYER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+John chapter 11; reference John 11:38–44. Lazarus emerges upright from a rock-cut cave tomb after its entrance stone has been moved aside. His hands and feet still loosely bound with burial linen strips and a face cloth still in place; two helpers reach to begin unwrapping him. Jesus stands outside with a commanding yet compassionate open hand, Martha and Mary watch in astonishment. One Lazarus, alive and human, not a horror mummy; no glow from eye sockets, no decay or gore. Keep movement plausible with bound feet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-### Chapter 18 — TORCH
-**Filename:** `ch18.png`
+### John 12 — DONKEY
 
-```
-A dramatic, cinematic biblical illustration of Soldiers with torches — arrest in the garden. Symbolizes 'TORCH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: John 12:12–15.
 
-### Chapter 19 — CROSS
-**Filename:** `ch19.png`
+John chapter 12; reference John 12:12–15. Jesus enters Jerusalem seated on ONE young donkey, a modest animal supporting him naturally, amid a joyful crowd holding recognizable palm branches. Ancient city gate and sunlit stone walls behind. The donkey has exactly four anatomically plausible legs, Jesus sits naturally astride. No second donkey, horse, crown, military parade, modern flags or lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Crucifixion — 'It is finished'. Symbolizes 'CROSS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### John 13 — TOWEL
 
-### Chapter 20 — LINEN
-**Filename:** `ch20.png`
+Reference: John 13:3–9.
 
-```
-A dramatic, cinematic biblical illustration of Empty tomb — linen cloth left behind. Symbolizes 'LINEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+John chapter 13; reference John 13:3–9. Jesus kneels beside Simon Peter to wash one of his bare feet in a shallow earthenware basin. Jesus has laid aside his outer mantle and wears a simple modest tunic with a linen TOWEL wrapped around his waist, part of it held ready to dry the foot. Peter is seated with a moved surprised expression, a few disciples softly behind at the supper. Natural connected limbs, one foot in basin, no extra feet or modern plumbing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
 
-### Chapter 21 — FIRE
-**Filename:** `ch21.png`
+### John 14 — HOUSE
 
-```
-A dramatic, cinematic biblical illustration of Charcoal fire on the beach — Peter restored. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: John 14:1–3.
 
+John chapter 14; reference John 14:1–3. A clearly symbolic welcoming house illustrating many rooms: a warm first-century stone household courtyard opens into several spacious lamp-lit doorways and chambers around an arcade. An inviting open entrance in the foreground leads inward to a place prepared for welcome. Humane modest architecture, warm sunset, rich stone and timber textures. No claim of a literal blueprint of heaven, no modern mansion, floating castle, clouds as floor, giant gate or text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
+
+### John 15 — VINE
+
+Reference: John 15:1–8.
+
+John chapter 15; reference John 15:1–8. A strong old grapevine in a Judean vineyard, its living branches visibly connected to a thick central trunk, rich green leaves and abundant ripe grape clusters lit by morning sun. An ancient gardener carefully tends a fruit-bearing branch with a small curved pruning knife; a detached dry branch rests on the ground. The connection of branches to vine is the focus, realistic grape botany, no human body fused with tree, no fantasy glowing sap. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
+
+### John 16 — WIND
+
+Reference: John 16:5–15.
+
+John chapter 16; reference John 16:5–15. Jesus quietly reassures sorrowful disciples during his farewell teaching, inside a lamplit first-century room. A soft evening breeze moves a simple linen curtain at the open window as a restrained SYMBOLIC cue to the existing keyword WIND. Focus on attentive faces, promise and comfort. This is the promise of the Advocate, not Pentecost: no tongues of fire, no rushing tornado, no visible Spirit person or descending dove, no ghosts. A few listeners visible in cropped intimate composition. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
+
+### John 17 — PRAYER
+
+Reference: John 17:1–3, 20–23.
+
+John chapter 17; reference John 17:1–3, 20–23. Jesus lifts his eyes toward heaven in earnest prayer, hands gently open, with disciples listening quietly behind him in a subdued evening setting. Three-quarter close portrait with human tenderness and solemnity. This is his prayer for his followers before entering the garden; no solitary agony beside a rock, no angel with cup, no sleeping disciples or visible God in clouds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
+
+### John 18 — TORCH
+
+Reference: John 18:1–8.
+
+John chapter 18; reference John 18:1–8. At night in a garden beyond the Kidron valley, Jesus calmly steps forward to meet armed officers carrying burning TORCHES and ancient lanterns. Judas stands with the approaching group while disciples remain behind Jesus. Strong warm torchlight against dark olive trees, tension without active violence. Depict the encounter before the group falls back, no kiss imported from another Gospel, no severed ear, no modern weapons. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
+
+### John 19 — CROSS
+
+Reference: John 19:18, 28–30.
+
+John chapter 19; reference John 19:18, 28–30. A reverent distant view of THREE occupied crosses on Golgotha, Jesus on the central cross, head bowed after saying it is finished, two others one on either side. A small group of grieving followers stands below. Darkened muted sky, central cross a clear visual anchor. Non-graphic restrained depiction, all figures wear opaque modest waist coverings, no visible gore. Frame the top of the central upright near the image edge so the title notice is outside the crop rather than showing a blank sign; no readable text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
+
+### John 20 — LINEN
+
+Reference: John 20:3–10.
+
+John chapter 20; reference John 20:3–10. Inside the empty rock-cut tomb at dawn, Simon Peter looks intently at the unoccupied stone burial bench where linen burial cloths lie, and a separate rolled head cloth rests distinctly to one side. The other disciple stands just inside the entrance behind him, amazed. Exactly two men, no Jesus body, no angels, no women in this particular moment. Clear warm light from the doorway reveals the EMPTY space and the separate cloths. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
+
+### John 21 — FIRE
+
+Reference: John 21:9–17.
+
+John chapter 21; reference John 21:9–17. On the shore of the Sea of Galilee in gentle morning light, a low CHARCOAL fire glows with cooked fish and bread nearby. After breakfast Jesus sits facing Simon Peter in a compassionate restoring conversation, the little fire between and slightly beside them. A fishing boat and gathered net rest farther along the beach, other disciples small and unobtrusive. No huge campfire, no simultaneous Peter jumping from the boat, no literal sheep flock added to the shore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Matthew and Mark artwork. LANDSCAPE 4:3, full bleed with no border or empty margins, warm atmospheric lighting, rich earth tones, subtle painted texture, believable first-century materials. One coherent moment, clear principal subject readable on a phone, no montage or panels. Jesus when present is an olive-brown-skinned Jewish man in his early thirties, dark wavy hair and beard, cream tunic and muted red mantle unless the scene requires different clothing. No chapter number, keyword, caption, logo, watermark or signature in the artwork; app labels remain outside. No readable text; fine manuscript texture is permitted only on the Isaiah scroll. Respectful human expressions, anatomically natural hands and bodies. Representative artistic memory cue rather than an exhaustive reconstruction.
