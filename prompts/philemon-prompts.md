@@ -1,13 +1,9 @@
-# Image prompts for Philemon — all chapters
+# Philemon — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/philemon/`.
+Reviewed against the bundled BSB scripture (book 57). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 1 chapters.
+### Philemon 1 — CHARGE
 
-### Chapter 1 — CHARGE
-**Filename:** `ch1.png`
+Reference: Philemon 1:15–19.
 
-```
-A dramatic, cinematic biblical illustration of 'If he has wronged you or owes you anything — charge that to my account' (v.18). Symbolizes 'CHARGE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
-
+Philemon chapter 1. Reference Philemon 1:15–19. Paul writes a personal letter at a humble table, one hand open in a gesture of taking responsibility; a small account tablet and a few coins sit beside the parchment. Onesimus, a dignified adult man, stands nearby as a trusted brother, not chained property. The scene illustrates Paul offering to cover any possible debt, not asserting that Onesimus stole. No theft reenactment, slave auction, readable financial figures or triumphant payment display. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
