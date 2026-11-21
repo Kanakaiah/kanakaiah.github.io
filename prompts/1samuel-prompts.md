@@ -1,223 +1,189 @@
-# Image prompts for 1 Samuel — all chapters
+# 1 Samuel — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/1samuel/`.
+Reviewed against the bundled BSB scripture (book 9). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 31 chapters.
+### 1 Samuel 1 — TEARS
 
-### Chapter 1 — TEARS
-**Filename:** `ch1.png`
+Reference: 1 Samuel 1:9–18.
 
-```
-A dramatic, cinematic biblical illustration of Hannah weeps at the tabernacle — "I am a woman of sorrowful spirit. Symbolizes 'TEARS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 1. Reference 1 Samuel 1:9–18. Hannah kneels praying silently with tears in the sanctuary courtyard at Shiloh, lips moving, elderly priest Eli watching from a chair beside the doorpost. Personal grief and hope; no baby yet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SONG
-**Filename:** `ch2.png`
+### 1 Samuel 2 — SONG
 
-```
-A dramatic, cinematic biblical illustration of Hannah's song — "My heart rejoices in the LORD — he raises the poor. Symbolizes 'SONG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 2:1–8.
 
-### Chapter 3 — LAMP
-**Filename:** `ch3.png`
+1 Samuel chapter 2. Reference 1 Samuel 2:1–8. Hannah offers her song of thanksgiving at Shiloh, standing with lifted open hands and joyful tearful eyes; young Samuel in a simple linen garment beside her. Humble sanctuary surroundings, focus on her grateful prayer, not a performance stage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The lamp of God nearly out when God calls Samuel — "Speak LORD. Symbolizes 'LAMP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 3 — LAMP
 
-### Chapter 4 — ARK
-**Filename:** `ch4.png`
+Reference: 1 Samuel 3:2–10.
 
-```
-A dramatic, cinematic biblical illustration of The ark captured by the Philistines — Eli falls backward and dies. Symbolizes 'ARK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 3. Reference 1 Samuel 3:2–10. Young Samuel sits upright on his simple sleeping mat in the sanctuary at night, attentively listening to God's call. A still-burning oil lamp illuminates his face; a curtain separates the sacred inner room. No visible ark beside his bed, no extinguished lamp, no human image of God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — DAGON
-**Filename:** `ch5.png`
+### 1 Samuel 4 — ARK
 
-```
-A dramatic, cinematic biblical illustration of Dagon falls facedown before the ark twice. Symbolizes 'DAGON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 4:10–11.
 
-### Chapter 6 — COWS
-**Filename:** `ch6.png`
+1 Samuel chapter 4. Reference 1 Samuel 4:10–11. Philistine soldiers carry the captured golden covenant ark away from Israel's abandoned battlefield, holding the carrying poles rather than the chest. Defeated Israelite banners and abandoned shields in the dust, no gore. One capture scene, not Eli's death. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Ark returned on a new cart pulled by nursing cows heading home. Symbolizes 'COWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 5 — DAGON
 
-### Chapter 7 — STONE
-**Filename:** `ch7.png`
+Reference: 1 Samuel 5:2–5.
 
-```
-A dramatic, cinematic biblical illustration of Ebenezer stone — "Thus far the LORD has helped us. Symbolizes 'STONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 5. Reference 1 Samuel 5:2–5. Morning inside Dagon's temple: the stone idol lies face down before the upright golden covenant ark; its stone head and both stone hands broken off on the threshold. Astonished attendants stand back. Broken statue parts visibly stone, not human body parts. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — KING
-**Filename:** `ch8.png`
+### 1 Samuel 6 — COWS
 
-```
-A dramatic, cinematic biblical illustration of The people demand a king — "We want to be like the nations. Symbolizes 'KING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 6:7–14.
 
-### Chapter 9 — DONKEYS
-**Filename:** `ch9.png`
+1 Samuel chapter 6. Reference 1 Samuel 6:7–14. Exactly two milk cows pull one new wooden cart carrying the golden ark and a small closed offering chest along a road toward wheat harvesters at Beth-shemesh. Calves are absent, left behind in Philistia. Joyful harvesters notice the approaching cart; no driver on it. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Saul searching for lost donkeys — meets Samuel instead. Symbolizes 'DONKEYS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 7 — STONE
 
-### Chapter 10 — OIL
-**Filename:** `ch10.png`
+Reference: 1 Samuel 7:10–12.
 
-```
-A dramatic, cinematic biblical illustration of Samuel pours oil on Saul's head — first anointing. Symbolizes 'OIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 7. Reference 1 Samuel 7:10–12. Samuel stands beside a large newly erected rough memorial stone between Mizpah and Shen, addressing grateful Israelites after deliverance. Clearing storm clouds beyond. Stone is uninscribed, central visual cue; no engraved modern lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — AMMON
-**Filename:** `ch11.png`
+### 1 Samuel 8 — KING
 
-```
-A dramatic, cinematic biblical illustration of Saul defeats the Ammonites — kingship confirmed. Symbolizes 'AMMON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 8:4–7.
 
-### Chapter 12 — RAIN
-**Filename:** `ch12.png`
+1 Samuel chapter 8. Reference 1 Samuel 8:4–7. Israel's elders urgently petition the aged Samuel for a king at Ramah. Their open argumentative gestures meet his troubled expression; simple village council under a tree. No king enthroned already, no crown on Samuel. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Samuel calls for thunder and rain at harvest — the people fear. Symbolizes 'RAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 9 — DONKEYS
 
-### Chapter 13 — FIRE
-**Filename:** `ch13.png`
+Reference: 1 Samuel 9:3–6.
 
-```
-A dramatic, cinematic biblical illustration of Saul offers the sacrifice himself — "Your kingdom will not endure. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 9. Reference 1 Samuel 9:3–6. Tall young Saul and his servant search the rocky hills for lost donkeys. The servant points toward a distant town where the seer lives; empty lead rope in Saul's hand signals their search. No found donkeys standing beside them, no royal crown yet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — HONEY
-**Filename:** `ch14.png`
+### 1 Samuel 10 — OIL
 
-```
-A dramatic, cinematic biblical illustration of Jonathan eats honey unknowingly — nearly executed by Saul. Symbolizes 'HONEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 10:1.
 
-### Chapter 15 — SHEEP
-**Filename:** `ch15.png`
+1 Samuel chapter 10. Reference 1 Samuel 10:1. On a quiet road, elderly Samuel pours a small stream of oil from a flask onto the head of tall young Saul. Saul bows slightly; private anointing, no crowd or crown. Flask rather than the horn used for David later. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Saul spares sheep and King Agag — "To obey is better than sacrifice. Symbolizes 'SHEEP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 11 — AMMON
 
-### Chapter 16 — OIL
-**Filename:** `ch16.png`
+Reference: 1 Samuel 11:9–11.
 
-```
-A dramatic, cinematic biblical illustration of Samuel anoints David — the youngest, the forgotten one. Symbolizes 'OIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 11. Reference 1 Samuel 11:9–11. At dawn Saul leads Israelite troops into the Ammonite camp outside Jabesh-gilead as surprised enemy soldiers flee between tents. Town walls beyond, energetic rescue scene without wounds or bodies. Ancient Levantine equipment, no Roman armor. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — STONE
-**Filename:** `ch17.png`
+### 1 Samuel 12 — RAIN
 
-```
-A dramatic, cinematic biblical illustration of David's smooth stone kills Goliath — "This day the LORD will deliver you. Symbolizes 'STONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 12:16–19.
 
-### Chapter 18 — JAVELIN
-**Filename:** `ch18.png`
+1 Samuel chapter 12. Reference 1 Samuel 12:16–19. Samuel raises his hand as sudden thunderclouds and heavy rain sweep a ripe wheat harvest. Gathered Israelites crouch in fear among golden sheaves; an unmistakable storm at harvest, no lightning striking people. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Saul throws a javelin at David — twice. Symbolizes 'JAVELIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 13 — FIRE
 
-### Chapter 19 — WINDOW
-**Filename:** `ch19.png`
+Reference: 1 Samuel 13:8–14.
 
-```
-A dramatic, cinematic biblical illustration of Michal lowers David through a window — an idol in the bed. Symbolizes 'WINDOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 13. Reference 1 Samuel 13:8–14. Samuel confronts Saul beside the still-smoking stone altar at Gilgal immediately after Saul's unauthorized sacrifice. Saul defensive, Samuel stern, troops lingering behind. No active slaughter, no priestly breastplate on Saul. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — ARROW
-**Filename:** `ch20.png`
+### 1 Samuel 14 — HONEY
 
-```
-A dramatic, cinematic biblical illustration of Jonathan's arrow signals danger — the farewell in the field. Symbolizes 'ARROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 14:25–29.
 
-### Chapter 21 — BREAD
-**Filename:** `ch21.png`
+1 Samuel chapter 14. Reference 1 Samuel 14:25–29. In a woodland, Jonathan tastes honey from the end of his staff beside a honeycomb, exhausted soldiers watching with concern. The honey is the vivid foreground cue; no king sentencing him in this same scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David eats the consecrated bread at Nob — "Five loaves. Symbolizes 'BREAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 15 — SHEEP
 
-### Chapter 22 — CAVE
-**Filename:** `ch22.png`
+Reference: 1 Samuel 15:13–23.
 
-```
-A dramatic, cinematic biblical illustration of Cave of Adullam — 400 distressed, indebted men gather to David. Symbolizes 'CAVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 15. Reference 1 Samuel 15:13–23. Samuel sternly confronts Saul while spared sheep and cattle crowd behind the king. Saul gestures toward the animals to justify himself; distant captive Agag guarded but unharmed. Obedience versus excuses, no execution. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — WILDERNESS
-**Filename:** `ch23.png`
+### 1 Samuel 16 — OIL
 
-```
-A dramatic, cinematic biblical illustration of David flees through wilderness — Saul hunts him constantly. Symbolizes 'WILDERNESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 16:11–13.
 
-### Chapter 24 — ROBE
-**Filename:** `ch24.png`
+1 Samuel chapter 16. Reference 1 Samuel 16:11–13. Samuel pours oil from a horn onto young shepherd David's head in Jesse's household, David's older brothers looking on. Shepherd's staff and pouch nearby, no crown or throne; warm intimate composition clearly distinct from Saul's roadside flask anointing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David cuts Saul's robe in the cave — "The LORD's anointed. Symbolizes 'ROBE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 17 — STONE
 
-### Chapter 25 — ABIGAIL
-**Filename:** `ch25.png`
+Reference: 1 Samuel 17:40–50.
 
-```
-A dramatic, cinematic biblical illustration of Abigail brings bread and wine — prevents David from bloodshed. Symbolizes 'ABIGAIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 17. Reference 1 Samuel 17:40–50. Young unarmored David releases a stone from a simple two-cord sling toward towering armored Goliath across the valley. Goliath still standing before impact, shield-bearer nearby. Shepherd pouch, staff and smooth stones; no slingshot fork, no gore or severed head. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — SPEAR
-**Filename:** `ch26.png`
+### 1 Samuel 18 — JAVELIN
 
-```
-A dramatic, cinematic biblical illustration of David takes Saul's spear and water jug while he sleeps. Symbolizes 'SPEAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 18:10–11.
 
-### Chapter 27 — PHILISTINES
-**Filename:** `ch27.png`
+1 Samuel chapter 18. Reference 1 Samuel 18:10–11. Inside Saul's hall, Saul has just hurled a spear which lodges in the wall as David moves aside holding his small lyre. Saul angry, David alert and uninjured; one clear spear trajectory, no wounds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David lives among the Philistines — Ziklag given to him. Symbolizes 'PHILISTINES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 19 — WINDOW
 
-### Chapter 28 — WITCH
-**Filename:** `ch28.png`
+Reference: 1 Samuel 19:11–12.
 
-```
-A dramatic, cinematic biblical illustration of Saul consults the medium at Endor — Samuel's ghost appears. Symbolizes 'WITCH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 19. Reference 1 Samuel 19:11–12. At night Michal helps David escape through their house window using a strong rope. David descends outside the wall, Michal securely bracing the rope inside; guards distant below, safe readable anatomy, no floating bodies. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — DISMISSED
-**Filename:** `ch29.png`
+### 1 Samuel 20 — ARROW
 
-```
-A dramatic, cinematic biblical illustration of Philistine commanders send David away from the battle. Symbolizes 'DISMISSED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 1 Samuel 20:35–39.
 
-### Chapter 30 — RAID
-**Filename:** `ch30.png`
+1 Samuel chapter 20. Reference 1 Samuel 20:35–39. Jonathan stands in a field with bow lowered after shooting an arrow beyond a young attendant who searches the grass. David stays concealed behind a large rock in the distance. Quiet coded warning, arrow in ground rather than aimed at the child. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Amalekites raid Ziklag — David pursues and recovers everything. Symbolizes 'RAID'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 1 Samuel 21 — BREAD
 
-### Chapter 31 — ARMOR
-**Filename:** `ch31.png`
+Reference: 1 Samuel 21:3–6.
 
-```
-A dramatic, cinematic biblical illustration of Saul falls on his sword — his armor taken, body on the wall. Symbolizes 'ARMOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+1 Samuel chapter 21. Reference 1 Samuel 21:3–6. At Nob the priest Ahimelech gives fugitive David consecrated bread wrapped in clean linen. Several round loaves on a low table, simple sanctuary background. No eating at the inner holy table, no modern communion chalice. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### 1 Samuel 22 — CAVE
+
+Reference: 1 Samuel 22:1–2.
+
+1 Samuel chapter 22. Reference 1 Samuel 22:1–2. David welcomes distressed and indebted men with their bundles into the enormous cave of Adullam. A few distinct faces in foreground and many figures receding into deep cave space imply the gathered four hundred; not an exact count of tiny figures. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 23 — WILDERNESS
+
+Reference: 1 Samuel 23:24–28.
+
+1 Samuel chapter 23. Reference 1 Samuel 23:24–28. David and his men hurry around one rocky slope in the wilderness of Maon while Saul's distant pursuing column follows the opposite side of the ridge. A messenger reaches Saul in the distance. Rugged terrain and near-escape dominate, no cave robe incident. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 24 — ROBE
+
+Reference: 1 Samuel 24:8–12.
+
+1 Samuel chapter 24. Reference 1 Samuel 24:8–12. Outside the dark cave entrance David holds up a small cut corner of Saul's robe to the king, showing that he spared him. Saul stands farther down the rocky path turning back; David's sword remains sheathed. Cloth fragment clearly visible, no attack. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 25 — ABIGAIL
+
+Reference: 1 Samuel 25:18–28.
+
+1 Samuel chapter 25. Reference 1 Samuel 25:18–28. Abigail kneels in respectful urgent appeal before armed David in a mountain ravine. Donkeys behind her bear baskets of bread, raisins and figs, and wine skins; David pauses and lowers his hand. No violence or banquet, focus on peacemaking. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 26 — SPEAR
+
+Reference: 1 Samuel 26:7–12.
+
+1 Samuel chapter 26. Reference 1 Samuel 26:7–12. Moonlit camp: David carefully lifts Saul's spear and water jug from beside the sleeping king, with Abishai watching. Saul and surrounding soldiers remain asleep, unharmed. Spear upright away from Saul's body, jug clear in David's other hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 27 — PHILISTINES
+
+Reference: 1 Samuel 27:2–6.
+
+1 Samuel chapter 27. Reference 1 Samuel 27:2–6. David respectfully meets Achish king of Gath in a Philistine courtyard to receive a town for his people. David's traveling household waits with packs beyond; distinct Philistine guards. Refuge under a foreign king, no modern map or written deed. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 28 — WITCH
+
+Reference: 1 Samuel 28:11–16.
+
+1 Samuel chapter 28. Reference 1 Samuel 28:11–16. Disguised Saul kneels in a dim ancient room at Endor as an alarmed woman gestures toward an elderly robed figure emerging in subdued mist. Solemn fearful consultation, not a fantasy witch: no pointed hat, cauldron, pentagram or glowing magic props. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 29 — DISMISSED
+
+Reference: 1 Samuel 29:6–11.
+
+1 Samuel chapter 29. Reference 1 Samuel 29:6–11. Achish reluctantly dismisses David at the edge of the Philistine army camp. Suspicious Philistine commanders stand behind Achish, David and his men turn toward the road away. No fighting; rejected participation is the central action. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 30 — RAID
+
+Reference: 1 Samuel 30:17–20.
+
+1 Samuel chapter 30. Reference 1 Samuel 30:17–20. David reunites rescued families and children after recovering the captives taken in the raid on Ziklag. Returning people, recovered bundles and flocks fill a wilderness encampment; relief and reunion, not burning people or a battle montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 1 Samuel 31 — ARMOR
+
+Reference: 1 Samuel 31:8–13.
+
+1 Samuel chapter 31. Reference 1 Samuel 31:8–13. Solemn aftermath of Saul's defeat: Philistine attendants place his empty royal armor and shield inside their idol temple. Armor is the main visual cue of the fallen king; no exposed corpse, beheading, self-harm or gore. Somber mood rather than celebration. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
