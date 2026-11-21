@@ -1,48 +1,39 @@
-# Image prompts for Ephesians — all chapters
+# Ephesians — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/ephesians/`.
+Reviewed against the bundled BSB scripture (book 49). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 6 chapters.
+### Ephesians 1 — HEAVENLY
 
-### Chapter 1 — HEAVENLY
-**Filename:** `ch1.png`
+Reference: Ephesians 1:3–6.
 
-```
-A dramatic, cinematic biblical illustration of Every spiritual blessing in the heavenly places. Symbolizes 'HEAVENLY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ephesians chapter 1. Reference Ephesians 1:3–6. A symbolic gathering of ordinary ancient believers, men and women of varied ages, looks upward in thankful wonder as soft golden daylight breaks through a clouded sky above a humble courtyard. Belonging, adoption and blessing expressed through their welcome of one another. No material riches raining from heaven, floating money, visible God face or fantasy throne palace. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — WALL
-**Filename:** `ch2.png`
+### Ephesians 2 — WALL
 
-```
-A dramatic, cinematic biblical illustration of The dividing wall of hostility — demolished. Symbolizes 'WALL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ephesians 2:13–22.
 
-### Chapter 3 — MYSTERY
-**Filename:** `ch3.png`
+Ephesians chapter 2. Reference Ephesians 2:13–22. A symbolic dividing wall has an open demolished section through which two formerly separated groups greet one another and share bread. Fallen stones lie safely aside, intact adjoining walls give context. Ancient Jewish and Gentile believers of equal dignity meet in peace, no ethnic caricatures. No active violent demolition, modern border wall, national flags or Jesus swinging a hammer. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The mystery hidden for ages — Gentiles as co-heirs. Symbolizes 'MYSTERY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ephesians 3 — MYSTERY
 
-### Chapter 4 — WALK
-**Filename:** `ch4.png`
+Reference: Ephesians 3:4–6.
 
-```
-A dramatic, cinematic biblical illustration of 'Walk worthy' — unity, gifts, putting off the old self. Symbolizes 'WALK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ephesians chapter 3. Reference Ephesians 3:4–6. A warmly lit ancient household table receives Jewish and Gentile guests together as equal members of one family, with a host drawing back a simple curtain to reveal the ready places. Shared bread and welcoming faces visualize the formerly hidden mystery now revealed. No secret code, puzzle box, supernatural scroll seal or separate privileged seating. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — LIGHT
-**Filename:** `ch5.png`
+### Ephesians 4 — WALK
 
-```
-A dramatic, cinematic biblical illustration of Walk as children of light — marriage as gospel picture. Symbolizes 'LIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ephesians 4:1–6.
 
-### Chapter 6 — ARMOR
-**Filename:** `ch6.png`
+Ephesians chapter 4. Reference Ephesians 4:1–6. A mixed group of ancient believers walks together along one path, matching their pace to support a slower older member. Humble open gestures and patient cooperation, bright landscape and coherent forward movement. Walking worthy as a visual metaphor for unity, not a military march; no uniforms, ranks, glowing footprints or discarded human skin. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Full armor of God — stand firm. Symbolizes 'ARMOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ephesians 5 — LIGHT
 
+Reference: Ephesians 5:8–14.
+
+Ephesians chapter 5. Reference Ephesians 5:8–14. Ordinary believers walk from the shadows of a narrow ancient lane into an open sunlit courtyard, one person carrying a small lamp to help a neighbor find footing. Their honest kindly actions and clear light carry the theme. No literal glowing children, no supernatural transformation, no dark-skinned/ light-skinned moral contrast, no wedding montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Ephesians 6 — ARMOR
+
+Reference: Ephesians 6:10–18.
+
+Ephesians chapter 6. Reference Ephesians 6:10–18. A symbolic believer stands firm wearing complete first-century Roman-style defensive armor: belt, breastplate, sturdy sandals, large shield, helmet and a short sword held low at the side. A few fiery arrows are extinguished against the shield, no human enemy shown. Alert prayerful expression and steady feet. Spiritual metaphor, not endorsement of violence: no crusader cross, medieval plate armor, charging attack, slain enemies, guns or labels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Gospel illustrations. LANDSCAPE 4:3 full bleed, no border or blank margins. Warm atmospheric lighting, rich earth tones, believable first-century materials, subtle painted texture, principal subject clear at phone size. ONE coherent scene, no collage or multiple panels. Natural human anatomy and restrained expressions. Paul where present is a middle-aged olive-skinned Jewish man with receding dark hair, short graying beard, simple ochre tunic and muted blue-brown mantle; Peter is a stocky older fisherman with curly gray beard in earth-toned robes. Do not reuse Jesus likeness for apostles. No caption, chapter number, keyword, logo, watermark or signature. No readable lettering; small indistinct inscription or manuscript texture allowed only when specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
