@@ -1823,43 +1823,65 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       {/* Fixed header — tap-to-toggle chrome, same trigger as the bottom nav below */}
       <div
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-30 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-5 sm:px-8 lg:px-8`}
-        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+        className={`fixed top-0 left-0 right-0 z-30 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-4 sm:px-8`}
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
       >
-        <div className="max-w-2xl mx-auto w-full pb-3 relative">
+        <div className="max-w-2xl mx-auto w-full pb-3 flex items-center justify-between gap-2">
           <button
+            type="button"
             onClick={onClose}
-            className="absolute left-0 top-1 p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10"
+            className="min-w-[40px] min-h-[40px] -ml-1.5 rounded-full flex items-center justify-center hover:bg-card-hover transition-colors shrink-0"
             title="Go back"
             aria-label="Go back"
           >
-            <ArrowLeft className="w-6 h-6 text-secondary" />
+            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-secondary" />
           </button>
-          <div className="flex flex-col items-center justify-center pt-1 px-12">
-            <div className="flex items-center justify-center gap-2.5 flex-wrap">
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary font-heading">
+
+          <div className="flex-1 min-w-0 flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 max-w-full min-w-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setNavigatorBook(activeBookId);
+                  setShowNavigator(true);
+                }}
+                className="min-w-0 truncate text-xl sm:text-3xl font-bold tracking-tight text-primary font-heading hover:text-accent transition-colors"
+                title="Jump to book or chapter"
+              >
                 {getBookName(activeBookId, activeBookTitle, state.settings.bibleVersion)} {activeChapterNum}
-              </h2>
-              <span className="text-xs font-bold tracking-widest uppercase px-2.5 py-1 rounded-full transition-colors text-accent bg-accent/10 border border-accent/25">
-                {BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}
-              </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowOverflowMenu(false);
+                  setShowOptions(false);
+                  setShowVersionPicker((v) => !v);
+                }}
+                className="shrink-0 inline-flex items-center gap-0.5 text-[11px] sm:text-xs font-bold tracking-wider uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full transition-colors text-accent bg-accent/10 border border-accent/25 hover:bg-accent/20"
+                title="Change Bible version"
+                aria-label={`Bible version ${BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}. Tap to change.`}
+              >
+                <span>{BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}</span>
+                <ChevronDown className="w-3 h-3 shrink-0" />
+              </button>
             </div>
             {chapterRecord && chapterRecord.readCount > 0 && (
-              <p className="text-[0.625rem] text-muted mt-1 tabular-nums">
+              <p className="text-[11px] text-muted mt-0.5 tabular-nums truncate max-w-full">
                 Read {chapterRecord.readCount} time{chapterRecord.readCount === 1 ? '' : 's'}
                 {chapterRecord.lastReadDate ? ` · last ${formatShortDate(chapterRecord.lastReadDate)}` : ''}
               </p>
             )}
           </div>
 
-          <div className="absolute right-0 top-1 flex items-center gap-1.5">
+          <div className="shrink-0 flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => {
                 setShowOverflowMenu(false);
+                setShowVersionPicker(false);
                 setShowOptions((v) => !v);
               }}
-              className={`w-9 h-9 rounded-full border border-card-border flex items-center justify-center font-bold text-sm transition-colors ${showOptions ? 'bg-accent/20 border-accent text-accent' : 'bg-card text-accent hover:border-accent'}`}
+              className={`min-w-[40px] min-h-[40px] rounded-full border border-card-border flex items-center justify-center font-bold text-sm transition-colors ${showOptions ? 'bg-accent/20 border-accent text-accent' : 'bg-card text-accent hover:border-accent'}`}
               title="Reading Settings"
               aria-label="Reading settings"
             >
@@ -1871,12 +1893,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                 type="button"
                 onClick={() => {
                   setShowOptions(false);
+                  setShowVersionPicker(false);
                   setShowOverflowMenu((v) => !v);
                 }}
                 aria-label="Reader actions"
                 aria-haspopup="menu"
                 aria-expanded={showOverflowMenu}
-                className={`w-9 h-9 rounded-full border border-card-border flex items-center justify-center transition-colors ${showOverflowMenu ? 'bg-accent/20 border-accent text-accent' : 'bg-card text-secondary hover:text-primary hover:border-accent/50'}`}
+                className={`min-w-[40px] min-h-[40px] rounded-full border border-card-border flex items-center justify-center transition-colors ${showOverflowMenu ? 'bg-accent/20 border-accent text-accent' : 'bg-card text-secondary hover:text-primary hover:border-accent/50'}`}
               >
                 <MoreVertical className="w-4 h-4" />
               </button>
@@ -2767,12 +2790,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           pill is showing (below), since both are fixed to the bottom edge and
           would otherwise stack on top of each other. */}
       {!loading && !error && selectedVerses.length === 0 && returnStack.length === 0 && (
-        <div className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}>
-          <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
+        <div
+          className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}
+          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        >
+          <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-2.5">
             <button
+              type="button"
               onClick={handlePrevChapter}
               disabled={!prevLabel}
-              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+              className="flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-xl text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
               aria-label={prevLabel ? `Previous: ${prevLabel}` : 'No previous chapter'}
             >
               <ChevronLeft className="w-4 h-4 flex-shrink-0" />
@@ -2781,18 +2808,20 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             </button>
 
             <button
+              type="button"
               onClick={() => { setNavigatorBook(activeBookId); setShowNavigator(true); }}
-              className="flex items-center gap-1 text-xs font-bold text-muted uppercase tracking-wider hover:text-primary transition-colors border border-card-border rounded-md px-3 py-1.5"
+              className="flex items-center gap-1 min-h-[40px] text-xs font-bold text-primary uppercase tracking-wider hover:border-accent transition-colors bg-card-elevated border border-card-border rounded-xl px-3.5 py-2"
               aria-label="Jump to a different book or chapter"
             >
               Ch {activeChapterNum}
-              <ChevronDown className="w-3 h-3" />
+              <ChevronDown className="w-3.5 h-3.5 text-secondary" />
             </button>
 
             <button
+              type="button"
               onClick={handleNextChapter}
               disabled={!nextLabel}
-              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
+              className="flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-xl text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-card-hover text-secondary hover:text-primary"
               aria-label={nextLabel ? `Next: ${nextLabel}` : 'No next chapter'}
             >
               <span className="hidden sm:block truncate max-w-[120px]">{nextLabel || 'End'}</span>
@@ -2805,53 +2834,45 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
       {/* Book/Chapter Navigator */}
       {showNavigator && (
-        <div className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]">
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Go to book or chapter"
+          className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+        >
+          {/* Header — clears iPhone Dynamic Island / status bar */}
+          <div
+            className="flex items-center justify-between gap-2 px-4 sm:px-5 pb-3.5 border-b border-card-border shrink-0"
+            style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
+          >
             <button
+              type="button"
               onClick={() => { setShowNavigator(false); setShowVersionPicker(false); }}
-              className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
+              className="min-w-[44px] min-h-[44px] -ml-1.5 rounded-xl flex items-center justify-center hover:bg-card-hover transition-colors shrink-0"
               aria-label="Close navigator"
             >
               <X className="w-5 h-5 text-secondary" />
             </button>
-            <span className="text-sm font-bold text-primary tracking-wide">Go to...</span>
-            <div className="relative">
-              <button
-                onClick={() => setShowVersionPicker(v => !v)}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-bold text-secondary hover:text-primary hover:bg-card-hover transition-colors border border-card-border"
-                aria-label="Change Bible version"
-                title="Change Bible version"
-              >
-                {BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}
-                <ChevronDown className="w-3 h-3" />
-              </button>
-              {showVersionPicker && (
-                <>
-                  <div className="fixed inset-0 z-[74]" onClick={() => setShowVersionPicker(false)} />
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-card-elevated border border-card-border rounded-lg shadow-md z-[75] overflow-hidden animate-[fadeScaleIn_0.15s_ease-out]">
-                    {TRANSLATION_OPTIONS.map(opt => (
-                      <button
-                        key={opt.value}
-                        onClick={() => {
-                          dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: opt.value as any } });
-                          setShowVersionPicker(false);
-                        }}
-                        className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-card-hover ${
-                          bibleVersion === opt.value ? 'text-accent font-bold bg-accent/10' : 'text-primary'
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
+            <span className="flex-1 text-center text-base font-heading font-bold text-primary tracking-tight truncate">
+              Go to...
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowVersionPicker(true)}
+              className="shrink-0 min-h-[40px] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-accent bg-accent/10 hover:bg-accent/20 transition-colors border border-accent/30"
+              aria-label="Change Bible version"
+              title="Change Bible version"
+            >
+              <span>{BIBLE_VERSION_LABELS[bibleVersion] || bibleVersion}</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
           </div>
 
           {/* Book list */}
-          <div className="flex-1 overflow-y-auto px-4 py-3">
+          <div
+            className="flex-1 overflow-y-auto px-4 py-3"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' }}
+          >
             {/* Column headers */}
             <div className="grid grid-cols-2 mb-2">
               <span className="text-right pr-4 text-[10px] font-bold text-muted uppercase tracking-widest">Old Testament</span>
@@ -2954,6 +2975,41 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         </div>
       )}
 
+      {/* Shared Bible Version Picker Sheet — works cleanly from both Reader Header and "Go to..." Navigator on portrait phones */}
+      <Modal
+        isOpen={showVersionPicker}
+        onClose={() => setShowVersionPicker(false)}
+        variant="sheet"
+        size="sm"
+        zIndexClass="z-[85]"
+        title="Bible Version"
+        subtitle="Choose your preferred translation"
+      >
+        <div className="p-3 flex flex-col gap-1">
+          {TRANSLATION_OPTIONS.map(opt => {
+            const isSelected = bibleVersion === opt.value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  dispatch({ type: 'UPDATE_SETTINGS', payload: { bibleVersion: opt.value as any } });
+                  setShowVersionPicker(false);
+                }}
+                className={`w-full min-h-[48px] px-4 py-3 rounded-xl text-left text-sm flex items-center justify-between gap-3 transition-colors ${
+                  isSelected
+                    ? 'bg-accent/15 text-accent font-bold'
+                    : 'text-primary hover:bg-card-hover'
+                }`}
+              >
+                <span className="truncate">{opt.label}</span>
+                {isSelected && <Check className="w-4 h-4 shrink-0 text-accent" />}
+              </button>
+            );
+          })}
+        </div>
+      </Modal>
+
       {showCrossReferences && (
         <CrossReferenceModal
           verseRefs={showCrossReferences}
@@ -3010,7 +3066,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         const topReturnBookName = getBookName(topReturn.book, topReturnBookEnglish, state.settings.bibleVersion);
         return (
           <div
-            className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-8 pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
+            className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
           >
             <div className="bg-card-elevated border border-card-border text-primary shadow-md rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">
               <button

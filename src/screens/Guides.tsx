@@ -318,19 +318,26 @@ const BibleIndexModal: React.FC<{
       aria-label="Bible books index"
       className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
     >
-      <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
+      <div
+        className="flex items-center justify-between px-4 sm:px-5 pb-3.5 border-b border-card-border shrink-0"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
+      >
         <button
+          type="button"
           onClick={onClose}
-          className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors"
+          className="min-w-[44px] min-h-[44px] -ml-1.5 rounded-xl flex items-center justify-center hover:bg-card-hover transition-colors shrink-0"
           aria-label="Close index"
         >
           <X className="w-5 h-5 text-secondary" />
         </button>
-        <span className="text-sm font-bold text-primary tracking-wide">Bible Books</span>
-        <div className="w-9" />
+        <span className="flex-1 text-center text-base font-heading font-bold text-primary tracking-tight">Bible Books</span>
+        <div className="w-11 shrink-0" aria-hidden="true" />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-3 pb-32">
+      <div
+        className="flex-1 overflow-y-auto px-4 py-3"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' }}
+      >
         <div className="grid grid-cols-2 mb-2">
           <span className="text-right pr-4 text-[10px] font-bold text-muted uppercase tracking-widest">Old Testament</span>
           <span className="text-left pl-4 text-[10px] font-bold text-muted uppercase tracking-widest">New Testament</span>
@@ -1001,22 +1008,24 @@ export const Guides: React.FC = () => {
           className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-5 sm:px-8 lg:px-8`}
           style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         >
-          <div className="max-w-4xl mx-auto w-full pb-3 relative flex items-center justify-between min-h-[3rem]">
+          <div className="max-w-4xl mx-auto w-full pb-3 flex items-center justify-between gap-2 min-h-[3rem]">
             <button
+              type="button"
               onClick={() => setActiveGuideId(null)}
-              className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
+              className="min-w-[40px] min-h-[40px] -ml-1.5 rounded-full flex items-center justify-center hover:bg-card-hover transition-colors shrink-0"
               title="Go back"
               aria-label="Go back"
             >
-              <ArrowLeft className="w-6 h-6 text-secondary" />
+              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-secondary" />
             </button>
-            <h2 className="absolute left-1/2 -translate-x-1/2 text-2xl sm:text-3xl font-bold tracking-tight text-primary font-heading text-center px-12 leading-tight line-clamp-1 w-full pointer-events-none">
+            <h2 className="flex-1 min-w-0 text-xl sm:text-3xl font-bold tracking-tight text-primary font-heading text-center leading-tight truncate">
               {isNT ? 'New Testament' : 'Old Testament'}
             </h2>
-            <div className="z-10 flex items-center gap-1.5">
+            <div className="shrink-0 flex items-center gap-1.5">
               <button
+                type="button"
                 onClick={() => setActiveGuideId(BIBLE_BROWSER_OT)}
-                className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
+                className={`min-h-[34px] px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
                   !isNT
                     ? 'bg-accent/20 border-accent text-accent'
                     : 'bg-card border-card-border text-secondary hover:text-primary'
@@ -1025,8 +1034,9 @@ export const Guides: React.FC = () => {
                 OT
               </button>
               <button
+                type="button"
                 onClick={() => setActiveGuideId(BIBLE_BROWSER_NT)}
-                className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
+                className={`min-h-[34px] px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
                   isNT
                     ? 'bg-accent/20 border-accent text-accent'
                     : 'bg-card border-card-border text-secondary hover:text-primary'
@@ -1069,13 +1079,9 @@ export const Guides: React.FC = () => {
           className={`fixed top-0 left-0 right-0 z-40 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-5 sm:px-8 lg:px-8`}
           style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
         >
-          <div className="max-w-4xl mx-auto w-full pb-3 relative flex items-center justify-between min-h-[3rem]">
+          <div className="max-w-4xl mx-auto w-full pb-3 flex items-center justify-between gap-2 min-h-[3rem]">
             <button
-              // Back goes back. This sent every book guide to the testament browser —
-              // a screen most readers arrive at a book without ever having seen, since
-              // the index and search both jump straight to the book — so "back" landed
-              // somewhere they had never been. History is the honest answer when there
-              // is one; the testament browser stays the fallback for a cold deep link.
+              type="button"
               onClick={() => {
                 const state = location.state as { fromReader?: boolean } | null;
                 if (window.history.length > 1 && !state?.fromReader) {
@@ -1088,18 +1094,18 @@ export const Guides: React.FC = () => {
                   );
                 }
               }}
-              className="p-2 -ml-2 rounded-full hover:bg-card-hover transition-colors z-10 relative after:absolute after:-inset-[2px] after:content-['']"
+              className="min-w-[40px] min-h-[40px] -ml-1.5 rounded-full flex items-center justify-center hover:bg-card-hover transition-colors shrink-0"
               title="Go back"
               aria-label="Go back"
             >
-              <ArrowLeft className="w-6 h-6 text-secondary" />
+              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-secondary" />
             </button>
-            <h2 className={`absolute left-1/2 -translate-x-1/2 font-bold tracking-tight text-primary font-heading text-center leading-tight line-clamp-2 px-12 w-full pointer-events-none ${
-              activeGuide.title.length > 18 ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl'
+            <h2 className={`flex-1 min-w-0 font-bold tracking-tight text-primary font-heading text-center leading-tight line-clamp-2 ${
+              activeGuide.title.length > 18 ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-4xl'
             }`}>
               {activeGuide.title}
             </h2>
-            <div className="w-10 flex-shrink-0" aria-hidden="true" />
+            <div className="w-10 shrink-0" aria-hidden="true" />
           </div>
         </div>
 

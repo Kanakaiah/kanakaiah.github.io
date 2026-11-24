@@ -169,7 +169,12 @@ export const Modal: React.FC<ModalProps> = ({
           ref={trapRef}
           {...ariaProps}
           {...panelProps}
-          style={panelStyle}
+          style={{
+            ...(isSheet || isDrawer
+              ? { paddingBottom: 'env(safe-area-inset-bottom, 0px)' }
+              : undefined),
+            ...panelStyle,
+          }}
           className={`
             relative pointer-events-auto bg-card border-card-border flex flex-col overflow-hidden shadow-2xl
             ${isDrawer
@@ -187,7 +192,10 @@ export const Modal: React.FC<ModalProps> = ({
           )}
 
           {title !== undefined && (
-            <div className="flex items-start justify-between gap-3 px-5 py-3.5 border-b border-card-border shrink-0">
+            <div
+              className="flex items-start justify-between gap-3 px-5 py-3.5 border-b border-card-border shrink-0"
+              style={isDrawer ? { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.875rem)' } : undefined}
+            >
               <div className="flex items-center gap-3 min-w-0 pt-0.5">
                 {icon}
                 <div className="min-w-0">

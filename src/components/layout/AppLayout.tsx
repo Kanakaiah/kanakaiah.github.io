@@ -178,12 +178,16 @@ export const AppLayout: React.FC = () => {
               : 'px-5 sm:px-8 lg:px-8 pb-24 lg:pb-8'
           }`}
           style={{
-            paddingTop: isFullscreenView
+            paddingTop: isPracticePage
+              ? 'env(safe-area-inset-top, 0px)'
+              : isFullscreenView
               ? '0px'
               : hasOwnTopHeader
               ? 'calc(env(safe-area-inset-top, 0px) + 0.75rem)'
               : 'calc(env(safe-area-inset-top, 0px) + 4.75rem)',
-            paddingBottom: isFullscreenView
+            paddingBottom: isPracticePage
+              ? 'env(safe-area-inset-bottom, 0px)'
+              : isFullscreenView
               ? '0px'
               : 'calc(env(safe-area-inset-bottom, 0px) + 6.5rem)',
           }}

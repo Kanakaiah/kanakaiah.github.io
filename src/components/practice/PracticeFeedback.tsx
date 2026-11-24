@@ -119,7 +119,7 @@ export const PracticeOrderMenu: React.FC<{
       {open && !disabled && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-full mt-1.5 z-50 min-w-[230px] rounded-xl bg-card-elevated border border-card-border shadow-xl overflow-hidden">
+          <div className="absolute left-0 top-full mt-1.5 z-50 min-w-[230px] max-w-[calc(100vw-2rem)] rounded-xl bg-card-elevated border border-card-border shadow-xl overflow-hidden">
             <button
               type="button"
               onClick={() => {
@@ -192,7 +192,7 @@ export const PracticeModePicker: React.FC<{
       {open && !disabled && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-full mt-1.5 z-50 min-w-[220px] max-h-[70vh] overflow-y-auto rounded-xl bg-card-elevated border border-card-border shadow-xl py-1.5">
+          <div className="absolute left-0 top-full mt-1.5 z-50 min-w-[220px] max-w-[calc(100vw-2rem)] max-h-[70vh] overflow-y-auto rounded-xl bg-card-elevated border border-card-border shadow-xl py-1.5">
             {MODE_CATEGORIES.map(group => (
               <div key={group.label} className="py-1">
                 <div className="px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-muted">

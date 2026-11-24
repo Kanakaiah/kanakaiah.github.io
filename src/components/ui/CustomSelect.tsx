@@ -137,7 +137,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
           role="listbox"
           id={listboxId}
           aria-label={ariaLabel}
-          className="absolute z-50 min-w-full w-max mt-1.5 py-1.5 bg-card border border-card-border rounded-xl shadow-lg max-h-60 overflow-y-auto animate-[fadeScaleIn_0.15s_ease-out]"
+          className="absolute z-50 min-w-full w-max max-w-[calc(100vw-2rem)] mt-1.5 py-1.5 bg-card border border-card-border rounded-xl shadow-lg max-h-60 overflow-y-auto animate-[fadeScaleIn_0.15s_ease-out]"
         >
           {options.map((option, index) => (
             <button

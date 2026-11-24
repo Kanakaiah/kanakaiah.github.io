@@ -142,9 +142,13 @@ export const ChainDrill: React.FC<{
       aria-modal="true"
       aria-label={`${label} — anchor chain drill`}
       className="fixed inset-0 z-[75] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
-      <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
-        <button onClick={onClose} className="p-2 -ml-2 rounded-md hover:bg-card-hover transition-colors" aria-label="Close drill">
+      <div
+        className="flex items-center justify-between px-4 sm:px-5 pb-3.5 border-b border-card-border shrink-0"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
+      >
+        <button type="button" onClick={onClose} className="min-w-[44px] min-h-[44px] -ml-1.5 rounded-xl flex items-center justify-center hover:bg-card-hover transition-colors" aria-label="Close drill">
           <X className="w-5 h-5 text-secondary" />
         </button>
         <div className="flex flex-col items-center">
