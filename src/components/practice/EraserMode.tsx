@@ -94,7 +94,7 @@ export const EraserMode: React.FC<EraserModeProps> = ({ text, onComplete }) => {
               }}
               className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-colors ${
                 sliderValue === p.value
-                  ? 'bg-accent border-accent text-[#141414]'
+                  ? 'bg-accent border-accent text-on-accent'
                   : 'bg-card border-card-border text-secondary hover:text-primary'
               }`}
             >
@@ -114,7 +114,7 @@ export const EraserMode: React.FC<EraserModeProps> = ({ text, onComplete }) => {
               setManualOverrides({});
             }}
             aria-label="Percentage of words hidden"
-            className="flex-1 accent-accent"
+            className="flex-1 remora-slider"
           />
           <span className="text-xs font-bold text-primary tabular-nums w-10 text-right">
             {sliderValue}%
@@ -166,7 +166,7 @@ export const EraserMode: React.FC<EraserModeProps> = ({ text, onComplete }) => {
           <button
             type="button"
             onClick={() => onComplete(hiddenRatio)}
-            className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+            className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 transition-opacity"
           >
             Check passage
           </button>

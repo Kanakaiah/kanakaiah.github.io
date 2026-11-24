@@ -6,6 +6,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { CustomSelect } from '../ui/CustomSelect';
 import { Modal } from '../ui/Modal';
+import { Switch } from '../ui/Switch';
 import { activePreset, READING_PRESET_LABELS, READING_PRESETS } from '../../data/readingPresets';
 import { TRANSLATION_OPTIONS } from '../../data/bibleMap';
 
@@ -140,7 +141,7 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                             }`}
                             style={{ backgroundColor: t.swatch }}
                           />
-                          <span className="text-[10px] font-medium text-secondary leading-tight text-center">{t.label}</span>
+                          <span className="text-xs font-medium text-secondary leading-tight text-center">{t.label}</span>
                         </button>
                       ))}
                     </div>
@@ -160,9 +161,9 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
               <Card className="p-1 overflow-visible">
                 <div className="flex flex-col divide-y divide-card-border">
 
-                  <div onClick={() => handleToggle('ttsEnabled')} role="switch" aria-checked={state.settings.ttsEnabled} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-t-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+                  <div onClick={() => handleToggle('ttsEnabled')} className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-card-hover transition-colors rounded-t-2xl">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-full bg-info-soft text-info flex items-center justify-center shrink-0">
                         <Volume2 className="w-4 h-4" />
                       </div>
                       <div>
@@ -170,14 +171,16 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Read verses aloud during practice</p>
                       </div>
                     </div>
-                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${state.settings.ttsEnabled ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
-                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${state.settings.ttsEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
-                    </div>
+                    <Switch
+                      checked={Boolean(state.settings.ttsEnabled)}
+                      onChange={() => handleToggle('ttsEnabled')}
+                      ariaLabel="Text-to-Speech"
+                    />
                   </div>
 
-                  <div onClick={() => handleToggle('recallMasking')} role="switch" aria-checked={state.settings.recallMasking} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center shrink-0">
+                  <div onClick={() => handleToggle('recallMasking')} className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-card-hover transition-colors">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-full bg-success-soft text-success flex items-center justify-center shrink-0">
                         <EyeOff className="w-4 h-4" />
                       </div>
                       <div>
@@ -185,14 +188,16 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Hide parts of verses in the dashboard</p>
                       </div>
                     </div>
-                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${state.settings.recallMasking ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
-                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${state.settings.recallMasking ? 'translate-x-5' : 'translate-x-0'}`} />
-                    </div>
+                    <Switch
+                      checked={Boolean(state.settings.recallMasking)}
+                      onChange={() => handleToggle('recallMasking')}
+                      ariaLabel="Recall Masking"
+                    />
                   </div>
 
-                  <div onClick={() => handleToggle('bionicReading')} role="switch" aria-checked={state.settings.bionicReading} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
+                  <div onClick={() => handleToggle('bionicReading')} className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-card-hover transition-colors">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-full bg-accent/15 text-accent flex items-center justify-center shrink-0">
                         <Type className="w-4 h-4" />
                       </div>
                       <div>
@@ -200,9 +205,11 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Bold first letters to read faster</p>
                       </div>
                     </div>
-                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${state.settings.bionicReading ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
-                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${state.settings.bionicReading ? 'translate-x-5' : 'translate-x-0'}`} />
-                    </div>
+                    <Switch
+                      checked={Boolean(state.settings.bionicReading)}
+                      onChange={() => handleToggle('bionicReading')}
+                      ariaLabel="Bionic Reading"
+                    />
                   </div>
 
                   {/* Reader apparatus. Presets are the common cases in one tap; the
@@ -213,19 +220,18 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                       <h3 className="font-bold text-primary text-sm">Chapter Display</h3>
                       <p className="text-xs text-secondary">How much the reader shows alongside the text</p>
                     </div>
-                    <div className="grid grid-cols-4 gap-1 p-1 rounded-lg bg-card-elevated border border-card-border">
+                    <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-card-elevated border border-card-border">
                       {(['study', 'reading', 'clean', 'custom'] as const).map(preset => {
                         const isActive = currentPreset === preset;
                         const isCustom = preset === 'custom';
                         return (
                           <button
                             key={preset}
-                            // "Custom" is a readout, not a choice — it lights up on its own
-                            // when the toggles stop matching a preset.
+                            type="button"
                             disabled={isCustom}
                             onClick={() => !isCustom && dispatch({ type: 'UPDATE_SETTINGS', payload: READING_PRESETS[preset] })}
-                            className={`py-1.5 rounded-md text-xs font-bold transition-colors ${
-                              isActive ? 'bg-accent text-white' : isCustom ? 'text-muted' : 'text-secondary hover:bg-card-hover'
+                            className={`min-h-[36px] py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                              isActive ? 'bg-accent text-on-accent' : isCustom ? 'text-muted' : 'text-secondary hover:bg-card-hover'
                             }`}
                           >
                             {READING_PRESET_LABELS[preset]}
@@ -240,15 +246,14 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                           <div
                             key={key}
                             onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { [key]: !isOn } })}
-                            role="switch"
-                            aria-checked={isOn}
-                            aria-label={label}
-                            className="py-2.5 flex items-center justify-between cursor-pointer"
+                            className="py-2.5 flex items-center justify-between gap-3 cursor-pointer"
                           >
                             <span className="text-sm text-primary">{label}</span>
-                            <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${isOn ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
-                              <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${isOn ? 'translate-x-5' : 'translate-x-0'}`} />
-                            </div>
+                            <Switch
+                              checked={isOn}
+                              onChange={(next) => dispatch({ type: 'UPDATE_SETTINGS', payload: { [key]: next } })}
+                              ariaLabel={label}
+                            />
                           </div>
                         );
                       })}
@@ -335,9 +340,17 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                     </div>
                   </div>
 
-                  <div onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { streakIncludesChapters: state.settings.streakIncludesChapters === false } })} role="switch" aria-checked={state.settings.streakIncludesChapters !== false} className="p-4 flex items-center justify-between cursor-pointer hover:bg-card-hover transition-colors rounded-b-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center shrink-0">
+                  <div
+                    onClick={() =>
+                      dispatch({
+                        type: 'UPDATE_SETTINGS',
+                        payload: { streakIncludesChapters: state.settings.streakIncludesChapters === false },
+                      })
+                    }
+                    className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-card-hover transition-colors rounded-b-2xl"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-full bg-warning-soft text-warning flex items-center justify-center shrink-0">
                         <Flame className="w-4 h-4" />
                       </div>
                       <div>
@@ -345,9 +358,16 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose 
                         <p className="text-xs text-secondary">Count chapter and Memory Sentence reviews toward your daily streak</p>
                       </div>
                     </div>
-                    <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 border border-secondary/30 ${state.settings.streakIncludesChapters !== false ? 'bg-accent border-accent' : 'bg-secondary/20'}`}>
-                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm ring-1 ring-black/10 transition-transform ${state.settings.streakIncludesChapters !== false ? 'translate-x-5' : 'translate-x-0'}`} />
-                    </div>
+                    <Switch
+                      checked={state.settings.streakIncludesChapters !== false}
+                      onChange={(next) =>
+                        dispatch({
+                          type: 'UPDATE_SETTINGS',
+                          payload: { streakIncludesChapters: next },
+                        })
+                      }
+                      ariaLabel="Streak Includes Chapters"
+                    />
                   </div>
 
                 </div>

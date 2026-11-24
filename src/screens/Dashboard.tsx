@@ -7,6 +7,8 @@ import { isDue } from '../utils/sm2';
 import { useNow } from '../utils/useNow';
 import { VerseDetailModal } from '../components/dashboard/VerseDetailModal';
 import { ManageTopicsModal } from '../components/dashboard/ManageTopicsModal';
+import { Modal } from '../components/ui/Modal';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useToast } from '../context/ToastContext';
 import type { Verse } from '../types/models';
 import { OT_BOOKS } from '../data/otBooks';
@@ -52,6 +54,7 @@ export const Dashboard: React.FC = () => {
   const [isOrderOpen, setIsOrderOpen] = useState(false);
 
   const [inspectingCollectionId, setInspectingCollectionId] = useState<string | null>(null);
+  const [pendingDeleteCollection, setPendingDeleteCollection] = useState<{ id: string; name: string } | null>(null);
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const [isManageTopicsOpen, setIsManageTopicsOpen] = useState(false);
   const [isNewCollectionOpen, setIsNewCollectionOpen] = useState(false);
@@ -251,7 +254,7 @@ export const Dashboard: React.FC = () => {
             onClick={() => window.dispatchEvent(new Event('remora:open-settings'))}
             aria-label="Settings"
             title="Settings"
-            className="p-2 rounded-full bg-card border border-card-border text-secondary hover:text-primary hover:border-accent/50 transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full bg-card border border-card-border text-secondary hover:text-primary hover:border-accent/50 transition-colors"
           >
             <Settings className="w-4 h-4" />
           </button>
@@ -405,7 +408,7 @@ export const Dashboard: React.FC = () => {
           onClick={() =>
             state.verses.length === 0 ? navigate('?add=true') : handleStartReview(selectedCollectionId)
           }
-          className="mt-4 w-full h-12 rounded-[18px] bg-accent hover:opacity-95 text-[#141414] font-bold text-[15px] transition-opacity flex items-center justify-center shadow-sm"
+          className="mt-4 w-full h-12 rounded-[18px] bg-accent hover:opacity-95 text-on-accent font-bold text-[15px] transition-opacity flex items-center justify-center shadow-sm"
         >
           {state.verses.length === 0 ? 'Add verses' : 'Start review'}
         </button>
@@ -581,38 +584,29 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Modal 1: Inspect Verses Inside a Collection */}
-      {inspectedCollection && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="w-full max-w-lg max-h-[85vh] bg-card border border-card-border rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
-              <div>
-                <h3 className="text-xl font-heading font-bold text-primary">{inspectedCollection.name}</h3>
-                <p className="text-xs text-secondary mt-0.5">
-                  {inspectedVerses.length} {inspectedVerses.length === 1 ? 'verse' : 'verses'} · {inspectedCollection.dueCount} due
-                </p>
-              </div>
+      <Modal
+        isOpen={Boolean(inspectedCollection)}
+        onClose={() => setInspectingCollectionId(null)}
+        variant="sheet"
+        size="md"
+        title={inspectedCollection?.name || ''}
+        subtitle={
+          inspectedCollection
+            ? `${inspectedVerses.length} ${inspectedVerses.length === 1 ? 'verse' : 'verses'} · ${inspectedCollection.dueCount} due`
+            : undefined
+        }
+      >
+        {inspectedCollection && (
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between gap-2 px-5 py-3 border-b border-card-border bg-card-elevated/40">
               <div className="flex items-center gap-2">
-                {inspectedCollection.id !== DEFAULT_GENERAL_COLLECTION_ID && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      dispatch({ type: 'DELETE_TOPIC', payload: inspectedCollection.id });
-                      setInspectingCollectionId(null);
-                      showToast(`Deleted collection '${inspectedCollection.name}'.`, 'info');
-                    }}
-                    className="p-2 text-muted hover:text-primary transition-colors"
-                    title="Delete collection"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
                 <button
                   type="button"
                   onClick={() => {
                     setInspectingCollectionId(null);
                     navigate('?add=true');
                   }}
-                  className="px-3 py-1.5 rounded-[22px] bg-card-elevated border border-card-border text-xs font-semibold text-primary hover:border-accent/50 transition-colors inline-flex items-center gap-1"
+                  className="min-h-[38px] px-3.5 py-1.5 rounded-full bg-card border border-card-border text-xs font-semibold text-primary hover:border-accent/50 transition-colors inline-flex items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5 text-accent" />
                   Add verses
@@ -624,21 +618,30 @@ export const Dashboard: React.FC = () => {
                     setInspectingCollectionId(null);
                     handleStartReview(id);
                   }}
-                  className="px-4 py-1.5 rounded-[22px] border border-accent/65 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
+                  className="min-h-[38px] px-4 py-1.5 rounded-full border border-accent/65 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
                 >
                   Review
                 </button>
+              </div>
+              {inspectedCollection.id !== DEFAULT_GENERAL_COLLECTION_ID && (
                 <button
                   type="button"
-                  onClick={() => setInspectingCollectionId(null)}
-                  className="p-1.5 text-secondary hover:text-primary transition-colors"
+                  onClick={() =>
+                    setPendingDeleteCollection({
+                      id: inspectedCollection.id,
+                      name: inspectedCollection.name,
+                    })
+                  }
+                  className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-danger bg-danger-soft/60 hover:bg-danger-soft transition-colors"
+                  aria-label={`Delete collection ${inspectedCollection.name}`}
+                  title="Delete collection"
                 >
-                  <X className="w-5 h-5" />
+                  <Trash2 className="w-4 h-4" />
                 </button>
-              </div>
+              )}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5">
+            <div className="p-4 flex flex-col gap-2.5">
               {inspectedVerses.length === 0 ? (
                 <div className="py-12 flex flex-col items-center text-center gap-3">
                   <BookOpen className="w-10 h-10 text-muted opacity-60" />
@@ -649,7 +652,7 @@ export const Dashboard: React.FC = () => {
                       setInspectingCollectionId(null);
                       navigate('?add=true');
                     }}
-                    className="px-4 py-2 rounded-[10px] bg-accent text-[#141414] font-bold text-sm flex items-center gap-1.5"
+                    className="min-h-[44px] px-4 py-2 rounded-xl bg-accent text-on-accent font-bold text-sm flex items-center gap-1.5 hover:bg-accent-hover transition-colors"
                   >
                     <Plus className="w-4 h-4" /> Add verses
                   </button>
@@ -659,6 +662,14 @@ export const Dashboard: React.FC = () => {
                   <div
                     key={verse.id}
                     onClick={() => setSelectedVerse(verse)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedVerse(verse);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
                     className="rounded-xl bg-card-elevated border border-card-border px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:border-card-border-hover transition-colors"
                   >
                     <div className="min-w-0 flex-1">
@@ -669,10 +680,15 @@ export const Dashboard: React.FC = () => {
                       type="button"
                       onClick={e => {
                         e.stopPropagation();
-                        dispatch({ type: 'DELETE_VERSE', payload: verse.id });
-                        showToast('Verse removed', 'info');
+                        const removed = verse;
+                        dispatch({ type: 'DELETE_VERSE', payload: removed.id });
+                        showToast(`Removed ${removed.ref}`, 'info', {
+                          label: 'Undo',
+                          onClick: () => dispatch({ type: 'ADD_VERSE', payload: removed }),
+                        });
                       }}
-                      className="p-1.5 text-muted hover:text-primary shrink-0"
+                      className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-muted hover:text-danger hover:bg-danger-soft/60 shrink-0 transition-colors"
+                      aria-label={`Remove ${verse.ref}`}
                       title="Remove verse"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -682,186 +698,197 @@ export const Dashboard: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </Modal>
+
+      <ConfirmDialog
+        isOpen={Boolean(pendingDeleteCollection)}
+        title={`Delete “${pendingDeleteCollection?.name || ''}”?`}
+        description="This will remove the collection and any verses that belong exclusively to it."
+        confirmLabel="Delete Collection"
+        cancelLabel="Cancel"
+        tone="danger"
+        onConfirm={() => {
+          if (!pendingDeleteCollection) return;
+          dispatch({ type: 'DELETE_TOPIC', payload: pendingDeleteCollection.id });
+          if (inspectingCollectionId === pendingDeleteCollection.id) {
+            setInspectingCollectionId(null);
+          }
+          showToast(`Deleted collection “${pendingDeleteCollection.name}”`, 'info');
+          setPendingDeleteCollection(null);
+        }}
+        onCancel={() => setPendingDeleteCollection(null)}
+        zIndexClass="z-[80]"
+      />
 
       {/* Modal 2: 66-Book Selector for Chapter Themes Memorization */}
-      {isChapterThemePickerOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="w-full max-w-lg max-h-[88vh] bg-card border border-card-border rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-card-border">
-              <div>
-                <h3 className="text-xl font-heading font-bold text-primary">Chapter Themes</h3>
-                <p className="text-xs text-secondary mt-0.5">
-                  Select a book from the 66 books to memorize its chapter themes
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsChapterThemePickerOpen(false)}
-                className="p-1.5 text-secondary hover:text-primary transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+      <Modal
+        isOpen={isChapterThemePickerOpen}
+        onClose={() => setIsChapterThemePickerOpen(false)}
+        variant="sheet"
+        size="md"
+        title="Chapter Themes"
+        subtitle="Select a book from the 66 books to memorize its chapter themes"
+      >
+        <div className="flex flex-col">
+          <div className="px-5 pt-3 pb-3 flex flex-col gap-2.5 border-b border-card-border sticky top-0 bg-card z-10">
+            <div className="relative">
+              <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={bookSearchQuery}
+                onChange={e => setBookSearchQuery(e.target.value)}
+                placeholder="Search 66 books..."
+                className="w-full min-h-[44px] pl-9 pr-10 py-2 rounded-xl bg-card-elevated border border-card-border text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent"
+              />
+              {bookSearchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setBookSearchQuery('')}
+                  aria-label="Clear search"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg text-muted hover:text-primary"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
-            <div className="px-4 pt-3 pb-2 flex flex-col gap-2.5 border-b border-card-border">
-              <div className="relative">
-                <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={bookSearchQuery}
-                  onChange={e => setBookSearchQuery(e.target.value)}
-                  placeholder="Search 66 books..."
-                  className="w-full pl-9 pr-8 py-2 rounded-[10px] bg-card-elevated border border-card-border text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent"
-                />
-                {bookSearchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setBookSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                {([
-                  { key: 'ALL', label: 'All (66)' },
-                  { key: 'OT', label: 'Old Testament (39)' },
-                  { key: 'NT', label: 'New Testament (27)' },
-                ] as const).map(tab => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => setTestamentFilter(tab.key)}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
-                      testamentFilter === tab.key
-                        ? 'bg-accent border-accent text-[#141414]'
-                        : 'bg-card-elevated border-card-border text-secondary hover:text-primary'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              {([
+                { key: 'ALL', label: 'All (66)' },
+                { key: 'OT', label: 'Old Testament (39)' },
+                { key: 'NT', label: 'New Testament (27)' },
+              ] as const).map(tab => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setTestamentFilter(tab.key)}
+                  className={`min-h-[36px] px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                    testamentFilter === tab.key
+                      ? 'bg-accent border-accent text-on-accent'
+                      : 'bg-card-elevated border-card-border text-secondary hover:text-primary'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5">
-              {filteredBooks.map(book => {
-                const m = mastery[book.id];
-                const secure = m?.secure ?? 0;
-                const total = m?.total ?? book.chapters;
-                const due = chapterThemeStats.dueByBook.get(book.id) || 0;
-                const pct = Math.min(100, (secure / Math.max(1, total)) * 100);
-                const localizedName = getBookName(book.id, book.name, state.settings.bibleVersion);
+          <div className="p-4 flex flex-col gap-2.5">
+            {filteredBooks.map(book => {
+              const m = mastery[book.id];
+              const secure = m?.secure ?? 0;
+              const total = m?.total ?? book.chapters;
+              const due = chapterThemeStats.dueByBook.get(book.id) || 0;
+              const pct = Math.min(100, (secure / Math.max(1, total)) * 100);
+              const localizedName = getBookName(book.id, book.name, state.settings.bibleVersion);
 
-                return (
-                  <div
-                    key={book.id}
-                    onClick={() => {
+              return (
+                <div
+                  key={book.id}
+                  onClick={() => {
+                    setIsChapterThemePickerOpen(false);
+                    navigate('/practice', { state: { subject: 'anchor', sweepBookIds: [book.id] } });
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setIsChapterThemePickerOpen(false);
+                      navigate('/practice', { state: { subject: 'anchor', sweepBookIds: [book.id] } });
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  className="rounded-xl bg-card-elevated border border-card-border px-4 py-3.5 flex items-center justify-between gap-3 cursor-pointer hover:border-card-border-hover transition-colors"
+                >
+                  <div className="flex-1 min-w-0 pr-2">
+                    <h4 className="text-base font-heading font-bold text-primary truncate">{localizedName}</h4>
+                    <p className="text-xs text-secondary mt-0.5">
+                      {due} due · {secure} of {total} chapters learned
+                    </p>
+                    <div className="w-full h-[3px] rounded-full bg-card-border mt-2 overflow-hidden">
+                      <div className="h-full bg-accent rounded-full" style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={e => {
+                      e.stopPropagation();
                       setIsChapterThemePickerOpen(false);
                       navigate('/practice', { state: { subject: 'anchor', sweepBookIds: [book.id] } });
                     }}
-                    className="rounded-xl bg-card-elevated border border-card-border px-4 py-3.5 flex items-center justify-between gap-3 cursor-pointer hover:border-card-border-hover transition-colors"
+                    className="shrink-0 min-h-[38px] px-4 py-1.5 rounded-full border border-accent/65 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
                   >
-                    <div className="flex-1 min-w-0 pr-2">
-                      <h4 className="text-base font-heading font-bold text-primary truncate">{localizedName}</h4>
-                      <p className="text-xs text-secondary mt-0.5">
-                        {due} due · {secure} of {total} chapters learned
-                      </p>
-                      <div className="w-full h-[3px] rounded-full bg-card-border mt-2 overflow-hidden">
-                        <div className="h-full bg-accent rounded-full" style={{ width: `${pct}%` }} />
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={e => {
-                        e.stopPropagation();
-                        setIsChapterThemePickerOpen(false);
-                        navigate('/practice', { state: { subject: 'anchor', sweepBookIds: [book.id] } });
-                      }}
-                      className="shrink-0 px-4 py-1.5 rounded-[22px] border border-accent/65 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
-                    >
-                      Review
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+                    Review
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
-      )}
+      </Modal>
 
       {/* Modal 3: New Collection Dialog */}
-      {isNewCollectionOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-card-elevated border border-card-border rounded-2xl p-5 flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xl font-heading font-bold text-primary">New Collection</h3>
+      <Modal
+        isOpen={isNewCollectionOpen}
+        onClose={() => setIsNewCollectionOpen(false)}
+        variant="dialog"
+        size="sm"
+        title="New Collection"
+        subtitle="Create a custom group or add a curated pack"
+      >
+        <form onSubmit={handleCreateCollection} className="p-5 flex flex-col gap-3.5">
+          <input
+            type="text"
+            value={newCollectionName}
+            onChange={e => setNewCollectionName(e.target.value)}
+            placeholder="e.g. Anxiety, Peace, Courage"
+            className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-card-elevated border border-card-border text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent"
+            autoFocus
+          />
+
+          <p className="text-xs text-secondary font-medium">Or choose a curated collection:</p>
+          <div className="flex flex-wrap gap-2">
+            {['Top 100', 'Well-Known', 'Anxiety', 'Peace', 'Courage', 'Faith & Trust'].map(suggestion => (
               <button
+                key={suggestion}
                 type="button"
-                onClick={() => setIsNewCollectionOpen(false)}
-                className="p-1 text-secondary hover:text-primary"
+                onClick={() => {
+                  if (suggestion === 'Top 100') {
+                    handleAddPresetCollection('top_100');
+                  } else if (suggestion === 'Well-Known') {
+                    handleAddPresetCollection('well_known');
+                  } else {
+                    setNewCollectionName(suggestion);
+                  }
+                }}
+                className="min-h-[36px] px-3.5 py-1.5 rounded-full bg-card-elevated border border-card-border text-xs font-medium text-accent hover:border-accent transition-colors"
               >
-                <X className="w-5 h-5" />
+                {suggestion}
               </button>
-            </div>
-
-            <form onSubmit={handleCreateCollection} className="flex flex-col gap-3">
-              <input
-                type="text"
-                value={newCollectionName}
-                onChange={e => setNewCollectionName(e.target.value)}
-                placeholder="e.g. Anxiety, Peace, Courage"
-                className="w-full px-3.5 py-2.5 rounded-[10px] bg-card border border-card-border text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent"
-                autoFocus
-              />
-
-              <p className="text-xs text-secondary font-medium">Or choose a curated collection:</p>
-              <div className="flex flex-wrap gap-2">
-                {['Top 100', 'Well-Known', 'Anxiety', 'Peace', 'Courage', 'Faith & Trust'].map(suggestion => (
-                  <button
-                    key={suggestion}
-                    type="button"
-                    onClick={() => {
-                      if (suggestion === 'Top 100') {
-                        handleAddPresetCollection('top_100');
-                      } else if (suggestion === 'Well-Known') {
-                        handleAddPresetCollection('well_known');
-                      } else {
-                        setNewCollectionName(suggestion);
-                      }
-                    }}
-                    className="px-3 py-1.5 rounded-full bg-card border border-card-border text-xs font-medium text-accent hover:border-accent transition-colors"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsNewCollectionOpen(false)}
-                  className="px-4 py-2 text-sm text-muted hover:text-primary"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={!newCollectionName.trim()}
-                  className="px-5 py-2 rounded-[10px] bg-accent text-[#141414] font-bold text-sm disabled:opacity-40"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
+            ))}
           </div>
-        </div>
-      )}
+
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => setIsNewCollectionOpen(false)}
+              className="min-h-[44px] px-4 py-2 rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-card-hover transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={!newCollectionName.trim()}
+              className="min-h-[44px] px-5 py-2 rounded-xl bg-accent hover:bg-accent-hover text-on-accent font-bold text-sm disabled:opacity-40 transition-colors"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </Modal>
 
       {/* Verse Detail Modal (When clicking a verse inside the Collection inspection modal) */}
       {selectedVerse && (() => {

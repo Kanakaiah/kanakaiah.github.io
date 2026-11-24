@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, PenLine, AlertCircle, Plus, Check, Library, Settings } from 'lucide-react';
+import { Search, PenLine, AlertCircle, Plus, Check, Library, Settings, BookOpen } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../context/ToastContext';
 import { Input } from '../components/ui/Input';
@@ -445,7 +445,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           onClick={() => setActiveTab('manual')}
           className={`flex flex-col items-center justify-center gap-1.5 p-3 sm:p-4 rounded-md transition-colors duration-150 ${
             activeTab === 'manual'
-              ? 'bg-accent text-white'
+              ? 'bg-accent text-on-accent'
               : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
@@ -456,7 +456,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           onClick={() => setActiveTab('search')}
           className={`flex flex-col items-center justify-center gap-1.5 p-3 sm:p-4 rounded-md transition-colors duration-150 ${
             activeTab === 'search'
-              ? 'bg-accent text-white'
+              ? 'bg-accent text-on-accent'
               : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
@@ -467,7 +467,7 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           onClick={() => setActiveTab('collections')}
           className={`flex flex-col items-center justify-center gap-1.5 p-3 sm:p-4 rounded-md transition-colors duration-150 ${
             activeTab === 'collections'
-              ? 'bg-accent text-white'
+              ? 'bg-accent text-on-accent'
               : 'bg-transparent text-muted hover:bg-card-hover hover:text-primary'
           }`}
         >
@@ -765,11 +765,12 @@ export const AddVerse: React.FC<AddVerseProps> = ({ onVerseAdded }) => {
           </p>
 
           <div className="p-4 bg-card-elevated border-2 border-accent/40 rounded-lg flex flex-col gap-3 relative overflow-hidden">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <h3 className="font-heading font-bold text-lg text-primary flex items-center gap-2">
-                <span>📖</span> Key Verses (All 66 Books)
+                <BookOpen className="w-5 h-5 text-accent shrink-0" />
+                <span>Key Verses (All 66 Books)</span>
               </h3>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-accent bg-accent/15 px-2.5 py-1 rounded-full">
+              <span className="text-xs font-bold uppercase tracking-wider text-accent bg-accent/15 px-2.5 py-1 rounded-full">
                 {ALL_KEY_VERSES.length} Verses · 66 Books
               </span>
             </div>

@@ -138,7 +138,7 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text, onComplete }) 
             key={item.id}
             type="button"
             onClick={() => handleRemoveWord(item)}
-            className="px-3 py-1.5 rounded-lg bg-accent text-[#141414] text-sm font-bold shadow hover:opacity-95 active:scale-95 transition-all"
+            className="px-3 py-1.5 rounded-lg bg-accent text-on-accent text-sm font-bold shadow hover:opacity-95 active:scale-95 transition-all"
             title="Tap to return to bank"
           >
             {item.word}
@@ -191,7 +191,7 @@ export const ScrambleMode: React.FC<ScrambleModeProps> = ({ text, onComplete }) 
         type="button"
         disabled={placedWords.length < targetWords.length || isSuccess}
         onClick={handleCheckOrder}
-        className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm disabled:opacity-40 transition-opacity"
+        className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-on-accent font-bold text-sm disabled:opacity-40 transition-opacity"
       >
         Check order
       </button>

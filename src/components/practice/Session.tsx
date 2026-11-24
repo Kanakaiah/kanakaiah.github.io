@@ -403,7 +403,7 @@ export const Session: React.FC<{
         <div className="mt-auto flex flex-col gap-2">
           <button
             onClick={onExit}
-            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             Back to Today
           </button>
@@ -455,7 +455,7 @@ export const Session: React.FC<{
           )}
           <button
             onClick={onExit}
-            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             Back to Today
           </button>
@@ -652,7 +652,7 @@ const IntroduceCard: React.FC<{ item: Extract<SessionItem, { kind: 'introduce' }
     <div className="mt-auto flex flex-col gap-1.5">
       <button
         onClick={onDone}
-        className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+        className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
       >
         I've got it — test me
       </button>
@@ -839,7 +839,7 @@ const VerseCardPrompt: React.FC<{
         <div className="flex flex-col gap-1.5">
           <button
             onClick={commit}
-            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             {/* A verse never once recalled is not a test, and asking for one guarantees a
                 blank — which teaches nothing and costs the reader something. The first pass
@@ -871,14 +871,14 @@ const VerseCardPrompt: React.FC<{
         // looking at it" move this card exists to remove. It records the blank it was.
         <button
           onClick={() => submit(1)}
-          className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
         >
           Got it — try again tomorrow
         </button>
       ) : !isLastPart ? (
         <button
           onClick={nextPart}
-          className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
         >
           Again, with the next part
         </button>
@@ -1039,7 +1039,7 @@ const AnchorCardPrompt: React.FC<{
         <div className="flex flex-col gap-1.5">
           <button
             onClick={() => answer()}
-            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             Answer
           </button>
@@ -1051,7 +1051,7 @@ const AnchorCardPrompt: React.FC<{
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => submit(judged.score)}
-            className="py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             Continue
           </button>
@@ -1149,7 +1149,7 @@ const ThemeCardPrompt: React.FC<{
         <div className="flex flex-col gap-1.5">
           <button
             onClick={() => answer()}
-            className="w-full py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="w-full py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             Answer
           </button>
@@ -1161,7 +1161,7 @@ const ThemeCardPrompt: React.FC<{
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => submit(judged.score)}
-            className="py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             Continue
           </button>

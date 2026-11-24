@@ -95,7 +95,7 @@ export const Retention: React.FC = () => {
       </div>
 
       {tooEarly ? (
-        <div className="flex flex-col gap-3 border border-card-border rounded-md p-6">
+        <div className="flex flex-col gap-3 bg-card border border-card-border rounded-[20px] p-6">
           <p className="text-lg font-heading font-semibold text-primary">Not enough reviews yet</p>
           <p className="text-secondary leading-relaxed">
             Retention needs about a week of reviews before it can tell you anything. Keep going.
@@ -114,10 +114,7 @@ export const Retention: React.FC = () => {
             <span className="text-sm text-secondary">recalled on the first try, last 30 days</span>
             <span className="text-xs text-muted tabular-nums">across {headline.attempts} reviews</span>
             {overdue > 0 && (
-              // A large backlog makes the number above optimistic — it counts only what
-              // was actually reviewed — and the screen should say so rather than let it
-              // read as good news.
-              <span className="text-xs text-orange-400 mt-1">
+              <span className="text-xs text-warning mt-1 font-medium">
                 {overdue} items overdue. This counts only what you've actually reviewed.
               </span>
             )}
@@ -125,12 +122,8 @@ export const Retention: React.FC = () => {
         </>
       )}
 
-      {/* The Cold Check — the one number here that is not measured on the scheduler's
-          own terms. Everything above asks items when they are due, so a healthy rate
-          partly reports that the scheduler chose good moments; this asks things the
-          schedule is not asking for and records the answer without acting on it. */}
-      <section className="flex flex-col gap-3 border border-card-border rounded-md p-4">
-        <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Cold check</h2>
+      <section className="flex flex-col gap-3 bg-card border border-card-border rounded-[20px] p-5">
+        <h2 className="text-xs font-bold text-accent tracking-[0.14em] uppercase">Cold check</h2>
         {coldAvailable > 0 ? (
           <>
             <p className="text-sm text-secondary leading-relaxed">
@@ -139,8 +132,9 @@ export const Retention: React.FC = () => {
               no grades, no schedule.
             </p>
             <button
+              type="button"
               onClick={() => setChecking(true)}
-              className="self-start px-4 py-2 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+              className="self-start min-h-[44px] px-5 py-2.5 rounded-xl bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
             >
               Run a cold check
             </button>
@@ -165,7 +159,7 @@ export const Retention: React.FC = () => {
         type="button"
         onClick={() => setShowDetails(s => !s)}
         aria-expanded={showDetails}
-        className="w-full py-2.5 px-4 rounded-lg border border-card-border bg-card hover:bg-card-elevated text-sm font-medium text-accent flex items-center justify-center gap-2 transition-colors"
+        className="w-full min-h-[44px] py-2.5 px-4 rounded-xl border border-card-border bg-card hover:bg-card-elevated text-sm font-semibold text-accent flex items-center justify-center gap-2 transition-colors"
       >
         {showDetails ? (
           <>
@@ -186,19 +180,19 @@ export const Retention: React.FC = () => {
             <>
               {/* The forgetting curve — the diagnostic the scheduler has never had. */}
               <section className="flex flex-col gap-3">
-                <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">How long it holds</h2>
+                <h2 className="text-xs font-bold text-accent tracking-[0.14em] uppercase">How long it holds</h2>
                 <div className="flex items-end gap-2 h-32" role="img" aria-label={
                   `Retention by interval: ${curve.filter(b => b.rate !== null)
                     .map(b => `${pct(b.rate)} at ${b.label}`).join(', ') || 'not enough data yet'}`
                 }>
                   {curve.map(b => (
                     <div key={b.label} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                      <span className="text-[0.625rem] text-muted tabular-nums">{pct(b.rate)}</span>
+                      <span className="text-xs text-muted tabular-nums">{pct(b.rate)}</span>
                       <div
-                        className={`w-full rounded-t-sm ${b.rate === null ? 'bg-card-border' : b.rate >= 0.85 ? 'bg-emerald-500/70' : b.rate >= 0.7 ? 'bg-gold/70' : 'bg-red-500/60'}`}
+                        className={`w-full rounded-t-md ${b.rate === null ? 'bg-card-border' : b.rate >= 0.85 ? 'bg-success/75' : b.rate >= 0.7 ? 'bg-gold/75' : 'bg-danger/70'}`}
                         style={{ height: `${Math.max(4, (b.rate ?? 0) * 100)}%` }}
                       />
-                      <span className="text-[0.625rem] text-muted">{b.label}</span>
+                      <span className="text-xs text-muted">{b.label}</span>
                     </div>
                   ))}
                 </div>
@@ -207,7 +201,7 @@ export const Retention: React.FC = () => {
                 </p>
 
                 {needsShortening && (
-                  <div className="flex flex-col gap-2 border border-orange-400/30 bg-orange-400/5 rounded-md p-4">
+                  <div className="flex flex-col gap-2 border border-warning/35 bg-warning-soft rounded-2xl p-4">
                     <p className="text-sm text-secondary leading-relaxed">
                       You're forgetting faster than the schedule assumes. Shortening every
                       interval brings reviews forward across the board.
@@ -216,11 +210,12 @@ export const Retention: React.FC = () => {
                       {[0.7, 0.85, 1].map(v => (
                         <button
                           key={v}
+                          type="button"
                           onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { intervalScale: v } })}
                           aria-pressed={scale === v}
-                          className={`px-3 py-1.5 rounded-md border text-xs font-bold transition-colors ${
+                          className={`min-h-[38px] px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-colors ${
                             scale === v
-                              ? 'bg-accent text-white border-accent'
+                              ? 'bg-accent text-on-accent border-accent'
                               : 'border-card-border text-secondary hover:text-primary'
                           }`}
                         >
@@ -228,7 +223,7 @@ export const Retention: React.FC = () => {
                         </button>
                       ))}
                     </div>
-                    <p className="text-[0.6875rem] text-muted">
+                    <p className="text-xs text-muted">
                       Applies to intervals as they're earned. Nothing already scheduled moves.
                     </p>
                   </div>
@@ -237,8 +232,8 @@ export const Retention: React.FC = () => {
 
               {/* The honesty gap: what was claimed against what was produced. */}
               {gap && (
-                <section className="flex flex-col gap-2 border border-card-border rounded-md p-4">
-                  <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Are your grades honest?</h2>
+                <section className="flex flex-col gap-2 bg-card border border-card-border rounded-[20px] p-5">
+                  <h2 className="text-xs font-bold text-accent tracking-[0.14em] uppercase">Are your grades honest?</h2>
                   <p className="text-sm text-secondary leading-relaxed">
                     {gap.gap >= 0.5
                       ? `You grade yourself about ${gap.gap.toFixed(1)} of a grade above what you actually
@@ -255,7 +250,7 @@ export const Retention: React.FC = () => {
 
               {/* Retention per layer, not counts per layer. */}
               <section className="flex flex-col gap-3">
-                <h2 className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">By layer</h2>
+                <h2 className="text-xs font-bold text-accent tracking-[0.14em] uppercase">By layer</h2>
                 <div className="flex flex-col divide-y divide-card-border border-y border-card-border">
                   {byLayer.map(l => (
                     <div key={l.kind} className="flex items-baseline justify-between py-2.5">

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2, Edit2, Check } from 'lucide-react';
+import { Plus, Trash2, Edit2, Check } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
+import { Modal } from '../ui/Modal';
+import { Button } from '../ui/Button';
+import { ConfirmDialog } from '../ui/ConfirmDialog';
 
 interface ManageTopicsModalProps {
   onClose: () => void;
@@ -8,22 +12,26 @@ interface ManageTopicsModalProps {
 
 export const ManageTopicsModal: React.FC<ManageTopicsModalProps> = ({ onClose }) => {
   const { state, dispatch } = useApp();
+  const { showToast } = useToast();
   const topics = state.topics || [];
 
   const [newTopicName, setNewTopicName] = useState('');
   const [editingTopicId, setEditingTopicId] = useState<string | null>(null);
   const [editingTopicName, setEditingTopicName] = useState('');
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const handleAddTopic = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newTopicName.trim()) {
+    const trimmed = newTopicName.trim();
+    if (trimmed) {
       dispatch({
         type: 'ADD_TOPIC',
         payload: {
-          id: `topic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          name: newTopicName.trim(),
+          id: `topic-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
+          name: trimmed,
         },
       });
+      showToast(`Created group “${trimmed}”`, 'success');
       setNewTopicName('');
     }
   };
@@ -39,54 +47,49 @@ export const ManageTopicsModal: React.FC<ManageTopicsModalProps> = ({ onClose })
         type: 'RENAME_TOPIC',
         payload: { id: editingTopicId, name: editingTopicName.trim() },
       });
+      showToast('Group renamed', 'success');
     }
     setEditingTopicId(null);
     setEditingTopicName('');
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this group? All verses that belong exclusively to this group will also be permanently deleted.')) {
-      dispatch({ type: 'DELETE_TOPIC', payload: id });
-    }
+  const confirmDelete = () => {
+    if (!pendingDelete) return;
+    dispatch({ type: 'DELETE_TOPIC', payload: pendingDelete.id });
+    showToast(`Deleted group “${pendingDelete.name}”`, 'info');
+    setPendingDelete(null);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div
-        className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
-        role="dialog"
-        aria-modal="true"
+    <>
+      <Modal
+        isOpen
+        onClose={onClose}
+        variant="dialog"
+        size="sm"
+        title="Manage Groups"
+        subtitle="Organize verses into collections"
+        zIndexClass="z-[70]"
       >
-        <div className="flex items-center justify-between p-4 border-b border-card-border">
-          <h2 className="text-xl font-heading font-semibold text-primary">Manage Groups</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-muted hover:text-primary transition-colors rounded-full hover:bg-card-border"
-            aria-label="Close"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="p-4">
-          <form onSubmit={handleAddTopic} className="flex gap-2 mb-6">
+        <div className="p-5 flex flex-col gap-4">
+          <form onSubmit={handleAddTopic} className="flex gap-2">
             <input
               type="text"
               value={newTopicName}
               onChange={(e) => setNewTopicName(e.target.value)}
               placeholder="New group name (e.g. Anxiety)"
-              className="flex-1 bg-bg-color border border-card-border rounded-lg px-3 py-2 text-primary focus:outline-none focus:border-accent transition-colors"
+              className="flex-1 min-h-[44px] bg-card-elevated border border-card-border rounded-xl px-3.5 py-2 text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
             />
-            <button
+            <Button
               type="submit"
               disabled={!newTopicName.trim()}
-              className="bg-accent text-accent-fg px-4 py-2 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-opacity"
+              className="shrink-0 gap-1"
             >
               <Plus className="w-4 h-4" /> Add
-            </button>
+            </Button>
           </form>
 
-          <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+          <div className="space-y-2 max-h-[55vh] overflow-y-auto">
             {topics.length === 0 ? (
               <p className="text-center text-muted py-8 text-sm">
                 No groups created yet. Groups help you organize related verses.
@@ -95,15 +98,15 @@ export const ManageTopicsModal: React.FC<ManageTopicsModalProps> = ({ onClose })
               topics.map((topic) => (
                 <div
                   key={topic.id}
-                  className="flex items-center justify-between p-3 bg-bg-color border border-card-border rounded-lg group"
+                  className="flex items-center justify-between gap-2 px-3.5 py-2.5 bg-card-elevated border border-card-border rounded-xl"
                 >
                   {editingTopicId === topic.id ? (
-                    <div className="flex items-center gap-2 flex-1 mr-2">
+                    <div className="flex items-center gap-2 flex-1">
                       <input
                         type="text"
                         value={editingTopicName}
                         onChange={(e) => setEditingTopicName(e.target.value)}
-                        className="flex-1 bg-card border border-accent rounded px-2 py-1 text-primary focus:outline-none"
+                        className="flex-1 min-h-[38px] bg-card border border-accent rounded-lg px-2.5 py-1 text-sm text-primary focus:outline-none"
                         autoFocus
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') saveEdit();
@@ -111,28 +114,31 @@ export const ManageTopicsModal: React.FC<ManageTopicsModalProps> = ({ onClose })
                         }}
                       />
                       <button
+                        type="button"
                         onClick={saveEdit}
-                        className="p-1.5 text-accent hover:bg-card-border rounded transition-colors"
-                        aria-label="Save"
+                        className="min-w-[40px] min-h-[40px] flex items-center justify-center text-accent hover:bg-card-hover rounded-xl transition-colors"
+                        aria-label="Save group name"
                       >
                         <Check className="w-4 h-4" />
                       </button>
                     </div>
                   ) : (
                     <>
-                      <span className="text-primary font-medium">{topic.name}</span>
-                      <div className="flex items-center gap-1 transition-opacity">
+                      <span className="text-sm text-primary font-semibold truncate">{topic.name}</span>
+                      <div className="flex items-center gap-1 shrink-0">
                         <button
+                          type="button"
                           onClick={() => startEditing(topic.id, topic.name)}
-                          className="p-1.5 text-muted hover:text-primary hover:bg-card-border rounded transition-colors"
-                          aria-label="Edit group"
+                          className="min-w-[40px] min-h-[40px] flex items-center justify-center text-secondary hover:text-primary hover:bg-card-hover rounded-xl transition-colors"
+                          aria-label={`Edit group ${topic.name}`}
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(topic.id)}
-                          className="p-1.5 text-muted hover:text-red-400 hover:bg-card-border rounded transition-colors"
-                          aria-label="Delete group"
+                          type="button"
+                          onClick={() => setPendingDelete({ id: topic.id, name: topic.name })}
+                          className="min-w-[40px] min-h-[40px] flex items-center justify-center text-danger bg-danger-soft/60 hover:bg-danger-soft rounded-xl transition-colors"
+                          aria-label={`Delete group ${topic.name}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -144,7 +150,19 @@ export const ManageTopicsModal: React.FC<ManageTopicsModalProps> = ({ onClose })
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </Modal>
+
+      <ConfirmDialog
+        isOpen={Boolean(pendingDelete)}
+        title={`Delete “${pendingDelete?.name || ''}”?`}
+        description="All verses that belong exclusively to this group will also be permanently deleted."
+        confirmLabel="Delete Group"
+        cancelLabel="Cancel"
+        tone="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+        zIndexClass="z-[85]"
+      />
+    </>
   );
 };

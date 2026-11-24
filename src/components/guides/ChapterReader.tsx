@@ -8,6 +8,7 @@ import { CommentaryModal, hasCommentaryForBook } from './StudyToolsSheet';
 import { ImmersedReader } from '../practice/ImmersedReader';
 import { ReviewGrades } from '../practice/PracticeFeedback';
 import { Modal } from '../ui/Modal';
+import { Switch } from '../ui/Switch';
 import { saveReaderPosition } from '../../utils/readerPosition';
 import {
   adjacentReadingChapter,
@@ -289,7 +290,7 @@ const RecallCard: React.FC<{
             <button
               type="button"
               onClick={onNextChapter}
-              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-bold text-white hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-bold text-on-accent hover:opacity-90 transition-opacity"
             >
               <span>Next chapter ({nextLabel})</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -1976,7 +1977,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         title="Reading settings"
         subtitle="These settings apply to reading and Immerse. The palette also changes the app theme."
       >
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 p-5">
           {/* Live Preview Card */}
           {(() => {
             const palette = PREVIEW_PALETTE[state.theme || 'black'] || PREVIEW_PALETTE.black;
@@ -2038,7 +2039,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontSize: size.value } })}
                     className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
                       isSelected
-                        ? 'border-accent bg-accent text-white'
+                        ? 'border-accent bg-accent text-on-accent'
                         : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
                     }`}
                   >
@@ -2069,7 +2070,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { fontFamily: f.id as UserSettings['fontFamily'] } })}
                     className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
                       isSelected
-                        ? 'border-accent bg-accent text-white'
+                        ? 'border-accent bg-accent text-on-accent'
                         : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
                     }`}
                   >
@@ -2097,7 +2098,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     onClick={() => dispatch({ type: 'UPDATE_SETTINGS', payload: { lineSpacing: spacing.id as UserSettings['lineSpacing'] } })}
                     className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                       isSelected
-                        ? 'border-accent bg-accent text-white'
+                        ? 'border-accent bg-accent text-on-accent'
                         : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
                     }`}
                   >
@@ -2126,7 +2127,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     onClick={() => dispatch({ type: 'SET_THEME', payload: t.id as 'black' | 'dark' | 'sepia' | 'white' })}
                     className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                       isSelected
-                        ? 'border-accent bg-accent text-white'
+                        ? 'border-accent bg-accent text-on-accent'
                         : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
                     }`}
                   >
@@ -2138,53 +2139,67 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           </div>
 
           {/* Verse numbers switch */}
-          <label className="flex items-center justify-between gap-3 py-1 cursor-pointer">
+          <div
+            onClick={() =>
+              dispatch({
+                type: 'UPDATE_SETTINGS',
+                payload: { showVerseNumbers: state.settings.showVerseNumbers === false },
+              })
+            }
+            className="flex items-center justify-between gap-3 py-1 cursor-pointer"
+          >
             <span className="text-sm font-medium text-primary">Verse numbers</span>
-            <input
-              type="checkbox"
+            <Switch
               checked={state.settings.showVerseNumbers !== false}
-              onChange={() =>
+              onChange={(next) =>
                 dispatch({
                   type: 'UPDATE_SETTINGS',
-                  payload: { showVerseNumbers: state.settings.showVerseNumbers === false },
+                  payload: { showVerseNumbers: next },
                 })
               }
-              className="h-4 w-4 accent-accent cursor-pointer"
+              ariaLabel="Verse numbers"
             />
-          </label>
+          </div>
 
           {/* Keep Immerse awake switch */}
-          <label className="flex items-center justify-between gap-3 py-1 cursor-pointer">
+          <div
+            onClick={() => setKeepImmerseAwake(!keepImmerseAwake)}
+            className="flex items-center justify-between gap-3 py-1 cursor-pointer"
+          >
             <div className="flex flex-col">
               <span className="text-sm font-medium text-primary">Keep Immerse awake</span>
               <span className="text-xs text-muted">While Immerse is on screen</span>
             </div>
-            <input
-              type="checkbox"
+            <Switch
               checked={keepImmerseAwake}
-              onChange={(e) => setKeepImmerseAwake(e.target.checked)}
-              aria-label="Keep Immerse awake"
-              className="h-4 w-4 accent-accent cursor-pointer"
+              onChange={setKeepImmerseAwake}
+              ariaLabel="Keep Immerse awake"
             />
-          </label>
+          </div>
 
           {/* Continue chapters switch */}
           <div className="flex flex-col gap-1 py-1">
-            <label className="flex items-center justify-between gap-3 cursor-pointer">
+            <div
+              onClick={() =>
+                dispatch({
+                  type: 'UPDATE_SETTINGS',
+                  payload: { continueChapters: !continueChapters },
+                })
+              }
+              className="flex items-center justify-between gap-3 cursor-pointer"
+            >
               <span className="text-sm font-medium text-primary">Continue chapters</span>
-              <input
-                type="checkbox"
+              <Switch
                 checked={continueChapters}
-                onChange={(e) =>
+                onChange={(next) =>
                   dispatch({
                     type: 'UPDATE_SETTINGS',
-                    payload: { continueChapters: e.target.checked },
+                    payload: { continueChapters: next },
                   })
                 }
-                aria-label="Continue chapters"
-                className="h-4 w-4 accent-accent cursor-pointer"
+                ariaLabel="Continue chapters"
               />
-            </label>
+            </div>
             <p className="text-xs text-muted">
               Scroll or listen into the next chapter. Immerse continues when you tap Next.
             </p>
@@ -2207,20 +2222,27 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
             {advancedReadingOptionsOpen && (
               <div className="flex flex-col gap-3 rounded-xl border border-card-border bg-card-elevated/40 p-3.5">
-                <label className="flex items-center justify-between gap-3 cursor-pointer">
+                <div
+                  onClick={() =>
+                    dispatch({
+                      type: 'UPDATE_SETTINGS',
+                      payload: { bionicReading: !state.settings.bionicReading },
+                    })
+                  }
+                  className="flex items-center justify-between gap-3 cursor-pointer"
+                >
                   <span className="text-sm font-medium text-primary">Bionic reading</span>
-                  <input
-                    type="checkbox"
+                  <Switch
                     checked={Boolean(state.settings.bionicReading)}
-                    onChange={() =>
+                    onChange={(next) =>
                       dispatch({
                         type: 'UPDATE_SETTINGS',
-                        payload: { bionicReading: !state.settings.bionicReading },
+                        payload: { bionicReading: next },
                       })
                     }
-                    className="h-4 w-4 accent-accent cursor-pointer"
+                    ariaLabel="Bionic reading"
                   />
-                </label>
+                </div>
 
                 {state.settings.bionicReading && (
                   <div className="flex flex-col gap-1.5">
@@ -2248,7 +2270,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                             }
                             className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
                               isSelected
-                                ? 'border-accent bg-accent text-white'
+                                ? 'border-accent bg-accent text-on-accent'
                                 : 'border-card-border bg-card text-secondary hover:text-primary'
                             }`}
                           >
@@ -2292,7 +2314,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             <button
               type="button"
               onClick={() => setShowOptions(false)}
-              className="rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+              className="rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-on-accent shadow-sm hover:opacity-90 transition-opacity"
             >
               Done
             </button>
@@ -2343,7 +2365,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             <div className="flex items-center gap-2 mt-2">
               <button
                 onClick={() => setRetryCount(c => c + 1)}
-                className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-md bg-accent text-white hover:bg-accent-hover transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-md bg-accent text-on-accent hover:bg-accent-hover transition-colors"
               >
                 <RotateCw className="w-3.5 h-3.5" /> Try Again
               </button>
@@ -2421,7 +2443,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       <button
                         type="button"
                         onClick={handleNextChapter}
-                        className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+                        className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-on-accent shadow-sm hover:opacity-90 transition-opacity"
                       >
                         <span>Next chapter · {nextLabel}</span>
                         <ChevronRight className="w-4 h-4" />
@@ -2462,14 +2484,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       {/* Floating Action Bar for Selected Verses */}
       {selectedVerses.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 z-50 animate-[fadeScaleIn_0.2s_ease-out] px-3 pb-3 sm:pb-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
-          <div className="bg-accent text-white rounded-xl shadow-lg max-w-lg mx-auto overflow-hidden">
+          <div className="bg-accent text-on-accent rounded-2xl shadow-lg max-w-lg mx-auto overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3">
               <span className="font-bold text-base">
                 {selectedVerses.length} {selectedVerses.length === 1 ? 'verse' : 'verses'} selected
               </span>
               <button
+                type="button"
                 onClick={() => setSelectedVerses([])}
-                className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
+                className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl hover:bg-on-accent/15 transition-colors"
+                aria-label="Cancel selection"
                 title="Cancel Selection"
               >
                 <X className="w-5 h-5" />
@@ -2477,36 +2501,40 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
             </div>
             <div className="flex items-center gap-2.5 px-5 pb-4 flex-wrap">
               <button
+                type="button"
                 onClick={handleCopySelected}
-                className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
+                className="bg-on-accent/15 hover:bg-on-accent/25 min-h-[42px] px-4 py-2 rounded-xl font-bold text-sm transition-colors flex items-center gap-2"
               >
                 <Copy className="w-4 h-4" /> Copy
               </button>
 
               {hasRefs && (
                 <button
+                  type="button"
                   onClick={() => {
                     const sorted = [...selectedVerses].sort((a, b) => a - b);
                     setCrossRefPeekSource(null);
                     setCrossRefInitialSection(undefined);
                     setShowCrossReferences(sorted.map(v => `${selectionEnglishBookTitle.toLowerCase()} ${selectionScope.chapter}:${v}`));
                   }}
-                  className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
+                  className="bg-on-accent/15 hover:bg-on-accent/25 min-h-[42px] px-4 py-2 rounded-xl font-bold text-sm transition-colors flex items-center gap-2"
                 >
                   <BookOpen className="w-4 h-4" /> Refs
                 </button>
               )}
               {selectedVerses.every(v => memorizedVerses.has(v)) ? (
                 <button
+                  type="button"
                   onClick={handleDeleteSelected}
-                  className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
+                  className="bg-red-600 hover:bg-red-700 text-white min-h-[42px] px-4 py-2 rounded-xl font-bold text-sm transition-colors flex items-center gap-2"
                 >
                   <Trash2 className="w-4 h-4" /> Remove
                 </button>
               ) : (
                 <button
+                  type="button"
                   onClick={handleAddClick}
-                  className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-bold text-base transition-colors flex items-center gap-2"
+                  className="bg-on-accent/15 hover:bg-on-accent/25 min-h-[42px] px-4 py-2 rounded-xl font-bold text-sm transition-colors flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" /> Add
                 </button>
@@ -2516,30 +2544,32 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         </div>
       )}
 
-      {/* Add to memory Modal matching Mockup */}
+      {/* Add to memory Modal — theme-native semantic tokens */}
       {showAddOptions && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
-          <div className="bg-[#14120E] border border-[#2C2720] rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4 text-[#F5F2EB]">
-            {/* Header */}
-            <div>
-              <h3 className="text-2xl font-serif font-bold text-[#F5F2EB] leading-tight">Add to memory</h3>
-              <p className="text-sm font-medium text-[#A89F91] mt-1">
-                {selectedVerses.length > 1 
-                  ? `${selectionEnglishBookTitle} ${selectionScope.chapter}:${[...selectedVerses].sort((a, b) => a - b)[0]}–${[...selectedVerses].sort((a, b) => a - b).slice(-1)[0]}`
-                  : `${selectionEnglishBookTitle} ${selectionScope.chapter}:${selectedVerses[0] || ''}`}
-              </p>
-            </div>
-
+        <Modal
+          isOpen={showAddOptions}
+          onClose={() => setShowAddOptions(false)}
+          variant="sheet"
+          size="sm"
+          zIndexClass="z-[60]"
+          title="Add to memory"
+          subtitle={
+            selectedVerses.length > 1
+              ? `${selectionEnglishBookTitle} ${selectionScope.chapter}:${[...selectedVerses].sort((a, b) => a - b)[0]}–${[...selectedVerses].sort((a, b) => a - b).slice(-1)[0]}`
+              : `${selectionEnglishBookTitle} ${selectionScope.chapter}:${selectedVerses[0] || ''}`
+          }
+        >
+          <div className="flex flex-col gap-4 p-5">
             {/* Segmented Mode Selector (When > 1 verse) */}
             {selectedVerses.length > 1 && (
-              <div className="flex bg-[#1E1B17] border border-[#332D24] rounded-full p-1 h-12">
+              <div className="flex bg-card-elevated border border-card-border rounded-full p-1 h-12">
                 <button
                   type="button"
                   onClick={() => setAsOnePassage(true)}
                   className={`flex-1 rounded-full text-sm font-bold transition-all ${
                     asOnePassage
-                      ? 'bg-[#D4A359] text-[#14120E] shadow-sm'
-                      : 'text-[#A89F91] hover:text-[#F5F2EB]'
+                      ? 'bg-accent text-on-accent shadow-sm'
+                      : 'text-secondary hover:text-primary'
                   }`}
                 >
                   As one passage
@@ -2549,8 +2579,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   onClick={() => setAsOnePassage(false)}
                   className={`flex-1 rounded-full text-sm font-bold transition-all ${
                     !asOnePassage
-                      ? 'bg-[#D4A359] text-[#14120E] shadow-sm'
-                      : 'text-[#A89F91] hover:text-[#F5F2EB]'
+                      ? 'bg-accent text-on-accent shadow-sm'
+                      : 'text-secondary hover:text-primary'
                   }`}
                 >
                   As {selectedVerses.length} verses
@@ -2560,7 +2590,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
             {/* Collections */}
             <div className="flex flex-col gap-2">
-              <span className="text-[0.6875rem] font-bold text-[#A89F91] uppercase tracking-wider">Collections</span>
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Collections</span>
               <div className="flex flex-wrap items-center gap-2 max-h-36 overflow-y-auto no-scrollbar">
                 {state.topics?.map(topic => {
                   const isActive = selectedTopicIds.includes(topic.id);
@@ -2573,16 +2603,16 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                           isActive ? prev.filter(id => id !== topic.id) : [...prev, topic.id]
                         );
                       }}
-                      className={`text-xs px-3.5 py-2 rounded-full font-medium transition-all border flex items-center gap-2 ${
+                      className={`text-xs min-h-[38px] px-3.5 py-2 rounded-full font-medium transition-all border flex items-center gap-2 ${
                         isActive 
-                          ? 'bg-[#1E1B17] text-[#F5F2EB] border-[#D4A359]' 
-                          : 'bg-[#1E1B17] text-[#A89F91] border-[#332D24] hover:border-[#4A4237]'
+                          ? 'bg-accent/15 text-primary border-accent' 
+                          : 'bg-card-elevated text-secondary border-card-border hover:border-card-border-hover hover:text-primary'
                       }`}
                     >
-                      <span className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] ${
-                        isActive ? 'bg-[#D4A359] border-[#D4A359] text-[#14120E]' : 'border-[#6E6455]'
+                      <span className={`w-4 h-4 rounded flex items-center justify-center border ${
+                        isActive ? 'bg-accent border-accent text-on-accent' : 'border-card-border-hover'
                       }`}>
-                        {isActive && '✓'}
+                        {isActive && <Check className="w-3 h-3" />}
                       </span>
                       <span>{topic.name}</span>
                     </button>
@@ -2596,7 +2626,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                       value={newGroupName}
                       onChange={(e) => setNewGroupName(e.target.value)}
                       placeholder="New collection..."
-                      className="text-xs px-3 py-1.5 rounded-full bg-[#181512] border border-[#D4A359] text-[#F5F2EB] focus:outline-none w-28"
+                      className="text-xs px-3 py-1.5 min-h-[38px] rounded-full bg-card-elevated border border-accent text-primary placeholder:text-muted focus:outline-none w-32"
                       autoFocus
                       onKeyDown={(e) => {
                         if (e.key === 'Escape') setIsAddingGroup(false);
@@ -2608,7 +2638,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                     <button
                       type="submit"
                       disabled={!newGroupName.trim()}
-                      className="p-1.5 rounded-full text-[#D4A359] hover:bg-[#D4A359]/10 disabled:opacity-50 transition-colors"
+                      className="min-w-[38px] min-h-[38px] flex items-center justify-center rounded-full text-accent hover:bg-accent/10 disabled:opacity-50 transition-colors"
                       aria-label="Save collection"
                     >
                       <Check className="w-4 h-4" />
@@ -2618,9 +2648,9 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                   <button
                     type="button"
                     onClick={() => setIsAddingGroup(true)}
-                    className="text-xs px-3.5 py-2 rounded-full font-semibold transition-colors border border-dashed border-[#5A4D3B] text-[#D4A359] hover:border-solid hover:border-[#D4A359]"
+                    className="text-xs min-h-[38px] px-3.5 py-2 rounded-full font-semibold transition-colors border border-dashed border-accent/60 text-accent hover:border-solid hover:border-accent"
                   >
-                    New collection
+                    + New collection
                   </button>
                 )}
               </div>
@@ -2628,39 +2658,53 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
             {/* Keyword (Your Memory Hook) */}
             <div className="flex flex-col gap-1.5">
-              <span className="text-[0.6875rem] font-bold text-[#A89F91] uppercase tracking-wider">Keyword (Your Memory Hook)</span>
+              <label htmlFor="memory-hook-input" className="text-xs font-bold text-muted uppercase tracking-wider">
+                Keyword (Your Memory Hook)
+              </label>
               <input
+                id="memory-hook-input"
                 type="text"
                 value={memoryHookText}
                 onChange={(e) => setMemoryHookText(e.target.value)}
                 placeholder="Forever"
-                className="w-full px-4 py-3 rounded-xl bg-[#181512] border border-[#332D24] text-sm text-[#F5F2EB] placeholder:text-[#A89F91]/50 focus:outline-none focus:border-[#D4A359]"
+                className="w-full min-h-[44px] px-4 py-2.5 rounded-xl bg-card-elevated border border-card-border text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
               />
             </div>
 
-            {/* Radio Options */}
-            <div className="flex flex-col gap-2.5 pt-1">
-              <label className="flex items-center gap-3 cursor-pointer text-sm text-[#F5F2EB]">
-                <input
-                  type="radio"
-                  name="scheduleChoice"
-                  checked={startLearningNow}
-                  onChange={() => setStartLearningNow(true)}
-                  className="accent-[#D4A359] w-4 h-4"
-                />
-                <span>Start learning now</span>
-              </label>
-
-              <label className="flex items-center gap-3 cursor-pointer text-sm text-[#F5F2EB]">
-                <input
-                  type="radio"
-                  name="scheduleChoice"
-                  checked={!startLearningNow}
-                  onChange={() => setStartLearningNow(false)}
-                  className="accent-[#D4A359] w-4 h-4"
-                />
-                <span>First review tomorrow</span>
-              </label>
+            {/* Accessible Radio Options */}
+            <div className="flex flex-col gap-2 pt-1" role="radiogroup" aria-label="Review schedule">
+              {[
+                { value: true, title: 'Start learning now', desc: 'Queues immediately in today’s review' },
+                { value: false, title: 'First review tomorrow', desc: 'Saves to library without queuing today' },
+              ].map((opt) => {
+                const selected = startLearningNow === opt.value;
+                return (
+                  <button
+                    key={opt.title}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setStartLearningNow(opt.value)}
+                    className={`w-full p-3 rounded-xl border text-left flex items-center gap-3 transition-colors ${
+                      selected
+                        ? 'bg-accent/12 border-accent text-primary'
+                        : 'bg-card-elevated border-card-border text-secondary hover:border-card-border-hover'
+                    }`}
+                  >
+                    <span
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                        selected ? 'border-accent' : 'border-muted'
+                      }`}
+                    >
+                      {selected && <span className="w-2.5 h-2.5 rounded-full bg-accent" />}
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="text-sm font-semibold text-primary">{opt.title}</span>
+                      <span className="text-xs text-muted">{opt.desc}</span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Action CTA Button */}
@@ -2668,7 +2712,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               <button
                 type="button"
                 onClick={() => executeAdd(selectedVerses.length > 1 && asOnePassage ? 'combined' : 'individual')}
-                className="w-full py-3.5 rounded-[18px] bg-[#D4A359] text-[#14120E] font-bold text-base hover:bg-[#E2B773] transition-all shadow-md active:scale-95 flex items-center justify-center"
+                className="w-full min-h-[48px] py-3 rounded-[14px] bg-accent text-on-accent font-bold text-base hover:bg-accent-hover transition-colors shadow-sm active:scale-[0.99] flex items-center justify-center"
               >
                 {selectedVerses.length <= 1
                   ? 'Add verse'
@@ -2680,13 +2724,13 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               <button 
                 type="button"
                 onClick={() => setShowAddOptions(false)}
-                className="w-full py-1 text-xs font-semibold text-[#A89F91] hover:text-[#F5F2EB] transition-colors"
+                className="w-full min-h-[40px] py-1.5 text-xs font-semibold text-secondary hover:text-primary transition-colors"
               >
                 Cancel
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
 
       {isSpeakingChapter && !followAudio && !immerseChapterOpen && selectedVerses.length === 0 && returnStack.length === 0 && (
@@ -2712,7 +2756,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               }
             }
           }}
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 rounded-full bg-accent px-4 py-2 text-xs font-bold text-white shadow-lg flex items-center gap-1.5 hover:opacity-95 transition-opacity"
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 rounded-full bg-accent px-4 py-2 text-xs font-bold text-on-accent shadow-lg flex items-center gap-1.5 hover:opacity-95 transition-opacity"
         >
           <Volume2 className="w-3.5 h-3.5" />
           <span>Return to audio</span>
@@ -2889,7 +2933,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
                                 onClick={() => handleNavigate(navigatorBook, ch)}
                                 className={`aspect-square rounded-md text-base font-bold transition-colors flex items-center justify-center ${
                                   isCurrent
-                                    ? 'bg-accent text-white'
+                                    ? 'bg-accent text-on-accent'
                                     : 'text-secondary hover:bg-card-hover hover:text-primary'
                                 }`}
                               >

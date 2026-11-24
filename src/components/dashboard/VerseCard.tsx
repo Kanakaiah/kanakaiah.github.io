@@ -12,16 +12,16 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
   const { state } = useApp();
   const masteryPct = Math.min(100, Math.round(((verse.sm2?.repetition || 0) / 6) * 100));
 
-  let indicatorColor = 'border-l-accent';
+  let indicatorColor = 'bg-accent';
   let statusColor = 'text-accent';
   let statusText = 'Learning';
 
   if (masteryPct >= 100) {
-    indicatorColor = 'border-l-gold';
+    indicatorColor = 'bg-gold';
     statusColor = 'text-gold';
     statusText = 'Memorized';
   } else if (isDue(verse.sm2)) {
-    indicatorColor = 'border-l-gold';
+    indicatorColor = 'bg-gold';
     statusColor = 'text-gold';
     statusText = 'Due now';
   }
@@ -80,7 +80,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
 
   return (
     <div
-      className={`group relative flex flex-col cursor-pointer overflow-hidden rounded-lg bg-card border border-card-border p-0 transition-colors duration-150 hover:border-card-border-hover`}
+      className={`group relative flex flex-col cursor-pointer overflow-hidden rounded-[18px] bg-card border border-card-border p-0 transition-colors duration-150 hover:border-card-border-hover`}
       onClick={() => onClick(verse.id)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -92,7 +92,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ verse, onClick }) => {
       tabIndex={0}
       aria-label={`Verse ${verse.ref}`}
     >
-      <div className={`absolute top-0 bottom-0 left-0 w-1.5 ${indicatorColor} opacity-80`} />
+      <div className={`absolute top-0 bottom-0 left-0 w-1.5 ${indicatorColor} opacity-85`} />
       
       <div className="flex-1 p-5 pl-6 flex flex-col justify-between">
         <div>

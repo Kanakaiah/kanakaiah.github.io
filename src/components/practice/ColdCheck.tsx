@@ -126,7 +126,7 @@ export const ColdCheck: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </p>
         <button
           onClick={onClose}
-          className="w-full max-w-xs py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95 mt-2"
+          className="w-full max-w-xs py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95 mt-2"
         >
           Done
         </button>
@@ -180,7 +180,7 @@ export const ColdCheck: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div className="px-5 pb-6">
         <button
           onClick={shown ? next : reveal}
-          className="w-full max-w-xs mx-auto block py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+          className="w-full max-w-xs mx-auto block py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
         >
           {shown ? (index < items.length - 1 ? 'Next' : 'Finish') : 'Show me'}
         </button>

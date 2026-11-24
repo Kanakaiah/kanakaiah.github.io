@@ -18,109 +18,149 @@
   :root {
     color-scheme: dark;
     --bg-color: #0c0a08;
-    --text-primary: #f3ede2;
-    --text-secondary: #b3a891;
-    --text-muted: #7d7462;
+    --text-primary: #f5efe6;
+    --text-secondary: #c4b8a6;
+    --text-muted: #9a8e7c;
 
-    --accent: #cc6f47;
-    --accent-hover: #b25a37;
-    --accent-light: #e2a07e;
-    --accent-glow: rgba(204, 111, 71, 0.15);
-    --accent-glow-strong: rgba(204, 111, 71, 0.3);
+    --accent: #d47a52;
+    --accent-hover: #df8861;
+    --accent-light: #e5a382;
+    --on-accent: #14100d;
+    --accent-glow: rgba(212, 122, 82, 0.15);
+    --accent-glow-strong: rgba(212, 122, 82, 0.3);
 
-    --gold: #d9a24a;
+    --gold: #e0b45c;
+    --success: #4ade80;
+    --success-soft: rgba(74, 222, 128, 0.14);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, 0.14);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, 0.14);
+    --info: #60a5fa;
+    --info-soft: rgba(96, 165, 250, 0.14);
+    --scrim: rgba(0, 0, 0, 0.65);
 
     --glass-bg: rgba(255, 250, 240, 0.04);
     --glass-bg-hover: rgba(255, 250, 240, 0.08);
     --glass-border: rgba(255, 250, 240, 0.09);
     --glass-border-hover: rgba(255, 250, 240, 0.14);
 
-    --card-bg: #131110;
-    --card-bg-elevated: #1c1917;
-    --card-border: #2a2521;
-    --card-border-hover: #3a332c;
-    --card-hover: #1c1917;
+    --card-bg: #15120e;
+    --card-bg-elevated: #1f1a15;
+    --card-border: #2c261f;
+    --card-border-hover: #3f372d;
+    --card-hover: #241f19;
   }
 
   [data-theme="white"] {
     color-scheme: light;
-    --bg-color: #ffffff;
-    --text-primary: #111827;
-    --text-secondary: #4b5563;
-    --text-muted: #9ca3af;
+    --bg-color: #faf9f7;
+    --text-primary: #181512;
+    --text-secondary: #4a453f;
+    --text-muted: #625c55;
 
-    --accent: #b8552f;
-    --accent-hover: #96431f;
-    --accent-light: #c96a44;
-    --accent-glow: rgba(184, 85, 47, 0.1);
-    --accent-glow-strong: rgba(184, 85, 47, 0.2);
+    --accent: #a94a26;
+    --accent-hover: #913d1e;
+    --accent-light: #c25e38;
+    --on-accent: #ffffff;
+    --accent-glow: rgba(169, 74, 38, 0.10);
+    --accent-glow-strong: rgba(169, 74, 38, 0.22);
 
-    --gold: #a97a1f;
+    --gold: #9a6d14;
+    --success: #15803d;
+    --success-soft: rgba(21, 128, 61, 0.10);
+    --warning: #b45309;
+    --warning-soft: rgba(180, 83, 9, 0.10);
+    --danger: #b91c1c;
+    --danger-soft: rgba(185, 28, 28, 0.10);
+    --info: #1d4ed8;
+    --info-soft: rgba(29, 78, 216, 0.10);
+    --scrim: rgba(24, 21, 18, 0.42);
 
-    --glass-bg: rgba(17, 24, 39, 0.03);
-    --glass-bg-hover: rgba(17, 24, 39, 0.06);
-    --glass-border: rgba(17, 24, 39, 0.09);
-    --glass-border-hover: rgba(17, 24, 39, 0.16);
+    --glass-bg: rgba(24, 21, 18, 0.03);
+    --glass-bg-hover: rgba(24, 21, 18, 0.06);
+    --glass-border: rgba(24, 21, 18, 0.09);
+    --glass-border-hover: rgba(24, 21, 18, 0.16);
 
-    --card-bg: #f8fafc;
-    --card-bg-elevated: #ffffff;
-    --card-border: #e5e7eb;
-    --card-border-hover: #d1d5db;
-    --card-hover: #f3f4f6;
+    --card-bg: #ffffff;
+    --card-bg-elevated: #f3f1ed;
+    --card-border: #e4e0d8;
+    --card-border-hover: #cdc7bc;
+    --card-hover: #eae7e1;
   }
 
   [data-theme="dark"] {
     color-scheme: dark;
     --bg-color: #1a1613;
     --text-primary: #f5efe3;
-    --text-secondary: #b8ad99;
-    --text-muted: #8a8069;
+    --text-secondary: #c9beae;
+    --text-muted: #a19482;
 
-    --accent: #cf7350;
-    --accent-hover: #b25a37;
-    --accent-light: #e2a07e;
-    --accent-glow: rgba(207, 115, 80, 0.15);
-    --accent-glow-strong: rgba(207, 115, 80, 0.3);
+    --accent: #d47a52;
+    --accent-hover: #e08962;
+    --accent-light: #e5a382;
+    --on-accent: #14100d;
+    --accent-glow: rgba(212, 122, 82, 0.16);
+    --accent-glow-strong: rgba(212, 122, 82, 0.30);
 
-    --gold: #d9a24a;
+    --gold: #e3b864;
+    --success: #4ade80;
+    --success-soft: rgba(74, 222, 128, 0.15);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, 0.15);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, 0.15);
+    --info: #60a5fa;
+    --info-soft: rgba(96, 165, 250, 0.15);
+    --scrim: rgba(10, 8, 6, 0.65);
 
     --glass-bg: rgba(255, 250, 240, 0.05);
     --glass-bg-hover: rgba(255, 250, 240, 0.09);
     --glass-border: rgba(255, 250, 240, 0.1);
     --glass-border-hover: rgba(255, 250, 240, 0.16);
 
-    --card-bg: #221d18;
-    --card-bg-elevated: #2c2620;
-    --card-border: #3a332b;
-    --card-border-hover: #4a4237;
-    --card-hover: #2c2620;
+    --card-bg: #231e19;
+    --card-bg-elevated: #2d2620;
+    --card-border: #3a322a;
+    --card-border-hover: #50453a;
+    --card-hover: #322b24;
   }
 
   [data-theme="sepia"] {
     color-scheme: light;
     --bg-color: #f6ecd6;
-    --text-primary: #4a3a2c;
-    --text-secondary: #7d6a56;
-    --text-muted: #a08d76;
+    --text-primary: #2c2013;
+    --text-secondary: #53422f;
+    --text-muted: #6b5842;
 
-    --accent: #a8562e;
-    --accent-hover: #8a4423;
-    --accent-light: #c17a4f;
-    --accent-glow: rgba(168, 86, 46, 0.12);
-    --accent-glow-strong: rgba(168, 86, 46, 0.25);
+    --accent: #a94a26;
+    --accent-hover: #8f3d1e;
+    --accent-light: #c16a45;
+    --on-accent: #ffffff;
+    --accent-glow: rgba(169, 74, 38, 0.12);
+    --accent-glow-strong: rgba(169, 74, 38, 0.25);
 
-    --gold: #a1731c;
+    --gold: #9a6d14;
+    --success: #15803d;
+    --success-soft: rgba(21, 128, 61, 0.12);
+    --warning: #b45309;
+    --warning-soft: rgba(180, 83, 9, 0.12);
+    --danger: #b91c1c;
+    --danger-soft: rgba(185, 28, 28, 0.11);
+    --info: #1d4ed8;
+    --info-soft: rgba(29, 78, 216, 0.12);
+    --scrim: rgba(44, 32, 19, 0.44);
 
     --glass-bg: rgba(120, 80, 20, 0.05);
     --glass-bg-hover: rgba(120, 80, 20, 0.08);
     --glass-border: rgba(120, 80, 20, 0.14);
     --glass-border-hover: rgba(120, 80, 20, 0.22);
 
-    --card-bg: #f0e3c8;
-    --card-bg-elevated: #f9f0dc;
-    --card-border: #e3d3ae;
-    --card-border-hover: #d3bd8c;
-    --card-hover: #eadfc0;
+    --card-bg: #fbf4e4;
+    --card-bg-elevated: #efe3c8;
+    --card-border: #dccba8;
+    --card-border-hover: #c4af85;
+    --card-hover: #e7d8b8;
   }
 
   :root {
@@ -157,9 +197,83 @@ nav, button, [role="button"], a {
 }
 
 /* Visible focus rings for keyboard navigation */
-button:focus-visible, a:focus-visible, [role="button"]:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="switch"]:focus-visible, [role="radio"]:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Skip to main content link for keyboard navigation */
+.skip-to-content {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: top 0.15s ease;
+}
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* Unified sleek range slider styling */
+.remora-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--card-border-hover);
+  outline: none;
+  cursor: pointer;
+}
+.remora-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--accent);
+  border: 3px solid var(--card-bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.remora-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.08);
+}
+.remora-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--accent);
+  border: 3px solid var(--card-bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 select option {

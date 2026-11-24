@@ -16,6 +16,8 @@ import {
 import type { SortOrder, Verse } from '../../types/models';
 import { practicePassage, studyThoughts } from '../../utils/studyText';
 import { useKeepImmerseAwake, useWakeLock } from '../../hooks/useWakeLock';
+import { Switch } from '../ui/Switch';
+import { Slider } from '../ui/Slider';
 
 const IMMERSE_APPEARANCE_KEY = 'remora_immerse_appearance';
 
@@ -243,7 +245,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
         surface: 'bg-[#121212] border-[#262626]',
         sheet: 'bg-[#111111] text-[#F1EEE8] border-[#262626]',
         chipIdle: 'bg-[#171717] border-[#2C2C2C] text-[#BDB7AB]',
-        chipActive: 'bg-accent border-accent text-[#141414]',
+        chipActive: 'bg-accent border-accent text-on-accent',
       };
     }
     return {
@@ -252,7 +254,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
       surface: 'bg-card border-card-border',
       sheet: 'bg-card-elevated text-primary border-card-border',
       chipIdle: 'bg-card border-card-border text-secondary hover:text-primary',
-      chipActive: 'bg-accent border-accent text-[#141414]',
+      chipActive: 'bg-accent border-accent text-on-accent',
     };
   }, [appearance.theme]);
 
@@ -416,7 +418,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
                     setThoughtHidden(h => !h);
                     setShowContext(false);
                   }}
-                  className="px-4 py-2 rounded-xl bg-accent text-[#141414] text-xs font-bold inline-flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-accent text-on-accent text-xs font-bold inline-flex items-center gap-1.5"
                 >
                   {thoughtHidden ? (
                     <>
@@ -561,7 +563,7 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
             aria-label={isAutoPlaying ? 'Stop reading aloud' : 'Read aloud'}
             className={`px-5 h-11 rounded-full font-semibold text-sm inline-flex items-center gap-2 transition-all ${
               isAutoPlaying
-                ? 'bg-accent text-[#141414] shadow-sm'
+                ? 'bg-accent text-on-accent shadow-sm'
                 : `${themeClasses.surface} border hover:border-accent/60 disabled:opacity-40`
             } ${hiddenControlClass(controlsVisible || isAutoPlaying)}`}
           >
@@ -641,84 +643,80 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
       {/* Reading Appearance Bottom Sheet */}
       {appearanceOpen && (
         <div
-          className="fixed inset-0 z-[60] bg-black/60 flex items-end sm:items-center justify-center"
+          className="fixed inset-0 z-[60] bg-scrim backdrop-blur-[2px] flex items-end sm:items-center justify-center"
           onClick={() => setAppearanceOpen(false)}
         >
           <div
-            className={`w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border p-6 flex flex-col gap-5 shadow-2xl ${themeClasses.sheet}`}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Reading appearance"
+            className={`w-full max-w-lg max-h-[85dvh] overflow-y-auto rounded-t-[24px] sm:rounded-[20px] border p-6 flex flex-col gap-5 shadow-2xl animate-[slideInUp_0.28s_cubic-bezier(0.16,1,0.3,1)] sm:animate-[fadeScaleIn_0.2s_ease-out] ${themeClasses.sheet}`}
             onClick={e => e.stopPropagation()}
           >
+            <div className="flex justify-center -mt-2 pb-1 sm:hidden" aria-hidden="true">
+              <div className="w-10 h-1 rounded-full bg-card-border-hover" />
+            </div>
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-heading font-bold">Reading appearance</h2>
               <button
                 type="button"
                 onClick={() => setAppearanceOpen(false)}
-                className="text-sm font-semibold text-accent hover:opacity-80"
+                className="min-h-[40px] px-3 rounded-xl text-sm font-semibold text-accent hover:bg-accent/10 transition-colors"
               >
                 Done
               </button>
             </div>
 
-            <label className="flex items-center justify-between gap-3 cursor-pointer py-1">
+            <div
+              onClick={() => setKeepAwake(!keepAwake)}
+              className="flex items-center justify-between gap-3 cursor-pointer py-1"
+            >
               <div className="flex flex-col">
                 <span className="text-sm font-medium">Keep Immerse awake</span>
                 <span className={`text-xs ${themeClasses.muted}`}>While Immerse is on screen</span>
               </div>
-              <input
-                type="checkbox"
+              <Switch
                 checked={keepAwake}
-                onChange={(e) => setKeepAwake(e.target.checked)}
-                aria-label="Keep Immerse awake"
-                className="h-4 w-4 accent-[var(--accent)] cursor-pointer"
+                onChange={setKeepAwake}
+                ariaLabel="Keep Immerse awake"
               />
-            </label>
+            </div>
 
             {continueChapters !== undefined && onContinueChaptersChange !== undefined && (
-              <label className="flex items-center justify-between gap-3 cursor-pointer py-1">
+              <div
+                onClick={() => onContinueChaptersChange(!continueChapters)}
+                className="flex items-center justify-between gap-3 cursor-pointer py-1"
+              >
                 <span className="text-sm font-medium">Continue chapters</span>
-                <input
-                  type="checkbox"
+                <Switch
                   checked={continueChapters}
-                  onChange={(e) => onContinueChaptersChange(e.target.checked)}
-                  aria-label="Continue chapters"
-                  className="h-4 w-4 accent-[var(--accent)] cursor-pointer"
+                  onChange={onContinueChaptersChange}
+                  ariaLabel="Continue chapters"
                 />
-              </label>
+              </div>
             )}
 
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-sm font-medium">
-                <span>Text size</span>
-                <span className={themeClasses.muted}>{appearance.fontSize}px</span>
-              </div>
-              <input
-                type="range"
-                min={22}
-                max={40}
-                step={2}
-                value={appearance.fontSize}
-                onChange={e => updateAppearance({ fontSize: Number(e.target.value) })}
-                aria-label="Text size"
-                className="w-full accent-[var(--accent)]"
-              />
-            </div>
+            <Slider
+              label="Text size"
+              valueLabel={`${appearance.fontSize}px`}
+              min={22}
+              max={40}
+              step={2}
+              value={appearance.fontSize}
+              onChange={(val) => updateAppearance({ fontSize: val })}
+              ariaLabel="Text size"
+            />
 
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-sm font-medium">
-                <span>Line spacing</span>
-                <span className={themeClasses.muted}>{appearance.lineHeight.toFixed(1)}</span>
-              </div>
-              <input
-                type="range"
-                min={1.5}
-                max={2.0}
-                step={0.1}
-                value={appearance.lineHeight}
-                onChange={e => updateAppearance({ lineHeight: Number(e.target.value) })}
-                aria-label="Line spacing"
-                className="w-full accent-[var(--accent)]"
-              />
-            </div>
+            <Slider
+              label="Line spacing"
+              valueLabel={appearance.lineHeight.toFixed(1)}
+              min={1.5}
+              max={2.0}
+              step={0.1}
+              value={appearance.lineHeight}
+              onChange={(val) => updateAppearance({ lineHeight: val })}
+              ariaLabel="Line spacing"
+            />
 
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium">Layout</span>

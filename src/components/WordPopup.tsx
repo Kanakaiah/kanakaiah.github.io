@@ -93,8 +93,10 @@ export function WordPopup({
 
         {/* Close button (top-right corner) */}
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-3 right-4 p-1.5 rounded-full hover:bg-card-hover transition-colors"
+          aria-label="Close definition"
+          className="absolute top-2.5 right-3 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl hover:bg-card-hover transition-colors"
         >
           <X className="w-4 h-4 text-secondary" />
         </button>

@@ -200,7 +200,7 @@ export const ChainDrill: React.FC<{
             <button onClick={restart} className="flex items-center justify-center gap-2 py-3 rounded-md border border-card-border text-secondary font-bold text-sm hover:text-primary transition-colors">
               <RotateCcw className="w-4 h-4" /> Run it again
             </button>
-            <button onClick={onClose} className="py-3 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95">
+            <button onClick={onClose} className="py-3 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95">
               Done
             </button>
           </div>

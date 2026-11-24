@@ -208,7 +208,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
             onClick={() => changeScope(opt.id)}
             className={`px-3.5 py-1.5 rounded-full border text-xs font-semibold transition-colors ${
               scope === opt.id
-                ? 'bg-accent border-accent text-[#141414]'
+                ? 'bg-accent border-accent text-on-accent'
                 : 'bg-card border-card-border text-secondary hover:text-primary'
             }`}
           >
@@ -237,7 +237,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
                 setFrozenPool(null);
                 goTo(0);
               }}
-              className="flex-1 min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+              className="flex-1 min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95"
             >
               Practice again
             </button>
@@ -300,7 +300,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
                   <button
                     type="button"
                     onClick={handleContinueCued}
-                    className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+                    className="w-full min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95"
                   >
                     Continue without grading
                   </button>
@@ -315,7 +315,7 @@ export const ThemeDrill: React.FC<{ onExit: () => void }> = ({ onExit }) => {
               <button
                 type="button"
                 onClick={() => setRevealed(true)}
-                className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+                className="w-full min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95"
               >
                 Show theme
               </button>

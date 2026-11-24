@@ -1256,7 +1256,7 @@ export const Guides: React.FC = () => {
                         const target = readerPath(activeGuide.id, 1);
                         if (target) navigate(target);
                       }}
-                      className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+                      className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-on-accent shadow-sm hover:opacity-90 transition-opacity"
                     >
                       <BookOpen className="h-4 w-4" />
                       Read chapter 1
@@ -1765,7 +1765,7 @@ export const Guides: React.FC = () => {
           title="Choose chapter"
           subtitle={activeGuide.title}
         >
-          <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 max-h-[60vh] overflow-y-auto py-1">
+          <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 p-5">
             {Array.from({ length: Number(activeGuide.chapters) || 1 }, (_, i) => i + 1).map((ch) => (
               <button
                 key={ch}
@@ -1793,8 +1793,8 @@ export const Guides: React.FC = () => {
           subtitle={blockChapterPicker ? `Chapters ${blockChapterPicker.start}–${blockChapterPicker.end}` : undefined}
         >
           {blockChapterPicker && (
-            <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 max-h-[50vh] overflow-y-auto py-1">
+            <div className="flex flex-col gap-4 p-5">
+              <div className="grid grid-cols-5 sm:grid-cols-6 gap-2">
                 {Array.from(
                   { length: blockChapterPicker.end - blockChapterPicker.start + 1 },
                   (_, i) => blockChapterPicker.start + i,
@@ -1941,32 +1941,32 @@ export const Guides: React.FC = () => {
 
   // ── Main listing view ──────────────────────────────────────────────────────
   return (
-    <div 
-      className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-4"
-      style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-    >
-      <div className="flex items-center gap-3 mb-2">
+    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pt-2">
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-3xl font-heading font-bold text-primary tracking-tight">Bible</h1>
         <button
-          onClick={() => navigate('/')}
-          className="p-2 -ml-2 rounded-full hover:bg-card-hover text-secondary hover:text-primary transition-colors"
-          title="Close to Today"
-          aria-label="Close to Today"
+          type="button"
+          onClick={() => window.dispatchEvent(new Event('remora:open-settings'))}
+          aria-label="Open settings"
+          title="Settings"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border border-card-border bg-card text-secondary hover:text-primary hover:border-accent/50 transition-colors"
         >
-          <X className="w-6 h-6 text-secondary hover:text-primary" />
+          <Settings className="w-4 h-4" />
         </button>
-        <h1 className="text-3xl font-heading font-bold text-primary">Bible</h1>
       </div>
 
-      <div className="flex bg-card p-1 rounded-lg shadow-sm border border-card-border mt-[-10px] sm:max-w-[300px]">
+      <div className="flex bg-card p-1 rounded-xl shadow-sm border border-card-border sm:max-w-[300px]">
         <button
+          type="button"
           onClick={() => setActiveTab('books')}
-          className={`flex-1 py-1.5 text-sm font-bold tracking-wide uppercase rounded-md transition-all duration-200 ${activeTab === 'books' ? 'bg-accent/10 text-accent shadow-sm' : 'text-muted hover:text-primary hover:bg-card-elevated'}`}
+          className={`flex-1 min-h-[38px] py-1.5 text-sm font-bold tracking-wide rounded-lg transition-all duration-200 ${activeTab === 'books' ? 'bg-accent/15 text-accent shadow-sm' : 'text-muted hover:text-primary hover:bg-card-elevated'}`}
         >
           Books
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab('guides')}
-          className={`flex-1 py-1.5 text-sm font-bold tracking-wide uppercase rounded-md transition-all duration-200 ${activeTab === 'guides' ? 'bg-accent/10 text-accent shadow-sm' : 'text-muted hover:text-primary hover:bg-card-elevated'}`}
+          className={`flex-1 min-h-[38px] py-1.5 text-sm font-bold tracking-wide rounded-lg transition-all duration-200 ${activeTab === 'guides' ? 'bg-accent/15 text-accent shadow-sm' : 'text-muted hover:text-primary hover:bg-card-elevated'}`}
         >
           Guides
         </button>

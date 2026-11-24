@@ -106,7 +106,7 @@ export const BookCard: React.FC<{
             <button
               type="button"
               onClick={() => navigate(firstChapterPath)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-xs font-bold text-on-accent shadow-sm hover:opacity-90 transition-opacity"
             >
               <BookOpen className="h-3.5 w-3.5" />
               Read

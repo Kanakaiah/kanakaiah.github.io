@@ -405,7 +405,7 @@ export const Lookup: React.FC = () => {
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new Event('remora:open-settings'))}
-                className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full border border-card-border bg-card text-secondary hover:text-primary transition-colors"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border border-card-border bg-card text-secondary hover:text-primary hover:border-accent/50 transition-colors"
                 aria-label="Open settings"
                 title="Settings"
               >
@@ -474,7 +474,7 @@ export const Lookup: React.FC = () => {
           </div>
 
           {searchError && (
-            <div className="p-4 border border-red-500/30 bg-red-500/10 rounded-lg text-center text-red-500 flex flex-col items-center gap-2">
+            <div className="p-4 border border-danger/30 bg-danger-soft rounded-2xl text-center text-danger flex flex-col items-center gap-2">
               <AlertCircle className="w-6 h-6" />
               <p className="text-sm font-medium">{searchError}</p>
             </div>

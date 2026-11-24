@@ -350,7 +350,7 @@ export const AnchorDrill: React.FC<{
               <button
                 type="button"
                 onClick={handleRestart}
-                className="flex-1 min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+                className="flex-1 min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95"
               >
                 Practice again
               </button>
@@ -462,7 +462,7 @@ export const AnchorDrill: React.FC<{
                 type="button"
                 disabled={!typedInput.trim()}
                 onClick={handleCheckAnswer}
-                className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
+                className="w-full min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
               >
                 Check answer
               </button>

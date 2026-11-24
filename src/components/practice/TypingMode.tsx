@@ -53,7 +53,7 @@ export const TypingMode: React.FC<TypingModeProps> = ({ text, onAttempt }) => {
           type="button"
           onClick={check}
           disabled={!input.trim()}
-          className="w-full min-h-[48px] py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
+          className="w-full min-h-[48px] py-3 rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
         >
           Check answer
         </button>

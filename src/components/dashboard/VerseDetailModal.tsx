@@ -8,6 +8,7 @@ import { OT_BOOKS } from '../../data/otBooks';
 import { NT_BOOKS } from '../../data/ntBooks';
 import { readerPath } from '../../utils/readerRoute';
 import { useApp } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 import { TRANSLATION_OPTIONS } from '../../data/bibleMap';
 
 const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
@@ -25,6 +26,7 @@ interface VerseDetailModalProps {
 export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpen, onClose, onPractice, onDelete, onNext, onPrev }) => {
   const navigate = useNavigate();
   const { state, dispatch } = useApp();
+  const { showToast } = useToast();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
@@ -72,7 +74,7 @@ export const VerseDetailModal: React.FC<VerseDetailModalProps> = ({ verse, isOpe
         onClose();
         navigate(path);
       } else {
-        alert("Could not locate this book in the reader.");
+        showToast('Could not locate this book in the reader.', 'error');
       }
     }
   };

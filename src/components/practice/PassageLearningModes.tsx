@@ -147,7 +147,7 @@ export const BuildPassageMode: React.FC<{
       <button
         type="button"
         onClick={handlePrimaryAction}
-        className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+        className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 transition-opacity"
       >
         {primaryLabel}
       </button>
@@ -316,7 +316,7 @@ export const ReferenceRecallMode: React.FC<{
               setMatched(referenceMatches(input, verse.ref));
               setChecked(true);
             }}
-            className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-accent text-[#141414] font-bold text-sm disabled:opacity-40 transition-opacity"
+            className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-accent text-on-accent font-bold text-sm disabled:opacity-40 transition-opacity"
           >
             Check reference
           </button>
@@ -349,7 +349,7 @@ export const ReferenceRecallMode: React.FC<{
             type="button"
             disabled={disabled}
             onClick={() => onSave(matched ? 4 : 1)}
-            className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-accent text-[#141414] font-bold text-sm disabled:opacity-40 transition-opacity"
+            className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-accent text-on-accent font-bold text-sm disabled:opacity-40 transition-opacity"
           >
             Save reference practice
           </button>

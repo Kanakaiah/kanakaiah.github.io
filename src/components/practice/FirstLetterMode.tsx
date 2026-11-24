@@ -156,7 +156,7 @@ export const FirstLetterMode: React.FC<FirstLetterModeProps> = ({
               setTryingWithoutHints(true);
             }
           }}
-          className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+          className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 transition-opacity"
         >
           {tryingWithoutHints ? 'Check passage' : 'Try without hints'}
         </button>

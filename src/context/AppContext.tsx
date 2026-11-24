@@ -149,6 +149,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     document.documentElement.setAttribute('data-theme', state.theme);
     document.documentElement.style.fontSize = '';
 
+    // Keep mobile PWA status bar color synced with the active palette
+    const themeMetaColors: Record<string, string> = {
+      black: '#0c0a08',
+      dark: '#1a1613',
+      sepia: '#f6ecd6',
+      white: '#faf9f7',
+    };
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', themeMetaColors[state.theme] || '#0c0a08');
+    }
+
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
       persist(latestState.current);

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Play, Square, SkipBack, SkipForward, ChevronDown } from 'lucide-react';
+import { Switch } from '../ui/Switch';
 
 interface ListenModeProps {
   text: string;
@@ -149,7 +150,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
             onClick={() => selectPauseMode(opt.value)}
             className={`px-3.5 py-1.5 rounded-full border text-xs font-semibold transition-colors ${
               pauseForRecall === opt.value
-                ? 'bg-accent border-accent text-[#141414]'
+                ? 'bg-accent border-accent text-on-accent'
                 : 'bg-card border-card-border text-secondary hover:text-primary'
             }`}
           >
@@ -200,7 +201,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
             }
           }}
           aria-label={isPlaying ? 'Stop playback' : 'Play verse'}
-          className="w-14 h-14 rounded-full bg-accent text-[#141414] flex items-center justify-center shadow-md hover:opacity-95 active:scale-95 transition-all"
+          className="w-14 h-14 rounded-full bg-accent text-on-accent flex items-center justify-center shadow-md hover:opacity-95 active:scale-95 transition-all"
         >
           {isPlaying ? (
             <Square className="w-6 h-6 fill-current" />
@@ -238,7 +239,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
         <button
           type="button"
           onClick={() => setAnswerShown(true)}
-          className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+          className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95"
         >
           Check passage
         </button>
@@ -296,7 +297,7 @@ export const ListenMode: React.FC<ListenModeProps> = ({
                 onClick={() => setHideText(h => !h)}
                 className={`px-3.5 py-1.5 rounded-full border text-xs font-semibold ${
                   hideText
-                    ? 'bg-accent border-accent text-[#141414]'
+                    ? 'bg-accent border-accent text-on-accent'
                     : 'bg-card-elevated border-card-border text-primary'
                 }`}
               >
@@ -305,17 +306,19 @@ export const ListenMode: React.FC<ListenModeProps> = ({
             </div>
 
             {!pauseForRecall && (
-              <label className="flex items-center justify-between gap-3 cursor-pointer">
-                <span className="text-xs text-primary">
+              <div
+                onClick={() => setAutoAdvance(a => !a)}
+                className="flex items-center justify-between gap-3 cursor-pointer py-1"
+              >
+                <span className="text-xs font-medium text-primary">
                   Advance to next verse after listening
                 </span>
-                <input
-                  type="checkbox"
+                <Switch
                   checked={autoAdvance}
-                  onChange={e => setAutoAdvance(e.target.checked)}
-                  className="w-4 h-4 accent-accent cursor-pointer"
+                  onChange={setAutoAdvance}
+                  ariaLabel="Advance to next verse after listening"
                 />
-              </label>
+              </div>
             )}
 
             <p className="text-xs text-muted">

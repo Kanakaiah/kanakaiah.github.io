@@ -318,7 +318,7 @@ export const MemorySentence: React.FC<MemorySentenceProps> = ({ sentence, anchor
         !isGrading ? (
           <button
             onClick={() => setIsGrading(true)}
-            className="self-center flex items-center gap-2 px-6 py-2.5 rounded-md bg-accent text-white font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
+            className="self-center flex items-center gap-2 px-6 py-2.5 rounded-md bg-accent text-on-accent font-bold text-sm hover:bg-accent-hover transition-colors active:scale-95"
           >
             <Check className="w-4 h-4" /> Score My Recall
           </button>

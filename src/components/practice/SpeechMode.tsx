@@ -143,7 +143,7 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({
             setCompared(true);
             onAttempt?.({ accuracy: score.accuracy, committed: transcript });
           }}
-          className="w-full min-h-[48px] py-3 rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
+          className="w-full min-h-[48px] py-3 rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 disabled:opacity-40 transition-opacity"
         >
           Compare transcript
         </button>
@@ -184,7 +184,7 @@ export const SpeechMode: React.FC<SpeechModeProps> = ({
             className={`w-full min-h-[48px] px-4 py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-colors ${
               isListening
                 ? 'bg-red-500 text-white hover:bg-red-600'
-                : 'bg-accent text-[#141414] hover:opacity-95'
+                : 'bg-accent text-on-accent hover:opacity-95'
             }`}
           >
             {isListening ? (

@@ -555,7 +555,7 @@ export const Practice: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+            className="w-full min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95"
           >
             Back to Today
           </button>
@@ -656,7 +656,7 @@ export const Practice: React.FC = () => {
                 setChooseActivity(false);
                 handleChangeMode('read');
               }}
-              className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+              className="w-full min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 transition-opacity"
             >
               Recall
             </button>
@@ -971,7 +971,7 @@ export const Practice: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsRevealed(true)}
-                  className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95 transition-opacity"
+                  className="w-full min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95 transition-opacity"
                 >
                   Show passage
                 </button>
@@ -1027,7 +1027,7 @@ export const Practice: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSaveAssisted}
-                className="w-full min-h-[48px] rounded-2xl bg-accent text-[#141414] font-bold text-sm hover:opacity-95"
+                className="w-full min-h-[48px] rounded-2xl bg-accent text-on-accent font-bold text-sm hover:opacity-95"
               >
                 Save practice and continue
               </button>

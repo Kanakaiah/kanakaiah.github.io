@@ -189,7 +189,7 @@ export const CommentaryModal: React.FC<CommentaryModalProps> = ({
       title="Commentary"
       subtitle={currentEntry.series.title}
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 p-5">
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
           {SERIES_CATALOG.map(({ series }) => {
             const active = series.id === currentEntry.series.id;
@@ -204,13 +204,14 @@ export const CommentaryModal: React.FC<CommentaryModalProps> = ({
                   setSelectedSeriesId(series.id);
                   setFilterToBook(false);
                 }}
-                className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                className={`shrink-0 inline-flex items-center gap-1.5 min-h-[36px] rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                   active
                     ? 'border-accent bg-accent/15 text-accent'
                     : 'border-card-border bg-card-elevated text-secondary hover:text-primary'
                 }`}
               >
-                {series.icon} {shortTitle}
+                <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                {shortTitle}
               </button>
             );
           })}
@@ -339,7 +340,7 @@ export const TheologiansModal: React.FC<TheologiansModalProps> = ({ isOpen, onCl
       title="Preachers & theologians"
       subtitle="Major figures across church history"
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 p-5">
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
           {eras.map((era, index) => {
             const active = index === selectedEra;
