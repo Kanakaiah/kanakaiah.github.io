@@ -1,76 +1,63 @@
-# Image prompts for Ezra — all chapters
+# Ezra — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/ezra/`.
+Reviewed against the bundled BSB scripture (book 15). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 10 chapters.
+### Ezra 1 — DECREE
 
-### Chapter 1 — DECREE
-**Filename:** `ch1.png`
+Reference: Ezra 1:1–4, 7–8.
 
-```
-A dramatic, cinematic biblical illustration of Cyrus's decree — the Spirit of the king is moved by God. Symbolizes 'DECREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ezra chapter 1. Reference Ezra 1:1–4, 7–8. Cyrus's Persian treasurer counts returned gold and silver temple vessels before Sheshbazzar as a herald holds the royal decree nearby. Judean families prepare to depart in the courtyard beyond. Restitution and authorized return, no modern luggage, readable decree or later rebuilt temple. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — LIST
-**Filename:** `ch2.png`
+### Ezra 2 — LIST
 
-```
-A dramatic, cinematic biblical illustration of The list of returning exiles — 49,897 people by name. Symbolizes 'LIST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ezra 2:64–67.
 
-### Chapter 3 — SHOUT
-**Filename:** `ch3.png`
+Ezra chapter 2. Reference Ezra 2:64–67. A scribe records returning Judean households as families with children, bundles and pack animals pass his table toward their ancestral towns. Indistinct ink marks on a long list, a broad caravan receding beyond. No written population number or claim every person is individually pictured. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Foundation laid — weeping and shouting mixed together. Symbolizes 'SHOUT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ezra 3 — SHOUT
 
-### Chapter 4 — LETTER
-**Filename:** `ch4.png`
+Reference: Ezra 3:10–13.
 
-```
-A dramatic, cinematic biblical illustration of Enemies write letters to stop the building — work halted. Symbolizes 'LETTER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ezra chapter 3. Reference Ezra 3:10–13. At the newly laid temple foundations, priests blow trumpets and Levites sound cymbals while younger people shout joyfully and older witnesses weep. Foundation stones only, no completed temple; both emotions clearly visible in one gathering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — PROPHETS
-**Filename:** `ch5.png`
+### Ezra 4 — LETTER
 
-```
-A dramatic, cinematic biblical illustration of Haggai and Zechariah stir the people — building resumes. Symbolizes 'PROPHETS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ezra 4:7–8.
 
-### Chapter 6 — PASSOVER
-**Filename:** `ch6.png`
+Ezra chapter 4. Reference Ezra 4:7–8. Rehum and Shimshai compose an accusatory letter against Jerusalem in a Persian provincial office, a courier waiting at the doorway. Concerned builders visible outside at a distance, one letter-writing moment. No readable false text or confusing several kings in one scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Temple completed — Passover celebrated with great joy. Symbolizes 'PASSOVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ezra 5 — PROPHETS
 
-### Chapter 7 — HAND
-**Filename:** `ch7.png`
+Reference: Ezra 5:1–2.
 
-```
-A dramatic, cinematic biblical illustration of The hand of the LORD his God was on him" — Ezra arrives. Symbolizes 'HAND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ezra chapter 5. Reference Ezra 5:1–2. Haggai and Zechariah encourage Zerubbabel, Jeshua and workers as construction resumes among the temple foundation stones. Timber and masonry being raised, earnest prophets gesturing with hope. No completed temple or supernatural tools. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — FASTING
-**Filename:** `ch8.png`
+### Ezra 6 — PASSOVER
 
-```
-A dramatic, cinematic biblical illustration of Ezra proclaims a fast by the river — "I was ashamed to ask the king for soldiers. Symbolizes 'FASTING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ezra 6:19–22.
 
-### Chapter 9 — GARMENT
-**Filename:** `ch9.png`
+Ezra chapter 6. Reference Ezra 6:19–22. Returned exiles celebrate Passover with unleavened bread and a prepared lamb meal near the newly completed modest second temple. Families rejoice together, priests and Levites nearby. No massive Herodian temple, modern festival objects or Christian communion. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Ezra tears his garment — the intermarriage crisis. Symbolizes 'GARMENT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ezra 7 — HAND
 
-### Chapter 10 — RAIN
-**Filename:** `ch10.png`
+Reference: Ezra 7:8–10, 27–28.
 
-```
-A dramatic, cinematic biblical illustration of The people stand in the rain — the foreign wives sent away. Symbolizes 'RAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ezra chapter 7. Reference Ezra 7:8–10, 27–28. Ezra arrives in Jerusalem with fellow travelers, holding a well-used law scroll close to his chest and raising a hand in thanksgiving. People welcome the learned priest and scribe; study, obedience and teaching conveyed naturally. No giant divine hand or modern book. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Ezra 8 — FASTING
+
+Reference: Ezra 8:21–23.
+
+Ezra chapter 8. Reference Ezra 8:21–23. Ezra leads families in fasting and humble prayer beside the Ahava Canal before their journey. Covered food baskets remain untouched, children and pack animals rest nearby. No armed royal escort or miraculous bridge. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Ezra 9 — GARMENT
+
+Reference: Ezra 9:3–6.
+
+Ezra chapter 9. Reference Ezra 9:3–6. Ezra kneels in grief at the evening offering with the outer edges of tunic and cloak torn over an intact undergarment, hands spread in confession. Concerned people sit around him. No self-injury detail, humiliation of women or ethnic caricature. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Ezra 10 — RAIN
+
+Reference: Ezra 10:9–14.
+
+Ezra chapter 10. Reference Ezra 10:9–14. A large assembly sits shivering in heavy rain in the square before the house of God as Ezra addresses the difficult covenant crisis. Rain-soaked cloaks and sober faces dominate. No triumphant expulsion scene, abuse or caricature of foreign families. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
