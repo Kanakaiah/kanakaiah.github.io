@@ -1,258 +1,219 @@
-# Image prompts for 2 Chronicles — all chapters
+# 2 Chronicles — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/2chronicles/`.
+Reviewed against the bundled BSB scripture (book 14). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 36 chapters.
+### 2 Chronicles 1 — WISDOM
 
-### Chapter 1 — WISDOM
-**Filename:** `ch1.png`
+Reference: 2 Chronicles 1:7–12.
 
-```
-A dramatic, cinematic biblical illustration of Solomon chooses wisdom at Gibeon — God grants it and more. Symbolizes 'WISDOM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 1. Reference 2 Chronicles 1:7–12. Solomon kneels alone at night at Gibeon, hands open in humble petition for wisdom and knowledge to govern his people. A quiet warm light marks the divine encounter without a human God. Modest royal clothing, no treasure falling from heaven. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — CRAFTSMEN
-**Filename:** `ch2.png`
+### 2 Chronicles 2 — CRAFTSMEN
 
-```
-A dramatic, cinematic biblical illustration of Hiram sends the master craftsman Huram-abi. Symbolizes 'CRAFTSMEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 2:13–16.
 
-### Chapter 3 — MORIAH
-**Filename:** `ch3.png`
+2 Chronicles chapter 2. Reference 2 Chronicles 2:13–16. Master craftsman Huram-abi demonstrates fine bronze engraving to Solomon's artisans in a busy workshop, with carved cedar, metal tools and purple-blue-crimson textiles arranged nearby. Skill and collaboration dominate, no readable inscription or modern machinery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Temple built on Mount Moriah — Abraham's mountain. Symbolizes 'MORIAH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 3 — MORIAH
 
-### Chapter 4 — BRONZE
-**Filename:** `ch4.png`
+Reference: 2 Chronicles 3:1–3.
 
-```
-A dramatic, cinematic biblical illustration of The bronze sea, ten basins, lampstands, tables. Symbolizes 'BRONZE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 3. Reference 2 Chronicles 3:1–3. Masons lay the first large dressed foundation stones of Solomon's temple on Mount Moriah above ancient Jerusalem. Measuring cords, timber rollers and the broad former threshing-floor site visible. No Abraham sacrifice in the same moment, no completed temple or modern cranes. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — GLORY
-**Filename:** `ch5.png`
+### 2 Chronicles 4 — BRONZE
 
-```
-A dramatic, cinematic biblical illustration of The cloud of glory fills the temple — priests cannot stand. Symbolizes 'GLORY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 4:2–5.
 
-### Chapter 6 — PRAYER
-**Filename:** `ch6.png`
+2 Chronicles chapter 4. Reference 2 Chronicles 4:2–5. The enormous round bronze Sea stands on twelve bronze oxen arranged in four groups facing outward in Solomon's temple court. Low three-quarter view shows two groups clearly and the others partly behind; lily-shaped rim, priests small for scale. Bronze ox sculptures support the basin, not living cattle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Solomon's dedicatory prayer — "Hear from heaven and forgive. Symbolizes 'PRAYER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 5 — GLORY
 
-### Chapter 7 — FIRE
-**Filename:** `ch7.png`
+Reference: 2 Chronicles 5:12–14.
 
-```
-A dramatic, cinematic biblical illustration of Fire from heaven consumes the sacrifice — "If my people.... Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 5. Reference 2 Chronicles 5:12–14. Linen-clad Levitical singers, cymbal players and trumpeters worship together outside the temple as a dense luminous cloud fills its entrance. Music and awe in one moment; no collapsed injured priests, human deity or burning temple. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — CITIES
-**Filename:** `ch8.png`
+### 2 Chronicles 6 — PRAYER
 
-```
-A dramatic, cinematic biblical illustration of Solomon's building projects — cities, store cities, fleet. Symbolizes 'CITIES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 6:12–15.
 
-### Chapter 9 — QUEEN
-**Filename:** `ch9.png`
+2 Chronicles chapter 6. Reference 2 Chronicles 6:12–15. Solomon kneels on a low square bronze platform in the temple courtyard, spreading his hands toward heaven before the assembled people during his dedication prayer. Temple and altar behind, dignified humility, no standing triumphant king or throne on the platform. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Queen of Sheba overwhelmed — "Your wisdom exceeded the report. Symbolizes 'QUEEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 7 — FIRE
 
-### Chapter 10 — YOKE
-**Filename:** `ch10.png`
+Reference: 2 Chronicles 7:1–3.
 
-```
-A dramatic, cinematic biblical illustration of My father's yoke was heavy — I will add to it" — kingdom splits. Symbolizes 'YOKE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 7. Reference 2 Chronicles 7:1–3. Fire from heaven consumes the offering on the temple altar after Solomon's prayer, while the people bow facedown on the stone pavement. Glory cloud fills the temple entrance; flames obscure sacrifice details, no burning people or destruction of the building. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — PRIESTS
-**Filename:** `ch11.png`
+### 2 Chronicles 8 — CITIES
 
-```
-A dramatic, cinematic biblical illustration of Priests and Levites abandon the north and move to Judah. Symbolizes 'PRIESTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 8:3–6.
 
-### Chapter 12 — SHIELDS
-**Filename:** `ch12.png`
+2 Chronicles chapter 8. Reference 2 Chronicles 8:3–6. Solomon's overseer surveys workers rebuilding a fortified store city with stone walls, barred wooden gates and grain warehouses. Pack animals bring supplies; one representative building project, no multi-city montage or seagoing fleet inside the city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Shishak takes the gold shields — replaced with bronze ones. Symbolizes 'SHIELDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 9 — QUEEN
 
-### Chapter 13 — BATTLE
-**Filename:** `ch13.png`
+Reference: 2 Chronicles 9:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Abijah's speech before battle — God strikes Jeroboam. Symbolizes 'BATTLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 9. Reference 2 Chronicles 9:1–5. The queen of Sheba listens in astonishment as Solomon answers her difficult questions in a spacious court; royal attendants and abundant ordered hospitality behind. Her caravan's spice jars and gifts near the entrance. Dignified ancient southern Arabian attire, not romance or European royal costume. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — REST
-**Filename:** `ch14.png`
+### 2 Chronicles 10 — YOKE
 
-```
-A dramatic, cinematic biblical illustration of Asa's reforms — ten years of peace and rest. Symbolizes 'REST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 10:13–16.
 
-### Chapter 15 — COVENANT
-**Filename:** `ch15.png`
+2 Chronicles chapter 10. Reference 2 Chronicles 10:13–16. Rehoboam answers Israel's elders harshly from his seat as younger advisers stand behind him and the petitioners turn away in dismay. A heavy wooden agricultural yoke resting beside laborers is a symbolic cue to oppressive burdens, not a torture device on a person's neck. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Asa's great covenant renewal — they seek God with their whole heart. Symbolizes 'COVENANT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 11 — PRIESTS
 
-### Chapter 16 — FEET
-**Filename:** `ch16.png`
+Reference: 2 Chronicles 11:13–17.
 
-```
-A dramatic, cinematic biblical illustration of Asa's diseased feet — he trusts physicians not the LORD. Symbolizes 'FEET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 11. Reference 2 Chronicles 11:13–17. Priests and Levite families leave northern pasturelands carrying simple household bundles and travel toward Judah and Jerusalem. A linen-clad elder leads, children and pack animals follow. Voluntary relocation for worship, no soldiers driving them into exile. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — TEACHERS
-**Filename:** `ch17.png`
+### 2 Chronicles 12 — SHIELDS
 
-```
-A dramatic, cinematic biblical illustration of Jehoshaphat sends teachers with the Book of the Law. Symbolizes 'TEACHERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 12:9–11.
 
-### Chapter 18 — ARROW
-**Filename:** `ch18.png`
+2 Chronicles chapter 12. Reference 2 Chronicles 12:9–11. Rehoboam's guards receive newly made bronze shields in the palace guardroom, with empty wall pegs recalling the gold shields taken by Shishak. Bronze clearly reddish-brown, not gold; one replacement scene rather than simultaneous Egyptian invasion. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The random arrow finds Ahab's joint in his armor. Symbolizes 'ARROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 13 — BATTLE
 
-### Chapter 19 — JUDGES
-**Filename:** `ch19.png`
+Reference: 2 Chronicles 13:13–16.
 
-```
-A dramatic, cinematic biblical illustration of Jehoshaphat appoints judges — "You judge not for man but for God. Symbolizes 'JUDGES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 13. Reference 2 Chronicles 13:13–16. Judah's priests blow trumpets while surrounded soldiers cry to God under Abijah's leadership; opposing formations visible before and behind across the hills. Dramatic moment before deliverance, no mass corpses or giant hand striking troops. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — SINGERS
-**Filename:** `ch20.png`
+### 2 Chronicles 14 — REST
 
-```
-A dramatic, cinematic biblical illustration of Singers go out ahead of the army — the enemy destroys themselves. Symbolizes 'SINGERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 14:1–7.
 
-### Chapter 21 — BOWELS
-**Filename:** `ch21.png`
+2 Chronicles chapter 14. Reference 2 Chronicles 14:1–7. During Asa's years of peace, families cultivate fields beside workers strengthening a town wall, with children safely near the gate. Removed idol fragments off to one side signal reform. A restful productive landscape, no battle in the same frame. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jehoram's bowels fall out — written judgment of God. Symbolizes 'BOWELS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 15 — COVENANT
 
-### Chapter 22 — HIDDEN
-**Filename:** `ch22.png`
+Reference: 2 Chronicles 15:10–15.
 
-```
-A dramatic, cinematic biblical illustration of Baby Joash hidden in the temple for six years. Symbolizes 'HIDDEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 15. Reference 2 Chronicles 15:10–15. Asa and the assembled people of Judah renew their covenant in Jerusalem, raising open hands in solemn shared commitment as trumpets sound. Varied households, joy and reverence, no executions or readable oath banners. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — CROWN
-**Filename:** `ch23.png`
+### 2 Chronicles 16 — FEET
 
-```
-A dramatic, cinematic biblical illustration of Joash crowned — Athaliah killed at the horse gate. Symbolizes 'CROWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 16:12–14.
 
-### Chapter 24 — STONES
-**Filename:** `ch24.png`
+2 Chronicles chapter 16. Reference 2 Chronicles 16:12–14. Elderly Asa sits on a couch with painful feet loosely bandaged and elevated on a cushion while ancient physicians attend him. Serious reflective mood, royal room, no exposed sores, graphic tissue or implication medical care itself is forbidden. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Zechariah stoned in the temple courtyard — "The LORD see and avenge. Symbolizes 'STONES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 17 — TEACHERS
 
-### Chapter 25 — IDOLS
-**Filename:** `ch25.png`
+Reference: 2 Chronicles 17:7–9.
 
-```
-A dramatic, cinematic biblical illustration of Amaziah worships the gods of Edom he defeated. Symbolizes 'IDOLS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 17. Reference 2 Chronicles 17:7–9. Jehoshaphat's appointed teachers read the Book of the Law to families in a Judean town square, one Levite holding an open parchment with indistinct manuscript texture. Attentive children and adults, traveling bags nearby; no modern classroom or printed Bible. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — LEPROSY
-**Filename:** `ch26.png`
+### 2 Chronicles 18 — ARROW
 
-```
-A dramatic, cinematic biblical illustration of Uzziah's hand breaks out in leprosy at the incense altar. Symbolizes 'LEPROSY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 18:33–34.
 
-### Chapter 27 — MIGHTY
-**Filename:** `ch27.png`
+2 Chronicles chapter 18. Reference 2 Chronicles 18:33–34. Disguised King Ahab, struck by an arrow between armor joints, braces himself in his chariot while the driver turns from the battle. Arrow shaft visible but no open wound or blood. Distant archer unknowing, no crown identifying the king. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jotham grew mighty because he ordered his ways before the LORD. Symbolizes 'MIGHTY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 19 — JUDGES
 
-### Chapter 28 — ALTAR
-**Filename:** `ch28.png`
+Reference: 2 Chronicles 19:5–7.
 
-```
-A dramatic, cinematic biblical illustration of Ahaz closes the temple doors and makes altars on street corners. Symbolizes 'ALTAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 19. Reference 2 Chronicles 19:5–7. Jehoshaphat instructs newly appointed judges at a fortified city gate to act impartially, while ordinary petitioners wait respectfully. A judge sets aside an offered gift as a representative cue against bribery. No modern courtroom, gavel or scales logo. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — CLEANSED
-**Filename:** `ch29.png`
+### 2 Chronicles 20 — SINGERS
 
-```
-A dramatic, cinematic biblical illustration of Hezekiah reopens and cleanses the temple — first act of his reign. Symbolizes 'CLEANSED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 20:21–23.
 
-### Chapter 30 — PASSOVER
-**Filename:** `ch30.png`
+2 Chronicles chapter 20. Reference 2 Chronicles 20:21–23. Linen-clad singers lead Jehoshaphat's army down a wilderness road, praising with uplifted faces while soldiers follow behind. Worshippers unmistakably ahead of the troops, mountains and distant enemy camp beyond. No fantasy sound-wave weapons or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Hezekiah's great Passover — unprecedented joy in Jerusalem. Symbolizes 'PASSOVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 21 — BOWELS
 
-### Chapter 31 — STOREROOMS
-**Filename:** `ch31.png`
+Reference: 2 Chronicles 21:18–20.
 
-```
-A dramatic, cinematic biblical illustration of Storerooms overflowing with tithes and firstfruits. Symbolizes 'STOREROOMS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 21. Reference 2 Chronicles 21:18–20. King Jehoram lies fully covered on a bed in a sparse dim royal chamber, one hand clutching his abdomen and his face showing serious illness. A neglected royal cloak and distant attendant convey isolation. No exposed intestines, bodily fluids or graphic anatomy. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 32 — SPRING
-**Filename:** `ch32.png`
+### 2 Chronicles 22 — HIDDEN
 
-```
-A dramatic, cinematic biblical illustration of Hezekiah blocks the spring before Sennacherib arrives. Symbolizes 'SPRING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 22:10–12.
 
-### Chapter 33 — HUMBLED
-**Filename:** `ch33.png`
+2 Chronicles chapter 22. Reference 2 Chronicles 22:10–12. Jehoshabeath quietly shelters infant Joash with his nurse in a concealed bedroom within the temple complex, drawing a curtain across the doorway. Warm lamplight, protective faces and safe wrapped baby. No massacre shown or claim he remained an infant for six years. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Manasseh in chains — he humbles himself — God restores him. Symbolizes 'HUMBLED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 23 — CROWN
 
-### Chapter 34 — SCROLL
-**Filename:** `ch34.png`
+Reference: 2 Chronicles 23:11–13.
 
-```
-A dramatic, cinematic biblical illustration of Josiah finds the scroll — tears his robes — Huldah prophesies. Symbolizes 'SCROLL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+2 Chronicles chapter 23. Reference 2 Chronicles 23:11–13. Seven-year-old Joash stands beside a temple pillar as Jehoiada crowns and anoints him, trumpeters and joyful people nearby. The child receives a rolled law scroll. No Athaliah execution or grown adult king. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 35 — ARCHERS
-**Filename:** `ch35.png`
+### 2 Chronicles 24 — STONES
 
-```
-A dramatic, cinematic biblical illustration of Josiah killed by Pharaoh Necho's archers at Megiddo. Symbolizes 'ARCHERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: 2 Chronicles 24:20–22.
 
-### Chapter 36 — DECREE
-**Filename:** `ch36.png`
+2 Chronicles chapter 24. Reference 2 Chronicles 24:20–22. Zechariah son of Jehoiada stands courageously in the temple courtyard rebuking the people, while hostile figures at the edge hold stones but have not thrown them. Tense prophetic witness before violence; no wounds, gore or confusion with the later prophet Zechariah. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Cyrus's decree — "Let him go up to Jerusalem" — exile over. Symbolizes 'DECREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### 2 Chronicles 25 — IDOLS
 
+Reference: 2 Chronicles 25:14–16.
+
+2 Chronicles chapter 25. Reference 2 Chronicles 25:14–16. Amaziah bows before captured Edomite idols in his palace court as a prophet confronts him. Spoils and incense make the irony clear: worshipping the gods of a defeated people. No idol magically alive or battle montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 26 — LEPROSY
+
+Reference: 2 Chronicles 26:16–20.
+
+2 Chronicles chapter 26. Reference 2 Chronicles 26:16–20. Uzziah angrily holds a censer near the incense altar as Azariah and priests bar his way; a mild pale patch appears visibly on Uzziah's forehead. Correct location is forehead, not hand. No graphic disease, blazing body or priests attacking him. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 27 — MIGHTY
+
+Reference: 2 Chronicles 27:3–6.
+
+2 Chronicles chapter 27. Reference 2 Chronicles 27:3–6. King Jotham inspects the rebuilt Upper Gate and stone defenses at Ophel with builders and officials, strong towers and forested hills beyond. Orderly civic work reflects his strength and faithful conduct; no oversized muscular hero or later city skyline. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 28 — ALTAR
+
+Reference: 2 Chronicles 28:24–25.
+
+2 Chronicles chapter 28. Reference 2 Chronicles 28:24–25. Under Ahaz, heavy temple doors stand shut while a newly built foreign altar burns incense at a nearby Jerusalem street corner. Concerned townspeople pass in shadow, temple receding behind. No simultaneous temple reopening or Christian symbols. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 29 — CLEANSED
+
+Reference: 2 Chronicles 29:3–5, 15–17.
+
+2 Chronicles chapter 29. Reference 2 Chronicles 29:3–5, 15–17. Hezekiah's priests and Levites carry defiling objects and debris out through reopened temple doors, workers repairing the entrance in morning light. Renewal through cleansing, baskets and simple tools; no modern cleaning machines or sacred ark carried as refuse. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 30 — PASSOVER
+
+Reference: 2 Chronicles 30:21–23.
+
+2 Chronicles chapter 30. Reference 2 Chronicles 30:21–23. A large joyful Passover gathering under Hezekiah fills Jerusalem's temple courts with singing Levites and families sharing unleavened bread. Warm communal celebration and thanksgiving, no Christian Last Supper composition or modern feast table. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 31 — STOREROOMS
+
+Reference: 2 Chronicles 31:5–12.
+
+2 Chronicles chapter 31. Reference 2 Chronicles 31:5–12. Levites organize overflowing firstfruit offerings in temple storerooms: grain heaps, olive oil jars, honey and produce baskets, while Hezekiah and officials give thanks. Order and abundance, no modern crates, labels or wealth magically appearing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 32 — SPRING
+
+Reference: 2 Chronicles 32:2–4.
+
+2 Chronicles chapter 32. Reference 2 Chronicles 32:2–4. Hezekiah's workers block exposed springs outside Jerusalem with stone and earth before the Assyrian siege, leaders directing the work beside flowing water. Defensive water management is central; no poisoned water or modern pipes. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 33 — HUMBLED
+
+Reference: 2 Chronicles 33:11–13.
+
+2 Chronicles chapter 33. Reference 2 Chronicles 33:11–13. Captive Manasseh kneels in a dim Babylonian holding room with bronze wrist shackles, head bowed in sincere prayer and repentance. Royal clothing worn and dusty, no graphic nose hook or simultaneous restored throne. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 34 — SCROLL
+
+Reference: 2 Chronicles 34:18–21.
+
+2 Chronicles chapter 34. Reference 2 Chronicles 34:18–21. Josiah tears the outer edge of his royal robe in grief as Shaphan reads the rediscovered law scroll before him. Intact undergarment, solemn court, indistinct manuscript marks. No modern Bible or Huldah speaking in the same scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 35 — ARCHERS
+
+Reference: 2 Chronicles 35:22–24.
+
+2 Chronicles chapter 35. Reference 2 Chronicles 35:22–24. At Megiddo attendants help wounded Josiah from a war chariot into a second chariot for the journey home, Egyptian archers distant beyond. Injury conveyed by weakness and a covered bandage, no gore or arrow through exposed flesh. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### 2 Chronicles 36 — DECREE
+
+Reference: 2 Chronicles 36:22–23.
+
+2 Chronicles chapter 36. Reference 2 Chronicles 36:22–23. A Persian herald reads Cyrus's written decree to hopeful Judean exiles preparing household bundles for the journey to Jerusalem. Persian court gateway and ancient robes, parchment with indistinct writing. Closing note of return and hope, no completed rebuilt temple yet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
