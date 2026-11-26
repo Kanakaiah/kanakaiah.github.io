@@ -1,97 +1,81 @@
-# Image prompts for Nehemiah — all chapters
+# Nehemiah — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/nehemiah/`.
+Reviewed against the bundled BSB scripture (book 16). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 13 chapters.
+### Nehemiah 1 — TEARS
 
-### Chapter 1 — TEARS
-**Filename:** `ch1.png`
+Reference: Nehemiah 1:3–5.
 
-```
-A dramatic, cinematic biblical illustration of Nehemiah weeps, fasts, and prays for four months. Symbolizes 'TEARS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Nehemiah chapter 1. Reference Nehemiah 1:3–5. Nehemiah sits weeping and praying in a quiet room at Susa after hearing news of Jerusalem's broken walls. A simple cup used in royal service rests unused nearby. No simultaneous physical view of faraway Jerusalem or four-month calendar. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — NIGHT
-**Filename:** `ch2.png`
+### Nehemiah 2 — NIGHT
 
-```
-A dramatic, cinematic biblical illustration of Nehemiah inspects the broken walls alone at night on a donkey. Symbolizes 'NIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Nehemiah 2:11–16.
 
-### Chapter 3 — GATES
-**Filename:** `ch3.png`
+Nehemiah chapter 2. Reference Nehemiah 2:11–16. At night Nehemiah rides a donkey while a few trusted men walk with him to inspect Jerusalem's broken walls and burned gates. Moonlit rubble blocks the narrow way ahead. He is not alone; only his mount is present, no large escort. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Every gate and section of the wall assigned to specific builders. Symbolizes 'GATES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Nehemiah 3 — GATES
 
-### Chapter 4 — SWORD
-**Filename:** `ch4.png`
+Reference: Nehemiah 3:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Workers build with one hand and hold a sword in the other. Symbolizes 'SWORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Nehemiah chapter 3. Reference Nehemiah 3:1–3. Priests and neighboring families rebuild a section of Jerusalem's wall and install heavy timber doors at the Sheep Gate. Teams fit stone and door bars side by side, a few sheep passing outside as a subtle cue. No modern tools or entire wall compressed into a diagram. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — DEBT
-**Filename:** `ch5.png`
+### Nehemiah 4 — SWORD
 
-```
-A dramatic, cinematic biblical illustration of Nehemiah confronts the nobles for charging interest on the poor. Symbolizes 'DEBT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Nehemiah 4:16–18.
 
-### Chapter 6 — LETTER
-**Filename:** `ch6.png`
+Nehemiah chapter 4. Reference Nehemiah 4:16–18. Jerusalem's wall builders set stones with swords strapped at their sides while separate guards hold spears and shields; a burden carrier balances materials with one hand and carries a weapon in the other. Nehemiah's trumpeter nearby. Natural practical work, no mason impossibly laying stones one-handed with a sword overhead. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Sanballat's fifth letter — "Come and meet with me" — Nehemiah refuses. Symbolizes 'LETTER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Nehemiah 5 — DEBT
 
-### Chapter 7 — LIST
-**Filename:** `ch7.png`
+Reference: Nehemiah 5:6–12.
 
-```
-A dramatic, cinematic biblical illustration of The same list of returning exiles — Nehemiah finds it in the archives. Symbolizes 'LIST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Nehemiah chapter 5. Reference Nehemiah 5:6–12. Nehemiah rebukes wealthy nobles in an assembly as burdened farming families stand nearby with grain sacks and worn tools. A noble returns a sealed property document as a representative cue to restoration. No readable contract, modern bank or ethnic caricature. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — READING
-**Filename:** `ch8.png`
+### Nehemiah 6 — LETTER
 
-```
-A dramatic, cinematic biblical illustration of Ezra reads the law from dawn to midday — people weep — then rejoice. Symbolizes 'READING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Nehemiah 6:5–9.
 
-### Chapter 9 — DUST
-**Filename:** `ch9.png`
+Nehemiah chapter 6. Reference Nehemiah 6:5–9. A messenger presents Sanballat's unsealed letter to Nehemiah beside the nearly finished wall. Nehemiah calmly rejects the accusation and gestures back toward the work. Open parchment with indistinct script, no meeting with Sanballat or crown on Nehemiah. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Great prayer of confession — from creation to exile — "We are now slaves. Symbolizes 'DUST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Nehemiah 7 — LIST
 
-### Chapter 10 — SEAL
-**Filename:** `ch10.png`
+Reference: Nehemiah 7:5–7.
 
-```
-A dramatic, cinematic biblical illustration of The covenant document signed and sealed — 84 names listed. Symbolizes 'SEAL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Nehemiah chapter 7. Reference Nehemiah 7:5–7. Nehemiah examines an old genealogical register with scribes in a modest archive room, while returning households wait to be enrolled. Worn parchment and storage jars, focused administrative care. No modern filing cabinet or readable names. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — LOTS
-**Filename:** `ch11.png`
+### Nehemiah 8 — READING
 
-```
-A dramatic, cinematic biblical illustration of Lots cast to choose one in ten to live inside Jerusalem. Symbolizes 'LOTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Nehemiah 8:3–6.
 
-### Chapter 12 — CHOIRS
-**Filename:** `ch12.png`
+Nehemiah chapter 8. Reference Nehemiah 8:3–6. Ezra stands on a high wooden platform at the Water Gate reading an opened law scroll to attentive men, women and children in morning light. Levites stand nearby, the crowd rising reverently. No modern pulpit, printed Bible or readable letters. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Two great choirs walk the wall in opposite directions and meet. Symbolizes 'CHOIRS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Nehemiah 9 — DUST
 
-### Chapter 13 — SABBATH
-**Filename:** `ch13.png`
+Reference: Nehemiah 9:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Nehemiah returns — drives out Tobiah — closes gates on the Sabbath. Symbolizes 'SABBATH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Nehemiah chapter 9. Reference Nehemiah 9:1–3. The people gather fasting in sackcloth with dust on their heads, bowing in confession as Levites lead prayer and read the Law. Sober communal humility in Jerusalem's square, no dirt thrown at others or punishment spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Nehemiah 10 — SEAL
+
+Reference: Nehemiah 10:1–2, 28–29.
+
+Nehemiah chapter 10. Reference Nehemiah 10:1–2, 28–29. Nehemiah and community leaders press ancient seal impressions onto a covenant document while families stand in shared agreement behind them. Close view of hands and seal, indistinct script only. No modern signatures or giant numbered list. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Nehemiah 11 — LOTS
+
+Reference: Nehemiah 11:1–2.
+
+Nehemiah chapter 11. Reference Nehemiah 11:1–2. Families cast simple lots into a shallow bowl to choose residents for Jerusalem, selected volunteers welcomed with gratitude at the restored city gate. Household bundles ready to move, no modern lottery tickets or readable one-in-ten chart. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Nehemiah 12 — CHOIRS
+
+Reference: Nehemiah 12:31, 38–43.
+
+Nehemiah chapter 12. Reference Nehemiah 12:31, 38–43. Two thanksgiving choirs process along separate stretches of Jerusalem's restored wall toward the temple, musicians and leaders visible in a broad elevated city view. Joyful human-scale stone defenses, no impossible narrow ledges or medieval battlements. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Nehemiah 13 — SABBATH
+
+Reference: Nehemiah 13:19–22.
+
+Nehemiah chapter 13. Reference Nehemiah 13:19–22. At sunset before the Sabbath, Levite gatekeepers close Jerusalem's heavy gates while merchants with loaded pack animals wait outside. Nehemiah directs the closure calmly; rest protected, no violent expulsion or modern clocks. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
