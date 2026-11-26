@@ -1,223 +1,189 @@
-# Image prompts for Proverbs — all chapters
+# Proverbs — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/proverbs/`.
+Reviewed against the bundled BSB scripture (book 20). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 31 chapters.
+### Proverbs 1 — FATHER
 
-### Chapter 1 — FATHER
-**Filename:** `ch1.png`
+Reference: Proverbs 1:8–10.
 
-```
-A dramatic, cinematic biblical illustration of Listen, my son, to your father's instruction — wisdom's urgent call. Symbolizes 'FATHER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 1. Reference Proverbs 1:8–10. An ancient father and mother teach their attentive adolescent son in a modest courtyard, a small scroll between them. Warm family wisdom and the son's thoughtful attention; no readable lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SILVER
-**Filename:** `ch2.png`
+### Proverbs 2 — SILVER
 
-```
-A dramatic, cinematic biblical illustration of If you seek wisdom like silver and search for it as hidden treasure. Symbolizes 'SILVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 2:1–6.
 
-### Chapter 3 — TRUST
-**Filename:** `ch3.png`
+Proverbs chapter 2. Reference Proverbs 2:1–6. An ancient seeker carefully uncovers a small silver treasure in rocky earth by lamplight. His absorbed attention illustrates seeking wisdom as hidden treasure; a closed scroll rests beside him, no glowing magical book. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Trust in the LORD with all your heart — lean not on your own understanding. Symbolizes 'TRUST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 3 — TRUST
 
-### Chapter 4 — PATH
-**Filename:** `ch4.png`
+Reference: Proverbs 3:5–8.
 
-```
-A dramatic, cinematic biblical illustration of The path of the righteous is like the morning sun shining ever brighter. Symbolizes 'PATH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 3. Reference Proverbs 3:5–8. An ancient traveler pauses in humble prayer where a difficult rocky trail opens onto a clear straight path. Trust and acknowledgment of divine guidance expressed through posture and light, no visible deity or modern signpost. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — HONEY
-**Filename:** `ch5.png`
+### Proverbs 4 — PATH
 
-```
-A dramatic, cinematic biblical illustration of The adulteress's lips drip honey — but her end is bitter as gall. Symbolizes 'HONEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 4:18–19.
 
-### Chapter 6 — ANT
-**Filename:** `ch6.png`
+Proverbs chapter 4. Reference Proverbs 4:18–19. A winding ancient footpath emerges from deep valley shadow into increasingly bright dawn on a sunlit ridge. A steady traveler walks toward the light, a landscape metaphor for the path of righteousness. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Go to the ant, you sluggard — consider its ways and be wise. Symbolizes 'ANT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 5 — HONEY
 
-### Chapter 7 — NET
-**Filename:** `ch7.png`
+Reference: Proverbs 5:3–6.
 
-```
-A dramatic, cinematic biblical illustration of The young man like a bird darting into a snare — the adulteress's house. Symbolizes 'NET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 5. Reference Proverbs 5:3–6. A symbolic still life beside an alluring but dark ancient doorway: golden honey in a small bowl, bitter wormwood sprigs and a sheathed double-edged sword. A thoughtful adult traveler hesitates outside; warning about deceptive attraction, no erotic pose or honey pouring from a mouth. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — BEFORE
-**Filename:** `ch8.png`
+### Proverbs 6 — ANT
 
-```
-A dramatic, cinematic biblical illustration of Wisdom: "Before the mountains were settled I was there — filled with delight daily. Symbolizes 'BEFORE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 6:6–11.
 
-### Chapter 9 — TABLE
-**Filename:** `ch9.png`
+Proverbs chapter 6. Reference Proverbs 6:6–11. Close ground-level view of ants diligently carrying grain into their nest at harvest, with an idle ancient worker resting blurred in the background. Natural small ants, clear stored provisions, no human clothing on insects. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Wisdom has built her house — set her table — "Come, eat my food. Symbolizes 'TABLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 7 — NET
 
-### Chapter 10 — TONGUE
-**Filename:** `ch10.png`
+Reference: Proverbs 7:21–27.
 
-```
-A dramatic, cinematic biblical illustration of The tongue of the righteous is choice silver — the heart of the wicked is of little value. Symbolizes 'TONGUE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 7. Reference Proverbs 7:21–27. A bird approaches a concealed net near an ancient shadowed doorway as an impulsive young adult man follows a beckoning fully clothed adult woman in the background. The snare is the chapter's explicit metaphor, no graphic wound or seductive nudity. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — SCALES
-**Filename:** `ch11.png`
+### Proverbs 8 — BEFORE
 
-```
-A dramatic, cinematic biblical illustration of Honest scales and balances belong to the LORD — all the weights in the bag are his work. Symbolizes 'SCALES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 8:22–31.
 
-### Chapter 12 — ROOTS
-**Filename:** `ch12.png`
+Proverbs chapter 8. Reference Proverbs 8:22–31. Poetic personification of Wisdom as a dignified fully clothed woman contemplating the ordered sea, mountains and starry heavens from a high rocky overlook. Joy in creation, symbolic rather than a historical woman or a second creator; no human God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The righteous will never be uprooted — the wicked will not remain in the land. Symbolizes 'ROOTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 9 — TABLE
 
-### Chapter 13 — TREE
-**Filename:** `ch13.png`
+Reference: Proverbs 9:1–6.
 
-```
-A dramatic, cinematic biblical illustration of Hope deferred makes the heart sick — but a longing fulfilled is a tree of life. Symbolizes 'TREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 9. Reference Proverbs 9:1–6. Wisdom personified as a dignified ancient hostess welcomes ordinary guests to a generous table of bread, meat and mixed wine beneath exactly seven clearly visible house pillars. One coherent welcoming scene, no readable invitations. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — GATE
-**Filename:** `ch14.png`
+### Proverbs 10 — TONGUE
 
-```
-A dramatic, cinematic biblical illustration of Wisdom has built her house — there is a way that appears right but leads to death. Symbolizes 'GATE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 10:19–21.
 
-### Chapter 15 — GENTLE
-**Filename:** `ch15.png`
+Proverbs chapter 10. Reference Proverbs 10:19–21. A wise ancient elder speaks measured counsel to attentive neighbors while a few pieces of refined silver rest on the table. Silver is a visual comparison for valuable speech; no metallic tongue or silver pouring from a mouth. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of A gentle answer turns away wrath — but a harsh word stirs up anger. Symbolizes 'GENTLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 11 — SCALES
 
-### Chapter 16 — PLANS
-**Filename:** `ch16.png`
+Reference: Proverbs 11:1–3.
 
-```
-A dramatic, cinematic biblical illustration of In their hearts humans plan their course — but the LORD establishes their steps. Symbolizes 'PLANS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 11. Reference Proverbs 11:1–3. An honest ancient merchant carefully balances grain against accurate stone weights on a simple equal-arm scale before a satisfied customer. Fair measures and integrity, no modern scales or labeled weights. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — FRIEND
-**Filename:** `ch17.png`
+### Proverbs 12 — ROOTS
 
-```
-A dramatic, cinematic biblical illustration of A friend loves at all times — a brother is born for a time of adversity. Symbolizes 'FRIEND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 12:1–3.
 
-### Chapter 18 — TOWER
-**Filename:** `ch18.png`
+Proverbs chapter 12. Reference Proverbs 12:1–3. A healthy ancient olive tree stands firmly rooted on a windy hillside, substantial roots gripping the soil while dry weeds lift away nearby. Explicit landscape metaphor for the righteous remaining established, no human-tree hybrid. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The name of the LORD is a fortified tower — the righteous run to it and are safe. Symbolizes 'TOWER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 13 — TREE
 
-### Chapter 19 — WIFE
-**Filename:** `ch19.png`
+Reference: Proverbs 13:12–14.
 
-```
-A dramatic, cinematic biblical illustration of Houses and wealth are inherited from parents — but a prudent wife is from the LORD. Symbolizes 'WIFE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 13. Reference Proverbs 13:12–14. A hopeful ancient family rejoices beneath a newly fruitful tree, its ripe fruit and rich leaves filling the foreground. A representative metaphor for longing fulfilled and renewed life, no magical fruit or literal anatomical heart. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — LAMP
-**Filename:** `ch20.png`
+### Proverbs 14 — GATE
 
-```
-A dramatic, cinematic biblical illustration of The human spirit is the lamp of the LORD — searching out the inmost being. Symbolizes 'LAMP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 14:12–16.
 
-### Chapter 21 — WATER
-**Filename:** `ch21.png`
+Proverbs chapter 14. Reference Proverbs 14:12–16. An ancient traveler stops thoughtfully before a broad attractive gate opening onto a path that ends at a dangerous cliff, while a humbler safe trail remains visible nearby. A symbolic warning that an apparently right way may end badly, no falling person. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The king's heart is in the hand of the LORD — he directs it like a watercourse. Symbolizes 'WATER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 15 — GENTLE
 
-### Chapter 22 — TRAIN
-**Filename:** `ch22.png`
+Reference: Proverbs 15:1–4.
 
-```
-A dramatic, cinematic biblical illustration of Train up a child in the way they should go — even when old they will not depart. Symbolizes 'TRAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 15. Reference Proverbs 15:1–4. In an ancient marketplace a calm person answers an angry neighbor with an open hand and gentle expression; the neighbor's clenched posture begins to soften. A clear human moment showing a gentle answer turning away wrath. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — WINGS
-**Filename:** `ch23.png`
+### Proverbs 16 — PLANS
 
-```
-A dramatic, cinematic biblical illustration of Do not wear yourself out to get rich — riches sprout wings and fly off like an eagle. Symbolizes 'WINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 16:3–9.
 
-### Chapter 24 — HONEY
-**Filename:** `ch24.png`
+Proverbs chapter 16. Reference Proverbs 16:3–9. An ancient traveler lays out a simple unlabeled route sketch beside his sandals, then looks prayerfully toward the actual road beyond. Human planning and humble dependence, no giant divine hand moving his feet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Eat honey my son for it is good — wisdom too is sweet to your soul. Symbolizes 'HONEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 17 — FRIEND
 
-### Chapter 25 — COALS
-**Filename:** `ch25.png`
+Reference: Proverbs 17:17–18.
 
-```
-A dramatic, cinematic biblical illustration of If your enemy is hungry give him food — you will heap burning coals on his head. Symbolizes 'COALS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 17. Reference Proverbs 17:17–18. A faithful friend supports an exhausted companion on a difficult rocky road, sharing a water flask and carrying part of his load. Warm solidarity during adversity, natural anatomy and no unrelated military action. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — DOG
-**Filename:** `ch26.png`
+### Proverbs 18 — TOWER
 
-```
-A dramatic, cinematic biblical illustration of As a dog returns to its vomit — so a fool repeats his foolishness. Symbolizes 'DOG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 18:10–12.
 
-### Chapter 27 — IRON
-**Filename:** `ch27.png`
+Proverbs chapter 18. Reference Proverbs 18:10–12. A righteous traveler runs toward the open entrance of a sturdy ancient refuge tower as threatening weather approaches. Solid welcoming architecture symbolizes safety in the Lord's name; no divine name lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of As iron sharpens iron — so one person sharpens another. Symbolizes 'IRON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 19 — WIFE
 
-### Chapter 28 — LION
-**Filename:** `ch28.png`
+Reference: Proverbs 19:14–17.
 
-```
-A dramatic, cinematic biblical illustration of The wicked flee though no one pursues — the righteous are as bold as a lion. Symbolizes 'LION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 19. Reference Proverbs 19:14–17. A prudent ancient wife thoughtfully manages household stores with her husband and shares a portion of grain with a poor neighbor. Dignified partnership, careful provision and generosity rather than a passive bridal portrait. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — VISION
-**Filename:** `ch29.png`
+### Proverbs 20 — LAMP
 
-```
-A dramatic, cinematic biblical illustration of Where there is no revelation the people cast off restraint. Symbolizes 'VISION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Proverbs 20:27–29.
 
-### Chapter 30 — EAGLE
-**Filename:** `ch30.png`
+Proverbs chapter 20. Reference Proverbs 20:27–29. A reflective ancient person holds a small oil lamp that illuminates a quiet inner room and a polished bronze mirror. The lamp is a metaphor for searching the inner self, no transparent body or illuminated organs. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Agur: four things too wonderful — the eagle, the serpent, the ship, the man with a woman. Symbolizes 'EAGLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Proverbs 21 — WATER
 
-### Chapter 31 — RUBIES
-**Filename:** `ch31.png`
+Reference: Proverbs 21:1–3.
 
-```
-A dramatic, cinematic biblical illustration of A wife of noble character who can find — she is worth far more than rubies. Symbolizes 'RUBIES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Proverbs chapter 21. Reference Proverbs 21:1–3. An ancient king watches water diverted through carefully formed irrigation channels in a palace garden. Flowing water changes direction around small gates, a visual simile for the king's heart under divine direction; no anatomical heart or giant hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Proverbs 22 — TRAIN
+
+Reference: Proverbs 22:6–9.
+
+Proverbs chapter 22. Reference Proverbs 22:6–9. A parent patiently teaches a child to share bread with a needy neighbor on an ancient village path. Early formation through a concrete good action, gentle instruction without punishment or classroom blackboard. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 23 — WINGS
+
+Reference: Proverbs 23:4–5.
+
+Proverbs chapter 23. Reference Proverbs 23:4–5. An ancient wealthy man reaches after an eagle rising freely into the sky while an open coin purse sits forgotten on a ledge. A poetic comparison for fleeting riches, no coins literally sprouting wings. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 24 — HONEY
+
+Reference: Proverbs 24:13–14.
+
+Proverbs chapter 24. Reference Proverbs 24:13–14. An ancient teacher offers a young listener a small piece of golden honeycomb beside a study scroll. The learner tastes it with quiet delight, illustrating the sweetness of wisdom and hope. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 25 — COALS
+
+Reference: Proverbs 25:21–22.
+
+Proverbs chapter 25. Reference Proverbs 25:21–22. An ancient person gives bread and a cup of water to a hungry former enemy who receives them with humbled surprise. Kindness is the central action; a distant ordinary hearth alludes subtly to coals, with no burning coals placed on anyone's head. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 26 — DOG
+
+Reference: Proverbs 26:11–12.
+
+Proverbs chapter 26. Reference Proverbs 26:11–12. A village dog turns back toward discarded spoiled scraps beside a broken clay bowl while a foolish adult again reaches toward the same visibly damaged tool. Restrained non-graphic visual comparison for repeating folly; no explicit vomit. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 27 — IRON
+
+Reference: Proverbs 27:17–19.
+
+Proverbs chapter 27. Reference Proverbs 27:17–19. Two ancient craftspeople work face to face, one drawing an iron edge against an iron sharpening tool while the other gives careful guidance. Mutual improvement through friendship, plausible hands and iron tools, no modern grinder. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 28 — LION
+
+Reference: Proverbs 28:1–2.
+
+Proverbs chapter 28. Reference Proverbs 28:1–2. A calm bold lion stands firmly on a sunlit rocky ridge while distant frightened figures flee without anyone pursuing them. A clear poetic contrast of courage and guilty fear, no lion attacking a person. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 29 — VISION
+
+Reference: Proverbs 29:18–20.
+
+Proverbs chapter 29. Reference Proverbs 29:18–20. An ancient teacher holds an open law scroll before a community at a gate; attentive listeners gather close while a few distracted figures argue beyond. Guidance through revealed instruction, no fortune-telling vision or readable text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 30 — EAGLE
+
+Reference: Proverbs 30:18–19.
+
+Proverbs chapter 30. Reference Proverbs 30:18–19. A majestic eagle glides over a rocky coastline and an ancient sailing ship follows the sea wind below. A small snake moves along foreground rock, with an adult couple walking quietly on the shore. One coherent natural landscape representing four wonders without collage panels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Proverbs 31 — RUBIES
+
+Reference: Proverbs 31:10–20.
+
+Proverbs chapter 31. Reference Proverbs 31:10–20. A capable ancient woman supervises wool and flax work in her household courtyard while offering aid to a poor neighbor; a spindle and produce from her vineyard show skill and enterprise. Dignified strong posture, her value conveyed by action with a small ruby-colored stone on a side table. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
