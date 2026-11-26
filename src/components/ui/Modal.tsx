@@ -107,9 +107,9 @@ export const Modal: React.FC<ModalProps> = ({
       <div
         ref={trapRef}
         {...ariaProps}
-        className={`fixed inset-0 ${zIndexClass} flex flex-col bg-background animate-[fadeIn_0.2s_ease-out] ${panelClassName}`}
+        className={`fixed top-0 left-0 right-0 ${zIndexClass} flex flex-col bg-background animate-[fadeIn_0.2s_ease-out] ${panelClassName}`}
         {...panelProps}
-        style={panelStyle}
+        style={{ height: 'var(--app-height)', ...panelStyle }}
       >
         <div
           className="flex items-center justify-between px-5 py-3.5 relative border-b border-card-border shrink-0"
@@ -151,7 +151,7 @@ export const Modal: React.FC<ModalProps> = ({
   const isDrawer = variant === 'drawer';
 
   return createPortal(
-    <div className={`fixed inset-0 ${zIndexClass}`}>
+    <div className={`fixed top-0 left-0 right-0 ${zIndexClass}`} style={{ height: 'var(--app-height)' }}>
       <div
         className={`absolute inset-0 bg-scrim backdrop-blur-[2px] animate-[fadeIn_0.2s_ease-out] ${overlayClassName}`}
         onClick={onClose}

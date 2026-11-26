@@ -173,14 +173,21 @@
     --font-primary: 'Inter', system-ui, sans-serif;
     --font-heading: 'Fraunces', Georgia, serif;
     --font-scale: 1;
+    --app-height: 100dvh;
+  }
+
+  /* iOS standalone PWAs with viewport-fit=cover + black-translucent compute
+     100dvh / 100% / fixed inset-0 ~59px short (status-bar height), leaving a
+     dead black band below bottom bars. 100vh spans the full physical screen. */
+  @media (display-mode: standalone) {
+    :root {
+      --app-height: 100vh;
+    }
   }
 }
 
-html, body, #root {
-  height: 100%;
-}
-
 html, body {
+  min-height: var(--app-height);
   overscroll-behavior: none;
   touch-action: pan-x pan-y;
   -webkit-overflow-scrolling: touch;
@@ -354,7 +361,7 @@ select option {
 
 /* Reading progress bar */
 .reading-progress {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   height: 4px;

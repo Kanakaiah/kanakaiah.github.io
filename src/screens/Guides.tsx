@@ -316,7 +316,8 @@ const BibleIndexModal: React.FC<{
       role="dialog"
       aria-modal="true"
       aria-label="Bible books index"
-      className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+      className="fixed top-0 left-0 right-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+      style={{ height: 'var(--app-height)' }}
     >
       <div
         className="flex items-center justify-between px-4 sm:px-5 pb-3.5 border-b border-card-border shrink-0"

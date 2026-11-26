@@ -1809,7 +1809,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+      className="fixed top-0 left-0 right-0 z-50 flex flex-col overflow-hidden bg-background animate-[fadeIn_0.2s_ease-out]"
+      style={{ height: 'var(--app-height)' }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -1823,7 +1824,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
       {/* Fixed header — tap-to-toggle chrome, same trigger as the bottom nav below */}
       <div
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-30 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-4 sm:px-8`}
+        className={`absolute top-0 left-0 right-0 z-30 bg-background border-b border-card-border/60 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : '-translate-y-full'} px-4 sm:px-8`}
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
       >
         <div className="max-w-2xl mx-auto w-full pb-3 flex items-center justify-between gap-2">
@@ -2506,7 +2507,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
 
       {/* Floating Action Bar for Selected Verses */}
       {selectedVerses.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 animate-[fadeScaleIn_0.2s_ease-out] px-3 pb-3 sm:pb-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
+        <div className="absolute bottom-0 left-0 right-0 z-50 animate-[fadeScaleIn_0.2s_ease-out] px-3 pb-3 sm:pb-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
           <div className="bg-accent text-on-accent rounded-2xl shadow-lg max-w-lg mx-auto overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3">
               <span className="font-bold text-base">
@@ -2779,20 +2780,18 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
               }
             }
           }}
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 rounded-full bg-accent px-4 py-2 text-xs font-bold text-on-accent shadow-lg flex items-center gap-1.5 hover:opacity-95 transition-opacity"
+          className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 rounded-full bg-accent px-4 py-2 text-xs font-bold text-on-accent shadow-lg flex items-center gap-1.5 hover:opacity-95 transition-opacity"
         >
           <Volume2 className="w-3.5 h-3.5" />
           <span>Return to audio</span>
         </button>
       )}
 
-      {/* Bottom Chapter Navigation Bar — hidden while the "Go back to..." return
-          pill is showing (below), since both are fixed to the bottom edge and
-          would otherwise stack on top of each other. */}
+      {/* Bottom Chapter Navigation Bar — anchored to ChapterReader's full --app-height container */}
       {!loading && !error && selectedVerses.length === 0 && returnStack.length === 0 && (
         <div
-          className={`fixed bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}
-          style={{ paddingBottom: 'max(0.5rem, calc(env(safe-area-inset-bottom, 0px) * 0.45))' }}
+          className={`absolute bottom-0 left-0 right-0 bg-card border-t border-card-border z-10 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${chromeVisible ? 'translate-y-0' : 'translate-y-full'}`}
+          style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0px))' }}
         >
           <div className="max-w-2xl mx-auto flex items-center justify-between px-4 pt-2 pb-0.5">
             <button
@@ -2838,7 +2837,8 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
           role="dialog"
           aria-modal="true"
           aria-label="Go to book or chapter"
-          className="fixed inset-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+          className="fixed top-0 left-0 right-0 z-[70] flex flex-col bg-background animate-[fadeIn_0.2s_ease-out]"
+          style={{ height: 'var(--app-height)' }}
         >
           {/* Header — clears iPhone Dynamic Island / status bar */}
           <div
@@ -3066,7 +3066,7 @@ export function ChapterReader({ bookId, chapter, bookTitle, initialVerse, onClos
         const topReturnBookName = getBookName(topReturn.book, topReturnBookEnglish, state.settings.bibleVersion);
         return (
           <div
-            className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
+            className="absolute bottom-0 left-0 right-0 z-40 flex justify-center pt-6 px-4 pointer-events-none animate-[fadeScaleIn_0.2s_ease-out] bg-gradient-to-t from-background via-background/80 to-transparent"
             style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
           >
             <div className="bg-card-elevated border border-card-border text-primary shadow-md rounded-full px-5 py-3.5 flex items-center gap-4 pointer-events-auto">

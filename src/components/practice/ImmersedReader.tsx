@@ -275,8 +275,9 @@ export const ImmersedReader: React.FC<ImmersedReaderProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col min-h-0 w-full h-[100dvh] transition-colors ${themeClasses.root}`}
+      className={`fixed top-0 left-0 right-0 z-50 flex flex-col min-h-0 w-full transition-colors ${themeClasses.root}`}
       style={{
+        height: 'var(--app-height)',
         paddingTop: 'env(safe-area-inset-top, 0px)',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
       }}

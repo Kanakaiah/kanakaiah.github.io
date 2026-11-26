@@ -49,21 +49,24 @@ export const AppLayout: React.FC = () => {
   ];
 
   return (
-    <div className="fixed inset-0 flex flex-col lg:flex-row w-full overflow-hidden bg-background">
+    <div
+      className="flex flex-col lg:flex-row w-full overflow-hidden bg-background"
+      style={{ height: 'var(--app-height)' }}
+    >
       <a href="#main-content" className="skip-to-content">
         Skip to main content
       </a>
 
-      {/* LEFT SIDEBAR (Desktop) / BOTTOM TAB BAR (Mobile) */}
+      {/* LEFT SIDEBAR (Desktop) / BOTTOM TAB BAR (Mobile — in flex flow, immune to iOS fixed-bottom chin bug) */}
       <nav
         className={`
-          fixed lg:static bottom-0 left-0 right-0 lg:inset-auto
-          lg:w-64 lg:h-full
+          order-2 lg:order-none shrink-0
+          w-full lg:w-64 lg:h-full
           bg-card border-t lg:border-t-0 lg:border-r border-card-border
           z-50
           flex lg:flex-col items-center lg:items-start justify-around lg:justify-start
           px-2 pt-1.5 lg:p-6
-          pb-[max(0.5rem,calc(env(safe-area-inset-bottom,0px)*0.5))] lg:pb-6
+          pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] lg:pb-6
           ${isFullscreenView ? 'hidden' : ''}
         `}
         role="navigation"
@@ -137,7 +140,7 @@ export const AppLayout: React.FC = () => {
       </nav>
 
       {/* MAIN CONTENT AREA */}
-      <main id="main-content" tabIndex={-1} className="flex-1 flex flex-col h-full overflow-hidden relative focus:outline-none">
+      <main id="main-content" tabIndex={-1} className="order-1 lg:order-none flex-1 min-h-0 flex flex-col overflow-hidden relative focus:outline-none">
         {/* GLOBAL HEADER (Mobile Only, omitted on screens with dedicated top bar) */}
         <header
           className={`
@@ -172,10 +175,10 @@ export const AppLayout: React.FC = () => {
         {/* SCROLLABLE PAGE CONTENT */}
         <div
           id="main-scroll-container"
-          className={`flex-1 overflow-y-auto w-full ${
+          className={`flex-1 min-h-0 overflow-y-auto w-full ${
             (location.pathname === '/practice' || isReadingPage)
               ? ''
-              : 'px-5 sm:px-8 lg:px-8 pb-24 lg:pb-8'
+              : 'px-5 sm:px-8 lg:px-8 pb-6 lg:pb-8'
           }`}
           style={{
             paddingTop: isPracticePage
@@ -189,25 +192,24 @@ export const AppLayout: React.FC = () => {
               ? 'env(safe-area-inset-bottom, 0px)'
               : isFullscreenView
               ? '0px'
-              : 'calc(env(safe-area-inset-bottom, 0px) + 6.5rem)',
+              : '1.5rem',
           }}
         >
           <Outlet />
         </div>
-      </main>
 
-      {/* FLOATING ACTION BUTTON (Mobile Today screen only) */}
-      {location.pathname === '/' && (
-        <button
-          type="button"
-          onClick={() => setIsAddVerseOpen(true)}
-          className="fixed right-5 w-14 h-14 rounded-full bg-accent text-on-accent hover:bg-accent-hover shadow-lg flex items-center justify-center z-40 lg:hidden transition-colors active:scale-95"
-          style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)' }}
-          aria-label="Add Verse"
-        >
-          <Plus className="w-6 h-6" />
-        </button>
-      )}
+        {/* FLOATING ACTION BUTTON (Mobile Today screen only — anchored inside main, above bottom nav) */}
+        {location.pathname === '/' && (
+          <button
+            type="button"
+            onClick={() => setIsAddVerseOpen(true)}
+            className="absolute right-5 bottom-4 w-14 h-14 rounded-full bg-accent text-on-accent hover:bg-accent-hover shadow-lg flex items-center justify-center z-40 lg:hidden transition-colors active:scale-95"
+            aria-label="Add Verse"
+          >
+            <Plus className="w-6 h-6" />
+          </button>
+        )}
+      </main>
 
       {/* Settings Drawer */}
       <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
