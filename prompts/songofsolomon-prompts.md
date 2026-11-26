@@ -1,62 +1,51 @@
-# Image prompts for Song of Solomon — all chapters
+# Song of Solomon — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/songofsolomon/`.
+Reviewed against the bundled BSB scripture (book 22). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 8 chapters.
+### Song of Solomon 1 — PERFUME
 
-### Chapter 1 — PERFUME
-**Filename:** `ch1.png`
+Reference: Song of Solomon 1:2–4.
 
-```
-A dramatic, cinematic biblical illustration of Your name is like perfume poured out — draw me after you — let us run together. Symbolizes 'PERFUME'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Song of Solomon chapter 1. Reference Song of Solomon 1:2–4. An adult ancient bride and bridegroom share a tender fully clothed greeting in a garden courtyard, with an open perfume vessel on a nearby table. Fragrance and affection, restrained romantic dignity without erotic exposure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — APPLE
-**Filename:** `ch2.png`
+### Song of Solomon 2 — APPLE
 
-```
-A dramatic, cinematic biblical illustration of Like an apple tree among the trees of the forest is my beloved — I delight to sit in his shade. Symbolizes 'APPLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Song of Solomon 2:3–7.
 
-### Chapter 3 — BED
-**Filename:** `ch3.png`
+Song of Solomon chapter 2. Reference Song of Solomon 2:3–7. An adult beloved couple rests fully clothed in the welcome shade of a fruitful apple tree, a small basket of apples and raisins nearby. Gentle affection and refreshing shelter, natural anatomy and no sexual action. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of All night long on my bed I looked for the one my heart loves — I will search for him. Symbolizes 'BED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Song of Solomon 3 — BED
 
-### Chapter 4 — GARDEN
-**Filename:** `ch4.png`
+Reference: Song of Solomon 3:1–4.
 
-```
-A dramatic, cinematic biblical illustration of You are a garden locked up, my sister, my bride — a spring enclosed, a sealed fountain. Symbolizes 'GARDEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Song of Solomon chapter 3. Reference Song of Solomon 3:1–4. An adult woman in modest ancient clothing searches a moonlit city street, asking two watchmen whether they have seen her beloved. Her empty bed is not included; one clear moment of longing and seeking. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — HAND
-**Filename:** `ch5.png`
+### Song of Solomon 4 — GARDEN
 
-```
-A dramatic, cinematic biblical illustration of I arose to open for my beloved — myrrh ran off my hands onto the handles of the bolt. Symbolizes 'HAND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Song of Solomon 4:12–16.
 
-### Chapter 6 — ARMY
-**Filename:** `ch6.png`
+Song of Solomon chapter 4. Reference Song of Solomon 4:12–16. A lush enclosed ancient garden with pomegranates, fragrant herbs and a protected spring behind a closed decorative gate. The bride stands dignified beside the gate, fully clothed; a symbolic image of cherished intimacy, no literal woman transformed into plants. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Who is she that appears like the dawn — beautiful as the moon, bright as the sun — majestic as the stars in procession?. Symbolizes 'ARMY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Song of Solomon 5 — HAND
 
-### Chapter 7 — PALM
-**Filename:** `ch7.png`
+Reference: Song of Solomon 5:4–6.
 
-```
-A dramatic, cinematic biblical illustration of Your stature is like that of the palm — I said I will climb the palm tree. Symbolizes 'PALM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Song of Solomon chapter 5. Reference Song of Solomon 5:4–6. Close view of an adult woman's hand glistening with myrrh as she opens the wooden door bolt, finding the moonlit passage outside empty. Her partly visible face shows longing; no disembodied extra hand or intruder. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — SEAL
-**Filename:** `ch8.png`
+### Song of Solomon 6 — ARMY
 
-```
-A dramatic, cinematic biblical illustration of Place me like a seal over your heart — love is as strong as death — its jealousy unyielding as the grave. Symbolizes 'SEAL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Song of Solomon 6:10–13.
 
+Song of Solomon chapter 6. Reference Song of Solomon 6:10–13. A dignified adult bride walks through a blossoming walnut grove at dawn as companions admire her radiant presence. The sun and pale fading moon share a plausible dawn sky; majesty is conveyed through posture, no literal armed female army. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Song of Solomon 7 — PALM
+
+Reference: Song of Solomon 7:6–12.
+
+Song of Solomon chapter 7. Reference Song of Solomon 7:6–12. A fully clothed adult couple walks affectionately through a spring vineyard beside a tall graceful date palm, noticing budding vines and pomegranate flowers. The palm is a poetic comparison; no tree climbing on a person, nudity or sexual action. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Song of Solomon 8 — SEAL
+
+Reference: Song of Solomon 8:6–7.
+
+Song of Solomon chapter 8. Reference Song of Solomon 8:6–7. An adult beloved couple stands close beside a rushing river, each wearing a small ancient seal pendant, hands gently joined at chest height. A protected hearth flame on the bank suggests enduring love that waters cannot quench; no readable seal inscription or burning bodies. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
