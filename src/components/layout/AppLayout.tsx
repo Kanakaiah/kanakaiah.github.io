@@ -49,7 +49,7 @@ export const AppLayout: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row h-[100dvh] w-full overflow-hidden bg-background">
+    <div className="fixed inset-0 flex flex-col lg:flex-row w-full overflow-hidden bg-background">
       <a href="#main-content" className="skip-to-content">
         Skip to main content
       </a>
@@ -63,7 +63,7 @@ export const AppLayout: React.FC = () => {
           z-50
           flex lg:flex-col items-center lg:items-start justify-around lg:justify-start
           px-2 pt-1.5 lg:p-6
-          pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] lg:pb-6
+          pb-[max(0.5rem,calc(env(safe-area-inset-bottom,0px)*0.5))] lg:pb-6
           ${isFullscreenView ? 'hidden' : ''}
         `}
         role="navigation"
