@@ -1,90 +1,75 @@
-# Image prompts for Ecclesiastes — all chapters
+# Ecclesiastes — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/ecclesiastes/`.
+Reviewed against the bundled BSB scripture (book 21). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 12 chapters.
+### Ecclesiastes 1 — WIND
 
-### Chapter 1 — WIND
-**Filename:** `ch1.png`
+Reference: Ecclesiastes 1:2–7.
 
-```
-A dramatic, cinematic biblical illustration of Vanity of vanities — the wind blows south then north — chasing after wind. Symbolizes 'WIND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ecclesiastes chapter 1. Reference Ecclesiastes 1:2–7. An ancient teacher watches wind swirl dust and bend dry grasses above a river that runs toward the sea. Recurring natural movement and human smallness evoke life's elusive gain, no literal chasing a visible spirit. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — LAUGHTER
-**Filename:** `ch2.png`
+### Ecclesiastes 2 — LAUGHTER
 
-```
-A dramatic, cinematic biblical illustration of I said of laughter — it is madness — what does pleasure accomplish?. Symbolizes 'LAUGHTER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ecclesiastes 2:1–3.
 
-### Chapter 3 — TIME
-**Filename:** `ch3.png`
+Ecclesiastes chapter 2. Reference Ecclesiastes 2:1–3. A richly dressed ancient ruler sits thoughtful and unsatisfied at the edge of a lavish feast while others laugh nearby. An untouched wine cup and fading lamplight show pleasure's limits, no drunken caricature. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of A time for everything — a season for every activity under the heavens. Symbolizes 'TIME'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ecclesiastes 3 — TIME
 
-### Chapter 4 — THREAD
-**Filename:** `ch4.png`
+Reference: Ecclesiastes 3:1–8.
 
-```
-A dramatic, cinematic biblical illustration of A cord of three strands is not quickly broken — two are better than one. Symbolizes 'THREAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ecclesiastes chapter 3. Reference Ecclesiastes 3:1–8. An ancient family plants a young tree beside the weathered stump of an old one in a cultivated garden. Different generations work together in one moment, expressing seasons of planting and uprooting without a collage of every listed event. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — VOWS
-**Filename:** `ch5.png`
+### Ecclesiastes 4 — THREAD
 
-```
-A dramatic, cinematic biblical illustration of When you make a vow to God do not delay in fulfilling it. Symbolizes 'VOWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ecclesiastes 4:9–12.
 
-### Chapter 6 — GRAVE
-**Filename:** `ch6.png`
+Ecclesiastes chapter 4. Reference Ecclesiastes 4:9–12. Two ancient travelers help each other climb a rocky slope using a strong rope whose three braided strands are clearly visible close to the viewer. Companionship and shared strength, no dangerous dangling cliff fall. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Even if a man lives a thousand years — if he does not enjoy prosperity — do not all go to the same place?. Symbolizes 'GRAVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ecclesiastes 5 — VOWS
 
-### Chapter 7 — FUNERAL
-**Filename:** `ch7.png`
+Reference: Ecclesiastes 5:1–6.
 
-```
-A dramatic, cinematic biblical illustration of It is better to go to a house of mourning than a house of feasting. Symbolizes 'FUNERAL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ecclesiastes chapter 5. Reference Ecclesiastes 5:1–6. A reverent ancient worshipper quietly brings a promised offering to the sanctuary entrance, listening attentively to a priest. Deliberate fulfilled commitment, no grand public vow lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — KING
-**Filename:** `ch8.png`
+### Ecclesiastes 6 — GRAVE
 
-```
-A dramatic, cinematic biblical illustration of Obey the king's command because you took an oath before God. Symbolizes 'KING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ecclesiastes 6:1–6.
 
-### Chapter 9 — ARROW
-**Filename:** `ch9.png`
+Ecclesiastes chapter 6. Reference Ecclesiastes 6:1–6. An elderly wealthy man sits unable to enjoy an abundant untouched table while a simple distant burial place is visible through the courtyard opening. Reflective mortality and unsatisfied prosperity, no dead infant or graphic remains. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Time and chance happen to them all — no one knows when their hour will come. Symbolizes 'ARROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ecclesiastes 7 — FUNERAL
 
-### Chapter 10 — FLY
-**Filename:** `ch10.png`
+Reference: Ecclesiastes 7:1–4.
 
-```
-A dramatic, cinematic biblical illustration of Dead flies give perfume a bad smell — so a little folly outweighs wisdom and honor. Symbolizes 'FLY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Ecclesiastes chapter 7. Reference Ecclesiastes 7:1–4. Ancient mourners sit together in a quiet home, comforting one another beside a modest covered bier. A visitor listens thoughtfully, learning the seriousness of life, no exposed body or festive banquet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — SEED
-**Filename:** `ch11.png`
+### Ecclesiastes 8 — KING
 
-```
-A dramatic, cinematic biblical illustration of Sow your seed in the morning — do not withhold your hand in the evening. Symbolizes 'SEED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Ecclesiastes 8:2–5.
 
-### Chapter 12 — WELL
-**Filename:** `ch12.png`
+Ecclesiastes chapter 8. Reference Ecclesiastes 8:2–5. A prudent ancient courtier listens carefully to his king's command, standing respectfully before a modest throne. Restraint, wise timing and royal authority, no modern legal documents or submissive humiliation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Remember your Creator before the silver cord is severed and the golden bowl broken at the well. Symbolizes 'WELL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Ecclesiastes 9 — ARROW
 
+Reference: Ecclesiastes 9:11–12.
+
+Ecclesiastes chapter 9. Reference Ecclesiastes 9:11–12. A bird is unexpectedly caught in a simple hunter's net beside a quiet field while an ancient traveler pauses nearby in reflection. The actual chapter's snare metaphor conveys unforeseen timing; no invented arrow wound despite the existing app keyword. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Ecclesiastes 10 — FLY
+
+Reference: Ecclesiastes 10:1–3.
+
+Ecclesiastes chapter 10. Reference Ecclesiastes 10:1–3. Close still life of an ancient perfumer's open oil jar spoiled by a few dead flies, with fine aromatic ingredients and a concerned artisan behind. Small folly ruining something valuable, restrained natural detail. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Ecclesiastes 11 — SEED
+
+Reference: Ecclesiastes 11:4–6.
+
+Ecclesiastes chapter 11. Reference Ecclesiastes 11:4–6. An ancient farmer steadily scatters seed across a field under uncertain clouds while another hesitates at the edge watching the wind. Active diligence despite uncertainty, one moment with natural grain and tools. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Ecclesiastes 12 — WELL
+
+Reference: Ecclesiastes 12:1–7.
+
+Ecclesiastes chapter 12. Reference Ecclesiastes 12:1–7. A broken earthen pitcher and damaged wooden well wheel lie beside an old stone well, with an elderly traveler resting nearby. A snapped cord and crushed small golden bowl serve as restrained poetic symbols of mortality; no graphic death or modern machinery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
