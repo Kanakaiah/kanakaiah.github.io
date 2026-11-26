@@ -1,76 +1,63 @@
-# Image prompts for Esther — all chapters
+# Esther — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/esther/`.
+Reviewed against the bundled BSB scripture (book 17). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 10 chapters.
+### Esther 1 — CROWN
 
-### Chapter 1 — CROWN
-**Filename:** `ch1.png`
+Reference: Esther 1:10–12, 19.
 
-```
-A dramatic, cinematic biblical illustration of Queen Vashti refuses to wear the crown — deposed by royal decree. Symbolizes 'CROWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Esther chapter 1. Reference Esther 1:10–12, 19. Queen Vashti, fully and richly clothed with her royal crown, stands firmly in her own Persian banquet chamber declining the summons delivered by royal attendants. Dignified resolve; she refuses to come, not to wear a crown. No nudity, coercive stripping or king physically present. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — BEAUTY
-**Filename:** `ch2.png`
+### Esther 2 — BEAUTY
 
-```
-A dramatic, cinematic biblical illustration of Esther chosen in the kingdom-wide search — Mordecai at the gate. Symbolizes 'BEAUTY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Esther 2:16–18.
 
-### Chapter 3 — DECREE
-**Filename:** `ch3.png`
+Esther chapter 2. Reference Esther 2:16–18. King Xerxes places a Persian royal crown on adult Esther's head before court attendants. Esther dignified in modest elegant ancient garments, a moment of appointment rather than a beauty-pageant lineup. No modern crown shape or erotic harem scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Haman's decree — every Jew in the empire to be destroyed. Symbolizes 'DECREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Esther 3 — DECREE
 
-### Chapter 4 — SILENCE
-**Filename:** `ch4.png`
+Reference: Esther 3:10–15.
 
-```
-A dramatic, cinematic biblical illustration of Do not think that because you are in the king's house you will escape. Symbolizes 'SILENCE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Esther chapter 3. Reference Esther 3:10–15. Haman directs royal scribes as they prepare the destructive decree, the king's signet ring beside the parchment and mounted couriers waiting beyond. Dark ominous mood, no readable hate message or depiction of victims being attacked. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — BANQUET
-**Filename:** `ch5.png`
+### Esther 4 — SILENCE
 
-```
-A dramatic, cinematic biblical illustration of Esther's first banquet — Haman builds the gallows for Mordecai. Symbolizes 'BANQUET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Esther 4:13–17.
 
-### Chapter 6 — HORSE
-**Filename:** `ch6.png`
+Esther chapter 4. Reference Esther 4:13–17. Esther listens gravely to Hathach relaying Mordecai's warning, then turns toward her attendants with determined resolve to fast and act. Quiet Persian palace chamber, untouched food set aside. Mordecai is not physically inside the queen's room; no battle or speech text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Mordecai paraded on Haman's own horse through the city streets. Symbolizes 'HORSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Esther 5 — BANQUET
 
-### Chapter 7 — GALLOWS
-**Filename:** `ch7.png`
+Reference: Esther 5:4–8.
 
-```
-A dramatic, cinematic biblical illustration of Haman hanged on the gallows he built for Mordecai. Symbolizes 'GALLOWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Esther chapter 5. Reference Esther 5:4–8. Esther hosts the first intimate banquet for Xerxes and Haman, calmly addressing the king while Haman looks pleased with his status. Exactly these three main diners with distant servants, rich Persian table setting. No gallows or later accusation in the same moment. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — SEAL
-**Filename:** `ch8.png`
+### Esther 6 — HORSE
 
-```
-A dramatic, cinematic biblical illustration of New decree sealed — Jews may defend themselves throughout the empire. Symbolizes 'SEAL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Esther 6:8–11.
 
-### Chapter 9 — PURIM
-**Filename:** `ch9.png`
+Esther chapter 6. Reference Esther 6:8–11. Mordecai rides the king's royal horse wearing a royal robe as humiliated Haman leads it through Susa's public square. Horse has a royal crest on its head; this is the king's horse, not Haman's. Townspeople watch, no readable proclamation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The Jews triumph — Purim established as a feast forever. Symbolizes 'PURIM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Esther 7 — GALLOWS
 
-### Chapter 10 — GREATNESS
-**Filename:** `ch10.png`
+Reference: Esther 7:8–10.
 
-```
-A dramatic, cinematic biblical illustration of Mordecai's greatness recorded — second only to the king. Symbolizes 'GREATNESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Esther chapter 7. Reference Esther 7:8–10. At the second banquet guards cover Haman's face and lead him away while Esther remains safely beside her couch and Xerxes stands sternly. Through a distant opening a tall empty wooden execution structure at Haman's house is a subdued cue. No hanging body, assault or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Esther 8 — SEAL
+
+Reference: Esther 8:8–11.
+
+Esther chapter 8. Reference Esther 8:8–11. Mordecai seals the new decree with the royal signet ring as scribes prepare copies and swift mounted couriers wait to carry them. Esther watches with relieved determination. Indistinct manuscript marks, no modern envelopes or weapons threatening civilians. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Esther 9 — PURIM
+
+Reference: Esther 9:20–22.
+
+Esther chapter 9. Reference Esther 9:20–22. Jewish households in Persia celebrate the first Purim with a shared feast, exchanging food gifts and giving baskets to poor neighbors. Warm relief after danger, simple ancient garments and dishes. No modern costumes, masks, carnival props or battle scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Esther 10 — GREATNESS
+
+Reference: Esther 10:1–3.
+
+Esther chapter 10. Reference Esther 10:1–3. Mordecai as a senior Persian official listens attentively to ordinary Jewish petitioners and advocates their welfare in a palace courtyard. Royal authority conveyed by robe and seal, humble service by his gestures. No throne above Xerxes or triumphal conquest. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
