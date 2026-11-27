@@ -1,104 +1,87 @@
-# Image prompts for Hosea — all chapters
+# Hosea — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/hosea/`.
+Reviewed against the bundled BSB scripture (book 28). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 14 chapters.
+### Hosea 1 — WIFE
 
-### Chapter 1 — WIFE
-**Filename:** `ch1.png`
+Reference: Hosea 1:2–9.
 
-```
-A dramatic, cinematic biblical illustration of God commands Hosea to marry Gomer — three children given symbolic names. Symbolizes 'WIFE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hosea chapter 1. Reference Hosea 1:2–9. Hosea and fully clothed Gomer sit solemnly in a modest ancient home with their three children: an older boy, a girl and an infant boy. A family portrait embodying prophetic signs, no readable names or sexualized depiction. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — VALLEY
-**Filename:** `ch2.png`
+### Hosea 2 — VALLEY
 
-```
-A dramatic, cinematic biblical illustration of I will make the Valley of Achor a door of hope — she will call me my husband. Symbolizes 'VALLEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hosea 2:14–20.
 
-### Chapter 3 — SILVER
-**Filename:** `ch3.png`
+Hosea chapter 2. Reference Hosea 2:14–20. A grieving ancient woman steps from barren wilderness into a valley opening toward renewed vineyards and warm light. The Valley of Achor as a gateway of hope, poetic restoration without a literal labeled doorway. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Hosea buys Gomer back for fifteen pieces of silver — "You are to live with me. Symbolizes 'SILVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hosea 3 — SILVER
 
-### Chapter 4 — KNOWLEDGE
-**Filename:** `ch4.png`
+Reference: Hosea 3:1–5.
 
-```
-A dramatic, cinematic biblical illustration of My people are destroyed from lack of knowledge — the priests reject knowledge. Symbolizes 'KNOWLEDGE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hosea chapter 3. Reference Hosea 3:1–5. Hosea respectfully offers weighed silver and sacks of barley to redeem Gomer, who stands fully clothed beside him with a guarded hopeful expression. Restoration of relationship, no auction spectacle or humiliation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — MOTH
-**Filename:** `ch5.png`
+### Hosea 4 — KNOWLEDGE
 
-```
-A dramatic, cinematic biblical illustration of I am like a moth to Ephraim — like rot to the people of Judah. Symbolizes 'MOTH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hosea 4:4–6.
 
-### Chapter 6 — RAIN
-**Filename:** `ch6.png`
+Hosea chapter 4. Reference Hosea 4:4–6. A negligent priest turns away from an ignored law scroll while confused families wait for guidance in an ancient sanctuary court. The loss of knowledge and responsible teaching is central. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Let us acknowledge the LORD — his coming is as sure as the spring rains. Symbolizes 'RAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hosea 5 — MOTH
 
-### Chapter 7 — OVEN
-**Filename:** `ch7.png`
+Reference: Hosea 5:11–13.
 
-```
-A dramatic, cinematic biblical illustration of Their hearts are like an oven — they approach him with flattery but devour their rulers. Symbolizes 'OVEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hosea chapter 5. Reference Hosea 5:11–13. Close symbolic still life of a moth-eaten royal cloak and decaying wooden support in a once-fine Judean room. An uneasy envoy prepares to seek Assyria beyond, no giant moth or diseased human close-up. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — WIND
-**Filename:** `ch8.png`
+### Hosea 6 — RAIN
 
-```
-A dramatic, cinematic biblical illustration of They sow the wind and reap the whirlwind — they have set up kings without my consent. Symbolizes 'WIND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hosea 6:1–4.
 
-### Chapter 9 — GRAPES
-**Filename:** `ch9.png`
+Hosea chapter 6. Reference Hosea 6:1–4. Ancient worshippers look toward gentle spring rain watering thirsty fields at sunrise. Renewed seeking and healing, with a fading mist suggesting fragile loyalty. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I found Israel like grapes in the desert — like the early fruit on the fig tree. Symbolizes 'GRAPES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hosea 7 — OVEN
 
-### Chapter 10 — CALF
-**Filename:** `ch10.png`
+Reference: Hosea 7:4–7.
 
-```
-A dramatic, cinematic biblical illustration of The calf of Beth Aven will be carried to Assyria — Israel will be ashamed of its wooden idols. Symbolizes 'CALF'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hosea chapter 7. Reference Hosea 7:4–7. A glowing ancient bread oven dominates the foreground while conspirators whisper near a royal feast behind. Smoldering political passion is a metaphor, no people inside the oven. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — CHILD
-**Filename:** `ch11.png`
+### Hosea 8 — WIND
 
-```
-A dramatic, cinematic biblical illustration of When Israel was a child I loved him — out of Egypt I called my son. Symbolizes 'CHILD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hosea 8:5–7.
 
-### Chapter 12 — HEEL
-**Filename:** `ch12.png`
+Hosea chapter 8. Reference Hosea 8:5–7. A farmer sows seed into fierce wind as a threatening whirlwind gathers above barren fields, with a broken calf idol lying aside. A symbolic consequence of idolatry, no letters or coins flying as seed. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of In the womb he grasped his brother's heel — in his manhood he struggled with God. Symbolizes 'HEEL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Hosea 9 — GRAPES
 
-### Chapter 13 — BEAR
-**Filename:** `ch13.png`
+Reference: Hosea 9:10.
 
-```
-A dramatic, cinematic biblical illustration of I will be like a lion to them — like a bear robbed of her cubs. Symbolizes 'BEAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Hosea chapter 9. Reference Hosea 9:10. Unexpected ripe grapes and the first figs appear in a dry wilderness oasis, while distant people turn toward a shrine containing a small, indistinct human-shaped dark stone pagan idol, never a calf or bull. First delight and subsequent betrayal recall Baal-Peor in one coherent landscape. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — DEW
-**Filename:** `ch14.png`
+### Hosea 10 — CALF
 
-```
-A dramatic, cinematic biblical illustration of I will be like the dew to Israel — he will blossom like a lily. Symbolizes 'DEW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Hosea 10:5–6.
 
+Hosea chapter 10. Reference Hosea 10:5–6. Assyrian soldiers carry a golden calf idol away as tribute while its former worshippers mourn in Samaria. The idol remains inert, no actual animal being carried. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Hosea 11 — CHILD
+
+Reference: Hosea 11:1–4.
+
+Hosea chapter 11. Reference Hosea 11:1–4. An ancient parent tenderly teaches a small child to walk, supporting his arms and bending to offer food. The chapter's explicit parental metaphor for Israel's beginnings, no human portrait labeled as God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Hosea 12 — HEEL
+
+Reference: Hosea 12:3–6.
+
+Hosea chapter 12. Reference Hosea 12:3–6. Jacob wrestles a solemn humanlike angelic messenger beside a river in dim predawn light. His determined grasp and tearful face recall Hosea's appeal to return, no infant birth scene or exposed body. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Hosea 13 — BEAR
+
+Reference: Hosea 13:7–9.
+
+Hosea chapter 13. Reference Hosea 13:7–9. An enraged mother bear stands alert beside an empty rocky den, with threatening wilderness shadows. The bear robbed of cubs is the chapter's judgment metaphor, no attack on a human or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Hosea 14 — DEW
+
+Reference: Hosea 14:4–8.
+
+Hosea chapter 14. Reference Hosea 14:4–8. Fresh dew glistens on a blooming lily beneath a flourishing olive tree, with healthy grain and vines beyond. A serene landscape of freely given healing and renewed fruitfulness. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
