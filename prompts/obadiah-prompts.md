@@ -1,13 +1,9 @@
-# Image prompts for Obadiah — all chapters
+# Obadiah — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/obadiah/`.
+Reviewed against the bundled BSB scripture (book 31). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 1 chapters.
+### Obadiah 1 — CLIFF
 
-### Chapter 1 — CLIFF
-**Filename:** `ch1.png`
+Reference: Obadiah 1:3–4.
 
-```
-A dramatic, cinematic biblical illustration of You who live in the clefts of the rocks and make your home on the heights — you say to yourself, who can bring me down? Though you soar like the eagle — I will bring you down. Symbolizes 'CLIFF'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
-
+Obadiah chapter 1. Reference Obadiah 1:3–4. An eagle nests high above Edom's rock-cleft stronghold, whose proud walls cling to a steep red mountain. Tiny figures below emphasize deceptive confidence in height, no Roman-era carved facade. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
