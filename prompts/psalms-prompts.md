@@ -1,1056 +1,903 @@
-# Image prompts for Psalms — all chapters
+# Psalms — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/psalms/`.
+Reviewed against the bundled BSB scripture (book 19). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 150 chapters.
+### Psalms 1 — TREE
 
-### Chapter 1 — TREE
-**Filename:** `ch1.png`
+Reference: Psalms 1:1–3.
 
-```
-A dramatic, cinematic biblical illustration of The blessed man like a tree planted by streams of water. Symbolizes 'TREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 1. Reference Psalms 1:1–3. A fruitful leafy tree beside clear running streams, with an ancient worshipper seated in its shade meditating on a law scroll. Lush roots and healthy fruit express the psalm's simile; no human transformed into a tree or readable words. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — NATIONS
-**Filename:** `ch2.png`
+### Psalms 2 — NATIONS
 
-```
-A dramatic, cinematic biblical illustration of Why do the nations rage — the Son enthroned on Zion. Symbolizes 'NATIONS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 2:1–6.
 
-### Chapter 3 — SHIELD
-**Filename:** `ch3.png`
+Psalms chapter 2. Reference Psalms 2:1–6. A symbolic royal scene: anxious earthly rulers confer in shadow below Zion while a modest ancient throne on the sunlit height stands secure. No visible human God, giant laughing face or modern national flags. Rebellion contrasted with divinely established rule in one landscape. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of David flees Absalom — "You are a shield around me, O LORD. Symbolizes 'SHIELD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 3 — SHIELD
 
-### Chapter 4 — SLEEP
-**Filename:** `ch4.png`
+Reference: Psalms 3:3–5.
 
-```
-A dramatic, cinematic biblical illustration of In peace I will lie down and sleep — you alone make me dwell in safety. Symbolizes 'SLEEP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 3. Reference Psalms 3:3–5. David rests safely at a wilderness camp while a round shield stands beside him and dawn lifts his face. The shield is a poetic memory cue for God's protection, not a magical force field; distant danger remains outside the calm foreground. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — MORNING
-**Filename:** `ch5.png`
+### Psalms 4 — SLEEP
 
-```
-A dramatic, cinematic biblical illustration of In the morning, LORD, you hear my voice — I lay my requests before you. Symbolizes 'MORNING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 4:6–8.
 
-### Chapter 6 — TEARS
-**Filename:** `ch6.png`
+Psalms chapter 4. Reference Psalms 4:6–8. An ancient traveler sleeps peacefully on a simple mat in a modest home at night, soft lamplight and a secure doorway conveying trust. No armed guard required, no sleeping deity or angel carrying the bed. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I am worn out from groaning — all night I flood my bed with tears. Symbolizes 'TEARS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 5 — MORNING
 
-### Chapter 7 — LION
-**Filename:** `ch7.png`
+Reference: Psalms 5:1–3.
 
-```
-A dramatic, cinematic biblical illustration of Or they will tear me like a lion — ripping me apart with no one to rescue. Symbolizes 'LION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 5. Reference Psalms 5:1–3. At first light a worshipper kneels on a rooftop facing the sunrise, hands open in patient morning prayer. Quiet ancient town below, no readable prayer or visible deity. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — MOON
-**Filename:** `ch8.png`
+### Psalms 6 — TEARS
 
-```
-A dramatic, cinematic biblical illustration of When I consider the moon and the stars — what is man that you are mindful of him?. Symbolizes 'MOON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 6:6–9.
 
-### Chapter 9 — THRONE
-**Filename:** `ch9.png`
+Psalms chapter 6. Reference Psalms 6:6–9. A weary psalmist sits on the edge of his sleeping mat at night, wiping real tears from his face while praying. Damp cloth and low lamp convey sorrow; no literal flood filling the room. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The LORD reigns forever — he has established his throne for judgment. Symbolizes 'THRONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 7 — LION
 
-### Chapter 10 — HIDING
-**Filename:** `ch10.png`
+Reference: Psalms 7:1–2.
 
-```
-A dramatic, cinematic biblical illustration of Why, LORD, do you stand far off — why do you hide in times of trouble?. Symbolizes 'HIDING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 7. Reference Psalms 7:1–2. A hunted traveler takes refuge among protective rocks while a lion prowls at a distance as a poetic image of threatening enemies. Tense but safe separation, no mauling or suggestion this is a recorded David-and-lion episode. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — FIRE
-**Filename:** `ch11.png`
+### Psalms 8 — MOON
 
-```
-A dramatic, cinematic biblical illustration of On the wicked he will rain fiery coals — the LORD examines the righteous. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 8:3–5.
 
-### Chapter 12 — SILVER
-**Filename:** `ch12.png`
+Psalms chapter 8. Reference Psalms 8:3–5. A small human figure stands in awe beneath an immense star-filled sky and a bright moon over ancient hills. Human scale against creation is central, no giant cosmic hands or planets arranged like a diagram. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The words of the LORD are like silver refined seven times in a furnace. Symbolizes 'SILVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 9 — THRONE
 
-### Chapter 13 — FACE
-**Filename:** `ch13.png`
+Reference: Psalms 9:7–10.
 
-```
-A dramatic, cinematic biblical illustration of How long, LORD — will you forget me forever? How long will you hide your face?. Symbolizes 'FACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 9. Reference Psalms 9:7–10. Symbolic justice: an empty ancient throne illuminated by steady light stands within a strong stone refuge, where vulnerable families are welcomed. No bodily representation of God, earthly king pretending to be God or courtroom text. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — FOOL
-**Filename:** `ch14.png`
+### Psalms 10 — HIDING
 
-```
-A dramatic, cinematic biblical illustration of The fool says in his heart — there is no God. Symbolizes 'FOOL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 10:1–4.
 
-### Chapter 15 — HILL
-**Filename:** `ch15.png`
+Psalms chapter 10. Reference Psalms 10:1–4. A distressed poor family shelters beside a rough wall while an arrogant wealthy oppressor walks away in shadow; the praying parent looks toward a sky partly hidden by clouds. Felt divine distance, not God physically hiding behind an object. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Lord who may dwell on your holy mountain — the one whose walk is blameless. Symbolizes 'HILL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 11 — FIRE
 
-### Chapter 16 — CUP
-**Filename:** `ch16.png`
+Reference: Psalms 11:4–7.
 
-```
-A dramatic, cinematic biblical illustration of LORD, you have assigned my portion and my cup — the boundary lines have fallen for me in pleasant places. Symbolizes 'CUP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 11. Reference Psalms 11:4–7. Poetic judgment scene: a dark storm releases glowing embers onto barren distant ground while an upright worshipper shelters near a stone sanctuary. No people burning, no divine face or human figure throwing fire. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — WINGS
-**Filename:** `ch17.png`
+### Psalms 12 — SILVER
 
-```
-A dramatic, cinematic biblical illustration of Keep me as the apple of your eye — hide me in the shadow of your wings. Symbolizes 'WINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 12:5–7.
 
-### Chapter 18 — ROCK
-**Filename:** `ch18.png`
+Psalms chapter 12. Reference Psalms 12:5–7. An ancient silversmith carefully refines glowing silver in a clay furnace, removing dark dross as pure metal shines. The refining process is a visual metaphor for trustworthy divine words; no seven duplicate furnaces or written verse. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The LORD is my rock, my fortress, my deliverer — I called to him and was saved. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 13 — FACE
 
-### Chapter 19 — SUN
-**Filename:** `ch19.png`
+Reference: Psalms 13:1–6.
 
-```
-A dramatic, cinematic biblical illustration of The heavens declare the glory of God — in them the sun rises like a champion. Symbolizes 'SUN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 13. Reference Psalms 13:1–6. A solitary psalmist raises a weary face toward a narrow opening of light in heavy clouds, grief gradually giving way to trust. Simple lyre rests beside him; no giant hidden face in the sky. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — NAME
-**Filename:** `ch20.png`
+### Psalms 14 — FOOL
 
-```
-A dramatic, cinematic biblical illustration of Some trust in chariots, some in horses — we trust in the name of the LORD. Symbolizes 'NAME'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 14:1–3.
 
-### Chapter 21 — CROWN
-**Filename:** `ch21.png`
+Psalms chapter 14. Reference Psalms 14:1–3. A wealthy self-satisfied man turns away from a hungry neighbor in an ancient street, showing the moral folly described by the psalm. No caricatured disability, mocking costume, readable denial of God or modern atheist stereotypes. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of You placed a crown of pure gold on his head — he asked for life and you gave it. Symbolizes 'CROWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 15 — HILL
 
-### Chapter 22 — CROSS
-**Filename:** `ch22.png`
+Reference: Psalms 15:1–5.
 
-```
-A dramatic, cinematic biblical illustration of My God, my God, why have you forsaken me — they divide my garments among them. Symbolizes 'CROSS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 15. Reference Psalms 15:1–5. A pilgrim helps a burdened neighbor up the path toward a tent sanctuary on a holy hill, setting aside an offered bribe. Integrity and truthful service are the visual cues, no written qualification checklist. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — SHEPHERD
-**Filename:** `ch23.png`
+### Psalms 16 — CUP
 
-```
-A dramatic, cinematic biblical illustration of The LORD is my shepherd — I shall not want. Symbolizes 'SHEPHERD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 16:5–11.
 
-### Chapter 24 — GATES
-**Filename:** `ch24.png`
+Psalms chapter 16. Reference Psalms 16:5–11. A grateful worshipper holds a simple cup beside a peaceful cultivated field bounded by low stones, looking with contentment over a pleasant inheritance. The cup and land are poetic cues, no treasure overflow or prosperity spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Lift up your heads, you gates — let the King of Glory come in. Symbolizes 'GATES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 17 — WINGS
 
-### Chapter 25 — PATHS
-**Filename:** `ch25.png`
+Reference: Psalms 17:6–9.
 
-```
-A dramatic, cinematic biblical illustration of Show me your paths, Lord — guide me in your truth and teach me. Symbolizes 'PATHS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 17. Reference Psalms 17:6–9. A mother bird shelters her young beneath outspread wings in a rocky nest while distant storm clouds pass. Intimate natural metaphor for protective refuge; no literal winged human God or enormous eyeball. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — ALTAR
-**Filename:** `ch26.png`
+### Psalms 18 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of I wash my hands in innocence and go around your altar, LORD. Symbolizes 'ALTAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 18:1–3.
 
-### Chapter 27 — LIGHT
-**Filename:** `ch27.png`
+Psalms chapter 18. Reference Psalms 18:1–3. A psalmist stands safely on a massive rock below a strong ancient fortress, raising thanks after danger. Shield beside him, rugged landscape and clearing storm. Poetic refuge, no fantasy castle or giant divine warrior. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The LORD is my light and my salvation — whom shall I fear?. Symbolizes 'LIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 19 — SUN
 
-### Chapter 28 — FORTRESS
-**Filename:** `ch28.png`
+Reference: Psalms 19:1–6.
 
-```
-A dramatic, cinematic biblical illustration of The LORD is my strength and my shield — my heart trusts in him and leaps for joy. Symbolizes 'FORTRESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 19. Reference Psalms 19:1–6. The sun rises magnificently over ancient hills and a wide sky, lighting fields and a tiny watching traveler. Creation itself declares glory; no sun with a face, literal celestial tent or written words in clouds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — THUNDER
-**Filename:** `ch29.png`
+### Psalms 20 — NAME
 
-```
-A dramatic, cinematic biblical illustration of The voice of the LORD is over the waters — the LORD thunders over the mighty waters. Symbolizes 'THUNDER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 20:6–9.
 
-### Chapter 30 — NIGHT
-**Filename:** `ch30.png`
+Psalms chapter 20. Reference Psalms 20:6–9. A humble group prays beside resting horses and parked ancient chariots before a journey or battle, deliberately turning their attention upward rather than admiring military power. No written divine name, magical weapons or active combat. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Weeping may stay for the night — but rejoicing comes in the morning. Symbolizes 'NIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 21 — CROWN
 
-### Chapter 31 — HANDS
-**Filename:** `ch31.png`
+Reference: Psalms 21:1–7.
 
-```
-A dramatic, cinematic biblical illustration of Into your hands I commit my spirit — you have redeemed me, LORD. Symbolizes 'HANDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 21. Reference Psalms 21:1–7. An ancient Israelite king kneels gratefully with a simple gold crown on his head, acknowledging strength and life received from God. Warm light and open hands, no heavenly hand physically crowning him. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 32 — HIDING
-**Filename:** `ch32.png`
+### Psalms 22 — CROSS
 
-```
-A dramatic, cinematic biblical illustration of Blessed is the one whose sin is covered — when I kept silent my bones wasted away. Symbolizes 'HIDING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 22:1–2, 16–18.
 
-### Chapter 33 — WORD
-**Filename:** `ch33.png`
+Psalms chapter 22. Reference Psalms 22:1–2, 16–18. A Christian messianic interpretation of the psalm's suffering: a distant solitary wooden cross silhouetted on a hill at dusk, with a discarded robe and small casting-lots stones in the foreground. No body, wounds or readable inscription. This is an explicitly later Christian interpretive image, not a claim a cross stood in David's historical setting; keep ancient atmosphere and restrained sorrow. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of By the word of the LORD the heavens were made — the earth stands firm at his command. Symbolizes 'WORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 23 — SHEPHERD
 
-### Chapter 34 — TASTE
-**Filename:** `ch34.png`
+Reference: Psalms 23:1–6.
 
-```
-A dramatic, cinematic biblical illustration of Taste and see that the LORD is good — blessed is the man who takes refuge in him. Symbolizes 'TASTE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 23. Reference Psalms 23:1–6. An ancient shepherd gently leads a small flock through green pasture beside quiet water, with a darker valley opening beyond and a clear safe path. Natural pastoral scene, rod and staff, no overfilled banquet montage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 35 — ARMOR
-**Filename:** `ch35.png`
+### Psalms 24 — GATES
 
-```
-A dramatic, cinematic biblical illustration of Contend, LORD, with those who contend with me — take up shield and armor. Symbolizes 'ARMOR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 24:7–10.
 
-### Chapter 36 — FOUNTAIN
-**Filename:** `ch36.png`
+Psalms chapter 24. Reference Psalms 24:7–10. Massive ancient city gates open toward brilliant warm light as worshippers approach in reverent expectation. The King of Glory suggested by light and procession, no giant human king, floating crown or modern gate lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of With you is the fountain of life — in your light we see light. Symbolizes 'FOUNTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 25 — PATHS
 
-### Chapter 37 — DELIGHT
-**Filename:** `ch37.png`
+Reference: Psalms 25:4–7.
 
-```
-A dramatic, cinematic biblical illustration of Delight yourself in the LORD and he will give you the desires of your heart. Symbolizes 'DELIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 25. Reference Psalms 25:4–7. A humble traveler pauses where rugged paths diverge, then follows a clear sunlit footpath toward a distant sanctuary. A guide gently indicates the way, representative of learning and guidance, no directional signs or divine figure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 38 — GROANING
-**Filename:** `ch38.png`
+### Psalms 26 — ALTAR
 
-```
-A dramatic, cinematic biblical illustration of I am bowed down and brought low — all day long I go about mourning. Symbolizes 'GROANING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 26:6–8.
 
-### Chapter 39 — BREATH
-**Filename:** `ch39.png`
+Psalms chapter 26. Reference Psalms 26:6–8. A worshipper washes his hands in a simple basin in a sanctuary courtyard before approaching an altar in thanksgiving. Clean water and reverence dominate, no blood, self-righteous confrontation or priestly role claimed for every worshipper. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Each man's life is but a breath — man is a mere phantom. Symbolizes 'BREATH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 27 — LIGHT
 
-### Chapter 40 — SCROLL
-**Filename:** `ch40.png`
+Reference: Psalms 27:1–5.
 
-```
-A dramatic, cinematic biblical illustration of It is written about me in the scroll — I desire to do your will, my God. Symbolizes 'SCROLL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 27. Reference Psalms 27:1–5. A psalmist stands calmly at a sheltering tent doorway as strong dawn light breaks through surrounding darkness. A distant hostile camp remains in shadow; courage and refuge, no weapon made of light. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 41 — BREAD
-**Filename:** `ch41.png`
+### Psalms 28 — FORTRESS
 
-```
-A dramatic, cinematic biblical illustration of Even my close friend who ate my bread has lifted his heel against me. Symbolizes 'BREAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 28:6–9.
 
-### Chapter 42 — DEER
-**Filename:** `ch42.png`
+Psalms chapter 28. Reference Psalms 28:6–9. Families find protection within a strong ancient refuge while a thankful psalmist holds a lyre beside a resting shield. Shared salvation and trust, no isolated luxury castle or literal God wearing armor. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of As the deer pants for streams of water — so my soul pants for you, my God. Symbolizes 'DEER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 29 — THUNDER
 
-### Chapter 43 — LIGHT
-**Filename:** `ch43.png`
+Reference: Psalms 29:3–9.
 
-```
-A dramatic, cinematic biblical illustration of Send me your light and your faithful care — let them bring me to your holy mountain. Symbolizes 'LIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 29. Reference Psalms 29:3–9. A powerful thunderstorm sweeps great waters and bends Lebanon's cedars, lightning illuminating waves and rugged hills. Nature conveys the psalm's thunderous imagery; no face in clouds or people struck by lightning. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 44 — SLEEP
-**Filename:** `ch44.png`
+### Psalms 30 — NIGHT
 
-```
-A dramatic, cinematic biblical illustration of Awake, Lord! Why do you sleep — rise up and help us. Symbolizes 'SLEEP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 30:4–5, 10–12.
 
-### Chapter 45 — WEDDING
-**Filename:** `ch45.png`
+Psalms chapter 30. Reference Psalms 30:4–5, 10–12. At dawn a formerly grieving worshipper rises from a discarded sackcloth and joins a small circle of joyful dancers. Night's dim room opens onto warm morning light in one coherent scene, no split-screen before-and-after. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The royal wedding psalm — "Your throne, O God, will last forever and ever. Symbolizes 'WEDDING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 31 — HANDS
 
-### Chapter 46 — STILL
-**Filename:** `ch46.png`
+Reference: Psalms 31:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Be still and know that I am God — I will be exalted among the nations. Symbolizes 'STILL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 31. Reference Psalms 31:1–5. A weary psalmist kneels at a rocky refuge with both hands open in surrender, a broken snare lying nearby. Trustful prayer conveys entrusting his spirit, no enormous disembodied divine hands. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 47 — SHOUT
-**Filename:** `ch47.png`
+### Psalms 32 — HIDING
 
-```
-A dramatic, cinematic biblical illustration of Clap your hands, all you nations — shout to God with cries of joy. Symbolizes 'SHOUT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 32:1–5.
 
-### Chapter 48 — CITY
-**Filename:** `ch48.png`
+Psalms chapter 32. Reference Psalms 32:1–5. A relieved worshipper finishes honest confession in a quiet sheltered garden, shoulders relaxing and face lifting toward light. A folded heavy cloak set aside is a restrained burden cue, no hidden criminal or magical sin labels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Great is the LORD in the city of our God — beautiful in its loftiness. Symbolizes 'CITY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 33 — WORD
 
-### Chapter 49 — RANSOM
-**Filename:** `ch49.png`
+Reference: Psalms 33:6–9.
 
-```
-A dramatic, cinematic biblical illustration of No one can redeem the life of another — no payment is ever enough. Symbolizes 'RANSOM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 33. Reference Psalms 33:6–9. A broad ancient landscape of sea, firm land and a starry sky transitioning into dawn, with a small group quietly praising from a ridge. Creation's order is central; no visible mouth speaking stars into existence or cosmic lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 50 — SACRIFICE
-**Filename:** `ch50.png`
+### Psalms 34 — TASTE
 
-```
-A dramatic, cinematic biblical illustration of I have no need of a bull from your stall — sacrifice thank offerings to God. Symbolizes 'SACRIFICE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 34:7–10.
 
-### Chapter 51 — HYSSOP
-**Filename:** `ch51.png`
+Psalms chapter 34. Reference Psalms 34:7–10. A traveler shares simple bread and fresh fruit with companions under a protective rocky overhang, faces grateful as they taste the meal. Ordinary goodness as the psalm's metaphor, not eating a divine body or luxury feast. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Cleanse me with hyssop — create in me a pure heart, O God. Symbolizes 'HYSSOP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 35 — ARMOR
 
-### Chapter 52 — OLIVE
-**Filename:** `ch52.png`
+Reference: Psalms 35:1–3.
 
-```
-A dramatic, cinematic biblical illustration of I am like an olive tree flourishing in the house of God. Symbolizes 'OLIVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 35. Reference Psalms 35:1–3. A vulnerable supplicant kneels beside a large shield and ancient armor at the entrance of a strong refuge while threatening figures remain far away. Symbolic appeal for defense, no bodily God wielding weapons or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 53 — FOOL
-**Filename:** `ch53.png`
+### Psalms 36 — FOUNTAIN
 
-```
-A dramatic, cinematic biblical illustration of The fool says in his heart — there is no God. Symbolizes 'FOOL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 36:5–9.
 
-### Chapter 54 — NAME
-**Filename:** `ch54.png`
+Psalms chapter 36. Reference Psalms 36:5–9. A clear spring bubbles from rock and flows through a sunlit landscape where people and animals drink safely. Fountain, light and sheltering shade express life and loving care; no fantasy magical fountain or modern plumbing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Save me, O God, by your name — vindicate me by your might. Symbolizes 'NAME'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 37 — DELIGHT
 
-### Chapter 55 — WINGS
-**Filename:** `ch55.png`
+Reference: Psalms 37:1–7.
 
-```
-A dramatic, cinematic biblical illustration of Oh that I had the wings of a dove — I would fly away and be at rest. Symbolizes 'WINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 37. Reference Psalms 37:1–7. An elderly worshipper tends a small productive garden with patient joy while distant wealthy passersby hurry on a dusty road. Faithful ordinary work and contentment, no gold raining down or guaranteed riches. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 56 — BOTTLE
-**Filename:** `ch56.png`
+### Psalms 38 — GROANING
 
-```
-A dramatic, cinematic biblical illustration of Record my misery — list my tears on your scroll — are they not in your record?. Symbolizes 'BOTTLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 38:1–8.
 
-### Chapter 57 — DAWN
-**Filename:** `ch57.png`
+Psalms chapter 38. Reference Psalms 38:1–8. A fully clothed suffering psalmist sits bent low on a simple couch, hands clasped over his chest in grief and prayer. Illness and remorse conveyed by posture and face, no festering wounds or graphic anatomy. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Awake my soul — I will awaken the dawn — your love reaches to the heavens. Symbolizes 'DAWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 39 — BREATH
 
-### Chapter 58 — COBRA
-**Filename:** `ch58.png`
+Reference: Psalms 39:4–7.
 
-```
-A dramatic, cinematic biblical illustration of The wicked go astray from the womb — like a cobra that has stopped its ears. Symbolizes 'COBRA'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 39. Reference Psalms 39:4–7. An older traveler exhales a faint breath in cool dawn air as a short-lived mist lifts from the valley. His open hand and thoughtful face express life's brevity; no skeleton, ghost body or modern hourglass. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 59 — FORTRESS
-**Filename:** `ch59.png`
+### Psalms 40 — SCROLL
 
-```
-A dramatic, cinematic biblical illustration of You are my fortress, my refuge in times of trouble — I will sing of your strength. Symbolizes 'FORTRESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 40:6–8.
 
-### Chapter 60 — CUP
-**Filename:** `ch60.png`
+Psalms chapter 40. Reference Psalms 40:6–8. A psalmist unrolls a worn law scroll on a wooden table and places one hand over his heart, expressing readiness to obey. Indistinct manuscript texture, warm quiet interior; no readable quotation or modern bound Bible. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of You have shown your people desperate times — you have given us wine that makes us stagger. Symbolizes 'CUP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 41 — BREAD
 
-### Chapter 61 — TOWER
-**Filename:** `ch61.png`
+Reference: Psalms 41:9–12.
 
-```
-A dramatic, cinematic biblical illustration of Lead me to the rock that is higher than I — you have been my refuge, a strong tower. Symbolizes 'TOWER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 41. Reference Psalms 41:9–12. At a simple ancient table, a sorrowful host watches a trusted companion turn away after sharing bread. Broken loaf and an empty place emphasize betrayal, no literal raised heel striking the host or later Last Supper reenactment. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 62 — ROCK
-**Filename:** `ch62.png`
+### Psalms 42 — DEER
 
-```
-A dramatic, cinematic biblical illustration of Truly my soul finds rest in God — he alone is my rock and my salvation. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 42:1–3.
 
-### Chapter 63 — DESERT
-**Filename:** `ch63.png`
+Psalms chapter 42. Reference Psalms 42:1–3. A thirsty deer bends to drink from a narrow fresh stream in a dry rocky woodland. Close natural view of thirst and water with soft light, no anthropomorphic tears or human-deer hybrid. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of You, God, are my God — in a dry and parched land I earnestly seek you. Symbolizes 'DESERT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 43 — LIGHT
 
-### Chapter 64 — ARROWS
-**Filename:** `ch64.png`
+Reference: Psalms 43:3–5.
 
-```
-A dramatic, cinematic biblical illustration of They shoot from ambush at the innocent — suddenly they shoot without fear. Symbolizes 'ARROWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 43. Reference Psalms 43:3–5. A discouraged pilgrim carrying a small lyre follows a shaft of dawn light along a mountain path toward the sanctuary. Hope and direction in one landscape, no glowing personification of Truth or written arrows. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 65 — RAIN
-**Filename:** `ch65.png`
+### Psalms 44 — SLEEP
 
-```
-A dramatic, cinematic biblical illustration of You crown the year with your bounty — the streams of God are filled with water. Symbolizes 'RAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 44:23–26.
 
-### Chapter 66 — FIRE
-**Filename:** `ch66.png`
+Psalms chapter 44. Reference Psalms 44:23–26. A community of afflicted worshippers kneels low in dust outside damaged homes, looking upward in urgent prayer for help. The psalm's plea is shown without depicting God literally asleep; no battlefield corpses. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of You tested us, God — you refined us like silver, you brought us through fire. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 45 — WEDDING
 
-### Chapter 67 — HARVEST
-**Filename:** `ch67.png`
+Reference: Psalms 45:10–15.
 
-```
-A dramatic, cinematic biblical illustration of The land yields its harvest — may all the ends of the earth fear him. Symbolizes 'HARVEST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 45. Reference Psalms 45:10–15. A royal bride in modest embroidered ancient garments proceeds joyfully with her companions into an Israelite palace to meet the bridegroom king. Gold-thread fabric and dignified celebration, no modern white wedding dress or sensual exposure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 68 — CLOUD
-**Filename:** `ch68.png`
+### Psalms 46 — STILL
 
-```
-A dramatic, cinematic biblical illustration of Sing to God — who rides on the clouds — the LORD Almighty gives thunderstorms. Symbolizes 'CLOUD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 46:9–11.
 
-### Chapter 69 — FLOOD
-**Filename:** `ch69.png`
+Psalms chapter 46. Reference Psalms 46:9–11. A worshipper sits quietly beside a calm river after conflict, broken bows and a shattered spear resting on the far bank beneath a secure city. Stillness and peace after turmoil, no ongoing battle or literal divine figure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Save me, O God — the waters have come up to my neck. Symbolizes 'FLOOD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 47 — SHOUT
 
-### Chapter 70 — HURRY
-**Filename:** `ch70.png`
+Reference: Psalms 47:1–6.
 
-```
-A dramatic, cinematic biblical illustration of Hasten, O God, to save me — come quickly, LORD, to help me. Symbolizes 'HURRY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 47. Reference Psalms 47:1–6. People from varied ancient neighboring communities clap and sing joyfully together as ram horns sound on an open hillside. Shared praise and rejoicing, no modern national flags, stage or conquering army. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 71 — OLD AGE
-**Filename:** `ch71.png`
+### Psalms 48 — CITY
 
-```
-A dramatic, cinematic biblical illustration of Do not cast me away when I am old — do not forsake me when my strength is gone. Symbolizes 'OLD AGE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 48:1–8.
 
-### Chapter 72 — GOLD
-**Filename:** `ch72.png`
+Psalms chapter 48. Reference Psalms 48:1–8. Pilgrims admire the strong ancient city of Zion on its hill, its citadels and walls warmly lit above valleys. Human-scale Iron Age Jerusalem, no later dome, modern skyline or fantasy skyscraper temple. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of May gold from Sheba be given him — all nations will be blessed through him. Symbolizes 'GOLD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 49 — RANSOM
 
-### Chapter 73 — FEET
-**Filename:** `ch73.png`
+Reference: Psalms 49:6–12.
 
-```
-A dramatic, cinematic biblical illustration of My feet had almost slipped — I envied the arrogant when I saw their prosperity. Symbolizes 'FEET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 49. Reference Psalms 49:6–12. A wealthy ancient man stands thoughtfully beside an ancestral rock-cut tomb, holding a purse whose silver cannot prevent mortality. Quiet serious reflection, no ransom transaction with a visible God, skeleton or readable epitaph. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 74 — RUINS
-**Filename:** `ch74.png`
+### Psalms 50 — SACRIFICE
 
-```
-A dramatic, cinematic biblical illustration of Your enemies have roared in the place where you met with us — they smashed the carvings. Symbolizes 'RUINS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 50:7–15.
 
-### Chapter 75 — CUP
-**Filename:** `ch75.png`
+Psalms chapter 50. Reference Psalms 50:7–15. A worshipper offers heartfelt thanks with open hands near a simple altar while herds graze across broad hills beyond. Gratitude rather than lavish sacrifice dominates; no slaughter or image of God needing food. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of In the hand of the LORD is a cup full of foaming wine — the wicked drink it down. Symbolizes 'CUP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 51 — HYSSOP
 
-### Chapter 76 — ARROWS
-**Filename:** `ch76.png`
+Reference: Psalms 51:7–12.
 
-```
-A dramatic, cinematic biblical illustration of You broke the flashing arrows, the shields and the swords and the weapons of war. Symbolizes 'ARROWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 51. Reference Psalms 51:7–12. A repentant ancient worshipper kneels beside a simple basin of clear water with a small hyssop branch laid across its rim. Gentle dawn light illuminates his bowed face and open hands. A visual metaphor for cleansing and a renewed heart, not a magical plant or visible anatomical heart. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 77 — WATER
-**Filename:** `ch77.png`
+### Psalms 52 — OLIVE
 
-```
-A dramatic, cinematic biblical illustration of The waters saw you, God — the very depths were convulsed. Symbolizes 'WATER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 52:7–9.
 
-### Chapter 78 — ROCK
-**Filename:** `ch78.png`
+Psalms chapter 52. Reference Psalms 52:7–9. A mature green olive tree flourishes beside an ancient sanctuary courtyard; a humble worshipper rests beneath its fruitful branches, while an abandoned purse lies in distant shadow. The flourishing olive tree is the psalmist's metaphor for trust in God's enduring love. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of He split the rocks in the wilderness — he gave them water as abundant as the seas. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 53 — FOOL
 
-### Chapter 79 — ASHES
-**Filename:** `ch79.png`
+Reference: Psalms 53:1–3.
 
-```
-A dramatic, cinematic biblical illustration of They have reduced Jerusalem to rubble — we are objects of contempt to our neighbors. Symbolizes 'ASHES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 53. Reference Psalms 53:1–3. At an ancient town gate a wealthy man arrogantly turns away while poorer neighbors appeal for help; his cold dismissal contrasts with a humble person quietly looking heavenward. An ethical illustration of corrupt self-sufficiency, not a caricature of any modern community. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 80 — VINE
-**Filename:** `ch80.png`
+### Psalms 54 — NAME
 
-```
-A dramatic, cinematic biblical illustration of You transplanted a vine from Egypt — why have you broken down its walls?. Symbolizes 'VINE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 54:1–4.
 
-### Chapter 81 — HONEY
-**Filename:** `ch81.png`
+Psalms chapter 54. Reference Psalms 54:1–4. David, a young fugitive in simple weathered clothing, prays in a rocky Judean hiding place as distant pursuers search the ridge. His open hands and composed face express reliance on God's name. No written divine name or visible rescuer. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I would feed you with the finest wheat — with honey from the rock I would satisfy you. Symbolizes 'HONEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 55 — WINGS
 
-### Chapter 82 — GODS
-**Filename:** `ch82.png`
+Reference: Psalms 55:4–8.
 
-```
-A dramatic, cinematic biblical illustration of God presides in the great assembly — how long will you defend the unjust?. Symbolizes 'GODS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 55. Reference Psalms 55:4–8. An anxious ancient poet sits above a troubled walled city and watches a white dove fly toward peaceful wilderness hills. The bird's open wings and spacious distant valley convey his longing to escape and find rest; the man does not have wings. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 83 — FIRE
-**Filename:** `ch83.png`
+### Psalms 56 — BOTTLE
 
-```
-A dramatic, cinematic biblical illustration of Make them like tumbleweed — like fire burning a forest. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 56:8–11.
 
-### Chapter 84 — SPARROW
-**Filename:** `ch84.png`
+Psalms chapter 56. Reference Psalms 56:8–11. An intimate symbolic still life beside a grieving ancient worshipper: a small translucent glass tear bottle and an open record scroll on a rough wooden table, lit tenderly by a lamp. No legible writing or gigantic tears; remembered sorrow and trust are the focus. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Even the sparrow has found a home at your altar — better is one day in your courts. Symbolizes 'SPARROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 57 — DAWN
 
-### Chapter 85 — KISS
-**Filename:** `ch85.png`
+Reference: Psalms 57:7–11.
 
-```
-A dramatic, cinematic biblical illustration of Love and faithfulness meet together — righteousness and peace kiss each other. Symbolizes 'KISS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 57. Reference Psalms 57:7–11. A steadfast singer plays an ancient lyre at the mouth of a rocky refuge as brilliant sunrise spreads across the hills. His face and instrument catch the first warm light, awakening the dawn through praise. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 86 — EAR
-**Filename:** `ch86.png`
+### Psalms 58 — COBRA
 
-```
-A dramatic, cinematic biblical illustration of Hear me, LORD, and answer me — bend down your ear to me. Symbolizes 'EAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 58:3–5.
 
-### Chapter 87 — ZION
-**Filename:** `ch87.png`
+Psalms chapter 58. Reference Psalms 58:3–5. A tense symbolic scene of a hooded cobra turning away from an ancient snake charmer and his simple flute on dry rocky ground. Emphasize refusal to listen as the psalm's comparison for wickedness; natural snake anatomy without visible human ears. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Glorious things are said of you, city of God — I will record Rahab and Babylon. Symbolizes 'ZION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 59 — FORTRESS
 
-### Chapter 88 — DARKNESS
-**Filename:** `ch88.png`
+Reference: Psalms 59:14–17.
 
-```
-A dramatic, cinematic biblical illustration of You have put me in the lowest pit — darkness is my closest friend. Symbolizes 'DARKNESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 59. Reference Psalms 59:14–17. A worshipper sings from the shelter of a sturdy stone fortress at dawn, while a few prowling dogs retreat along the dark outer city lane. The fortress is a metaphor of refuge and the dogs echo hostile pursuit, with no attack or gore. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 89 — FOREVER
-**Filename:** `ch89.png`
+### Psalms 60 — CUP
 
-```
-A dramatic, cinematic biblical illustration of I will sing of the LORD's great love forever — where is your former great love, Lord?. Symbolizes 'FOREVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 60:1–5.
 
-### Chapter 90 — GRASS
-**Filename:** `ch90.png`
+Psalms chapter 60. Reference Psalms 60:1–5. A weary ancient soldier kneels on fractured battlefield ground beside an overturned wine cup, looking toward a plain rallying banner still standing in morning light. Symbolic hardship and appeal for restoration, no drunken revelry or written emblem. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Moses: "A thousand years are like a day — we are like grass that withers in the evening. Symbolizes 'GRASS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 61 — TOWER
 
-### Chapter 91 — FEATHERS
-**Filename:** `ch91.png`
+Reference: Psalms 61:1–4.
 
-```
-A dramatic, cinematic biblical illustration of He will cover you with his feathers — his faithfulness will be your shield and rampart. Symbolizes 'FEATHERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 61. Reference Psalms 61:1–4. A small exhausted traveler looks upward along a rising rocky path toward a strong stone refuge tower on a high crag. The rock is clearly higher than he is; welcoming light at the tower conveys protection without a giant divine hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 92 — PALM
-**Filename:** `ch92.png`
+### Psalms 62 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of The righteous will flourish like a palm tree — they will still bear fruit in old age. Symbolizes 'PALM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 62:1–8.
 
-### Chapter 93 — WAVES
-**Filename:** `ch93.png`
+Psalms chapter 62. Reference Psalms 62:1–8. A solitary ancient worshipper sits quietly in the sheltered lee of an immense stable rock while wind bends grasses outside. Stillness, grounded posture and a calm warm horizon express waiting in God alone; no dramatic rescue event. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The LORD reigns, clothed in majesty — mightier than the thunder of great waters. Symbolizes 'WAVES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 63 — DESERT
 
-### Chapter 94 — ROCK
-**Filename:** `ch94.png`
+Reference: Psalms 63:1–4.
 
-```
-A dramatic, cinematic biblical illustration of When I said my foot is slipping — your unfailing love, LORD, supported me. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 63. Reference Psalms 63:1–4. David stands in a dry Judean wilderness with cracked earth and barren slopes, lifting empty hands toward dawn. His thirsty yet devoted expression makes the parched landscape a metaphor for yearning for God, without an oasis that erases the drought. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 95 — KNEEL
-**Filename:** `ch95.png`
+### Psalms 64 — ARROWS
 
-```
-A dramatic, cinematic biblical illustration of Come, let us bow down in worship — let us kneel before the LORD our Maker. Symbolizes 'KNEEL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 64:2–7.
 
-### Chapter 96 — TREES
-**Filename:** `ch96.png`
+Psalms chapter 64. Reference Psalms 64:2–7. A symbolic ambush scene: shadowed ancient conspirators aim arrows from behind rocks toward an innocent traveler on a sunlit path. Arrows represent bitter words and secret plotting; no literal tongues as blades and no wounded body. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Let the heavens rejoice — let the trees of the forest sing for joy. Symbolizes 'TREES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 65 — RAIN
 
-### Chapter 97 — LIGHTNING
-**Filename:** `ch97.png`
+Reference: Psalms 65:9–13.
 
-```
-A dramatic, cinematic biblical illustration of His lightning lights up the world — the mountains melt like wax before the LORD. Symbolizes 'LIGHTNING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 65. Reference Psalms 65:9–13. Fresh rain nourishes furrowed fields in a broad fertile valley; overflowing streams thread through golden grain and green hills dotted with sheep. Sun breaks through rain clouds, a single lush landscape celebrating the year's bounty. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 98 — TRUMPET
-**Filename:** `ch98.png`
+### Psalms 66 — FIRE
 
-```
-A dramatic, cinematic biblical illustration of Shout for joy to the LORD — burst into jubilant song with music, trumpet and horn. Symbolizes 'TRUMPET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 66:10–12.
 
-### Chapter 99 — FOOTSTOOL
-**Filename:** `ch99.png`
+Psalms chapter 66. Reference Psalms 66:10–12. An ancient silversmith carefully heats and refines silver in a small crucible over a bright furnace while removing dark impurities. This is the psalm's explicit metaphor for testing and refinement, with no person placed inside fire. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The LORD reigns — let the nations tremble — he is exalted over all the nations. Symbolizes 'FOOTSTOOL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 67 — HARVEST
 
-### Chapter 100 — GATES
-**Filename:** `ch100.png`
+Reference: Psalms 67:4–7.
 
-```
-A dramatic, cinematic biblical illustration of Enter his gates with thanksgiving and his courts with praise. Symbolizes 'GATES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 67. Reference Psalms 67:4–7. Families from several ancient neighboring lands gather gratefully beside a rich grain harvest, carrying sheaves and baskets under a generous sky. Peaceful shared thanksgiving connects the earth's yield with blessing for all peoples. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 101 — HOUSE
-**Filename:** `ch101.png`
+### Psalms 68 — CLOUD
 
-```
-A dramatic, cinematic biblical illustration of I will conduct the affairs of my house with a blameless heart. Symbolizes 'HOUSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 68:4–8.
 
-### Chapter 102 — SMOKE
-**Filename:** `ch102.png`
+Psalms chapter 68. Reference Psalms 68:4–8. Towering luminous storm clouds rise over Sinai-like wilderness mountains, with a small traveling community sheltered together below. Rain and rays of light evoke divine majesty and care; no human figure riding a cloud. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of For my days vanish like smoke — I am like a desert owl among the ruins. Symbolizes 'SMOKE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 69 — FLOOD
 
-### Chapter 103 — EAST
-**Filename:** `ch103.png`
+Reference: Psalms 69:1–3.
 
-```
-A dramatic, cinematic biblical illustration of As far as the east is from the west — so far has he removed our transgressions. Symbolizes 'EAST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 69. Reference Psalms 69:1–3. A poetic visualization of overwhelming trouble: a fully clothed ancient man struggles for footing in dark water reaching his neck, looking upward with an urgent prayer. Distant light and the scale of the waters communicate the plea; no graphic suffering or visible rescuing hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 104 — SPRINGS
-**Filename:** `ch104.png`
+### Psalms 70 — HURRY
 
-```
-A dramatic, cinematic biblical illustration of He makes springs pour water into the ravines — the earth is satisfied by the fruit of his work. Symbolizes 'SPRINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 70:1–5.
 
-### Chapter 105 — COVENANT
-**Filename:** `ch105.png`
+Psalms chapter 70. Reference Psalms 70:1–5. A poor exhausted traveler raises his hands urgently toward a lit refuge doorway while distant pursuers remain indistinct behind him. A moment of urgent prayer for help, without inventing a specific named rescue. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of He remembers his covenant forever — the word he commanded for a thousand generations. Symbolizes 'COVENANT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 71 — OLD AGE
 
-### Chapter 106 — PRAISE
-**Filename:** `ch106.png`
+Reference: Psalms 71:9–18.
 
-```
-A dramatic, cinematic biblical illustration of Praise the LORD — we have sinned as our ancestors did — yet he saved them for his name's sake. Symbolizes 'PRAISE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 71. Reference Psalms 71:9–18. A gray-haired elderly worshipper, visibly frail but hopeful, tells attentive children and young adults about God's faithfulness in a quiet courtyard. His staff rests nearby; intergenerational witness, dignity and endurance are central. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 107 — REDEEMED
-**Filename:** `ch107.png`
+### Psalms 72 — GOLD
 
-```
-A dramatic, cinematic biblical illustration of Let the redeemed of the LORD tell their story — gathered from east, west, north and south. Symbolizes 'REDEEMED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 72:10–15.
 
-### Chapter 108 — DAWN
-**Filename:** `ch108.png`
+Psalms chapter 72. Reference Psalms 72:10–15. An ancient just king receives modest vessels of gold from distant envoys while a poor parent and child are welcomed safely beside his throne. Tribute supports the psalm's greater emphasis on justice and care for the needy; no Bethlehem nativity or magi scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Awake, harp and lyre — I will awaken the dawn. Symbolizes 'DAWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 73 — FEET
 
-### Chapter 109 — CURSE
-**Filename:** `ch109.png`
+Reference: Psalms 73:2–3,16–18.
 
-```
-A dramatic, cinematic biblical illustration of In return for my friendship they accuse me — appoint someone evil over him. Symbolizes 'CURSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 73. Reference Psalms 73:2–3,16–18. A troubled worshipper steadies his slipping sandal on worn sanctuary steps, turning away from wealthy arrogant revelers visible below. Warm sanctuary light draws his attention inward; a symbolic shift from envy to understanding. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 110 — FOOTSTOOL
-**Filename:** `ch110.png`
+### Psalms 74 — RUINS
 
-```
-A dramatic, cinematic biblical illustration of The LORD says to my lord — sit at my right hand until I make your enemies a footstool. Symbolizes 'FOOTSTOOL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 74:3–8.
 
-### Chapter 111 — FEAR
-**Filename:** `ch111.png`
+Psalms chapter 74. Reference Psalms 74:3–8. A lamenting survivor stands among a burned sanctuary's shattered carved cedar panels, broken stone and discarded axes. Smoke thins in gray daylight; focus on violated sacred space and grief, without gore or a modern ruined church. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The fear of the LORD is the beginning of wisdom — his praise endures forever. Symbolizes 'FEAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 75 — CUP
 
-### Chapter 112 — LIGHT
-**Filename:** `ch112.png`
+Reference: Psalms 75:6–8.
 
-```
-A dramatic, cinematic biblical illustration of Even in darkness light dawns for the upright — they will never be shaken. Symbolizes 'LIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 75. Reference Psalms 75:6–8. A solemn symbolic still life of a bronze cup brimming with dark foaming spiced wine on a stone ledge beneath a storm-dark sky. An overturned crown in shadow suggests judgment on the proud. No visible divine hand, drinking celebration or lettering. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 113 — DUST
-**Filename:** `ch113.png`
+### Psalms 76 — ARROWS
 
-```
-A dramatic, cinematic biblical illustration of He raises the poor from the dust — he seats them with princes. Symbolizes 'DUST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 76:1–6.
 
-### Chapter 114 — TREMBLE
-**Filename:** `ch114.png`
+Psalms chapter 76. Reference Psalms 76:1–6. Broken arrows, a split shield and a snapped sword lie abandoned outside sunlit ancient Zion, whose walls stand peaceful beyond. The shattered weapons embody the end of hostile power; no corpses or active battle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The sea looked and fled — the mountains skipped like rams. Symbolizes 'TREMBLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 77 — WATER
 
-### Chapter 115 — IDOLS
-**Filename:** `ch115.png`
+Reference: Psalms 77:16–20.
 
-```
-A dramatic, cinematic biblical illustration of Their idols have mouths but cannot speak — eyes but cannot see. Symbolizes 'IDOLS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 77. Reference Psalms 77:16–20. A memory of the Exodus: an ancient Israelite procession follows Moses and Aaron through a broad dry passage between towering sea waters, under thunderclouds pierced with light. No divine footprints or giant human figure, clear land beneath the travelers. Moses and Aaron wear ordinary travel robes; no priestly breastplate, ephod or ceremonial garments, which were introduced after this crossing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 116 — CUP
-**Filename:** `ch116.png`
+### Psalms 78 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of I will lift up the cup of salvation and call on the name of the LORD. Symbolizes 'CUP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 78:15–20.
 
-### Chapter 117 — SHORT
-**Filename:** `ch117.png`
+Psalms chapter 78. Reference Psalms 78:15–20. Abundant fresh water pours from a split wilderness rock while Israelite families fill clay jars and drink beside their tents. The astonishing stream dominates the dry landscape, recalling provision even amid the people's questioning. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The shortest chapter in the Bible — "Praise the LORD all you nations. Symbolizes 'SHORT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 79 — ASHES
 
-### Chapter 118 — GATE
-**Filename:** `ch118.png`
+Reference: Psalms 79:1–4.
 
-```
-A dramatic, cinematic biblical illustration of This is the gate of the LORD — the stone the builders rejected has become the cornerstone. Symbolizes 'GATE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 79. Reference Psalms 79:1–4. Mourners sit in the ashes of devastated ancient Jerusalem, with collapsed walls and the ruined temple rising behind them. A broken household jar and charred beams convey loss without showing bodies or blood. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 119 — LAMP
-**Filename:** `ch119.png`
+### Psalms 80 — VINE
 
-```
-A dramatic, cinematic biblical illustration of Your word is a lamp to my feet and a light to my path" — 176 verses, 22 stanzas. Symbolizes 'LAMP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 80:8–14.
 
-### Chapter 120 — ARROWS
-**Filename:** `ch120.png`
+Psalms chapter 80. Reference Psalms 80:8–14. A once vigorous grapevine sprawls through a breached vineyard wall, its branches damaged by a wild boar and exposed fruit stripped away. A lone keeper looks over the ruin with concern. Explicit visual metaphor for Israel and the plea to restore the vine. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Save me, LORD, from lying lips — from deceitful tongues — sharp arrows of the warrior. Symbolizes 'ARROWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 81 — HONEY
 
-### Chapter 121 — HILLS
-**Filename:** `ch121.png`
+Reference: Psalms 81:13–16.
 
-```
-A dramatic, cinematic biblical illustration of I lift up my eyes to the mountains — where does my help come from?. Symbolizes 'HILLS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 81. Reference Psalms 81:13–16. A symbolic still life in a rocky fertile landscape: fine wheat sheaves and a natural honeycomb tucked into a rock crevice, amber honey glistening in sunlight. Rich nourishment represents the promised provision; no impossible fountain of honey. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 122 — PEACE
-**Filename:** `ch122.png`
+### Psalms 82 — GODS
 
-```
-A dramatic, cinematic biblical illustration of Pray for the peace of Jerusalem — may those who love you be secure. Symbolizes 'PEACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 82:1–4.
 
-### Chapter 123 — EYES
-**Filename:** `ch123.png`
+Psalms chapter 82. Reference Psalms 82:1–4. In an ancient council hall, stern judges sit elevated while a vulnerable orphan and a poor parent stand before them. A strong shaft of light falls on the needy and exposes the judges' uneasy faces. Focus on the psalm's demand for just judgment, no pagan pantheon portrayed as literal gods. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of As the eyes of slaves look to their master — our eyes look to the LORD. Symbolizes 'EYES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 83 — FIRE
 
-### Chapter 124 — BIRD
-**Filename:** `ch124.png`
+Reference: Psalms 83:13–16.
 
-```
-A dramatic, cinematic biblical illustration of We have escaped like a bird from the fowler's snare — the snare has been broken. Symbolizes 'BIRD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 83. Reference Psalms 83:13–16. Wind drives tumbleweed and chaff across a rocky slope as a distant forest fire advances beneath a stormy sky. This is the psalm's poetic image of judgment and pursuit, with no people burning or named historical battle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 125 — MOUNTAIN
-**Filename:** `ch125.png`
+### Psalms 84 — SPARROW
 
-```
-A dramatic, cinematic biblical illustration of Those who trust in the LORD are like Mount Zion which cannot be shaken. Symbolizes 'MOUNTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 84:1–4.
 
-### Chapter 126 — SEEDS
-**Filename:** `ch126.png`
+Psalms chapter 84. Reference Psalms 84:1–4. A small sparrow rests beside a swallow's nest of young birds in sheltered ancient temple stonework, with the courtyard altar respectfully distant. Warm welcoming light expresses belonging near God's dwelling; the nest is not inside the fire. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Those who sow with tears will reap with songs of joy — carrying sheaves with them. Symbolizes 'SEEDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 85 — KISS
 
-### Chapter 127 — SLEEP
-**Filename:** `ch127.png`
+Reference: Psalms 85:8–13.
 
-```
-A dramatic, cinematic biblical illustration of He grants sleep to those he loves — unless the LORD builds the house, the builders labor in vain. Symbolizes 'SLEEP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 85. Reference Psalms 85:8–13. Two ancient neighbors reconcile with a gentle embrace and a customary greeting kiss at the edge of a newly fruitful field under clearing skies. A symbolic human illustration of righteousness and peace meeting, not literal deities personified or a romantic scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 128 — VINE
-**Filename:** `ch128.png`
+### Psalms 86 — EAR
 
-```
-A dramatic, cinematic biblical illustration of Your wife will be like a fruitful vine within your house. Symbolizes 'VINE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 86:1–7.
 
-### Chapter 129 — PLOW
-**Filename:** `ch129.png`
+Psalms chapter 86. Reference Psalms 86:1–7. A poor ancient worshipper kneels alone beside a small clay lamp, speaking a sincere prayer into the quiet dawn. His open hands, worn clothing and attentive upward gaze express confidence that God hears; no giant ear in the sky. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Plowmen have plowed my back and made their furrows long. Symbolizes 'PLOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 87 — ZION
 
-### Chapter 130 — DEPTHS
-**Filename:** `ch130.png`
+Reference: Psalms 87:1–7.
 
-```
-A dramatic, cinematic biblical illustration of Out of the depths I cry to you, LORD — my soul waits for the Lord more than watchmen. Symbolizes 'DEPTHS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 87. Reference Psalms 87:1–7. People from ancient Egypt, Babylon, Philistia, Tyre and Cush gather peacefully at Zion's gates while a scribe records names on an indistinct scroll and musicians welcome them. Varied historically plausible clothing and complexions, one shared belonging, no readable writing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 131 — CHILD
-**Filename:** `ch131.png`
+### Psalms 88 — DARKNESS
 
-```
-A dramatic, cinematic biblical illustration of I have calmed and quieted myself — like a weaned child with its mother. Symbolizes 'CHILD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 88:13–18.
 
-### Chapter 132 — FOOTSTOOL
-**Filename:** `ch132.png`
+Psalms chapter 88. Reference Psalms 88:13–18. A lonely ancient sufferer sits in a deeply shadowed stone chamber, head bowed and hands open in prayer. A very faint gray morning at a high opening preserves the psalm's unresolved darkness; no cheerful reunion or triumphant rescue. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of We heard it in Ephraim — we came to worship at his footstool. Symbolizes 'FOOTSTOOL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 89 — FOREVER
 
-### Chapter 133 — DEW
-**Filename:** `ch133.png`
+Reference: Psalms 89:1–4,38–46.
 
-```
-A dramatic, cinematic biblical illustration of How good when brothers live together in unity — like the dew of Hermon. Symbolizes 'DEW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 89. Reference Psalms 89:1–4,38–46. A royal crown lies dusty beside a damaged Davidic throne in a ruined palace courtyard, while a faithful singer looks toward the enduring stars. The single nocturnal scene holds the tension between covenant promise and present royal humiliation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 134 — NIGHT
-**Filename:** `ch134.png`
+### Psalms 90 — GRASS
 
-```
-A dramatic, cinematic biblical illustration of Praise the LORD all you servants of the LORD who minister by night in the house. Symbolizes 'NIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 90:4–6.
 
-### Chapter 135 — HAIL
-**Filename:** `ch135.png`
+Psalms chapter 90. Reference Psalms 90:4–6. Close foreground grasses fade from fresh green in sheltered shade to dry golden stalks in evening light across one ancient hillside. An elderly traveler pauses nearby, contemplating life's brevity. Natural landscape metaphor, no clocks or calendars. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of He sends lightning with the rain — he brings out the wind and hail. Symbolizes 'HAIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 91 — FEATHERS
 
-### Chapter 136 — MERCY
-**Filename:** `ch136.png`
+Reference: Psalms 91:1–4.
 
-```
-A dramatic, cinematic biblical illustration of Give thanks to the LORD — his love endures forever" — repeated 26 times. Symbolizes 'MERCY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 91. Reference Psalms 91:1–4. A mother bird shelters small chicks beneath broad protective feathers in a rocky nest while rain falls outside. A tender natural metaphor for refuge under God's wings; no giant feathered deity or human-bird hybrid. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 137 — RIVERS
-**Filename:** `ch137.png`
+### Psalms 92 — PALM
 
-```
-A dramatic, cinematic biblical illustration of By the rivers of Babylon we sat and wept — we hung our harps on the poplars. Symbolizes 'RIVERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 92:12–15.
 
-### Chapter 138 — KINGS
-**Filename:** `ch138.png`
+Psalms chapter 92. Reference Psalms 92:12–15. A flourishing mature date palm heavy with fruit rises beside a sturdy cedar in an ancient sanctuary courtyard, with an elderly worshipper tending the ground. The healthy trees and dignified elder express fruitfulness even in old age. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of All the kings of the earth will praise you — when they hear what you have decreed. Symbolizes 'KINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 93 — WAVES
 
-### Chapter 139 — WOMB
-**Filename:** `ch139.png`
+Reference: Psalms 93:1–4.
 
-```
-A dramatic, cinematic biblical illustration of You knit me together in my mother's womb — I am fearfully and wonderfully made. Symbolizes 'WOMB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 93. Reference Psalms 93:1–4. Powerful sea breakers thunder against a rocky coast beneath an immense luminous sky. The stormy water occupies the lower frame while calm majestic light towers above, evoking sovereignty greater than the waters without a visible divine figure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 140 — POISON
-**Filename:** `ch140.png`
+### Psalms 94 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of Rescue me from evil men — who stir up war every day — viper's poison on their lips. Symbolizes 'POISON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 94:17–22.
 
-### Chapter 141 — INCENSE
-**Filename:** `ch141.png`
+Psalms chapter 94. Reference Psalms 94:17–22. A worried ancient traveler finds a secure foothold and sheltered resting place beside a massive rock on a steep path. His relieved posture and the stable rock convey support when his foot slips; no supernatural hand or unrelated rescue party. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of May my prayer be set before you like incense — may the lifting of my hands be like the evening sacrifice. Symbolizes 'INCENSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 95 — KNEEL
 
-### Chapter 142 — PRISON
-**Filename:** `ch142.png`
+Reference: Psalms 95:6–8.
 
-```
-A dramatic, cinematic biblical illustration of Set me free from my prison that I may praise your name. Symbolizes 'PRISON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 95. Reference Psalms 95:6–8. An ancient community kneels together in sincere worship on open pastureland, with a shepherd and sheep nearby. Natural humble postures and warm morning light emphasize listening and bowing before their Maker. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 143 — MORNING
-**Filename:** `ch143.png`
+### Psalms 96 — TREES
 
-```
-A dramatic, cinematic biblical illustration of Let the morning bring me word of your unfailing love — show me the way I should go. Symbolizes 'MORNING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 96:11–13.
 
-### Chapter 144 — ARROW
-**Filename:** `ch144.png`
+Psalms chapter 96. Reference Psalms 96:11–13. A radiant forest opens toward fertile fields and the distant sea; wind moves tree branches in an exuberant rhythm and sunlight fills the leaves. Nature rejoices as poetic imagery, without human mouths or faces on trees. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of He shoots his arrows and scatters the enemies — he parts the heavens and comes down. Symbolizes 'ARROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 97 — LIGHTNING
 
-### Chapter 145 — HAND
-**Filename:** `ch145.png`
+Reference: Psalms 97:1–6.
 
-```
-A dramatic, cinematic biblical illustration of You open your hand and satisfy the desires of every living thing. Symbolizes 'HAND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 97. Reference Psalms 97:1–6. Brilliant lightning illuminates rugged mountains beneath immense dark clouds, the peaks softened by fiery atmospheric light. Awe and majesty dominate; the mountains' melting is suggested poetically, not rendered as candles or a scientific volcanic diagram. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 146 — BONES
-**Filename:** `ch146.png`
+### Psalms 98 — TRUMPET
 
-```
-A dramatic, cinematic biblical illustration of Do not put your trust in princes — his breath departs, he returns to the ground. Symbolizes 'BONES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 98:4–9.
 
-### Chapter 147 — STARS
-**Filename:** `ch147.png`
+Psalms chapter 98. Reference Psalms 98:4–9. Ancient worshippers joyfully play a straight metal trumpet, ram's horn and lyre beside a flowing river, with mountains beyond. Human celebration and lively water echo creation's praise; no modern brass instruments or literal hands on rivers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of He determines the number of the stars — he heals the brokenhearted. Symbolizes 'STARS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 99 — FOOTSTOOL
 
-### Chapter 148 — HEIGHTS
-**Filename:** `ch148.png`
+Reference: Psalms 99:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Praise the LORD from the heavens — praise him in the heights above. Symbolizes 'HEIGHTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Psalms chapter 99. Reference Psalms 99:1–5. Reverent worshippers bow low in an ancient sanctuary courtyard before a closed sacred doorway, with warm light beyond and subtle cherub motifs on the curtain. The posture conveys worship at God's footstool; no visible feet of a giant deity or ordinary chair mistaken for the ark. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 149 — SWORD
-**Filename:** `ch149.png`
+### Psalms 100 — GATES
 
-```
-A dramatic, cinematic biblical illustration of Let the praise of God be in their mouths and a double-edged sword in their hands. Symbolizes 'SWORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Psalms 100:1–5.
 
-### Chapter 150 — BREATH
-**Filename:** `ch150.png`
+Psalms chapter 100. Reference Psalms 100:1–5. A joyful multigenerational procession enters broad ancient sanctuary gates carrying simple musical instruments and offering baskets. Faces show gratitude and welcome, sunlight opens into the courts, and no readable gate inscription appears. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Let everything that has breath praise the LORD — Praise the LORD!. Symbolizes 'BREATH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Psalms 101 — HOUSE
 
+Reference: Psalms 101:1–4.
+
+Psalms chapter 101. Reference Psalms 101:1–4. David stands in his royal household doorway, welcoming an honest humble servant while turning away an offered bag of corrupt wealth. Quiet integrity in domestic leadership, no elaborate unrelated coronation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 102 — SMOKE
+
+Reference: Psalms 102:3–7.
+
+Psalms chapter 102. Reference Psalms 102:3–7. A solitary desert owl perches among ruined ancient walls as a thin wisp of smoke fades into a gray sky. A weary human silhouette sits far below. Poetic images of loneliness and vanishing days, no burning human bones. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 103 — EAST
+
+Reference: Psalms 103:8–14.
+
+Psalms chapter 103. Reference Psalms 103:8–14. A vast open landscape stretches between distant eastern and western horizons beneath a compassionate warm sky. In the foreground an ancient father gently embraces a returning child. The breadth of forgiveness is a visual metaphor, without directional labels or written sins. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 104 — SPRINGS
+
+Reference: Psalms 104:10–15.
+
+Psalms chapter 104. Reference Psalms 104:10–15. Fresh springs run through a green mountain ravine where wild donkeys drink and birds nest above the water. Cultivated fields extend beyond, one coherent abundant ecosystem celebrating creation and provision. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 105 — COVENANT
+
+Reference: Psalms 105:8–11.
+
+Psalms chapter 105. Reference Psalms 105:8–11. Elderly Abraham stands beside his tent overlooking Canaan's hills with a young family member at his side, gesturing toward the promised land. This recalls the covenant across generations without placing Abraham, Isaac and Jacob as equal-aged adults together. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 106 — PRAISE
+
+Reference: Psalms 106:6–12.
+
+Psalms chapter 106. Reference Psalms 106:6–12. Israelite families stand safely on the far shore after the Red Sea crossing, humbled and grateful, singing praise as the water settles behind them. Rescue despite repeated unfaithfulness, no floating bodies or collage of later desert events. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 107 — REDEEMED
+
+Reference: Psalms 107:1–9.
+
+Psalms chapter 107. Reference Psalms 107:1–9. Exhausted desert travelers from different directions reach a welcoming ancient city gate, where residents offer water and bread. Relief, gathered community and thanksgiving convey redeemed wanderers finding a place to live. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 108 — DAWN
+
+Reference: Psalms 108:1–5.
+
+Psalms chapter 108. Reference Psalms 108:1–5. A confident ancient musician stands on a broad rooftop at first sunrise, playing a lyre toward the awakening city and distant hills. A harp rests nearby. Expansive public praise and steadfastness distinguish this from a cave refuge. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 109 — CURSE
+
+Reference: Psalms 109:1–5.
+
+Psalms chapter 109. Reference Psalms 109:1–5. An innocent ancient man remains in prayer as hostile accusers whisper and point from the shadowed edge of a town courtyard. His open empty hands and calm resolve contrast with their accusations; no magical curse symbols or exaggerated tongues. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 110 — FOOTSTOOL
+
+Reference: Psalms 110:1–4.
+
+Psalms chapter 110. Reference Psalms 110:1–4. A symbolic ancient royal-priestly figure sits on a dignified throne on Zion, holding a scepter, with surrendered weapons arranged below a low footstool. Warm glory from the upper right implies divine authorization without depicting God as a second human or putting living people under the king's feet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 111 — FEAR
+
+Reference: Psalms 111:7–10.
+
+Psalms chapter 111. Reference Psalms 111:7–10. A reverent ancient teacher and younger listeners study a law scroll in a sunlit sanctuary courtyard. Bowed attentive faces and careful handling of the scroll express wisdom beginning in reverence; no readable writing or terrified expressions. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 112 — LIGHT
+
+Reference: Psalms 112:4–9.
+
+Psalms chapter 112. Reference Psalms 112:4–9. At dawn a generous ancient household head offers bread and a small loan purse to a struggling neighbor in a once-dark lane. Warm light falls across compassionate faces, illustrating upright generosity and steadfast trust. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 113 — DUST
+
+Reference: Psalms 113:5–9.
+
+Psalms chapter 113. Reference Psalms 113:5–9. A poor dusty traveler is respectfully helped from the roadside and welcomed to a bench beside ancient community leaders. Human hospitality illustrates the psalm's reversal of lowliness, with dignity rather than humiliating spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 114 — TREMBLE
+
+Reference: Psalms 114:1–8.
+
+Psalms chapter 114. Reference Psalms 114:1–8. Israelite travelers cross a dry sea passage beneath trembling rugged mountains, with wind and light giving the landscape a sense of awe. The psalm's poetic response of creation is suggested through motion; no literal mountains with ram legs or collage of sea and Jordan crossings. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 115 — IDOLS
+
+Reference: Psalms 115:4–8.
+
+Psalms chapter 115. Reference Psalms 115:4–8. An ancient metalworker's silver and gold human-shaped idols sit inert on a bench, with lifeless carved eyes and closed mouths. Tools and unfinished metal show they are made by human hands; no glowing magical powers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 116 — CUP
+
+Reference: Psalms 116:12–19.
+
+Psalms chapter 116. Reference Psalms 116:12–19. A grateful worshipper lifts a simple ceremonial cup in an ancient sanctuary courtyard among a few witnesses, fulfilling thanksgiving vows. No Christian communion setting or ornate medieval chalice. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 117 — SHORT
+
+Reference: Psalms 117:1–2.
+
+Psalms chapter 117. Reference Psalms 117:1–2. A compact joyful gathering of people from several ancient nations raises open hands in shared praise under a bright sky. Two clear groups unite in one composition, expressing universal praise and enduring faithfulness without text or numbered symbols. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 118 — GATE
+
+Reference: Psalms 118:19–24.
+
+Psalms chapter 118. Reference Psalms 118:19–24. Ancient builders carefully set a once-discarded substantial stone into the corner foundation of a grand gateway, while grateful worshippers approach through the opening. Emphasize the cornerstone's structural role, not a floating stone or an arch keystone. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 119 — LAMP
+
+Reference: Psalms 119:105–112.
+
+Psalms chapter 119. Reference Psalms 119:105–112. Close view of a traveler's sandaled feet on a dark rocky path illuminated by a small handheld ancient oil lamp; a rolled scripture scroll is tucked safely at his belt. The warm pool of light reveals the next steps, a clear metaphor for guidance by God's word. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 120 — ARROWS
+
+Reference: Psalms 120:1–7.
+
+Psalms chapter 120. Reference Psalms 120:1–7. A peaceful ancient traveler stands apart from a hostile camp, where sharp arrows and a brazier of glowing broom-wood coals lie in the foreground. His prayerful gaze contrasts with arguing figures; judgment imagery remains symbolic and non-graphic. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 121 — HILLS
+
+Reference: Psalms 121:1–8.
+
+Psalms chapter 121. Reference Psalms 121:1–8. An ancient pilgrim pauses on a winding uphill road and lifts his gaze toward high mountains beneath a watchful expansive sky. A patch of shade shelters his right side, suggesting care through the journey without depicting a sleeping or visible divine guardian. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 122 — PEACE
+
+Reference: Psalms 122:6–9.
+
+Psalms chapter 122. Reference Psalms 122:6–9. Pilgrims pray together from an overlook above peaceful ancient Jerusalem, its walls enclosing homes and the sanctuary. Children and families move safely through the gate, with calm warm light expressing peace within the city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 123 — EYES
+
+Reference: Psalms 123:1–4.
+
+Psalms chapter 123. Reference Psalms 123:1–4. A household servant attentively watches the open hand of a seated mistress, awaiting a gentle instruction, in a modest ancient courtyard. This respectful everyday scene illustrates the psalm's explicit simile of looking for mercy; no chains or exaggerated servility. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 124 — BIRD
+
+Reference: Psalms 124:6–8.
+
+Psalms chapter 124. Reference Psalms 124:6–8. A small bird spreads its wings and escapes from a clearly torn hunter's net on open ground. Broken net strands remain visible below, with bright free sky ahead; natural anatomy and a simple unmistakable liberation metaphor. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 125 — MOUNTAIN
+
+Reference: Psalms 125:1–3.
+
+Psalms chapter 125. Reference Psalms 125:1–3. Ancient Jerusalem rests securely among encircling hills, with Mount Zion prominent and a small pilgrim in the foreground. Stable layered mountains and calm light convey enduring trust and surrounding protection. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 126 — SEEDS
+
+Reference: Psalms 126:4–6.
+
+Psalms chapter 126. Reference Psalms 126:4–6. A joyful ancient farmer returns home carrying full grain sheaves, with a small seed pouch still at his waist and tears of relief in his eyes. One harvest moment embodies the promise of sowing in sorrow and reaping with joy, no split-season collage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 127 — SLEEP
+
+Reference: Psalms 127:1–3.
+
+Psalms chapter 127. Reference Psalms 127:1–3. An ancient builder sleeps peacefully in a modest completed home, tools set aside and children resting safely nearby. Moonlight and a small extinguishing hearth convey trust and the gift of sleep, not laziness amid dangerous unfinished work. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 128 — VINE
+
+Reference: Psalms 128:1–4.
+
+Psalms chapter 128. Reference Psalms 128:1–4. An ancient family shares the fruit of their work around a simple courtyard table beneath a fruitful grapevine, with young olive shoots growing nearby. The wife and children remain fully human; vine and olive imagery gently frame household blessing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 129 — PLOW
+
+Reference: Psalms 129:1–4.
+
+Psalms chapter 129. Reference Psalms 129:1–4. A resilient ancient laborer stands upright beside long deep furrows in a field, with severed binding cords on the ground. The plowed soil is a visual metaphor for endured oppression; no literal plow on a person's back or graphic wounds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 130 — DEPTHS
+
+Reference: Psalms 130:1–6.
+
+Psalms chapter 130. Reference Psalms 130:1–6. A solitary watchman waits on a shadowed ancient city wall just before dawn, looking toward the first pale light beyond a deep valley. His quiet prayer and patient vigilance convey hope from the depths, without immediate triumphant rescue. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 131 — CHILD
+
+Reference: Psalms 131:1–3.
+
+Psalms chapter 131. Reference Psalms 131:1–3. A calm fully clothed toddler rests securely beside his mother's chest in a modest ancient home, no longer nursing. Her relaxed embrace and the child's quiet face embody the explicitly weaned child's contentment, with no infant breastfeeding scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 132 — FOOTSTOOL
+
+Reference: Psalms 132:6–9.
+
+Psalms chapter 132. Reference Psalms 132:6–9. Reverent priests and worshippers accompany the covered ark on shoulder-carried poles toward its resting tent. Blue cloth fully conceals the sacred chest during transport; no cart, bare handling or readable labels. Joyful reverence echoes the psalm's invitation to its dwelling place. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 133 — DEW
+
+Reference: Psalms 133:1–3.
+
+Psalms chapter 133. Reference Psalms 133:1–3. Brothers greet each other warmly on dew-covered mountain pasture at dawn, with Hermon's high slopes beyond. Fine droplets glisten on grass and olive leaves, a natural visual metaphor for refreshing unity rather than oil flooding the landscape. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 134 — NIGHT
+
+Reference: Psalms 134:1–3.
+
+Psalms chapter 134. Reference Psalms 134:1–3. A few ancient temple servants lift their hands in worship during the night watch, oil lamps softly lighting stone courts beneath a starry sky. Quiet sustained devotion, no daytime crowd or modern candles. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 135 — HAIL
+
+Reference: Psalms 135:5–7.
+
+Psalms chapter 135. Reference Psalms 135:5–7. Lightning flashes within rain-heavy clouds sweeping over an ancient landscape, while strong wind bends trees and drives showers across hills. The source keyword is retained by the app, but the scene follows the actual verses' lightning, rain and wind rather than inventing hail here. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 136 — MERCY
+
+Reference: Psalms 136:1–9.
+
+Psalms chapter 136. Reference Psalms 136:1–9. A grateful ancient community gathers on a hillside at twilight, where the last sunlight, rising moon and first stars share one natural sky. The gathering gives thanks for creation and enduring loving devotion, no repeated written refrain or collage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 137 — RIVERS
+
+Reference: Psalms 137:1–4.
+
+Psalms chapter 137. Reference Psalms 137:1–4. Judean exiles sit weeping beside a broad Babylonian canal, their ancient lyres hanging unused from willow branches. Distant Babylonian architecture and subdued water reflections emphasize homesickness and unwillingness to perform for captors. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 138 — KINGS
+
+Reference: Psalms 138:4–6.
+
+Psalms chapter 138. Reference Psalms 138:4–6. Several ancient regional kings set aside their proud postures and bow in gratitude as a humble messenger speaks in an open court. Diverse royal garments, restrained dignity and shared reverence; no readable decree or modern crowns. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 139 — WOMB
+
+Reference: Psalms 139:13–18.
+
+Psalms chapter 139. Reference Psalms 139:13–18. A fully clothed expectant mother sits peacefully beside a small woven baby blanket, resting her hands gently on her pregnant abdomen in warm lamplight. A tender non-anatomical image of life wonderfully formed and known; no transparent womb, fetus diagram or knitting a human body. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 140 — POISON
+
+Reference: Psalms 140:1–4.
+
+Psalms chapter 140. Reference Psalms 140:1–4. A coiled viper in foreground shadow echoes the whispered plotting of distant hostile men, while a vulnerable traveler prays beyond them in light. The snake is a poetic metaphor for venomous speech, not emerging from human mouths. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 141 — INCENSE
+
+Reference: Psalms 141:1–4.
+
+Psalms chapter 141. Reference Psalms 141:1–4. An ancient worshipper raises his hands in evening prayer as a thin column of incense smoke rises from a small bronze vessel nearby. Sunset and the smoke's graceful ascent connect prayer with offering; no fire enveloping the person. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 142 — PRISON
+
+Reference: Psalms 142:1–7.
+
+Psalms chapter 142. Reference Psalms 142:1–7. David prays alone in the deep recess of a rocky cave, with a narrow view of daylight and the path outside. The enclosing stone expresses imprisonment and isolation metaphorically; no invented iron jail bars in the cave. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 143 — MORNING
+
+Reference: Psalms 143:7–10.
+
+Psalms chapter 143. Reference Psalms 143:7–10. A weary ancient traveler steps from shadow onto a level path flooded with gentle morning light, pausing with open hands for guidance. The quiet hopeful dawn and safe ground embody the plea for loving devotion and direction. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 144 — ARROW
+
+Reference: Psalms 144:5–8.
+
+Psalms chapter 144. Reference Psalms 144:5–8. Sharp branching lightning streaks like arrows across a stormy sky above smoky mountain ridges, scattering a distant hostile force on the plain. Poetic divine deliverance without a giant archer in the clouds, human-shaped deity or graphic casualties. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 145 — HAND
+
+Reference: Psalms 145:14–17.
+
+Psalms chapter 145. Reference Psalms 145:14–17. An ancient farmer's open hand scatters grain for birds while sheep graze and a family shares bread beside a fruitful field. A representative human memory cue for generous provision to living creatures, not a literal giant divine hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 146 — BONES
+
+Reference: Psalms 146:3–9.
+
+Psalms chapter 146. Reference Psalms 146:3–9. An abandoned royal crown rests beside an earthen burial mound in the foreground, while beyond it ordinary neighbors offer bread and support to a widow and orphan. Mortal power contrasted with enduring faithful care, no exposed skeleton or graphic remains. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 147 — STARS
+
+Reference: Psalms 147:2–6.
+
+Psalms chapter 147. Reference Psalms 147:2–6. Under a vast star-filled sky above rebuilding Jerusalem, a caring neighbor gently bandages a returning exile's hand while others arrive home. Intimate healing beneath innumerable stars links compassion and immeasurable power, no numbered constellations. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 148 — HEIGHTS
+
+Reference: Psalms 148:1–10.
+
+Psalms chapter 148. Reference Psalms 148:1–10. A sweeping mountain-to-sea landscape under a luminous high sky, with birds, grazing animals, cedars and fruit trees all alive with movement. One coherent panorama of creation praising, not a collage of incompatible day and night skies or literal singing animal mouths. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 149 — SWORD
+
+Reference: Psalms 149:1–9.
+
+Psalms chapter 149. Reference Psalms 149:1–9. An ancient Israelite assembly sings with tambourines and lyres while a solemn guard holds a straight double-edged sword upright at rest. The image connects praise with the psalm's judgment motif without an active execution, attack or modern militant symbolism. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Psalms 150 — BREATH
+
+Reference: Psalms 150:1–6.
+
+Psalms chapter 150. Reference Psalms 150:1–6. A joyful ancient sanctuary celebration fills the frame with singers, dancers, a ram's horn, lyre, harp, flute, tambourines and hand-held cymbals. Natural varied gestures and one coherent gathering celebrate all who breathe; no modern orchestra instruments or readable lyrics. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
