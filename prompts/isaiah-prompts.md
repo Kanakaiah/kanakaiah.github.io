@@ -1,468 +1,399 @@
-# Image prompts for Isaiah — all chapters
+# Isaiah — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/isaiah/`.
+Reviewed against the bundled BSB scripture (book 23). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 66 chapters.
+### Isaiah 1 — SCARLET
 
-### Chapter 1 — SCARLET
-**Filename:** `ch1.png`
+Reference: Isaiah 1:18–20.
 
-```
-A dramatic, cinematic biblical illustration of Though your sins are like scarlet — they shall be as white as snow. Symbolizes 'SCARLET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 1. Reference Isaiah 1:18–20. A symbolic still life of deep scarlet cloth beside clean white wool on a stone washing basin, with a repentant ancient worshipper nearby. Forgiveness and cleansing, no literal written sins or split-screen transformation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SWORDS
-**Filename:** `ch2.png`
+### Isaiah 2 — SWORDS
 
-```
-A dramatic, cinematic biblical illustration of They will beat their swords into plowshares — nation will not take up sword. Symbolizes 'SWORDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 2:2–4.
 
-### Chapter 3 — ANKLETS
-**Filename:** `ch3.png`
+Isaiah chapter 2. Reference Isaiah 2:2–4. Ancient smiths reshape a sword into a broad plowshare and a spear into a pruning hook while people from several nations approach peaceful Zion behind them. Clear hammering action, no modern tools. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of God removes finery from the daughters of Zion — ankle chains, nose rings. Symbolizes 'ANKLETS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 3 — ANKLETS
 
-### Chapter 4 — BRANCH
-**Filename:** `ch4.png`
+Reference: Isaiah 3:16–24.
 
-```
-A dramatic, cinematic biblical illustration of The Branch of the LORD will be beautiful and glorious. Symbolizes 'BRANCH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 3. Reference Isaiah 3:16–24. A humbled fully clothed woman of ancient Zion sets ornate anklets, pendants and a polished mirror aside, wearing simple sackcloth as other citizens mourn behind her. Loss of pride and finery, no nudity or degrading spectacle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — VINEYARD
-**Filename:** `ch5.png`
+### Isaiah 4 — BRANCH
 
-```
-A dramatic, cinematic biblical illustration of My beloved had a vineyard — he looked for good grapes but found only bad. Symbolizes 'VINEYARD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 4:2–6.
 
-### Chapter 6 — COAL
-**Filename:** `ch6.png`
+Isaiah chapter 4. Reference Isaiah 4:2–6. A fresh fruitful branch grows prominently above survivors gathered in restored Zion beneath a protective luminous cloud canopy. A poetic vision of beauty, purification and shelter, no tree-shaped human deity. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Isaiah's vision — seraphim, the coal to his lips — "Here am I, send me. Symbolizes 'COAL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 5 — VINEYARD
 
-### Chapter 7 — SIGN
-**Filename:** `ch7.png`
+Reference: Isaiah 5:1–7.
 
-```
-A dramatic, cinematic biblical illustration of The virgin will conceive and give birth to a son — Immanuel. Symbolizes 'SIGN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 5. Reference Isaiah 5:1–7. A disappointed vineyard keeper examines small sour grapes in a carefully cultivated hillside vineyard with a stone watchtower and carved winepress. His care contrasts with the failed fruit, a clear parable of justice neglected. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — WATERS
-**Filename:** `ch8.png`
+### Isaiah 6 — COAL
 
-```
-A dramatic, cinematic biblical illustration of The LORD is bringing the floodwaters of the Euphrates against them. Symbolizes 'WATERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 6:1–8.
 
-### Chapter 9 — CHILD
-**Filename:** `ch9.png`
+Isaiah chapter 6. Reference Isaiah 6:1–8. Isaiah kneels in a smoke-filled temple vision as one seraph brings a glowing coal held with tongs near his lips. The seraph has exactly six wings: two covering its face, two its feet, two extended for flight. Divine throne lost in radiance beyond, no visible human God or burned face. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of For to us a child is born — Wonderful Counselor, Prince of Peace. Symbolizes 'CHILD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 7 — SIGN
 
-### Chapter 10 — AXE
-**Filename:** `ch10.png`
+Reference: Isaiah 7:10–16.
 
-```
-A dramatic, cinematic biblical illustration of Does the axe raise itself above the one who swings it?. Symbolizes 'AXE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 7. Reference Isaiah 7:10–16. A symbolic prophetic scene of a modest ancient mother holding a newborn son in warm light while Isaiah and troubled King Ahaz stand in the shadowed background. The promised sign of Immanuel, no readable name or claim this is a documented birth before Ahaz. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — SHOOT
-**Filename:** `ch11.png`
+### Isaiah 8 — WATERS
 
-```
-A dramatic, cinematic biblical illustration of A shoot will come up from the stump of Jesse — the wolf and the lamb. Symbolizes 'SHOOT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 8:5–8.
 
-### Chapter 12 — WELLS
-**Filename:** `ch12.png`
+Isaiah chapter 8. Reference Isaiah 8:5–8. A great river flood surges beyond its banks toward Judean fields and walls, distant Assyrian standards suggesting the invading power it symbolizes. No map labels or drowned people. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of With joy you will draw water from the wells of salvation. Symbolizes 'WELLS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 9 — CHILD
 
-### Chapter 13 — BABYLON
-**Filename:** `ch13.png`
+Reference: Isaiah 9:2–7.
 
-```
-A dramatic, cinematic biblical illustration of Oracle against Babylon — "Babylon, the jewel of kingdoms, will fall. Symbolizes 'BABYLON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 9. Reference Isaiah 9:2–7. A mother cradles a newborn son in radiant dawn beside an empty Davidic throne, with broken weapons resting in shadow. Explicit symbolic image of the promised child and peaceful righteous rule, no infant wearing heavy regalia. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — STAR
-**Filename:** `ch14.png`
+### Isaiah 10 — AXE
 
-```
-A dramatic, cinematic biblical illustration of How you have fallen from heaven, morning star, son of the dawn. Symbolizes 'STAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 10:12–16.
 
-### Chapter 15 — MOAB
-**Filename:** `ch15.png`
+Isaiah chapter 10. Reference Isaiah 10:12–16. An ancient woodcutter holds an ordinary axe firmly while an arrogant Assyrian ruler stands blurred beyond. The tool's dependence on its wielder illustrates the prophet's rebuke, no flying sentient axe. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Oracle against Moab — they wail on every high place. Symbolizes 'MOAB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 11 — SHOOT
 
-### Chapter 16 — SHADOW
-**Filename:** `ch16.png`
+Reference: Isaiah 11:1–9.
 
-```
-A dramatic, cinematic biblical illustration of Give shelter to the fugitives of Moab — be a shadow from the destroyer. Symbolizes 'SHADOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 11. Reference Isaiah 11:1–9. A fresh shoot springs from a cut tree stump in the foreground while a wolf rests peacefully beside a lamb and a small child leads a calf nearby. One prophetic peace landscape, natural animals without aggression. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — RUINS
-**Filename:** `ch17.png`
+### Isaiah 12 — WELLS
 
-```
-A dramatic, cinematic biblical illustration of Damascus will no longer be a city but will become a heap of ruins. Symbolizes 'RUINS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 12:1–6.
 
-### Chapter 18 — RIVERS
-**Filename:** `ch18.png`
+Isaiah chapter 12. Reference Isaiah 12:1–6. Joyful ancient worshippers draw clear water from a deep stone well, sharing filled clay jars in Zion's sunlight. A vivid metaphor of salvation, gratitude and abundant water. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Oracle against Cush — "a land of whirring wings along the rivers. Symbolizes 'RIVERS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 13 — BABYLON
 
-### Chapter 19 — ALTAR
-**Filename:** `ch19.png`
+Reference: Isaiah 13:19–22.
 
-```
-A dramatic, cinematic biblical illustration of There will be an altar to the LORD in Egypt — and a monument at its border. Symbolizes 'ALTAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 13. Reference Isaiah 13:19–22. Desert creatures and jackals move through abandoned Babylonian palace ruins, with broken glazed brick gates and empty courtyards. The fallen pride of Babylon, no contemporary buildings or graphic casualties. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — NAKED
-**Filename:** `ch20.png`
+### Isaiah 14 — STAR
 
-```
-A dramatic, cinematic biblical illustration of Isaiah walks naked and barefoot three years as a sign against Egypt. Symbolizes 'NAKED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 14:4–15.
 
-### Chapter 21 — WATCHMAN
-**Filename:** `ch21.png`
+Isaiah chapter 14. Reference Isaiah 14:4–15. A Babylonian king's fallen crown and broken scepter lie below an overturned throne, while a fading morning star hangs above the distant horizon. Symbolic humiliation of the proud ruler addressed by the chapter, no invented horned devil. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Watchman, what is left of the night — watchman, what of the night?. Symbolizes 'WATCHMAN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 15 — MOAB
 
-### Chapter 22 — KEY
-**Filename:** `ch22.png`
+Reference: Isaiah 15:1–5.
 
-```
-A dramatic, cinematic biblical illustration of I will place on his shoulder the key to the house of David. Symbolizes 'KEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 15. Reference Isaiah 15:1–5. Moabite refugees in sackcloth climb a rocky slope past ruined town walls, their heads bowed and faces grieving. A few shorn heads and cut beards convey mourning, no active massacre. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — TYRE
-**Filename:** `ch23.png`
+### Isaiah 16 — SHADOW
 
-```
-A dramatic, cinematic biblical illustration of Oracle against Tyre — "wail you ships — the harbor city is destroyed. Symbolizes 'TYRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 16:3–5.
 
-### Chapter 24 — EARTH
-**Filename:** `ch24.png`
+Isaiah chapter 16. Reference Isaiah 16:3–5. A compassionate ancient household shelters weary Moabite fugitives beneath a broad dark canopy at fierce midday. Shade and welcome are the unmistakable focus, no betraying guards or modern refugee equipment. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The earth is broken up — it staggers like a drunkard — the curse devours. Symbolizes 'EARTH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 17 — RUINS
 
-### Chapter 25 — DEATH
-**Filename:** `ch25.png`
+Reference: Isaiah 17:1–6.
 
-```
-A dramatic, cinematic biblical illustration of He will swallow up death forever — the LORD will wipe away all tears. Symbolizes 'DEATH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 17. Reference Isaiah 17:1–6. Ancient Damascus lies in broken stone ruins, with a few remaining olives high on a stripped foreground tree. Desolation and a small surviving remnant share one landscape. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — ROCK
-**Filename:** `ch26.png`
+### Isaiah 18 — RIVERS
 
-```
-A dramatic, cinematic biblical illustration of Trust in the LORD forever — for the LORD is the Rock eternal. Symbolizes 'ROCK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 18:1–3.
 
-### Chapter 27 — TRUMPET
-**Filename:** `ch27.png`
+Isaiah chapter 18. Reference Isaiah 18:1–3. Swift Cushite messengers travel in a papyrus reed boat along a broad river bordered by reeds and waterbirds. Historically plausible ancient African clothing and skin tones, no modern vessel or fantasy winged people. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of In that day a great trumpet will sound — the lost in Assyria will come. Symbolizes 'TRUMPET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 19 — ALTAR
 
-### Chapter 28 — CORNERSTONE
-**Filename:** `ch28.png`
+Reference: Isaiah 19:19–25.
 
-```
-A dramatic, cinematic biblical illustration of See, I lay in Zion a tested cornerstone — the one who trusts will not panic. Symbolizes 'CORNERSTONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 19. Reference Isaiah 19:19–25. Ancient Egyptian, Assyrian and Israelite worshippers gather peacefully around a simple altar in Egypt, a border pillar and long connecting road beyond. A prophetic image of reconciliation among the three peoples, no modern flags or pagan statue on the altar. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — BLIND
-**Filename:** `ch29.png`
+### Isaiah 20 — NAKED
 
-```
-A dramatic, cinematic biblical illustration of In that day the deaf will hear — the eyes of the blind will see. Symbolizes 'BLIND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 20:2–6.
 
-### Chapter 30 — SHADOW
-**Filename:** `ch30.png`
+Isaiah chapter 20. Reference Isaiah 20:2–6. Isaiah walks barefoot through an ancient Jerusalem courtyard with his outer sackcloth and sandals set aside. A plain undyed linen under-wrap provides a modest traditional depiction of being stripped as a sign of captivity. Concerned onlookers watch; natural anatomy and physically plausible architecture, no floating wall. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Woe to those who go down to Egypt for help — lean on the shadow of a horse. Symbolizes 'SHADOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 21 — WATCHMAN
 
-### Chapter 31 — BIRDS
-**Filename:** `ch31.png`
+Reference: Isaiah 21:6–12.
 
-```
-A dramatic, cinematic biblical illustration of Like birds hovering overhead the LORD will shield Jerusalem. Symbolizes 'BIRDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 21. Reference Isaiah 21:6–12. A vigilant ancient watchman stands on a stone tower at the last watch of night, spotting distant paired riders in the first pale dawn. Anxious attention and long watch, no modern telescope. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 32 — DESERT
-**Filename:** `ch32.png`
+### Isaiah 22 — KEY
 
-```
-A dramatic, cinematic biblical illustration of The Spirit is poured on us from on high — the desert becomes a fertile field. Symbolizes 'DESERT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 22:20–25.
 
-### Chapter 33 — KING
-**Filename:** `ch33.png`
+Isaiah chapter 22. Reference Isaiah 22:20–25. Eliakim receives a large ancient wooden palace key resting across his shoulder beside the heavy gate of David's household. Robe and sash mark entrusted authority, no oversized modern metal house key. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Your eyes will see the king in his beauty — they will behold a land that stretches far. Symbolizes 'KING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 23 — TYRE
 
-### Chapter 34 — SWORD
-**Filename:** `ch34.png`
+Reference: Isaiah 23:1–5.
 
-```
-A dramatic, cinematic biblical illustration of The LORD has a sword — it descends on Edom in judgment. Symbolizes 'SWORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 23. Reference Isaiah 23:1–5. Ancient merchant ships approach the devastated harbor of Tyre, sailors staring at broken quays and silent warehouses. Coastal trading city recognizable through Phoenician ships and cargo, no modern cranes. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 35 — BLOOM
-**Filename:** `ch35.png`
+### Isaiah 24 — EARTH
 
-```
-A dramatic, cinematic biblical illustration of The desert and parched land will be glad — the wilderness will rejoice and blossom. Symbolizes 'BLOOM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 24:19–23.
 
-### Chapter 36 — WALL
-**Filename:** `ch36.png`
+Isaiah chapter 24. Reference Isaiah 24:19–23. A symbolic prophetic landscape of fractured earth and collapsing empty city walls beneath a darkened sky, with distant Zion receiving light. Universal judgment conveyed without a planet split like an egg or human casualties. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Sennacherib's field commander mocks from outside Jerusalem's wall. Symbolizes 'WALL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 25 — DEATH
 
-### Chapter 37 — ANGEL
-**Filename:** `ch37.png`
+Reference: Isaiah 25:6–9.
 
-```
-A dramatic, cinematic biblical illustration of One angel kills 185,000 Assyrians overnight — Sennacherib retreats. Symbolizes 'ANGEL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 25. Reference Isaiah 25:6–9. People from many ancient nations share a rich banquet on a mountain, a mourner gently drying tears as a dark funeral shroud is set aside. A symbolic vision of death overcome and shared joy, no visible human God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 38 — SUNDIAL
-**Filename:** `ch38.png`
+### Isaiah 26 — ROCK
 
-```
-A dramatic, cinematic biblical illustration of Hezekiah's illness — the sun's shadow moves backward ten steps. Symbolizes 'SUNDIAL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 26:1–4.
 
-### Chapter 39 — TREASURE
-**Filename:** `ch39.png`
+Isaiah chapter 26. Reference Isaiah 26:1–4. A peaceful ancient traveler enters a secure city's open gate built beside a massive enduring rock. Steadfast trust and safety, sunlit walls and calm expression. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Hezekiah shows Babylon his treasury — Isaiah announces the coming exile. Symbolizes 'TREASURE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 27 — TRUMPET
 
-### Chapter 40 — WINGS
-**Filename:** `ch40.png`
+Reference: Isaiah 27:12–13.
 
-```
-A dramatic, cinematic biblical illustration of Those who hope in the LORD will soar on wings like eagles — they will not grow weary. Symbolizes 'WINGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 27. Reference Isaiah 27:12–13. A herald sounds a great ram's horn on Zion while weary exiles arrive from distant roads, welcomed one by one. Gathering and worship, no modern brass trumpet or numbered crowds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 41 — RIGHT HAND
-**Filename:** `ch41.png`
+### Isaiah 28 — CORNERSTONE
 
-```
-A dramatic, cinematic biblical illustration of I will uphold you with my righteous right hand — do not fear for I am with you. Symbolizes 'RIGHT HAND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 28:16–17.
 
-### Chapter 42 — SERVANT
-**Filename:** `ch42.png`
+Isaiah chapter 28. Reference Isaiah 28:16–17. Ancient masons place a large carefully tested cornerstone in Zion's foundation, checking a taut measuring line and plumb level. Secure foundation and justice, no arch keystone or floating block. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of First Servant Song — "Here is my servant — a bruised reed he will not break. Symbolizes 'SERVANT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 29 — BLIND
 
-### Chapter 43 — RIVER
-**Filename:** `ch43.png`
+Reference: Isaiah 29:18–19.
 
-```
-A dramatic, cinematic biblical illustration of When you pass through the waters I will be with you — through the rivers they will not sweep you away. Symbolizes 'RIVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 29. Reference Isaiah 29:18–19. A formerly blind ancient listener looks with new wonder toward an open scroll while a companion listens attentively and humble neighbors rejoice. A prophetic scene of restored perception, no surgical equipment or exaggerated eye glow. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 44 — RAIN
-**Filename:** `ch44.png`
+### Isaiah 30 — SHADOW
 
-```
-A dramatic, cinematic biblical illustration of I will pour out my Spirit on your offspring — like streams on dry ground. Symbolizes 'RAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 30:1–7.
 
-### Chapter 45 — CYRUS
-**Filename:** `ch45.png`
+Isaiah chapter 30. Reference Isaiah 30:1–7. Judean envoys lead camels loaded with treasure toward the looming shade of Pharaoh's palace, faces uneasy as they seek unreliable protection. Desert hardship and costly dependence on Egypt, no invented horse-shadow quotation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I call you by name — Cyrus — though you do not acknowledge me. Symbolizes 'CYRUS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 31 — BIRDS
 
-### Chapter 46 — CARRY
-**Filename:** `ch46.png`
+Reference: Isaiah 31:4–5.
 
-```
-A dramatic, cinematic biblical illustration of I have made you and I will carry you — I will sustain you and rescue you. Symbolizes 'CARRY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 31. Reference Isaiah 31:4–5. Protective birds hover above peaceful ancient Jerusalem beneath a broad luminous sky, their wings framing the city. An explicit poetic image of shielding care, no giant bird deity attacking armies. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 47 — DARKNESS
-**Filename:** `ch47.png`
+### Isaiah 32 — DESERT
 
-```
-A dramatic, cinematic biblical illustration of Sit in darkness, daughter Babylon — you who thought you would be queen forever. Symbolizes 'DARKNESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 32:15–18.
 
-### Chapter 48 — FURNACE
-**Filename:** `ch48.png`
+Isaiah chapter 32. Reference Isaiah 32:15–18. A once arid landscape now supports orchards, fertile fields and safe homes where families rest peacefully. Gentle rain and rich growth symbolize renewal by the Spirit, no split before-and-after panels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I have refined you — I have tested you in the furnace of affliction. Symbolizes 'FURNACE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 33 — KING
 
-### Chapter 49 — MOTHER
-**Filename:** `ch49.png`
+Reference: Isaiah 33:17–22.
 
-```
-A dramatic, cinematic biblical illustration of Can a mother forget the baby at her breast? — I will not forget you. Symbolizes 'MOTHER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 33. Reference Isaiah 33:17–22. A dignified righteous king stands in beauty above secure Zion while citizens look across a broad peaceful land and spacious waterways. Prophetic hope and stable dwelling, no portrait labeled as a historical ruler. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 50 — CHEEK
-**Filename:** `ch50.png`
+### Isaiah 34 — SWORD
 
-```
-A dramatic, cinematic biblical illustration of I offered my back to those who beat me — my cheeks to those who pulled out my beard. Symbolizes 'CHEEK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 34:5–11.
 
-### Chapter 51 — CUP
-**Filename:** `ch51.png`
+Isaiah chapter 34. Reference Isaiah 34:5–11. An abandoned sword lies before Edom's ruined red-rock stronghold, where smoke rises and desert owls settle among broken stones. Judgment and desolation represented without blood or human slaughter. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of You drank from the cup of his wrath — the goblet of his anger. Symbolizes 'CUP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 35 — BLOOM
 
-### Chapter 52 — FEET
-**Filename:** `ch52.png`
+Reference: Isaiah 35:1–6.
 
-```
-A dramatic, cinematic biblical illustration of How beautiful on the mountains are the feet of those who bring good news. Symbolizes 'FEET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 35. Reference Isaiah 35:1–6. A desert bursts with flowers around fresh streams as an elderly traveler steadies himself and rejoices with restored strength. Rich blooming wilderness and hopeful movement, natural anatomy. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 53 — LAMB
-**Filename:** `ch53.png`
+### Isaiah 36 — WALL
 
-```
-A dramatic, cinematic biblical illustration of He was led like a lamb to the slaughter — he bore the sin of many. Symbolizes 'LAMB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 36:13–20.
 
-### Chapter 54 — TENT
-**Filename:** `ch54.png`
+Isaiah chapter 36. Reference Isaiah 36:13–20. The Assyrian field commander loudly addresses Jerusalem's defenders from outside the walls while Judean officials listen tensely below. Assyrian armor and conical helmet, no attack breaching the city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Enlarge the place of your tent — for you will spread out to the right and left. Symbolizes 'TENT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 37 — ANGEL
 
-### Chapter 55 — SNOW
-**Filename:** `ch55.png`
+Reference: Isaiah 37:33–37.
 
-```
-A dramatic, cinematic biblical illustration of As the rain and snow come down from heaven — so is my word — it will not return empty. Symbolizes 'SNOW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 37. Reference Isaiah 37:33–37. A solemn luminous angel passes above a silent ruined Assyrian camp at night, abandoned weapons and collapsed tents outside untouched Jerusalem. Deliverance and judgment without visible corpses or a giant superhero. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 56 — HOUSE
-**Filename:** `ch56.png`
+### Isaiah 38 — SUNDIAL
 
-```
-A dramatic, cinematic biblical illustration of My house will be called a house of prayer for all nations. Symbolizes 'HOUSE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 38:7–8.
 
-### Chapter 57 — HIGH
-**Filename:** `ch57.png`
+Isaiah chapter 38. Reference Isaiah 38:7–8. Recovering Hezekiah and Isaiah study a sharply defined receding shadow across the stone stairway of Ahaz. Ancient steps and sunlight, no modern clock or numbered sundial. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I live in a high and holy place — but also with the one who is contrite and lowly in spirit. Symbolizes 'HIGH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 39 — TREASURE
 
-### Chapter 58 — CHAINS
-**Filename:** `ch58.png`
+Reference: Isaiah 39:1–8.
 
-```
-A dramatic, cinematic biblical illustration of Is not this the fast I have chosen — to loose the chains of injustice?. Symbolizes 'CHAINS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 39. Reference Isaiah 39:1–8. Hezekiah proudly opens his treasury to attentive Babylonian envoys, displaying silver, gold, spices and weapons. Their appraising expressions and his confidence convey the dangerous disclosure, no future exile collage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 59 — WALL
-**Filename:** `ch59.png`
+### Isaiah 40 — WINGS
 
-```
-A dramatic, cinematic biblical illustration of Your iniquities have separated you from your God — his arm is not too short to save. Symbolizes 'WALL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 40:28–31.
 
-### Chapter 60 — LIGHT
-**Filename:** `ch60.png`
+Isaiah chapter 40. Reference Isaiah 40:28–31. A majestic eagle soars on broad wings above a weary ancient traveler renewed enough to continue along a mountain path. Strength through hope, no wings attached to the person. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Arise, shine, for your light has come — the glory of the LORD rises upon you. Symbolizes 'LIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 41 — RIGHT HAND
 
-### Chapter 61 — OIL
-**Filename:** `ch61.png`
+Reference: Isaiah 41:8–13.
 
-```
-A dramatic, cinematic biblical illustration of The Spirit of the Sovereign LORD is on me — oil of joy instead of mourning. Symbolizes 'OIL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 41. Reference Isaiah 41:8–13. A frightened ancient pilgrim steadies his right hand on a secure rock and rises with new courage in gentle light. A representative metaphor for promised support, no giant divine hand or visible human God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 62 — CROWN
-**Filename:** `ch62.png`
+### Isaiah 42 — SERVANT
 
-```
-A dramatic, cinematic biblical illustration of You will be a crown of splendor in the LORD's hand — called Sought After. Symbolizes 'CROWN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 42:1–4.
 
-### Chapter 63 — WINEPRESS
-**Filename:** `ch63.png`
+Isaiah chapter 42. Reference Isaiah 42:1–4. A gentle servant shields a smoldering oil-lamp wick from the wind and supports a bent reed beside it. Quiet attentive care embodies the Servant's tender justice, no broken reed repaired by magic. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I have trodden the winepress alone — their blood spattered my garments. Symbolizes 'WINEPRESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 43 — RIVER
 
-### Chapter 64 — CLAY
-**Filename:** `ch64.png`
+Reference: Isaiah 43:1–3.
 
-```
-A dramatic, cinematic biblical illustration of We are the clay — you are the potter — we are all the work of your hand. Symbolizes 'CLAY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Isaiah chapter 43. Reference Isaiah 43:1–3. An ancient family crosses a strong river together on a secure shallow passage, waters surging around them without overwhelming them. A poetic image of presence through trial, no drowning or second fire scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 65 — NEW
-**Filename:** `ch65.png`
+### Isaiah 44 — RAIN
 
-```
-A dramatic, cinematic biblical illustration of See, I will create new heavens and a new earth — the wolf and the lamb will feed together. Symbolizes 'NEW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Isaiah 44:1–5.
 
-### Chapter 66 — FIRE
-**Filename:** `ch66.png`
+Isaiah chapter 44. Reference Isaiah 44:1–5. Fresh streams spread over thirsty ground and nourish young willows while children of an ancient family watch the new growth. Generational blessing and renewal, no readable writing on hands. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The LORD will come with fire — all mankind will come and bow down before me. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Isaiah 45 — CYRUS
 
+Reference: Isaiah 45:1–4.
+
+Isaiah chapter 45. Reference Isaiah 45:1–4. Cyrus in plausible Persian royal clothing approaches open bronze city gates with broken iron bars at their base. His confident advance evokes the appointed liberation, no modern crown or visible divine hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 46 — CARRY
+
+Reference: Isaiah 46:3–4.
+
+Isaiah chapter 46. Reference Isaiah 46:3–4. A gray-haired ancient elder is tenderly carried along a safe road by caring younger companions. Human care serves as a metaphor for sustaining love through old age, no claim the carriers are God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 47 — DARKNESS
+
+Reference: Isaiah 47:1–7.
+
+Isaiah chapter 47. Reference Isaiah 47:1–7. A fully clothed woman personifying Babylon sits humbled in dust beside an abandoned throne and hand mill, former royal ornaments set aside. Darkened palace backdrop, no nudity or sexual humiliation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 48 — FURNACE
+
+Reference: Isaiah 48:9–11.
+
+Isaiah chapter 48. Reference Isaiah 48:9–11. An exhausted but steadfast ancient exile sits beside the glow of a furnace in a workshop, looking toward a clear opening beyond. The furnace symbolizes affliction and testing; nobody inside the flames. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 49 — MOTHER
+
+Reference: Isaiah 49:14–16.
+
+Isaiah chapter 49. Reference Isaiah 49:14–16. A mother holds her nursing-age infant close in a fully covered tender embrace beneath Jerusalem's walls. Her attentive face embodies the comparison of unfailing remembrance, no giant inscribed palm. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 50 — CHEEK
+
+Reference: Isaiah 50:4–7.
+
+Isaiah chapter 50. Reference Isaiah 50:4–7. A faithful bearded servant stands resolute before threatening accusers, face set with quiet courage as a hand reaches toward his beard. Restrained non-graphic suffering, no torn flesh or retaliation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 51 — CUP
+
+Reference: Isaiah 51:17–23.
+
+Isaiah chapter 51. Reference Isaiah 51:17–23. A weary woman personifying Jerusalem rises from rubble as an emptied bitter cup is removed from beside her. A compassionate companion helps her stand; symbolic relief after judgment, no drunken banquet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 52 — FEET
+
+Reference: Isaiah 52:7–10.
+
+Isaiah chapter 52. Reference Isaiah 52:7–10. A messenger's sandaled feet climb the last mountain ridge toward Jerusalem as watchmen rejoice from the walls at his good news. Dynamic hopeful arrival and warm light, no written proclamation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 53 — LAMB
+
+Reference: Isaiah 53:4–8.
+
+Isaiah chapter 53. Reference Isaiah 53:4–8. A gentle unresisting lamb is led along a solemn stone path while a quiet afflicted servant stands in soft background shadow. Explicit metaphor for the suffering Servant's innocence and sacrifice, no slaughter or graphic wounds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 54 — TENT
+
+Reference: Isaiah 54:1–3.
+
+Isaiah chapter 54. Reference Isaiah 54:1–3. An ancient household joyfully enlarges its tent, stretching fabric and lengthening ropes while driving strong stakes into the ground. Growing welcome and restoration, natural believable tent construction. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 55 — SNOW
+
+Reference: Isaiah 55:8–13.
+
+Isaiah chapter 55. Reference Isaiah 55:8–13. Rain and distant melting mountain snow feed streams through newly sprouting fields where a farmer holds seed and bread. One coherent landscape illustrating the fruitful effectiveness of God's word, no letters falling from clouds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 56 — HOUSE
+
+Reference: Isaiah 56:6–8.
+
+Isaiah chapter 56. Reference Isaiah 56:6–8. People from several ancient nations gather gladly in a spacious sanctuary courtyard to pray together, with open welcoming gates. Diverse plausible clothing, no exclusion barriers or modern national symbols. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 57 — HIGH
+
+Reference: Isaiah 57:14–16.
+
+Isaiah chapter 57. Reference Isaiah 57:14–16. A humble contrite worshipper kneels in a low simple dwelling beneath a towering luminous mountain sky. Nearness to the lowly despite divine exaltation, no miniature human God entering the house. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 58 — CHAINS
+
+Reference: Isaiah 58:6–10.
+
+Isaiah chapter 58. Reference Isaiah 58:6–10. An ancient neighbor loosens an oppressed worker's binding cords while others offer bread and a cloak to a needy family. Practical justice and compassionate fasting, no feast-centered celebration. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 59 — WALL
+
+Reference: Isaiah 59:1–4.
+
+Isaiah chapter 59. Reference Isaiah 59:1–4. A troubled ancient community stands behind a wall they have built from stones, facing bright light beyond a narrow opening. A symbolic barrier of injustice and estrangement, no literal wall around God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 60 — LIGHT
+
+Reference: Isaiah 60:1–5.
+
+Isaiah chapter 60. Reference Isaiah 60:1–5. Radiant dawn rises over restored Zion as returning families and distant envoys stream toward its open gates. Joyful homecoming and nations drawn to the light, no modern city skyline. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 61 — OIL
+
+Reference: Isaiah 61:1–3.
+
+Isaiah chapter 61. Reference Isaiah 61:1–3. A mourner in ancient Zion receives a gentle anointing of oil and a clean festive garment, ashes set aside nearby. Comfort and renewed dignity, with a freed captive welcomed in the background. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 62 — CROWN
+
+Reference: Isaiah 62:1–5.
+
+Isaiah chapter 62. Reference Isaiah 62:1–5. A human-sized ancient royal diadem rests on burgundy cloth supported by a solid foreground stone ledge beside a joyful ancient bridal couple at the gate, with restored Jerusalem beyond. Explicit poetic illustration of Zion cherished as a crown and bride, one coherent physically grounded scene; no floating crown or giant divine hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 63 — WINEPRESS
+
+Reference: Isaiah 63:1–6.
+
+Isaiah chapter 63. Reference Isaiah 63:1–6. A lone solemn ancient figure stands beside a stone winepress, his robe stained with dark grape juice. The winepress is an explicit judgment metaphor, no human bodies in the vat or literal blood spray. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 64 — CLAY
+
+Reference: Isaiah 64:6–9.
+
+Isaiah chapter 64. Reference Isaiah 64:6–9. An ancient potter's careful hands shape a humble clay vessel on a simple wheel while an attentive worshipper watches. The craft is the chapter's metaphor of formation and dependence, no human figure made of clay. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 65 — NEW
+
+Reference: Isaiah 65:17–25.
+
+Isaiah chapter 65. Reference Isaiah 65:17–25. A prophetic renewed landscape of joyful families in homes and vineyards, with a wolf and lamb feeding peacefully nearby and a lion eating straw. Abundant ordinary life and harmony, no futuristic city or fantasy planets. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Isaiah 66 — FIRE
+
+Reference: Isaiah 66:12–16,22–23.
+
+Isaiah chapter 66. Reference Isaiah 66:12–16,22–23. People from many ancient nations bow in worship toward a radiant holy horizon over restored Jerusalem, with distant fiery clouds conveying the solemn reality of judgment. One prophetic scene of enduring worship, no burning people or visible human deity. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
