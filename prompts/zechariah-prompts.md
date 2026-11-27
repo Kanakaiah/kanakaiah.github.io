@@ -1,104 +1,87 @@
-# Image prompts for Zechariah — all chapters
+# Zechariah — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/zechariah/`.
+Reviewed against the bundled BSB scripture (book 38). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 14 chapters.
+### Zechariah 1 — HORSES
 
-### Chapter 1 — HORSES
-**Filename:** `ch1.png`
+Reference: Zechariah 1:8–11.
 
-```
-A dramatic, cinematic biblical illustration of Red, brown, and white horses patrol the earth — "We have patrolled the earth — it is at rest and quiet. Symbolizes 'HORSES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Zechariah chapter 1. Reference Zechariah 1:8–11. In a nighttime prophetic vision, a rider on a red horse stands among myrtle trees in a hollow, with red, sorrel and white horses behind. Quiet returning patrol, no modern cavalry. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — MEASURING
-**Filename:** `ch2.png`
+### Zechariah 2 — MEASURING
 
-```
-A dramatic, cinematic biblical illustration of Man with a measuring line — "Jerusalem will be a city without walls — I will be a wall of fire around it. Symbolizes 'MEASURING'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Zechariah 2:1–5.
 
-### Chapter 3 — CLOTHES
-**Filename:** `ch3.png`
+Zechariah chapter 2. Reference Zechariah 2:1–5. A young man measures open Jerusalem ground with a long cord while a distant luminous ring of fire surrounds its expanding unwalled settlement. A prophetic protective vision, fire safely beyond homes. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Joshua the high priest in filthy clothes — the accuser stands ready — God says "Take off his filthy clothes — I have taken away your sin. Symbolizes 'CLOTHES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Zechariah 3 — CLOTHES
 
-### Chapter 4 — LAMPSTAND
-**Filename:** `ch4.png`
+Reference: Zechariah 3:1–5.
 
-```
-A dramatic, cinematic biblical illustration of Golden lampstand with two olive trees — "Not by might nor by power but by my Spirit. Symbolizes 'LAMPSTAND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Zechariah chapter 3. Reference Zechariah 3:1–5. Joshua the high priest receives clean splendid robes and a clean turban as attendants remove his dirty outer garment, his body modestly covered. An angel stands beside him and a shadowed accuser recedes, no horned caricature. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — SCROLL
-**Filename:** `ch5.png`
+### Zechariah 4 — LAMPSTAND
 
-```
-A dramatic, cinematic biblical illustration of A flying scroll thirty feet long — the curse going through the whole land. Symbolizes 'SCROLL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Zechariah 4:1–6.
 
-### Chapter 6 — CHARIOTS
-**Filename:** `ch6.png`
+Zechariah chapter 4. Reference Zechariah 4:1–6. A prophetic golden lampstand has a bowl above and exactly seven burning oil lamps, flanked by exactly two living olive trees, one on each side. Clear uncluttered composition, no electric bulbs or extra lampstands. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Four chariots with horses going to the four winds — the north country given rest. Symbolizes 'CHARIOTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Zechariah 5 — SCROLL
 
-### Chapter 7 — HEARTS
-**Filename:** `ch7.png`
+Reference: Zechariah 5:1–4.
 
-```
-A dramatic, cinematic biblical illustration of They made their hearts as hard as flint and would not listen to the law or the words of the prophets. Symbolizes 'HEARTS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Zechariah chapter 5. Reference Zechariah 5:1–4. An immense unfurled scroll floats above an ancient town, approximately twice as long as it is wide, with faint indistinct manuscript marks on its surface. A solemn prophetic vision, no readable text or magical alphabet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — OLD MEN
-**Filename:** `ch8.png`
+### Zechariah 6 — CHARIOTS
 
-```
-A dramatic, cinematic biblical illustration of Old men and women will again sit in the streets of Jerusalem — each with cane in hand because of his age. Symbolizes 'OLD MEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Zechariah 6:1–8.
 
-### Chapter 9 — DONKEY
-**Filename:** `ch9.png`
+Zechariah chapter 6. Reference Zechariah 6:1–8. Exactly four ancient chariots emerge from a pass between two bronze-colored mountains, drawn respectively by red, black, white and dappled horses. Distinct teams and coherent depth, no extra chariot or modern vehicle. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Rejoice greatly, Daughter Zion — your king comes to you, righteous and having salvation — riding on a donkey. Symbolizes 'DONKEY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Zechariah 7 — HEARTS
 
-### Chapter 10 — CORNERSTONE
-**Filename:** `ch10.png`
+Reference: Zechariah 7:9–12.
 
-```
-A dramatic, cinematic biblical illustration of From Judah will come the cornerstone — the tent peg — the battle bow. Symbolizes 'CORNERSTONE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Zechariah chapter 7. Reference Zechariah 7:9–12. Stubborn ancient officials turn away and stop their ears while a widow, orphan and poor foreign traveler ask for justice. A piece of flint on the judgment table symbolizes hard hearts, no anatomical stone hearts. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — SILVER
-**Filename:** `ch11.png`
+### Zechariah 8 — OLD MEN
 
-```
-A dramatic, cinematic biblical illustration of So they paid me thirty pieces of silver — and I threw them to the potter at the house of the LORD. Symbolizes 'SILVER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Zechariah 8:4–8.
 
-### Chapter 12 — PIERCED
-**Filename:** `ch12.png`
+Zechariah chapter 8. Reference Zechariah 8:4–8. Elderly men and women with staffs rest safely along Jerusalem's restored streets as children play freely nearby. Peace across generations, warm everyday joy and modest ancient homes. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of They will look on me whom they have pierced — they will mourn for him as one mourns for an only child. Symbolizes 'PIERCED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Zechariah 9 — DONKEY
 
-### Chapter 13 — FOUNTAIN
-**Filename:** `ch13.png`
+Reference: Zechariah 9:9–10.
 
-```
-A dramatic, cinematic biblical illustration of On that day a fountain will be opened for the house of David — strike the shepherd and the sheep will be scattered. Symbolizes 'FOUNTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Zechariah chapter 9. Reference Zechariah 9:9–10. A humble righteous king rides a single young donkey toward welcoming Zion, wearing simple dignified ancient clothing. Broken war bows lie aside; no war horse, second ridden donkey or modern royal regalia. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — FEET
-**Filename:** `ch14.png`
+### Zechariah 10 — CORNERSTONE
 
-```
-A dramatic, cinematic biblical illustration of On that day his feet will stand on the Mount of Olives — the LORD will be king over the whole earth. Symbolizes 'FEET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Zechariah 10:3–5.
 
+Zechariah chapter 10. Reference Zechariah 10:3–5. A strong cornerstone, secure tent peg and battle bow occupy the foreground beside Judah's gathering community under a faithful leader. Explicit symbolic memory cue for dependable leadership, no disconnected panels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Zechariah 11 — SILVER
+
+Reference: Zechariah 11:12–13.
+
+Zechariah chapter 11. Reference Zechariah 11:12–13. Zechariah casts thirty small silver pieces toward a potter in the temple court, the potter's clay vessels nearby. The prophetic wage scene itself, no Judas or later Roman soldiers. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Zechariah 12 — PIERCED
+
+Reference: Zechariah 12:10–14.
+
+Zechariah chapter 12. Reference Zechariah 12:10–14. Separate ancient households mourn deeply in Jerusalem around a dignified veiled bier, expressing grief as for an only son. A spear laid aside quietly recalls the pierced one; no graphic wound or invented visible corpse. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Zechariah 13 — FOUNTAIN
+
+Reference: Zechariah 13:1–7.
+
+Zechariah chapter 13. Reference Zechariah 13:1–7. A fresh fountain opens beside Jerusalem's households, where worshippers wash their hands in clear flowing water. The cleansing promise is central; no simultaneous shepherd attack or scattered sheep collage. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Zechariah 14 — FEET
+
+Reference: Zechariah 14:3–9.
+
+Zechariah chapter 14. Reference Zechariah 14:3–9. A prophetic view east of Jerusalem shows the Mount of Olives split by a broad new valley with living water flowing outward beneath extraordinary evening light. Tiny fleeing figures find passage; no giant disembodied feet or modern city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
