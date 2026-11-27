@@ -1,69 +1,57 @@
-# Image prompts for Amos — all chapters
+# Amos — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/amos/`.
+Reviewed against the bundled BSB scripture (book 30). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 9 chapters.
+### Amos 1 — FIRE
 
-### Chapter 1 — FIRE
-**Filename:** `ch1.png`
+Reference: Amos 1:3–5.
 
-```
-A dramatic, cinematic biblical illustration of I will send fire on the house of Hazael — it will consume the fortresses of Ben-Hadad. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Amos chapter 1. Reference Amos 1:3–5. Fire consumes the citadel of ancient Damascus beyond broken gates, abandoned weapons in foreground and refugees at a safe distance. Judgment on violent power, no burned bodies. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SANDALS
-**Filename:** `ch2.png`
+### Amos 2 — SANDALS
 
-```
-A dramatic, cinematic biblical illustration of Israel sells the righteous for silver — the poor for a pair of sandals. Symbolizes 'SANDALS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Amos 2:6–8.
 
-### Chapter 3 — LION
-**Filename:** `ch3.png`
+Amos chapter 2. Reference Amos 2:6–8. A wealthy creditor accepts silver beside a pair of sandals while a poor family is unjustly taken away by an attendant. Amos protests nearby; economic injustice without demeaning the victims. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Does a lion roar in the thicket when it has no prey — does it growl when it has caught nothing?. Symbolizes 'LION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Amos 3 — LION
 
-### Chapter 4 — COWS
-**Filename:** `ch4.png`
+Reference: Amos 3:4–8.
 
-```
-A dramatic, cinematic biblical illustration of Hear this word, you cows of Bashan — you who oppress the poor and crush the needy. Symbolizes 'COWS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Amos chapter 3. Reference Amos 3:4–8. A lion roars from a wooded rocky thicket as Amos stands listening and prepares to speak to a distant city. The roar evokes the urgency of prophetic speech, no graphic prey. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — WATER
-**Filename:** `ch5.png`
+### Amos 4 — COWS
 
-```
-A dramatic, cinematic biblical illustration of Let justice roll on like a river — righteousness like a never-failing stream. Symbolizes 'WATER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Amos 4:1–3.
 
-### Chapter 6 — BED
-**Filename:** `ch6.png`
+Amos chapter 4. Reference Amos 4:1–3. Wealthy women in ancient Samaria demand more wine while a poor servant struggles with burdens at their feet; well-fed cattle graze beyond the terrace. The cattle are a poetic comparison, no women with animal bodies. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Woe to you who lie on beds inlaid with ivory — you do not grieve over the ruin of Joseph. Symbolizes 'BED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Amos 5 — WATER
 
-### Chapter 7 — PLUMB LINE
-**Filename:** `ch7.png`
+Reference: Amos 5:21–24.
 
-```
-A dramatic, cinematic biblical illustration of I will set a plumb line among my people Israel — I will spare them no longer. Symbolizes 'PLUMB LINE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Amos chapter 5. Reference Amos 5:21–24. A powerful clear river flows past an ancient town where neighbors act justly and help the poor, while an ornate ceremonial procession stands neglected in the distance. Flowing justice is the central metaphor. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — FRUIT
-**Filename:** `ch8.png`
+### Amos 6 — BED
 
-```
-A dramatic, cinematic biblical illustration of The time is ripe for my people Israel — I will spare them no longer. Symbolizes 'FRUIT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Amos 6:4–7.
 
-### Chapter 9 — SIEVE
-**Filename:** `ch9.png`
+Amos chapter 6. Reference Amos 6:4–7. Indulgent nobles lounge on ivory-inlaid couches with bowls of wine and a lyre, ignoring a distressed messenger from the ruined land. Luxurious indifference in one ancient interior. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I will shake the house of Israel among all the nations as grain is shaken in a sieve. Symbolizes 'SIEVE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Amos 7 — PLUMB LINE
 
+Reference: Amos 7:7–9.
+
+Amos chapter 7. Reference Amos 7:7–9. A taut plumb line hangs clearly beside an ancient masonry wall while Amos studies it under solemn light. The divine measuring vision represented by the line and wall, no visible human God. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Amos 8 — FRUIT
+
+Reference: Amos 8:1–3.
+
+Amos chapter 8. Reference Amos 8:1–3. A basket of fully ripe summer fruit fills the foreground before Amos, with a shadow falling across the distant sanctuary. Ripe fruit as the announced end, no rotten-fruit substitution or written pun. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Amos 9 — SIEVE
+
+Reference: Amos 9:9–12.
+
+Amos chapter 9. Reference Amos 9:9–12. An ancient worker shakes grain in a wide sieve beside the partly restored tent of David. Sifting judgment and promised restoration share one grounded symbolic scene, no miniature people inside the sieve. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
