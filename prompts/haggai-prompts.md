@@ -1,20 +1,15 @@
-# Image prompts for Haggai — all chapters
+# Haggai — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/haggai/`.
+Reviewed against the bundled BSB scripture (book 37). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 2 chapters.
+### Haggai 1 — PANELED
 
-### Chapter 1 — PANELED
-**Filename:** `ch1.png`
+Reference: Haggai 1:3–8.
 
-```
-A dramatic, cinematic biblical illustration of Is it time for you yourselves to dwell in your paneled houses while this house remains a ruin?. Symbolizes 'PANELED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Haggai chapter 1. Reference Haggai 1:3–8. Haggai points from a comfortable cedar-paneled house toward the neglected temple ruins across the lane, while householders begin lifting lumber to rebuild. Clear contrast of priorities in one setting. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SIGNET
-**Filename:** `ch2.png`
+### Haggai 2 — SIGNET
 
-```
-A dramatic, cinematic biblical illustration of I will make you like my signet ring, Zerubbabel — for I have chosen you. Symbolizes 'SIGNET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Haggai 2:20–23.
 
+Haggai chapter 2. Reference Haggai 2:20–23. Zerubbabel stands beside the rebuilding temple holding a small signet ring, which catches warm light as workers labor behind. The ring symbolizes chosen authority; no giant divine hand or readable seal. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
