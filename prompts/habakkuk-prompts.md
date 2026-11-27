@@ -1,27 +1,21 @@
-# Image prompts for Habakkuk — all chapters
+# Habakkuk — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/habakkuk/`.
+Reviewed against the bundled BSB scripture (book 35). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 3 chapters.
+### Habakkuk 1 — COMPLAINT
 
-### Chapter 1 — COMPLAINT
-**Filename:** `ch1.png`
+Reference: Habakkuk 1:2–6.
 
-```
-A dramatic, cinematic biblical illustration of How long, LORD, must I call for help — why do you make me look at injustice? — you are using Babylon — this I cannot understand. Symbolizes 'COMPLAINT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Habakkuk chapter 1. Reference Habakkuk 1:2–6. Habakkuk raises troubled hands in prayer above a Judean street where powerful men mistreat the poor and distant Babylonian forces approach. Honest bewilderment at injustice, restrained non-graphic action. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — WATCHTOWER
-**Filename:** `ch2.png`
+### Habakkuk 2 — WATCHTOWER
 
-```
-A dramatic, cinematic biblical illustration of I will stand at my watch — I will look to see what he will say — the righteous shall live by his faith — the earth will be filled with the knowledge of the LORD. Symbolizes 'WATCHTOWER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Habakkuk 2:1–4.
 
-### Chapter 3 — FIG
-**Filename:** `ch3.png`
+Habakkuk chapter 2. Reference Habakkuk 2:1–4. Habakkuk waits attentively on a stone watchtower beside a clay writing tablet bearing faint indistinct inscription texture. Patient faith and listening, no readable lettering or blank decorative tablet. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Though the fig tree does not bud and there are no grapes on the vines — yet I will rejoice in the LORD. Symbolizes 'FIG'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Habakkuk 3 — FIG
 
+Reference: Habakkuk 3:17–19.
+
+Habakkuk chapter 3. Reference Habakkuk 3:17–19. Habakkuk rejoices with lifted hands beside a barren fig tree, empty vines and an empty sheepfold, while a deer stands sure-footed on a distant ridge. Faith amid actual crop failure, no flourishing harvest. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
