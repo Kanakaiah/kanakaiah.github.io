@@ -1,370 +1,315 @@
-# Image prompts for Jeremiah — all chapters
+# Jeremiah — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/jeremiah/`.
+Reviewed against the bundled BSB scripture (book 24). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 52 chapters.
+### Jeremiah 1 — WOMB
 
-### Chapter 1 — WOMB
-**Filename:** `ch1.png`
+Reference: Jeremiah 1:4–10.
 
-```
-A dramatic, cinematic biblical illustration of Before I formed you in the womb I knew you — I appointed you as prophet to the nations. Symbolizes 'WOMB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 1. Reference Jeremiah 1:4–10. Young Jeremiah stands hesitant but attentive in a quiet Judean landscape, one hand near his mouth as warm light falls on him. A modest expectant mother in the distant village subtly recalls being known before birth; no transparent womb or visible divine hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — CISTERN
-**Filename:** `ch2.png`
+### Jeremiah 2 — CISTERN
 
-```
-A dramatic, cinematic biblical illustration of My people have forsaken me and dug their own cisterns — broken cisterns that cannot hold water. Symbolizes 'CISTERN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 2:12–13.
 
-### Chapter 3 — FAITHLESS
-**Filename:** `ch3.png`
+Jeremiah chapter 2. Reference Jeremiah 2:12–13. A broken stone cistern leaks precious water through obvious cracks beside a neglected flowing spring. Ancient people labor at the failing reservoir, a clear metaphor for forsaking living water. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Return, faithless Israel — I will not look on you in anger for I am faithful. Symbolizes 'FAITHLESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 3 — FAITHLESS
 
-### Chapter 4 — LION
-**Filename:** `ch4.png`
+Reference: Jeremiah 3:12–15.
 
-```
-A dramatic, cinematic biblical illustration of A lion has come out of his lair — a destroyer of nations has set out. Symbolizes 'LION'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 3. Reference Jeremiah 3:12–15. Weary ancient Israelites turn back along a northern road toward welcoming Zion as a shepherd guides scattered sheep beside them. A representative image of returning faithlessly scattered people and faithful guidance. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — HARVEST
-**Filename:** `ch5.png`
+### Jeremiah 4 — LION
 
-```
-A dramatic, cinematic biblical illustration of The harvest is past, the summer has ended — and we are not saved. Symbolizes 'HARVEST'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 4:5–8.
 
-### Chapter 6 — ROAD
-**Filename:** `ch6.png`
+Jeremiah chapter 4. Reference Jeremiah 4:5–8. A lion emerges from a rocky thicket in the foreground while distant invading forces approach and Judean families hurry toward a fortified city. The lion symbolizes the destroyer, no animal attacking a child. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Stand at the crossroads and look — ask for the ancient paths, where the good way is. Symbolizes 'ROAD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 5 — HARVEST
 
-### Chapter 7 — TEMPLE
-**Filename:** `ch7.png`
+Reference: Jeremiah 5:22–25.
 
-```
-A dramatic, cinematic biblical illustration of Do not trust in deceptive words — This is the temple of the LORD, the temple of the LORD. Symbolizes 'TEMPLE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 5. Reference Jeremiah 5:22–25. A farmer looks anxiously over a dry unharvested field beneath clouds that withhold seasonal rain. The scene follows chapter 5's withheld rain and harvest blessing, not the chapter 8 quotation about summer ending. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 8 — BALM
-**Filename:** `ch8.png`
+### Jeremiah 6 — ROAD
 
-```
-A dramatic, cinematic biblical illustration of Is there no balm in Gilead? Is there no physician there? Why is there no healing?. Symbolizes 'BALM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 6:16–19.
 
-### Chapter 9 — FOUNTAIN
-**Filename:** `ch9.png`
+Jeremiah chapter 6. Reference Jeremiah 6:16–19. Jeremiah points toward an old well-worn safe path at a crossroads while stubborn travelers turn toward a harsher route. Ancient landscape and a distant watchman with a ram's horn, no readable signposts. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Oh that my head were a spring of water and my eyes a fountain of tears. Symbolizes 'FOUNTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 7 — TEMPLE
 
-### Chapter 10 — SCARECROW
-**Filename:** `ch10.png`
+Reference: Jeremiah 7:1–7.
 
-```
-A dramatic, cinematic biblical illustration of Like a scarecrow in a cucumber field their idols cannot speak — they must be carried. Symbolizes 'SCARECROW'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 7. Reference Jeremiah 7:1–7. Jeremiah speaks urgently at the temple gate to confident worshippers passing a neglected widow, orphan and foreign traveler. His gesture toward the vulnerable makes justice central to the temple sermon. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 11 — PLOT
-**Filename:** `ch11.png`
+### Jeremiah 8 — BALM
 
-```
-A dramatic, cinematic biblical illustration of I was like a gentle lamb led to slaughter — they had plotted against me. Symbolizes 'PLOT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 8:20–22.
 
-### Chapter 12 — WEEDS
-**Filename:** `ch12.png`
+Jeremiah chapter 8. Reference Jeremiah 8:20–22. A grieving healer holds a small jar of balm beside an exhausted patient in a modest Judean home, with bare harvested fields beyond. The unanswered need for healing, restrained suffering and no graphic wound. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of You have planted them and they have taken root — they grow and bear fruit. Symbolizes 'WEEDS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 9 — FOUNTAIN
 
-### Chapter 13 — BELT
-**Filename:** `ch13.png`
+Reference: Jeremiah 9:1–3.
 
-```
-A dramatic, cinematic biblical illustration of The linen belt buried at the Euphrates — ruined and completely useless. Symbolizes 'BELT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 9. Reference Jeremiah 9:1–3. Jeremiah weeps quietly overlooking a devastated Judean town, a small natural spring flowing beside him. The spring echoes the fountain-of-tears metaphor; no water jets from his eyes. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 14 — DROUGHT
-**Filename:** `ch14.png`
+### Jeremiah 10 — SCARECROW
 
-```
-A dramatic, cinematic biblical illustration of Because of our sins our faces are downcast — we acknowledge our wickedness. Symbolizes 'DROUGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 10:3–5.
 
-### Chapter 15 — IRON
-**Filename:** `ch15.png`
+Jeremiah chapter 10. Reference Jeremiah 10:3–5. A motionless scarecrow stands in a cucumber field while craftsmen carry an inert gilded wooden idol along the nearby road. Clear poetic comparison of powerless handmade objects, no animated statue. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I will make you a wall to this people — a fortified wall of bronze. Symbolizes 'IRON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 11 — PLOT
 
-### Chapter 16 — FISHERMEN
-**Filename:** `ch16.png`
+Reference: Jeremiah 11:18–20.
 
-```
-A dramatic, cinematic biblical illustration of I will send for many fishermen — and they will catch them. Symbolizes 'FISHERMEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 11. Reference Jeremiah 11:18–20. Unaware Jeremiah walks near a gentle lamb while shadowed conspirators quietly plot behind an ancient wall. The lamb is a metaphor for his vulnerability; no slaughter or literal transformation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 17 — TREE
-**Filename:** `ch17.png`
+### Jeremiah 12 — WEEDS
 
-```
-A dramatic, cinematic biblical illustration of Blessed is the one who trusts in the LORD — like a tree planted by the water. Symbolizes 'TREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 12:1–4.
 
-### Chapter 18 — POTTER
-**Filename:** `ch18.png`
+Jeremiah chapter 12. Reference Jeremiah 12:1–4. Jeremiah watches prosperous dishonest landowners beside a flourishing orchard while neglected land beyond is withered. His troubled prayer asks why the wicked prosper; no claim the healthy trees are weeds. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Like clay in the hand of the potter so are you in my hand, Israel. Symbolizes 'POTTER'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 13 — BELT
 
-### Chapter 19 — JAR
-**Filename:** `ch19.png`
+Reference: Jeremiah 13:1–11.
 
-```
-A dramatic, cinematic biblical illustration of Jeremiah smashes a clay jar before the elders — "so will I break this nation. Symbolizes 'JAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 13. Reference Jeremiah 13:1–11. Jeremiah retrieves a visibly rotted linen waistband from a rocky crevice, holding the ruined fabric with disappointment. Fully clothed prophet, no invented legible markings or modern leather belt. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 20 — FIRE
-**Filename:** `ch20.png`
+### Jeremiah 14 — DROUGHT
 
-```
-A dramatic, cinematic biblical illustration of His word is in my heart like a fire shut up in my bones — I am weary of holding it in. Symbolizes 'FIRE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 14:1–6.
 
-### Chapter 21 — WAY
-**Filename:** `ch21.png`
+Jeremiah chapter 14. Reference Jeremiah 14:1–6. Servants return from a dry cistern with empty clay jars across cracked earth while farmers bow their heads under a rainless sky. Severe drought and shared helplessness, no water remaining in the jars. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I am setting before you the way of life and the way of death. Symbolizes 'WAY'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 15 — IRON
 
-### Chapter 22 — CEDAR
-**Filename:** `ch22.png`
+Reference: Jeremiah 15:19–21.
 
-```
-A dramatic, cinematic biblical illustration of Does it make you a king to have more and more cedar? — your father had justice. Symbolizes 'CEDAR'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 15. Reference Jeremiah 15:19–21. Jeremiah stands firmly before hostile townspeople with a great bronze-clad wall rising behind him. The wall symbolizes promised resilience, not Jeremiah literally made of metal. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 23 — BRANCH
-**Filename:** `ch23.png`
+### Jeremiah 16 — FISHERMEN
 
-```
-A dramatic, cinematic biblical illustration of I will raise up for David a righteous Branch — a king who will reign wisely. Symbolizes 'BRANCH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 16:14–18.
 
-### Chapter 24 — FIGS
-**Filename:** `ch24.png`
+Jeremiah chapter 16. Reference Jeremiah 16:14–18. Ancient fishermen spread a wide net along a rocky river while distant searchers comb hillside paths. A sober prophetic metaphor for searching judgment, no humans caught as fish or cheerful unrelated fishing picnic. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Two baskets of figs — one basket very good, the other too bad to eat. Symbolizes 'FIGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 17 — TREE
 
-### Chapter 25 — CUP
-**Filename:** `ch25.png`
+Reference: Jeremiah 17:5–8.
 
-```
-A dramatic, cinematic biblical illustration of Take from my hand this cup filled with the wine of my wrath — make all nations drink it. Symbolizes 'CUP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 17. Reference Jeremiah 17:5–8. A lush fruit-bearing tree sends visible roots toward a stream during surrounding drought, with a parched shrub on dry ground beyond. The landscape directly illustrates trust and sustained life. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 26 — COURT
-**Filename:** `ch26.png`
+### Jeremiah 18 — POTTER
 
-```
-A dramatic, cinematic biblical illustration of Jeremiah in the temple court — priests and prophets seize him — nearly killed. Symbolizes 'COURT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 18:1–6.
 
-### Chapter 27 — YOKE
-**Filename:** `ch27.png`
+Jeremiah chapter 18. Reference Jeremiah 18:1–6. Jeremiah watches an ancient potter reshape a flawed soft clay vessel into a new form on his wheel. The wet clay remains workable, clear hands and simple tools. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jeremiah makes a yoke and wears it — submit to Babylon's yoke. Symbolizes 'YOKE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 19 — JAR
 
-### Chapter 28 — BARS
-**Filename:** `ch28.png`
+Reference: Jeremiah 19:10–13.
 
-```
-A dramatic, cinematic biblical illustration of False prophet Hananiah breaks Jeremiah's yoke bars — Jeremiah replaces it with iron. Symbolizes 'BARS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 19. Reference Jeremiah 19:10–13. Jeremiah has just shattered an earthenware jar on rocky ground before startled elders outside Jerusalem. Falling shards and his solemn gesture convey the enacted warning, no explosive effect or injured people. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 29 — PLANS
-**Filename:** `ch29.png`
+### Jeremiah 20 — FIRE
 
-```
-A dramatic, cinematic biblical illustration of I know the plans I have for you — plans to prosper you and give you hope and a future. Symbolizes 'PLANS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 20:7–9.
 
-### Chapter 30 — WOUND
-**Filename:** `ch30.png`
+Jeremiah chapter 20. Reference Jeremiah 20:7–9. Jeremiah struggles in prayer with a closed scroll pressed to his chest beside a small hearth whose warm glow lights his face. Fire is a metaphor for the word he cannot suppress, no burning body or visible bones. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Your wound is incurable — but I will restore health to you. Symbolizes 'WOUND'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 21 — WAY
 
-### Chapter 31 — HEART
-**Filename:** `ch31.png`
+Reference: Jeremiah 21:8–10.
 
-```
-A dramatic, cinematic biblical illustration of I will make a new covenant — I will write my law on their hearts. Symbolizes 'HEART'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 21. Reference Jeremiah 21:8–10. From inside besieged Jerusalem, frightened residents face a choice between remaining behind failing walls and walking out toward the Babylonian camp. Jeremiah indicates the surrender route, no modern surrender flag or generic fork unrelated to the siege. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 32 — FIELD
-**Filename:** `ch32.png`
+### Jeremiah 22 — CEDAR
 
-```
-A dramatic, cinematic biblical illustration of Jeremiah buys a field in besieged Judah — an act of faith in the promise of return. Symbolizes 'FIELD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 22:13–17.
 
-### Chapter 33 — BRANCH
-**Filename:** `ch33.png`
+Jeremiah chapter 22. Reference Jeremiah 22:13–17. Unpaid laborers fit luxurious cedar panels into a royal palace while an indifferent ruler inspects the wealth and Jeremiah protests. Exploited workers and lavish construction reveal the chapter's criticism of unjust kingship. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of I will make a righteous Branch sprout from David's line — salvation and righteousness. Symbolizes 'BRANCH'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 23 — BRANCH
 
-### Chapter 34 — FREEDOM
-**Filename:** `ch34.png`
+Reference: Jeremiah 23:5–6.
 
-```
-A dramatic, cinematic biblical illustration of Zedekiah proclaims freedom for slaves — then reclaims them — God is furious. Symbolizes 'FREEDOM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 23. Reference Jeremiah 23:5–6. A living branch grows beside a Davidic throne where a symbolic righteous king listens fairly to a poor petitioner. Hope of wise just rule, no plant growing from a human body or readable divine title. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 35 — WINE
-**Filename:** `ch35.png`
+### Jeremiah 24 — FIGS
 
-```
-A dramatic, cinematic biblical illustration of The Recabites refuse wine — their obedience shames disobedient Judah. Symbolizes 'WINE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 24:1–7.
 
-### Chapter 36 — SCROLL
-**Filename:** `ch36.png`
+Jeremiah chapter 24. Reference Jeremiah 24:1–7. Jeremiah studies exactly two baskets before the temple: one filled with excellent ripe figs, the other with spoiled inedible figs. Strong visible contrast, no labels or third basket. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Baruch reads the scroll — Jehoiakim cuts and burns it column by column. Symbolizes 'SCROLL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 25 — CUP
 
-### Chapter 37 — CISTERN
-**Filename:** `ch37.png`
+Reference: Jeremiah 25:15–17.
 
-```
-A dramatic, cinematic biblical illustration of Jeremiah lowered into a muddy cistern with ropes — sinks down in the mud. Symbolizes 'CISTERN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 25. Reference Jeremiah 25:15–17. Jeremiah holds a solemn bronze cup of dark wine before representatives of ancient nations, their expressions uneasy. A symbolic cup of judgment, no celebratory toast or visible divine hand. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 38 — RAGS
-**Filename:** `ch38.png`
+### Jeremiah 26 — COURT
 
-```
-A dramatic, cinematic biblical illustration of Ebed-melek uses old rags and ropes to pull Jeremiah from the cistern. Symbolizes 'RAGS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 26:8–16.
 
-### Chapter 39 — FALL
-**Filename:** `ch39.png`
+Jeremiah chapter 26. Reference Jeremiah 26:8–16. Jeremiah speaks calmly in the temple court while angry priests hold his arms and officials seated at the gate listen to his defense. Tense public hearing without execution or graphic violence. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Jerusalem falls — the city burned — Zedekiah's sons killed, his eyes gouged out. Symbolizes 'FALL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 27 — YOKE
 
-### Chapter 40 — FREE
-**Filename:** `ch40.png`
+Reference: Jeremiah 27:1–7.
 
-```
-A dramatic, cinematic biblical illustration of Jeremiah freed from chains — Gedaliah appointed governor over the remnant. Symbolizes 'FREE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 27. Reference Jeremiah 27:1–7. Jeremiah wears a wooden yoke secured with leather straps across his shoulders while addressing foreign envoys in Jerusalem. The prophetic sign of submission to Babylon, clearly wooden agricultural-style bars. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 41 — POOL
-**Filename:** `ch41.png`
+### Jeremiah 28 — BARS
 
-```
-A dramatic, cinematic biblical illustration of Ishmael murders Gedaliah — throws bodies into a cistern — the remnant panics. Symbolizes 'POOL'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 28:10–17.
 
-### Chapter 42 — SWORD
-**Filename:** `ch42.png`
+Jeremiah chapter 28. Reference Jeremiah 28:10–17. Hananiah has just broken the wooden yoke taken from Jeremiah, holding its snapped bars before a watching crowd. Jeremiah stands solemn and unconvinced; one moment, no simultaneous iron replacement scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of If you stay in this land — I will build you up — do not go to Egypt. Symbolizes 'SWORD'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 29 — PLANS
 
-### Chapter 43 — EGYPT
-**Filename:** `ch43.png`
+Reference: Jeremiah 29:4–14.
 
-```
-A dramatic, cinematic biblical illustration of Johanan ignores the word — drags the remnant including Jeremiah into Egypt. Symbolizes 'EGYPT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 29. Reference Jeremiah 29:4–14. Judean exiles in Babylon build modest homes and plant a productive garden while an elder reads Jeremiah's letter to the community. Hope expressed through faithful life during exile, no instant return to Jerusalem. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 44 — QUEEN
-**Filename:** `ch44.png`
+### Jeremiah 30 — WOUND
 
-```
-A dramatic, cinematic biblical illustration of The people burn incense to the Queen of Heaven — Jeremiah's final sermon in Egypt. Symbolizes 'QUEEN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 30:12–17.
 
-### Chapter 45 — NECK
-**Filename:** `ch45.png`
+Jeremiah chapter 30. Reference Jeremiah 30:12–17. A compassionate caregiver binds a formerly neglected sufferer's wounds near damaged Zion's walls, with hopeful rebuilding in the distance. Symbolic restoration of health, covered injuries and no graphic sores. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Should you seek great things for yourself? Do not seek them" — to Baruch. Symbolizes 'NECK'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 31 — HEART
 
-### Chapter 46 — NILE
-**Filename:** `ch46.png`
+Reference: Jeremiah 31:31–34.
 
-```
-A dramatic, cinematic biblical illustration of Oracle against Egypt — "Who is this that rises like the Nile?. Symbolizes 'NILE'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 31. Reference Jeremiah 31:31–34. An ancient family receives a covenant scroll with hands resting thoughtfully over their chests, faces showing inward commitment. The promised law on hearts conveyed through human response, no exposed hearts or letters carved into skin. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 47 — SEA
-**Filename:** `ch47.png`
+### Jeremiah 32 — FIELD
 
-```
-A dramatic, cinematic biblical illustration of Oracle against Philistia — "Waters are rising in the north — a mighty flood. Symbolizes 'SEA'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 32:9–15.
 
-### Chapter 48 — MOAB
-**Filename:** `ch48.png`
+Jeremiah chapter 32. Reference Jeremiah 32:9–15. Jeremiah weighs silver before witnesses in the guard courtyard while Baruch places a sealed deed and an open deed into a clay jar. A land purchase during siege as a sign of future restoration, no readable contracts. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Oracle against Moab — "Moab will be broken — wail for him — he is shattered. Symbolizes 'MOAB'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 33 — BRANCH
 
-### Chapter 49 — EDOM
-**Filename:** `ch49.png`
+Reference: Jeremiah 33:14–16.
 
-```
-A dramatic, cinematic biblical illustration of Oracles against Ammon, Edom, Damascus, Kedar, Hazor, and Elam. Symbolizes 'EDOM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 33. Reference Jeremiah 33:14–16. A fresh branch rises beside a repaired Davidic throne overlooking safe restored Jerusalem, where families walk without fear. A prophetic symbol of righteous rule and renewed security, distinct city-centered composition. The throne has simple botanical carving, without a six-pointed-star emblem. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 50 — BABYLON
-**Filename:** `ch50.png`
+### Jeremiah 34 — FREEDOM
 
-```
-A dramatic, cinematic biblical illustration of Flee from Babylon — Babylon has fallen — her images are put to shame. Symbolizes 'BABYLON'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jeremiah 34:8–11.
 
-### Chapter 51 — EUPHRATES
-**Filename:** `ch51.png`
+Jeremiah chapter 34. Reference Jeremiah 34:8–11. A newly freed Hebrew servant is reluctantly forced back toward a wealthy household by his former master, broken release cords visible nearby. Jeremiah protests the betrayal of proclaimed freedom, restrained non-graphic scene. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Seraiah ties the scroll and throws it into the Euphrates — "So will Babylon sink. Symbolizes 'EUPHRATES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jeremiah 35 — WINE
 
-### Chapter 52 — EYES
-**Filename:** `ch52.png`
+Reference: Jeremiah 35:1–10.
 
-```
-A dramatic, cinematic biblical illustration of Jerusalem's fall retold — Zedekiah's eyes gouged out — the temple vessels catalogued. Symbolizes 'EYES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jeremiah chapter 35. Reference Jeremiah 35:1–10. Rechabite elders politely refuse cups and pitchers of wine offered by Jeremiah in a temple chamber. Open palms and untouched vessels show faithful obedience to their ancestor's instruction. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Jeremiah 36 — SCROLL
+
+Reference: Jeremiah 36:21–23.
+
+Jeremiah chapter 36. Reference Jeremiah 36:21–23. King Jehoiakim cuts a section from a scroll with a scribe's knife and drops it into a winter brazier as Jehudi reads and officials look alarmed. No Baruch substituted for Jehudi, no whole library burning. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 37 — CISTERN
+
+Reference: Jeremiah 37:13–21.
+
+Jeremiah chapter 37. Reference Jeremiah 37:13–21. Imprisoned Jeremiah receives his daily loaf of bread in the courtyard of the guard, with the entrance to the former dungeon behind him. The chapter 37 confinement is shown accurately, without the muddy cistern of chapter 38. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 38 — RAGS
+
+Reference: Jeremiah 38:6–13.
+
+Jeremiah chapter 38. Reference Jeremiah 38:6–13. Ebed-melech, a Cushite court official, and helpers carefully lift Jeremiah from a deep narrow cistern using ropes padded with old rags under his arms. Mud clings to the prophet's lower robe; high sheer walls make self-escape impossible, no shallow pit. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 39 — FALL
+
+Reference: Jeremiah 39:8–12.
+
+Jeremiah chapter 39. Reference Jeremiah 39:8–12. Babylonian soldiers escort captives away from burning Jerusalem while Jeremiah is respectfully protected at the side by an officer. Collapsed walls and smoke convey the fall, no graphic royal mutilation. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 40 — FREE
+
+Reference: Jeremiah 40:1–6.
+
+Jeremiah chapter 40. Reference Jeremiah 40:1–6. Nebuzaradan releases the chains from Jeremiah's wrists at Ramah and gives him provisions, with other captives and the road to Judah behind. The prophet's thoughtful freedom is central. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 41 — POOL
+
+Reference: Jeremiah 41:1–9.
+
+Jeremiah chapter 41. Reference Jeremiah 41:1–9. An overturned meal table and abandoned cups stand near a dark cistern at Mizpah as frightened survivors flee an armed conspirator's group. The aftermath of Gedaliah's assassination, no visible bodies in the cistern. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 42 — SWORD
+
+Reference: Jeremiah 42:10–17.
+
+Jeremiah chapter 42. Reference Jeremiah 42:10–17. Jeremiah urges the remnant to remain beside Judah's fields while their leaders look toward the road to Egypt with travel bundles ready. A tense choice and warning, no swords attacking the listeners. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 43 — EGYPT
+
+Reference: Jeremiah 43:4–9.
+
+Jeremiah chapter 43. Reference Jeremiah 43:4–9. Johanan leads the Judean remnant, including elderly Jeremiah and Baruch, into Egyptian Tahpanhes despite the prophet's warning. Egyptian architecture identifies the destination, weary families and packed donkeys. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 44 — QUEEN
+
+Reference: Jeremiah 44:15–19.
+
+Jeremiah chapter 44. Reference Jeremiah 44:15–19. Judean families in Egypt burn incense and present small shaped cakes before an idol shrine while Jeremiah addresses them solemnly. Their defiant attention reveals the conflict, no living Queen of Heaven appearing. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 45 — NECK
+
+Reference: Jeremiah 45:1–5.
+
+Jeremiah chapter 45. Reference Jeremiah 45:1–5. Weary Baruch rests his writing hand beside the scroll as Jeremiah gently counsels him in a modest room. Personal discouragement and the promise of preserved life, no invented neck injury from the mnemonic keyword. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 46 — NILE
+
+Reference: Jeremiah 46:7–10.
+
+Jeremiah chapter 46. Reference Jeremiah 46:7–10. Egyptian chariots and shield-bearing troops surge across a plain beside the swollen Nile, the river echoing their boastful advance. One coherent landscape, no drowning army copied from Exodus. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 47 — SEA
+
+Reference: Jeremiah 47:1–4.
+
+Jeremiah chapter 47. Reference Jeremiah 47:1–4. An overwhelming northern storm front and flood-like advancing army approach a Philistine coastal city as residents flee with bundles. The waters are a poetic invasion image, no literal ocean covering the globe. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 48 — MOAB
+
+Reference: Jeremiah 48:11–17.
+
+Jeremiah chapter 48. Reference Jeremiah 48:11–17. Large Moabite wine jars lie broken and emptied beside a shattered ceremonial staff before a ruined town. Explicit judgment metaphor for Moab poured out after long ease, no human bodies in vessels. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 49 — EDOM
+
+Reference: Jeremiah 49:7–16.
+
+Jeremiah chapter 49. Reference Jeremiah 49:7–16. Edom's proud red-rock mountain stronghold stands exposed above a deep ravine, an eagle's high nest in the foreground and distant attackers below. Height cannot guarantee safety, no later Roman Petra facade. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 50 — BABYLON
+
+Reference: Jeremiah 50:2–8.
+
+Jeremiah chapter 50. Reference Jeremiah 50:2–8. Judean families depart fallen Babylon toward home while shattered Babylonian idols and broken city gates lie behind. Hope of return and judgment on oppressive power, no modern skyline. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 51 — EUPHRATES
+
+Reference: Jeremiah 51:59–64.
+
+Jeremiah chapter 51. Reference Jeremiah 51:59–64. Seraiah casts a scroll securely tied to a stone into the Euphrates at Babylon, the weighted bundle just entering the water. His solemn action enacts Babylon's sinking, no loose scroll floating away. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Jeremiah 52 — EYES
+
+Reference: Jeremiah 52:17–23.
+
+Jeremiah chapter 52. Reference Jeremiah 52:17–23. Babylonian soldiers dismantle bronze temple pillars and carry sacred vessels from devastated Jerusalem. A broken pomegranate capital and bronze basin dominate the foreground; the closing chapter's loss shown without graphic blinding. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
