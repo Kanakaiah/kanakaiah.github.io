@@ -1,27 +1,21 @@
-# Image prompts for Nahum — all chapters
+# Nahum — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/nahum/`.
+Reviewed against the bundled BSB scripture (book 34). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 3 chapters.
+### Nahum 1 — JEALOUS
 
-### Chapter 1 — JEALOUS
-**Filename:** `ch1.png`
+Reference: Nahum 1:2–8.
 
-```
-A dramatic, cinematic biblical illustration of The LORD is a jealous and avenging God — the LORD takes vengeance on his foes — slow to anger but great in power. Symbolizes 'JEALOUS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Nahum chapter 1. Reference Nahum 1:2–8. Storm clouds and a violent whirlwind loom over ancient Nineveh while a small refuge shelters trusting travelers in foreground light. Awe and judgment, no human figure in the sky or graphic destruction. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — CHARIOT
-**Filename:** `ch2.png`
+### Nahum 2 — CHARIOT
 
-```
-A dramatic, cinematic biblical illustration of The chariots storm through the streets — they rush to and fro — their appearance is like torches — they dart like lightning. Symbolizes 'CHARIOT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Nahum 2:3–6.
 
-### Chapter 3 — WHIP
-**Filename:** `ch3.png`
+Nahum chapter 2. Reference Nahum 2:3–6. Ancient chariots with flashing metal fittings rush through Nineveh's streets toward failing river gates. Scarlet-clad warriors and urgent movement, no modern wheels or fire-consuming horses. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Woe to the city of blood — the crack of whips — the clatter of wheels — galloping horses — jolting chariots. Symbolizes 'WHIP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Nahum 3 — WHIP
 
+Reference: Nahum 3:1–4.
+
+Nahum chapter 3. Reference Nahum 3:1–4. Close view of pounding horse hooves, a taut charioteer's whip and a rattling ancient chariot wheel rushing through a plundered Nineveh street. Broken goods imply violence and ruin without visible bodies. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
