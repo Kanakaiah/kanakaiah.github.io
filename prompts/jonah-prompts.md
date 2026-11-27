@@ -1,34 +1,27 @@
-# Image prompts for Jonah — all chapters
+# Jonah — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/jonah/`.
+Reviewed against the bundled BSB scripture (book 32). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 4 chapters.
+### Jonah 1 — SHIP
 
-### Chapter 1 — SHIP
-**Filename:** `ch1.png`
+Reference: Jonah 1:12–17.
 
-```
-A dramatic, cinematic biblical illustration of Jonah pays his fare — the storm rises — sailors cast lots — Jonah thrown overboard. Symbolizes 'SHIP'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jonah chapter 1. Reference Jonah 1:12–17. Sailors on a storm-tossed ancient wooden ship lift fully clothed Jonah over the side as he submits, huge waves beyond. The decisive chapter-one action, no graphic injury or giant fish swallowing the ship. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — SEAWEED
-**Filename:** `ch2.png`
+### Jonah 2 — SEAWEED
 
-```
-A dramatic, cinematic biblical illustration of Seaweed wrapped around my head — I sank to the roots of the mountains — yet you brought me up. Symbolizes 'SEAWEED'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Jonah 2:3–7.
 
-### Chapter 3 — ASHES
-**Filename:** `ch3.png`
+Jonah chapter 2. Reference Jonah 2:3–7. A poetic underwater view of Jonah praying amid deep blue currents with seaweed around his head and distant mountain roots below. Light suggests hope; this illustrates his remembered prayer, not a transparent fish interior. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of The king of Nineveh rises from his throne — sits in ashes — proclaims a fast. Symbolizes 'ASHES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Jonah 3 — ASHES
 
-### Chapter 4 — PLANT
-**Filename:** `ch4.png`
+Reference: Jonah 3:6–10.
 
-```
-A dramatic, cinematic biblical illustration of A plant grows overnight to shelter Jonah — withers overnight — God's final question. Symbolizes 'PLANT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Jonah chapter 3. Reference Jonah 3:6–10. Nineveh's king sits humbly in ashes wearing sackcloth, royal robe and crown set aside as citizens repent around him. Ancient Assyrian setting, no fire destroying the spared city. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Jonah 4 — PLANT
+
+Reference: Jonah 4:6–11.
+
+Jonah chapter 4. Reference Jonah 4:6–11. Jonah sits angry beneath a withered shade plant outside spared Nineveh, a small worm near the damaged stem. Harsh sun and the living city underscore compassion. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
