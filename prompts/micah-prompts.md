@@ -1,55 +1,45 @@
-# Image prompts for Micah — all chapters
+# Micah — validated chapter artwork prompts
 
-Paste each prompt into your image generator. Save the result under the filename given and place it in `public/chapters/micah/`.
+Reviewed against the bundled BSB scripture (book 33). Single scenes replace mixed events; symbolic illustrations are identified explicitly. Existing chapter keywords remain unchanged and are displayed by the app outside the art. All images use the established full-bleed 4:3 format. Original prompts are preserved in the local review folder.
 
-The wording is identical across every book so the set stays visually consistent — change it only if you intend to restyle all 7 chapters.
+### Micah 1 — BAREFOOT
 
-### Chapter 1 — BAREFOOT
-**Filename:** `ch1.png`
+Reference: Micah 1:8–9.
 
-```
-A dramatic, cinematic biblical illustration of Micah walks barefoot and naked as a sign of mourning — "disaster has come down from the LORD. Symbolizes 'BAREFOOT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Micah chapter 1. Reference Micah 1:8–9. Micah mourns barefoot outside Judah's threatened gate, removed outer garments beside him. Foreground stone and framing modestly obscure his unclothed body; no genital or buttock exposure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 2 — COVET
-**Filename:** `ch2.png`
+### Micah 2 — COVET
 
-```
-A dramatic, cinematic biblical illustration of Woe to those who plan iniquity — they covet fields and seize them — they defraud people of their homes. Symbolizes 'COVET'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Micah 2:1–2.
 
-### Chapter 3 — DARKNESS
-**Filename:** `ch3.png`
+Micah chapter 2. Reference Micah 2:1–2. Powerful ancient landowners seize a poor family's field and home, moving a boundary stone while the family protests. Clear abuse of power, no modern machinery. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of False prophets who see no vision — God gives them darkness — "Zion will be plowed like a field. Symbolizes 'DARKNESS'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Micah 3 — DARKNESS
 
-### Chapter 4 — MOUNTAIN
-**Filename:** `ch4.png`
+Reference: Micah 3:5–7.
 
-```
-A dramatic, cinematic biblical illustration of In the last days the mountain of the LORD's temple will be established as chief among the mountains. Symbolizes 'MOUNTAIN'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Micah chapter 3. Reference Micah 3:5–7. False prophets sit ashamed in a darkened courtyard with mouths covered as daylight fades. Silence and inability to answer convey loss of vision. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-### Chapter 5 — BETHLEHEM
-**Filename:** `ch5.png`
+### Micah 4 — MOUNTAIN
 
-```
-A dramatic, cinematic biblical illustration of But you, Bethlehem Ephrathah — out of you will come the ruler over Israel whose origins are from ancient times. Symbolizes 'BETHLEHEM'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Reference: Micah 4:1–4.
 
-### Chapter 6 — SCALES
-**Filename:** `ch6.png`
+Micah chapter 4. Reference Micah 4:1–4. People from many ancient nations climb toward Zion's elevated sanctuary while peaceful families rest under vines and fig trees below. One spacious prophetic landscape. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
-```
-A dramatic, cinematic biblical illustration of Shall I acquit someone with dishonest scales — with a bag of false weights? — what does the LORD require?. Symbolizes 'SCALES'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+### Micah 5 — BETHLEHEM
 
-### Chapter 7 — LIGHT
-**Filename:** `ch7.png`
+Reference: Micah 5:2–5.
 
-```
-A dramatic, cinematic biblical illustration of Though I sit in darkness the LORD will be my light — he will bring me out into the light. Symbolizes 'LIGHT'. Photorealistic oil painting style, 16:9 widescreen composition, warm atmospheric lighting, rich earth tones. No text, letters, words, captions, signage, inscriptions, watermarks or signatures anywhere in the image.
-```
+Micah chapter 5. Reference Micah 5:2–5. Small ancient Bethlehem rests among Judean hills as a humble shepherd-ruler stands with a safely gathered flock in dawn light. Prophetic leadership from an unlikely village, no nativity collage or written sign. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
 
+### Micah 6 — SCALES
+
+Reference: Micah 6:8–11.
+
+Micah chapter 6. Reference Micah 6:8–11. An honest merchant sets aside false weights and offers a fair measure to a poor customer while Micah walks humbly beside them. Justice, mercy and honest scales in ordinary action. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
+
+### Micah 7 — LIGHT
+
+Reference: Micah 7:8–9.
+
+Micah chapter 7. Reference Micah 7:8–9. A fallen ancient worshipper rises from a shadowed step toward clear morning light while a hostile figure recedes. Patient hope amid acknowledged failure. Use case: illustration-story. Asset: Remora Bible chapter gallery. Classical realistic biblical oil painting consistent with the approved Genesis, Exodus and Deuteronomy series. LANDSCAPE 4:3 full bleed, no borders or blank margins. Warm atmospheric light, rich earth tones, believable ancient Near Eastern clothing and materials appropriate to this passage, subtle painted texture. Clear main action readable on a phone. ONE coherent scene and moment; no collage or panels. Natural anatomy and restrained expressions. No modern objects, later Roman costumes, Christian crosses in pre-Christian scenes, or giant human face representing God. No captions, chapter numbers, keywords, logos, watermarks or signatures. No readable lettering; manuscript or inscription texture only where specified. App labels appear outside the artwork. A representative artistic memory cue, not an exhaustive historical reconstruction.
